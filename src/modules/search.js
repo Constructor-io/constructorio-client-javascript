@@ -7,7 +7,6 @@ const { fetch } = fetchPonyfill({ Promise });
 
 const createSearchUrl = (parameters, options) => {
   const { apiKey, version, serviceUrl, sessionId, clientId, segments, testCells } = options;
-  const { term, page, resultsPerPage, filters, sortBy, sortOrder, section } = parameters;
   const query = { c: version };
   let searchTerm = '';
 
@@ -28,6 +27,12 @@ const createSearchUrl = (parameters, options) => {
   }
 
   if (parameters) {
+    const { term, page, resultsPerPage, filters, sortBy, sortOrder, section } = parameters;
+
+    if (!term || typeof term !== 'string') {
+      throw new Error('parameters.term is required and must be of type string');
+    }
+
     // Pull term from parameters
     if (term) {
       searchTerm = encodeURIComponent(term);

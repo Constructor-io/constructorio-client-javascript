@@ -9,7 +9,7 @@
     "serve": "npm run build:dev -- --watch --progress & http-server ./ -p 8080 -o -c-1",
     "lint": "eslint '**/*.js'",
     "version": "npm run build && git add ./dist/*",
-    "test": "mocha ./spec/* --opts ./mocha.opts",
+    "test": "mocha ./spec/* --opts ./mocha.opts --recursive",
     "precoverage": "rm -rf ./coverage",
     "coverage": "nyc --all --reporter=html npm test",
     "postcoverage": "http-server ./coverage -p 8081 -o -c-1"
@@ -34,6 +34,7 @@
     "@babel/register": "^7.4.4",
     "babel-loader": "^8.0.5",
     "chai": "^4.2.0",
+    "dotenv": "^8.1.0",
     "eslint": "^6.1.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-airbnb-base": "^14.0.0",
