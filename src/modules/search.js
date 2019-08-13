@@ -1,4 +1,7 @@
 import qs from 'qs';
+import fetchPonyfill from 'fetch-ponyfill';
+import Promise from 'es6-promise';
+const { fetch } = fetchPonyfill({ Promise });
 
 /*
  * Search
@@ -6,78 +9,63 @@ import qs from 'qs';
  */
 
 const createSearchUrl = (parameters, options) => {
-  const {
-    apiKey,
-    version,
-    serviceUrl,
-    sessionId,
-    clientId,
-    segments,
-    testCells,
-  } = options;
+  const { apiKey, version, serviceUrl, sessionId, clientId, segments, testCells } = options;
+  const { term, page, resultsPerPage, filters, sortBy, sortOrder, section } = parameters;
   const query = { c: version };
-  let term = '';
 
   query.key = apiKey;
   query.i = clientId;
   query.s = sessionId;
 
-  // Pull test cells from client options
+  // Pull test cells from options
   if (testCells) {
     Object.keys(testCells).forEach((testCellKey) => {
       query[`ef-${testCellKey}`] = testCells[testCellKey];
     });
   }
 
-  // Pull user segments from client options
+  // Pull user segments from options
   if (segments && segments.length) {
     query.us = segments;
   }
 
-  // Pull term from search request
-  if (parameters && parameters.term) {
-    term = encodeURIComponent(parameters.term);
+  if (parameters) {
+    // Pull term from parameters
+    if (term) {
+      term = encodeURIComponent(term);
+    }
+  
+    // Pull page from parameters
+    if (page) {
+      query.page = page;
+    }
+  
+    // Pull results per page from parameters
+    if (resultsPerPage) {
+      query.num_results_per_page = resultsPerPage;
+    }
+    
+    if (filters) {
+      query.filters = filters;
+    }
+  
+    // Pull sort by from parameters
+    if (sortBy) {
+      query.sort_by = sortBy;
+    }
+  
+    // Pull sort order from parameters
+    if (sortOrder) {
+      query.sort_order = sortOrder;
+    }
+  
+    // Pull section from parameters
+    if (section) {
+      query.section = section;
+    }
   }
 
-  // Pull page from search request
-  if (parameters && parameters.page) {
-    query.page = parameters.page;
-  }
-
-  // Pull results per page from search request
-  if (parameters && parameters.resultsPerPage) {
-    query.num_results_per_page = parameters.resultsPerPage;
-  }
-
-  // Pull filters from search request
-  if (parameters && parameters.filters) {
-    query.filters = parameters.filters;
-  }
-
-  // Pull features from search request
-  if (parameters && parameters.features) {
-    query.features = parameters.features;
-  }
-
-  // Pull sort option from search request
-  if (parameters && parameters.sortOption) {
-    query.sort_by = parameters.sortOption.sortBy;
-    query.sort_order = parameters.sortOption.sortOrder;
-  }
-
-  // Pull section from search request
-  if (parameters && parameters.section) {
-    query.section = parameters.section;
-  }
-
-  if (parameters && parameters.explain) {
-    query.explain = parameters.explain;
-  }
-
-  let queryString = '';
-
-  // Transform the search request query
-  queryString = qs.stringify(query, { indices: false });
+  const queryString = qs.stringify(query, { indices: false });
 
   return `${serviceUrl}/search/${term}?${queryString}`;
 };
@@ -88,6 +76,20 @@ export default class Search {
   }
 
   get(parameters) {
-    return createSearchUrl(parameters, this.options);
+    const requestUrl =  createSearchUrl(parameters, this.options);
+    fetch(requestUrl)
+      .then((response) => {
+        if (response.ok) {
+          return response;
+        }
+        throw(response.statusText)
+      })
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
 }

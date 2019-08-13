@@ -6,6 +6,7 @@
   "scripts": {
     "build:dev": "webpack --config webpack.config.dev.js --mode=development",
     "build": "webpack --mode=production",
+    "sample_page": "npm run build:dev & http-server ./index.html -p 8080",
     "lint": "eslint '**/*.js'"
   },
   "repository": {
@@ -30,6 +31,7 @@
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
+    "http-server": "^0.11.1",
     "pre-push": "^0.1.1",
     "webpack": "^4.39.3",
     "webpack-cli": "^3.3.8",
