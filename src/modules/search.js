@@ -1,6 +1,8 @@
+/* eslint-disable object-curly-newline */
 import qs from 'qs';
 import fetchPonyfill from 'fetch-ponyfill';
 import Promise from 'es6-promise';
+
 const { fetch } = fetchPonyfill({ Promise });
 
 /*
@@ -12,6 +14,7 @@ const createSearchUrl = (parameters, options) => {
   const { apiKey, version, serviceUrl, sessionId, clientId, segments, testCells } = options;
   const { term, page, resultsPerPage, filters, sortBy, sortOrder, section } = parameters;
   const query = { c: version };
+  let searchTerm = '';
 
   query.key = apiKey;
   query.i = clientId;
@@ -32,33 +35,33 @@ const createSearchUrl = (parameters, options) => {
   if (parameters) {
     // Pull term from parameters
     if (term) {
-      term = encodeURIComponent(term);
+      searchTerm = encodeURIComponent(term);
     }
-  
+
     // Pull page from parameters
     if (page) {
       query.page = page;
     }
-  
+
     // Pull results per page from parameters
     if (resultsPerPage) {
       query.num_results_per_page = resultsPerPage;
     }
-    
+
     if (filters) {
       query.filters = filters;
     }
-  
+
     // Pull sort by from parameters
     if (sortBy) {
       query.sort_by = sortBy;
     }
-  
+
     // Pull sort order from parameters
     if (sortOrder) {
       query.sort_order = sortOrder;
     }
-  
+
     // Pull section from parameters
     if (section) {
       query.section = section;
@@ -67,7 +70,7 @@ const createSearchUrl = (parameters, options) => {
 
   const queryString = qs.stringify(query, { indices: false });
 
-  return `${serviceUrl}/search/${term}?${queryString}`;
+  return `${serviceUrl}/search/${searchTerm}?${queryString}`;
 };
 
 export default class Search {
@@ -76,20 +79,20 @@ export default class Search {
   }
 
   get(parameters) {
-    const requestUrl =  createSearchUrl(parameters, this.options);
+    const requestUrl = createSearchUrl(parameters, this.options);
     fetch(requestUrl)
       .then((response) => {
         if (response.ok) {
           return response;
         }
-        throw(response.statusText)
+        throw new Error(response.statusText);
       })
       .then((response) => response.json())
       .then((json) => {
-        console.log(json);
+        console.log(json); /* eslint-disable-line */
       })
       .catch((err) => {
-        console.error(err);
+        console.error(err); /* eslint-disable-line */
       });
   }
 }
