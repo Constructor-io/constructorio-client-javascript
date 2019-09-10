@@ -6,7 +6,7 @@
   "scripts": {
     "build:dev": "webpack --config webpack.config.dev.js --mode=development",
     "build": "webpack --mode=production",
-    "sample_page": "npm run build:dev & http-server ./index.html -p 8080",
+    "serve": "npm run build:dev -- --watch --progress & http-server ./ -p 8080 -o -c-1",
     "lint": "eslint '**/*.js'"
   },
   "repository": {

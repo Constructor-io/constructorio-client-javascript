@@ -3,8 +3,13 @@ const path = require('path');
 
 const versionId = `ciojs-search-${process.env.npm_package_version}`;
 
+/*
+ * BASE CONFIGURATION
+ */
 module.exports = {
+
   entry: './src/index.js',
+
   output: {
     filename: 'constructorio-client-javascript.bundle.js',
     path: path.resolve(__dirname, 'dist'),
@@ -30,4 +35,5 @@ module.exports = {
   ],
 
   target: 'web',
+
 };
