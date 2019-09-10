@@ -1,0 +1,19 @@
+{
+  "name": "constructorio-client-javascript",
+  "version": "1.0.0",
+  "description": "Constructor.io JavaScript client",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Constructor-io/constructorio-client-javascript.git"
+  },
+  "author": "constructor.io",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Constructor-io/constructorio-client-javascript/issues"
+  },
+  "homepage": "https://github.com/Constructor-io/constructorio-client-javascript#readme"
+}
