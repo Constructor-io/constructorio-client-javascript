@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+  <head>
+    <title>constructorio-client-javascript</title>
+  </head>
+  <body>
+    <script src="./dist/constructorio-client-javascript.bundle.js"></script>
+    <script>
+      (function() {
+        if (window.ConstructorIO) {
+          var constructorio = new window.ConstructorIO({
+            apiKey: 'test'
+          });
+
+          window.console.log(constructorio.Search().get());
+        }
+      }());
+    </script>
+  </body>
+</html>
