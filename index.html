@@ -12,7 +12,9 @@
             apiKey: 'test'
           });
 
-          window.console.log(constructorio.Search().get());
+          window.console.log(constructorio.Search().get({
+            term: 'dogs'
+          }));
         }
       }());
     </script>

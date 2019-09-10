@@ -1,7 +1,9 @@
+const webpack = require('webpack');
 const path = require('path');
 
-module.exports = {
+const versionId = `ciojs-search-${process.env.npm_package_version}`;
 
+module.exports = {
   entry: './src/index.js',
   output: {
     filename: 'constructorio-client-javascript.bundle.js',
@@ -20,6 +22,12 @@ module.exports = {
       },
     ],
   },
+
+  plugins: [
+    new webpack.DefinePlugin({
+      SEARCH_VERSION: JSON.stringify(versionId),
+    }),
+  ],
 
   target: 'web',
 };

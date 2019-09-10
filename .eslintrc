@@ -3,4 +3,7 @@
     "browser": true,
   },
   "extends": "airbnb/base",
+  "globals": {
+    "SEARCH_VERSION": true,
+  }
 }

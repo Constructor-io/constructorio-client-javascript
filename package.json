@@ -4,8 +4,8 @@
   "description": "Constructor.io JavaScript client",
   "main": "index.js",
   "scripts": {
-    "build:dev": "webpack --config webpack.config.dev.js",
-    "build": "webpack",
+    "build:dev": "webpack --config webpack.config.dev.js --mode=development",
+    "build": "webpack --mode=production",
     "lint": "eslint '**/*.js'"
   },
   "repository": {
@@ -34,7 +34,9 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
+    "constructorio-id": "git+ssh://git@github.com/Constructor-io/constructorio-identity.git#v2.0.0",
     "es6-promise": "^4.2.8",
-    "fetch-ponyfill": "^6.1.0"
+    "fetch-ponyfill": "^6.1.0",
+    "qs": "^6.8.0"
   }
 }
