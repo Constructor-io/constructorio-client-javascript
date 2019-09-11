@@ -7,7 +7,8 @@
     "build:dev": "webpack --config webpack.config.dev.js --mode=development",
     "build": "webpack --mode=production",
     "serve": "npm run build:dev -- --watch --progress & http-server ./ -p 8080 -o -c-1",
-    "lint": "eslint '**/*.js'"
+    "lint": "eslint '**/*.js'",
+    "version": "npm run build && git add ./dist/*"
   },
   "repository": {
     "type": "git",
