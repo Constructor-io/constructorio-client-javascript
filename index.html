@@ -9,12 +9,16 @@
       (function() {
         if (window.ConstructorIO) {
           var constructorio = new window.ConstructorIO({
-            apiKey: 'test'
+            apiKey: 'testing'
           });
 
-          window.console.log(constructorio.Search().get({
+          constructorio.Search().get({
             term: 'dogs'
-          }));
+          }).then(function(response) {
+            console.log(response);
+          }).catch(function(err) {
+            console.error(err);
+          });
         }
       }());
     </script>

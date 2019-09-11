@@ -1,4 +1,4 @@
-/* eslint-disable object-curly-newline */
+/* eslint-disable object-curly-newline, no-param-reassign */
 import qs from 'qs';
 import fetchPonyfill from 'fetch-ponyfill';
 import Promise from 'es6-promise';
@@ -80,19 +80,27 @@ export default class Search {
 
   get(parameters) {
     const requestUrl = createSearchUrl(parameters, this.options);
-    fetch(requestUrl)
+
+    return fetch(requestUrl)
       .then((response) => {
         if (response.ok) {
-          return response;
+          return response.json();
         }
+
         throw new Error(response.statusText);
       })
-      .then((response) => response.json())
       .then((json) => {
-        console.log(json); /* eslint-disable-line */
-      })
-      .catch((err) => {
-        console.error(err); /* eslint-disable-line */
+        if (json.response) {
+          if (json.result_id) {
+            json.response.results.forEach((result) => {
+              result.result_id = json.result_id;
+            });
+          }
+
+          return json;
+        }
+
+        throw new Error('No response object in result');
       });
   }
 }
