@@ -1,10 +1,10 @@
 /* eslint-disable import/prefer-default-export, camelcase */
-import ConstructorioID from 'constructorio-id';
+const ConstructorioID = require('constructorio-id');
 
 // Modules
-import Search from './modules/search';
+const { Search } = require('./modules/search');
 
-export class ConstructorIO {
+class ConstructorIO {
   constructor(options = {}) {
     const {
       apiKey,
@@ -37,7 +37,9 @@ export class ConstructorIO {
    * Search
    * https://docs.constructor.io/rest-api.html#search
    */
-  Search() {
+  search() {
     return new Search(this.options);
   }
 }
+
+module.exports = ConstructorIO;

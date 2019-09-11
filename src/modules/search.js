@@ -1,14 +1,9 @@
-/* eslint-disable object-curly-newline, no-param-reassign */
+/* eslint-disable object-curly-newline, no-param-reassign, import/prefer-default-export */
 import qs from 'qs';
 import fetchPonyfill from 'fetch-ponyfill';
 import Promise from 'es6-promise';
 
 const { fetch } = fetchPonyfill({ Promise });
-
-/*
- * Search
- * - https://docs.constructor.io/rest-api.html#search
- */
 
 const createSearchUrl = (parameters, options) => {
   const { apiKey, version, serviceUrl, sessionId, clientId, segments, testCells } = options;
@@ -73,7 +68,11 @@ const createSearchUrl = (parameters, options) => {
   return `${serviceUrl}/search/${searchTerm}?${queryString}`;
 };
 
-export default class Search {
+/*
+ * Search
+ * - https://docs.constructor.io/rest-api.html#search
+ */
+export class Search {
   constructor(options) {
     this.options = options;
   }

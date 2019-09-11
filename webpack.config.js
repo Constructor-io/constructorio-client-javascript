@@ -1,19 +1,17 @@
 const webpack = require('webpack');
-const FileManagerPlugin = require('filemanager-webpack-plugin');
 const path = require('path');
 
-const version = process.env.npm_package_version;
 const clientFilename = 'constructorio-client';
-const versionId = `ciojs-search-${version}`;
+const versionId = `ciojs-search-${process.env.npm_package_version}`;
 
 /*
  * BASE CONFIGURATION
  */
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/constructorio.js',
 
   output: {
-    filename: `${clientFilename}-${version}.bundle.js`,
+    filename: `${clientFilename}.bundle.js`,
     path: path.resolve(__dirname, 'dist'),
     library: 'ConstructorIO',
     libraryTarget: 'var',
@@ -36,18 +34,6 @@ module.exports = {
     // Define global variable
     new webpack.DefinePlugin({
       SEARCH_VERSION: JSON.stringify(versionId),
-    }),
-
-    // Copy current distribution to create "latest" version
-    new FileManagerPlugin({
-      onEnd: {
-        copy: [
-          {
-            source: `./dist/${clientFilename}-${version}.bundle.js`,
-            destination: `./dist/${clientFilename}-latest.bundle.js`,
-          },
-        ],
-      },
     }),
   ],
 

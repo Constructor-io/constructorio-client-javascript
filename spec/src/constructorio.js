@@ -1,5 +1,5 @@
 import jsdom from 'mocha-jsdom';
-import ConstructorIO from '../../src/index';
+import ConstructorIO from '../../src/constructorio';
 
 const validApiKey = 'testing';
 
@@ -23,7 +23,6 @@ describe('ConstructorIO', () => {
 
     expect(instance).to.be.an('object');
     expect(instance).to.have.property('options').to.be.an('object');
-    expect(instance).to.have.property('Search').to.be.a('function');
     expect(instance.options).to.have.property('apiKey').to.eq(validApiKey);
     expect(instance.options).to.have.property('version').to.eq(global.SEARCH_VERSION);
     expect(instance.options).to.have.property('serviceUrl');

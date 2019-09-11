@@ -4,7 +4,7 @@
     <title>constructorio-client-javascript</title>
   </head>
   <body>
-    <script src="./dist/constructorio-client-latest.bundle.js"></script>
+    <script src="./dist/constructorio-client.bundle.js"></script>
     <script>
       (function() {
         if (window.ConstructorIO) {
@@ -12,7 +12,7 @@
             apiKey: 'testing'
           });
 
-          constructorio.Search().get({
+          constructorio.search().get({
             term: 'dogs'
           }).then(function(response) {
             console.log(response);
