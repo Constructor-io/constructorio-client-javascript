@@ -1,16 +1,18 @@
-/* eslint-disable import/prefer-default-export */
+/* eslint-disable import/prefer-default-export, camelcase */
 import ConstructorioID from 'constructorio-id';
 
 // Modules
 import Search from './modules/search';
 
 export class ConstructorIO {
-  constructor(options) {
+  constructor(options = {}) {
     const {
       apiKey,
       serviceUrl,
       segments,
       testCells,
+      clientId,
+      sessionId,
     } = options;
 
     if (!apiKey || typeof apiKey !== 'string') {
@@ -18,14 +20,14 @@ export class ConstructorIO {
     }
 
     // Initialize ID session
-    const { sessionId, clientId } = new ConstructorioID();
+    const { session_id, client_id } = new ConstructorioID();
 
     this.options = {
       apiKey,
       version: SEARCH_VERSION,
       serviceUrl: serviceUrl || 'https://ac.cnstrc.com',
-      sessionId,
-      clientId,
+      sessionId: sessionId || session_id,
+      clientId: clientId || client_id,
       segments,
       testCells,
     };
