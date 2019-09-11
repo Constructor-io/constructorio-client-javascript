@@ -1,9 +1,10 @@
+/* eslint-disable import/prefer-default-export */
 import ConstructorioID from 'constructorio-id';
 
 // Modules
 import Search from './modules/search';
 
-class ConstructorIO {
+export class ConstructorIO {
   constructor(options) {
     const {
       apiKey,
@@ -37,9 +38,4 @@ class ConstructorIO {
   Search() {
     return new Search(this.options);
   }
-}
-
-// Export class to window object
-if (window) {
-  window.ConstructorIO = ConstructorIO;
 }

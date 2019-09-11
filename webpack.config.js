@@ -10,11 +10,13 @@ const versionId = `ciojs-search-${version}`;
  * BASE CONFIGURATION
  */
 module.exports = {
-  entry: './src/constructorio.js',
+  entry: './src/index.js',
 
   output: {
     filename: `${clientFilename}-${version}.bundle.js`,
     path: path.resolve(__dirname, 'dist'),
+    library: 'ConstructorIO',
+    libraryTarget: 'var',
   },
 
   // Enable transpilation of ES6 to regular JavaScript
