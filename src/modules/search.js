@@ -5,14 +5,18 @@ import Promise from 'es6-promise';
 
 const { fetch } = fetchPonyfill({ Promise });
 
-const createSearchUrl = (parameters, options) => {
+const createSearchUrl = (term, parameters, options) => {
   const { apiKey, version, serviceUrl, sessionId, clientId, segments, testCells } = options;
   const query = { c: version };
-  let searchTerm = '';
 
   query.key = apiKey;
   query.i = clientId;
   query.s = sessionId;
+
+  // Validate term is provided
+  if (!term || typeof term !== 'string') {
+    throw new Error('Term is a required parameter of type string');
+  }
 
   // Pull test cells from options
   if (testCells) {
@@ -27,16 +31,7 @@ const createSearchUrl = (parameters, options) => {
   }
 
   if (parameters) {
-    const { term, page, resultsPerPage, filters, sortBy, sortOrder, section } = parameters;
-
-    if (!term || typeof term !== 'string') {
-      throw new Error('parameters.term is required and must be of type string');
-    }
-
-    // Pull term from parameters
-    if (term) {
-      searchTerm = encodeURIComponent(term);
-    }
+    const { page, resultsPerPage, filters, sortBy, sortOrder, section } = parameters;
 
     // Pull page from parameters
     if (page) {
@@ -67,12 +62,12 @@ const createSearchUrl = (parameters, options) => {
       query.section = section;
     }
   } else {
-    throw new Error('parameters are required and must be of type object');
+    throw new Error('Parameters are required and must be of type object');
   }
 
   const queryString = qs.stringify(query, { indices: false });
 
-  return `${serviceUrl}/search/${searchTerm}?${queryString}`;
+  return `${serviceUrl}/search/${encodeURIComponent(term)}?${queryString}`;
 };
 
 /*
@@ -84,8 +79,8 @@ export class Search {
     this.options = options;
   }
 
-  get(parameters) {
-    const requestUrl = createSearchUrl(parameters, this.options);
+  get(term, parameters) {
+    const requestUrl = createSearchUrl(term, parameters, this.options);
 
     return fetch(requestUrl)
       .then((response) => {

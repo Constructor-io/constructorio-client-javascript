@@ -3,6 +3,7 @@ const ConstructorioID = require('constructorio-id');
 
 // Modules
 const { Search } = require('./modules/search');
+const { Browse } = require('./modules/browse');
 
 class ConstructorIO {
   constructor(options = {}) {
@@ -39,6 +40,13 @@ class ConstructorIO {
    */
   search() {
     return new Search(this.options);
+  }
+
+  /*
+   * Browse
+   */
+  browse() {
+    return new Browse(this.options);
   }
 }
 

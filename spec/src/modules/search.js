@@ -27,16 +27,14 @@ describe('ConstructorIO - Search', () => {
       apiKey: testApiKey,
     }).search();
 
-    const searchParams = {
-      term: 'drill',
-      section: 'Products',
-    };
+    const term = 'drill';
+    const searchParams = { section: 'Products' };
 
-    search.get(searchParams).then((res) => {
+    search.get(term, searchParams).then((res) => {
       expect(res).to.have.property('request').to.be.an('object');
       expect(res).to.have.property('response').to.be.an('object');
       expect(res).to.have.property('result_id').to.be.an('string');
-      expect(res.request.term).to.equal(searchParams.term);
+      expect(res.request.term).to.equal(term);
       expect(res.request.section).to.equal(searchParams.section);
       expect(res.response).to.have.property('results').to.be.an('array');
       done();
@@ -50,12 +48,7 @@ describe('ConstructorIO - Search', () => {
       testCells,
     }).search();
 
-    const searchParams = {
-      term: 'drill',
-      section: 'Products',
-    };
-
-    search.get(searchParams).then((res) => {
+    search.get('drill', { section: 'Products' }).then((res) => {
       expect(res).to.have.property('request').to.be.an('object');
       expect(res).to.have.property('response').to.be.an('object');
       expect(res).to.have.property('result_id').to.be.an('string');
@@ -71,16 +64,11 @@ describe('ConstructorIO - Search', () => {
       segments,
     }).search();
 
-    const searchParams = {
-      term: 'drill',
-      section: 'Products',
-    };
-
-    search.get(searchParams).then((res) => {
+    search.get('drill', { section: 'Products' }).then((res) => {
       expect(res).to.have.property('request').to.be.an('object');
       expect(res).to.have.property('response').to.be.an('object');
       expect(res).to.have.property('result_id').to.be.an('string');
-      expect(res.request.segments).to.equal(searchParams.segments);
+      expect(res.request.us).to.deep.equal(segments);
       done();
     });
   });
@@ -91,12 +79,11 @@ describe('ConstructorIO - Search', () => {
     }).search();
 
     const searchParams = {
-      term: 'drill',
       section: 'Products',
       page: 1,
     };
 
-    search.get(searchParams).then((res) => {
+    search.get('drill', searchParams).then((res) => {
       expect(res).to.have.property('request').to.be.an('object');
       expect(res).to.have.property('response').to.be.an('object');
       expect(res).to.have.property('result_id').to.be.an('string');
@@ -111,12 +98,11 @@ describe('ConstructorIO - Search', () => {
     }).search();
 
     const searchParams = {
-      term: 'drill',
       section: 'Products',
       resultsPerPage: 2,
     };
 
-    search.get(searchParams).then((res) => {
+    search.get('drill', searchParams).then((res) => {
       expect(res).to.have.property('request').to.be.an('object');
       expect(res).to.have.property('response').to.be.an('object');
       expect(res).to.have.property('result_id').to.be.an('string');
@@ -133,14 +119,13 @@ describe('ConstructorIO - Search', () => {
     }).search();
 
     const searchParams = {
-      term: 'drill',
       section: 'Products',
       filters: {
         keywords: ['battery-powered'],
       },
     };
 
-    search.get(searchParams).then((res) => {
+    search.get('drill', searchParams).then((res) => {
       expect(res).to.have.property('request').to.be.an('object');
       expect(res).to.have.property('response').to.be.an('object');
       expect(res).to.have.property('result_id').to.be.an('string');
@@ -155,12 +140,11 @@ describe('ConstructorIO - Search', () => {
     }).search();
 
     const searchParams = {
-      term: 'drill',
       section: 'Products',
       sortBy: 'relevance',
     };
 
-    search.get(searchParams).then((res) => {
+    search.get('drill', searchParams).then((res) => {
       expect(res).to.have.property('request').to.be.an('object');
       expect(res).to.have.property('response').to.be.an('object');
       expect(res).to.have.property('result_id').to.be.an('string');
@@ -175,12 +159,11 @@ describe('ConstructorIO - Search', () => {
     }).search();
 
     const searchParams = {
-      term: 'drill',
       section: 'Products',
       sortOrder: 'ascending',
     };
 
-    search.get(searchParams).then((res) => {
+    search.get('drill', searchParams).then((res) => {
       expect(res).to.have.property('request').to.be.an('object');
       expect(res).to.have.property('response').to.be.an('object');
       expect(res).to.have.property('result_id').to.be.an('string');
@@ -194,12 +177,7 @@ describe('ConstructorIO - Search', () => {
       apiKey: testApiKey,
     }).search();
 
-    const searchParams = {
-      term: 'drill',
-      section: 'Products',
-    };
-
-    search.get(searchParams).then((res) => {
+    search.get('drill', { section: 'Products' }).then((res) => {
       expect(res).to.have.property('request').to.be.an('object');
       expect(res).to.have.property('response').to.be.an('object');
       expect(res).to.have.property('result_id').to.be.an('string');
@@ -216,12 +194,7 @@ describe('ConstructorIO - Search', () => {
       apiKey: testApiKey,
     }).search();
 
-    const searchParams = {
-      term: [],
-      section: 'Products',
-    };
-
-    expect(() => search.get(searchParams)).to.throw('parameters.term is required and must be of type string');
+    expect(() => search.get([], { section: 'Products' })).to.throw('Term is a required parameter of type string');
   });
 
   it('Should throw an error when no term is provided', () => {
@@ -229,12 +202,7 @@ describe('ConstructorIO - Search', () => {
       apiKey: testApiKey,
     }).search();
 
-    const searchParams = {
-      term: null,
-      section: 'Products',
-    };
-
-    expect(() => search.get(searchParams)).to.throw('parameters.term is required and must be of type string');
+    expect(() => search.get(null, { section: 'Products' })).to.throw('Term is a required parameter of type string');
   });
 
   it('Should throw an error when no parameters are provided', () => {
@@ -242,7 +210,7 @@ describe('ConstructorIO - Search', () => {
       apiKey: testApiKey,
     }).search();
 
-    expect(() => search.get()).to.throw('parameters are required and must be of type object');
+    expect(() => search.get('drill')).to.throw('Parameters are required and must be of type object');
   });
 
   it('Should throw an error when invalid page parameter is provided', (done) => {
@@ -251,12 +219,11 @@ describe('ConstructorIO - Search', () => {
     }).search();
 
     const searchParams = {
-      term: 'drill',
       section: 'Products',
       page: 'abc',
     };
 
-    return expect(search.get(searchParams))
+    return expect(search.get('drill', searchParams))
       .to.eventually.be.rejectedWith('BAD REQUEST')
       .and.be.an.instanceOf(Error)
       .notify(done);
@@ -268,12 +235,11 @@ describe('ConstructorIO - Search', () => {
     }).search();
 
     const searchParams = {
-      term: 'drill',
       section: 'Products',
       resultsPerPage: 'abc',
     };
 
-    return expect(search.get(searchParams))
+    return expect(search.get('drill', searchParams))
       .to.eventually.be.rejectedWith('BAD REQUEST')
       .and.be.an.instanceOf(Error)
       .notify(done);
@@ -285,12 +251,11 @@ describe('ConstructorIO - Search', () => {
     }).search();
 
     const searchParams = {
-      term: 'drill',
       section: 'Products',
       filters: 'abc',
     };
 
-    return expect(search.get(searchParams))
+    return expect(search.get('drill', searchParams))
       .to.eventually.be.rejectedWith('BAD REQUEST')
       .and.be.an.instanceOf(Error)
       .notify(done);
@@ -302,12 +267,11 @@ describe('ConstructorIO - Search', () => {
     }).search();
 
     const searchParams = {
-      term: 'drill',
       section: 'Products',
       sortBy: ['foo', 'bar'],
     };
 
-    return expect(search.get(searchParams))
+    return expect(search.get('drill', searchParams))
       .to.eventually.be.rejectedWith('BAD REQUEST')
       .and.be.an.instanceOf(Error)
       .notify(done);
@@ -319,12 +283,11 @@ describe('ConstructorIO - Search', () => {
     }).search();
 
     const searchParams = {
-      term: 'drill',
       section: 'Products',
       sortOrder: 123,
     };
 
-    return expect(search.get(searchParams))
+    return expect(search.get('drill', searchParams))
       .to.eventually.be.rejectedWith('BAD REQUEST')
       .and.be.an.instanceOf(Error)
       .notify(done);
@@ -336,11 +299,10 @@ describe('ConstructorIO - Search', () => {
     }).search();
 
     const searchParams = {
-      term: 'drill',
       section: 123,
     };
 
-    return expect(search.get(searchParams))
+    return expect(search.get('drill', searchParams))
       .to.eventually.be.rejectedWith('BAD REQUEST')
       .and.be.an.instanceOf(Error)
       .notify(done);
@@ -352,11 +314,10 @@ describe('ConstructorIO - Search', () => {
     }).search();
 
     const searchParams = {
-      term: 'drill',
       section: 'Products',
     };
 
-    return expect(search.get(searchParams))
+    return expect(search.get('drill', searchParams))
       .to.eventually.be.rejectedWith('BAD REQUEST')
       .and.be.an.instanceOf(Error)
       .notify(done);
