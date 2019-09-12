@@ -34,6 +34,7 @@
     "@babel/register": "^7.4.4",
     "babel-loader": "^8.0.5",
     "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
     "dotenv": "^8.1.0",
     "eslint": "^6.1.0",
     "eslint-config-airbnb": "^18.0.1",

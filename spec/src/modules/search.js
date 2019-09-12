@@ -1,7 +1,10 @@
 import jsdom from 'mocha-jsdom';
 import dotenv from 'dotenv';
+import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
 import ConstructorIO from '../../../src/constructorio';
 
+chai.use(chaiAsPromised);
 dotenv.config();
 
 const testApiKey = process.env.TEST_API_KEY;
@@ -19,7 +22,7 @@ describe('ConstructorIO - Search', () => {
     delete global.SEARCH_VERSION;
   });
 
-  it('should return a response with a valid term, section, and apiKey', (done) => {
+  it('Should return a response with a valid term and section', (done) => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
     }).search();
@@ -40,7 +43,7 @@ describe('ConstructorIO - Search', () => {
     });
   });
 
-  it('should return a response with a valid term, section, apiKey, and page', (done) => {
+  it('Should return a response with a valid term, section, and page', (done) => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
     }).search();
@@ -60,7 +63,7 @@ describe('ConstructorIO - Search', () => {
     });
   });
 
-  it('should return a response with a valid term, section, apiKey, and resultsPerPage', (done) => {
+  it('Should return a response with a valid term, section, and resultsPerPage', (done) => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
     }).search();
@@ -82,7 +85,7 @@ describe('ConstructorIO - Search', () => {
     });
   });
 
-  it('should return a response with a valid term, section, apiKey, and filters', (done) => {
+  it('Should return a response with a valid term, section, and filters', (done) => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
     }).search();
@@ -104,7 +107,7 @@ describe('ConstructorIO - Search', () => {
     });
   });
 
-  it('should return a response with a valid term, section, apiKey, and sortBy', (done) => {
+  it('Should return a response with a valid term, section, and sortBy', (done) => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
     }).search();
@@ -124,7 +127,7 @@ describe('ConstructorIO - Search', () => {
     });
   });
 
-  it('should return a response with a valid term, section, apiKey, and sortOrder', (done) => {
+  it('Should return a response with a valid term, section, and sortOrder', (done) => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
     }).search();
@@ -144,7 +147,7 @@ describe('ConstructorIO - Search', () => {
     });
   });
 
-  it('should return a response with a valid term, section, and apiKey with a result_id appended to each result', (done) => {
+  it('Should return a response with a valid term, section with a result_id appended to each result', (done) => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
     }).search();
@@ -166,12 +169,121 @@ describe('ConstructorIO - Search', () => {
     });
   });
 
-  // should throw an error when providing an invalid term
-  // should throw an error when providing no term
-  // should throw an error when providing a valid term and an invalid page
-  // should throw an error when providing a valid term and an invalid resultsPerPage
-  // should throw an error when providing a valid term and an invalid filters
-  // should throw an error when providing a valid term and an invalid sortBy
-  // should throw an error when providing a valid term and an invalid sortOrder
-  // should throw an error when providing a valid term and an invalid section
+  it('Should throw an error when invalid term is provided', () => {
+    const search = new ConstructorIO({
+      apiKey: testApiKey,
+    }).search();
+
+    const searchParams = {
+      term: [],
+      section: 'Products',
+    };
+
+    expect(() => search.get(searchParams)).to.throw('parameters.term is required and must be of type string');
+  });
+
+  it('Should throw an error when no term is provided', () => {
+    const search = new ConstructorIO({
+      apiKey: testApiKey,
+    }).search();
+
+    const searchParams = {
+      term: null,
+      section: 'Products',
+    };
+
+    expect(() => search.get(searchParams)).to.throw('parameters.term is required and must be of type string');
+  });
+
+  it('Should throw an error when no parameters are provided', () => {
+    const search = new ConstructorIO({
+      apiKey: testApiKey,
+    }).search();
+
+    expect(() => search.get()).to.throw('parameters are required and must be of type object');
+  });
+
+
+  it('Should throw an error when invalid page parameter is provided', (done) => {
+    const search = new ConstructorIO({
+      apiKey: testApiKey,
+    }).search();
+
+    const searchParams = {
+      term: 'drill',
+      section: 'Products',
+      page: 'abc',
+    };
+
+    return expect(search.get(searchParams))
+      .to.eventually.be.rejectedWith('BAD REQUEST')
+      .and.be.an.instanceOf(Error)
+      .notify(done);
+  });
+
+  it('Should throw an error when invalid filters parameter is provided', (done) => {
+    const search = new ConstructorIO({
+      apiKey: testApiKey,
+    }).search();
+
+    const searchParams = {
+      term: 'drill',
+      section: 'Products',
+      filters: 'abc',
+    };
+
+    return expect(search.get(searchParams))
+      .to.eventually.be.rejectedWith('BAD REQUEST')
+      .and.be.an.instanceOf(Error)
+      .notify(done);
+  });
+
+  it('Should throw an error when invalid sortOrder parameter is provided', (done) => {
+    const search = new ConstructorIO({
+      apiKey: testApiKey,
+    }).search();
+
+    const searchParams = {
+      term: 'drill',
+      section: 'Products',
+      sortOrder: 123,
+    };
+
+    return expect(search.get(searchParams))
+      .to.eventually.be.rejectedWith('BAD REQUEST')
+      .and.be.an.instanceOf(Error)
+      .notify(done);
+  });
+
+  it('Should throw an error when invalid section parameter is provided', (done) => {
+    const search = new ConstructorIO({
+      apiKey: testApiKey,
+    }).search();
+
+    const searchParams = {
+      term: 'drill',
+      section: 123,
+    };
+
+    return expect(search.get(searchParams))
+      .to.eventually.be.rejectedWith('BAD REQUEST')
+      .and.be.an.instanceOf(Error)
+      .notify(done);
+  });
+
+  it('Should throw an error when invalid apiKey is provided', (done) => {
+    const search = new ConstructorIO({
+      apiKey: 'fyzs7tfF8L161VoAXQ8u',
+    }).search();
+
+    const searchParams = {
+      term: 'drill',
+      section: 'Products',
+    };
+
+    return expect(search.get(searchParams))
+      .to.eventually.be.rejectedWith('BAD REQUEST')
+      .and.be.an.instanceOf(Error)
+      .notify(done);
+  });
 });

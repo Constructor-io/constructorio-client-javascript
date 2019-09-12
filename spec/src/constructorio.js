@@ -52,11 +52,11 @@ describe('ConstructorIO', () => {
     expect(() => new ConstructorIO({ apiKey: 123456789 })).to.throw('API key is a required parameter of type string');
   });
 
-  it('Should throw an error when invalid API key is provided', () => {
-    expect(() => new ConstructorIO()).to.throw('API key is a required parameter of type string');
+  it('Should throw an error when no API key is provided', () => {
+    expect(() => new ConstructorIO({ apiKey: null })).to.throw('API key is a required parameter of type string');
   });
 
-  it('Should throw an error when invalid API key is provided', () => {
-    expect(() => new ConstructorIO({ apiKey: null })).to.throw('API key is a required parameter of type string');
+  it('Should throw an error when no options are provided', () => {
+    expect(() => new ConstructorIO()).to.throw('API key is a required parameter of type string');
   });
 });

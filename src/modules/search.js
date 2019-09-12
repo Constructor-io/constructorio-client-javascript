@@ -66,6 +66,8 @@ const createSearchUrl = (parameters, options) => {
     if (section) {
       query.section = section;
     }
+  } else {
+    throw new Error('parameters are required and must be of type object');
   }
 
   const queryString = qs.stringify(query, { indices: false });
