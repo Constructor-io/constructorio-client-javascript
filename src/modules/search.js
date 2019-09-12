@@ -15,7 +15,7 @@ const createSearchUrl = (term, parameters, options) => {
 
   // Validate term is provided
   if (!term || typeof term !== 'string') {
-    throw new Error('Term is a required parameter of type string');
+    throw new Error('term is a required parameter of type string');
   }
 
   // Pull test cells from options
@@ -61,8 +61,6 @@ const createSearchUrl = (term, parameters, options) => {
     if (section) {
       query.section = section;
     }
-  } else {
-    throw new Error('Parameters are required and must be of type object');
   }
 
   const queryString = qs.stringify(query, { indices: false });
