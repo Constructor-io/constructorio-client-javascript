@@ -29,7 +29,7 @@ describe('ConstructorIO - Browse', () => {
   it('Should return a response with a valid groupId, and section', (done) => {
     const browse = new ConstructorIO({
       apiKey: testApiKey,
-    }).browse();
+    }).browse;
 
     browse.get(groupId, { section }).then((res) => {
       expect(res).to.have.property('request').to.be.an('object');
@@ -49,7 +49,7 @@ describe('ConstructorIO - Browse', () => {
     const browse = new ConstructorIO({
       apiKey: testApiKey,
       testCells,
-    }).browse();
+    }).browse;
 
     browse.get(groupId, { section }).then((res) => {
       expect(res).to.have.property('request').to.be.an('object');
@@ -65,7 +65,7 @@ describe('ConstructorIO - Browse', () => {
     const browse = new ConstructorIO({
       apiKey: testApiKey,
       segments,
-    }).browse();
+    }).browse;
 
     browse.get(groupId, { section }).then((res) => {
       expect(res).to.have.property('request').to.be.an('object');
@@ -79,7 +79,7 @@ describe('ConstructorIO - Browse', () => {
   it('Should return a response with a valid groupId, section, and page', (done) => {
     const browse = new ConstructorIO({
       apiKey: testApiKey,
-    }).browse();
+    }).browse;
 
     const browseParams = {
       section,
@@ -98,7 +98,7 @@ describe('ConstructorIO - Browse', () => {
   it('Should return a response with a valid groupId, section, and resultsPerPage', (done) => {
     const browse = new ConstructorIO({
       apiKey: testApiKey,
-    }).browse();
+    }).browse;
 
     const browseParams = {
       section,
@@ -119,7 +119,7 @@ describe('ConstructorIO - Browse', () => {
   it('Should return a response with a valid groupId, section, and filters', (done) => {
     const browse = new ConstructorIO({
       apiKey: testApiKey,
-    }).browse();
+    }).browse;
 
     const browseParams = {
       section,
@@ -142,7 +142,7 @@ describe('ConstructorIO - Browse', () => {
   it('Should return a response with a valid groupId, section, and sortBy', (done) => {
     const browse = new ConstructorIO({
       apiKey: testApiKey,
-    }).browse();
+    }).browse;
 
     const browseParams = {
       section,
@@ -161,7 +161,7 @@ describe('ConstructorIO - Browse', () => {
   it('Should return a response with a valid groupId, section, and sortOrder', (done) => {
     const browse = new ConstructorIO({
       apiKey: testApiKey,
-    }).browse();
+    }).browse;
 
     const browseParams = {
       section,
@@ -180,7 +180,7 @@ describe('ConstructorIO - Browse', () => {
   it('Should return a response with a valid groupId, section with a result_id appended to each result', (done) => {
     const browse = new ConstructorIO({
       apiKey: testApiKey,
-    }).browse();
+    }).browse;
 
     browse.get(groupId, { section }).then((res) => {
       expect(res).to.have.property('request').to.be.an('object');
@@ -197,7 +197,7 @@ describe('ConstructorIO - Browse', () => {
   it('Should throw an error when invalid groupId is provided', () => {
     const browse = new ConstructorIO({
       apiKey: testApiKey,
-    }).browse();
+    }).browse;
 
     expect(() => browse.get([], { section })).to.throw('groupId is a required parameter of type string');
   });
@@ -205,7 +205,7 @@ describe('ConstructorIO - Browse', () => {
   it('Should throw an error when no groupId is provided', () => {
     const browse = new ConstructorIO({
       apiKey: testApiKey,
-    }).browse();
+    }).browse;
 
     expect(() => browse.get(null, { section })).to.throw('groupId is a required parameter of type string');
   });
@@ -213,7 +213,7 @@ describe('ConstructorIO - Browse', () => {
   it('Should throw an error when invalid page parameter is provided', (done) => {
     const browse = new ConstructorIO({
       apiKey: testApiKey,
-    }).browse();
+    }).browse;
 
     const browseParams = {
       section,
@@ -229,7 +229,7 @@ describe('ConstructorIO - Browse', () => {
   it('Should throw an error when invalid resultsPerPage parameter is provided', (done) => {
     const browse = new ConstructorIO({
       apiKey: testApiKey,
-    }).browse();
+    }).browse;
 
     const browseParams = {
       section,
@@ -245,7 +245,7 @@ describe('ConstructorIO - Browse', () => {
   it('Should throw an error when invalid filters parameter is provided', (done) => {
     const browse = new ConstructorIO({
       apiKey: testApiKey,
-    }).browse();
+    }).browse;
 
     const browseParams = {
       section,
@@ -261,7 +261,7 @@ describe('ConstructorIO - Browse', () => {
   it('Should throw an error when invalid sortBy parameter is provided', (done) => {
     const browse = new ConstructorIO({
       apiKey: testApiKey,
-    }).browse();
+    }).browse;
 
     const browseParams = {
       section,
@@ -277,7 +277,7 @@ describe('ConstructorIO - Browse', () => {
   it('Should throw an error when invalid sortOrder parameter is provided', (done) => {
     const browse = new ConstructorIO({
       apiKey: testApiKey,
-    }).browse();
+    }).browse;
 
     const browseParams = {
       section,
@@ -293,7 +293,7 @@ describe('ConstructorIO - Browse', () => {
   it('Should throw an error when invalid section parameter is provided', (done) => {
     const browse = new ConstructorIO({
       apiKey: testApiKey,
-    }).browse();
+    }).browse;
 
     return expect(browse.get(groupId, { section: 123 }))
       .to.eventually.be.rejectedWith('BAD REQUEST')
@@ -304,7 +304,7 @@ describe('ConstructorIO - Browse', () => {
   it('Should throw an error when invalid apiKey is provided', (done) => {
     const browse = new ConstructorIO({
       apiKey: 'fyzs7tfF8L161VoAXQ8u',
-    }).browse();
+    }).browse;
 
     return expect(browse.get(groupId, { section }))
       .to.eventually.be.rejectedWith('BAD REQUEST')

@@ -2,8 +2,8 @@
 const ConstructorioID = require('constructorio-id');
 
 // Modules
-const { Search } = require('./modules/search');
-const { Browse } = require('./modules/browse');
+const { search } = require('./modules/search');
+const { browse } = require('./modules/browse');
 
 class ConstructorIO {
   constructor(options = {}) {
@@ -32,21 +32,10 @@ class ConstructorIO {
       segments,
       testCells,
     };
-  }
 
-  /*
-   * Search
-   * https://docs.constructor.io/rest-api.html#search
-   */
-  search() {
-    return new Search(this.options);
-  }
-
-  /*
-   * Browse
-   */
-  browse() {
-    return new Browse(this.options);
+    // Expose modules
+    this.search = search(this.options);
+    this.browse = browse(this.options);
   }
 }
 

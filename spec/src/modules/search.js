@@ -28,7 +28,7 @@ describe('ConstructorIO - Search', () => {
   it('Should return a response with a valid term, and section', (done) => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
-    }).search();
+    }).search;
 
     search.get(term, { section }).then((res) => {
       expect(res).to.have.property('request').to.be.an('object');
@@ -46,7 +46,7 @@ describe('ConstructorIO - Search', () => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
       testCells,
-    }).search();
+    }).search;
 
     search.get(term, { section }).then((res) => {
       expect(res).to.have.property('request').to.be.an('object');
@@ -62,7 +62,7 @@ describe('ConstructorIO - Search', () => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
       segments,
-    }).search();
+    }).search;
 
     search.get(term, { section }).then((res) => {
       expect(res).to.have.property('request').to.be.an('object');
@@ -76,7 +76,7 @@ describe('ConstructorIO - Search', () => {
   it('Should return a response with a valid term, section, and page', (done) => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
-    }).search();
+    }).search;
 
     const searchParams = {
       section,
@@ -95,7 +95,7 @@ describe('ConstructorIO - Search', () => {
   it('Should return a response with a valid term, section, and resultsPerPage', (done) => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
-    }).search();
+    }).search;
 
     const searchParams = {
       section,
@@ -116,7 +116,7 @@ describe('ConstructorIO - Search', () => {
   it('Should return a response with a valid term, section, and filters', (done) => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
-    }).search();
+    }).search;
 
     const searchParams = {
       section,
@@ -137,7 +137,7 @@ describe('ConstructorIO - Search', () => {
   it('Should return a response with a valid term, section, and sortBy', (done) => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
-    }).search();
+    }).search;
 
     const searchParams = {
       section,
@@ -156,7 +156,7 @@ describe('ConstructorIO - Search', () => {
   it('Should return a response with a valid term, section, and sortOrder', (done) => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
-    }).search();
+    }).search;
 
     const searchParams = {
       section,
@@ -175,7 +175,7 @@ describe('ConstructorIO - Search', () => {
   it('Should return a response with a valid term, section with a result_id appended to each result', (done) => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
-    }).search();
+    }).search;
 
     search.get(term, { section }).then((res) => {
       expect(res).to.have.property('request').to.be.an('object');
@@ -192,7 +192,7 @@ describe('ConstructorIO - Search', () => {
   it('Should throw an error when invalid term is provided', () => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
-    }).search();
+    }).search;
 
     expect(() => search.get([], { section })).to.throw('term is a required parameter of type string');
   });
@@ -200,7 +200,7 @@ describe('ConstructorIO - Search', () => {
   it('Should throw an error when no term is provided', () => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
-    }).search();
+    }).search;
 
     expect(() => search.get(null, { section })).to.throw('term is a required parameter of type string');
   });
@@ -208,7 +208,7 @@ describe('ConstructorIO - Search', () => {
   it('Should throw an error when invalid page parameter is provided', (done) => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
-    }).search();
+    }).search;
 
     const searchParams = {
       section,
@@ -224,7 +224,7 @@ describe('ConstructorIO - Search', () => {
   it('Should throw an error when invalid resultsPerPage parameter is provided', (done) => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
-    }).search();
+    }).search;
 
     const searchParams = {
       section,
@@ -240,7 +240,7 @@ describe('ConstructorIO - Search', () => {
   it('Should throw an error when invalid filters parameter is provided', (done) => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
-    }).search();
+    }).search;
 
     const searchParams = {
       section,
@@ -256,7 +256,7 @@ describe('ConstructorIO - Search', () => {
   it('Should throw an error when invalid sortBy parameter is provided', (done) => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
-    }).search();
+    }).search;
 
     const searchParams = {
       section,
@@ -272,7 +272,7 @@ describe('ConstructorIO - Search', () => {
   it('Should throw an error when invalid sortOrder parameter is provided', (done) => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
-    }).search();
+    }).search;
 
     const searchParams = {
       section,
@@ -288,7 +288,7 @@ describe('ConstructorIO - Search', () => {
   it('Should throw an error when invalid section parameter is provided', (done) => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
-    }).search();
+    }).search;
 
     return expect(search.get(term, { section: 123 }))
       .to.eventually.be.rejectedWith('BAD REQUEST')
@@ -299,7 +299,7 @@ describe('ConstructorIO - Search', () => {
   it('Should throw an error when invalid apiKey is provided', (done) => {
     const search = new ConstructorIO({
       apiKey: 'fyzs7tfF8L161VoAXQ8u',
-    }).search();
+    }).search;
 
     return expect(search.get(term, { section }))
       .to.eventually.be.rejectedWith('BAD REQUEST')
