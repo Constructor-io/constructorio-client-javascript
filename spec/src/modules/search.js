@@ -203,7 +203,6 @@ describe('ConstructorIO - Search', () => {
     expect(() => search.get()).to.throw('parameters are required and must be of type object');
   });
 
-
   it('Should throw an error when invalid page parameter is provided', (done) => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
@@ -221,6 +220,23 @@ describe('ConstructorIO - Search', () => {
       .notify(done);
   });
 
+  it('Should throw an error when invalid resultsPerPage parameter is provided', (done) => {
+    const search = new ConstructorIO({
+      apiKey: testApiKey,
+    }).search();
+
+    const searchParams = {
+      term: 'drill',
+      section: 'Products',
+      resultsPerPage: 'abc',
+    };
+
+    return expect(search.get(searchParams))
+      .to.eventually.be.rejectedWith('BAD REQUEST')
+      .and.be.an.instanceOf(Error)
+      .notify(done);
+  });
+
   it('Should throw an error when invalid filters parameter is provided', (done) => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
@@ -230,6 +246,23 @@ describe('ConstructorIO - Search', () => {
       term: 'drill',
       section: 'Products',
       filters: 'abc',
+    };
+
+    return expect(search.get(searchParams))
+      .to.eventually.be.rejectedWith('BAD REQUEST')
+      .and.be.an.instanceOf(Error)
+      .notify(done);
+  });
+
+  it('Should throw an error when invalid sortBy parameter is provided', (done) => {
+    const search = new ConstructorIO({
+      apiKey: testApiKey,
+    }).search();
+
+    const searchParams = {
+      term: 'drill',
+      section: 'Products',
+      sortBy: ['foo', 'bar'],
     };
 
     return expect(search.get(searchParams))
