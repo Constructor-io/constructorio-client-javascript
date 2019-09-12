@@ -22,7 +22,7 @@ describe('ConstructorIO - Search', () => {
     delete global.SEARCH_VERSION;
   });
 
-  it('Should return a response with a valid term and section', (done) => {
+  it('Should return a response with a valid term, and section', (done) => {
     const search = new ConstructorIO({
       apiKey: testApiKey,
     }).search();
@@ -39,6 +39,48 @@ describe('ConstructorIO - Search', () => {
       expect(res.request.term).to.equal(searchParams.term);
       expect(res.request.section).to.equal(searchParams.section);
       expect(res.response).to.have.property('results').to.be.an('array');
+      done();
+    });
+  });
+
+  it('Should return a response with a valid term, section and testCells', (done) => {
+    const testCells = { foo: 'bar' };
+    const search = new ConstructorIO({
+      apiKey: testApiKey,
+      testCells,
+    }).search();
+
+    const searchParams = {
+      term: 'drill',
+      section: 'Products',
+    };
+
+    search.get(searchParams).then((res) => {
+      expect(res).to.have.property('request').to.be.an('object');
+      expect(res).to.have.property('response').to.be.an('object');
+      expect(res).to.have.property('result_id').to.be.an('string');
+      expect(res.request).to.have.property(`ef-${Object.keys(testCells)[0]}`).to.equal(Object.values(testCells)[0]);
+      done();
+    });
+  });
+
+  it('Should return a response with a valid term, section and segments', (done) => {
+    const segments = ['segments'];
+    const search = new ConstructorIO({
+      apiKey: testApiKey,
+      segments,
+    }).search();
+
+    const searchParams = {
+      term: 'drill',
+      section: 'Products',
+    };
+
+    search.get(searchParams).then((res) => {
+      expect(res).to.have.property('request').to.be.an('object');
+      expect(res).to.have.property('response').to.be.an('object');
+      expect(res).to.have.property('result_id').to.be.an('string');
+      expect(res.request.segments).to.equal(searchParams.segments);
       done();
     });
   });

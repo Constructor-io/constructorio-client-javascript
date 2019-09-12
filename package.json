@@ -10,7 +10,7 @@
     "lint": "eslint '**/*.js'",
     "version": "npm run build && git add ./dist/*",
     "test": "mocha ./spec/* --opts ./mocha.opts --recursive",
-    "precoverage": "rm -rf ./coverage",
+    "precoverage": "rm -rf ./coverage && rm -rf ./.nyc_output",
     "coverage": "nyc --all --reporter=html npm test",
     "postcoverage": "http-server ./coverage -p 8081 -o -c-1"
   },
