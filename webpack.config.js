@@ -13,7 +13,7 @@ module.exports = {
   output: {
     filename: `${clientFilename}.bundle.js`,
     path: path.resolve(__dirname, 'dist'),
-    library: 'ConstructorIO',
+    library: 'ConstructorIOClient',
     libraryTarget: 'var',
   },
 

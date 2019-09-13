@@ -7,12 +7,12 @@
     <script src="./dist/constructorio-client.bundle.js"></script>
     <script>
       (function() {
-        if (window.ConstructorIO) {
-          var constructorio = new window.ConstructorIO({
+        if (window.ConstructorIOClient) {
+          var constructorio = new window.ConstructorIOClient({
             apiKey: 'key'
           });
 
-          constructorio.search.get('dogs', {
+          constructorio.search.getSearchResults('dogs', {
             section: 'Products'
           }).then(function(response) {
             console.log(response);
