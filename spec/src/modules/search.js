@@ -75,100 +75,93 @@ describe('ConstructorIO - Search', () => {
     });
 
     it('Should return a response with a valid query, section, and page', (done) => {
+      const page = 1;
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
       });
 
-      const searchParams = {
+      search.getSearchResults(query, {
         section,
-        page: 1,
-      };
-
-      search.getSearchResults(query, searchParams).then((res) => {
+        page,
+      }).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.page).to.equal(searchParams.page);
+        expect(res.request.page).to.equal(page);
         done();
       });
     });
 
     it('Should return a response with a valid query, section, and resultsPerPage', (done) => {
+      const resultsPerPage = 2;
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
       });
 
-      const searchParams = {
+      search.getSearchResults(query, {
         section,
-        resultsPerPage: 2,
-      };
-
-      search.getSearchResults(query, searchParams).then((res) => {
+        resultsPerPage,
+      }).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.num_results_per_page).to.equal(2);
+        expect(res.request.num_results_per_page).to.equal(resultsPerPage);
         expect(res.response).to.have.property('results').to.be.an('array');
-        expect(res.response.results.length).to.equal(2);
+        expect(res.response.results.length).to.equal(resultsPerPage);
         done();
       });
     });
 
     it('Should return a response with a valid query, section, and filters', (done) => {
+      const filters = { keywords: ['battery-powered'] };
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
       });
 
-      const searchParams = {
+      search.getSearchResults(query, {
         section,
-        filters: {
-          keywords: ['battery-powered'],
-        },
-      };
-
-      search.getSearchResults(query, searchParams).then((res) => {
+        filters,
+      }).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.filters).to.deep.equal(searchParams.filters);
+        expect(res.request.filters).to.deep.equal(filters);
         done();
       });
     });
 
     it('Should return a response with a valid query, section, and sortBy', (done) => {
+      const sortBy = 'relevance';
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
       });
 
-      const searchParams = {
+      search.getSearchResults(query, {
         section,
-        sortBy: 'relevance',
-      };
-
-      search.getSearchResults(query, searchParams).then((res) => {
+        sortBy,
+      }).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.sort_by).to.deep.equal(searchParams.sortBy);
+        expect(res.request.sort_by).to.deep.equal(sortBy);
         done();
       });
     });
 
     it('Should return a response with a valid query, section, and sortOrder', (done) => {
+      const sortOrder = 'ascending';
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
       });
 
-      const searchParams = {
+      search.getSearchResults(query, {
         section,
-        sortOrder: 'ascending',
-      };
-
-      search.getSearchResults(query, searchParams).then((res) => {
+        sortOrder,
+      }).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.sort_order).to.deep.equal(searchParams.sortOrder);
+        expect(res.request.sort_order).to.deep.equal(sortOrder);
         done();
       });
     });
