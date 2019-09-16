@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* eslint-disable import/prefer-default-export, object-curly-newline */
 import qs from 'qs';
 import fetchPonyfill from 'fetch-ponyfill';
 import Promise from 'es6-promise';
@@ -79,6 +79,7 @@ export function autocomplete(options) {
                 if (sectionItems.length) {
                   // Append `result_id` to each section item
                   sectionItems.forEach((item) => {
+                    // eslint-disable-next-line no-param-reassign
                     item.result_id = json.result_id;
                   });
                 }

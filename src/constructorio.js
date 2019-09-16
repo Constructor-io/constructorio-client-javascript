@@ -1,4 +1,4 @@
-/* eslint-disable import/prefer-default-export, camelcase */
+/* eslint-disable camelcase */
 const ConstructorioID = require('constructorio-id');
 
 // Modules

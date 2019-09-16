@@ -1,4 +1,4 @@
-/* eslint-disable object-curly-newline, no-param-reassign, import/prefer-default-export */
+/* eslint-disable import/prefer-default-export, object-curly-newline */
 import qs from 'qs';
 import fetchPonyfill from 'fetch-ponyfill';
 import Promise from 'es6-promise';
@@ -151,6 +151,7 @@ export function search(options) {
           if (json.response && json.response.results) {
             if (json.result_id) {
               json.response.results.forEach((result) => {
+                // eslint-disable-next-line no-param-reassign
                 result.result_id = json.result_id;
               });
             }
@@ -179,6 +180,7 @@ export function search(options) {
             if (json.result_id) {
               // Append `result_id` to each result item
               json.response.results.forEach((result) => {
+                // eslint-disable-next-line no-param-reassign
                 result.result_id = json.result_id;
               });
             }

@@ -17,9 +17,7 @@ describe('ConstructorIO', () => {
   });
 
   it('Should return an instance when valid API key is provided', () => {
-    const instance = new ConstructorIO({
-      apiKey: validApiKey,
-    });
+    const instance = new ConstructorIO({ apiKey: validApiKey });
 
     expect(instance).to.be.an('object');
     expect(instance).to.have.property('options').to.be.an('object');
@@ -34,7 +32,6 @@ describe('ConstructorIO', () => {
     const clientId = 'client-id';
     const sessionId = 'session-id';
     const serviceUrl = 'http://constructor.io';
-
     const instance = new ConstructorIO({
       apiKey: validApiKey,
       clientId,
