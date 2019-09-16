@@ -10,7 +10,7 @@ const { fetch } = fetchPonyfill({ Promise });
  * - https://docs.constructor.io/rest-api.html#search
  */
 export function search(options) {
-  // Create URL from supplied query and parameters
+  // Create URL from supplied query (term) and parameters
   const createSearchUrl = (query, parameters) => {
     const { apiKey, version, serviceUrl, sessionId, clientId, segments, testCells } = options;
     const queryParams = { c: version };
@@ -19,7 +19,7 @@ export function search(options) {
     queryParams.i = clientId;
     queryParams.s = sessionId;
 
-    // Validate query is provided
+    // Validate query (term) is provided
     if (!query || typeof query !== 'string') {
       throw new Error('query is a required parameter of type string');
     }
@@ -49,6 +49,7 @@ export function search(options) {
         queryParams.num_results_per_page = resultsPerPage;
       }
 
+      // Pull filters from parameters
       if (filters) {
         queryParams.filters = filters;
       }
@@ -134,7 +135,7 @@ export function search(options) {
   };
 
   return {
-    // Get search results for supplied query
+    // Get search results for supplied query (term);
     getSearchResults: (query, parameters) => {
       const requestUrl = createSearchUrl(query, parameters, options);
 
@@ -147,7 +148,7 @@ export function search(options) {
           throw new Error(response.statusText);
         })
         .then((json) => {
-          if (json.response) {
+          if (json.response && json.response.results) {
             if (json.result_id) {
               json.response.results.forEach((result) => {
                 result.result_id = json.result_id;
@@ -157,11 +158,11 @@ export function search(options) {
             return json;
           }
 
-          throw new Error('No response object in result');
+          throw new Error('getSearchResults response data is malformed');
         });
     },
 
-    // Get browse results for supplied group ID
+    // Get browse results
     getBrowseResults(parameters) {
       const requestUrl = createBrowseUrl(parameters, options);
 
@@ -174,8 +175,9 @@ export function search(options) {
           throw new Error(response.statusText);
         })
         .then((json) => {
-          if (json.response) {
+          if (json.response && json.response.results) {
             if (json.result_id) {
+              // Append `result_id` to each result item
               json.response.results.forEach((result) => {
                 result.result_id = json.result_id;
               });
@@ -184,7 +186,7 @@ export function search(options) {
             return json;
           }
 
-          throw new Error('No response object in result');
+          throw new Error('getBrowseResults response data is malformed');
         });
     },
   };

@@ -9,12 +9,36 @@
       (function() {
         if (window.ConstructorIOClient) {
           var constructorio = new window.ConstructorIOClient({
+            // NOTE: apiKey should not be checked in to version control
             apiKey: 'key'
           });
 
+          /*
+           * Search
+           * - https://docs.constructor.io/rest-api.html#search
+           */
+          /*
           constructorio.search.getSearchResults('dogs', {
             section: 'Products'
           }).then(function(response) {
+            console.log(response);
+          }).catch(function(err) {
+            console.error(err);
+          });
+          constructorio.search.getBrowseResults('dogs', {
+            section: 'Products'
+          }).then(function(response) {
+            console.log(response);
+          }).catch(function(err) {
+            console.error(err);
+          });
+          */
+
+          /*
+           * Autocomplete
+           * - https://docs.constructor.io/rest-api.html#autocomplete
+           */
+          constructorio.autocomplete.getResults('drill').then(function(response) {
             console.log(response);
           }).catch(function(err) {
             console.error(err);
