@@ -165,7 +165,7 @@ export function search(options) {
 
     // Get browse results
     getBrowseResults(parameters) {
-      const requestUrl = createBrowseUrl(parameters, options);
+      const requestUrl = createBrowseUrl(parameters);
 
       return fetch(requestUrl)
         .then((response) => {

@@ -58,7 +58,7 @@ export function autocomplete(options) {
   return {
     // Get autocomplete results for supplied query (term)
     getResults: (query, parameters) => {
-      const requestUrl = createAutocompleteUrl(query, parameters, options);
+      const requestUrl = createAutocompleteUrl(query, parameters);
 
       return fetch(requestUrl)
         .then((response) => {

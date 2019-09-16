@@ -4,6 +4,7 @@ const ConstructorioID = require('constructorio-id');
 // Modules
 const { search } = require('./modules/search');
 const { autocomplete } = require('./modules/autocomplete');
+const { recommendations } = require('./modules/recommendations');
 
 class ConstructorIO {
   constructor(options = {}) {
@@ -36,6 +37,7 @@ class ConstructorIO {
     // Expose modules
     this.search = search(this.options);
     this.autocomplete = autocomplete(this.options);
+    this.recommendations = recommendations(this.options);
   }
 }
 

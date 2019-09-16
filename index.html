@@ -38,7 +38,34 @@
            * Autocomplete
            * - https://docs.constructor.io/rest-api.html#autocomplete
            */
+          /*
           constructorio.autocomplete.getResults('drill').then(function(response) {
+            console.log(response);
+          }).catch(function(err) {
+            console.error(err);
+          });
+          */
+
+          /*
+           * Recommendations
+           * - https://docs.constructor.io
+           */
+          constructorio.recommendations.getAlternativeItems(12345).then(function(response) {
+            console.log(response);
+          }).catch(function(err) {
+            console.error(err);
+          });
+          constructorio.recommendations.getComplimentaryItems(12345).then(function(response) {
+            console.log(response);
+          }).catch(function(err) {
+            console.error(err);
+          });
+          constructorio.recommendations.getRecentlyViewedItems().then(function(response) {
+            console.log(response);
+          }).catch(function(err) {
+            console.error(err);
+          });
+          constructorio.recommendations.getUserFeaturedItems().then(function(response) {
             console.log(response);
           }).catch(function(err) {
             console.error(err);
