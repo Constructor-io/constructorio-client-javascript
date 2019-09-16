@@ -75,18 +75,13 @@ export function search(options) {
   };
 
   // Create URL from supplied group ID and parameters
-  const createBrowseUrl = (groupId, parameters) => {
+  const createBrowseUrl = (parameters) => {
     const { apiKey, version, serviceUrl, sessionId, clientId, segments, testCells } = options;
     const query = { c: version };
 
     query.key = apiKey;
     query.i = clientId;
     query.s = sessionId;
-
-    // Validate groupId is provided
-    if (!groupId || typeof groupId !== 'string') {
-      throw new Error('groupId is a required parameter of type string');
-    }
 
     // Pull test cells from options
     if (testCells) {
@@ -133,13 +128,6 @@ export function search(options) {
       }
     }
 
-    query.filters = query.filters || {};
-
-    // Apply group_id filter
-    if (typeof query.filters === 'object') {
-      query.filters.group_id = groupId;
-    }
-
     const queryString = qs.stringify(query, { indices: false });
 
     return `${serviceUrl}/search/?${queryString}`;
@@ -174,8 +162,8 @@ export function search(options) {
     },
 
     // Get browse results for supplied group ID
-    getBrowseResults(groupId, parameters) {
-      const requestUrl = createBrowseUrl(groupId, parameters, options);
+    getBrowseResults(parameters) {
+      const requestUrl = createBrowseUrl(parameters, options);
 
       return fetch(requestUrl)
         .then((response) => {

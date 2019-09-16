@@ -310,8 +310,8 @@ describe('ConstructorIO - Search', () => {
   });
 
   describe('getBrowseResults', () => {
-    const groupId = 'drill_collection';
     const section = 'Products';
+    const groupId = 'drill_collection';
 
     beforeEach(() => {
       global.SEARCH_VERSION = 'cio-mocha';
@@ -321,12 +321,15 @@ describe('ConstructorIO - Search', () => {
       delete global.SEARCH_VERSION;
     });
 
-    it('Should return a response with a valid groupId, and section', (done) => {
+    it('Should return a response with a valid group_id, and section', (done) => {
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
       });
 
-      search.getBrowseResults(groupId, { section }).then((res) => {
+      search.getBrowseResults({
+        section,
+        filters: { group_id: groupId },
+      }).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
@@ -339,14 +342,17 @@ describe('ConstructorIO - Search', () => {
       });
     });
 
-    it('Should return a response with a valid groupId, section and testCells', (done) => {
+    it('Should return a response with a valid group_id, section and testCells', (done) => {
       const testCells = { foo: 'bar' };
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
         testCells,
       });
 
-      search.getBrowseResults(groupId, { section }).then((res) => {
+      search.getBrowseResults({
+        section,
+        filters: { group_id: groupId },
+      }).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
@@ -355,14 +361,17 @@ describe('ConstructorIO - Search', () => {
       });
     });
 
-    it('Should return a response with a valid groupId, section and segments', (done) => {
+    it('Should return a response with a valid group_id, section and segments', (done) => {
       const segments = ['segments'];
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
         segments,
       });
 
-      search.getBrowseResults(groupId, { section }).then((res) => {
+      search.getBrowseResults({
+        section,
+        filters: { group_id: groupId },
+      }).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
@@ -371,113 +380,112 @@ describe('ConstructorIO - Search', () => {
       });
     });
 
-    it('Should return a response with a valid groupId, section, and page', (done) => {
+    it('Should return a response with a valid group_id, section, and page', (done) => {
+      const page = 1;
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
       });
 
-      const searchParams = {
+      search.getBrowseResults({
         section,
-        page: 1,
-      };
-
-      search.getBrowseResults(groupId, searchParams).then((res) => {
+        filters: { group_id: groupId },
+        page,
+      }).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.page).to.equal(searchParams.page);
+        expect(res.request.page).to.equal(page);
         done();
       });
     });
 
-    it('Should return a response with a valid groupId, section, and resultsPerPage', (done) => {
+    it('Should return a response with a valid group_id, section, and resultsPerPage', (done) => {
+      const resultsPerPage = 2;
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
       });
 
-      const searchParams = {
+      search.getBrowseResults({
         section,
-        resultsPerPage: 2,
-      };
-
-      search.getBrowseResults(groupId, searchParams).then((res) => {
+        filters: { group_id: groupId },
+        resultsPerPage,
+      }).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.num_results_per_page).to.equal(2);
+        expect(res.request.num_results_per_page).to.equal(resultsPerPage);
         expect(res.response).to.have.property('results').to.be.an('array');
-        expect(res.response.results.length).to.equal(2);
+        expect(res.response.results.length).to.equal(resultsPerPage);
         done();
       });
     });
 
-    it('Should return a response with a valid groupId, section, and filters', (done) => {
+    it('Should return a response with a valid group_id, section, and additional filters', (done) => {
+      const filters = { keywords: ['battery-powered'] };
+      const combinedFilters = Object.assign({}, filters, { group_id: [groupId] });
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
       });
 
-      const searchParams = {
+      search.getBrowseResults({
         section,
-        filters: {
-          keywords: ['battery-powered'],
-        },
-      };
-
-      search.getBrowseResults(groupId, searchParams).then((res) => {
+        filters: combinedFilters,
+      }).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.filters).to.deep.equal(Object.assign({}, searchParams.filters, {
-          group_id: [groupId],
-        }));
+        expect(res.request.filters).to.deep.equal(combinedFilters);
         done();
       });
     });
 
-    it('Should return a response with a valid groupId, section, and sortBy', (done) => {
+    it('Should return a response with a valid group_id, section, and sortBy', (done) => {
+      const sortBy = 'relevance';
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
       });
 
-      const searchParams = {
+      search.getBrowseResults({
         section,
-        sortBy: 'relevance',
-      };
-
-      search.getBrowseResults(groupId, searchParams).then((res) => {
+        filters: { group_id: groupId },
+        sortBy,
+      }).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.sort_by).to.deep.equal(searchParams.sortBy);
+        expect(res.request.sort_by).to.deep.equal(sortBy);
         done();
       });
     });
 
-    it('Should return a response with a valid groupId, section, and sortOrder', (done) => {
+    it('Should return a response with a valid group_id, section, and sortOrder', (done) => {
+      const sortOrder = 'ascending';
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
       });
 
-      const searchParams = {
+      search.getBrowseResults({
         section,
-        sortOrder: 'ascending',
-      };
-
-      search.getBrowseResults(groupId, searchParams).then((res) => {
+        filters: { group_id: groupId },
+        sortOrder,
+      }).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.sort_order).to.deep.equal(searchParams.sortOrder);
+        expect(res.request.sort_order).to.deep.equal(sortOrder);
         done();
       });
     });
 
-    it('Should return a response with a valid groupId, section with a result_id appended to each result', (done) => {
+    it('Should return a response with a valid group_id, section with a result_id appended to each result', (done) => {
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
       });
 
-      search.getBrowseResults(groupId, { section }).then((res) => {
+      search.getBrowseResults({
+        section,
+        filters: { group_id: groupId },
+      }).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
@@ -489,20 +497,15 @@ describe('ConstructorIO - Search', () => {
       });
     });
 
-    it('Should throw an error when invalid groupId is provided', () => {
+    it('Should throw an error when no parameters are provided', (done) => {
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
       });
 
-      expect(() => search.getBrowseResults([], { section })).to.throw('groupId is a required parameter of type string');
-    });
-
-    it('Should throw an error when no groupId is provided', () => {
-      const { search } = new ConstructorIO({
-        apiKey: testApiKey,
-      });
-
-      expect(() => search.getBrowseResults(null, { section })).to.throw('groupId is a required parameter of type string');
+      return expect(search.getBrowseResults())
+        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .and.be.an.instanceOf(Error)
+        .notify(done);
     });
 
     it('Should throw an error when invalid page parameter is provided', (done) => {
@@ -510,29 +513,25 @@ describe('ConstructorIO - Search', () => {
         apiKey: testApiKey,
       });
 
-      const searchParams = {
+      return expect(search.getBrowseResults({
         section,
+        filters: { group_id: groupId },
         page: 'abc',
-      };
-
-      return expect(search.getBrowseResults(groupId, searchParams))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+      })).to.eventually.be.rejectedWith('BAD REQUEST')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
 
-    it('Should throw an error when invalid resultsPerPage parameter is provided', (done) => {
+    it('Should throw an error when invalid page parameter is provided', (done) => {
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
       });
 
-      const searchParams = {
+      return expect(search.getBrowseResults({
         section,
+        filters: { group_id: groupId },
         resultsPerPage: 'abc',
-      };
-
-      return expect(search.getBrowseResults(groupId, searchParams))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+      })).to.eventually.be.rejectedWith('BAD REQUEST')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -542,13 +541,10 @@ describe('ConstructorIO - Search', () => {
         apiKey: testApiKey,
       });
 
-      const searchParams = {
+      return expect(search.getBrowseResults({
         section,
         filters: 'abc',
-      };
-
-      return expect(search.getBrowseResults(groupId, searchParams))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+      })).to.eventually.be.rejectedWith('BAD REQUEST')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -558,13 +554,11 @@ describe('ConstructorIO - Search', () => {
         apiKey: testApiKey,
       });
 
-      const searchParams = {
+      return expect(search.getBrowseResults({
         section,
-        sortBy: ['foo', 'bar'],
-      };
-
-      return expect(search.getBrowseResults(groupId, searchParams))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+        filters: { group_id: groupId },
+        sortBy: { foo: 'bar' },
+      })).to.eventually.be.rejectedWith('BAD REQUEST')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -574,13 +568,11 @@ describe('ConstructorIO - Search', () => {
         apiKey: testApiKey,
       });
 
-      const searchParams = {
+      return expect(search.getBrowseResults({
         section,
-        sortOrder: 123,
-      };
-
-      return expect(search.getBrowseResults(groupId, searchParams))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+        filters: { group_id: groupId },
+        sortOrder: 'abc',
+      })).to.eventually.be.rejectedWith('BAD REQUEST')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -590,8 +582,10 @@ describe('ConstructorIO - Search', () => {
         apiKey: testApiKey,
       });
 
-      return expect(search.getBrowseResults(groupId, { section: 123 }))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+      return expect(search.getBrowseResults({
+        section: 123,
+        filters: { group_id: groupId },
+      })).to.eventually.be.rejectedWith('BAD REQUEST')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
