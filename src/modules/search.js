@@ -10,30 +10,30 @@ const { fetch } = fetchPonyfill({ Promise });
  * - https://docs.constructor.io/rest-api.html#search
  */
 export function search(options) {
-  // Create URL from supplied term and parameters
-  const createSearchUrl = (term, parameters) => {
+  // Create URL from supplied query and parameters
+  const createSearchUrl = (query, parameters) => {
     const { apiKey, version, serviceUrl, sessionId, clientId, segments, testCells } = options;
-    const query = { c: version };
+    const queryParams = { c: version };
 
-    query.key = apiKey;
-    query.i = clientId;
-    query.s = sessionId;
+    queryParams.key = apiKey;
+    queryParams.i = clientId;
+    queryParams.s = sessionId;
 
-    // Validate term is provided
-    if (!term || typeof term !== 'string') {
-      throw new Error('term is a required parameter of type string');
+    // Validate query is provided
+    if (!query || typeof query !== 'string') {
+      throw new Error('query is a required parameter of type string');
     }
 
     // Pull test cells from options
     if (testCells) {
       Object.keys(testCells).forEach((testCellKey) => {
-        query[`ef-${testCellKey}`] = testCells[testCellKey];
+        queryParams[`ef-${testCellKey}`] = testCells[testCellKey];
       });
     }
 
     // Pull user segments from options
     if (segments && segments.length) {
-      query.us = segments;
+      queryParams.us = segments;
     }
 
     if (parameters) {
@@ -41,58 +41,58 @@ export function search(options) {
 
       // Pull page from parameters
       if (page) {
-        query.page = page;
+        queryParams.page = page;
       }
 
       // Pull results per page from parameters
       if (resultsPerPage) {
-        query.num_results_per_page = resultsPerPage;
+        queryParams.num_results_per_page = resultsPerPage;
       }
 
       if (filters) {
-        query.filters = filters;
+        queryParams.filters = filters;
       }
 
       // Pull sort by from parameters
       if (sortBy) {
-        query.sort_by = sortBy;
+        queryParams.sort_by = sortBy;
       }
 
       // Pull sort order from parameters
       if (sortOrder) {
-        query.sort_order = sortOrder;
+        queryParams.sort_order = sortOrder;
       }
 
       // Pull section from parameters
       if (section) {
-        query.section = section;
+        queryParams.section = section;
       }
     }
 
-    const queryString = qs.stringify(query, { indices: false });
+    const queryString = qs.stringify(queryParams, { indices: false });
 
-    return `${serviceUrl}/search/${encodeURIComponent(term)}?${queryString}`;
+    return `${serviceUrl}/search/${encodeURIComponent(query)}?${queryString}`;
   };
 
   // Create URL from supplied group ID and parameters
   const createBrowseUrl = (parameters) => {
     const { apiKey, version, serviceUrl, sessionId, clientId, segments, testCells } = options;
-    const query = { c: version };
+    const queryParams = { c: version };
 
-    query.key = apiKey;
-    query.i = clientId;
-    query.s = sessionId;
+    queryParams.key = apiKey;
+    queryParams.i = clientId;
+    queryParams.s = sessionId;
 
     // Pull test cells from options
     if (testCells) {
       Object.keys(testCells).forEach((testCellKey) => {
-        query[`ef-${testCellKey}`] = testCells[testCellKey];
+        queryParams[`ef-${testCellKey}`] = testCells[testCellKey];
       });
     }
 
     // Pull user segments from options
     if (segments && segments.length) {
-      query.us = segments;
+      queryParams.us = segments;
     }
 
     if (parameters) {
@@ -100,43 +100,43 @@ export function search(options) {
 
       // Pull page from parameters
       if (page) {
-        query.page = page;
+        queryParams.page = page;
       }
 
       // Pull results per page from parameters
       if (resultsPerPage) {
-        query.num_results_per_page = resultsPerPage;
+        queryParams.num_results_per_page = resultsPerPage;
       }
 
       if (filters) {
-        query.filters = filters;
+        queryParams.filters = filters;
       }
 
       // Pull sort by from parameters
       if (sortBy) {
-        query.sort_by = sortBy;
+        queryParams.sort_by = sortBy;
       }
 
       // Pull sort order from parameters
       if (sortOrder) {
-        query.sort_order = sortOrder;
+        queryParams.sort_order = sortOrder;
       }
 
       // Pull section from parameters
       if (section) {
-        query.section = section;
+        queryParams.section = section;
       }
     }
 
-    const queryString = qs.stringify(query, { indices: false });
+    const queryString = qs.stringify(queryParams, { indices: false });
 
     return `${serviceUrl}/search/?${queryString}`;
   };
 
   return {
-    // Get search results for supplied term
-    getSearchResults: (term, parameters) => {
-      const requestUrl = createSearchUrl(term, parameters, options);
+    // Get search results for supplied query
+    getSearchResults: (query, parameters) => {
+      const requestUrl = createSearchUrl(query, parameters, options);
 
       return fetch(requestUrl)
         .then((response) => {
