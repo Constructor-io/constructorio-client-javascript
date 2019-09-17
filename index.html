@@ -10,21 +10,21 @@
         if (window.ConstructorIOClient) {
           var constructorio = new window.ConstructorIOClient({
             // NOTE: apiKey should not be checked in to version control
-            apiKey: 'key'
+            apiKey: 'ZqXaOfXuBWD4s3XzCI1q'
           });
 
           /*
            * Search
            * - https://docs.constructor.io/rest-api.html#search
            */
-          /*
-          constructorio.search.getSearchResults('dogs', {
+          constructorio.search.getSearchResults('drill', {
             section: 'Products'
           }).then(function(response) {
             console.log(response);
           }).catch(function(err) {
             console.error(err);
           });
+          /*
           constructorio.search.getBrowseResults('dogs', {
             section: 'Products'
           }).then(function(response) {
@@ -50,12 +50,13 @@
            * Recommendations
            * - https://docs.constructor.io
            */
+          /*
           constructorio.recommendations.getAlternativeItems(12345).then(function(response) {
             console.log(response);
           }).catch(function(err) {
             console.error(err);
           });
-          constructorio.recommendations.getComplimentaryItems(12345).then(function(response) {
+          constructorio.recommendations.getComplementaryItems(12345).then(function(response) {
             console.log(response);
           }).catch(function(err) {
             console.error(err);
@@ -70,6 +71,7 @@
           }).catch(function(err) {
             console.error(err);
           });
+          */
         }
       }());
     </script>

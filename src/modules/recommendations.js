@@ -30,9 +30,9 @@ export function recommendations(options) {
     if (validEndpoints[endpoint].itemIdRequired && (
       !parameters
       || !parameters.itemId
-      || typeof parameters.itemId !== 'number'
+      || typeof parameters.itemId !== 'string'
     )) {
-      throw new Error('itemId is a required parameter of type number');
+      throw new Error('itemId is a required parameter of type string');
     }
 
     queryParams.key = apiKey;
@@ -104,8 +104,8 @@ export function recommendations(options) {
       return requestAndProcessResponse(createRecommendationsUrl(parameters, 'alternative_items'), 'alternative_items');
     },
 
-    // Get complimentary item recommendations for supplied query (term)
-    getComplimentaryItems: (itemId, parameters) => {
+    // Get complementary item recommendations for supplied query (term)
+    getComplementaryItems: (itemId, parameters) => {
       parameters = parameters || {};
       parameters.itemId = itemId;
 
