@@ -14,7 +14,7 @@ describe('ConstructorIO - Recommendations', () => {
     url: 'http://localhost',
   });
 
-  describe.only('getAlternativeItems', () => {
+  describe('getAlternativeItems', () => {
     const itemId = 'power_drill';
 
     beforeEach(() => {

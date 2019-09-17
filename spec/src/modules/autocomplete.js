@@ -92,6 +92,23 @@ describe('ConstructorIO - Autocomplete', () => {
       });
     });
 
+    it('Should return a response with a valid query, and resultsPerSection', (done) => {
+      const resultsPerSection = {
+        Products: 1,
+        'Search Suggestions': 2,
+      };
+      const { autocomplete } = new ConstructorIO({ apiKey: testApiKey });
+
+      autocomplete.getResults(query, { resultsPerSection }).then((res) => {
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('sections').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.num_results_Products).to.equal(resultsPerSection.Products.toString());
+        expect(res.request['num_results_Search Suggestions']).to.equal(resultsPerSection['Search Suggestions'].toString());
+        done();
+      });
+    });
+
     it('Should return a response with a valid query, and filters', (done) => {
       const filters = { keywords: ['battery-powered'] };
       const { autocomplete } = new ConstructorIO({ apiKey: testApiKey });
