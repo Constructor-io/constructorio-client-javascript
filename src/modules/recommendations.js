@@ -80,7 +80,6 @@ export function recommendations(options) {
         if (json.result_id) {
           // Append `result_id` to each result item
           json.response.results.forEach((result) => {
-            // eslint-disable-next-line no-param-reassign
             result.result_id = json.result_id;
           });
         }
