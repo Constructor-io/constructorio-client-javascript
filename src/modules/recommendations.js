@@ -14,6 +14,26 @@ export function recommendations(options) {
   const createRecommendationsUrl = (parameters, endpoint) => {
     const { apiKey, version, serviceUrl, sessionId, clientId, segments, testCells } = options;
     const queryParams = { c: version };
+    const validEndpoints = {
+      alternative_items: { itemIdRequired: true },
+      complementary_items: { itemIdRequired: true },
+      recently_viewed_items: { itemIdRequired: false },
+      user_featured_items: { itemIdRequired: false },
+    };
+
+    // Ensure supplied endpoint is valid
+    if (!endpoint || !validEndpoints[endpoint]) {
+      throw new Error(`endpoint is a required parameter and must be one of the following strings: ${validEndpoints.join(', ')}`);
+    }
+
+    // Ensure a valid item id was passed for endpoints that require it
+    if (validEndpoints[endpoint].itemIdRequired && (
+      !parameters
+      || !parameters.itemId
+      || typeof parameters.itemId !== 'number'
+    )) {
+      throw new Error('itemId is a required parameter of type number');
+    }
 
     queryParams.key = apiKey;
     queryParams.i = clientId;
@@ -51,7 +71,7 @@ export function recommendations(options) {
   };
 
   // Process fetch response to append result_id's
-  const requestAndProcessResponse = (requestUrl) => fetch(requestUrl)
+  const requestAndProcessResponse = (requestUrl, endpoint) => fetch(requestUrl)
     .then((response) => {
       if (response.ok) {
         return response.json();
@@ -72,7 +92,7 @@ export function recommendations(options) {
         return json;
       }
 
-      throw new Error('getAlternativeItems response data is malformed');
+      throw new Error(`${endpoint} response data is malformed`);
     });
 
   return {
@@ -81,7 +101,7 @@ export function recommendations(options) {
       parameters = parameters || {};
       parameters.itemId = itemId;
 
-      return requestAndProcessResponse(createRecommendationsUrl(parameters, 'alternative_items'));
+      return requestAndProcessResponse(createRecommendationsUrl(parameters, 'alternative_items'), 'alternative_items');
     },
 
     // Get complimentary item recommendations for supplied query (term)
@@ -89,13 +109,13 @@ export function recommendations(options) {
       parameters = parameters || {};
       parameters.itemId = itemId;
 
-      return requestAndProcessResponse(createRecommendationsUrl(parameters, 'complementary_items'));
+      return requestAndProcessResponse(createRecommendationsUrl(parameters, 'complementary_items'), 'complementary_items');
     },
 
     // Get recently viewed item recommendations for supplied query (term)
-    getRecentlyViewedItems: (parameters) => requestAndProcessResponse(createRecommendationsUrl(parameters, 'recently_viewed_items')),
+    getRecentlyViewedItems: (parameters) => requestAndProcessResponse(createRecommendationsUrl(parameters, 'recently_viewed_items'), 'recently_viewed_items'),
 
     // Get user featured item recommendations for supplied query (term)
-    getUserFeaturedItems: (parameters) => requestAndProcessResponse(createRecommendationsUrl(parameters, 'user_featured_items')),
+    getUserFeaturedItems: (parameters) => requestAndProcessResponse(createRecommendationsUrl(parameters, 'user_featured_items'), 'user_featured_items'),
   };
 }
