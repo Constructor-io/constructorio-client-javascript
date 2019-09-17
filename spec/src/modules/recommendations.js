@@ -16,6 +16,7 @@ describe('ConstructorIO - Recommendations', () => {
 
   describe('getAlternativeItems', () => {
     const itemId = 'power_drill';
+    const itemIds = [itemId, 'drill'];
 
     beforeEach(() => {
       global.SEARCH_VERSION = 'cio-mocha';
@@ -25,7 +26,7 @@ describe('ConstructorIO - Recommendations', () => {
       delete global.SEARCH_VERSION;
     });
 
-    it('Should return a response with a valid itemId', (done) => {
+    it('Should return a response with valid itemIds (singular)', (done) => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
       recommendations.getAlternativeItems(itemId).then((res) => {
@@ -38,23 +39,20 @@ describe('ConstructorIO - Recommendations', () => {
       });
     });
 
-    // TODO: Doesn't seem to work?
-    // it('Should return a response with a valid itemId, and testCells', (done) => {
-    // const testCells = { foo: 'bar' };
-    // const { recommendations } = new ConstructorIO({
-    // apiKey: testApiKey,
-    // testCells,
-    // });
+    it('Should return a response with valid itemIds (multiple)', (done) => {
+      const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
-    // recommendations.getAlternativeItems(itemId).then((res) => {
-    // expect(res).to.have.property('request').to.be.an('object');
-    // expect(res).to.have.property('response').to.be.an('object');
-    // expect(res).to.have.property('result_id').to.be.an('string');
-    // done();
-    // });
-    // });
+      recommendations.getAlternativeItems(itemIds).then((res) => {
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.item_id).to.deep.equal(itemIds);
+        expect(res.response).to.have.property('results').to.be.an('array');
+        done();
+      });
+    });
 
-    it('Should return a response with a valid itemId, and segments', (done) => {
+    it('Should return a response with valid itemIds, and segments', (done) => {
       const segments = 'segments';
       const { recommendations } = new ConstructorIO({
         apiKey: testApiKey,
@@ -69,7 +67,7 @@ describe('ConstructorIO - Recommendations', () => {
       });
     });
 
-    it('Should return a response with a valid itemId, and results', (done) => {
+    it('Should return a response with valid itemIds, and results', (done) => {
       const results = 2;
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
@@ -82,8 +80,7 @@ describe('ConstructorIO - Recommendations', () => {
       });
     });
 
-    // TODO: Find an item that actually returns results
-    it('Should return a response with a valid itemId, with a result_id appended to each result', (done) => {
+    it('Should return a response with valid itemIds, with a result_id appended to each result', (done) => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
       recommendations.getAlternativeItems(itemId).then((res) => {
@@ -98,16 +95,16 @@ describe('ConstructorIO - Recommendations', () => {
       });
     });
 
-    it('Should throw an error when invalid itemId is provided', () => {
+    it('Should throw an error when invalid itemIds are provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(() => recommendations.getAlternativeItems([])).to.throw('itemId is a required parameter of type string');
+      expect(() => recommendations.getAlternativeItems({})).to.throw('itemIds is a required parameter of type string or array');
     });
 
-    it('Should throw an error when no itemId is provided', () => {
+    it('Should throw an error when no itemIds are provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(() => recommendations.getAlternativeItems()).to.throw('itemId is a required parameter of type string');
+      expect(() => recommendations.getAlternativeItems()).to.throw('itemIds is a required parameter of type string or array');
     });
 
     it('Should throw an error when invalid results parameter is provided', (done) => {
