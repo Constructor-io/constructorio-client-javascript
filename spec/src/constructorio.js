@@ -9,11 +9,11 @@ describe('ConstructorIO', () => {
   });
 
   beforeEach(() => {
-    global.SEARCH_VERSION = 'cio-mocha';
+    global.CLIENT_VERSION = 'cio-mocha';
   });
 
   afterEach(() => {
-    delete global.SEARCH_VERSION;
+    delete global.CLIENT_VERSION;
   });
 
   it('Should return an instance when valid API key is provided', () => {
@@ -22,7 +22,7 @@ describe('ConstructorIO', () => {
     expect(instance).to.be.an('object');
     expect(instance).to.have.property('options').to.be.an('object');
     expect(instance.options).to.have.property('apiKey').to.equal(validApiKey);
-    expect(instance.options).to.have.property('version').to.equal(global.SEARCH_VERSION);
+    expect(instance.options).to.have.property('version').to.equal(global.CLIENT_VERSION);
     expect(instance.options).to.have.property('serviceUrl');
     expect(instance.options).to.have.property('clientId');
     expect(instance.options).to.have.property('sessionId');

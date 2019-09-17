@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 
 const clientFilename = 'constructorio-client';
-const versionId = `ciojs-search-${process.env.npm_package_version}`;
+const versionId = `ciojs-client-${process.env.npm_package_version}`;
 
 /*
  * BASE CONFIGURATION
@@ -33,7 +33,7 @@ module.exports = {
   plugins: [
     // Define global variable
     new webpack.DefinePlugin({
-      SEARCH_VERSION: JSON.stringify(versionId),
+      CLIENT_VERSION: JSON.stringify(versionId),
     }),
 
     // Append copyright banner to top of file

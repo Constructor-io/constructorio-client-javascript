@@ -18,11 +18,11 @@ describe('ConstructorIO - Autocomplete', () => {
     const query = 'drill';
 
     beforeEach(() => {
-      global.SEARCH_VERSION = 'cio-mocha';
+      global.CLIENT_VERSION = 'cio-mocha';
     });
 
     afterEach(() => {
-      delete global.SEARCH_VERSION;
+      delete global.CLIENT_VERSION;
     });
 
     it('Should return a response with a valid query', (done) => {

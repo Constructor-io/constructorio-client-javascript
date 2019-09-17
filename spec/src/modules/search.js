@@ -19,11 +19,11 @@ describe('ConstructorIO - Search', () => {
     const section = 'Products';
 
     beforeEach(() => {
-      global.SEARCH_VERSION = 'cio-mocha';
+      global.CLIENT_VERSION = 'cio-mocha';
     });
 
     afterEach(() => {
-      delete global.SEARCH_VERSION;
+      delete global.CLIENT_VERSION;
     });
 
     it('Should return a response with a valid query, and section', (done) => {
@@ -270,11 +270,11 @@ describe('ConstructorIO - Search', () => {
     const groupId = 'drill_collection';
 
     beforeEach(() => {
-      global.SEARCH_VERSION = 'cio-mocha';
+      global.CLIENT_VERSION = 'cio-mocha';
     });
 
     afterEach(() => {
-      delete global.SEARCH_VERSION;
+      delete global.CLIENT_VERSION;
     });
 
     it('Should return a response with a valid group_id, and section', (done) => {

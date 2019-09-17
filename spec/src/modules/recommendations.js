@@ -19,11 +19,11 @@ describe('ConstructorIO - Recommendations', () => {
     const itemIds = [itemId, 'drill'];
 
     beforeEach(() => {
-      global.SEARCH_VERSION = 'cio-mocha';
+      global.CLIENT_VERSION = 'cio-mocha';
     });
 
     afterEach(() => {
-      delete global.SEARCH_VERSION;
+      delete global.CLIENT_VERSION;
     });
 
     it('Should return a response with valid itemIds (singular)', (done) => {
@@ -131,11 +131,11 @@ describe('ConstructorIO - Recommendations', () => {
     const itemIds = [itemId, 'drill'];
 
     beforeEach(() => {
-      global.SEARCH_VERSION = 'cio-mocha';
+      global.CLIENT_VERSION = 'cio-mocha';
     });
 
     afterEach(() => {
-      delete global.SEARCH_VERSION;
+      delete global.CLIENT_VERSION;
     });
 
     it('Should return a response with valid itemIds (singular)', (done) => {
@@ -240,11 +240,11 @@ describe('ConstructorIO - Recommendations', () => {
 
   describe('getRecentlyViewedItems', () => {
     beforeEach(() => {
-      global.SEARCH_VERSION = 'cio-mocha';
+      global.CLIENT_VERSION = 'cio-mocha';
     });
 
     afterEach(() => {
-      delete global.SEARCH_VERSION;
+      delete global.CLIENT_VERSION;
     });
 
     it('Should return a response', (done) => {
@@ -323,11 +323,11 @@ describe('ConstructorIO - Recommendations', () => {
 
   describe('getUserFeaturedItems', () => {
     beforeEach(() => {
-      global.SEARCH_VERSION = 'cio-mocha';
+      global.CLIENT_VERSION = 'cio-mocha';
     });
 
     afterEach(() => {
-      delete global.SEARCH_VERSION;
+      delete global.CLIENT_VERSION;
     });
 
     it('Should return a response', (done) => {
