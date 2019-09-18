@@ -41,11 +41,18 @@ export function autocomplete(options) {
     }
 
     if (parameters) {
-      const { results, filters } = parameters;
+      const { results, resultsPerSection, filters } = parameters;
 
       // Pull results number from parameters
       if (results) {
         queryParams.num_results = results;
+      }
+
+      // Pull results number per section from parameters
+      if (resultsPerSection) {
+        Object.keys(resultsPerSection).forEach((section) => {
+          queryParams[`num_results_${section}`] = resultsPerSection[section];
+        });
       }
 
       // Pull filters from parameters

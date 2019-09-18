@@ -18,11 +18,11 @@ describe('ConstructorIO - Autocomplete', () => {
     const query = 'drill';
 
     beforeEach(() => {
-      global.SEARCH_VERSION = 'cio-mocha';
+      global.CLIENT_VERSION = 'cio-mocha';
     });
 
     afterEach(() => {
-      delete global.SEARCH_VERSION;
+      delete global.CLIENT_VERSION;
     });
 
     it('Should return a response with a valid query', (done) => {
@@ -88,6 +88,23 @@ describe('ConstructorIO - Autocomplete', () => {
         expect(res).to.have.property('result_id').to.be.an('string');
         expect(res.request.num_results).to.equal(results);
         expect(resultCount).to.equal(results);
+        done();
+      });
+    });
+
+    it('Should return a response with a valid query, and resultsPerSection', (done) => {
+      const resultsPerSection = {
+        Products: 1,
+        'Search Suggestions': 2,
+      };
+      const { autocomplete } = new ConstructorIO({ apiKey: testApiKey });
+
+      autocomplete.getResults(query, { resultsPerSection }).then((res) => {
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('sections').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.num_results_Products).to.equal(resultsPerSection.Products.toString());
+        expect(res.request['num_results_Search Suggestions']).to.equal(resultsPerSection['Search Suggestions'].toString());
         done();
       });
     });

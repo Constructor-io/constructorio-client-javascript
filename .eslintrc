@@ -5,7 +5,7 @@
   },
   "extends": "airbnb/base",
   "globals": {
-    "SEARCH_VERSION": true,
+    "CLIENT_VERSION": true,
     "expect": true,
   },
   "rules": {

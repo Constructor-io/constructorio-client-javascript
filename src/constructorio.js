@@ -41,7 +41,7 @@ class ConstructorIO {
 
     this.options = {
       apiKey,
-      version: SEARCH_VERSION,
+      version: CLIENT_VERSION,
       serviceUrl: serviceUrl || 'https://ac.cnstrc.com',
       sessionId: sessionId || session_id,
       clientId: clientId || client_id,

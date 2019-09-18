@@ -12,13 +12,13 @@ const { fetch } = fetchPonyfill({ Promise });
 export function recommendations(options) {
   // Create URL from supplied parameters
   const createRecommendationsUrl = (parameters, endpoint) => {
-    const { apiKey, version, serviceUrl, sessionId, clientId, segments, testCells } = options;
+    const { apiKey, version, serviceUrl, sessionId, clientId, segments } = options;
     const queryParams = { c: version };
     const validEndpoints = {
-      alternative_items: { itemIdRequired: true },
-      complementary_items: { itemIdRequired: true },
-      recently_viewed_items: { itemIdRequired: false },
-      user_featured_items: { itemIdRequired: false },
+      alternative_items: { itemIdsRequired: true },
+      complementary_items: { itemIdsRequired: true },
+      recently_viewed_items: { itemIdsRequired: false },
+      user_featured_items: { itemIdsRequired: false },
     };
 
     // Ensure supplied endpoint is valid
@@ -27,24 +27,20 @@ export function recommendations(options) {
     }
 
     // Ensure a valid item id was passed for endpoints that require it
-    if (validEndpoints[endpoint].itemIdRequired && (
+    if (validEndpoints[endpoint].itemIdsRequired && (
       !parameters
-      || !parameters.itemId
-      || typeof parameters.itemId !== 'string'
+      || !parameters.itemIds
+      || (
+        typeof parameters.itemIds !== 'string'
+        && !Array.isArray(parameters.itemIds)
+      )
     )) {
-      throw new Error('itemId is a required parameter of type string');
+      throw new Error('itemIds is a required parameter of type string or array');
     }
 
     queryParams.key = apiKey;
     queryParams.i = clientId;
     queryParams.s = sessionId;
-
-    // Pull test cells from options
-    if (testCells) {
-      Object.keys(testCells).forEach((testCellKey) => {
-        queryParams[`ef-${testCellKey}`] = testCells[testCellKey];
-      });
-    }
 
     // Pull user segments from options
     if (segments && segments.length) {
@@ -52,16 +48,16 @@ export function recommendations(options) {
     }
 
     if (parameters) {
-      const { results, itemId } = parameters;
+      const { results, itemIds } = parameters;
 
       // Pull results number from parameters
       if (results) {
         queryParams.num_results = results;
       }
 
-      // Pull item id from parameters
-      if (itemId) {
-        queryParams.item_id = itemId;
+      // Pull item ids from parameters
+      if (itemIds) {
+        queryParams.item_id = itemIds;
       }
     }
 
@@ -84,7 +80,6 @@ export function recommendations(options) {
         if (json.result_id) {
           // Append `result_id` to each result item
           json.response.results.forEach((result) => {
-            // eslint-disable-next-line no-param-reassign
             result.result_id = json.result_id;
           });
         }
@@ -97,17 +92,17 @@ export function recommendations(options) {
 
   return {
     // Get alternative item recommendations for supplied query (term)
-    getAlternativeItems: (itemId, parameters) => {
+    getAlternativeItems: (itemIds, parameters) => {
       parameters = parameters || {};
-      parameters.itemId = itemId;
+      parameters.itemIds = itemIds;
 
       return requestAndProcessResponse(createRecommendationsUrl(parameters, 'alternative_items'), 'alternative_items');
     },
 
     // Get complementary item recommendations for supplied query (term)
-    getComplementaryItems: (itemId, parameters) => {
+    getComplementaryItems: (itemIds, parameters) => {
       parameters = parameters || {};
-      parameters.itemId = itemId;
+      parameters.itemIds = itemIds;
 
       return requestAndProcessResponse(createRecommendationsUrl(parameters, 'complementary_items'), 'complementary_items');
     },
