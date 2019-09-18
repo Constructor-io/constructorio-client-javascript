@@ -95,16 +95,22 @@ describe('ConstructorIO - Recommendations', () => {
       });
     });
 
-    it('Should throw an error when invalid itemIds are provided', () => {
+    it('Should throw an error when invalid itemIds are provided', (done) => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(() => recommendations.getAlternativeItems({})).to.throw('itemIds is a required parameter of type string or array');
+      return expect(recommendations.getAlternativeItems({}))
+        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .and.be.an.instanceOf(Error)
+        .notify(done);
     });
 
-    it('Should throw an error when no itemIds are provided', () => {
+    it('Should throw an error when no itemIds are provided', (done) => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(() => recommendations.getAlternativeItems()).to.throw('itemIds is a required parameter of type string or array');
+      return expect(recommendations.getAlternativeItems())
+        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .and.be.an.instanceOf(Error)
+        .notify(done);
     });
 
     it('Should throw an error when invalid results parameter is provided', (done) => {
@@ -207,16 +213,22 @@ describe('ConstructorIO - Recommendations', () => {
       });
     });
 
-    it('Should throw an error when invalid itemIds are provided', () => {
+    it('Should throw an error when invalid itemIds are provided', (done) => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(() => recommendations.getComplementaryItems({})).to.throw('itemIds is a required parameter of type string or array');
+      return expect(recommendations.getComplementaryItems({}))
+        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .and.be.an.instanceOf(Error)
+        .notify(done);
     });
 
-    it('Should throw an error when no itemIds are provided', () => {
+    it('Should throw an error when no itemIds are provided', (done) => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(() => recommendations.getComplementaryItems()).to.throw('itemIds is a required parameter of type string or array');
+      return expect(recommendations.getComplementaryItems())
+        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .and.be.an.instanceOf(Error)
+        .notify(done);
     });
 
     it('Should throw an error when invalid results parameter is provided', (done) => {

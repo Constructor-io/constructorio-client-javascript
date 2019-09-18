@@ -14,28 +14,16 @@ export function recommendations(options) {
   const createRecommendationsUrl = (parameters, endpoint) => {
     const { apiKey, version, serviceUrl, sessionId, clientId, segments } = options;
     const queryParams = { c: version };
-    const validEndpoints = {
-      alternative_items: { itemIdsRequired: true },
-      complementary_items: { itemIdsRequired: true },
-      recently_viewed_items: { itemIdsRequired: false },
-      user_featured_items: { itemIdsRequired: false },
-    };
+    const validEndpoints = [
+      'alternative_items',
+      'complementary_items',
+      'recently_viewed_items',
+      'user_featured_items',
+    ];
 
     // Ensure supplied endpoint is valid
-    if (!endpoint || !validEndpoints[endpoint]) {
+    if (!endpoint || !validEndpoints.includes(endpoint)) {
       throw new Error(`endpoint is a required parameter and must be one of the following strings: ${validEndpoints.join(', ')}`);
-    }
-
-    // Ensure a valid item id was passed for endpoints that require it
-    if (validEndpoints[endpoint].itemIdsRequired && (
-      !parameters
-      || !parameters.itemIds
-      || (
-        typeof parameters.itemIds !== 'string'
-        && !Array.isArray(parameters.itemIds)
-      )
-    )) {
-      throw new Error('itemIds is a required parameter of type string or array');
     }
 
     queryParams.key = apiKey;

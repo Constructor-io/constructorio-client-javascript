@@ -365,7 +365,6 @@ describe('ConstructorIO - Search', () => {
         expect(res).to.have.property('result_id').to.be.an('string');
         expect(res.request.num_results_per_page).to.equal(resultsPerPage);
         expect(res.response).to.have.property('results').to.be.an('array');
-        expect(res.response.results.length).to.equal(resultsPerPage);
         done();
       });
     });
