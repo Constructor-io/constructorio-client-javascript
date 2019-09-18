@@ -129,3 +129,14 @@ constructorio.recommendations.getUserFeaturedItems({ parameters }).then(function
 | Parameter | Type | Description |
 | --- | --- | --- |
 | `results` | number | Number of results to retrieve |
+
+## Development / npm commands
+
+```bash
+npm run build         # build production bundle file (written to ./dist/)
+npm run build:dev     # build development (unminified) bundle file (written to ./dist/)
+npm run lint          # run lint on source code and tests
+npm run test          # run tests
+npm run coverage      # run tests and serves coverage reports from localhost:8081
+npm run serve         # serves integration sandbox page from localhost:8080 and build on file change
+```
