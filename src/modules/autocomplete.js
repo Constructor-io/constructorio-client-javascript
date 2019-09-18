@@ -9,7 +9,6 @@ const { fetch } = fetchPonyfill({ Promise });
  * Interface to autocomplete related API calls.
  *
  * @module autocomplete
- * @memberof ConstructorIO
  * @inner
  * @returns {object}
  */

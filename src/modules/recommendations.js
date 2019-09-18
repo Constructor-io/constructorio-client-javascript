@@ -9,7 +9,6 @@ const { fetch } = fetchPonyfill({ Promise });
  * Interface to recommendations related API calls.
  *
  * @module recommendations
- * @memberof ConstructorIO
  * @inner
  * @returns {object}
  */

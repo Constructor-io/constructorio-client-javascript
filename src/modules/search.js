@@ -9,7 +9,6 @@ const { fetch } = fetchPonyfill({ Promise });
  * Interface to search related API calls.
  *
  * @module search
- * @memberof ConstructorIO
  * @inner
  * @returns {object}
  */
