@@ -8,8 +8,6 @@ An JavaScript client for [Constructor.io](http://constructor.io/). [Constructor.
 
 This package can be installed via npm: `npm install --save constructorio-client-javascript`. Once installed, simply import or require the package into your repository.
 
-A bundled JavaScript version of the application (located in the /dist directory) can also be included directly on any website. Once loaded, the `ConstructorIOClient` object will become available on the parent window object.
-
 ## 2. Retrieve an API key
 
 You can find this in your [Constructor.io dashboard](https://constructor.io/dashboard). Contact sales if you'd like to sign up, or support if you believe your company already has an account.
@@ -133,10 +131,7 @@ constructorio.recommendations.getUserFeaturedItems({ parameters }).then(function
 ## Development / npm commands
 
 ```bash
-npm run build         # build production bundle file (written to ./dist/)
-npm run build:dev     # build development (unminified) bundle file (written to ./dist/)
 npm run lint          # run lint on source code and tests
 npm run test          # run tests
 npm run coverage      # run tests and serves coverage reports from localhost:8081
-npm run serve         # serves integration sandbox page from localhost:8080 and build on file change
 ```
