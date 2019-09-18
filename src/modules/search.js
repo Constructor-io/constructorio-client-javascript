@@ -144,7 +144,7 @@ export function search(options) {
      *
      * @function getSearchResults
      * @param {string} query - Term to use to perform a search
-     * @param {object} [parameters] - Additional parameters to refine results
+     * @param {object} [parameters] - Additional parameters to refine result set
      * @param {number} [parameters.page] - The page number of the results
      * @param {number} [parameters.resultsPerPage] - The number of results per page to return
      * @param {object} [parameters.filters] - Filters used to refine search
@@ -184,7 +184,7 @@ export function search(options) {
      * Retrieve browse results from API
      *
      * @function getBrowseResults
-     * @param {object} [parameters] - Additional parameters to refine results
+     * @param {object} [parameters] - Additional parameters to refine result set
      * @param {number} [parameters.page] - The page number of the results
      * @param {number} [parameters.resultsPerPage] - The number of results per page to return
      * @param {object} [parameters.filters] - Filters used to refine search

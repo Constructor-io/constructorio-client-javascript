@@ -71,8 +71,8 @@ export function autocomplete(options) {
      * Retrieve autocomplete results from API
      *
      * @function getResults
-     * @param {object} [parameters] - Additional parameters to refine results
-     * @param {number} [parameters.results] - The number of results per page to return
+     * @param {object} [parameters] - Additional parameters to refine result set
+     * @param {number} [parameters.results] - The number of results to return
      * @param {object} [parameters.filters] - Filters used to refine search
      * @returns {Promise}
      * @see https://docs.constructor.io/rest-api.html#autocomplete
