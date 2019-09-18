@@ -1,8 +1,6 @@
-# constructorio-client-js
+# Constructor.io JavaScript Client
 
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Constructor-io/constructorio-client-javascript/blob/master/LICENSE)
-
-# Constructor.io JavaScript Client
 
 An JavaScript client for [Constructor.io](http://constructor.io/). [Constructor.io](http://constructor.io/) provides search as a service that optimizes results using artificial intelligence (including natural language processing, re-ranking to optimize for conversions, and user personalization).
 
@@ -112,7 +110,7 @@ constructorio.recommendations.getComplementaryItems('item-id', { parameters }).t
 
 #### Retrieve recently viewed item recommendations
 ```javascript
-constructorio.recommendations.getRecentlyViewedItems().then(function(response) {
+constructorio.recommendations.getRecentlyViewedItems({ parameters }).then(function(response) {
   console.log(response);
 }).catch(function(err) {
   console.error(err);
@@ -121,7 +119,7 @@ constructorio.recommendations.getRecentlyViewedItems().then(function(response) {
 
 #### Retrieve user featured item recommendations
 ```javascript
-constructorio.recommendations.getUserFeaturedItems().then(function(response) {
+constructorio.recommendations.getUserFeaturedItems({ parameters }).then(function(response) {
   console.log(response);
 }).catch(function(err) {
   console.error(err);
