@@ -13,7 +13,7 @@
     "precoverage": "rm -rf ./coverage && rm -rf ./.nyc_output",
     "coverage": "nyc --all --reporter=html npm test",
     "postcoverage": "http-server ./coverage -p 8081 -o -c-1",
-    "docs": "jsdoc --configure ./.jsdoc.json --recurse ./src --destination ./docs && http-server ./docs -p 8082 -o -c-1"
+    "docs": "jsdoc --configure ./.jsdoc.json ./README.md --recurse ./src --destination ./docs && http-server ./docs -p 8082 -o -c-1"
   },
   "repository": {
     "type": "git",
