@@ -6,6 +6,8 @@ const { search } = require('./modules/search');
 const { autocomplete } = require('./modules/autocomplete');
 const { recommendations } = require('./modules/recommendations');
 
+const { version } = require('../package.json');
+
 class ConstructorIO {
   constructor(options = {}) {
     const {
@@ -26,7 +28,7 @@ class ConstructorIO {
 
     this.options = {
       apiKey,
-      version: CLIENT_VERSION,
+      version: global.CLIENT_VERSION || `ciojs-client-${version}`,
       serviceUrl: serviceUrl || 'https://ac.cnstrc.com',
       sessionId: sessionId || session_id,
       clientId: clientId || client_id,
