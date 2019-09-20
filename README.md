@@ -134,4 +134,5 @@ constructorio.recommendations.getUserFeaturedItems({ parameters }).then(function
 npm run lint          # run lint on source code and tests
 npm run test          # run tests
 npm run coverage      # run tests and serves coverage reports from localhost:8081
+npm run docs          # build and serve documentation from localhost:8082
 ```

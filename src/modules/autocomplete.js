@@ -5,9 +5,12 @@ import Promise from 'es6-promise';
 
 const { fetch } = fetchPonyfill({ Promise });
 
-/*
- * Autocomplete
- * - https://docs.constructor.io/rest-api.html#autocomplete
+/**
+ * Interface to autocomplete related API calls.
+ *
+ * @module autocomplete
+ * @inner
+ * @returns {object}
  */
 export function autocomplete(options) {
   // Create URL from supplied query (term) and parameters
@@ -63,7 +66,16 @@ export function autocomplete(options) {
   };
 
   return {
-    // Get autocomplete results for supplied query (term)
+    /**
+     * Retrieve autocomplete results from API
+     *
+     * @function getResults
+     * @param {object} [parameters] - Additional parameters to refine result set
+     * @param {number} [parameters.results] - The number of results to return
+     * @param {object} [parameters.filters] - Filters used to refine search
+     * @returns {Promise}
+     * @see https://docs.constructor.io/rest-api.html#autocomplete
+     */
     getResults: (query, parameters) => {
       const requestUrl = createAutocompleteUrl(query, parameters);
 
