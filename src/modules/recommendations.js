@@ -22,7 +22,7 @@ export function recommendations(options) {
     ];
 
     // Ensure supplied endpoint is valid
-    if (!endpoint || !validEndpoints.includes(endpoint)) {
+    if (!endpoint || validEndpoints.indexOf(endpoint) === -1) {
       throw new Error(`endpoint is a required parameter and must be one of the following strings: ${validEndpoints.join(', ')}`);
     }
 
