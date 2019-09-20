@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-const ConstructorioID = require('constructorio-id');
+const ConstructorioID = require('@constructor-io/constructorio-id');
 
 // Modules
 const { search } = require('./modules/search');
