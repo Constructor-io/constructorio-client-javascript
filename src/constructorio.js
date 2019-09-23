@@ -5,7 +5,7 @@ const ConstructorioID = require('@constructor-io/constructorio-id');
 const { search } = require('./modules/search');
 const { autocomplete } = require('./modules/autocomplete');
 const { recommendations } = require('./modules/recommendations');
-
+const { tracker } = require('./modules/tracker');
 const { version } = require('../package.json');
 
 /**
@@ -22,6 +22,7 @@ class ConstructorIO {
    * @property {object} [search] - Interface to {@link module:search}
    * @property {object} [autocomplete] - Interface to {@link module:autocomplete}
    * @property {object} [recommendations] - Interface to {@link module:recommendations}
+   * @property {object} [tracker] - Interface to {@link module:tracker}
    * @returns {class}
    */
   constructor(options = {}) {
@@ -55,6 +56,7 @@ class ConstructorIO {
     this.search = search(this.options);
     this.autocomplete = autocomplete(this.options);
     this.recommendations = recommendations(this.options);
+    this.tracker = tracker(this.options);
   }
 }
 

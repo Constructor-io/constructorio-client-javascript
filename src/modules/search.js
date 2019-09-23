@@ -192,7 +192,7 @@ export function search(options) {
      * @returns {Promise}
      * @see https://docs.constructor.io
      */
-    getBrowseResults(parameters) {
+    getBrowseResults: (parameters) => {
       const requestUrl = createBrowseUrl(parameters);
 
       return fetch(requestUrl)
