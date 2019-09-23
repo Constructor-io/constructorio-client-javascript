@@ -5,9 +5,12 @@ import Promise from 'es6-promise';
 
 const { fetch } = fetchPonyfill({ Promise });
 
-/*
- * Search
- * - https://docs.constructor.io/rest-api.html#search
+/**
+ * Interface to search related API calls.
+ *
+ * @module search
+ * @inner
+ * @returns {object}
  */
 export function search(options) {
   // Create URL from supplied query (term) and parameters
@@ -135,7 +138,20 @@ export function search(options) {
   };
 
   return {
-    // Get search results for supplied query (term);
+    /**
+     * Retrieve search results from API
+     *
+     * @function getSearchResults
+     * @param {string} query - Term to use to perform a search
+     * @param {object} [parameters] - Additional parameters to refine result set
+     * @param {number} [parameters.page] - The page number of the results
+     * @param {number} [parameters.resultsPerPage] - The number of results per page to return
+     * @param {object} [parameters.filters] - Filters used to refine search
+     * @param {string} [parameters.sortBy='relevance'] - The sorting method
+     * @param {string} [parameters.sortOrder='descending'] - The sort order for search results
+     * @returns {Promise}
+     * @see https://docs.constructor.io/rest-api.html#search
+     */
     getSearchResults: (query, parameters) => {
       const requestUrl = createSearchUrl(query, parameters, options);
 
@@ -163,7 +179,19 @@ export function search(options) {
         });
     },
 
-    // Get browse results
+    /**
+     * Retrieve browse results from API
+     *
+     * @function getBrowseResults
+     * @param {object} [parameters] - Additional parameters to refine result set
+     * @param {number} [parameters.page] - The page number of the results
+     * @param {number} [parameters.resultsPerPage] - The number of results per page to return
+     * @param {object} [parameters.filters] - Filters used to refine search
+     * @param {string} [parameters.sortBy='relevance'] - The sorting method
+     * @param {string} [parameters.sortOrder='descending'] - The sort order for search results
+     * @returns {Promise}
+     * @see https://docs.constructor.io
+     */
     getBrowseResults(parameters) {
       const requestUrl = createBrowseUrl(parameters);
 

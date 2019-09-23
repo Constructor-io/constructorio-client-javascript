@@ -8,7 +8,22 @@ const { recommendations } = require('./modules/recommendations');
 
 const { version } = require('../package.json');
 
+/**
+ * Class to instantiate the ConstructorIO client.
+ */
 class ConstructorIO {
+  /**
+   * @param {string} apiKey - Constructor.io API key
+   * @param {string} [serviceUrl='https://ac.cnstrc.com'] - API URL endpoint
+   * @param {string} [segments] - User segments
+   * @param {object} [testCells] - User test cells
+   * @param {string} [clientId] - Client ID, defaults to value supplied by 'constructorio-id'
+   * @param {string} [sessionId] - Session id, defaults to value supplied by 'constructorio-id'
+   * @property {object} [search] - Interface to {@link module:search}
+   * @property {object} [autocomplete] - Interface to {@link module:autocomplete}
+   * @property {object} [recommendations] - Interface to {@link module:recommendations}
+   * @returns {class}
+   */
   constructor(options = {}) {
     const {
       apiKey,

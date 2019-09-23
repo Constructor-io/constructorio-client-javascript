@@ -5,9 +5,12 @@ import Promise from 'es6-promise';
 
 const { fetch } = fetchPonyfill({ Promise });
 
-/*
- * Recommendations
- * - https://docs.constructor.io
+/**
+ * Interface to recommendations related API calls.
+ *
+ * @module recommendations
+ * @inner
+ * @returns {object}
  */
 export function recommendations(options) {
   // Create URL from supplied parameters
@@ -79,7 +82,16 @@ export function recommendations(options) {
     });
 
   return {
-    // Get alternative item recommendations for supplied query (term)
+    /**
+     * Get alternative item recommendations for supplied item id(s)
+     *
+     * @function getAlternativeItems
+     * @param {string|array} itemIds - Item ID(s) to retrieve recommendations for
+     * @param {object} [parameters] - Additional parameters to refine results
+     * @param {number} [parameters.results] - The number of results to return
+     * @returns {Promise}
+     * @see https://docs.constructor.io/rest-api.html
+     */
     getAlternativeItems: (itemIds, parameters) => {
       parameters = parameters || {};
       parameters.itemIds = itemIds;
@@ -87,7 +99,16 @@ export function recommendations(options) {
       return requestAndProcessResponse(createRecommendationsUrl(parameters, 'alternative_items'), 'alternative_items');
     },
 
-    // Get complementary item recommendations for supplied query (term)
+    /**
+     * Get complementary item recommendations for supplied item id(s)
+     *
+     * @function getComplementaryItems
+     * @param {string|array} itemIds - Item ID(s) to retrieve recommendations for
+     * @param {object} [parameters] - Additional parameters to refine results
+     * @param {number} [parameters.results] - The number of results to return
+     * @returns {Promise}
+     * @see https://docs.constructor.io/rest-api.html
+     */
     getComplementaryItems: (itemIds, parameters) => {
       parameters = parameters || {};
       parameters.itemIds = itemIds;
@@ -95,10 +116,26 @@ export function recommendations(options) {
       return requestAndProcessResponse(createRecommendationsUrl(parameters, 'complementary_items'), 'complementary_items');
     },
 
-    // Get recently viewed item recommendations for supplied query (term)
+    /**
+     * Get recently viewed item recommendations
+     *
+     * @function getRecentlyViewedItems
+     * @param {object} [parameters] - Additional parameters to refine results
+     * @param {number} [parameters.results] - The number of results to return
+     * @returns {Promise}
+     * @see https://docs.constructor.io/rest-api.html
+     */
     getRecentlyViewedItems: (parameters) => requestAndProcessResponse(createRecommendationsUrl(parameters, 'recently_viewed_items'), 'recently_viewed_items'),
 
-    // Get user featured item recommendations for supplied query (term)
+    /**
+     * Get user featured item recommendations
+     *
+     * @function getUserFeaturedItems
+     * @param {object} [parameters] - Additional parameters to refine results
+     * @param {number} [parameters.results] - The number of results to return
+     * @returns {Promise}
+     * @see https://docs.constructor.io/rest-api.html
+     */
     getUserFeaturedItems: (parameters) => requestAndProcessResponse(createRecommendationsUrl(parameters, 'user_featured_items'), 'user_featured_items'),
   };
 }
