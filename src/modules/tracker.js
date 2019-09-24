@@ -60,6 +60,11 @@ export function tracker(options) {
       throw new Error('parameters is a required object, as are parameters.originalQuery and parameters.resultId');
     }
 
+    // Autocomplete section is required for 'select' actions
+    if (parameters && action === 'select' && !parameters.autocompleteSection) {
+      throw new Error('parameters is a required object, as is parameters.autocompleteSection');
+    }
+
     queryParams.key = apiKey;
     queryParams.i = clientId;
     queryParams.s = sessionId;
@@ -135,9 +140,11 @@ export function tracker(options) {
      *
      * @function sendAutocompleteSelect
      * @param {string} name - Name of selected product
-     * @param {object} [parameters] - Additional parameters to be sent with request
-     * @param {number} [parameters.page] - The page number of the results
-     * @param {number} [parameters.resultsPerPage] - The number of results per page to return
+     * @param {object} parameters - Additional parameters to be sent with request
+     * @param {number} parameters.originalQuery - The current autocomplete search query
+     * @param {number} parameters.resultId - Customer ID of the selected autocomplete item
+     * @param {number} parameters.autocompleteSection - Autocomplete section the item resides within
+     * @param {number} [parameters.tr] - Trigger used to select the autocomplete item (click, etc.)
      * @returns {Promise}
      */
     sendAutocompleteSelect: (name, parameters) => {

@@ -2,6 +2,7 @@ import jsdom from 'mocha-jsdom';
 import dotenv from 'dotenv';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
+import cloneDeep from 'lodash.clonedeep';
 import ConstructorIO from '../../../src/constructorio';
 
 chai.use(chaiAsPromised);
@@ -73,7 +74,6 @@ describe.only('ConstructorIO - Tracker', () => {
   describe('sendAutocompleteSelect', () => {
     const name = 'Where The Wild Things Are';
     const validParameters = {
-      tr: 'click',
       autocompleteSection: 'Products',
       resultId: '123-456-789',
       originalQuery: 'books',
@@ -94,6 +94,69 @@ describe.only('ConstructorIO - Tracker', () => {
         expect(res).to.equal(true);
         done();
       });
+    });
+
+    it('Should respond with a valid response when name and parameters and tr are provided', (done) => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      tracker.sendAutocompleteSelect(name, {
+        ...validParameters,
+        tr: 'click',
+      }).then((res) => {
+        expect(res).to.equal(true);
+        done();
+      });
+    });
+
+    it('Should throw an error when invalid name is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(() => tracker.sendAutocompleteSelect([], validParameters)).to.throw('name is a required parameter of type string');
+    });
+
+    it('Should throw an error when no name is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(() => tracker.sendAutocompleteSelect(null, validParameters)).to.throw('name is a required parameter of type string');
+    });
+
+    it('Should throw an error when invalid parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(() => tracker.sendAutocompleteSelect(name, [])).to.throw('parameters is a required object, as are parameters.originalQuery and parameters.resultId');
+    });
+
+    it('Should throw an error when no parameters are provided ', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(() => tracker.sendAutocompleteSelect(name)).to.throw('parameters is a required object, as are parameters.originalQuery and parameters.resultId');
+    });
+
+    it('Should throw an error when no originalQuery parameter is provided', () => {
+      const parameters = cloneDeep(validParameters);
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      delete parameters.originalQuery;
+
+      expect(() => tracker.sendAutocompleteSelect(name, parameters)).to.throw('parameters is a required object, as are parameters.originalQuery and parameters.resultId');
+    });
+
+    it('Should throw an error when no resultId parameter is provided', () => {
+      const parameters = cloneDeep(validParameters);
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      delete parameters.resultId;
+
+      expect(() => tracker.sendAutocompleteSelect(name, parameters)).to.throw('parameters is a required object, as are parameters.originalQuery and parameters.resultId');
+    });
+
+    it('Should throw an error when no autocompleteSection parameter is provided', () => {
+      const parameters = cloneDeep(validParameters);
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      delete parameters.autocompleteSection;
+
+      expect(() => tracker.sendAutocompleteSelect(name, parameters)).to.throw('parameters is a required object, as is parameters.autocompleteSection');
     });
 
     it('Should throw an error when invalid apiKey is provided', (done) => {
