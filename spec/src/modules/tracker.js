@@ -10,7 +10,7 @@ dotenv.config();
 
 const testApiKey = process.env.TEST_API_KEY;
 
-describe.only('ConstructorIO - Tracker', () => {
+describe('ConstructorIO - Tracker', () => {
   jsdom({
     url: 'http://localhost',
   });

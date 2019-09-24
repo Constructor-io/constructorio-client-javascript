@@ -14,12 +14,13 @@ const { fetch } = fetchPonyfill({ Promise });
  */
 export function tracker(options) {
   // Create behavior URL from supplied parameters
-  const createBehaviorUrl = (action) => {
+  const createBehaviorUrl = (action, parameters) => {
     const { apiKey, version, serviceUrl, sessionId, clientId } = options;
     const queryParams = { c: version };
     const validActions = [
       'session_start',
       'focus',
+      'search',
     ];
 
     // Ensure supplied action is valid
@@ -27,9 +28,41 @@ export function tracker(options) {
       throw new Error(`action is a required parameter and must be one of the following strings: ${validActions.join(', ')}`);
     }
 
+    // Query (term) and num results are required for 'search' actions
+    if (action === 'search'
+      && (
+        !parameters
+        || typeof parameters !== 'object'
+        || !parameters.query
+        || !parameters.numResults
+      )
+    ) {
+      throw new Error('parameters is a required object, as is parameters.query and parameters.numResults');
+    }
+
     queryParams.key = apiKey;
     queryParams.i = clientId;
     queryParams.s = sessionId;
+    queryParams.action = action;
+
+    if (parameters) {
+      const { query, numResults, customerIds } = parameters;
+
+      // Pull query (term) from parameters
+      if (query) {
+        queryParams.term = query;
+      }
+
+      // Pull number of results from parameters
+      if (numResults) {
+        queryParams.num_results = numResults;
+      }
+
+      // Pull customer id's from parameters
+      if (customerIds) {
+        queryParams.customer_ids = customerIds;
+      }
+    }
 
     const queryString = qs.stringify(queryParams, { indices: false });
 
@@ -141,10 +174,10 @@ export function tracker(options) {
      * @function sendAutocompleteSelect
      * @param {string} name - Name of selected product
      * @param {object} parameters - Additional parameters to be sent with request
-     * @param {number} parameters.originalQuery - The current autocomplete search query
-     * @param {number} parameters.resultId - Customer ID of the selected autocomplete item
-     * @param {number} parameters.autocompleteSection - Autocomplete section the item resides within
-     * @param {number} [parameters.tr] - Trigger used to select the autocomplete item (click, etc.)
+     * @param {string} parameters.originalQuery - The current autocomplete search query
+     * @param {string} parameters.resultId - Customer ID of the selected autocomplete item
+     * @param {string} parameters.autocompleteSection - Autocomplete section the item resides within
+     * @param {string} [parameters.tr] - Trigger used to select the autocomplete item (click, etc.)
      * @returns {Promise}
      */
     sendAutocompleteSelect: (name, parameters) => {
@@ -165,8 +198,8 @@ export function tracker(options) {
      * @function sendAutocompleteSearch
      * @param {string} name - Name of selected product
      * @param {object} parameters - Additional parameters to be sent with request
-     * @param {number} parameters.originalQuery - The current autocomplete search query
-     * @param {number} parameters.resultId - Customer ID of the selected autocomplete item
+     * @param {string} parameters.originalQuery - The current autocomplete search query
+     * @param {string} parameters.resultId - Customer ID of the selected autocomplete item
      * @returns {Promise}
      */
     sendAutocompleteSearch: (name, parameters) => {
@@ -181,8 +214,26 @@ export function tracker(options) {
       });
     },
 
-    sendSearchResults: () => {
+    /**
+     * Send search results event to API
+     *
+     * @function sendSearchResults
+     * @param {object} parameters - Additional parameters to be sent with request
+     * @param {string} parameters.query - The search query (term)
+     * @param {number} parameters.numResults - Number of search results in total
+     * @param {array} [parameters.customerIds] - List of customer item id's returned from search
+     * @returns {Promise}
+     */
+    sendSearchResults: (parameters) => {
+      const requestUrl = createBehaviorUrl('search', parameters);
 
+      return fetch(requestUrl).then((response) => {
+        if (response.ok) {
+          return true;
+        }
+
+        throw new Error(response.statusText);
+      });
     },
 
     sendSearchResultClick: () => {
