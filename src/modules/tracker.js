@@ -159,8 +159,26 @@ export function tracker(options) {
       });
     },
 
-    sendAutocompleteSearch: () => {
+    /**
+     * Send autocomplete search event to API
+     *
+     * @function sendAutocompleteSearch
+     * @param {string} name - Name of selected product
+     * @param {object} parameters - Additional parameters to be sent with request
+     * @param {number} parameters.originalQuery - The current autocomplete search query
+     * @param {number} parameters.resultId - Customer ID of the selected autocomplete item
+     * @returns {Promise}
+     */
+    sendAutocompleteSearch: (name, parameters) => {
+      const requestUrl = createAutocompleteUrl('search', name, parameters);
 
+      return fetch(requestUrl).then((response) => {
+        if (response.ok) {
+          return true;
+        }
+
+        throw new Error(response.statusText);
+      });
     },
 
     sendSearchResults: () => {

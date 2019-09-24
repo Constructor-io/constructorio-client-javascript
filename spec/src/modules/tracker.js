@@ -168,4 +168,80 @@ describe.only('ConstructorIO - Tracker', () => {
         .notify(done);
     });
   });
+
+  describe('sendAutocompleteSearch', () => {
+    const name = 'Where The Wild Things Are';
+    const validParameters = {
+      resultId: '123-456-789',
+      originalQuery: 'books',
+    };
+
+    beforeEach(() => {
+      global.CLIENT_VERSION = 'cio-mocha';
+    });
+
+    afterEach(() => {
+      delete global.CLIENT_VERSION;
+    });
+
+    it('Should respond with a valid response when name and parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      tracker.sendAutocompleteSearch(name, validParameters).then((res) => {
+        expect(res).to.equal(true);
+        done();
+      });
+    });
+
+    it('Should throw an error when invalid name is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(() => tracker.sendAutocompleteSearch([], validParameters)).to.throw('name is a required parameter of type string');
+    });
+
+    it('Should throw an error when no name is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(() => tracker.sendAutocompleteSearch(null, validParameters)).to.throw('name is a required parameter of type string');
+    });
+
+    it('Should throw an error when invalid parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(() => tracker.sendAutocompleteSearch(name, [])).to.throw('parameters is a required object, as are parameters.originalQuery and parameters.resultId');
+    });
+
+    it('Should throw an error when no parameters are provided ', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(() => tracker.sendAutocompleteSearch(name)).to.throw('parameters is a required object, as are parameters.originalQuery and parameters.resultId');
+    });
+
+    it('Should throw an error when no originalQuery parameter is provided', () => {
+      const parameters = cloneDeep(validParameters);
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      delete parameters.originalQuery;
+
+      expect(() => tracker.sendAutocompleteSearch(name, parameters)).to.throw('parameters is a required object, as are parameters.originalQuery and parameters.resultId');
+    });
+
+    it('Should throw an error when no resultId parameter is provided', () => {
+      const parameters = cloneDeep(validParameters);
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      delete parameters.resultId;
+
+      expect(() => tracker.sendAutocompleteSearch(name, parameters)).to.throw('parameters is a required object, as are parameters.originalQuery and parameters.resultId');
+    });
+
+    it('Should throw an error when invalid apiKey is provided', (done) => {
+      const { tracker } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
+
+      return expect(tracker.sendAutocompleteSearch(name, validParameters))
+        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .and.be.an.instanceOf(Error)
+        .notify(done);
+    });
+  });
 });
