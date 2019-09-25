@@ -59,8 +59,8 @@ export function tracker(options) {
       }
 
       // Pull customer id's from parameters
-      if (customerIds) {
-        queryParams.customer_ids = customerIds;
+      if (customerIds && Array.isArray(customerIds)) {
+        queryParams.customer_ids = customerIds.join(',');
       }
     }
 
