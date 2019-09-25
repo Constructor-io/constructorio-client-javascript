@@ -1,4 +1,9 @@
-/* eslint-disable import/prefer-default-export, object-curly-newline, no-underscore-dangle */
+/* eslint-disable
+  import/prefer-default-export,
+  object-curly-newline,
+  no-underscore-dangle,
+  camelcase
+*/
 import qs from 'qs';
 import fetchPonyfill from 'fetch-ponyfill';
 import Promise from 'es6-promise';
@@ -15,13 +20,13 @@ const { fetch } = fetchPonyfill({ Promise });
  */
 export function tracker(options) {
   // Create behavior URL from supplied parameters
-  const createBehaviorUrl = (action, parameters) => {
+  const createBehaviorUrl = (action, term, parameters) => {
     const { apiKey, version, serviceUrl, sessionId, clientId } = options;
-    const queryParams = { c: version };
+    let queryParams = { c: version };
     const validActions = [
       'session_start',
       'focus',
-      'search',
+      'search-results',
     ];
 
     // Ensure supplied action is valid
@@ -29,16 +34,9 @@ export function tracker(options) {
       throw new Error(`action is a required parameter and must be one of the following strings: ${validActions.join(', ')}`);
     }
 
-    // Query (term) and num results are required for 'search' actions
-    if (action === 'search'
-      && (
-        !parameters
-        || typeof parameters !== 'object'
-        || !parameters.query
-        || !parameters.numResults
-      )
-    ) {
-      throw new Error('parameters is a required object, as is parameters.query and parameters.numResults');
+    // Term is required for 'search' actions
+    if (action === 'search-results' && typeof term !== 'string') {
+      throw new Error('term is a required parameter of type string');
     }
 
     queryParams.key = apiKey;
@@ -47,24 +45,26 @@ export function tracker(options) {
     queryParams.action = action;
     queryParams._dt = Date.now();
 
+    // Append term to query params (search-results)
+    if (term) {
+      queryParams.term = term;
+    }
+
     if (parameters) {
-      const { query, numResults, customerIds } = parameters;
+      const { numResults, customerIds } = parameters;
 
-      // Pull query (term) from parameters (search)
-      if (query) {
-        queryParams.term = query;
-      }
-
-      // Pull number of results from parameters (search)
+      // Pull number of results from parameters (search-results)
       if (numResults) {
         queryParams.num_results = numResults;
       }
 
-      // Pull customer id's from parameters
+      // Pull customer id's from parameters (search-results)
       if (customerIds && Array.isArray(customerIds)) {
         queryParams.customer_ids = customerIds.join(',');
       }
     }
+
+    queryParams = utils.cleanParams(queryParams);
 
     const queryString = qs.stringify(queryParams, { indices: false });
 
@@ -76,24 +76,9 @@ export function tracker(options) {
     const { apiKey, version, serviceUrl, sessionId, clientId } = options;
     let queryParams = { c: version };
 
-    // Validate product name is provided
+    // Validate term is provided
     if (!term || typeof term !== 'string') {
       throw new Error('term is a required parameter of type string');
-    }
-
-    // Validate parameters are supplied and valid
-    if (!parameters || typeof parameters !== 'object') {
-      throw new Error('parameters is a required object');
-    }
-
-    // Original query, result id and section are required
-    if (!parameters.originalQuery || !parameters.resultId) {
-      throw new Error('parameters is a required object, as are parameters.originalQuery and parameters.resultId');
-    }
-
-    // Section is required for select
-    if (action === 'select' && !parameters.section) {
-      throw new Error('parameters is a required object, as is parameters.section');
     }
 
     queryParams.key = apiKey;
@@ -102,7 +87,15 @@ export function tracker(options) {
     queryParams._dt = Date.now();
 
     if (parameters) {
-      const { originalQuery, resultId, section, tr, groupId, displayName } = parameters;
+      const {
+        originalQuery,
+        resultId,
+        section,
+        original_section, // eslint-disable-line camelcase
+        tr,
+        groupId,
+        displayName,
+      } = parameters;
 
       // Pull original query from parameters
       if (originalQuery) {
@@ -115,8 +108,9 @@ export function tracker(options) {
       }
 
       // Pull section from parameters
-      if (section) {
-        queryParams.autocomplete_section = section;
+      // - Ideally, original_section should be deprecated and replaced with section
+      if (section || original_section) {
+        queryParams.autocomplete_section = section || original_section;
       }
 
       // Pull trigger (tr) from parameters
@@ -125,10 +119,10 @@ export function tracker(options) {
       }
 
       // Pull group id and display name from parameters
-      if (groupId && displayName) {
+      if (groupId) {
         queryParams.group = {
           group_id: groupId,
-          display_name: displayName,
+          display_name: displayName || '',
         };
       }
     }
@@ -138,58 +132,6 @@ export function tracker(options) {
     const queryString = qs.stringify(queryParams, { indices: false });
 
     return `${serviceUrl}/autocomplete/${utils.ourEncodeURIComponent(term)}/${action}?${queryString}`;
-  };
-
-  // Create autocomplete URL from supplied parameters using query in directive
-  const createAutocompleteUrlByQuery = (action, query, parameters) => {
-    const { apiKey, version, serviceUrl, sessionId, clientId } = options;
-    const queryParams = { c: version };
-    const validActions = [
-      'click_through',
-    ];
-
-    // Ensure supplied action is valid
-    if (!action || validActions.indexOf(action) === -1) {
-      throw new Error(`action is a required parameter and must be one of the following strings: ${validActions.join(', ')}`);
-    }
-
-    // Validate query (term) is provided
-    if (!query || typeof query !== 'string') {
-      throw new Error('query is a required parameter of type string');
-    }
-
-    // Validate parameters are supplied and valid
-    if (!parameters || typeof parameters !== 'object') {
-      throw new Error('parameters is a required object');
-    }
-
-    // Name and customer id are required for 'click_through' actions
-    if (!parameters.name || !parameters.customerId) {
-      throw new Error('parameters is a required object, as are parameters.name and parameters.customerId');
-    }
-
-    queryParams.key = apiKey;
-    queryParams.i = clientId;
-    queryParams.s = sessionId;
-    queryParams._dt = Date.now();
-
-    if (parameters) {
-      const { name, customerId } = parameters;
-
-      // Pull name from parameters (click_through)
-      if (name) {
-        queryParams.name = name;
-      }
-
-      // Pull customer id from parameters (click_through)
-      if (customerId) {
-        queryParams.customer_id = customerId;
-      }
-    }
-
-    const queryString = qs.stringify(queryParams, { indices: false });
-
-    return `${serviceUrl}/autocomplete/${encodeURIComponent(query)}/${action}?${queryString}`;
   };
 
   return {
@@ -283,14 +225,14 @@ export function tracker(options) {
      * Send search results event to API
      *
      * @function sendSearchResults
+     * @param {string} term - Search results query term
      * @param {object} parameters - Additional parameters to be sent with request
-     * @param {string} parameters.query - The search query (term)
      * @param {number} parameters.numResults - Number of search results in total
      * @param {array} [parameters.customerIds] - List of customer item id's returned from search
      * @returns {Promise}
      */
-    sendSearchResults: (parameters) => {
-      const requestUrl = createBehaviorUrl('search', parameters);
+    sendSearchResults: (term, parameters) => {
+      const requestUrl = createBehaviorUrl('search-results', term, parameters);
 
       return fetch(requestUrl).then((response) => {
         if (response.ok) {
@@ -301,26 +243,8 @@ export function tracker(options) {
       });
     },
 
-    /**
-     * Send click through event to API
-     *
-     * @function sendSearchResultClick
-     * @param {string} query - Current search query (term)
-     * @param {object} parameters - Additional parameters to be sent with request
-     * @param {string} parameters.name - The name of the item that was clicked
-     * @param {string} parameters.customerId - The customer id of the item that was clicked
-     * @returns {Promise}
-     */
-    sendSearchResultClick: (query, parameters) => {
-      const requestUrl = createAutocompleteUrlByQuery('click_through', query, parameters);
+    sendSearchResultClick: () => {
 
-      return fetch(requestUrl).then((response) => {
-        if (response.ok) {
-          return true;
-        }
-
-        throw new Error(response.statusText);
-      });
     },
 
     sendConversion: () => {
