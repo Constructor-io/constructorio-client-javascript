@@ -48,12 +48,12 @@ export function tracker(options) {
     if (parameters) {
       const { query, numResults, customerIds } = parameters;
 
-      // Pull query (term) from parameters
+      // Pull query (term) from parameters (search)
       if (query) {
         queryParams.term = query;
       }
 
-      // Pull number of results from parameters
+      // Pull number of results from parameters (search)
       if (numResults) {
         queryParams.num_results = numResults;
       }
@@ -69,8 +69,8 @@ export function tracker(options) {
     return `${serviceUrl}/behavior?${queryString}`;
   };
 
-  // Create autocomplete URL from supplied parameters
-  const createAutocompleteUrl = (action, name, parameters) => {
+  // Create autocomplete URL from supplied parameters using name in directive
+  const createAutocompleteUrlByName = (action, name, parameters) => {
     const { apiKey, version, serviceUrl, sessionId, clientId } = options;
     const queryParams = { c: version };
     const validActions = [
@@ -89,12 +89,17 @@ export function tracker(options) {
     }
 
     // Validate parameters are supplied and valid
-    if (!parameters || typeof parameters !== 'object' || !parameters.originalQuery || !parameters.resultId) {
+    if (!parameters || typeof parameters !== 'object') {
+      throw new Error('parameters is a required object');
+    }
+
+    // Original query and result id are required for 'select' and 'search' actions
+    if (!parameters.originalQuery || !parameters.resultId) {
       throw new Error('parameters is a required object, as are parameters.originalQuery and parameters.resultId');
     }
 
     // Autocomplete section is required for 'select' actions
-    if (parameters && action === 'select' && !parameters.autocompleteSection) {
+    if (action === 'select' && !parameters.autocompleteSection) {
       throw new Error('parameters is a required object, as is parameters.autocompleteSection');
     }
 
@@ -105,22 +110,22 @@ export function tracker(options) {
     if (parameters) {
       const { originalQuery, tr, autocompleteSection, resultId } = parameters;
 
-      // Pull original query from parameters
+      // Pull original query from parameters (select, search)
       if (originalQuery) {
         queryParams.original_query = originalQuery;
       }
 
-      // Pull trigger (tr) from parameters
+      // Pull trigger (tr) from parameters (select)
       if (tr) {
         queryParams.tr = tr;
       }
 
-      // Pull autocomplete section from parameters
+      // Pull autocomplete section from parameters (select)
       if (autocompleteSection) {
         queryParams.autocomplete_section = autocompleteSection;
       }
 
-      // Pull result id from parameters
+      // Pull result id from parameters (select, search)
       if (resultId) {
         queryParams.result_id = resultId;
       }
@@ -129,6 +134,57 @@ export function tracker(options) {
     const queryString = qs.stringify(queryParams, { indices: false });
 
     return `${serviceUrl}/autocomplete/${encodeURIComponent(name)}/${action}?${queryString}`;
+  };
+
+  // Create autocomplete URL from supplied parameters using query in directive
+  const createAutocompleteUrlByQuery = (action, query, parameters) => {
+    const { apiKey, version, serviceUrl, sessionId, clientId } = options;
+    const queryParams = { c: version };
+    const validActions = [
+      'click_through',
+    ];
+
+    // Ensure supplied action is valid
+    if (!action || validActions.indexOf(action) === -1) {
+      throw new Error(`action is a required parameter and must be one of the following strings: ${validActions.join(', ')}`);
+    }
+
+    // Validate query (term) is provided
+    if (!query || typeof query !== 'string') {
+      throw new Error('query is a required parameter of type string');
+    }
+
+    // Validate parameters are supplied and valid
+    if (!parameters || typeof parameters !== 'object') {
+      throw new Error('parameters is a required object');
+    }
+
+    // Name and customer id are required for 'click_through' actions
+    if (!parameters.name || !parameters.customerId) {
+      throw new Error('parameters is a required object, as are parameters.name and parameters.customerId');
+    }
+
+    queryParams.key = apiKey;
+    queryParams.i = clientId;
+    queryParams.s = sessionId;
+
+    if (parameters) {
+      const { name, customerId } = parameters;
+
+      // Pull name from parameters (click_through)
+      if (name) {
+        queryParams.name = name;
+      }
+
+      // Pull customer id from parameters (click_through)
+      if (customerId) {
+        queryParams.customer_id = customerId;
+      }
+    }
+
+    const queryString = qs.stringify(queryParams, { indices: false });
+
+    return `${serviceUrl}/autocomplete/${encodeURIComponent(query)}/${action}?${queryString}`;
   };
 
   return {
@@ -181,7 +237,7 @@ export function tracker(options) {
      * @returns {Promise}
      */
     sendAutocompleteSelect: (name, parameters) => {
-      const requestUrl = createAutocompleteUrl('select', name, parameters);
+      const requestUrl = createAutocompleteUrlByName('select', name, parameters);
 
       return fetch(requestUrl).then((response) => {
         if (response.ok) {
@@ -203,7 +259,7 @@ export function tracker(options) {
      * @returns {Promise}
      */
     sendAutocompleteSearch: (name, parameters) => {
-      const requestUrl = createAutocompleteUrl('search', name, parameters);
+      const requestUrl = createAutocompleteUrlByName('search', name, parameters);
 
       return fetch(requestUrl).then((response) => {
         if (response.ok) {
@@ -236,8 +292,26 @@ export function tracker(options) {
       });
     },
 
-    sendSearchResultClick: () => {
+    /**
+     * Send click through event to API
+     *
+     * @function sendSearchResultClick
+     * @param {string} query - Current search query (term)
+     * @param {object} parameters - Additional parameters to be sent with request
+     * @param {string} parameters.name - The name of the item that was clicked
+     * @param {string} parameters.customerId - The customer id of the item that was clicked
+     * @returns {Promise}
+     */
+    sendSearchResultClick: (query, parameters) => {
+      const requestUrl = createAutocompleteUrlByQuery('click_through', query, parameters);
 
+      return fetch(requestUrl).then((response) => {
+        if (response.ok) {
+          return true;
+        }
+
+        throw new Error(response.statusText);
+      });
     },
 
     sendConversion: () => {
