@@ -1,7 +1,8 @@
-/* eslint-disable import/prefer-default-export, object-curly-newline */
+/* eslint-disable import/prefer-default-export, object-curly-newline, no-underscore-dangle */
 import qs from 'qs';
 import fetchPonyfill from 'fetch-ponyfill';
 import Promise from 'es6-promise';
+import utils from '../utils';
 
 const { fetch } = fetchPonyfill({ Promise });
 
@@ -44,6 +45,7 @@ export function tracker(options) {
     queryParams.i = clientId;
     queryParams.s = sessionId;
     queryParams.action = action;
+    queryParams._dt = Date.now();
 
     if (parameters) {
       const { query, numResults, customerIds } = parameters;
@@ -67,6 +69,70 @@ export function tracker(options) {
     const queryString = qs.stringify(queryParams, { indices: false });
 
     return `${serviceUrl}/behavior?${queryString}`;
+  };
+
+  // Create autocomplete select URL from supplied parameters using name in directive
+  const createAutocompleteSelectUrl = (term, parameters) => {
+    const { apiKey, version, serviceUrl, sessionId, clientId } = options;
+    let queryParams = { c: version };
+
+    // Validate product name is provided
+    if (!term || typeof term !== 'string') {
+      throw new Error('term is a required parameter of type string');
+    }
+
+    // Validate parameters are supplied and valid
+    if (!parameters || typeof parameters !== 'object') {
+      throw new Error('parameters is a required object');
+    }
+
+    // Original query, result id and section are required
+    if (!parameters.originalQuery || !parameters.resultId || !parameters.section) {
+      throw new Error('parameters is a required object, as are parameters.originalQuery, parameters.resultId, parameters.section');
+    }
+
+    queryParams.key = apiKey;
+    queryParams.i = clientId;
+    queryParams.s = sessionId;
+    queryParams._dt = Date.now();
+
+    if (parameters) {
+      const { originalQuery, resultId, section, tr, groupId, displayName } = parameters;
+
+      // Pull original query from parameters
+      if (originalQuery) {
+        queryParams.original_query = originalQuery;
+      }
+
+      // Pull result id from parameters
+      if (resultId) {
+        queryParams.result_id = resultId;
+      }
+
+      // Pull section from parameters
+      if (section) {
+        queryParams.autocomplete_section = section;
+      }
+
+      // Pull trigger (tr) from parameters
+      if (tr) {
+        queryParams.tr = tr;
+      }
+
+      // Pull group id and display name from parameters
+      if (groupId && displayName) {
+        queryParams.group = {
+          group_id: groupId,
+          display_name: displayName,
+        };
+      }
+    }
+
+    queryParams = utils.cleanParams(queryParams);
+
+    const queryString = qs.stringify(queryParams, { indices: false });
+
+    return `${serviceUrl}/autocomplete/${utils.ourEncodeURIComponent(term)}/select?${queryString}`;
   };
 
   // Create autocomplete URL from supplied parameters using name in directive
@@ -106,6 +172,7 @@ export function tracker(options) {
     queryParams.key = apiKey;
     queryParams.i = clientId;
     queryParams.s = sessionId;
+    queryParams._dt = Date.now();
 
     if (parameters) {
       const { originalQuery, tr, autocompleteSection, resultId } = parameters;
@@ -167,6 +234,7 @@ export function tracker(options) {
     queryParams.key = apiKey;
     queryParams.i = clientId;
     queryParams.s = sessionId;
+    queryParams._dt = Date.now();
 
     if (parameters) {
       const { name, customerId } = parameters;
@@ -228,16 +296,18 @@ export function tracker(options) {
      * Send autocomplete select event to API
      *
      * @function sendAutocompleteSelect
-     * @param {string} name - Name of selected product
+     * @param {string} term - term of selected autocomplete item
      * @param {object} parameters - Additional parameters to be sent with request
      * @param {string} parameters.originalQuery - The current autocomplete search query
-     * @param {string} parameters.resultId - Customer ID of the selected autocomplete item
-     * @param {string} parameters.autocompleteSection - Autocomplete section the item resides within
-     * @param {string} [parameters.tr] - Trigger used to select the autocomplete item (click, etc.)
+     * @param {string} parameters.resultId - Customer id of the selected autocomplete item
+     * @param {string} parameters.section - Section the selected item resides within
+     * @param {string} [parameters.tr] - Trigger used to select the item (click, etc.)
+     * @param {string} [parameters.groupId] - Group identifier of selected item
+     * @param {string} [parameters.displayName] - Display name of group of selected item
      * @returns {Promise}
      */
-    sendAutocompleteSelect: (name, parameters) => {
-      const requestUrl = createAutocompleteUrlByName('select', name, parameters);
+    sendAutocompleteSelect: (term, parameters) => {
+      const requestUrl = createAutocompleteSelectUrl(term, parameters);
 
       return fetch(requestUrl).then((response) => {
         if (response.ok) {

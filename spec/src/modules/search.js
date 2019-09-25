@@ -10,9 +10,7 @@ dotenv.config();
 const testApiKey = process.env.TEST_API_KEY;
 
 describe('ConstructorIO - Search', () => {
-  jsdom({
-    url: 'http://localhost',
-  });
+  jsdom({ url: 'http://localhost' });
 
   describe('getSearchResults', () => {
     const query = 'drill';

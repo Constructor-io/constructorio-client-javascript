@@ -10,9 +10,7 @@ dotenv.config();
 const testApiKey = process.env.TEST_API_KEY;
 
 describe('ConstructorIO - Recommendations', () => {
-  jsdom({
-    url: 'http://localhost',
-  });
+  jsdom({ url: 'http://localhost' });
 
   describe('getAlternativeItems', () => {
     const itemId = 'power_drill';
