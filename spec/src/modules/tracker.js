@@ -260,4 +260,60 @@ describe.only('ConstructorIO - Tracker', () => {
         .notify(done);
     });
   });
+
+  describe('sendSearchResultClick', () => {
+    const term = 'Where The Wild Things Are';
+    const validParameters = { item: '123-456-789' };
+
+    beforeEach(() => {
+      global.CLIENT_VERSION = 'cio-mocha';
+    });
+
+    afterEach(() => {
+      delete global.CLIENT_VERSION;
+    });
+
+    it('Should respond with a valid response when term and parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      tracker.sendSearchResultClick(term, validParameters).then((res) => {
+        expect(res).to.equal(true);
+        done();
+      });
+    });
+
+    it('Should respond with a valid response when term and parameters including result id and customer id are provided', (done) => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      tracker.sendSearchResultClick(term, {
+        ...validParameters,
+        customerId: 'customer-id',
+        resultId: 'result-id',
+      }).then((res) => {
+        expect(res).to.equal(true);
+        done();
+      });
+    });
+
+    it('Should throw an error when invalid term is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(() => tracker.sendSearchResultClick([], validParameters)).to.throw('term is a required parameter of type string');
+    });
+
+    it('Should throw an error when no term is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(() => tracker.sendSearchResultClick(null, validParameters)).to.throw('term is a required parameter of type string');
+    });
+
+    it('Should throw an error when invalid apiKey is provided', (done) => {
+      const { tracker } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
+
+      return expect(tracker.sendSearchResultClick(term, validParameters))
+        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .and.be.an.instanceOf(Error)
+        .notify(done);
+    });
+  });
 });
