@@ -80,6 +80,7 @@ export function tracker(options) {
       'search',
       'click_through',
       'conversion',
+      'purchase',
     ];
 
     // Ensure supplied action is valid
@@ -112,6 +113,7 @@ export function tracker(options) {
         itemName,
         customerId,
         revenue,
+        customerIds,
       } = parameters;
 
       // Pull original query from parameters (select, search)
@@ -124,7 +126,7 @@ export function tracker(options) {
         queryParams.result_id = resultId;
       }
 
-      // Pull section from parameters (select)
+      // Pull section from parameters (select, conversion, purchase)
       // - Ideally, original_section should be deprecated and replaced with section
       if (section || original_section) {
         queryParams.autocomplete_section = section || original_section;
@@ -168,9 +170,14 @@ export function tracker(options) {
         queryParams.customer_id = customerId;
       }
 
-      // Pull revenue from parameters (conversion)
+      // Pull revenue from parameters (conversion, purchase)
       if (revenue) {
         queryParams.revenue = revenue;
+      }
+
+      // Pull customer id's from parameters (purchase)
+      if (customerIds && Array.isArray(customerIds)) {
+        queryParams.customer_ids = customerIds.join(',');
       }
     }
 
@@ -344,8 +351,26 @@ export function tracker(options) {
       });
     },
 
-    sendPurchase: () => {
+    /**
+     * Send purchase event to API
+     *
+     * @function sendPurchase
+     * @param {object} parameters - Additional parameters to be sent with request
+     * @param {array} parameters.customerIds - List of customer item id's
+     * @param {string} parameters.revenue - Revenue
+     * @param {string} parameters.section - Autocomplete section
+     * @returns {Promise}
+     */
+    sendPurchase: (parameters) => {
+      const requestUrl = createAutocompleteUrl('purchase', 'TERM_UNKNOWN', parameters);
 
+      return fetch(requestUrl).then((response) => {
+        if (response.ok) {
+          return true;
+        }
+
+        throw new Error(response.statusText);
+      });
     },
   };
 }

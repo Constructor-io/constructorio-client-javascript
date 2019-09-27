@@ -372,4 +372,60 @@ describe.only('ConstructorIO - Tracker', () => {
         .notify(done);
     });
   });
+
+  describe('sendPurchase', () => {
+    const term = 'Where The Wild Things Are';
+    const validParameters = { revenue: 123 };
+
+    beforeEach(() => {
+      global.CLIENT_VERSION = 'cio-mocha';
+    });
+
+    afterEach(() => {
+      delete global.CLIENT_VERSION;
+    });
+
+    it('Should respond with a valid response when term and parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      tracker.sendPurchase(term, validParameters).then((res) => {
+        expect(res).to.equal(true);
+        done();
+      });
+    });
+
+    it('Should respond with a valid response when term and parameters including customer ids, and section are provided', (done) => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      tracker.sendPurchase(term, {
+        ...validParameters,
+        customerIds: ['foo', 'bar'],
+        section: 'books',
+      }).then((res) => {
+        expect(res).to.equal(true);
+        done();
+      });
+    });
+
+    it('Should throw an error when invalid term is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(() => tracker.sendPurchase([], validParameters)).to.throw('term is a required parameter of type string');
+    });
+
+    it('Should throw an error when no term is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(() => tracker.sendPurchase(null, validParameters)).to.throw('term is a required parameter of type string');
+    });
+
+    it('Should throw an error when invalid apiKey is provided', (done) => {
+      const { tracker } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
+
+      return expect(tracker.sendPurchase(term, validParameters))
+        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .and.be.an.instanceOf(Error)
+        .notify(done);
+    });
+  });
 });
