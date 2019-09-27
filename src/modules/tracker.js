@@ -79,6 +79,7 @@ export function tracker(options) {
       'select',
       'search',
       'click_through',
+      'conversion',
     ];
 
     // Ensure supplied action is valid
@@ -110,6 +111,7 @@ export function tracker(options) {
         name,
         itemName,
         customerId,
+        revenue,
       } = parameters;
 
       // Pull original query from parameters (select, search)
@@ -117,7 +119,7 @@ export function tracker(options) {
         queryParams.original_query = originalQuery;
       }
 
-      // Pull result id from parameters (select, search, click_through)
+      // Pull result id from parameters (select, search, click_through, conversion)
       if (resultId) {
         queryParams.result_id = resultId;
       }
@@ -128,7 +130,7 @@ export function tracker(options) {
         queryParams.autocomplete_section = section || original_section;
       }
 
-      // Pull trigger (tr) from parameters (select)
+      // Pull trigger from parameters (select)
       if (tr) {
         queryParams.tr = tr;
       }
@@ -141,29 +143,34 @@ export function tracker(options) {
         };
       }
 
-      // Pull item id from parameters (click_through)
+      // Pull item id from parameters (click_through, conversion)
       if (itemId) {
         queryParams.item_id = itemId;
       }
 
-      // Pull item from parameters (click_through)
+      // Pull item from parameters (click_through, conversion)
       if (item) {
         queryParams.item = item;
       }
 
-      // Pull name from parameters (click_through)
+      // Pull name from parameters (click_through, conversion)
       if (name) {
         queryParams.name = name;
       }
 
-      // Pull item name from parameters (click_through)
+      // Pull item name from parameters (click_through, conversion)
       if (itemName) {
         queryParams.item_name = itemName;
       }
 
-      // Pull customer id from parameters (click_through)
+      // Pull customer id from parameters (click_through, conversion)
       if (customerId) {
         queryParams.customer_id = customerId;
+      }
+
+      // Pull revenue from parameters (conversion)
+      if (revenue) {
+        queryParams.revenue = revenue;
       }
     }
 
@@ -286,13 +293,13 @@ export function tracker(options) {
     /**
      * Send click through event to API
      *
-     * @function sendSearchResults
+     * @function sendSearchResultClick
      * @param {string} term - Search results query term
      * @param {object} parameters - Additional parameters to be sent with request
-     * @param {string} parameters.itemId - Identifier (only send itemId, item, name or itemName)
-     * @param {string} parameters.item - Identifier (only send itemId, item, name or itemName)
-     * @param {string} parameters.name - Identifier (only send itemId, item, name or itemName)
-     * @param {string} parameters.itemName - Identifier (only send itemId, item, name or itemName)
+     * @param {string} parameters.itemId - Identifier (send either itemId, item, name or itemName)
+     * @param {string} parameters.item - Identifier (send either itemId, item, name or itemName)
+     * @param {string} parameters.name - Identifier (send either itemId, item, name or itemName)
+     * @param {string} parameters.itemName - Identifier (send either itemId, item, name or itemName)
      * @param {string} parameters.customerId - Customer id
      * @param {string} parameters.resultId - Result id
      * @returns {Promise}
@@ -309,8 +316,32 @@ export function tracker(options) {
       });
     },
 
-    sendConversion: () => {
+    /**
+     * Send conversion event to API
+     *
+     * @function sendConversion
+     * @param {string} term - Search results query term
+     * @param {object} parameters - Additional parameters to be sent with request
+     * @param {string} parameters.itemId - Identifier (send either itemId, item, name or itemName)
+     * @param {string} parameters.item - Identifier (send either itemId, item, name or itemName)
+     * @param {string} parameters.name - Identifier (send either itemId, item, name or itemName)
+     * @param {string} parameters.itemName - Identifier (send either itemId, item, name or itemName)
+     * @param {string} parameters.customerId - Customer id
+     * @param {string} parameters.resultId - Result id
+     * @param {string} parameters.revenue - Revenue
+     * @param {string} parameters.section - Autocomplete section
+     * @returns {Promise}
+     */
+    sendConversion: (term, parameters) => {
+      const requestUrl = createAutocompleteUrl('conversion', term, parameters);
 
+      return fetch(requestUrl).then((response) => {
+        if (response.ok) {
+          return true;
+        }
+
+        throw new Error(response.statusText);
+      });
     },
 
     sendPurchase: () => {
