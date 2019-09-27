@@ -71,10 +71,20 @@ export function tracker(options) {
     return `${serviceUrl}/behavior?${queryString}`;
   };
 
-  // Create autocomplete select URL from supplied parameters using term in directive
+  // Create autocomplete URL from supplied parameters using term in directive
   const createAutocompleteUrl = (action, term, parameters) => {
     const { apiKey, version, serviceUrl, sessionId, clientId } = options;
     let queryParams = { c: version };
+    const validActions = [
+      'select',
+      'search',
+      'click_through',
+    ];
+
+    // Ensure supplied action is valid
+    if (!action || validActions.indexOf(action) === -1) {
+      throw new Error(`action is a required parameter and must be one of the following strings: ${validActions.join(', ')}`);
+    }
 
     // Validate term is provided
     if (!term || typeof term !== 'string') {
@@ -95,35 +105,65 @@ export function tracker(options) {
         tr,
         groupId,
         displayName,
+        itemId,
+        item,
+        name,
+        itemName,
+        customerId,
       } = parameters;
 
-      // Pull original query from parameters
+      // Pull original query from parameters (select, search)
       if (originalQuery) {
         queryParams.original_query = originalQuery;
       }
 
-      // Pull result id from parameters
+      // Pull result id from parameters (select, search, click_through)
       if (resultId) {
         queryParams.result_id = resultId;
       }
 
-      // Pull section from parameters
+      // Pull section from parameters (select)
       // - Ideally, original_section should be deprecated and replaced with section
       if (section || original_section) {
         queryParams.autocomplete_section = section || original_section;
       }
 
-      // Pull trigger (tr) from parameters
+      // Pull trigger (tr) from parameters (select)
       if (tr) {
         queryParams.tr = tr;
       }
 
-      // Pull group id and display name from parameters
+      // Pull group id and display name from parameters (select, search)
       if (groupId) {
         queryParams.group = {
           group_id: groupId,
           display_name: displayName || '',
         };
+      }
+
+      // Pull item id from parameters (click_through)
+      if (itemId) {
+        queryParams.item_id = itemId;
+      }
+
+      // Pull item from parameters (click_through)
+      if (item) {
+        queryParams.item = item;
+      }
+
+      // Pull name from parameters (click_through)
+      if (name) {
+        queryParams.name = name;
+      }
+
+      // Pull item name from parameters (click_through)
+      if (itemName) {
+        queryParams.item_name = itemName;
+      }
+
+      // Pull customer id from parameters (click_through)
+      if (customerId) {
+        queryParams.customer_id = customerId;
       }
     }
 
@@ -243,8 +283,30 @@ export function tracker(options) {
       });
     },
 
-    sendSearchResultClick: () => {
+    /**
+     * Send click through event to API
+     *
+     * @function sendSearchResults
+     * @param {string} term - Search results query term
+     * @param {object} parameters - Additional parameters to be sent with request
+     * @param {string} parameters.itemId - Identifier (only send itemId, item, name or itemName)
+     * @param {string} parameters.item - Identifier (only send itemId, item, name or itemName)
+     * @param {string} parameters.name - Identifier (only send itemId, item, name or itemName)
+     * @param {string} parameters.itemName - Identifier (only send itemId, item, name or itemName)
+     * @param {string} parameters.customerId - Customer id
+     * @param {string} parameters.resultId - Result id
+     * @returns {Promise}
+     */
+    sendSearchResultClick: (term, parameters) => {
+      const requestUrl = createAutocompleteUrl('click_through', term, parameters);
 
+      return fetch(requestUrl).then((response) => {
+        if (response.ok) {
+          return true;
+        }
+
+        throw new Error(response.statusText);
+      });
     },
 
     sendConversion: () => {
