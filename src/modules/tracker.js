@@ -5,11 +5,21 @@
   camelcase
 */
 import qs from 'qs';
-import fetchPonyfill from 'fetch-ponyfill';
-import Promise from 'es6-promise';
+import store from 'store2';
 import utils from '../utils';
 
-const { fetch } = fetchPonyfill({ Promise });
+// Options related to local or session storage
+const storageOptions = {
+  keys: {
+    searchTerm: { scope: 'session', key: '_constructorio_search_term' },
+    autocompleteItem: { scope: 'session', key: '_constructorio_selected_item' },
+    autocompleteEvents: { scope: 'local', key: '_constructorio_autocomplete' },
+    recentSearches: { scope: 'local', key: '_constructorio_recent_searches' },
+  },
+  recentSearchesMaxCount: 100,
+  integrationTestCookieName: '_constructorio_integration_test',
+  isHumanCookieName: '_constructorio_is_human',
+};
 
 /**
  * Interface to tracking related API calls.
@@ -31,12 +41,12 @@ export function tracker(options) {
 
     // Ensure supplied action is valid
     if (!action || validActions.indexOf(action) === -1) {
-      throw new Error(`action is a required parameter and must be one of the following strings: ${validActions.join(', ')}`);
+      return new Error(`action is a required parameter and must be one of the following strings: ${validActions.join(', ')}`);
     }
 
     // Term is required for 'search' actions
     if (action === 'search-results' && typeof term !== 'string') {
-      throw new Error('term is a required parameter of type string');
+      return new Error('term is a required parameter of type string');
     }
 
     queryParams.key = apiKey;
@@ -85,12 +95,12 @@ export function tracker(options) {
 
     // Ensure supplied action is valid
     if (!action || validActions.indexOf(action) === -1) {
-      throw new Error(`action is a required parameter and must be one of the following strings: ${validActions.join(', ')}`);
+      return new Error(`action is a required parameter and must be one of the following strings: ${validActions.join(', ')}`);
     }
 
     // Validate term is provided
     if (!term || typeof term !== 'string') {
-      throw new Error('term is a required parameter of type string');
+      return new Error('term is a required parameter of type string');
     }
 
     queryParams.key = apiKey;
@@ -188,42 +198,31 @@ export function tracker(options) {
     return `${serviceUrl}/autocomplete/${utils.ourEncodeURIComponent(term)}/${action}?${queryString}`;
   };
 
+  // Handle response from URL generation
+  const handleResponse = (urlResponse) => {
+    if (urlResponse instanceof Error) {
+      return urlResponse;
+    }
+
+    return true;
+  };
+
   return {
     /**
      * Send session start event to API
      *
      * @function sendSessionStart
-     * @returns {Promise}
+     * @returns {(true|Error)}
      */
-    sendSessionStart: () => {
-      const requestUrl = createBehaviorUrl('session_start');
-
-      return fetch(requestUrl).then((response) => {
-        if (response.ok) {
-          return true;
-        }
-
-        throw new Error(response.statusText);
-      });
-    },
+    sendSessionStart: () => handleResponse(createBehaviorUrl('session_start')),
 
     /**
      * Send input focus event to API
      *
      * @function sendInputFocus
-     * @returns {Promise}
+     * @returns {(true|Error)}
      */
-    sendInputFocus: () => {
-      const requestUrl = createBehaviorUrl('focus');
-
-      return fetch(requestUrl).then((response) => {
-        if (response.ok) {
-          return true;
-        }
-
-        throw new Error(response.statusText);
-      });
-    },
+    sendInputFocus: () => handleResponse(createBehaviorUrl('session_start')),
 
     /**
      * Send autocomplete select event to API
@@ -237,19 +236,9 @@ export function tracker(options) {
      * @param {string} [parameters.tr] - Trigger used to select the item (click, etc.)
      * @param {string} [parameters.groupId] - Group identifier of selected item
      * @param {string} [parameters.displayName] - Display name of group of selected item
-     * @returns {Promise}
+     * @returns {(true|Error)}
      */
-    sendAutocompleteSelect: (term, parameters) => {
-      const requestUrl = createAutocompleteUrl('select', term, parameters);
-
-      return fetch(requestUrl).then((response) => {
-        if (response.ok) {
-          return true;
-        }
-
-        throw new Error(response.statusText);
-      });
-    },
+    sendAutocompleteSelect: (term, parameters) => handleResponse(createAutocompleteUrl('select', term, parameters)),
 
     /**
      * Send autocomplete search event to API
@@ -261,19 +250,9 @@ export function tracker(options) {
      * @param {string} parameters.resultId - Customer ID of the selected autocomplete item
      * @param {string} [parameters.groupId] - Group identifier of selected item
      * @param {string} [parameters.displayName] - Display name of group of selected item
-     * @returns {Promise}
+     * @returns {(true|Error)}
      */
-    sendAutocompleteSearch: (term, parameters) => {
-      const requestUrl = createAutocompleteUrl('search', term, parameters);
-
-      return fetch(requestUrl).then((response) => {
-        if (response.ok) {
-          return true;
-        }
-
-        throw new Error(response.statusText);
-      });
-    },
+    sendAutocompleteSearch: (term, parameters) => handleResponse(createAutocompleteUrl('search', term, parameters)),
 
     /**
      * Send search results event to API
@@ -283,19 +262,9 @@ export function tracker(options) {
      * @param {object} parameters - Additional parameters to be sent with request
      * @param {number} parameters.numResults - Number of search results in total
      * @param {array} [parameters.customerIds] - List of customer item id's returned from search
-     * @returns {Promise}
+     * @returns {(true|Error)}
      */
-    sendSearchResults: (term, parameters) => {
-      const requestUrl = createBehaviorUrl('search-results', term, parameters);
-
-      return fetch(requestUrl).then((response) => {
-        if (response.ok) {
-          return true;
-        }
-
-        throw new Error(response.statusText);
-      });
-    },
+    sendSearchResults: (term, parameters) => handleResponse(createBehaviorUrl('search-results', term, parameters)),
 
     /**
      * Send click through event to API
@@ -309,19 +278,9 @@ export function tracker(options) {
      * @param {string} parameters.itemName - Identifier (send either itemId, item, name or itemName)
      * @param {string} parameters.customerId - Customer id
      * @param {string} parameters.resultId - Result id
-     * @returns {Promise}
+     * @returns {(true|Error)}
      */
-    sendSearchResultClick: (term, parameters) => {
-      const requestUrl = createAutocompleteUrl('click_through', term, parameters);
-
-      return fetch(requestUrl).then((response) => {
-        if (response.ok) {
-          return true;
-        }
-
-        throw new Error(response.statusText);
-      });
-    },
+    sendSearchResultClick: (term, parameters) => handleResponse(createAutocompleteUrl('click_through', term, parameters)),
 
     /**
      * Send conversion event to API
@@ -337,19 +296,9 @@ export function tracker(options) {
      * @param {string} parameters.resultId - Result id
      * @param {string} parameters.revenue - Revenue
      * @param {string} parameters.section - Autocomplete section
-     * @returns {Promise}
+     * @returns {(true|Error)}
      */
-    sendConversion: (term, parameters) => {
-      const requestUrl = createAutocompleteUrl('conversion', term, parameters);
-
-      return fetch(requestUrl).then((response) => {
-        if (response.ok) {
-          return true;
-        }
-
-        throw new Error(response.statusText);
-      });
-    },
+    sendConversion: (term, parameters) => handleResponse(createAutocompleteUrl('conversion', term, parameters)),
 
     /**
      * Send purchase event to API
@@ -359,18 +308,8 @@ export function tracker(options) {
      * @param {array} parameters.customerIds - List of customer item id's
      * @param {string} parameters.revenue - Revenue
      * @param {string} parameters.section - Autocomplete section
-     * @returns {Promise}
+     * @returns {(true|Error)}
      */
-    sendPurchase: (parameters) => {
-      const requestUrl = createAutocompleteUrl('purchase', 'TERM_UNKNOWN', parameters);
-
-      return fetch(requestUrl).then((response) => {
-        if (response.ok) {
-          return true;
-        }
-
-        throw new Error(response.statusText);
-      });
-    },
+    sendPurchase: (parameters) => handleResponse(createAutocompleteUrl('purchase', 'TERM_UNKNOWN', parameters)),
   };
 }
