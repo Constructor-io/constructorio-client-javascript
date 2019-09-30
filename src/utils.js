@@ -1,9 +1,11 @@
 import qs from 'qs';
+import botList from './botlist';
 
 const utils = {
   ourEncodeURIComponent: (str) => {
     if (str) {
       const parsedStrObj = qs.parse(`s=${str.replace(/&/g, '%26')}`);
+
       parsedStrObj.s = parsedStrObj.s.replace(/\s/g, ' ');
 
       return qs.stringify(parsedStrObj).split('=')[1];
@@ -29,6 +31,13 @@ const utils = {
 
     return cleanedParams;
   },
+
+  isBot: () => {
+    const { userAgent, webdriver } = window && window.navigator;
+    const botRegex = new RegExp(`(${botList.join('|')})`);
+
+    return Boolean(userAgent.match(botRegex)) || Boolean(webdriver);
+  }
 };
 
 module.exports = utils;

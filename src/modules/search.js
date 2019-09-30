@@ -15,7 +15,7 @@ const { fetch } = fetchPonyfill({ Promise });
 export function search(options) {
   // Create URL from supplied query (term) and parameters
   const createSearchUrl = (query, parameters) => {
-    const { apiKey, version, serviceUrl, sessionId, clientId, segments, testCells } = options;
+    const { apiKey, version, serviceUrl, sessionId, clientId, userId, segments, testCells } = options;
     const queryParams = { c: version };
 
     queryParams.key = apiKey;
@@ -37,6 +37,11 @@ export function search(options) {
     // Pull user segments from options
     if (segments && segments.length) {
       queryParams.us = segments;
+    }
+
+    // Pull user id from options
+    if (userId) {
+      queryParams.ui = userId;
     }
 
     if (parameters) {

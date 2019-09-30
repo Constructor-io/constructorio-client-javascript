@@ -15,7 +15,7 @@ const { fetch } = fetchPonyfill({ Promise });
 export function recommendations(options) {
   // Create URL from supplied parameters
   const createRecommendationsUrl = (parameters, endpoint) => {
-    const { apiKey, version, serviceUrl, sessionId, clientId, segments } = options;
+    const { apiKey, version, serviceUrl, sessionId, userId, clientId, segments } = options;
     const queryParams = { c: version };
     const validEndpoints = [
       'alternative_items',
@@ -36,6 +36,11 @@ export function recommendations(options) {
     // Pull user segments from options
     if (segments && segments.length) {
       queryParams.us = segments;
+    }
+
+    // Pull user id from options
+    if (userId) {
+      queryParams.ui = userId;
     }
 
     if (parameters) {

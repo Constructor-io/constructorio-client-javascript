@@ -16,183 +16,46 @@ import utils from '../utils';
  * @returns {object}
  */
 export function tracker(options) {
-  // Create behavior URL from supplied parameters
-  const createBehaviorUrl = (action, term, parameters) => {
-    const { apiKey, version, serviceUrl, sessionId, clientId } = options;
-    let queryParams = { c: version };
-    const validActions = [
-      'session_start',
-      'focus',
-      'search-results',
-    ];
+  // Add request to queue to be dispatched
+  const queueRequest = (request) => {
+    if (!utils.isBot()) {
+      //this.requestQueue.push(request);
+    }
+  }
 
-    // Ensure supplied action is valid
-    if (!action || validActions.indexOf(action) === -1) {
-      return new Error(`action is a required parameter and must be one of the following strings: ${validActions.join(', ')}`);
+  // Append common parameters to supplied parameters object
+  const createQueryString = (queryParamsObj) => {
+    const { apiKey, version, serviceUrl, sessionId, clientId, userId, segments, testCells } = options;
+    const paramsObj = Object.assign(queryParamsObj);
+
+    if (version) {
+      paramsObj.c = version;
     }
 
-    // Term is required for 'search' actions
-    if (action === 'search-results' && typeof term !== 'string') {
-      return new Error('term is a required parameter of type string');
+    if (clientId) {
+      paramsObj.i = clientId;
     }
 
-    queryParams.key = apiKey;
-    queryParams.i = clientId;
-    queryParams.s = sessionId;
-    queryParams.action = action;
-    queryParams._dt = Date.now();
-
-    // Append term to query params (search-results)
-    if (term) {
-      queryParams.term = term;
+    if (sessionId) {
+      paramsObj.s = sessionId;
     }
 
-    if (parameters) {
-      const { numResults, customerIds } = parameters;
-
-      // Pull number of results from parameters (search-results)
-      if (numResults) {
-        queryParams.num_results = numResults;
-      }
-
-      // Pull customer id's from parameters (search-results)
-      if (customerIds && Array.isArray(customerIds)) {
-        queryParams.customer_ids = customerIds.join(',');
-      }
+    if (userId) {
+      paramsObj.ui = userId;
     }
 
-    queryParams = utils.cleanParams(queryParams);
-
-    const queryString = qs.stringify(queryParams, { indices: false });
-
-    return `${serviceUrl}/behavior?${queryString}`;
-  };
-
-  // Create autocomplete URL from supplied parameters using term in directive
-  const createAutocompleteUrl = (action, term, parameters) => {
-    const { apiKey, version, serviceUrl, sessionId, clientId } = options;
-    let queryParams = { c: version };
-    const validActions = [
-      'select',
-      'search',
-      'click_through',
-      'conversion',
-      'purchase',
-    ];
-
-    // Ensure supplied action is valid
-    if (!action || validActions.indexOf(action) === -1) {
-      return new Error(`action is a required parameter and must be one of the following strings: ${validActions.join(', ')}`);
+    if (segments && segments.length) {
+      paramsObj.us = segments;
     }
 
-    // Validate term is provided
-    if (!term || typeof term !== 'string') {
-      return new Error('term is a required parameter of type string');
+    if (apiKey) {
+      paramsObj.key = apiKey;
     }
 
-    queryParams.key = apiKey;
-    queryParams.i = clientId;
-    queryParams.s = sessionId;
-    queryParams._dt = Date.now();
+    paramsObj._dt = Date.now();
 
-    if (parameters) {
-      const {
-        originalQuery,
-        resultId,
-        section,
-        original_section, // eslint-disable-line camelcase
-        tr,
-        groupId,
-        displayName,
-        itemId,
-        item,
-        name,
-        itemName,
-        customerId,
-        revenue,
-        customerIds,
-      } = parameters;
-
-      // Pull original query from parameters (select, search)
-      if (originalQuery) {
-        queryParams.original_query = originalQuery;
-      }
-
-      // Pull result id from parameters (select, search, click_through, conversion)
-      if (resultId) {
-        queryParams.result_id = resultId;
-      }
-
-      // Pull section from parameters (select, conversion, purchase)
-      // - Ideally, original_section should be deprecated and replaced with section
-      if (section || original_section) {
-        queryParams.autocomplete_section = section || original_section;
-      }
-
-      // Pull trigger from parameters (select)
-      if (tr) {
-        queryParams.tr = tr;
-      }
-
-      // Pull group id and display name from parameters (select, search)
-      if (groupId) {
-        queryParams.group = {
-          group_id: groupId,
-          display_name: displayName || '',
-        };
-      }
-
-      // Pull item id from parameters (click_through, conversion)
-      if (itemId) {
-        queryParams.item_id = itemId;
-      }
-
-      // Pull item from parameters (click_through, conversion)
-      if (item) {
-        queryParams.item = item;
-      }
-
-      // Pull name from parameters (click_through, conversion)
-      if (name) {
-        queryParams.name = name;
-      }
-
-      // Pull item name from parameters (click_through, conversion)
-      if (itemName) {
-        queryParams.item_name = itemName;
-      }
-
-      // Pull customer id from parameters (click_through, conversion)
-      if (customerId) {
-        queryParams.customer_id = customerId;
-      }
-
-      // Pull revenue from parameters (conversion, purchase)
-      if (revenue) {
-        queryParams.revenue = revenue;
-      }
-
-      // Pull customer id's from parameters (purchase)
-      if (customerIds && Array.isArray(customerIds)) {
-        queryParams.customer_ids = customerIds.join(',');
-      }
-    }
-
-    queryParams = utils.cleanParams(queryParams);
-
-    const queryString = qs.stringify(queryParams, { indices: false });
-
-    return `${serviceUrl}/autocomplete/${utils.ourEncodeURIComponent(term)}/${action}?${queryString}`;
-  };
-
-  // Handle response from URL generation
-  const handleResponse = (urlResponse) => {
-    if (urlResponse instanceof Error) {
-      return urlResponse;
-    }
-
-    return true;
-  };
+    return qs.stringify(paramsObj, { indices: false });
+  }
 
   return {
     /**
@@ -201,7 +64,14 @@ export function tracker(options) {
      * @function sendSessionStart
      * @returns {(true|Error)}
      */
-    sendSessionStart: () => handleResponse(createBehaviorUrl('session_start')),
+    sendSessionStart: () => {
+      const url = `${options.serviceUrl}/behavior?`;
+      const queryParamsObj = { action: 'session_start' };
+      const queryString = createQueryString(queryParamsObj);
+
+      queueRequest(`${url}${queryString}`);
+      //this.sendRequests();
+    },
 
     /**
      * Send input focus event to API
@@ -209,7 +79,9 @@ export function tracker(options) {
      * @function sendInputFocus
      * @returns {(true|Error)}
      */
-    sendInputFocus: () => handleResponse(createBehaviorUrl('session_start')),
+    sendInputFocus: () => {
+
+    },
 
     /**
      * Send autocomplete select event to API
@@ -226,14 +98,7 @@ export function tracker(options) {
      * @returns {(true|Error)}
      */
     sendAutocompleteSelect: (term, parameters) => {
-      const storageOption = options.storage.autocompleteItem;
 
-      store[storageOption.scope].set(storageOption.key, JSON.stringify({
-        item: term,
-        section: parameters && (parameters.section || parameters.original_section),
-      }));
-
-      return handleResponse(createAutocompleteUrl('select', term, parameters));
     },
 
     /**
@@ -249,11 +114,7 @@ export function tracker(options) {
      * @returns {(true|Error)}
      */
     sendAutocompleteSearch: (term, parameters) => {
-      const storageOption = options.storage.searchTerm;
 
-      store[storageOption.scope].set(storageOption.key, term);
-
-      return handleResponse(createAutocompleteUrl('search', term, parameters));
     },
 
     /**
@@ -266,7 +127,8 @@ export function tracker(options) {
      * @param {array} [parameters.customerIds] - List of customer item id's returned from search
      * @returns {(true|Error)}
      */
-    sendSearchResults: (term, parameters) => handleResponse(createBehaviorUrl('search-results', term, parameters)),
+    sendSearchResults: (term, parameters) => {
+    },
 
     /**
      * Send click through event to API
@@ -282,7 +144,8 @@ export function tracker(options) {
      * @param {string} parameters.resultId - Result id
      * @returns {(true|Error)}
      */
-    sendSearchResultClick: (term, parameters) => handleResponse(createAutocompleteUrl('click_through', term, parameters)),
+    sendSearchResultClick: (term, parameters) => {
+    },
 
     /**
      * Send conversion event to API
@@ -300,7 +163,8 @@ export function tracker(options) {
      * @param {string} parameters.section - Autocomplete section
      * @returns {(true|Error)}
      */
-    sendConversion: (term, parameters) => handleResponse(createAutocompleteUrl('conversion', term, parameters)),
+    sendConversion: (term, parameters) => {
+    },
 
     /**
      * Send purchase event to API
@@ -312,6 +176,7 @@ export function tracker(options) {
      * @param {string} parameters.section - Autocomplete section
      * @returns {(true|Error)}
      */
-    sendPurchase: (parameters) => handleResponse(createAutocompleteUrl('purchase', 'TERM_UNKNOWN', parameters)),
+    sendPurchase: (parameters) => {
+    },
   };
 }

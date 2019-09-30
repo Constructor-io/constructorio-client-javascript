@@ -19,6 +19,7 @@ class ConstructorIO {
    * @param {object} [testCells] - User test cells
    * @param {string} [clientId] - Client ID, defaults to value supplied by 'constructorio-id'
    * @param {string} [sessionId] - Session id, defaults to value supplied by 'constructorio-id'
+   * @param {string} [userId] - User id
    * @property {object} [search] - Interface to {@link module:search}
    * @property {object} [autocomplete] - Interface to {@link module:autocomplete}
    * @property {object} [recommendations] - Interface to {@link module:recommendations}
@@ -33,6 +34,7 @@ class ConstructorIO {
       testCells,
       clientId,
       sessionId,
+      userId,
     } = options;
 
     if (!apiKey || typeof apiKey !== 'string') {
@@ -48,11 +50,13 @@ class ConstructorIO {
       serviceUrl: serviceUrl || 'https://ac.cnstrc.com',
       sessionId: sessionId || session_id,
       clientId: clientId || client_id,
+      userId: userId,
       segments,
       testCells,
       storage: {
         searchTerm: { scope: 'session', key: '_constructorio_search_term' },
         autocompleteItem: { scope: 'session', key: '_constructorio_selected_item' },
+        events: { scope: 'local', key: '_constructorio_events'},
         cookies: {
           integrationTest: '_constructorio_integration_test',
           isHuman: '_constructorio_is_human',
