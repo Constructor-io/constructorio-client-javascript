@@ -10,13 +10,8 @@ import utils from '../utils';
 
 // Options related to local or session storage
 const storageOptions = {
-  keys: {
-    searchTerm: { scope: 'session', key: '_constructorio_search_term' },
-    autocompleteItem: { scope: 'session', key: '_constructorio_selected_item' },
-    autocompleteEvents: { scope: 'local', key: '_constructorio_autocomplete' },
-    recentSearches: { scope: 'local', key: '_constructorio_recent_searches' },
-  },
-  recentSearchesMaxCount: 100,
+  searchTerm: { scope: 'session', key: '_constructorio_search_term' },
+  autocompleteItem: { scope: 'session', key: '_constructorio_selected_item' },
   integrationTestCookieName: '_constructorio_integration_test',
   isHumanCookieName: '_constructorio_is_human',
 };
@@ -238,7 +233,16 @@ export function tracker(options) {
      * @param {string} [parameters.displayName] - Display name of group of selected item
      * @returns {(true|Error)}
      */
-    sendAutocompleteSelect: (term, parameters) => handleResponse(createAutocompleteUrl('select', term, parameters)),
+    sendAutocompleteSelect: (term, parameters) => {
+      const storageOption = storageOptions.autocompleteItem;
+
+      store[storageOption.scope].set(storageOption.key, JSON.stringify({
+        item: term,
+        section: parameters && (parameters.section || parameters.original_section),
+      }));
+
+      return handleResponse(createAutocompleteUrl('select', term, parameters));
+    },
 
     /**
      * Send autocomplete search event to API
@@ -252,7 +256,13 @@ export function tracker(options) {
      * @param {string} [parameters.displayName] - Display name of group of selected item
      * @returns {(true|Error)}
      */
-    sendAutocompleteSearch: (term, parameters) => handleResponse(createAutocompleteUrl('search', term, parameters)),
+    sendAutocompleteSearch: (term, parameters) => {
+      const storageOption = storageOptions.searchTerm;
+
+      store[storageOption.scope].set(storageOption.key, term);
+
+      return handleResponse(createAutocompleteUrl('search', term, parameters));
+    },
 
     /**
      * Send search results event to API
