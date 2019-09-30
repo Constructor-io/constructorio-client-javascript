@@ -50,6 +50,14 @@ class ConstructorIO {
       clientId: clientId || client_id,
       segments,
       testCells,
+      storage: {
+        searchTerm: { scope: 'session', key: '_constructorio_search_term' },
+        autocompleteItem: { scope: 'session', key: '_constructorio_selected_item' },
+        cookies: {
+          integrationTest: '_constructorio_integration_test',
+          isHuman: '_constructorio_is_human',
+        },
+      },
     };
 
     // Expose modules

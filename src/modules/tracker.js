@@ -8,14 +8,6 @@ import qs from 'qs';
 import store from 'store2';
 import utils from '../utils';
 
-// Options related to local or session storage
-const storageOptions = {
-  searchTerm: { scope: 'session', key: '_constructorio_search_term' },
-  autocompleteItem: { scope: 'session', key: '_constructorio_selected_item' },
-  integrationTestCookieName: '_constructorio_integration_test',
-  isHumanCookieName: '_constructorio_is_human',
-};
-
 /**
  * Interface to tracking related API calls.
  *
@@ -234,7 +226,7 @@ export function tracker(options) {
      * @returns {(true|Error)}
      */
     sendAutocompleteSelect: (term, parameters) => {
-      const storageOption = storageOptions.autocompleteItem;
+      const storageOption = options.storage.autocompleteItem;
 
       store[storageOption.scope].set(storageOption.key, JSON.stringify({
         item: term,
@@ -257,7 +249,7 @@ export function tracker(options) {
      * @returns {(true|Error)}
      */
     sendAutocompleteSearch: (term, parameters) => {
-      const storageOption = storageOptions.searchTerm;
+      const storageOption = options.storage.searchTerm;
 
       store[storageOption.scope].set(storageOption.key, term);
 
