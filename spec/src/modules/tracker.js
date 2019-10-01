@@ -13,10 +13,6 @@ const testApiKey = process.env.TEST_API_KEY;
 describe.only('ConstructorIO - Tracker', () => {
   jsdom({ url: 'http://localhost' });
 
-  describe('initialization', () => {
-
-  });
-
   describe('sendSessionStart', () => {
     beforeEach(() => {
       global.CLIENT_VERSION = 'cio-mocha';

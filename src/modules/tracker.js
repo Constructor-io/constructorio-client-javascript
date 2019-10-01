@@ -75,10 +75,17 @@ export function tracker(options) {
      * Send input focus event to API
      *
      * @function sendInputFocus
-     * @returns {(true|Error)}
+     * @returns {true}
      */
     sendInputFocus: () => {
+      const url = `${options.serviceUrl}/behavior?`;
+      const queryParamsObj = { action: 'focus' };
+      const queryString = createQueryString(queryParamsObj);
 
+      requests.queue(`${url}${queryString}`);
+      requests.send();
+
+      return true;
     },
 
     /**
@@ -96,7 +103,53 @@ export function tracker(options) {
      * @returns {(true|Error)}
      */
     sendAutocompleteSelect: (term, parameters) => {
+      if (term && typeof term === 'string') {
+        const url = `${options.serviceUrl}/autocomplete/${utils.ourEncodeURIComponent(term)}/select?`;
+        const queryParamsObj = {};
+        const storageOption = options.storage.autocompleteItem;
 
+        if (parameters) {
+          const { originalQuery, resultId, section, original_section, tr, groupId, displayName } = parameters;
+
+          if (originalQuery) {
+            queryParamsObj.original_query = originalQuery;
+          }
+
+          if (tr) {
+            queryParamsObj.tr = tr;
+          }
+
+          if (section || original_section) {
+            queryParamsObj.autocomplete_section = section || original_section;
+          }
+
+          if (groupId) {
+            queryParamsObj.group = {
+              group_id: groupId,
+              display_name: displayName || '',
+            };
+          }
+
+          if (resultId) {
+            queryParamsObj.result_id = resultId;
+          }
+        }
+
+        const queryString = createQueryString(queryParamsObj);
+
+        requests.queue(`${url}${queryString}`);
+        requests.send();
+
+        // Store last term in browser storage
+        store[storageOption.scope].set(storageOption.key, JSON.stringify({
+          item: term,
+          section: parameters && (parameters.section || parameters.original_section),
+        }));
+
+        return true;
+      }
+
+      return new Error('term is a required parameter of type string');
     },
 
     /**

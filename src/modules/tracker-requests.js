@@ -8,16 +8,16 @@ const { fetch } = fetchPonyfill({ Promise });
 
 export default function trackerRequests(options) {
   const humanity = trackerHumanity(options);
-  const requestsStorage = options.storage.requests;
+  const storageOption = options.storage.requests;
   let requestPending = false;
   let flushScheduled = false;
-  const requestQueue = store[requestsStorage.scope].get(requestsStorage.key) || [];
+  const requestQueue = store[storageOption.scope].get(storageOption.key) || [];
 
   // Flush requests to storage on unload
   window.addEventListener('beforeunload', () => {
     flushScheduled = true;
 
-    store[requestsStorage.scope].set(requestsStorage.key, requestQueue);
+    store[storageOption.scope].set(storageOption.key, requestQueue);
   });
 
   return {
@@ -29,8 +29,9 @@ export default function trackerRequests(options) {
     },
 
     // Read from queue and send requests to server
-    send: () => {
-      if (humanity.isHuman() && requestQueue.length && !requestPending && flushScheduled) {
+    // - Note: Must not be fat-arrow function to keep context
+    send: function send() {
+      if (humanity.isHuman() && requestQueue.length && !requestPending && !flushScheduled) {
         const nextInQueue = requestQueue.shift();
         const request = fetch(nextInQueue);
 
@@ -39,7 +40,8 @@ export default function trackerRequests(options) {
 
           request.finally(() => {
             requestPending = false;
-            trackerRequests.send();
+
+            this.send();
           });
         }
       }
