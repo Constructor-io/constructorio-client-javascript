@@ -140,7 +140,7 @@ export function tracker(options) {
         requests.queue(`${url}${queryString}`);
         requests.send();
 
-        // Store last term in browser storage
+        // Store term and section in browser storage
         store[storageOption.scope].set(storageOption.key, JSON.stringify({
           item: term,
           section: parameters && (parameters.section || parameters.original_section),
@@ -165,7 +165,42 @@ export function tracker(options) {
      * @returns {(true|Error)}
      */
     sendAutocompleteSearch: (term, parameters) => {
+      if (term && typeof term === 'string') {
+        const url = `${options.serviceUrl}/autocomplete/${utils.ourEncodeURIComponent(term)}/search?`;
+        const queryParamsObj = {};
+        const storageOption = options.storage.searchTerm;
 
+        if (parameters) {
+          const { originalQuery, resultId, groupId, displayName } = parameters;
+
+          if (originalQuery) {
+            queryParamsObj.original_query = originalQuery;
+          }
+
+          if (groupId) {
+            queryParamsObj.group = {
+              group_id: groupId,
+              display_name: displayName,
+            };
+          }
+
+          if (resultId) {
+            queryParamsObj.result_id = resultId;
+          }
+        }
+
+        const queryString = createQueryString(queryParamsObj);
+
+        requests.queue(`${url}${queryString}`);
+        requests.send();
+
+        // Store term in browser storage
+        store[storageOption.scope].set(storageOption.key, term);
+
+        return true
+      }
+
+      return new Error('term is a required parameter of type string');
     },
 
     /**
