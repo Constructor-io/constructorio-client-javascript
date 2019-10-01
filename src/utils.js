@@ -37,7 +37,7 @@ const utils = {
     const botRegex = new RegExp(`(${botList.join('|')})`);
 
     return Boolean(userAgent.match(botRegex)) || Boolean(webdriver);
-  }
+  },
 };
 
 module.exports = utils;

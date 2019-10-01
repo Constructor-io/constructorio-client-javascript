@@ -6,7 +6,22 @@
 */
 import qs from 'qs';
 import store from 'store2';
+import fetchPonyfill from 'fetch-ponyfill';
+import Promise from 'es6-promise';
 import utils from '../utils';
+
+const { fetch } = fetchPonyfill({ Promise });
+const humanEvents = [
+  'scroll',
+  'resize',
+  'touchmove',
+  'mouseover',
+  'mousemove',
+  'keydown',
+  'keypress',
+  'keyup',
+  'focus',
+];
 
 /**
  * Interface to tracking related API calls.
@@ -16,16 +31,63 @@ import utils from '../utils';
  * @returns {object}
  */
 export function tracker(options) {
+  const requestsStorage = options.storage.requests;
+  let requestPending = false;
+  let flushScheduled = false;
+  let isHuman = false;
+  const requestQueue = store[requestsStorage.scope].get(requestsStorage.key) || [];
+
+  // Bind event handlers for humanity detection and unload (invoked on instantiation)
+  (() => {
+    // Humanity proved, remove handlers to prove humanity
+    const remove = () => {
+      isHuman = true;
+
+      humanEvents.forEach((eventType) => {
+        window.removeEventListener(eventType, remove, true);
+      });
+    };
+
+    // Add handlers to prove humanity
+    humanEvents.forEach((eventType) => {
+      window.addEventListener(eventType, remove, true);
+    });
+
+    // Flush requests to storage on unload
+    window.addEventListener('beforeunload', () => {
+      flushScheduled = true;
+
+      store[requestsStorage.scope].set(requestsStorage.key, requestQueue);
+    });
+  })();
+
   // Add request to queue to be dispatched
   const queueRequest = (request) => {
     if (!utils.isBot()) {
-      //this.requestQueue.push(request);
+      requestQueue.push(request);
     }
-  }
+  };
+
+  // Read from queue and send requests to server
+  const sendRequests = () => {
+    if (isHuman && requestQueue.length && !requestPending && flushScheduled) {
+      const nextInQueue = requestQueue.shift();
+      const request = fetch(nextInQueue);
+
+      if (request) {
+        requestPending = true;
+
+        request.finally(() => {
+          requestPending = false;
+          sendRequests();
+        });
+      }
+    }
+  };
 
   // Append common parameters to supplied parameters object
   const createQueryString = (queryParamsObj) => {
-    const { apiKey, version, serviceUrl, sessionId, clientId, userId, segments, testCells } = options;
+    const { apiKey, version, sessionId, clientId, userId, segments } = options;
     const paramsObj = Object.assign(queryParamsObj);
 
     if (version) {
@@ -55,14 +117,14 @@ export function tracker(options) {
     paramsObj._dt = Date.now();
 
     return qs.stringify(paramsObj, { indices: false });
-  }
+  };
 
   return {
     /**
      * Send session start event to API
      *
      * @function sendSessionStart
-     * @returns {(true|Error)}
+     * @returns {true}
      */
     sendSessionStart: () => {
       const url = `${options.serviceUrl}/behavior?`;
@@ -70,7 +132,9 @@ export function tracker(options) {
       const queryString = createQueryString(queryParamsObj);
 
       queueRequest(`${url}${queryString}`);
-      //this.sendRequests();
+      sendRequests();
+
+      return true;
     },
 
     /**

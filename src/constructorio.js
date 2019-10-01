@@ -50,13 +50,13 @@ class ConstructorIO {
       serviceUrl: serviceUrl || 'https://ac.cnstrc.com',
       sessionId: sessionId || session_id,
       clientId: clientId || client_id,
-      userId: userId,
+      userId,
       segments,
       testCells,
       storage: {
         searchTerm: { scope: 'session', key: '_constructorio_search_term' },
         autocompleteItem: { scope: 'session', key: '_constructorio_selected_item' },
-        events: { scope: 'local', key: '_constructorio_events'},
+        requests: { scope: 'local', key: '_constructorio_requests' },
         cookies: {
           integrationTest: '_constructorio_integration_test',
           isHuman: '_constructorio_is_human',

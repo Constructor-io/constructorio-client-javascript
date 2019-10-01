@@ -15,7 +15,16 @@ const { fetch } = fetchPonyfill({ Promise });
 export function search(options) {
   // Create URL from supplied query (term) and parameters
   const createSearchUrl = (query, parameters) => {
-    const { apiKey, version, serviceUrl, sessionId, clientId, userId, segments, testCells } = options;
+    const {
+      apiKey,
+      version,
+      serviceUrl,
+      sessionId,
+      clientId,
+      userId,
+      segments,
+      testCells,
+    } = options;
     const queryParams = { c: version };
 
     queryParams.key = apiKey;
