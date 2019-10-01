@@ -127,18 +127,6 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.sendSearchResults(term)).to.equal(true);
     });
-
-    it('Should throw an error when invalid term parameter is provided', () => {
-      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
-
-      expect(tracker.sendSearchResults([])).to.be.an('error');
-    });
-
-    it('Should throw an error when no term parameter is provided', () => {
-      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
-
-      expect(tracker.sendSearchResults()).to.be.an('error');
-    });
   });
 
   describe('sendSearchResultClick', () => {
@@ -157,18 +145,6 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.sendSearchResultClick(term)).to.equal(true);
     });
-
-    it('Should throw an error when invalid term is provided', () => {
-      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
-
-      expect(tracker.sendSearchResultClick([])).to.be.an('error');
-    });
-
-    it('Should throw an error when no term is provided', () => {
-      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
-
-      expect(tracker.sendSearchResultClick()).to.be.an('error');
-    });
   });
 
   describe('sendConversion', () => {
@@ -186,18 +162,6 @@ describe.only('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
       expect(tracker.sendConversion(term)).to.equal(true);
-    });
-
-    it('Should throw an error when invalid term is provided', () => {
-      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
-
-      expect(tracker.sendConversion([])).to.be.an('error');
-    });
-
-    it('Should throw an error when no term is provided', () => {
-      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
-
-      expect(tracker.sendConversion()).to.be.an('error');
     });
   });
 

@@ -58,7 +58,7 @@ export function tracker(options) {
      * Send session start event to API
      *
      * @function sendSessionStart
-     * @returns {true}
+     * @returns {(true|Error)}
      */
     sendSessionStart: () => {
       const url = `${options.serviceUrl}/behavior?`;
@@ -75,7 +75,7 @@ export function tracker(options) {
      * Send input focus event to API
      *
      * @function sendInputFocus
-     * @returns {true}
+     * @returns {(true|Error)}
      */
     sendInputFocus: () => {
       const url = `${options.serviceUrl}/behavior?`;
@@ -109,7 +109,15 @@ export function tracker(options) {
         const storageOption = options.storage.autocompleteItem;
 
         if (parameters) {
-          const { originalQuery, resultId, section, original_section, tr, groupId, displayName } = parameters;
+          const {
+            originalQuery,
+            resultId,
+            section,
+            original_section,
+            tr,
+            groupId,
+            displayName,
+          } = parameters;
 
           if (originalQuery) {
             queryParamsObj.original_query = originalQuery;
@@ -197,7 +205,7 @@ export function tracker(options) {
         // Store term in browser storage
         store[storageOption.scope].set(storageOption.key, term);
 
-        return true
+        return true;
       }
 
       return new Error('term is a required parameter of type string');
@@ -214,6 +222,27 @@ export function tracker(options) {
      * @returns {(true|Error)}
      */
     sendSearchResults: (term, parameters) => {
+      const url = `${options.serviceUrl}/behavior?`;
+      const queryParamsObj = { action: 'search-results', term };
+
+      if (parameters) {
+        const { numResults, customerIds } = parameters;
+
+        if (numResults) {
+          queryParamsObj.num_results = numResults;
+        }
+
+        if (customerIds && Array.isArray(customerIds)) {
+          queryParamsObj.customer_ids = customerIds.join(',');
+        }
+      }
+
+      const queryString = createQueryString(queryParamsObj);
+
+      requests.queue(`${url}${queryString}`);
+      requests.send();
+
+      return true;
     },
 
     /**
@@ -231,6 +260,44 @@ export function tracker(options) {
      * @returns {(true|Error)}
      */
     sendSearchResultClick: (term, parameters) => {
+      const url = `${options.serviceUrl}/autocomplete/${utils.ourEncodeURIComponent(term)}/click_through?`;
+      const queryParamsObj = {};
+
+      if (parameters && Object.keys(parameters).length > 0) {
+        const { itemId, item, name, itemName, customerId, resultId } = parameters;
+
+        if (itemId) {
+          queryParamsObj.item_id = itemId;
+        }
+
+        if (item) {
+          queryParamsObj.item = item;
+        }
+
+        if (name) {
+          queryParamsObj.name = name;
+        }
+
+        if (itemName) {
+          queryParamsObj.item_name = itemName;
+        }
+
+        if (customerId) {
+          queryParamsObj.customer_id = customerId;
+        }
+
+        if (resultId) {
+          queryParamsObj.result_id = resultId;
+        }
+
+        const queryString = createQueryString(queryParamsObj);
+
+        requests.queue(`${url}${queryString}`);
+      }
+
+      requests.send();
+
+      return true;
     },
 
     /**
@@ -250,6 +317,60 @@ export function tracker(options) {
      * @returns {(true|Error)}
      */
     sendConversion: (term, parameters) => {
+      // eslint-disable-next-line
+      const lastSearchTerm = store[options.storage.searchTerm.scope]
+        .get(options.storage.searchTerm.key);
+      // eslint-disable-next-line
+      const lastSelectedItemData = JSON.parse(store[options.storage.autocompleteItem.scope]
+        .get(options.storage.autocompleteItem.key));
+
+      const searchTerm = utils.ourEncodeURIComponent(term) || 'TERM_UNKNOWN';
+      const url = `${options.serviceUrl}/autocomplete/${searchTerm}/conversion?`;
+      const queryParamsObj = {};
+
+      if (parameters && Object.keys(parameters).length > 0) {
+        const { itemId, item, name, itemName, customerId, resultId, revenue, section } = parameters;
+
+        if (itemId) {
+          queryParamsObj.item_id = itemId;
+        }
+
+        if (item) {
+          queryParamsObj.item = item;
+        }
+
+        if (name) {
+          queryParamsObj.name = name;
+        }
+
+        if (itemName) {
+          queryParamsObj.item_name = itemName;
+        }
+
+        if (customerId) {
+          queryParamsObj.customer_id = customerId;
+        }
+
+        if (resultId) {
+          queryParamsObj.result_id = resultId;
+        }
+
+        if (revenue) {
+          queryParamsObj.revenue = revenue;
+        }
+
+        if (section) {
+          queryParamsObj.autocomplete_section = section;
+        }
+
+        const queryString = createQueryString(queryParamsObj);
+
+        requests.queue(`${url}${queryString}`);
+      }
+
+      requests.send();
+
+      return true;
     },
 
     /**
@@ -263,6 +384,28 @@ export function tracker(options) {
      * @returns {(true|Error)}
      */
     sendPurchase: (parameters) => {
+      const url = `${options.serviceUrl}/autocomplete/TERM_UNKNOWN/purchase?`;
+      const queryParamsObj = {};
+
+      if (parameters && Object.keys(parameters).length > 0) {
+        const { customerIds, section } = parameters;
+
+        if (customerIds) {
+          queryParamsObj.customer_ids = customerIds;
+        }
+
+        if (section) {
+          queryParamsObj.autocomplete_section = section;
+        }
+
+        const queryString = createQueryString(queryParamsObj);
+
+        requests.queue(`${url}${queryString}`);
+      }
+
+      requests.send();
+
+      return true;
     },
   };
 }
