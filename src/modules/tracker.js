@@ -6,22 +6,8 @@
 */
 import qs from 'qs';
 import store from 'store2';
-import fetchPonyfill from 'fetch-ponyfill';
-import Promise from 'es6-promise';
 import utils from '../utils';
-
-const { fetch } = fetchPonyfill({ Promise });
-const humanEvents = [
-  'scroll',
-  'resize',
-  'touchmove',
-  'mouseover',
-  'mousemove',
-  'keydown',
-  'keypress',
-  'keyup',
-  'focus',
-];
+import trackerRequests from './tracker-requests';
 
 /**
  * Interface to tracking related API calls.
@@ -31,59 +17,7 @@ const humanEvents = [
  * @returns {object}
  */
 export function tracker(options) {
-  const requestsStorage = options.storage.requests;
-  let requestPending = false;
-  let flushScheduled = false;
-  let isHuman = false;
-  const requestQueue = store[requestsStorage.scope].get(requestsStorage.key) || [];
-
-  // Bind event handlers for humanity detection and unload (invoked on instantiation)
-  (() => {
-    // Humanity proved, remove handlers to prove humanity
-    const remove = () => {
-      isHuman = true;
-
-      humanEvents.forEach((eventType) => {
-        window.removeEventListener(eventType, remove, true);
-      });
-    };
-
-    // Add handlers to prove humanity
-    humanEvents.forEach((eventType) => {
-      window.addEventListener(eventType, remove, true);
-    });
-
-    // Flush requests to storage on unload
-    window.addEventListener('beforeunload', () => {
-      flushScheduled = true;
-
-      store[requestsStorage.scope].set(requestsStorage.key, requestQueue);
-    });
-  })();
-
-  // Add request to queue to be dispatched
-  const queueRequest = (request) => {
-    if (!utils.isBot()) {
-      requestQueue.push(request);
-    }
-  };
-
-  // Read from queue and send requests to server
-  const sendRequests = () => {
-    if (isHuman && requestQueue.length && !requestPending && flushScheduled) {
-      const nextInQueue = requestQueue.shift();
-      const request = fetch(nextInQueue);
-
-      if (request) {
-        requestPending = true;
-
-        request.finally(() => {
-          requestPending = false;
-          sendRequests();
-        });
-      }
-    }
-  };
+  const requests = trackerRequests(options);
 
   // Append common parameters to supplied parameters object
   const createQueryString = (queryParamsObj) => {
@@ -131,8 +65,8 @@ export function tracker(options) {
       const queryParamsObj = { action: 'session_start' };
       const queryString = createQueryString(queryParamsObj);
 
-      queueRequest(`${url}${queryString}`);
-      sendRequests();
+      requests.queue(`${url}${queryString}`);
+      requests.send();
 
       return true;
     },

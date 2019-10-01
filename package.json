@@ -42,7 +42,8 @@
     "mocha": "^6.2.0",
     "mocha-jsdom": "^2.0.0",
     "nyc": "^14.1.1",
-    "pre-push": "^0.1.1"
+    "pre-push": "^0.1.1",
+    "simulant": "^0.2.2"
   },
   "dependencies": {
     "@constructor-io/constructorio-id": "^2.1.0",
