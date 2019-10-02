@@ -53,15 +53,6 @@ class ConstructorIO {
       userId,
       segments,
       testCells,
-      storage: {
-        searchTerm: { scope: 'session', key: '_constructorio_search_term' },
-        autocompleteItem: { scope: 'session', key: '_constructorio_selected_item' },
-        requests: { scope: 'local', key: '_constructorio_requests' },
-        cookies: {
-          integrationTest: '_constructorio_integration_test',
-          isHuman: '_constructorio_is_human',
-        },
-      },
     };
 
     // Expose modules

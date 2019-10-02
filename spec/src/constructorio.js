@@ -26,7 +26,6 @@ describe('ConstructorIO', () => {
     expect(instance.options).to.have.property('serviceUrl');
     expect(instance.options).to.have.property('clientId');
     expect(instance.options).to.have.property('sessionId');
-    expect(instance.options).to.have.property('storage');
   });
 
   it('Should return an instance with custom options when valid API key is provided', () => {

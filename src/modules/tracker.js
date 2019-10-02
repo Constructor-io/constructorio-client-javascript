@@ -5,7 +5,6 @@
   camelcase
 */
 import qs from 'qs';
-import store from 'store2';
 import utils from '../utils';
 import trackerRequests from './tracker-requests';
 
@@ -106,7 +105,6 @@ export function tracker(options) {
       if (term && typeof term === 'string') {
         const url = `${options.serviceUrl}/autocomplete/${utils.ourEncodeURIComponent(term)}/select?`;
         const queryParamsObj = {};
-        const storageOption = options.storage.autocompleteItem;
 
         if (parameters) {
           const {
@@ -148,12 +146,6 @@ export function tracker(options) {
         requests.queue(`${url}${queryString}`);
         requests.send();
 
-        // Store term and section in browser storage
-        store[storageOption.scope].set(storageOption.key, JSON.stringify({
-          item: term,
-          section: parameters && (parameters.section || parameters.original_section),
-        }));
-
         return true;
       }
 
@@ -176,7 +168,6 @@ export function tracker(options) {
       if (term && typeof term === 'string') {
         const url = `${options.serviceUrl}/autocomplete/${utils.ourEncodeURIComponent(term)}/search?`;
         const queryParamsObj = {};
-        const storageOption = options.storage.searchTerm;
 
         if (parameters) {
           const { originalQuery, resultId, groupId, displayName } = parameters;
@@ -201,9 +192,6 @@ export function tracker(options) {
 
         requests.queue(`${url}${queryString}`);
         requests.send();
-
-        // Store term in browser storage
-        store[storageOption.scope].set(storageOption.key, term);
 
         return true;
       }
@@ -317,13 +305,6 @@ export function tracker(options) {
      * @returns {(true|Error)}
      */
     sendConversion: (term, parameters) => {
-      // eslint-disable-next-line
-      const lastSearchTerm = store[options.storage.searchTerm.scope]
-        .get(options.storage.searchTerm.key);
-      // eslint-disable-next-line
-      const lastSelectedItemData = JSON.parse(store[options.storage.autocompleteItem.scope]
-        .get(options.storage.autocompleteItem.key));
-
       const searchTerm = utils.ourEncodeURIComponent(term) || 'TERM_UNKNOWN';
       const url = `${options.serviceUrl}/autocomplete/${searchTerm}/conversion?`;
       const queryParamsObj = {};

@@ -6,18 +6,18 @@ import trackerHumanity from './tracker-humanity';
 
 const { fetch } = fetchPonyfill({ Promise });
 
-export default function trackerRequests(options) {
-  const humanity = trackerHumanity(options);
-  const storageOption = options.storage.requests;
+export default function trackerRequests() {
+  const humanity = trackerHumanity();
+  const storageKey = '_constructorio_requests';
   let requestPending = false;
   let flushScheduled = false;
-  const requestQueue = store[storageOption.scope].get(storageOption.key) || [];
+  const requestQueue = store.local.get(storageKey) || [];
 
   // Flush requests to storage on unload
   window.addEventListener('beforeunload', () => {
     flushScheduled = true;
 
-    store[storageOption.scope].set(storageOption.key, requestQueue);
+    store.local.set(storageKey, requestQueue);
   });
 
   return {

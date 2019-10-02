@@ -2,7 +2,6 @@ import jsdom from 'mocha-jsdom';
 import dotenv from 'dotenv';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import store from 'store2';
 import ConstructorIO from '../../../src/constructorio';
 
 chai.use(chaiAsPromised);
@@ -57,13 +56,9 @@ describe('ConstructorIO - Tracker', () => {
     });
 
     it('Should respond with a valid response when term is provided', () => {
-      const { tracker, options } = new ConstructorIO({ apiKey: testApiKey });
-      const storageOption = options.storage.autocompleteItem;
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
       expect(tracker.sendAutocompleteSelect(term)).to.equal(true);
-      expect(JSON.parse(store[storageOption.scope].get(storageOption.key))).to.deep.equal({
-        item: term,
-      });
     });
 
     it('Should throw an error when invalid term is provided', () => {
@@ -91,11 +86,9 @@ describe('ConstructorIO - Tracker', () => {
     });
 
     it('Should respond with a valid response when term is provided', () => {
-      const { tracker, options } = new ConstructorIO({ apiKey: testApiKey });
-      const storageOption = options.storage.searchTerm;
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
       expect(tracker.sendAutocompleteSearch(term)).to.equal(true);
-      expect(store[storageOption.scope].get(storageOption.key)).to.deep.equal(term);
     });
 
     it('Should throw an error when invalid term is provided', () => {
