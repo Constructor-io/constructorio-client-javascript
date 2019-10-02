@@ -46,5 +46,8 @@ export default function trackerRequests(options) {
         }
       }
     },
+
+    // Return current queue
+    get: () => requestQueue,
   };
 }

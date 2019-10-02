@@ -1,16 +1,14 @@
-import jsdom from 'mocha-jsdom';
 import dotenv from 'dotenv';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-const { setupDOM, teardownDOM, triggerResize } = require('../../mocha.helpers.js');
 import trackerHumanity from '../../../src/modules/tracker-humanity';
+
+const { setupDOM, teardownDOM, triggerResize } = require('../../mocha.helpers.js');
 
 chai.use(chaiAsPromised);
 dotenv.config();
 
-const testApiKey = process.env.TEST_API_KEY;
-
-describe.only('ConstructorIO - Tracker - Humanity', () => {
+describe('ConstructorIO - Tracker - Humanity', () => {
   describe('isHuman', () => {
     beforeEach(() => {
       global.CLIENT_VERSION = 'cio-mocha';
@@ -30,7 +28,6 @@ describe.only('ConstructorIO - Tracker - Humanity', () => {
 
     it('Should have isHuman flag set if human-like actions are detected', () => {
       const humanity = trackerHumanity();
-      const input = document.querySelector('input');
 
       triggerResize();
 
