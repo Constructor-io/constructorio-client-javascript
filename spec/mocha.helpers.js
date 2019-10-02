@@ -1,5 +1,8 @@
+import store from 'store2';
+
 const { JSDOM } = require('jsdom');
 
+// Setup mock DOM environment
 const setupDOM = () => {
   const { window } = new JSDOM();
 
@@ -7,11 +10,13 @@ const setupDOM = () => {
   global.document = window.document;
 };
 
+// Tear down mock DOM environment
 const teardownDOM = () => {
   delete global.window;
   delete global.document;
 };
 
+// Trigger browser resize event
 const triggerResize = () => {
   const resizeEvent = document.createEvent('Event');
 
@@ -26,8 +31,15 @@ const triggerResize = () => {
   window.resizeTo(1024, 768);
 };
 
+// Clear local and session storage
+const clearStorage = () => {
+  store.local.clearAll();
+  store.session.clearAll();
+};
+
 module.exports = {
   setupDOM,
   teardownDOM,
   triggerResize,
+  clearStorage,
 };
