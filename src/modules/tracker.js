@@ -217,32 +217,44 @@ export function tracker(options) {
      * @function sendSearchResults
      * @param {string} term - Search results query term
      * @param {object} parameters - Additional parameters to be sent with request
-     * @param {number} parameters.numResults - Number of search results in total
-     * @param {array} [parameters.customerIds] - List of customer item id's returned from search
+     * @param {number} parameters.num_results - Number of search results in total
+     * @param {array} [parameters.customer_ids] - List of customer item id's returned from search
      * @returns {(true|Error)}
      */
     sendSearchResults: (term, parameters) => {
-      const url = `${options.serviceUrl}/behavior?`;
-      const queryParamsObj = { action: 'search-results', term };
+      // Ensure term is provided (required)
+      if (term && typeof term === 'string') {
+        // Ensure parameters are provided (required)
+        if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+          const url = `${options.serviceUrl}/behavior?`;
+          const queryParamsObj = { action: 'search-results', term };
 
-      if (parameters) {
-        const { numResults, customerIds } = parameters;
+          if (parameters) {
+            const { num_results, customer_ids } = parameters;
 
-        if (numResults) {
-          queryParamsObj.num_results = numResults;
+            if (num_results) {
+              queryParamsObj.num_results = num_results;
+            }
+
+            if (customer_ids && Array.isArray(customer_ids)) {
+              queryParamsObj.customer_ids = customer_ids.join(',');
+            }
+          }
+
+          requests.queue(`${url}${createQueryString(queryParamsObj)}`);
+          requests.send();
+
+          return true;
         }
 
-        if (customerIds && Array.isArray(customerIds)) {
-          queryParamsObj.customer_ids = customerIds.join(',');
-        }
+        requests.send();
+
+        return new Error('parameters are required of type object');
       }
 
-      const queryString = createQueryString(queryParamsObj);
-
-      requests.queue(`${url}${queryString}`);
       requests.send();
 
-      return true;
+      return new Error('term is a required parameter of type string');
     },
 
     /**
