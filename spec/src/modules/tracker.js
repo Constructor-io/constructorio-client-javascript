@@ -46,6 +46,14 @@ describe('ConstructorIO - Tracker', () => {
 
   describe('sendAutocompleteSelect', () => {
     const term = 'Where The Wild Things Are';
+    const parameters = {
+      original_query: 'query',
+      result_id: 'result-id',
+      section: 'Search Suggestions',
+      tr: 'click',
+      group_id: 'group-id',
+      display_name: 'display-name',
+    };
 
     beforeEach(() => {
       global.CLIENT_VERSION = 'cio-mocha';
@@ -55,22 +63,34 @@ describe('ConstructorIO - Tracker', () => {
       delete global.CLIENT_VERSION;
     });
 
-    it('Should respond with a valid response when term is provided', () => {
+    it('Should respond with a valid response when term and parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendAutocompleteSelect(term)).to.equal(true);
+      expect(tracker.sendAutocompleteSelect(term, parameters)).to.equal(true);
     });
 
     it('Should throw an error when invalid term is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendAutocompleteSelect([])).to.be.an('error');
+      expect(tracker.sendAutocompleteSelect([], parameters)).to.be.an('error');
     });
 
     it('Should throw an error when no term is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendAutocompleteSelect()).to.be.an('error');
+      expect(tracker.sendAutocompleteSelect(null, parameters)).to.be.an('error');
+    });
+
+    it('Should throw an error when invalid parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.sendAutocompleteSelect(term, [])).to.be.an('error');
+    });
+
+    it('Should throw an error when no parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.sendAutocompleteSelect(term)).to.be.an('error');
     });
   });
 

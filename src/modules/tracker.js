@@ -21,7 +21,7 @@ export function tracker(options) {
   // Append common parameters to supplied parameters object
   const createQueryString = (queryParamsObj) => {
     const { apiKey, version, sessionId, clientId, userId, segments } = options;
-    const paramsObj = Object.assign(queryParamsObj);
+    let paramsObj = Object.assign(queryParamsObj);
 
     if (version) {
       paramsObj.c = version;
@@ -48,6 +48,7 @@ export function tracker(options) {
     }
 
     paramsObj._dt = Date.now();
+    paramsObj = utils.cleanParams(paramsObj);
 
     return qs.stringify(paramsObj, { indices: false });
   };
@@ -93,61 +94,68 @@ export function tracker(options) {
      * @function sendAutocompleteSelect
      * @param {string} term - Term of selected autocomplete item
      * @param {object} parameters - Additional parameters to be sent with request
-     * @param {string} parameters.originalQuery - The current autocomplete search query
-     * @param {string} parameters.resultId - Customer id of the selected autocomplete item
+     * @param {string} parameters.original_query - The current autocomplete search query
+     * @param {string} parameters.result_id - Customer id of the selected autocomplete item
      * @param {string} parameters.section - Section the selected item resides within
      * @param {string} [parameters.tr] - Trigger used to select the item (click, etc.)
-     * @param {string} [parameters.groupId] - Group identifier of selected item
-     * @param {string} [parameters.displayName] - Display name of group of selected item
+     * @param {string} [parameters.group_id] - Group identifier of selected item
+     * @param {string} [parameters.display_name] - Display name of group of selected item
      * @returns {(true|Error)}
      */
     sendAutocompleteSelect: (term, parameters) => {
+      // Ensure term is provided (required)
       if (term && typeof term === 'string') {
-        const url = `${options.serviceUrl}/autocomplete/${utils.ourEncodeURIComponent(term)}/select?`;
-        const queryParamsObj = {};
-
-        if (parameters) {
+        // Ensure parameters are provided (required)
+        if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+          const url = `${options.serviceUrl}/autocomplete/${utils.ourEncodeURIComponent(term)}/select?`;
+          const queryParamsObj = {};
           const {
-            originalQuery,
-            resultId,
+            original_query,
+            result_id,
             section,
             original_section,
             tr,
-            groupId,
-            displayName,
+            group_id,
+            display_name,
           } = parameters;
 
-          if (originalQuery) {
-            queryParamsObj.original_query = originalQuery;
+          if (original_query) {
+            queryParamsObj.original_query = original_query;
           }
 
           if (tr) {
             queryParamsObj.tr = tr;
           }
 
-          if (section || original_section) {
-            queryParamsObj.autocomplete_section = section || original_section;
+          if (original_section || section) {
+            queryParamsObj.section = original_section || section;
           }
 
-          if (groupId) {
+          if (group_id) {
             queryParamsObj.group = {
-              group_id: groupId,
-              display_name: displayName || '',
+              group_id,
+              display_name,
             };
           }
 
-          if (resultId) {
-            queryParamsObj.result_id = resultId;
+          if (result_id) {
+            queryParamsObj.result_id = result_id;
           }
+
+          const queryString = createQueryString(queryParamsObj);
+
+          requests.queue(`${url}${queryString}`);
+          requests.send();
+
+          return true;
         }
 
-        const queryString = createQueryString(queryParamsObj);
-
-        requests.queue(`${url}${queryString}`);
         requests.send();
 
-        return true;
+        return new Error('parameters are required of type object');
       }
+
+      requests.send();
 
       return new Error('term is a required parameter of type string');
     },
