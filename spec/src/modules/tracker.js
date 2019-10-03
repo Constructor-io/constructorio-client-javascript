@@ -9,7 +9,7 @@ dotenv.config();
 
 const testApiKey = process.env.TEST_API_KEY;
 
-describe.only('ConstructorIO - Tracker', () => {
+describe('ConstructorIO - Tracker', () => {
   jsdom({ url: 'http://localhost' });
 
   describe('sendSessionStart', () => {
@@ -259,7 +259,7 @@ describe.only('ConstructorIO - Tracker', () => {
       expect(tracker.sendConversion(term, parameters)).to.equal(true);
     });
 
-    it('Should respond with a valid response no term is provided, but parameters are', () => {
+    it('Should respond with a valid response when no term is provided, but parameters are', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
       expect(tracker.sendConversion(null, parameters)).to.equal(true);
@@ -279,6 +279,12 @@ describe.only('ConstructorIO - Tracker', () => {
   });
 
   describe('sendPurchase', () => {
+    const parameters = {
+      customer_ids: 'customer-id',
+      revenue: 123,
+      section: 'Products',
+    };
+
     beforeEach(() => {
       global.CLIENT_VERSION = 'cio-mocha';
     });
@@ -287,10 +293,22 @@ describe.only('ConstructorIO - Tracker', () => {
       delete global.CLIENT_VERSION;
     });
 
-    it('Should respond with a valid response', () => {
+    it('Should respond with a valid response when parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendPurchase()).to.equal(true);
+      expect(tracker.sendPurchase(parameters)).to.equal(true);
+    });
+
+    it('Should throw an error when invalid parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.sendPurchase([])).to.be.an('error');
+    });
+
+    it('Should throw an error when no parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.sendPurchase()).to.be.an('error');
     });
   });
 });

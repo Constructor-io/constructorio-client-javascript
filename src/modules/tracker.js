@@ -358,34 +358,42 @@ export function tracker(options) {
      *
      * @function sendPurchase
      * @param {object} parameters - Additional parameters to be sent with request
-     * @param {array} parameters.customerIds - List of customer item id's
+     * @param {array} parameters.customer_ids - List of customer item id's
      * @param {string} parameters.revenue - Revenue
      * @param {string} parameters.section - Autocomplete section
      * @returns {(true|Error)}
      */
     sendPurchase: (parameters) => {
-      const url = `${options.serviceUrl}/autocomplete/TERM_UNKNOWN/purchase?`;
-      const queryParamsObj = {};
+      // Ensure parameters are provided (required)
+      if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+        const url = `${options.serviceUrl}/autocomplete/TERM_UNKNOWN/purchase?`;
+        const queryParamsObj = {};
 
-      if (parameters && Object.keys(parameters).length > 0) {
-        const { customerIds, section } = parameters;
+        const { customer_ids, revenue, section } = parameters;
 
-        if (customerIds) {
-          queryParamsObj.customer_ids = customerIds;
+        if (customer_ids) {
+          queryParamsObj.customer_ids = customer_ids;
+        }
+
+        if (revenue) {
+          queryParamsObj.revenue = revenue;
         }
 
         if (section) {
-          queryParamsObj.autocomplete_section = section;
+          queryParamsObj.section = section;
+        } else {
+          queryParamsObj.section = 'Products';
         }
 
-        const queryString = createQueryString(queryParamsObj);
+        requests.queue(`${url}${createQueryString(queryParamsObj)}`);
+        requests.send();
 
-        requests.queue(`${url}${queryString}`);
+        return true;
       }
 
       requests.send();
 
-      return true;
+      return new Error('parameters are required of type object');
     },
   };
 }
