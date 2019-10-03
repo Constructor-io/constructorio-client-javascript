@@ -175,24 +175,21 @@ export function tracker(options) {
         if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
           const url = `${options.serviceUrl}/autocomplete/${utils.ourEncodeURIComponent(term)}/search?`;
           const queryParamsObj = {};
+          const { original_query, result_id, group_id, display_name } = parameters;
 
-          if (parameters) {
-            const { original_query, result_id, group_id, display_name } = parameters;
+          if (original_query) {
+            queryParamsObj.original_query = original_query;
+          }
 
-            if (original_query) {
-              queryParamsObj.original_query = original_query;
-            }
+          if (group_id) {
+            queryParamsObj.group = {
+              group_id,
+              display_name,
+            };
+          }
 
-            if (group_id) {
-              queryParamsObj.group = {
-                group_id,
-                display_name,
-              };
-            }
-
-            if (result_id) {
-              queryParamsObj.result_id = result_id;
-            }
+          if (result_id) {
+            queryParamsObj.result_id = result_id;
           }
 
           requests.queue(`${url}${createQueryString(queryParamsObj)}`);
@@ -228,17 +225,14 @@ export function tracker(options) {
         if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
           const url = `${options.serviceUrl}/behavior?`;
           const queryParamsObj = { action: 'search-results', term };
+          const { num_results, customer_ids } = parameters;
 
-          if (parameters) {
-            const { num_results, customer_ids } = parameters;
+          if (num_results) {
+            queryParamsObj.num_results = num_results;
+          }
 
-            if (num_results) {
-              queryParamsObj.num_results = num_results;
-            }
-
-            if (customer_ids && Array.isArray(customer_ids)) {
-              queryParamsObj.customer_ids = customer_ids.join(',');
-            }
+          if (customer_ids && Array.isArray(customer_ids)) {
+            queryParamsObj.customer_ids = customer_ids.join(',');
           }
 
           requests.queue(`${url}${createQueryString(queryParamsObj)}`);
@@ -263,53 +257,46 @@ export function tracker(options) {
      * @function sendSearchResultClick
      * @param {string} term - Search results query term
      * @param {object} parameters - Additional parameters to be sent with request
-     * @param {string} parameters.itemId - Identifier (send either itemId, item, name or itemName)
-     * @param {string} parameters.item - Identifier (send either itemId, item, name or itemName)
      * @param {string} parameters.name - Identifier (send either itemId, item, name or itemName)
-     * @param {string} parameters.itemName - Identifier (send either itemId, item, name or itemName)
-     * @param {string} parameters.customerId - Customer id
-     * @param {string} parameters.resultId - Result id
+     * @param {string} parameters.customer_id - Customer id
+     * @param {string} parameters.result_id - Result id
      * @returns {(true|Error)}
      */
     sendSearchResultClick: (term, parameters) => {
-      const url = `${options.serviceUrl}/autocomplete/${utils.ourEncodeURIComponent(term)}/click_through?`;
-      const queryParamsObj = {};
+      // Ensure term is provided (required)
+      if (term && typeof term === 'string') {
+        // Ensure parameters are provided (required)
+        if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+          const url = `${options.serviceUrl}/autocomplete/${utils.ourEncodeURIComponent(term)}/click_through?`;
+          const queryParamsObj = {};
+          const { name, customer_id, result_id } = parameters;
 
-      if (parameters && Object.keys(parameters).length > 0) {
-        const { itemId, item, name, itemName, customerId, resultId } = parameters;
+          if (name) {
+            queryParamsObj.name = name;
+          }
 
-        if (itemId) {
-          queryParamsObj.item_id = itemId;
+          if (customer_id) {
+            queryParamsObj.customer_id = customer_id;
+          }
+
+          if (result_id) {
+            queryParamsObj.result_id = result_id;
+          }
+
+          requests.queue(`${url}${createQueryString(queryParamsObj)}`);
+          requests.send();
+
+          return true;
         }
 
-        if (item) {
-          queryParamsObj.item = item;
-        }
+        requests.send();
 
-        if (name) {
-          queryParamsObj.name = name;
-        }
-
-        if (itemName) {
-          queryParamsObj.item_name = itemName;
-        }
-
-        if (customerId) {
-          queryParamsObj.customer_id = customerId;
-        }
-
-        if (resultId) {
-          queryParamsObj.result_id = resultId;
-        }
-
-        const queryString = createQueryString(queryParamsObj);
-
-        requests.queue(`${url}${queryString}`);
+        return new Error('parameters are required of type object');
       }
 
       requests.send();
 
-      return true;
+      return new Error('term is a required parameter of type string');
     },
 
     /**

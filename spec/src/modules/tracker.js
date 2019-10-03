@@ -190,6 +190,11 @@ describe.only('ConstructorIO - Tracker', () => {
 
   describe('sendSearchResultClick', () => {
     const term = 'Where The Wild Things Are';
+    const parameters = {
+      name: 'name',
+      customer_id: 'customer-id',
+      result_id: 'result-id',
+    };
 
     beforeEach(() => {
       global.CLIENT_VERSION = 'cio-mocha';
@@ -199,10 +204,34 @@ describe.only('ConstructorIO - Tracker', () => {
       delete global.CLIENT_VERSION;
     });
 
-    it('Should respond with a valid response when term is provided', () => {
+    it('Should respond with a valid response when term and parmeters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendSearchResultClick(term)).to.equal(true);
+      expect(tracker.sendSearchResultClick(term, parameters)).to.equal(true);
+    });
+
+    it('Should throw an error when invalid term is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.sendSearchResultClick([], parameters)).to.be.an('error');
+    });
+
+    it('Should throw an error when no term is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.sendSearchResultClick(null, parameters)).to.be.an('error');
+    });
+
+    it('Should throw an error when invalid parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.sendSearchResultClick(term, [])).to.be.an('error');
+    });
+
+    it('Should throw an error when no parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.sendSearchResultClick(term)).to.be.an('error');
     });
   });
 
