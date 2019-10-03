@@ -257,7 +257,7 @@ export function tracker(options) {
      * @function sendSearchResultClick
      * @param {string} term - Search results query term
      * @param {object} parameters - Additional parameters to be sent with request
-     * @param {string} parameters.name - Identifier (send either itemId, item, name or itemName)
+     * @param {string} parameters.name - Identifier
      * @param {string} parameters.customer_id - Customer id
      * @param {string} parameters.result_id - Result id
      * @returns {(true|Error)}
@@ -305,46 +305,31 @@ export function tracker(options) {
      * @function sendConversion
      * @param {string} term - Search results query term
      * @param {object} parameters - Additional parameters to be sent with request
-     * @param {string} parameters.itemId - Identifier (send either itemId, item, name or itemName)
-     * @param {string} parameters.item - Identifier (send either itemId, item, name or itemName)
-     * @param {string} parameters.name - Identifier (send either itemId, item, name or itemName)
-     * @param {string} parameters.itemName - Identifier (send either itemId, item, name or itemName)
-     * @param {string} parameters.customerId - Customer id
-     * @param {string} parameters.resultId - Result id
+     * @param {string} parameters.name - Identifier
+     * @param {string} parameters.customer_id - Customer id
+     * @param {string} parameters.result_id - Result id
      * @param {string} parameters.revenue - Revenue
      * @param {string} parameters.section - Autocomplete section
      * @returns {(true|Error)}
      */
     sendConversion: (term, parameters) => {
-      const searchTerm = utils.ourEncodeURIComponent(term) || 'TERM_UNKNOWN';
-      const url = `${options.serviceUrl}/autocomplete/${searchTerm}/conversion?`;
-      const queryParamsObj = {};
-
-      if (parameters && Object.keys(parameters).length > 0) {
-        const { itemId, item, name, itemName, customerId, resultId, revenue, section } = parameters;
-
-        if (itemId) {
-          queryParamsObj.item_id = itemId;
-        }
-
-        if (item) {
-          queryParamsObj.item = item;
-        }
+      // Ensure parameters are provided (required)
+      if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+        const searchTerm = utils.ourEncodeURIComponent(term) || 'TERM_UNKNOWN';
+        const url = `${options.serviceUrl}/autocomplete/${searchTerm}/conversion?`;
+        const queryParamsObj = {};
+        const { name, customer_id, result_id, revenue, section } = parameters;
 
         if (name) {
           queryParamsObj.name = name;
         }
 
-        if (itemName) {
-          queryParamsObj.item_name = itemName;
+        if (customer_id) {
+          queryParamsObj.customer_id = customer_id;
         }
 
-        if (customerId) {
-          queryParamsObj.customer_id = customerId;
-        }
-
-        if (resultId) {
-          queryParamsObj.result_id = resultId;
+        if (result_id) {
+          queryParamsObj.result_id = result_id;
         }
 
         if (revenue) {
@@ -352,17 +337,20 @@ export function tracker(options) {
         }
 
         if (section) {
-          queryParamsObj.autocomplete_section = section;
+          queryParamsObj.section = section;
+        } else {
+          queryParamsObj.section = 'Products';
         }
 
-        const queryString = createQueryString(queryParamsObj);
+        requests.queue(`${url}${createQueryString(queryParamsObj)}`);
+        requests.send();
 
-        requests.queue(`${url}${queryString}`);
+        return true;
       }
 
       requests.send();
 
-      return true;
+      return new Error('parameters are required of type object');
     },
 
     /**

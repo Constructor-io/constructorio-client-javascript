@@ -237,6 +237,13 @@ describe.only('ConstructorIO - Tracker', () => {
 
   describe('sendConversion', () => {
     const term = 'Where The Wild Things Are';
+    const parameters = {
+      name: 'name',
+      customer_id: 'customer-id',
+      result_id: 'result-id',
+      revenue: 123,
+      section: 'Products',
+    };
 
     beforeEach(() => {
       global.CLIENT_VERSION = 'cio-mocha';
@@ -246,10 +253,28 @@ describe.only('ConstructorIO - Tracker', () => {
       delete global.CLIENT_VERSION;
     });
 
-    it('Should respond with a valid response when term is provided', () => {
+    it('Should respond with a valid response when term and parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendConversion(term)).to.equal(true);
+      expect(tracker.sendConversion(term, parameters)).to.equal(true);
+    });
+
+    it('Should respond with a valid response no term is provided, but parameters are', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.sendConversion(null, parameters)).to.equal(true);
+    });
+
+    it('Should throw an error when invalid parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.sendSearchResultClick(term, [])).to.be.an('error');
+    });
+
+    it('Should throw an error when no parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.sendSearchResultClick(term)).to.be.an('error');
     });
   });
 
