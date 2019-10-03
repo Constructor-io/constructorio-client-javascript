@@ -1,7 +1,7 @@
-/* eslint-disable import/prefer-default-export, object-curly-newline, no-param-reassign */
-import qs from 'qs';
-import fetchPonyfill from 'fetch-ponyfill';
-import Promise from 'es6-promise';
+/* eslint-disable object-curly-newline, no-param-reassign */
+const qs = require('qs');
+const fetchPonyfill = require('fetch-ponyfill');
+const Promise = require('es6-promise');
 
 const { fetch } = fetchPonyfill({ Promise });
 
@@ -12,7 +12,7 @@ const { fetch } = fetchPonyfill({ Promise });
  * @inner
  * @returns {object}
  */
-export function recommendations(options) {
+const recommendations = (options) => {
   // Create URL from supplied parameters
   const createRecommendationsUrl = (parameters, endpoint) => {
     const { apiKey, version, serviceUrl, sessionId, clientId, segments } = options;
@@ -138,4 +138,8 @@ export function recommendations(options) {
      */
     getUserFeaturedItems: (parameters) => requestAndProcessResponse(createRecommendationsUrl(parameters, 'user_featured_items'), 'user_featured_items'),
   };
-}
+};
+
+module.exports = {
+  recommendations,
+};
