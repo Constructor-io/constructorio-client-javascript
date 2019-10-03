@@ -95,25 +95,25 @@ describe('ConstructorIO - Recommendations', () => {
       });
     });
 
-    it('Should throw an error when invalid itemIds are provided', () => {
+    it('Should be rejected when invalid itemIds are provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(recommendations.getAlternativeItems({})).to.eventually.be.rejected;
     });
 
-    it('Should throw an error when no itemIds are provided', () => {
+    it('Should be rejected when no itemIds are provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(recommendations.getAlternativeItems()).to.eventually.be.rejected;
     });
 
-    it('Should throw an error when invalid results parameter is provided', () => {
+    it('Should be rejected when invalid results parameter is provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(recommendations.getAlternativeItems(itemId, { results: 'abc' })).to.eventually.be.rejected;
     });
 
-    it('Should throw an error when invalid apiKey is provided', () => {
+    it('Should be rejected when invalid apiKey is provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
 
       return expect(recommendations.getAlternativeItems(itemId)).to.eventually.be.rejected;
@@ -201,25 +201,25 @@ describe('ConstructorIO - Recommendations', () => {
       });
     });
 
-    it('Should throw an error when invalid itemIds are provided', () => {
+    it('Should be rejected when invalid itemIds are provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(recommendations.getComplementaryItems({})).to.eventually.be.rejected;
     });
 
-    it('Should throw an error when no itemIds are provided', () => {
+    it('Should be rejected when no itemIds are provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(recommendations.getComplementaryItems()).to.eventually.be.rejected;
     });
 
-    it('Should throw an error when invalid results parameter is provided', () => {
+    it('Should be rejected when invalid results parameter is provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(recommendations.getComplementaryItems(itemId, { results: 'abc' })).to.eventually.be.rejected;
     });
 
-    it('Should throw an error when invalid apiKey is provided', () => {
+    it('Should be rejected when invalid apiKey is provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
 
       return expect(recommendations.getComplementaryItems(itemId)).to.eventually.be.rejected;
@@ -290,13 +290,13 @@ describe('ConstructorIO - Recommendations', () => {
       });
     });
 
-    it('Should throw an error when invalid results parameter is provided', () => {
+    it('Should be rejected when invalid results parameter is provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(recommendations.getRecentlyViewedItems({ results: 'abc' })).to.eventually.be.rejected;
     });
 
-    it('Should throw an error when invalid apiKey is provided', () => {
+    it('Should be rejected when invalid apiKey is provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
 
       return expect(recommendations.getRecentlyViewedItems()).to.eventually.be.rejected;
@@ -367,13 +367,13 @@ describe('ConstructorIO - Recommendations', () => {
       });
     });
 
-    it('Should throw an error when invalid results parameter is provided', () => {
+    it('Should be rejected when invalid results parameter is provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(recommendations.getUserFeaturedItems({ results: 'abc' })).to.eventually.be.rejected;
     });
 
-    it('Should throw an error when invalid apiKey is provided', () => {
+    it('Should be rejected when invalid apiKey is provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
 
       return expect(recommendations.getUserFeaturedItems()).to.eventually.be.rejected;
