@@ -63,9 +63,8 @@ export function tracker(options) {
     sendSessionStart: () => {
       const url = `${options.serviceUrl}/behavior?`;
       const queryParamsObj = { action: 'session_start' };
-      const queryString = createQueryString(queryParamsObj);
 
-      requests.queue(`${url}${queryString}`);
+      requests.queue(`${url}${createQueryString(queryParamsObj)}`);
       requests.send();
 
       return true;
@@ -80,9 +79,8 @@ export function tracker(options) {
     sendInputFocus: () => {
       const url = `${options.serviceUrl}/behavior?`;
       const queryParamsObj = { action: 'focus' };
-      const queryString = createQueryString(queryParamsObj);
 
-      requests.queue(`${url}${queryString}`);
+      requests.queue(`${url}${createQueryString(queryParamsObj)}`);
       requests.send();
 
       return true;
@@ -142,9 +140,7 @@ export function tracker(options) {
             queryParamsObj.result_id = result_id;
           }
 
-          const queryString = createQueryString(queryParamsObj);
-
-          requests.queue(`${url}${queryString}`);
+          requests.queue(`${url}${createQueryString(queryParamsObj)}`);
           requests.send();
 
           return true;
@@ -166,43 +162,51 @@ export function tracker(options) {
      * @function sendAutocompleteSearch
      * @param {string} term - Term of submitted autocomplete event
      * @param {object} parameters - Additional parameters to be sent with request
-     * @param {string} parameters.originalQuery - The current autocomplete search query
-     * @param {string} parameters.resultId - Customer ID of the selected autocomplete item
-     * @param {string} [parameters.groupId] - Group identifier of selected item
-     * @param {string} [parameters.displayName] - Display name of group of selected item
+     * @param {string} parameters.original_query - The current autocomplete search query
+     * @param {string} parameters.result_id - Customer ID of the selected autocomplete item
+     * @param {string} [parameters.group_id] - Group identifier of selected item
+     * @param {string} [parameters.display_name] - Display name of group of selected item
      * @returns {(true|Error)}
      */
     sendAutocompleteSearch: (term, parameters) => {
+      // Ensure term is provided (required)
       if (term && typeof term === 'string') {
-        const url = `${options.serviceUrl}/autocomplete/${utils.ourEncodeURIComponent(term)}/search?`;
-        const queryParamsObj = {};
+        // Ensure parameters are provided (required)
+        if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+          const url = `${options.serviceUrl}/autocomplete/${utils.ourEncodeURIComponent(term)}/search?`;
+          const queryParamsObj = {};
 
-        if (parameters) {
-          const { originalQuery, resultId, groupId, displayName } = parameters;
+          if (parameters) {
+            const { original_query, result_id, group_id, display_name } = parameters;
 
-          if (originalQuery) {
-            queryParamsObj.original_query = originalQuery;
+            if (original_query) {
+              queryParamsObj.original_query = original_query;
+            }
+
+            if (group_id) {
+              queryParamsObj.group = {
+                group_id,
+                display_name,
+              };
+            }
+
+            if (result_id) {
+              queryParamsObj.result_id = result_id;
+            }
           }
 
-          if (groupId) {
-            queryParamsObj.group = {
-              group_id: groupId,
-              display_name: displayName,
-            };
-          }
+          requests.queue(`${url}${createQueryString(queryParamsObj)}`);
+          requests.send();
 
-          if (resultId) {
-            queryParamsObj.result_id = resultId;
-          }
+          return true;
         }
 
-        const queryString = createQueryString(queryParamsObj);
-
-        requests.queue(`${url}${queryString}`);
         requests.send();
 
-        return true;
+        return new Error('parameters are required of type object');
       }
+
+      requests.send();
 
       return new Error('term is a required parameter of type string');
     },

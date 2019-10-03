@@ -9,7 +9,7 @@ dotenv.config();
 
 const testApiKey = process.env.TEST_API_KEY;
 
-describe('ConstructorIO - Tracker', () => {
+describe.only('ConstructorIO - Tracker', () => {
   jsdom({ url: 'http://localhost' });
 
   describe('sendSessionStart', () => {
@@ -47,7 +47,7 @@ describe('ConstructorIO - Tracker', () => {
   describe('sendAutocompleteSelect', () => {
     const term = 'Where The Wild Things Are';
     const parameters = {
-      original_query: 'query',
+      original_query: 'original-query',
       result_id: 'result-id',
       section: 'Search Suggestions',
       tr: 'click',
@@ -96,6 +96,12 @@ describe('ConstructorIO - Tracker', () => {
 
   describe('sendAutocompleteSearch', () => {
     const term = 'Where The Wild Things Are';
+    const parameters = {
+      original_query: 'original-query',
+      result_id: 'result-id',
+      group_id: 'group-id',
+      display_name: 'display-name',
+    };
 
     beforeEach(() => {
       global.CLIENT_VERSION = 'cio-mocha';
@@ -105,22 +111,34 @@ describe('ConstructorIO - Tracker', () => {
       delete global.CLIENT_VERSION;
     });
 
-    it('Should respond with a valid response when term is provided', () => {
+    it('Should respond with a valid response when term and parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendAutocompleteSearch(term)).to.equal(true);
+      expect(tracker.sendAutocompleteSearch(term, parameters)).to.equal(true);
     });
 
     it('Should throw an error when invalid term is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendAutocompleteSearch([])).to.be.an('error');
+      expect(tracker.sendAutocompleteSearch([], parameters)).to.be.an('error');
     });
 
     it('Should throw an error when no term is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendAutocompleteSearch()).to.be.an('error');
+      expect(tracker.sendAutocompleteSearch(null, parameters)).to.be.an('error');
+    });
+
+    it('Should throw an error when invalid parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.sendAutocompleteSearch(term, [])).to.be.an('error');
+    });
+
+    it('Should throw an error when no parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.sendAutocompleteSearch(term)).to.be.an('error');
     });
   });
 
