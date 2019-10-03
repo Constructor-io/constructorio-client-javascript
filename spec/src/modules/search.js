@@ -1,8 +1,8 @@
-import jsdom from 'mocha-jsdom';
-import dotenv from 'dotenv';
-import chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
-import ConstructorIO from '../../../src/constructorio';
+const jsdom = require('mocha-jsdom');
+const dotenv = require('dotenv');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+const ConstructorIO = require('../../../src/constructorio');
 
 chai.use(chaiAsPromised);
 dotenv.config();

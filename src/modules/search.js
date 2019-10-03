@@ -1,7 +1,7 @@
 /* eslint-disable import/prefer-default-export, object-curly-newline */
-import qs from 'qs';
-import fetchPonyfill from 'fetch-ponyfill';
-import Promise from 'es6-promise';
+const qs = require('qs');
+const fetchPonyfill = require('fetch-ponyfill');
+const Promise = require('es6-promise');
 
 const { fetch } = fetchPonyfill({ Promise });
 
@@ -12,7 +12,7 @@ const { fetch } = fetchPonyfill({ Promise });
  * @inner
  * @returns {object}
  */
-export function search(options) {
+const search = (options) => {
   // Create URL from supplied query (term) and parameters
   const createSearchUrl = (query, parameters) => {
     const { apiKey, version, serviceUrl, sessionId, clientId, segments, testCells } = options;
@@ -220,4 +220,8 @@ export function search(options) {
         });
     },
   };
-}
+};
+
+module.exports = {
+  search,
+};
