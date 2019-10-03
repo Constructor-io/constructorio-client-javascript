@@ -169,99 +169,78 @@ describe('ConstructorIO - Search', () => {
       });
     });
 
-    it('Should throw an error when invalid query is provided', () => {
+    it('Should be rejected when invalid query is provided', () => {
       const { search } = new ConstructorIO({ apiKey: testApiKey });
 
       expect(() => search.getSearchResults([], { section })).to.throw('query is a required parameter of type string');
     });
 
-    it('Should throw an error when no query is provided', () => {
+    it('Should be rejected when no query is provided', () => {
       const { search } = new ConstructorIO({ apiKey: testApiKey });
 
       expect(() => search.getSearchResults(null, { section })).to.throw('query is a required parameter of type string');
     });
 
-    it('Should throw an error when invalid page parameter is provided', (done) => {
+    it('Should be rejected when invalid page parameter is provided', () => {
       const { search } = new ConstructorIO({ apiKey: testApiKey });
       const searchParams = {
         section,
         page: 'abc',
       };
 
-      return expect(search.getSearchResults(query, searchParams))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
-        .and.be.an.instanceOf(Error)
-        .notify(done);
+      return expect(search.getSearchResults(query, searchParams)).to.eventually.be.rejected;
     });
 
-    it('Should throw an error when invalid resultsPerPage parameter is provided', (done) => {
+    it('Should be rejected when invalid resultsPerPage parameter is provided', () => {
       const { search } = new ConstructorIO({ apiKey: testApiKey });
       const searchParams = {
         section,
         resultsPerPage: 'abc',
       };
 
-      return expect(search.getSearchResults(query, searchParams))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
-        .and.be.an.instanceOf(Error)
-        .notify(done);
+      return expect(search.getSearchResults(query, searchParams)).to.eventually.be.rejected;
     });
 
-    it('Should throw an error when invalid filters parameter is provided', (done) => {
+    it('Should be rejected when invalid filters parameter is provided', () => {
       const { search } = new ConstructorIO({ apiKey: testApiKey });
       const searchParams = {
         section,
         filters: 'abc',
       };
 
-      return expect(search.getSearchResults(query, searchParams))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
-        .and.be.an.instanceOf(Error)
-        .notify(done);
+      return expect(search.getSearchResults(query, searchParams)).to.eventually.be.rejected;
     });
 
-    it('Should throw an error when invalid sortBy parameter is provided', (done) => {
+    it('Should be rejected when invalid sortBy parameter is provided', () => {
       const { search } = new ConstructorIO({ apiKey: testApiKey });
       const searchParams = {
         section,
         sortBy: ['foo', 'bar'],
       };
 
-      return expect(search.getSearchResults(query, searchParams))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
-        .and.be.an.instanceOf(Error)
-        .notify(done);
+      return expect(search.getSearchResults(query, searchParams)).to.eventually.be.rejected;
     });
 
-    it('Should throw an error when invalid sortOrder parameter is provided', (done) => {
+    it('Should be rejected when invalid sortOrder parameter is provided', () => {
       const { search } = new ConstructorIO({ apiKey: testApiKey });
       const searchParams = {
         section,
         sortOrder: 123,
       };
 
-      return expect(search.getSearchResults(query, searchParams))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
-        .and.be.an.instanceOf(Error)
-        .notify(done);
+      return expect(search.getSearchResults(query, searchParams)).to.eventually.be.rejected;
     });
 
-    it('Should throw an error when invalid section parameter is provided', (done) => {
+    it('Should be rejected when invalid section parameter is provided', () => {
       const { search } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(search.getSearchResults(query, { section: 123 }))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
-        .and.be.an.instanceOf(Error)
-        .notify(done);
+      return expect(search.getSearchResults(query, { section: 123 })).to.eventually.be.rejected;
     });
 
-    it('Should throw an error when invalid apiKey is provided', (done) => {
+    it('Should be rejected when invalid apiKey is provided', () => {
       const { search } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
 
-      return expect(search.getSearchResults(query, { section }))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
-        .and.be.an.instanceOf(Error)
-        .notify(done);
+      return expect(search.getSearchResults(query, { section })).to.eventually.be.rejected;
     });
   });
 
@@ -438,83 +417,68 @@ describe('ConstructorIO - Search', () => {
       });
     });
 
-    it('Should throw an error when invalid page parameter is provided', (done) => {
+    it('Should be rejected when invalid page parameter is provided', () => {
       const { search } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(search.getBrowseResults({
         section,
         filters: { group_id: groupId },
         page: 'abc',
-      })).to.eventually.be.rejectedWith('BAD REQUEST')
-        .and.be.an.instanceOf(Error)
-        .notify(done);
+      })).to.eventually.be.rejected;
     });
 
-    it('Should throw an error when invalid page parameter is provided', (done) => {
+    it('Should be rejected when invalid page parameter is provided', () => {
       const { search } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(search.getBrowseResults({
         section,
         filters: { group_id: groupId },
         resultsPerPage: 'abc',
-      })).to.eventually.be.rejectedWith('BAD REQUEST')
-        .and.be.an.instanceOf(Error)
-        .notify(done);
+      })).to.eventually.be.rejected;
     });
 
-    it('Should throw an error when invalid filters parameter is provided', (done) => {
+    it('Should be rejected when invalid filters parameter is provided', () => {
       const { search } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(search.getBrowseResults({
         section,
         filters: 'abc',
-      })).to.eventually.be.rejectedWith('BAD REQUEST')
-        .and.be.an.instanceOf(Error)
-        .notify(done);
+      })).to.eventually.be.rejected;
     });
 
-    it('Should throw an error when invalid sortBy parameter is provided', (done) => {
+    it('Should be rejected when invalid sortBy parameter is provided', () => {
       const { search } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(search.getBrowseResults({
         section,
         filters: { group_id: groupId },
         sortBy: { foo: 'bar' },
-      })).to.eventually.be.rejectedWith('BAD REQUEST')
-        .and.be.an.instanceOf(Error)
-        .notify(done);
+      })).to.eventually.be.rejected;
     });
 
-    it('Should throw an error when invalid sortOrder parameter is provided', (done) => {
+    it('Should be rejected when invalid sortOrder parameter is provided', () => {
       const { search } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(search.getBrowseResults({
         section,
         filters: { group_id: groupId },
         sortOrder: 'abc',
-      })).to.eventually.be.rejectedWith('BAD REQUEST')
-        .and.be.an.instanceOf(Error)
-        .notify(done);
+      })).to.eventually.be.rejected;
     });
 
-    it('Should throw an error when invalid section parameter is provided', (done) => {
+    it('Should be rejected when invalid section parameter is provided', () => {
       const { search } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(search.getBrowseResults({
         section: 123,
         filters: { group_id: groupId },
-      })).to.eventually.be.rejectedWith('BAD REQUEST')
-        .and.be.an.instanceOf(Error)
-        .notify(done);
+      })).to.eventually.be.rejected;
     });
 
-    it('Should throw an error when invalid apiKey is provided', (done) => {
+    it('Should be rejected when invalid apiKey is provided', () => {
       const { search } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
 
-      return expect(search.getBrowseResults(groupId, { section }))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
-        .and.be.an.instanceOf(Error)
-        .notify(done);
+      return expect(search.getBrowseResults(groupId, { section })).to.eventually.be.rejected;
     });
   });
 });
