@@ -8,17 +8,19 @@ import helpers from '../../mocha.helpers';
 chai.use(chaiAsPromised);
 dotenv.config();
 
-describe.only('ConstructorIO - Tracker - Humanity', () => {
+describe('ConstructorIO - Tracker - Humanity', () => {
   describe('isHuman', () => {
     const storageKey = '_constructorio_is_human';
 
     beforeEach(() => {
       global.CLIENT_VERSION = 'cio-mocha';
+
       helpers.setupDOM();
     });
 
     afterEach(() => {
       delete global.CLIENT_VERSION;
+
       helpers.teardownDOM();
       helpers.clearStorage();
     });

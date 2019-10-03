@@ -31,6 +31,19 @@ const triggerResize = () => {
   window.resizeTo(1024, 768);
 };
 
+// Trigger browser unload event
+const triggerUnload = () => {
+  const unloadEvent = document.createEvent('Event');
+
+  unloadEvent.initEvent('beforeunload', true, true);
+
+  global.window.unload = () => {
+    global.window.dispatchEvent(unloadEvent);
+  };
+
+  window.unload();
+};
+
 // Clear local and session storage
 const clearStorage = () => {
   store.local.clearAll();
@@ -41,5 +54,6 @@ module.exports = {
   setupDOM,
   teardownDOM,
   triggerResize,
+  triggerUnload,
   clearStorage,
 };
