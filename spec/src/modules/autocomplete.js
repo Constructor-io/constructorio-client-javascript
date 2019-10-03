@@ -157,22 +157,31 @@ describe('ConstructorIO - Autocomplete', () => {
       expect(() => autocomplete.getResults(null)).to.throw('query is a required parameter of type string');
     });
 
-    it('Should be rejected when invalid results parameter is provided', () => {
+    it('Should throw an error when invalid results parameter is provided', (done) => {
       const { autocomplete } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(autocomplete.getResults(query, { results: 'abc' })).to.eventually.be.rejected;
+      return expect(autocomplete.getResults(query, { results: 'abc' }))
+        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .and.be.an.instanceOf(Error)
+        .notify(done);
     });
 
-    it('Should be rejected when invalid filters parameter is provided', () => {
+    it('Should throw an error when invalid filters parameter is provided', (done) => {
       const { autocomplete } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(autocomplete.getResults(query, { filters: 'abc' })).to.eventually.be.rejected;
+      return expect(autocomplete.getResults(query, { filters: 'abc' }))
+        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .and.be.an.instanceOf(Error)
+        .notify(done);
     });
 
-    it('Should be rejected when invalid apiKey is provided', () => {
+    it('Should throw an error when invalid apiKey is provided', (done) => {
       const { autocomplete } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
 
-      return expect(autocomplete.getResults(query)).to.eventually.be.rejected;
+      return expect(autocomplete.getResults(query))
+        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .and.be.an.instanceOf(Error)
+        .notify(done);
     });
   });
 });

@@ -64,7 +64,7 @@ const recommendations = (options) => {
         return response.json();
       }
 
-      throw response;
+      throw new Error(response.statusText);
     })
     .then((json) => {
       if (json.response && json.response.results) {
