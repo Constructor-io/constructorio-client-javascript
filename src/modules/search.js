@@ -1,4 +1,4 @@
-/* eslint-disable import/prefer-default-export, object-curly-newline */
+/* eslint-disable object-curly-newline */
 const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
@@ -249,6 +249,4 @@ const search = (options) => {
   };
 };
 
-module.exports = {
-  search,
-};
+module.exports = search;

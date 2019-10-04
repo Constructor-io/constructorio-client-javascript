@@ -1,5 +1,4 @@
-import store from 'store2';
-
+const store = require('store2');
 const { JSDOM } = require('jsdom');
 
 // Setup mock DOM environment

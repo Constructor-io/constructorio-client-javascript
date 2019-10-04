@@ -1,12 +1,12 @@
-import store from 'store2';
-import fetchPonyfill from 'fetch-ponyfill';
-import Promise from 'es6-promise';
-import utils from '../utils';
-import trackerHumanity from './tracker-humanity';
+const store = require('store2');
+const fetchPonyfill = require('fetch-ponyfill');
+const Promise = require('es6-promise');
+const utils = require('../utils');
+const trackerHumanity = require('./tracker-humanity');
 
 const { fetch } = fetchPonyfill({ Promise });
 
-export default function trackerRequests() {
+const trackerRequests = () => {
   const humanity = trackerHumanity();
   const storageKey = '_constructorio_requests';
   let requestPending = false;
@@ -50,4 +50,6 @@ export default function trackerRequests() {
     // Return current queue
     get: () => requestQueue,
   };
-}
+};
+
+module.exports = trackerRequests;

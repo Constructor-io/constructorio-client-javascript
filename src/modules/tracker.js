@@ -1,12 +1,7 @@
-/* eslint-disable
-  import/prefer-default-export,
-  object-curly-newline,
-  no-underscore-dangle,
-  camelcase
-*/
-import qs from 'qs';
-import utils from '../utils';
-import trackerRequests from './tracker-requests';
+/* eslint-disable object-curly-newline, no-underscore-dangle, camelcase */
+const qs = require('qs');
+const utils = require('../utils');
+const trackerRequests = require('./tracker-requests');
 
 /**
  * Interface to tracking related API calls.
@@ -15,7 +10,7 @@ import trackerRequests from './tracker-requests';
  * @inner
  * @returns {object}
  */
-export function tracker(options) {
+const tracker = (options) => {
   const requests = trackerRequests(options);
 
   // Append common parameters to supplied parameters object
@@ -396,4 +391,6 @@ export function tracker(options) {
       return new Error('parameters are required of type object');
     },
   };
-}
+};
+
+module.exports = tracker;

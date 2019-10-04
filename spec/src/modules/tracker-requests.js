@@ -1,10 +1,10 @@
 /* eslint-disable no-restricted-properties, no-underscore-dangle */
-import dotenv from 'dotenv';
-import chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
-import store from 'store2';
-import trackerRequests from '../../../src/modules/tracker-requests';
-import helpers from '../../mocha.helpers';
+const dotenv = require('dotenv');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+const store = require('store2');
+const trackerRequests = require('../../../src/modules/tracker-requests');
+const helpers = require('../../mocha.helpers');
 
 chai.use(chaiAsPromised);
 dotenv.config();

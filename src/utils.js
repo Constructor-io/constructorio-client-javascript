@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
-import qs from 'qs';
-import botList from './botlist';
+const qs = require('qs');
+const botList = require('./botlist');
 
 const utils = {
   ourEncodeURIComponent: (str) => {
@@ -56,4 +56,4 @@ const utils = {
   }),
 };
 
-export default utils;
+module.exports = utils;

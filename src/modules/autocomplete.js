@@ -135,6 +135,4 @@ const autocomplete = (options) => {
   };
 };
 
-module.exports = {
-  autocomplete,
-};
+module.exports = autocomplete;

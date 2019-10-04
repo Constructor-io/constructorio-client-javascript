@@ -1,4 +1,4 @@
-import store from 'store2';
+const store = require('store2');
 
 const humanEvents = [
   'scroll',
@@ -12,7 +12,7 @@ const humanEvents = [
   'focus',
 ];
 
-export default function trackerHumanity() {
+const trackerHumanity = () => {
   const storageKey = '_constructorio_is_human';
   const isHumanStorage = !!store.session.get(storageKey);
   let isHumanBoolean = isHumanStorage || false;
@@ -38,4 +38,6 @@ export default function trackerHumanity() {
     // Return boolean indicating if is human
     isHuman: () => isHumanBoolean || !!store.session.get(storageKey),
   };
-}
+};
+
+module.exports = trackerHumanity;

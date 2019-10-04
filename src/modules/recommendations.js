@@ -182,6 +182,4 @@ const recommendations = (options) => {
   };
 };
 
-module.exports = {
-  recommendations,
-};
+module.exports = recommendations;
