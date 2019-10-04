@@ -99,7 +99,7 @@ describe('ConstructorIO - Recommendations', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(recommendations.getAlternativeItems({}))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .to.eventually.be.rejectedWith('Please specify an argument for either "item_id" or "dsi_id"')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -108,7 +108,7 @@ describe('ConstructorIO - Recommendations', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(recommendations.getAlternativeItems())
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .to.eventually.be.rejectedWith('Please specify an argument for either "item_id" or "dsi_id"')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -117,7 +117,7 @@ describe('ConstructorIO - Recommendations', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(recommendations.getAlternativeItems(itemId, { results: 'abc' }))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .to.eventually.be.rejectedWith('num_results must be an integer')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -126,7 +126,7 @@ describe('ConstructorIO - Recommendations', () => {
       const { recommendations } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
 
       return expect(recommendations.getAlternativeItems(itemId))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .to.eventually.be.rejectedWith('We have no record of this key. You can find your key at app.constructor.io/dashboard.')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -217,7 +217,7 @@ describe('ConstructorIO - Recommendations', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(recommendations.getComplementaryItems({}))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .to.eventually.be.rejectedWith('Please specify an argument for either "item_id" or "dsi_id"')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -226,7 +226,7 @@ describe('ConstructorIO - Recommendations', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(recommendations.getComplementaryItems())
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .to.eventually.be.rejectedWith('Please specify an argument for either "item_id" or "dsi_id"')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -235,7 +235,7 @@ describe('ConstructorIO - Recommendations', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(recommendations.getComplementaryItems(itemId, { results: 'abc' }))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .to.eventually.be.rejectedWith('num_results must be an integer')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -244,7 +244,7 @@ describe('ConstructorIO - Recommendations', () => {
       const { recommendations } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
 
       return expect(recommendations.getComplementaryItems(itemId))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .to.eventually.be.rejectedWith('We have no record of this key. You can find your key at app.constructor.io/dashboard.')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -318,7 +318,7 @@ describe('ConstructorIO - Recommendations', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(recommendations.getRecentlyViewedItems({ results: 'abc' }))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .to.eventually.be.rejectedWith('num_results must be an integer')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -327,7 +327,7 @@ describe('ConstructorIO - Recommendations', () => {
       const { recommendations } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
 
       return expect(recommendations.getRecentlyViewedItems())
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .to.eventually.be.rejectedWith('We have no record of this key. You can find your key at app.constructor.io/dashboard.')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -401,7 +401,7 @@ describe('ConstructorIO - Recommendations', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(recommendations.getUserFeaturedItems({ results: 'abc' }))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .to.eventually.be.rejectedWith('num_results must be an integer')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -410,7 +410,7 @@ describe('ConstructorIO - Recommendations', () => {
       const { recommendations } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
 
       return expect(recommendations.getUserFeaturedItems())
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .to.eventually.be.rejectedWith('We have no record of this key. You can find your key at app.constructor.io/dashboard.')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });

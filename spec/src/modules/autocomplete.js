@@ -161,7 +161,7 @@ describe('ConstructorIO - Autocomplete', () => {
       const { autocomplete } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(autocomplete.getResults(query, { results: 'abc' }))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .to.eventually.be.rejectedWith('num_results must be an integer')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -170,7 +170,7 @@ describe('ConstructorIO - Autocomplete', () => {
       const { autocomplete } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(autocomplete.getResults(query, { filters: 'abc' }))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .to.eventually.be.rejectedWith('Failed to parse the provided filters. Please check the syntax and try again')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -179,7 +179,7 @@ describe('ConstructorIO - Autocomplete', () => {
       const { autocomplete } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
 
       return expect(autocomplete.getResults(query))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .to.eventually.be.rejectedWith('We have no record of this key. You can find your key at app.constructor.io/dashboard.')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
