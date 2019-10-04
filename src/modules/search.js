@@ -161,6 +161,7 @@ const search = (options) => {
           if (response.ok) {
             return response.json();
           }
+
           return throwHttpErrorFromResponse(response);
         })
         .then((json) => {

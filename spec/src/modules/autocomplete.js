@@ -157,31 +157,22 @@ describe('ConstructorIO - Autocomplete', () => {
       expect(() => autocomplete.getResults(null)).to.throw('query is a required parameter of type string');
     });
 
-    it('Should throw an error when invalid results parameter is provided', (done) => {
+    it('Should be rejected when invalid results parameter is provided', () => {
       const { autocomplete } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(autocomplete.getResults(query, { results: 'abc' }))
-        .to.eventually.be.rejectedWith('num_results must be an integer')
-        .and.be.an.instanceOf(Error)
-        .notify(done);
+      return expect(autocomplete.getResults(query, { results: 'abc' })).to.eventually.be.rejected;
     });
 
-    it('Should throw an error when invalid filters parameter is provided', (done) => {
+    it('Should be rejected when invalid filters parameter is provided', () => {
       const { autocomplete } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(autocomplete.getResults(query, { filters: 'abc' }))
-        .to.eventually.be.rejectedWith('Failed to parse the provided filters. Please check the syntax and try again')
-        .and.be.an.instanceOf(Error)
-        .notify(done);
+      return expect(autocomplete.getResults(query, { filters: 'abc' })).to.eventually.be.rejected;
     });
 
-    it('Should throw an error when invalid apiKey is provided', (done) => {
+    it('Should be rejected when invalid apiKey is provided', () => {
       const { autocomplete } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
 
-      return expect(autocomplete.getResults(query))
-        .to.eventually.be.rejectedWith('We have no record of this key. You can find your key at app.constructor.io/dashboard.')
-        .and.be.an.instanceOf(Error)
-        .notify(done);
+      return expect(autocomplete.getResults(query)).to.eventually.be.rejected;
     });
   });
 });
