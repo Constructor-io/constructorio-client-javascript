@@ -189,7 +189,7 @@ describe('ConstructorIO - Search', () => {
       };
 
       return expect(search.getSearchResults(query, searchParams))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .to.eventually.be.rejectedWith('page must be an integer')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -202,7 +202,7 @@ describe('ConstructorIO - Search', () => {
       };
 
       return expect(search.getSearchResults(query, searchParams))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .to.eventually.be.rejectedWith('num_results_per_page must be an integer')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -215,7 +215,7 @@ describe('ConstructorIO - Search', () => {
       };
 
       return expect(search.getSearchResults(query, searchParams))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .to.eventually.be.rejectedWith('filters must be a dictionary')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -228,7 +228,7 @@ describe('ConstructorIO - Search', () => {
       };
 
       return expect(search.getSearchResults(query, searchParams))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .to.eventually.be.rejectedWith('sort_by must be a string')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -241,7 +241,7 @@ describe('ConstructorIO - Search', () => {
       };
 
       return expect(search.getSearchResults(query, searchParams))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .to.eventually.be.rejectedWith('Invalid value for parameter: "sort_order"')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -250,7 +250,7 @@ describe('ConstructorIO - Search', () => {
       const { search } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(search.getSearchResults(query, { section: 123 }))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .to.eventually.be.rejectedWith('Unknown section: 123')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -259,7 +259,7 @@ describe('ConstructorIO - Search', () => {
       const { search } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
 
       return expect(search.getSearchResults(query, { section }))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .to.eventually.be.rejectedWith('We have no record of this key. You can find your key at app.constructor.io/dashboard.')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -445,7 +445,7 @@ describe('ConstructorIO - Search', () => {
         section,
         filters: { group_id: groupId },
         page: 'abc',
-      })).to.eventually.be.rejectedWith('BAD REQUEST')
+      })).to.eventually.be.rejectedWith('page must be an integer')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -457,7 +457,7 @@ describe('ConstructorIO - Search', () => {
         section,
         filters: { group_id: groupId },
         resultsPerPage: 'abc',
-      })).to.eventually.be.rejectedWith('BAD REQUEST')
+      })).to.eventually.be.rejectedWith('num_results_per_page must be an integer')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -468,7 +468,7 @@ describe('ConstructorIO - Search', () => {
       return expect(search.getBrowseResults({
         section,
         filters: 'abc',
-      })).to.eventually.be.rejectedWith('BAD REQUEST')
+      })).to.eventually.be.rejectedWith('filters must be a dictionary')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -480,7 +480,7 @@ describe('ConstructorIO - Search', () => {
         section,
         filters: { group_id: groupId },
         sortBy: { foo: 'bar' },
-      })).to.eventually.be.rejectedWith('BAD REQUEST')
+      })).to.eventually.be.rejectedWith('sort_by must be a string')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -492,7 +492,7 @@ describe('ConstructorIO - Search', () => {
         section,
         filters: { group_id: groupId },
         sortOrder: 'abc',
-      })).to.eventually.be.rejectedWith('BAD REQUEST')
+      })).to.eventually.be.rejectedWith('Invalid value for parameter: "sort_order"')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -503,7 +503,7 @@ describe('ConstructorIO - Search', () => {
       return expect(search.getBrowseResults({
         section: 123,
         filters: { group_id: groupId },
-      })).to.eventually.be.rejectedWith('BAD REQUEST')
+      })).to.eventually.be.rejectedWith('Unknown section: 123')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
@@ -512,7 +512,7 @@ describe('ConstructorIO - Search', () => {
       const { search } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
 
       return expect(search.getBrowseResults(groupId, { section }))
-        .to.eventually.be.rejectedWith('BAD REQUEST')
+        .to.eventually.be.rejectedWith('We have no record of this key. You can find your key at app.constructor.io/dashboard.')
         .and.be.an.instanceOf(Error)
         .notify(done);
     });
