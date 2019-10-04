@@ -161,8 +161,7 @@ const search = (options) => {
           if (response.ok) {
             return response.json();
           }
-
-          return throwHttpErrorFromResponse(response);
+          return throwHttpErrorFromResponse(new Error(), response);
         })
         .then((json) => {
           if (json.response && json.response.results) {
@@ -202,7 +201,7 @@ const search = (options) => {
             return response.json();
           }
 
-          return throwHttpErrorFromResponse(response);
+          return throwHttpErrorFromResponse(new Error(), response);
         })
         .then((json) => {
           if (json.response && json.response.results) {

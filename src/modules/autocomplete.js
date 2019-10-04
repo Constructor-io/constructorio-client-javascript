@@ -86,7 +86,7 @@ const autocomplete = (options) => {
             return response.json();
           }
 
-          return throwHttpErrorFromResponse(response);
+          return throwHttpErrorFromResponse(new Error(), response);
         })
         .then((json) => {
           if (json.sections) {
