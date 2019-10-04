@@ -2,6 +2,7 @@
 const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
+const { throwHttpErrorFromResponse } = require('../utils');
 
 const { fetch } = fetchPonyfill({ Promise });
 
@@ -91,7 +92,13 @@ const autocomplete = (options) => {
      * @see https://docs.constructor.io/rest-api.html#autocomplete
      */
     getResults: (query, parameters) => {
-      const requestUrl = createAutocompleteUrl(query, parameters);
+      let requestUrl;
+
+      try {
+        requestUrl = createAutocompleteUrl(query, parameters);
+      } catch (e) {
+        return Promise.reject(e);
+      }
 
       return fetch(requestUrl)
         .then((response) => {
@@ -99,7 +106,7 @@ const autocomplete = (options) => {
             return response.json();
           }
 
-          throw new Error(response.statusText);
+          return throwHttpErrorFromResponse(new Error(), response);
         })
         .then((json) => {
           if (json.sections) {

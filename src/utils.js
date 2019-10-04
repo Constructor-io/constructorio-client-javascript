@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import qs from 'qs';
 import botList from './botlist';
 
@@ -38,6 +39,21 @@ const utils = {
 
     return Boolean(userAgent.match(botRegex)) || Boolean(webdriver);
   },
+
+  /**
+   * Returns a thenable that throws an http error based on a fetch response
+   * @param {Error} An error (to preserve the stack trace)
+   * @param {Object} A fetch response
+   */
+  throwHttpErrorFromResponse: (error, response) => response.json().then((json) => {
+    error.message = json.message;
+    error.status = response.status;
+    error.statusText = response.statusText;
+    error.url = response.url;
+    error.headers = response.headers;
+
+    throw error;
+  }),
 };
 
 export default utils;
