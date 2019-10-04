@@ -2,6 +2,7 @@
 const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
+const { throwHttpErrorFromResponse } = require('../utils');
 
 const { fetch } = fetchPonyfill({ Promise });
 
@@ -85,7 +86,7 @@ const autocomplete = (options) => {
             return response.json();
           }
 
-          throw new Error(response.statusText);
+          return throwHttpErrorFromResponse(response);
         })
         .then((json) => {
           if (json.sections) {
