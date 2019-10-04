@@ -1,6 +1,6 @@
 {
   "name": "@constructor-io/constructorio-client-javascript",
-  "version": "1.5.5",
+  "version": "1.5.7",
   "description": "Constructor.io JavaScript client",
   "main": "src/constructorio.js",
   "scripts": {
@@ -46,7 +46,7 @@
     "pre-push": "^0.1.1"
   },
   "dependencies": {
-    "@constructor-io/constructorio-id": "^2.1.0",
+    "@constructor-io/constructorio-id": "^2.1.1",
     "es6-promise": "^4.2.8",
     "fetch-ponyfill": "^6.1.0",
     "qs": "^6.8.0",

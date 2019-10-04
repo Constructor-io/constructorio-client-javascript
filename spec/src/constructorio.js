@@ -1,5 +1,5 @@
-import jsdom from 'mocha-jsdom';
-import ConstructorIO from '../../src/constructorio';
+const jsdom = require('mocha-jsdom');
+const ConstructorIO = require('../../src/constructorio');
 
 const validApiKey = 'testing';
 

@@ -1,7 +1,7 @@
-/* eslint-disable import/prefer-default-export, object-curly-newline */
-import qs from 'qs';
-import fetchPonyfill from 'fetch-ponyfill';
-import Promise from 'es6-promise';
+/* eslint-disable object-curly-newline */
+const qs = require('qs');
+const fetchPonyfill = require('fetch-ponyfill');
+const Promise = require('es6-promise');
 
 const { fetch } = fetchPonyfill({ Promise });
 
@@ -12,7 +12,7 @@ const { fetch } = fetchPonyfill({ Promise });
  * @inner
  * @returns {object}
  */
-export function autocomplete(options) {
+const autocomplete = (options) => {
   // Create URL from supplied query (term) and parameters
   const createAutocompleteUrl = (query, parameters) => {
     const {
@@ -126,4 +126,8 @@ export function autocomplete(options) {
         });
     },
   };
-}
+};
+
+module.exports = {
+  autocomplete,
+};
