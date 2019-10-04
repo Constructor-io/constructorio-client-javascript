@@ -2,6 +2,7 @@
 const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
+const { throwHttpErrorFromResponse } = require('../utils');
 
 const { fetch } = fetchPonyfill({ Promise });
 
@@ -153,7 +154,13 @@ const search = (options) => {
      * @see https://docs.constructor.io/rest-api.html#search
      */
     getSearchResults: (query, parameters) => {
-      const requestUrl = createSearchUrl(query, parameters, options);
+      let requestUrl;
+
+      try {
+        requestUrl = createSearchUrl(query, parameters, options);
+      } catch (e) {
+        return Promise.reject(e);
+      }
 
       return fetch(requestUrl)
         .then((response) => {
@@ -161,7 +168,7 @@ const search = (options) => {
             return response.json();
           }
 
-          throw new Error(response.statusText);
+          return throwHttpErrorFromResponse(new Error(), response);
         })
         .then((json) => {
           if (json.response && json.response.results) {
@@ -193,7 +200,13 @@ const search = (options) => {
      * @see https://docs.constructor.io
      */
     getBrowseResults(parameters) {
-      const requestUrl = createBrowseUrl(parameters);
+      let requestUrl;
+
+      try {
+        requestUrl = createBrowseUrl(parameters);
+      } catch (e) {
+        return Promise.reject(e);
+      }
 
       return fetch(requestUrl)
         .then((response) => {
@@ -201,7 +214,7 @@ const search = (options) => {
             return response.json();
           }
 
-          throw new Error(response.statusText);
+          return throwHttpErrorFromResponse(new Error(), response);
         })
         .then((json) => {
           if (json.response && json.response.results) {
