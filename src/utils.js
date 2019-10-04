@@ -12,6 +12,7 @@ function throwHttpErrorFromResponse(error, response) {
     error.statusText = response.statusText;
     error.url = response.url;
     error.headers = response.headers;
+
     throw error;
   });
 }

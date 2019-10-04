@@ -143,18 +143,18 @@ describe('ConstructorIO - Autocomplete', () => {
       });
     });
 
-    it('Should throw an error when invalid query is provided', () => {
+    it('Should be rejected when invalid query is provided', () => {
       const { autocomplete } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(() => autocomplete.getResults([])).to.throw('query is a required parameter of type string');
+      return expect(autocomplete.getResults([])).to.eventually.be.rejected;
     });
 
-    it('Should throw an error when no query is provided', () => {
+    it('Should be rejected when no query is provided', () => {
       const { autocomplete } = new ConstructorIO({
         apiKey: testApiKey,
       });
 
-      expect(() => autocomplete.getResults(null)).to.throw('query is a required parameter of type string');
+      return expect(autocomplete.getResults(null)).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid results parameter is provided', () => {

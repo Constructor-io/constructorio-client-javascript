@@ -94,10 +94,18 @@ const recommendations = (options) => {
      * @see https://docs.constructor.io/rest-api.html
      */
     getAlternativeItems: (itemIds, parameters) => {
+      let requestUrl;
+
       parameters = parameters || {};
       parameters.itemIds = itemIds;
 
-      return requestAndProcessResponse(createRecommendationsUrl(parameters, 'alternative_items'), 'alternative_items');
+      try {
+        requestUrl = createRecommendationsUrl(parameters, 'alternative_items');
+      } catch (e) {
+        return Promise.reject(e);
+      }
+
+      return requestAndProcessResponse(requestUrl, 'alternative_items');
     },
 
     /**
@@ -111,10 +119,18 @@ const recommendations = (options) => {
      * @see https://docs.constructor.io/rest-api.html
      */
     getComplementaryItems: (itemIds, parameters) => {
+      let requestUrl;
+
       parameters = parameters || {};
       parameters.itemIds = itemIds;
 
-      return requestAndProcessResponse(createRecommendationsUrl(parameters, 'complementary_items'), 'complementary_items');
+      try {
+        requestUrl = createRecommendationsUrl(parameters, 'complementary_items');
+      } catch (e) {
+        return Promise.reject(e);
+      }
+
+      return requestAndProcessResponse(requestUrl, 'complementary_items');
     },
 
     /**
@@ -126,7 +142,17 @@ const recommendations = (options) => {
      * @returns {Promise}
      * @see https://docs.constructor.io/rest-api.html
      */
-    getRecentlyViewedItems: (parameters) => requestAndProcessResponse(createRecommendationsUrl(parameters, 'recently_viewed_items'), 'recently_viewed_items'),
+    getRecentlyViewedItems: (parameters) => {
+      let requestUrl;
+
+      try {
+        requestUrl = createRecommendationsUrl(parameters, 'recently_viewed_items');
+      } catch (e) {
+        return Promise.reject(e);
+      }
+
+      return requestAndProcessResponse(requestUrl, 'recently_viewed_items');
+    },
 
     /**
      * Get user featured item recommendations
@@ -137,7 +163,17 @@ const recommendations = (options) => {
      * @returns {Promise}
      * @see https://docs.constructor.io/rest-api.html
      */
-    getUserFeaturedItems: (parameters) => requestAndProcessResponse(createRecommendationsUrl(parameters, 'user_featured_items'), 'user_featured_items'),
+    getUserFeaturedItems: (parameters) => {
+      let requestUrl;
+
+      try {
+        requestUrl = createRecommendationsUrl(parameters, 'user_featured_items');
+      } catch (e) {
+        return Promise.reject(e);
+      }
+
+      return requestAndProcessResponse(requestUrl, 'user_featured_items');
+    },
   };
 };
 

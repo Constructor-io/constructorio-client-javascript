@@ -169,16 +169,16 @@ describe('ConstructorIO - Search', () => {
       });
     });
 
-    it('Should throw an error when invalid query is provided', () => {
+    it('Should be rejected when invalid query is provided', () => {
       const { search } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(() => search.getSearchResults([], { section })).to.throw('query is a required parameter of type string');
+      return expect(search.getSearchResults([], { section })).to.eventually.be.rejected;
     });
 
-    it('Should throw an error when no query is provided', () => {
+    it('Should be rejected when no query is provided', () => {
       const { search } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(() => search.getSearchResults(null, { section })).to.throw('query is a required parameter of type string');
+      return expect(search.getSearchResults(null, { section })).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid page parameter is provided', () => {

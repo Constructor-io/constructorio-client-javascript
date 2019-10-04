@@ -78,7 +78,13 @@ const autocomplete = (options) => {
      * @see https://docs.constructor.io/rest-api.html#autocomplete
      */
     getResults: (query, parameters) => {
-      const requestUrl = createAutocompleteUrl(query, parameters);
+      let requestUrl;
+
+      try {
+        requestUrl = createAutocompleteUrl(query, parameters);
+      } catch (e) {
+        return Promise.reject(e);
+      }
 
       return fetch(requestUrl)
         .then((response) => {

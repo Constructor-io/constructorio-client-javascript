@@ -154,13 +154,20 @@ const search = (options) => {
      * @see https://docs.constructor.io/rest-api.html#search
      */
     getSearchResults: (query, parameters) => {
-      const requestUrl = createSearchUrl(query, parameters, options);
+      let requestUrl;
+
+      try {
+        requestUrl = createSearchUrl(query, parameters, options);
+      } catch (e) {
+        return Promise.reject(e);
+      }
 
       return fetch(requestUrl)
         .then((response) => {
           if (response.ok) {
             return response.json();
           }
+
           return throwHttpErrorFromResponse(new Error(), response);
         })
         .then((json) => {
@@ -193,7 +200,13 @@ const search = (options) => {
      * @see https://docs.constructor.io
      */
     getBrowseResults(parameters) {
-      const requestUrl = createBrowseUrl(parameters);
+      let requestUrl;
+
+      try {
+        requestUrl = createBrowseUrl(parameters);
+      } catch (e) {
+        return Promise.reject(e);
+      }
 
       return fetch(requestUrl)
         .then((response) => {
