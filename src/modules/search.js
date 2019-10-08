@@ -4,8 +4,6 @@ const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
 const { throwHttpErrorFromResponse } = require('../utils');
 
-const { fetch } = fetchPonyfill({ Promise });
-
 /**
  * Interface to search related API calls.
  *
@@ -14,6 +12,8 @@ const { fetch } = fetchPonyfill({ Promise });
  * @returns {object}
  */
 const search = (options) => {
+  const fetch = (options && options.fetch) || fetchPonyfill({ Promise }).fetch;
+
   // Create URL from supplied query (term) and parameters
   const createSearchUrl = (query, parameters) => {
     const { apiKey, version, serviceUrl, sessionId, clientId, segments, testCells } = options;

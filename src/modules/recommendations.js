@@ -4,8 +4,6 @@ const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
 const { throwHttpErrorFromResponse } = require('../utils');
 
-const { fetch } = fetchPonyfill({ Promise });
-
 /**
  * Interface to recommendations related API calls.
  *
@@ -14,6 +12,8 @@ const { fetch } = fetchPonyfill({ Promise });
  * @returns {object}
  */
 const recommendations = (options) => {
+  const fetch = (options && options.fetch) || fetchPonyfill({ Promise }).fetch;
+
   // Create URL from supplied parameters
   const createRecommendationsUrl = (parameters, endpoint) => {
     const { apiKey, version, serviceUrl, sessionId, clientId, segments } = options;
