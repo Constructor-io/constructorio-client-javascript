@@ -1,5 +1,5 @@
-const store = require('../src/store');
 const { JSDOM } = require('jsdom');
+const store = require('../src/store');
 
 // Setup mock DOM environment
 const setupDOM = () => {
