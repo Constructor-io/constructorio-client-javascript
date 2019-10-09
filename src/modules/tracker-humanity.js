@@ -1,4 +1,4 @@
-const store = require('store2');
+const store = require('../store');
 
 const humanEvents = [
   'scroll',
