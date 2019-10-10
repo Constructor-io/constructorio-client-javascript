@@ -1,7 +1,7 @@
 const dotenv = require('dotenv');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
-const store = require('store2');
+const store = require('../../../src/store');
 const trackerHumanity = require('../../../src/modules/tracker-humanity');
 const helpers = require('../../mocha.helpers');
 
