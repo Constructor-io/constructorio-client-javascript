@@ -35,6 +35,7 @@ class ConstructorIO {
       clientId,
       sessionId,
       userId,
+      fetch,
     } = options;
 
     if (!apiKey || typeof apiKey !== 'string') {
@@ -53,6 +54,7 @@ class ConstructorIO {
       userId,
       segments,
       testCells,
+      fetch,
     };
 
     // Expose modules

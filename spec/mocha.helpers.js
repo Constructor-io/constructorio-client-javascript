@@ -1,4 +1,5 @@
 const store = require('store2');
+const qs = require('qs');
 const { JSDOM } = require('jsdom');
 
 // Setup mock DOM environment
@@ -49,10 +50,24 @@ const clearStorage = () => {
   store.session.clearAll();
 };
 
+// Extract query parameters as object from url
+const extractUrlParamsFromFetch = (fetch) => {
+  const lastCallArguments = fetch && fetch.args && fetch.args[fetch.args.length - 1];
+  const url = lastCallArguments[0];
+  const urlSplit = url && url.split('?');
+
+  if (urlSplit && urlSplit[1]) {
+    return qs.parse(urlSplit[1]);
+  }
+
+  return null;
+};
+
 module.exports = {
   setupDOM,
   teardownDOM,
   triggerResize,
   triggerUnload,
   clearStorage,
+  extractUrlParamsFromFetch,
 };
