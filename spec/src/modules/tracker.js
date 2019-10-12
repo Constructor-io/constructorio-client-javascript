@@ -18,7 +18,7 @@ dotenv.config();
 const testApiKey = process.env.TEST_API_KEY;
 const { fetch } = fetchPonyfill({ Promise });
 
-describe.only('ConstructorIO - Tracker', () => {
+describe('ConstructorIO - Tracker', () => {
   const clientVersion = 'cio-mocha';
   let fetchSpy;
 
@@ -519,6 +519,19 @@ describe.only('ConstructorIO - Tracker', () => {
       expect(requestedUrlParams).to.have.property('section').to.equal(parameters.section);
     });
 
+    it('Should respond with a valid response and section should be defaulted when term and parameters are provided', () => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      expect(tracker.sendConversion(term, parameters)).to.equal(true);
+
+      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+      expect(requestedUrlParams).to.have.property('section').to.equal('Products');
+    });
+
     it('Should respond with a valid response when term, parameters and segments are provided', () => {
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
@@ -594,6 +607,19 @@ describe.only('ConstructorIO - Tracker', () => {
       expect(requestedUrlParams).to.have.property('customer_ids').to.equal(parameters.customer_ids);
       expect(requestedUrlParams).to.have.property('revenue').to.equal(parameters.revenue.toString());
       expect(requestedUrlParams).to.have.property('section').to.equal(parameters.section);
+    });
+
+    it('Should respond with a valid response and section should be defaulted when term and parameters are provided', () => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      expect(tracker.sendPurchase(parameters)).to.equal(true);
+
+      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+      expect(requestedUrlParams).to.have.property('section').to.equal('Products');
     });
 
     it('Should respond with a valid response parameters and segments are provided', () => {
