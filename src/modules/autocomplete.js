@@ -1,8 +1,8 @@
-/* eslint-disable object-curly-newline */
+/* eslint-disable object-curly-newline, no-underscore-dangle */
 const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
-const { throwHttpErrorFromResponse } = require('../utils');
+const { throwHttpErrorFromResponse, cleanParams } = require('../utils');
 
 /**
  * Interface to autocomplete related API calls.
@@ -26,7 +26,7 @@ const autocomplete = (options) => {
       segments,
       testCells,
     } = options;
-    const queryParams = { c: version };
+    let queryParams = { c: version };
 
     queryParams.key = apiKey;
     queryParams.i = clientId;
@@ -74,6 +74,9 @@ const autocomplete = (options) => {
         queryParams.filters = filters;
       }
     }
+
+    queryParams._dt = Date.now();
+    queryParams = cleanParams(queryParams);
 
     const queryString = qs.stringify(queryParams, { indices: false });
 
