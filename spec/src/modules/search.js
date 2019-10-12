@@ -104,6 +104,25 @@ describe('ConstructorIO - Search', () => {
       });
     });
 
+    it('Should return a response with a valid query, section and user id', (done) => {
+      const userId = 'user-id';
+      const { search } = new ConstructorIO({
+        apiKey: testApiKey,
+        userId,
+        fetch: fetchSpy,
+      });
+
+      search.getSearchResults(query, { section }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        done();
+      });
+    });
+
     it('Should return a response with a valid query, section, and page', (done) => {
       const page = 1;
       const { search } = new ConstructorIO({
@@ -386,6 +405,28 @@ describe('ConstructorIO - Search', () => {
         expect(res).to.have.property('result_id').to.be.an('string');
         expect(res.request.us).to.deep.equal(segments);
         expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        done();
+      });
+    });
+
+    it('Should return a response with a valid group_id, section and user id', (done) => {
+      const userId = 'user-id';
+      const { search } = new ConstructorIO({
+        apiKey: testApiKey,
+        userId,
+        fetch: fetchSpy,
+      });
+
+      search.getBrowseResults({
+        section,
+        filters,
+      }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
         done();
       });
     });

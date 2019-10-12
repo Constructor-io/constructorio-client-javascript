@@ -98,7 +98,16 @@ const search = (options) => {
 
   // Create URL from supplied group ID and parameters
   const createBrowseUrl = (parameters) => {
-    const { apiKey, version, serviceUrl, sessionId, clientId, segments, testCells } = options;
+    const {
+      apiKey,
+      version,
+      serviceUrl,
+      sessionId,
+      clientId,
+      userId,
+      segments,
+      testCells,
+    } = options;
     let queryParams = { c: version };
 
     queryParams.key = apiKey;
@@ -115,6 +124,11 @@ const search = (options) => {
     // Pull user segments from options
     if (segments && segments.length) {
       queryParams.us = segments;
+    }
+
+    // Pull user id from options
+    if (userId) {
+      queryParams.ui = userId;
     }
 
     if (parameters) {

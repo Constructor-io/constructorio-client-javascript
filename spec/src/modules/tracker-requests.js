@@ -9,7 +9,7 @@ const helpers = require('../../mocha.helpers');
 chai.use(chaiAsPromised);
 dotenv.config();
 
-describe.only('ConstructorIO - Tracker - Requests', () => {
+describe('ConstructorIO - Tracker - Requests', () => {
   const storageKey = '_constructorio_requests';
   const waitInterval = 500;
 
