@@ -100,6 +100,25 @@ describe('ConstructorIO - Autocomplete', () => {
       });
     });
 
+    it('Should return a response with a valid query, and user id', (done) => {
+      const userId = 'user-id';
+      const { autocomplete } = new ConstructorIO({
+        apiKey: testApiKey,
+        userId,
+        fetch: fetchSpy,
+      });
+
+      autocomplete.getResults(query).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('sections').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        done();
+      });
+    });
+
     it('Should return a response with a valid query, and results', (done) => {
       const results = 2;
       const { autocomplete } = new ConstructorIO({
