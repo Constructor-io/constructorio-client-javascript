@@ -59,6 +59,7 @@ describe('ConstructorIO - Search', () => {
         expect(requestedUrlParams).to.have.property('s');
         expect(requestedUrlParams).to.have.property('section').to.equal(section);
         expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestedUrlParams).to.have.property('_dt');
         done();
       });
     });
@@ -338,6 +339,7 @@ describe('ConstructorIO - Search', () => {
         expect(requestedUrlParams).to.have.property('section').to.equal(section);
         expect(requestedUrlParams).to.have.property('filters');
         expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestedUrlParams).to.have.property('_dt');
         done();
       });
     });

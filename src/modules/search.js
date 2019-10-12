@@ -1,8 +1,8 @@
-/* eslint-disable object-curly-newline */
+/* eslint-disable object-curly-newline, no-underscore-dangle */
 const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
-const { throwHttpErrorFromResponse } = require('../utils');
+const { throwHttpErrorFromResponse, cleanParams } = require('../utils');
 
 /**
  * Interface to search related API calls.
@@ -26,7 +26,7 @@ const search = (options) => {
       segments,
       testCells,
     } = options;
-    const queryParams = { c: version };
+    let queryParams = { c: version };
 
     queryParams.key = apiKey;
     queryParams.i = clientId;
@@ -88,6 +88,9 @@ const search = (options) => {
       }
     }
 
+    queryParams._dt = Date.now();
+    queryParams = cleanParams(queryParams);
+
     const queryString = qs.stringify(queryParams, { indices: false });
 
     return `${serviceUrl}/search/${encodeURIComponent(query)}?${queryString}`;
@@ -96,7 +99,7 @@ const search = (options) => {
   // Create URL from supplied group ID and parameters
   const createBrowseUrl = (parameters) => {
     const { apiKey, version, serviceUrl, sessionId, clientId, segments, testCells } = options;
-    const queryParams = { c: version };
+    let queryParams = { c: version };
 
     queryParams.key = apiKey;
     queryParams.i = clientId;
@@ -146,6 +149,9 @@ const search = (options) => {
         queryParams.section = section;
       }
     }
+
+    queryParams._dt = Date.now();
+    queryParams = cleanParams(queryParams);
 
     const queryString = qs.stringify(queryParams, { indices: false });
 
