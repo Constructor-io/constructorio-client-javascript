@@ -9,8 +9,9 @@ const helpers = require('../../mocha.helpers');
 chai.use(chaiAsPromised);
 dotenv.config();
 
-describe('ConstructorIO - Tracker - Requests', () => {
+describe.only('ConstructorIO - Tracker - Requests', () => {
   const storageKey = '_constructorio_requests';
+  const waitInterval = 500;
 
   describe('queue', () => {
     let defaultAgent;
@@ -101,7 +102,7 @@ describe('ConstructorIO - Tracker - Requests', () => {
       setTimeout(() => {
         expect(requests.get()).to.be.an('array').length(0);
         done();
-      }, 1000);
+      }, waitInterval);
     });
 
     it('Should not send tracking requests if queue is populated and user is not human', (done) => {
@@ -117,7 +118,7 @@ describe('ConstructorIO - Tracker - Requests', () => {
       setTimeout(() => {
         expect(requests.get()).to.be.an('array').length(3);
         done();
-      }, 1000);
+      }, waitInterval);
     });
 
     it('Should not send tracking requests if queue is populated and user is human and page is unloading', (done) => {
@@ -135,7 +136,7 @@ describe('ConstructorIO - Tracker - Requests', () => {
       setTimeout(() => {
         expect(requests.get()).to.be.an('array').length(3);
         done();
-      }, 1000);
+      }, waitInterval);
     });
 
     it('Should send all tracking requests if requests exist in storage and user is human', (done) => {
@@ -154,7 +155,7 @@ describe('ConstructorIO - Tracker - Requests', () => {
       setTimeout(() => {
         expect(requests.get()).to.be.an('array').length(0);
         done();
-      }, 1000);
+      }, waitInterval);
     });
 
     it('Should not send tracking requests if requests exist in storage and user is not human', (done) => {
@@ -172,7 +173,7 @@ describe('ConstructorIO - Tracker - Requests', () => {
       setTimeout(() => {
         expect(requests.get()).to.be.an('array').length(3);
         done();
-      }, 1000);
+      }, waitInterval);
     });
 
     it('Should not send tracking requests if requests exist in storage and user is human and page is unloading', (done) => {
@@ -192,7 +193,7 @@ describe('ConstructorIO - Tracker - Requests', () => {
       setTimeout(() => {
         expect(requests.get()).to.be.an('array').length(3);
         done();
-      }, 1000);
+      }, waitInterval);
     });
   });
 });
