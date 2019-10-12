@@ -14,38 +14,38 @@ const tracker = (options) => {
   const requests = trackerRequests(options);
 
   // Append common parameters to supplied parameters object
-  const createQueryString = (queryParamsObj) => {
+  const createQueryString = (parameters) => {
     const { apiKey, version, sessionId, clientId, userId, segments } = options;
-    let paramsObj = Object.assign(queryParamsObj);
+    let queryParams = Object.assign(parameters);
 
     if (version) {
-      paramsObj.c = version;
+      queryParams.c = version;
     }
 
     if (clientId) {
-      paramsObj.i = clientId;
+      queryParams.i = clientId;
     }
 
     if (sessionId) {
-      paramsObj.s = sessionId;
+      queryParams.s = sessionId;
     }
 
     if (userId) {
-      paramsObj.ui = userId;
+      queryParams.ui = userId;
     }
 
     if (segments && segments.length) {
-      paramsObj.us = segments;
+      queryParams.us = segments;
     }
 
     if (apiKey) {
-      paramsObj.key = apiKey;
+      queryParams.key = apiKey;
     }
 
-    paramsObj._dt = Date.now();
-    paramsObj = utils.cleanParams(paramsObj);
+    queryParams._dt = Date.now();
+    queryParams = utils.cleanParams(queryParams);
 
-    return qs.stringify(paramsObj, { indices: false });
+    return qs.stringify(queryParams, { indices: false });
   };
 
   return {
@@ -57,9 +57,9 @@ const tracker = (options) => {
      */
     sendSessionStart: () => {
       const url = `${options.serviceUrl}/behavior?`;
-      const queryParamsObj = { action: 'session_start' };
+      const queryParams = { action: 'session_start' };
 
-      requests.queue(`${url}${createQueryString(queryParamsObj)}`);
+      requests.queue(`${url}${createQueryString(queryParams)}`);
       requests.send();
 
       return true;
@@ -73,9 +73,9 @@ const tracker = (options) => {
      */
     sendInputFocus: () => {
       const url = `${options.serviceUrl}/behavior?`;
-      const queryParamsObj = { action: 'focus' };
+      const queryParams = { action: 'focus' };
 
-      requests.queue(`${url}${createQueryString(queryParamsObj)}`);
+      requests.queue(`${url}${createQueryString(queryParams)}`);
       requests.send();
 
       return true;
@@ -101,7 +101,7 @@ const tracker = (options) => {
         // Ensure parameters are provided (required)
         if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
           const url = `${options.serviceUrl}/autocomplete/${utils.ourEncodeURIComponent(term)}/select?`;
-          const queryParamsObj = {};
+          const queryParams = {};
           const {
             original_query,
             result_id,
@@ -113,29 +113,29 @@ const tracker = (options) => {
           } = parameters;
 
           if (original_query) {
-            queryParamsObj.original_query = original_query;
+            queryParams.original_query = original_query;
           }
 
           if (tr) {
-            queryParamsObj.tr = tr;
+            queryParams.tr = tr;
           }
 
           if (original_section || section) {
-            queryParamsObj.section = original_section || section;
+            queryParams.section = original_section || section;
           }
 
           if (group_id) {
-            queryParamsObj.group = {
+            queryParams.group = {
               group_id,
               display_name,
             };
           }
 
           if (result_id) {
-            queryParamsObj.result_id = result_id;
+            queryParams.result_id = result_id;
           }
 
-          requests.queue(`${url}${createQueryString(queryParamsObj)}`);
+          requests.queue(`${url}${createQueryString(queryParams)}`);
           requests.send();
 
           return true;
@@ -169,25 +169,25 @@ const tracker = (options) => {
         // Ensure parameters are provided (required)
         if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
           const url = `${options.serviceUrl}/autocomplete/${utils.ourEncodeURIComponent(term)}/search?`;
-          const queryParamsObj = {};
+          const queryParams = {};
           const { original_query, result_id, group_id, display_name } = parameters;
 
           if (original_query) {
-            queryParamsObj.original_query = original_query;
+            queryParams.original_query = original_query;
           }
 
           if (group_id) {
-            queryParamsObj.group = {
+            queryParams.group = {
               group_id,
               display_name,
             };
           }
 
           if (result_id) {
-            queryParamsObj.result_id = result_id;
+            queryParams.result_id = result_id;
           }
 
-          requests.queue(`${url}${createQueryString(queryParamsObj)}`);
+          requests.queue(`${url}${createQueryString(queryParams)}`);
           requests.send();
 
           return true;
@@ -219,18 +219,18 @@ const tracker = (options) => {
         // Ensure parameters are provided (required)
         if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
           const url = `${options.serviceUrl}/behavior?`;
-          const queryParamsObj = { action: 'search-results', term };
+          const queryParams = { action: 'search-results', term };
           const { num_results, customer_ids } = parameters;
 
           if (num_results) {
-            queryParamsObj.num_results = num_results;
+            queryParams.num_results = num_results;
           }
 
           if (customer_ids && Array.isArray(customer_ids)) {
-            queryParamsObj.customer_ids = customer_ids.join(',');
+            queryParams.customer_ids = customer_ids.join(',');
           }
 
-          requests.queue(`${url}${createQueryString(queryParamsObj)}`);
+          requests.queue(`${url}${createQueryString(queryParams)}`);
           requests.send();
 
           return true;
@@ -263,22 +263,22 @@ const tracker = (options) => {
         // Ensure parameters are provided (required)
         if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
           const url = `${options.serviceUrl}/autocomplete/${utils.ourEncodeURIComponent(term)}/click_through?`;
-          const queryParamsObj = {};
+          const queryParams = {};
           const { name, customer_id, result_id } = parameters;
 
           if (name) {
-            queryParamsObj.name = name;
+            queryParams.name = name;
           }
 
           if (customer_id) {
-            queryParamsObj.customer_id = customer_id;
+            queryParams.customer_id = customer_id;
           }
 
           if (result_id) {
-            queryParamsObj.result_id = result_id;
+            queryParams.result_id = result_id;
           }
 
-          requests.queue(`${url}${createQueryString(queryParamsObj)}`);
+          requests.queue(`${url}${createQueryString(queryParams)}`);
           requests.send();
 
           return true;
@@ -312,32 +312,32 @@ const tracker = (options) => {
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
         const searchTerm = utils.ourEncodeURIComponent(term) || 'TERM_UNKNOWN';
         const url = `${options.serviceUrl}/autocomplete/${searchTerm}/conversion?`;
-        const queryParamsObj = {};
+        const queryParams = {};
         const { name, customer_id, result_id, revenue, section } = parameters;
 
         if (name) {
-          queryParamsObj.name = name;
+          queryParams.name = name;
         }
 
         if (customer_id) {
-          queryParamsObj.customer_id = customer_id;
+          queryParams.customer_id = customer_id;
         }
 
         if (result_id) {
-          queryParamsObj.result_id = result_id;
+          queryParams.result_id = result_id;
         }
 
         if (revenue) {
-          queryParamsObj.revenue = revenue;
+          queryParams.revenue = revenue;
         }
 
         if (section) {
-          queryParamsObj.section = section;
+          queryParams.section = section;
         } else {
-          queryParamsObj.section = 'Products';
+          queryParams.section = 'Products';
         }
 
-        requests.queue(`${url}${createQueryString(queryParamsObj)}`);
+        requests.queue(`${url}${createQueryString(queryParams)}`);
         requests.send();
 
         return true;
@@ -362,25 +362,25 @@ const tracker = (options) => {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
         const url = `${options.serviceUrl}/autocomplete/TERM_UNKNOWN/purchase?`;
-        const queryParamsObj = {};
+        const queryParams = {};
 
         const { customer_ids, revenue, section } = parameters;
 
         if (customer_ids) {
-          queryParamsObj.customer_ids = customer_ids;
+          queryParams.customer_ids = customer_ids;
         }
 
         if (revenue) {
-          queryParamsObj.revenue = revenue;
+          queryParams.revenue = revenue;
         }
 
         if (section) {
-          queryParamsObj.section = section;
+          queryParams.section = section;
         } else {
-          queryParamsObj.section = 'Products';
+          queryParams.section = 'Products';
         }
 
-        requests.queue(`${url}${createQueryString(queryParamsObj)}`);
+        requests.queue(`${url}${createQueryString(queryParams)}`);
         requests.send();
 
         return true;

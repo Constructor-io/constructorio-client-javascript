@@ -18,7 +18,7 @@ dotenv.config();
 const testApiKey = process.env.TEST_API_KEY;
 const { fetch } = fetchPonyfill({ Promise });
 
-describe.only('ConstructorIO - Tracker', () => {
+describe('ConstructorIO - Tracker', () => {
   const clientVersion = 'cio-mocha';
   let fetchSpy;
 
