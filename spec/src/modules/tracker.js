@@ -1,42 +1,66 @@
+/* eslint-disable no-unused-expressions */
 const jsdom = require('mocha-jsdom');
 const dotenv = require('dotenv');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
+const sinon = require('sinon');
+const sinonChai = require('sinon-chai');
+const fetchPonyfill = require('fetch-ponyfill');
+const Promise = require('es6-promise');
+const store = require('../../../src/store');
 const ConstructorIO = require('../../../src/constructorio');
+const helpers = require('../../mocha.helpers');
 
 chai.use(chaiAsPromised);
+chai.use(sinonChai);
 dotenv.config();
 
 const testApiKey = process.env.TEST_API_KEY;
+const { fetch } = fetchPonyfill({ Promise });
 
 describe('ConstructorIO - Tracker', () => {
+  const clientVersion = 'cio-mocha';
+  let fetchSpy;
+
   jsdom({ url: 'http://localhost' });
 
+  beforeEach(() => {
+    store.session.set('_constructorio_is_human', true);
+
+    global.CLIENT_VERSION = clientVersion;
+    fetchSpy = sinon.spy(fetch);
+  });
+
+  afterEach(() => {
+    helpers.clearStorage();
+
+    delete global.CLIENT_VERSION;
+
+    fetchSpy = null;
+  });
+
   describe('sendSessionStart', () => {
-    beforeEach(() => {
-      global.CLIENT_VERSION = 'cio-mocha';
-    });
-
-    afterEach(() => {
-      delete global.CLIENT_VERSION;
-    });
-
     it('Should respond with a valid response', () => {
-      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
 
       expect(tracker.sendSessionStart()).to.equal(true);
+
+      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+      expect(fetchSpy).to.have.been.called;
+      expect(requestedUrlParams).to.have.property('key');
+      expect(requestedUrlParams).to.have.property('i');
+      expect(requestedUrlParams).to.have.property('s');
+      expect(requestedUrlParams).to.have.property('action').to.equal('session_start');
+      expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
+      expect(requestedUrlParams).to.have.property('_dt');
     });
   });
 
   describe('sendInputFocus', () => {
-    beforeEach(() => {
-      global.CLIENT_VERSION = 'cio-mocha';
-    });
-
-    afterEach(() => {
-      delete global.CLIENT_VERSION;
-    });
-
     it('Should respond with a valid response', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
@@ -54,14 +78,6 @@ describe('ConstructorIO - Tracker', () => {
       group_id: 'group-id',
       display_name: 'display-name',
     };
-
-    beforeEach(() => {
-      global.CLIENT_VERSION = 'cio-mocha';
-    });
-
-    afterEach(() => {
-      delete global.CLIENT_VERSION;
-    });
 
     it('Should respond with a valid response when term and parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
@@ -103,14 +119,6 @@ describe('ConstructorIO - Tracker', () => {
       display_name: 'display-name',
     };
 
-    beforeEach(() => {
-      global.CLIENT_VERSION = 'cio-mocha';
-    });
-
-    afterEach(() => {
-      delete global.CLIENT_VERSION;
-    });
-
     it('Should respond with a valid response when term and parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
@@ -148,14 +156,6 @@ describe('ConstructorIO - Tracker', () => {
       num_results: 1337,
       customer_ids: [1, 2, 3],
     };
-
-    beforeEach(() => {
-      global.CLIENT_VERSION = 'cio-mocha';
-    });
-
-    afterEach(() => {
-      delete global.CLIENT_VERSION;
-    });
 
     it('Should respond with a valid response when term and parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
@@ -195,14 +195,6 @@ describe('ConstructorIO - Tracker', () => {
       customer_id: 'customer-id',
       result_id: 'result-id',
     };
-
-    beforeEach(() => {
-      global.CLIENT_VERSION = 'cio-mocha';
-    });
-
-    afterEach(() => {
-      delete global.CLIENT_VERSION;
-    });
 
     it('Should respond with a valid response when term and parmeters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
@@ -245,14 +237,6 @@ describe('ConstructorIO - Tracker', () => {
       section: 'Products',
     };
 
-    beforeEach(() => {
-      global.CLIENT_VERSION = 'cio-mocha';
-    });
-
-    afterEach(() => {
-      delete global.CLIENT_VERSION;
-    });
-
     it('Should respond with a valid response when term and parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
@@ -284,14 +268,6 @@ describe('ConstructorIO - Tracker', () => {
       revenue: 123,
       section: 'Products',
     };
-
-    beforeEach(() => {
-      global.CLIENT_VERSION = 'cio-mocha';
-    });
-
-    afterEach(() => {
-      delete global.CLIENT_VERSION;
-    });
 
     it('Should respond with a valid response when parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });

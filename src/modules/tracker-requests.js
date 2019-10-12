@@ -4,9 +4,8 @@ const store = require('../store');
 const utils = require('../utils');
 const trackerHumanity = require('./tracker-humanity');
 
-const { fetch } = fetchPonyfill({ Promise });
-
-const trackerRequests = () => {
+const trackerRequests = (options) => {
+  const fetch = (options && options.fetch) || fetchPonyfill({ Promise }).fetch;
   const humanity = trackerHumanity();
   const storageKey = '_constructorio_requests';
   let requestPending = false;
