@@ -1,6 +1,6 @@
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
-const store = require('../store');
+const store = require('../store/store');
 const utils = require('../utils');
 const trackerHumanity = require('./tracker-humanity');
 

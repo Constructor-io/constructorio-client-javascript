@@ -1,4 +1,7 @@
 {
+  "exclude": [
+    "src/store/*"
+  ],
   "include": [
     "src/*"
   ],
