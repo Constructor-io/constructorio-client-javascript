@@ -130,6 +130,93 @@ constructorio.recommendations.getUserFeaturedItems({ parameters }).then(function
 | --- | --- | --- |
 | `results` | number | Number of results to retrieve |
 
+### Tracker
+
+The tracker module can be used to send tracking events. Returns `true` when successful, or will throw an error if an issue is encountered.
+
+#### Send autocomplete select event
+```javascript
+constructorio.tracker.sendAutocompleteSelect('dogs', {
+    parameters
+});
+```
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `original_query` | string | ? |
+| `result_id` | string | ? |
+| `section` | string | ? |
+| `tr` | string | ? |
+| `group_id` | string | ? |
+| `display_name` | string | ? |
+
+#### Send autocomplete search event
+```javascript
+constructorio.tracker.sendAutocompleteSearch('dogs', {
+    parameters
+});
+```
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `original_query` | string | ? |
+| `result_id` | string | ? |
+| `group_id` | string | ? |
+| `display_name` | string | ? |
+
+#### Send search results event
+```javascript
+constructorio.tracker.sendSearchResults('dogs', {
+    parameters
+});
+```
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `num_results` | string | ? |
+| `customer_ids` | string | ? |
+
+#### Send search result click event
+```javascript
+constructorio.tracker.sendSearchResultClick('dogs', {
+    parameters
+});
+```
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `name` | string | ? |
+| `customer_id` | string | ? |
+| `result_id` | string | ? |
+
+#### Send conversion event
+```javascript
+constructorio.tracker.sendConversion('dogs', {
+    parameters
+});
+```
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `name` | string | ? |
+| `customer_id` | string | ? |
+| `result_id` | string | ? |
+| `revenue` | string | ? |
+| `section` | string | ? |
+
+#### Send purchase event
+```javascript
+constructorio.tracker.sendPurchase({
+    parameters
+});
+```
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `customer_ids` | string | ? |
+| `revenue` | string | ? |
+| `section` | string | ? |
+
 ## Development / npm commands
 
 ```bash
