@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/@constructor-io/constructorio-client-javascript)](https://www.npmjs.com/package/@constructor-io/constructorio-client-javascript)
 ![David (path)](https://img.shields.io/david/Constructor-io/constructorio-client-javascript)
-[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Constructor-io/constructorio-client-javascript/blob/master/LICENSE) 
+[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Constructor-io/constructorio-client-javascript/blob/master/LICENSE)
 
 A JavaScript client for [Constructor.io](http://constructor.io/). [Constructor.io](http://constructor.io/) provides search as a service that optimizes results using artificial intelligence (including natural language processing, re-ranking to optimize for conversions, and user personalization).
 
@@ -26,7 +26,7 @@ var constructorio = new ConstructorIOClient({
 
 ## 4. Retrieve Results
 
-After instantiating an instance of the client, three modules will be exposed as properties to help retrieve data from Constructor.io: `search`, `autocomplete`, and `recommendations`.
+After instantiating an instance of the client, four modules will be exposed as properties to help retrieve data from Constructor.io: `search`, `autocomplete`, `recommendations` and `tracking`.
 
 ### Search
 
