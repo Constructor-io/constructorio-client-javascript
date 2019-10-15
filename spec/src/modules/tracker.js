@@ -583,7 +583,7 @@ describe('ConstructorIO - Tracker', () => {
 
   describe('trackPurchase', () => {
     const parameters = {
-      customer_ids: 'customer-id',
+      customer_ids: ['customer-id1', 'customer-id1', 'customer-id2'],
       revenue: 123,
       section: 'Products',
     };
@@ -604,7 +604,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(requestedUrlParams).to.have.property('s');
       expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
       expect(requestedUrlParams).to.have.property('_dt');
-      expect(requestedUrlParams).to.have.property('customer_ids').to.equal(parameters.customer_ids);
+      expect(requestedUrlParams).to.have.property('customer_ids').to.deep.equal(parameters.customer_ids);
       expect(requestedUrlParams).to.have.property('revenue').to.equal(parameters.revenue.toString());
       expect(requestedUrlParams).to.have.property('section').to.equal(parameters.section);
     });
