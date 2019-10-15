@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 const qs = require('qs');
-const botList = require('./botlist');
 
 const utils = {
   ourEncodeURIComponent: (str) => {
@@ -31,13 +30,6 @@ const utils = {
     });
 
     return cleanedParams;
-  },
-
-  isBot: () => {
-    const { userAgent, webdriver } = window && window.navigator;
-    const botRegex = new RegExp(`(${botList.join('|')})`);
-
-    return Boolean(userAgent.match(botRegex)) || Boolean(webdriver);
   },
 
   /**

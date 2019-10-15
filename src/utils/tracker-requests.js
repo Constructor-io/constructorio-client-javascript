@@ -22,7 +22,7 @@ const trackerRequests = (options) => {
   return {
     // Add request to queue to be dispatched
     queue: (request) => {
-      if (!helpers.isBot()) {
+      if (!humanity.isBot()) {
         requestQueue.push(request);
       }
     },

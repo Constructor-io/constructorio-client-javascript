@@ -1,4 +1,5 @@
 const store = require('../utils/store');
+const botList = require('./botlist');
 
 const humanEvents = [
   'scroll',
@@ -37,6 +38,14 @@ const trackerHumanity = () => {
   return {
     // Return boolean indicating if is human
     isHuman: () => isHumanBoolean || !!store.session.get(storageKey),
+
+    // Return boolean indicating if useragent matches botlist
+    isBot: () => {
+      const { userAgent, webdriver } = window && window.navigator;
+      const botRegex = new RegExp(`(${botList.join('|')})`);
+
+      return Boolean(userAgent.match(botRegex)) || Boolean(webdriver);
+    },
   };
 };
 
