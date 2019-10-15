@@ -5,7 +5,7 @@ const ConstructorioID = require('@constructor-io/constructorio-id');
 const { search } = require('./modules/search');
 const { autocomplete } = require('./modules/autocomplete');
 const { recommendations } = require('./modules/recommendations');
-
+const tracker = require('./modules/tracker');
 const { version } = require('../package.json');
 
 /**
@@ -19,9 +19,11 @@ class ConstructorIO {
    * @param {object} [testCells] - User test cells
    * @param {string} [clientId] - Client ID, defaults to value supplied by 'constructorio-id'
    * @param {string} [sessionId] - Session id, defaults to value supplied by 'constructorio-id'
+   * @param {string} [userId] - User id
    * @property {object} [search] - Interface to {@link module:search}
    * @property {object} [autocomplete] - Interface to {@link module:autocomplete}
    * @property {object} [recommendations] - Interface to {@link module:recommendations}
+   * @property {object} [tracker] - Interface to {@link module:tracker}
    * @returns {class}
    */
   constructor(options = {}) {
@@ -32,6 +34,7 @@ class ConstructorIO {
       testCells,
       clientId,
       sessionId,
+      userId,
       fetch,
     } = options;
 
@@ -48,6 +51,7 @@ class ConstructorIO {
       serviceUrl: serviceUrl || 'https://ac.cnstrc.com',
       sessionId: sessionId || session_id,
       clientId: clientId || client_id,
+      userId,
       segments,
       testCells,
       fetch,
@@ -57,6 +61,7 @@ class ConstructorIO {
     this.search = search(this.options);
     this.autocomplete = autocomplete(this.options);
     this.recommendations = recommendations(this.options);
+    this.tracker = tracker(this.options);
   }
 }
 
