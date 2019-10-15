@@ -2,11 +2,11 @@ const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
 const store = require('../utils/store');
 const helpers = require('../utils/helpers');
-const trackerHumanity = require('../utils/tracker-humanity');
+const HumanityCheck = require('../utils/humanity-check');
 
 const trackerRequests = (options) => {
   const fetch = (options && options.fetch) || fetchPonyfill({ Promise }).fetch;
-  const humanity = trackerHumanity();
+  const humanity = new HumanityCheck();
   const storageKey = '_constructorio_requests';
   let requestPending = false;
   let flushScheduled = false;
