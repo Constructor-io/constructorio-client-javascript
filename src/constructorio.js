@@ -2,10 +2,10 @@
 const ConstructorioID = require('@constructor-io/constructorio-id');
 
 // Modules
-const search = require('./modules/search');
-const autocomplete = require('./modules/autocomplete');
-const recommendations = require('./modules/recommendations');
-const tracker = require('./modules/tracker');
+const Search = require('./modules/search');
+const Autocomplete = require('./modules/autocomplete');
+const Recommendations = require('./modules/recommendations');
+const Tracker = require('./modules/tracker');
 const { version } = require('../package.json');
 
 /**
@@ -58,10 +58,10 @@ class ConstructorIO {
     };
 
     // Expose modules
-    this.search = search(this.options);
-    this.autocomplete = autocomplete(this.options);
-    this.recommendations = recommendations(this.options);
-    this.tracker = tracker(this.options);
+    this.search = new Search(this.options);
+    this.autocomplete = new Autocomplete(this.options);
+    this.recommendations = new Recommendations(this.options);
+    this.tracker = new Tracker(this.options);
   }
 }
 
