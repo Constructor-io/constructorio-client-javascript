@@ -1,7 +1,7 @@
 /* eslint-disable object-curly-newline, no-underscore-dangle, camelcase */
 const qs = require('qs');
 const helpers = require('../utils/helpers');
-const trackerRequests = require('../utils/tracker-requests');
+const RequestQueue = require('../utils/request-queue');
 
 // Append common parameters to supplied parameters object
 function createQueryString(parameters, options) {
@@ -48,7 +48,7 @@ function createQueryString(parameters, options) {
 class Tracker {
   constructor(options) {
     this.options = options;
-    this.requests = trackerRequests(options);
+    this.requests = new RequestQueue(options);
   }
 
   /**

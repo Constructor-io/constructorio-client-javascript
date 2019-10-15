@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 const store = require('../utils/store');
 const botList = require('./botlist');
 
@@ -48,6 +49,6 @@ class HumanityCheck {
 
     return Boolean(userAgent.match(botRegex)) || Boolean(webdriver);
   }
-};
+}
 
 module.exports = HumanityCheck;
