@@ -2,7 +2,7 @@
 const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
-const { throwHttpErrorFromResponse } = require('../utils');
+const { throwHttpErrorFromResponse, cleanParams } = require('../utils');
 
 /**
  * Interface to recommendations related API calls.
@@ -16,8 +16,8 @@ const recommendations = (options) => {
 
   // Create URL from supplied parameters
   const createRecommendationsUrl = (parameters, endpoint) => {
-    const { apiKey, version, serviceUrl, sessionId, clientId, segments } = options;
-    const queryParams = { c: version };
+    const { apiKey, version, serviceUrl, sessionId, userId, clientId, segments } = options;
+    let queryParams = { c: version };
     const validEndpoints = [
       'alternative_items',
       'complementary_items',
@@ -39,6 +39,11 @@ const recommendations = (options) => {
       queryParams.us = segments;
     }
 
+    // Pull user id from options
+    if (userId) {
+      queryParams.ui = userId;
+    }
+
     if (parameters) {
       const { results, itemIds } = parameters;
 
@@ -52,6 +57,8 @@ const recommendations = (options) => {
         queryParams.item_id = itemIds;
       }
     }
+
+    queryParams = cleanParams(queryParams);
 
     const queryString = qs.stringify(queryParams, { indices: false });
 
@@ -177,6 +184,4 @@ const recommendations = (options) => {
   };
 };
 
-module.exports = {
-  recommendations,
-};
+module.exports = recommendations;
