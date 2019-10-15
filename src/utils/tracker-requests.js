@@ -1,8 +1,8 @@
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
-const store = require('../store/store');
-const utils = require('../utils');
-const trackerHumanity = require('./tracker-humanity');
+const store = require('../utils/store');
+const helpers = require('../utils/helpers');
+const trackerHumanity = require('../utils/tracker-humanity');
 
 const trackerRequests = (options) => {
   const fetch = (options && options.fetch) || fetchPonyfill({ Promise }).fetch;
@@ -22,7 +22,7 @@ const trackerRequests = (options) => {
   return {
     // Add request to queue to be dispatched
     queue: (request) => {
-      if (!utils.isBot()) {
+      if (!helpers.isBot()) {
         requestQueue.push(request);
       }
     },

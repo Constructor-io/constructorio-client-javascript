@@ -2,8 +2,8 @@
 const dotenv = require('dotenv');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
-const store = require('../../../src/store/store');
-const trackerRequests = require('../../../src/modules/tracker-requests');
+const store = require('../../../src/utils/store');
+const trackerRequests = require('../../../src/utils/tracker-requests');
 const helpers = require('../../mocha.helpers');
 
 chai.use(chaiAsPromised);
@@ -11,7 +11,7 @@ dotenv.config();
 
 describe('ConstructorIO - Tracker - Requests', () => {
   const storageKey = '_constructorio_requests';
-  const waitInterval = 500;
+  const waitInterval = 1000;
 
   describe('queue', () => {
     let defaultAgent;

@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-escape */
 
-const botList = [
+module.exports = [
   'Googlebot\/',
   'Googlebot-Mobile',
   'Googlebot-Image',
@@ -357,5 +357,3 @@ const botList = [
   'tracemyfile',
   'Nimbostratus-Bot',
 ];
-
-module.exports = botList;

@@ -7,7 +7,7 @@ const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
-const store = require('../../../src/store/store');
+const store = require('../../../src/utils/store');
 const ConstructorIO = require('../../../src/constructorio');
 const helpers = require('../../mocha.helpers');
 
