@@ -21,9 +21,7 @@ describe('ConstructorIO - Autocomplete', () => {
   const clientVersion = 'cio-mocha';
   let fetchSpy;
 
-  jsdom({
-    url: 'http://localhost',
-  });
+  jsdom({ url: 'http://localhost' });
 
   beforeEach(() => {
     global.CLIENT_VERSION = 'cio-mocha';
@@ -57,6 +55,7 @@ describe('ConstructorIO - Autocomplete', () => {
         expect(requestedUrlParams).to.have.property('i');
         expect(requestedUrlParams).to.have.property('s');
         expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestedUrlParams).to.have.property('_dt');
         done();
       });
     });
@@ -97,6 +96,25 @@ describe('ConstructorIO - Autocomplete', () => {
         expect(res).to.have.property('result_id').to.be.an('string');
         expect(res.request.us).to.deep.equal(segments);
         expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        done();
+      });
+    });
+
+    it('Should return a response with a valid query, and user id', (done) => {
+      const userId = 'user-id';
+      const { autocomplete } = new ConstructorIO({
+        apiKey: testApiKey,
+        userId,
+        fetch: fetchSpy,
+      });
+
+      autocomplete.getResults(query).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('sections').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
         done();
       });
     });

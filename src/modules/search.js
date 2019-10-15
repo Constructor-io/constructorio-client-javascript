@@ -1,8 +1,8 @@
-/* eslint-disable import/prefer-default-export, object-curly-newline */
+/* eslint-disable object-curly-newline, no-underscore-dangle */
 const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
-const { throwHttpErrorFromResponse } = require('../utils');
+const { throwHttpErrorFromResponse, cleanParams } = require('../utils');
 
 /**
  * Interface to search related API calls.
@@ -16,8 +16,17 @@ const search = (options) => {
 
   // Create URL from supplied query (term) and parameters
   const createSearchUrl = (query, parameters) => {
-    const { apiKey, version, serviceUrl, sessionId, clientId, segments, testCells } = options;
-    const queryParams = { c: version };
+    const {
+      apiKey,
+      version,
+      serviceUrl,
+      sessionId,
+      clientId,
+      userId,
+      segments,
+      testCells,
+    } = options;
+    let queryParams = { c: version };
 
     queryParams.key = apiKey;
     queryParams.i = clientId;
@@ -38,6 +47,11 @@ const search = (options) => {
     // Pull user segments from options
     if (segments && segments.length) {
       queryParams.us = segments;
+    }
+
+    // Pull user id from options
+    if (userId) {
+      queryParams.ui = userId;
     }
 
     if (parameters) {
@@ -74,6 +88,9 @@ const search = (options) => {
       }
     }
 
+    queryParams._dt = Date.now();
+    queryParams = cleanParams(queryParams);
+
     const queryString = qs.stringify(queryParams, { indices: false });
 
     return `${serviceUrl}/search/${encodeURIComponent(query)}?${queryString}`;
@@ -81,8 +98,17 @@ const search = (options) => {
 
   // Create URL from supplied group ID and parameters
   const createBrowseUrl = (parameters) => {
-    const { apiKey, version, serviceUrl, sessionId, clientId, segments, testCells } = options;
-    const queryParams = { c: version };
+    const {
+      apiKey,
+      version,
+      serviceUrl,
+      sessionId,
+      clientId,
+      userId,
+      segments,
+      testCells,
+    } = options;
+    let queryParams = { c: version };
 
     queryParams.key = apiKey;
     queryParams.i = clientId;
@@ -98,6 +124,11 @@ const search = (options) => {
     // Pull user segments from options
     if (segments && segments.length) {
       queryParams.us = segments;
+    }
+
+    // Pull user id from options
+    if (userId) {
+      queryParams.ui = userId;
     }
 
     if (parameters) {
@@ -132,6 +163,9 @@ const search = (options) => {
         queryParams.section = section;
       }
     }
+
+    queryParams._dt = Date.now();
+    queryParams = cleanParams(queryParams);
 
     const queryString = qs.stringify(queryParams, { indices: false });
 
@@ -235,6 +269,4 @@ const search = (options) => {
   };
 };
 
-module.exports = {
-  search,
-};
+module.exports = search;
