@@ -136,7 +136,7 @@ The tracker module can be used to send tracking events. Returns `true` when succ
 
 #### Send autocomplete select event
 ```javascript
-constructorio.tracker.sendAutocompleteSelect('dogs', {
+constructorio.tracker.trackAutocompleteSelect('dogs', {
     parameters
 });
 ```
@@ -152,7 +152,7 @@ constructorio.tracker.sendAutocompleteSelect('dogs', {
 
 #### Send autocomplete search event
 ```javascript
-constructorio.tracker.sendAutocompleteSearch('dogs', {
+constructorio.tracker.trackSearchSubmit('dogs', {
     parameters
 });
 ```
@@ -166,7 +166,7 @@ constructorio.tracker.sendAutocompleteSearch('dogs', {
 
 #### Send search results event
 ```javascript
-constructorio.tracker.sendSearchResults('dogs', {
+constructorio.tracker.trackSearchResultsLoaded('dogs', {
     parameters
 });
 ```
@@ -178,7 +178,7 @@ constructorio.tracker.sendSearchResults('dogs', {
 
 #### Send search result click event
 ```javascript
-constructorio.tracker.sendSearchResultClick('dogs', {
+constructorio.tracker.trackSearchResultClick('dogs', {
     parameters
 });
 ```
@@ -191,7 +191,7 @@ constructorio.tracker.sendSearchResultClick('dogs', {
 
 #### Send conversion event
 ```javascript
-constructorio.tracker.sendConversion('dogs', {
+constructorio.tracker.trackConversion('dogs', {
     parameters
 });
 ```
@@ -206,7 +206,7 @@ constructorio.tracker.sendConversion('dogs', {
 
 #### Send purchase event
 ```javascript
-constructorio.tracker.sendPurchase({
+constructorio.tracker.trackPurchase({
     parameters
 });
 ```

@@ -141,7 +141,7 @@ describe('ConstructorIO - Tracker', () => {
     });
   });
 
-  describe('sendAutocompleteSelect', () => {
+  describe('trackAutocompleteSelect', () => {
     const term = 'Where The Wild Things Are';
     const parameters = {
       original_query: 'original-query',
@@ -158,7 +158,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.sendAutocompleteSelect(term, parameters)).to.equal(true);
+      expect(tracker.trackAutocompleteSelect(term, parameters)).to.equal(true);
 
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
@@ -185,7 +185,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.sendAutocompleteSelect(term, parameters)).to.equal(true);
+      expect(tracker.trackAutocompleteSelect(term, parameters)).to.equal(true);
 
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
@@ -200,7 +200,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.sendAutocompleteSelect(term, parameters)).to.equal(true);
+      expect(tracker.trackAutocompleteSelect(term, parameters)).to.equal(true);
 
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
@@ -210,29 +210,29 @@ describe('ConstructorIO - Tracker', () => {
     it('Should throw an error when invalid term is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendAutocompleteSelect([], parameters)).to.be.an('error');
+      expect(tracker.trackAutocompleteSelect([], parameters)).to.be.an('error');
     });
 
     it('Should throw an error when no term is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendAutocompleteSelect(null, parameters)).to.be.an('error');
+      expect(tracker.trackAutocompleteSelect(null, parameters)).to.be.an('error');
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendAutocompleteSelect(term, [])).to.be.an('error');
+      expect(tracker.trackAutocompleteSelect(term, [])).to.be.an('error');
     });
 
     it('Should throw an error when no parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendAutocompleteSelect(term)).to.be.an('error');
+      expect(tracker.trackAutocompleteSelect(term)).to.be.an('error');
     });
   });
 
-  describe('sendAutocompleteSearch', () => {
+  describe('trackSearchSubmit', () => {
     const term = 'Where The Wild Things Are';
     const parameters = {
       original_query: 'original-query',
@@ -247,7 +247,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.sendAutocompleteSearch(term, parameters)).to.equal(true);
+      expect(tracker.trackSearchSubmit(term, parameters)).to.equal(true);
 
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
@@ -273,7 +273,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.sendAutocompleteSearch(term, parameters)).to.equal(true);
+      expect(tracker.trackSearchSubmit(term, parameters)).to.equal(true);
 
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
@@ -288,7 +288,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.sendAutocompleteSearch(term, parameters)).to.equal(true);
+      expect(tracker.trackSearchSubmit(term, parameters)).to.equal(true);
 
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
@@ -298,29 +298,29 @@ describe('ConstructorIO - Tracker', () => {
     it('Should throw an error when invalid term is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendAutocompleteSearch([], parameters)).to.be.an('error');
+      expect(tracker.trackSearchSubmit([], parameters)).to.be.an('error');
     });
 
     it('Should throw an error when no term is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendAutocompleteSearch(null, parameters)).to.be.an('error');
+      expect(tracker.trackSearchSubmit(null, parameters)).to.be.an('error');
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendAutocompleteSearch(term, [])).to.be.an('error');
+      expect(tracker.trackSearchSubmit(term, [])).to.be.an('error');
     });
 
     it('Should throw an error when no parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendAutocompleteSearch(term)).to.be.an('error');
+      expect(tracker.trackSearchSubmit(term)).to.be.an('error');
     });
   });
 
-  describe('sendSearchResults', () => {
+  describe('trackSearchResultsLoaded', () => {
     const term = 'Cat in the Hat';
     const parameters = {
       num_results: 1337,
@@ -333,7 +333,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.sendSearchResults(term, parameters)).to.equal(true);
+      expect(tracker.trackSearchResultsLoaded(term, parameters)).to.equal(true);
 
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
@@ -355,7 +355,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.sendSearchResults(term, parameters)).to.equal(true);
+      expect(tracker.trackSearchResultsLoaded(term, parameters)).to.equal(true);
 
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
@@ -370,7 +370,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.sendSearchResults(term, parameters)).to.equal(true);
+      expect(tracker.trackSearchResultsLoaded(term, parameters)).to.equal(true);
 
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
@@ -380,29 +380,29 @@ describe('ConstructorIO - Tracker', () => {
     it('Should throw an error when invalid term is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendSearchResults([], parameters)).to.be.an('error');
+      expect(tracker.trackSearchResultsLoaded([], parameters)).to.be.an('error');
     });
 
     it('Should throw an error when no term is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendSearchResults(null, parameters)).to.be.an('error');
+      expect(tracker.trackSearchResultsLoaded(null, parameters)).to.be.an('error');
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendSearchResults(term, [])).to.be.an('error');
+      expect(tracker.trackSearchResultsLoaded(term, [])).to.be.an('error');
     });
 
     it('Should throw an error when no parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendSearchResults(term)).to.be.an('error');
+      expect(tracker.trackSearchResultsLoaded(term)).to.be.an('error');
     });
   });
 
-  describe('sendSearchResultClick', () => {
+  describe('trackSearchResultClick', () => {
     const term = 'Where The Wild Things Are';
     const parameters = {
       name: 'name',
@@ -416,7 +416,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.sendSearchResultClick(term, parameters)).to.equal(true);
+      expect(tracker.trackSearchResultClick(term, parameters)).to.equal(true);
 
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
@@ -439,7 +439,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.sendSearchResultClick(term, parameters)).to.equal(true);
+      expect(tracker.trackSearchResultClick(term, parameters)).to.equal(true);
 
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
@@ -454,7 +454,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.sendSearchResultClick(term, parameters)).to.equal(true);
+      expect(tracker.trackSearchResultClick(term, parameters)).to.equal(true);
 
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
@@ -464,29 +464,29 @@ describe('ConstructorIO - Tracker', () => {
     it('Should throw an error when invalid term is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendSearchResultClick([], parameters)).to.be.an('error');
+      expect(tracker.trackSearchResultClick([], parameters)).to.be.an('error');
     });
 
     it('Should throw an error when no term is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendSearchResultClick(null, parameters)).to.be.an('error');
+      expect(tracker.trackSearchResultClick(null, parameters)).to.be.an('error');
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendSearchResultClick(term, [])).to.be.an('error');
+      expect(tracker.trackSearchResultClick(term, [])).to.be.an('error');
     });
 
     it('Should throw an error when no parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendSearchResultClick(term)).to.be.an('error');
+      expect(tracker.trackSearchResultClick(term)).to.be.an('error');
     });
   });
 
-  describe('sendConversion', () => {
+  describe('trackConversion', () => {
     const term = 'Where The Wild Things Are';
     const parameters = {
       name: 'name',
@@ -502,7 +502,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.sendConversion(term, parameters)).to.equal(true);
+      expect(tracker.trackConversion(term, parameters)).to.equal(true);
 
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
@@ -525,7 +525,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.sendConversion(term, parameters)).to.equal(true);
+      expect(tracker.trackConversion(term, parameters)).to.equal(true);
 
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
@@ -540,7 +540,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.sendConversion(term, parameters)).to.equal(true);
+      expect(tracker.trackConversion(term, parameters)).to.equal(true);
 
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
@@ -555,7 +555,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.sendConversion(term, parameters)).to.equal(true);
+      expect(tracker.trackConversion(term, parameters)).to.equal(true);
 
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
@@ -565,23 +565,23 @@ describe('ConstructorIO - Tracker', () => {
     it('Should respond with a valid response when no term is provided, but parameters are', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendConversion(null, parameters)).to.equal(true);
+      expect(tracker.trackConversion(null, parameters)).to.equal(true);
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendSearchResultClick(term, [])).to.be.an('error');
+      expect(tracker.trackSearchResultClick(term, [])).to.be.an('error');
     });
 
     it('Should throw an error when no parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendSearchResultClick(term)).to.be.an('error');
+      expect(tracker.trackSearchResultClick(term)).to.be.an('error');
     });
   });
 
-  describe('sendPurchase', () => {
+  describe('trackPurchase', () => {
     const parameters = {
       customer_ids: 'customer-id',
       revenue: 123,
@@ -594,7 +594,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.sendPurchase(parameters)).to.equal(true);
+      expect(tracker.trackPurchase(parameters)).to.equal(true);
 
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
@@ -615,7 +615,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.sendPurchase(parameters)).to.equal(true);
+      expect(tracker.trackPurchase(parameters)).to.equal(true);
 
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
@@ -630,7 +630,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.sendPurchase(parameters)).to.equal(true);
+      expect(tracker.trackPurchase(parameters)).to.equal(true);
 
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
@@ -645,7 +645,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.sendPurchase(parameters)).to.equal(true);
+      expect(tracker.trackPurchase(parameters)).to.equal(true);
 
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
@@ -655,13 +655,13 @@ describe('ConstructorIO - Tracker', () => {
     it('Should throw an error when invalid parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendPurchase([])).to.be.an('error');
+      expect(tracker.trackPurchase([])).to.be.an('error');
     });
 
     it('Should throw an error when no parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.sendPurchase()).to.be.an('error');
+      expect(tracker.trackPurchase()).to.be.an('error');
     });
   });
 });

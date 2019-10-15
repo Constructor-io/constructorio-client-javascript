@@ -2,9 +2,9 @@
 const ConstructorioID = require('@constructor-io/constructorio-id');
 
 // Modules
-const search = require('./modules/search');
-const autocomplete = require('./modules/autocomplete');
-const recommendations = require('./modules/recommendations');
+const { search } = require('./modules/search');
+const { autocomplete } = require('./modules/autocomplete');
+const { recommendations } = require('./modules/recommendations');
 const tracker = require('./modules/tracker');
 const { version } = require('../package.json');
 

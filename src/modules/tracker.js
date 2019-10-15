@@ -84,7 +84,7 @@ const tracker = (options) => {
     /**
      * Send autocomplete select event to API
      *
-     * @function sendAutocompleteSelect
+     * @function trackAutocompleteSelect
      * @param {string} term - Term of selected autocomplete item
      * @param {object} parameters - Additional parameters to be sent with request
      * @param {string} parameters.original_query - The current autocomplete search query
@@ -95,7 +95,7 @@ const tracker = (options) => {
      * @param {string} [parameters.display_name] - Display name of group of selected item
      * @returns {(true|Error)}
      */
-    sendAutocompleteSelect: (term, parameters) => {
+    trackAutocompleteSelect: (term, parameters) => {
       // Ensure term is provided (required)
       if (term && typeof term === 'string') {
         // Ensure parameters are provided (required)
@@ -154,7 +154,7 @@ const tracker = (options) => {
     /**
      * Send autocomplete search event to API
      *
-     * @function sendAutocompleteSearch
+     * @function trackSearchSubmit
      * @param {string} term - Term of submitted autocomplete event
      * @param {object} parameters - Additional parameters to be sent with request
      * @param {string} parameters.original_query - The current autocomplete search query
@@ -163,7 +163,7 @@ const tracker = (options) => {
      * @param {string} [parameters.display_name] - Display name of group of selected item
      * @returns {(true|Error)}
      */
-    sendAutocompleteSearch: (term, parameters) => {
+    trackSearchSubmit: (term, parameters) => {
       // Ensure term is provided (required)
       if (term && typeof term === 'string') {
         // Ensure parameters are provided (required)
@@ -206,14 +206,14 @@ const tracker = (options) => {
     /**
      * Send search results event to API
      *
-     * @function sendSearchResults
+     * @function trackSearchResultsLoaded
      * @param {string} term - Search results query term
      * @param {object} parameters - Additional parameters to be sent with request
      * @param {number} parameters.num_results - Number of search results in total
      * @param {array} [parameters.customer_ids] - List of customer item id's returned from search
      * @returns {(true|Error)}
      */
-    sendSearchResults: (term, parameters) => {
+    trackSearchResultsLoaded: (term, parameters) => {
       // Ensure term is provided (required)
       if (term && typeof term === 'string') {
         // Ensure parameters are provided (required)
@@ -249,7 +249,7 @@ const tracker = (options) => {
     /**
      * Send click through event to API
      *
-     * @function sendSearchResultClick
+     * @function trackSearchResultClick
      * @param {string} term - Search results query term
      * @param {object} parameters - Additional parameters to be sent with request
      * @param {string} parameters.name - Identifier
@@ -257,7 +257,7 @@ const tracker = (options) => {
      * @param {string} parameters.result_id - Result id
      * @returns {(true|Error)}
      */
-    sendSearchResultClick: (term, parameters) => {
+    trackSearchResultClick: (term, parameters) => {
       // Ensure term is provided (required)
       if (term && typeof term === 'string') {
         // Ensure parameters are provided (required)
@@ -297,7 +297,7 @@ const tracker = (options) => {
     /**
      * Send conversion event to API
      *
-     * @function sendConversion
+     * @function trackConversion
      * @param {string} term - Search results query term
      * @param {object} parameters - Additional parameters to be sent with request
      * @param {string} parameters.name - Identifier
@@ -307,7 +307,7 @@ const tracker = (options) => {
      * @param {string} parameters.section - Autocomplete section
      * @returns {(true|Error)}
      */
-    sendConversion: (term, parameters) => {
+    trackConversion: (term, parameters) => {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
         const searchTerm = utils.ourEncodeURIComponent(term) || 'TERM_UNKNOWN';
@@ -351,14 +351,14 @@ const tracker = (options) => {
     /**
      * Send purchase event to API
      *
-     * @function sendPurchase
+     * @function trackPurchase
      * @param {object} parameters - Additional parameters to be sent with request
      * @param {array} parameters.customer_ids - List of customer item id's
      * @param {string} parameters.revenue - Revenue
      * @param {string} parameters.section - Autocomplete section
      * @returns {(true|Error)}
      */
-    sendPurchase: (parameters) => {
+    trackPurchase: (parameters) => {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
         const url = `${options.serviceUrl}/autocomplete/TERM_UNKNOWN/purchase?`;
