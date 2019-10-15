@@ -1,12 +1,51 @@
 /* eslint-disable no-param-reassign */
+const qs = require('qs');
+const botList = require('./botlist');
 
-/**
- * Returns a thenable that throws an http error based on a fetch response
- * @param {Error} An error (to preserve the stack trace)
- * @param {Object} A fetch response
- */
-function throwHttpErrorFromResponse(error, response) {
-  return response.json().then((json) => {
+const utils = {
+  ourEncodeURIComponent: (str) => {
+    if (str) {
+      const parsedStrObj = qs.parse(`s=${str.replace(/&/g, '%26')}`);
+
+      parsedStrObj.s = parsedStrObj.s.replace(/\s/g, ' ');
+
+      return qs.stringify(parsedStrObj).split('=')[1];
+    }
+
+    return null;
+  },
+
+  cleanParams: (paramsObj) => {
+    const cleanedParams = {};
+
+    Object.keys(paramsObj).forEach((paramKey) => {
+      const paramValue = paramsObj[paramKey];
+
+      if (typeof paramValue === 'string') {
+        // Replace non-breaking spaces (or any other type of spaces caught by the regex)
+        // - with a regular white space
+        cleanedParams[paramKey] = decodeURIComponent(utils.ourEncodeURIComponent(paramValue));
+      } else {
+        cleanedParams[paramKey] = paramValue;
+      }
+    });
+
+    return cleanedParams;
+  },
+
+  isBot: () => {
+    const { userAgent, webdriver } = window && window.navigator;
+    const botRegex = new RegExp(`(${botList.join('|')})`);
+
+    return Boolean(userAgent.match(botRegex)) || Boolean(webdriver);
+  },
+
+  /**
+   * Returns a thenable that throws an http error based on a fetch response
+   * @param {Error} An error (to preserve the stack trace)
+   * @param {Object} A fetch response
+   */
+  throwHttpErrorFromResponse: (error, response) => response.json().then((json) => {
     error.message = json.message;
     error.status = response.status;
     error.statusText = response.statusText;
@@ -14,9 +53,7 @@ function throwHttpErrorFromResponse(error, response) {
     error.headers = response.headers;
 
     throw error;
-  });
-}
-
-module.exports = {
-  throwHttpErrorFromResponse,
+  }),
 };
+
+module.exports = utils;

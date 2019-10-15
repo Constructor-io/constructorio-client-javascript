@@ -38,6 +38,7 @@
     "eslint-plugin-import": "^2.18.2",
     "http-server": "^0.11.1",
     "jsdoc": "^3.6.3",
+    "jsdom": "^15.1.1",
     "minami": "^1.2.3",
     "mocha": "^6.2.0",
     "mocha-jsdom": "^2.0.0",
@@ -50,6 +51,7 @@
     "@constructor-io/constructorio-id": "^2.1.1",
     "es6-promise": "^4.2.8",
     "fetch-ponyfill": "^6.1.0",
-    "qs": "^6.8.0"
+    "qs": "^6.8.0",
+    "store2": "^2.9.0"
   }
 }
