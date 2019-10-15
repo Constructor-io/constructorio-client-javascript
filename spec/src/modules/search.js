@@ -59,7 +59,6 @@ describe('ConstructorIO - Search', () => {
         expect(requestedUrlParams).to.have.property('s');
         expect(requestedUrlParams).to.have.property('section').to.equal(section);
         expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
-        expect(requestedUrlParams).to.have.property('_dt');
         done();
       });
     });
@@ -100,25 +99,6 @@ describe('ConstructorIO - Search', () => {
         expect(res).to.have.property('result_id').to.be.an('string');
         expect(res.request.us).to.deep.equal(segments);
         expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
-        done();
-      });
-    });
-
-    it('Should return a response with a valid query, section and user id', (done) => {
-      const userId = 'user-id';
-      const { search } = new ConstructorIO({
-        apiKey: testApiKey,
-        userId,
-        fetch: fetchSpy,
-      });
-
-      search.getSearchResults(query, { section }).then((res) => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-
-        expect(res).to.have.property('request').to.be.an('object');
-        expect(res).to.have.property('response').to.be.an('object');
-        expect(res).to.have.property('result_id').to.be.an('string');
-        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
         done();
       });
     });
@@ -358,7 +338,6 @@ describe('ConstructorIO - Search', () => {
         expect(requestedUrlParams).to.have.property('section').to.equal(section);
         expect(requestedUrlParams).to.have.property('filters');
         expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
-        expect(requestedUrlParams).to.have.property('_dt');
         done();
       });
     });
@@ -405,28 +384,6 @@ describe('ConstructorIO - Search', () => {
         expect(res).to.have.property('result_id').to.be.an('string');
         expect(res.request.us).to.deep.equal(segments);
         expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
-        done();
-      });
-    });
-
-    it('Should return a response with a valid group_id, section and user id', (done) => {
-      const userId = 'user-id';
-      const { search } = new ConstructorIO({
-        apiKey: testApiKey,
-        userId,
-        fetch: fetchSpy,
-      });
-
-      search.getBrowseResults({
-        section,
-        filters,
-      }).then((res) => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-
-        expect(res).to.have.property('request').to.be.an('object');
-        expect(res).to.have.property('response').to.be.an('object');
-        expect(res).to.have.property('result_id').to.be.an('string');
-        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
         done();
       });
     });

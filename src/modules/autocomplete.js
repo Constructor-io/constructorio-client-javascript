@@ -1,8 +1,8 @@
-/* eslint-disable object-curly-newline, no-underscore-dangle */
+/* eslint-disable object-curly-newline */
 const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
-const { throwHttpErrorFromResponse, cleanParams } = require('../utils');
+const { throwHttpErrorFromResponse } = require('../utils');
 
 /**
  * Interface to autocomplete related API calls.
@@ -16,17 +16,8 @@ const autocomplete = (options) => {
 
   // Create URL from supplied query (term) and parameters
   const createAutocompleteUrl = (query, parameters) => {
-    const {
-      apiKey,
-      version,
-      serviceUrl,
-      sessionId,
-      clientId,
-      userId,
-      segments,
-      testCells,
-    } = options;
-    let queryParams = { c: version };
+    const { apiKey, version, serviceUrl, sessionId, clientId, segments, testCells } = options;
+    const queryParams = { c: version };
 
     queryParams.key = apiKey;
     queryParams.i = clientId;
@@ -49,11 +40,6 @@ const autocomplete = (options) => {
       queryParams.us = segments;
     }
 
-    // Pull user id from options
-    if (userId) {
-      queryParams.ui = userId;
-    }
-
     if (parameters) {
       const { results, resultsPerSection, filters } = parameters;
 
@@ -74,9 +60,6 @@ const autocomplete = (options) => {
         queryParams.filters = filters;
       }
     }
-
-    queryParams._dt = Date.now();
-    queryParams = cleanParams(queryParams);
 
     const queryString = qs.stringify(queryParams, { indices: false });
 
@@ -138,4 +121,6 @@ const autocomplete = (options) => {
   };
 };
 
-module.exports = autocomplete;
+module.exports = {
+  autocomplete,
+};
