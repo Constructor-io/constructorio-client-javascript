@@ -4,6 +4,75 @@ const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
 const { throwHttpErrorFromResponse, cleanParams } = require('../utils');
 
+// Create URL from supplied query (term) and parameters
+function createAutocompleteUrl(query, parameters, options) {
+  const {
+    apiKey,
+    version,
+    serviceUrl,
+    sessionId,
+    clientId,
+    userId,
+    segments,
+    testCells,
+  } = options;
+  let queryParams = { c: version };
+
+  queryParams.key = apiKey;
+  queryParams.i = clientId;
+  queryParams.s = sessionId;
+
+  // Validate query (term) is provided
+  if (!query || typeof query !== 'string') {
+    throw new Error('query is a required parameter of type string');
+  }
+
+  // Pull test cells from options
+  if (testCells) {
+    Object.keys(testCells).forEach((testCellKey) => {
+      queryParams[`ef-${testCellKey}`] = testCells[testCellKey];
+    });
+  }
+
+  // Pull user segments from options
+  if (segments && segments.length) {
+    queryParams.us = segments;
+  }
+
+  // Pull user id from options
+  if (userId) {
+    queryParams.ui = userId;
+  }
+
+  if (parameters) {
+    const { results, resultsPerSection, filters } = parameters;
+
+    // Pull results number from parameters
+    if (results) {
+      queryParams.num_results = results;
+    }
+
+    // Pull results number per section from parameters
+    if (resultsPerSection) {
+      Object.keys(resultsPerSection).forEach((section) => {
+        queryParams[`num_results_${section}`] = resultsPerSection[section];
+      });
+    }
+
+    // Pull filters from parameters
+    if (filters) {
+      queryParams.filters = filters;
+    }
+  }
+
+  queryParams._dt = Date.now();
+  queryParams = cleanParams(queryParams);
+
+  const queryString = qs.stringify(queryParams, { indices: false });
+
+  return `${serviceUrl}/autocomplete/${encodeURIComponent(query)}?${queryString}`;
+}
+
 /**
  * Interface to autocomplete related API calls.
  *
@@ -11,131 +80,63 @@ const { throwHttpErrorFromResponse, cleanParams } = require('../utils');
  * @inner
  * @returns {object}
  */
-const autocomplete = (options) => {
-  const fetch = (options && options.fetch) || fetchPonyfill({ Promise }).fetch;
+class Autocomplete {
+  constructor(options) {
+    this.options = options;
+  }
 
-  // Create URL from supplied query (term) and parameters
-  const createAutocompleteUrl = (query, parameters) => {
-    const {
-      apiKey,
-      version,
-      serviceUrl,
-      sessionId,
-      clientId,
-      userId,
-      segments,
-      testCells,
-    } = options;
-    let queryParams = { c: version };
+  /**
+   * Retrieve autocomplete results from API
+   *
+   * @function getResults
+   * @param {object} [parameters] - Additional parameters to refine result set
+   * @param {number} [parameters.results] - The number of results to return
+   * @param {object} [parameters.filters] - Filters used to refine search
+   * @returns {Promise}
+   * @see https://docs.constructor.io/rest-api.html#autocomplete
+   */
+  getResults(query, parameters) {
+    let requestUrl;
+    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
 
-    queryParams.key = apiKey;
-    queryParams.i = clientId;
-    queryParams.s = sessionId;
-
-    // Validate query (term) is provided
-    if (!query || typeof query !== 'string') {
-      throw new Error('query is a required parameter of type string');
+    try {
+      requestUrl = createAutocompleteUrl(query, parameters, this.options);
+    } catch (e) {
+      return Promise.reject(e);
     }
 
-    // Pull test cells from options
-    if (testCells) {
-      Object.keys(testCells).forEach((testCellKey) => {
-        queryParams[`ef-${testCellKey}`] = testCells[testCellKey];
+    return fetch(requestUrl)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+
+        return throwHttpErrorFromResponse(new Error(), response);
+      })
+      .then((json) => {
+        if (json.sections) {
+          if (json.result_id) {
+            const sectionKeys = Object.keys(json.sections);
+
+            sectionKeys.forEach((section) => {
+              const sectionItems = json.sections[section];
+
+              if (sectionItems.length) {
+                // Append `result_id` to each section item
+                sectionItems.forEach((item) => {
+                  // eslint-disable-next-line no-param-reassign
+                  item.result_id = json.result_id;
+                });
+              }
+            });
+          }
+
+          return json;
+        }
+
+        throw new Error('getResults response data is malformed');
       });
-    }
+  }
+}
 
-    // Pull user segments from options
-    if (segments && segments.length) {
-      queryParams.us = segments;
-    }
-
-    // Pull user id from options
-    if (userId) {
-      queryParams.ui = userId;
-    }
-
-    if (parameters) {
-      const { results, resultsPerSection, filters } = parameters;
-
-      // Pull results number from parameters
-      if (results) {
-        queryParams.num_results = results;
-      }
-
-      // Pull results number per section from parameters
-      if (resultsPerSection) {
-        Object.keys(resultsPerSection).forEach((section) => {
-          queryParams[`num_results_${section}`] = resultsPerSection[section];
-        });
-      }
-
-      // Pull filters from parameters
-      if (filters) {
-        queryParams.filters = filters;
-      }
-    }
-
-    queryParams._dt = Date.now();
-    queryParams = cleanParams(queryParams);
-
-    const queryString = qs.stringify(queryParams, { indices: false });
-
-    return `${serviceUrl}/autocomplete/${encodeURIComponent(query)}?${queryString}`;
-  };
-
-  return {
-    /**
-     * Retrieve autocomplete results from API
-     *
-     * @function getResults
-     * @param {object} [parameters] - Additional parameters to refine result set
-     * @param {number} [parameters.results] - The number of results to return
-     * @param {object} [parameters.filters] - Filters used to refine search
-     * @returns {Promise}
-     * @see https://docs.constructor.io/rest-api.html#autocomplete
-     */
-    getResults: (query, parameters) => {
-      let requestUrl;
-
-      try {
-        requestUrl = createAutocompleteUrl(query, parameters);
-      } catch (e) {
-        return Promise.reject(e);
-      }
-
-      return fetch(requestUrl)
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          }
-
-          return throwHttpErrorFromResponse(new Error(), response);
-        })
-        .then((json) => {
-          if (json.sections) {
-            if (json.result_id) {
-              const sectionKeys = Object.keys(json.sections);
-
-              sectionKeys.forEach((section) => {
-                const sectionItems = json.sections[section];
-
-                if (sectionItems.length) {
-                  // Append `result_id` to each section item
-                  sectionItems.forEach((item) => {
-                    // eslint-disable-next-line no-param-reassign
-                    item.result_id = json.result_id;
-                  });
-                }
-              });
-            }
-
-            return json;
-          }
-
-          throw new Error('getResults response data is malformed');
-        });
-    },
-  };
-};
-
-module.exports = autocomplete;
+module.exports = Autocomplete;
