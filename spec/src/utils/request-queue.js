@@ -2,16 +2,16 @@
 const dotenv = require('dotenv');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
-const store = require('../../../src/store/store');
-const trackerRequests = require('../../../src/modules/tracker-requests');
+const store = require('../../../src/utils/store');
+const RequestQueue = require('../../../src/utils/request-queue');
 const helpers = require('../../mocha.helpers');
 
 chai.use(chaiAsPromised);
 dotenv.config();
 
-describe('ConstructorIO - Tracker - Requests', () => {
+describe('ConstructorIO - Utils - Request Queue', () => {
   const storageKey = '_constructorio_requests';
-  const waitInterval = 500;
+  const waitInterval = 1000;
 
   describe('queue', () => {
     let defaultAgent;
@@ -34,7 +34,7 @@ describe('ConstructorIO - Tracker - Requests', () => {
     });
 
     it('Should add requests to the queue and persist on unload event', () => {
-      const requests = trackerRequests();
+      const requests = new RequestQueue();
 
       requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
       requests.queue('https://ac.cnstrc.com/behavior?action=focus');
@@ -46,7 +46,7 @@ describe('ConstructorIO - Tracker - Requests', () => {
     });
 
     it('Should not add requests to the queue if the user has a bot-like useragent', () => {
-      const requests = trackerRequests();
+      const requests = new RequestQueue();
 
       window.navigator.__defineGetter__('userAgent', () => 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Googlebot/2.1; +http://www.google.com/bot.html) Safari/537.36');
 
@@ -60,7 +60,7 @@ describe('ConstructorIO - Tracker - Requests', () => {
     });
 
     it('Should not add requests to the queue if the user is webdriver', () => {
-      const requests = trackerRequests();
+      const requests = new RequestQueue();
 
       window.navigator.__defineGetter__('webdriver', () => true);
 
@@ -89,7 +89,7 @@ describe('ConstructorIO - Tracker - Requests', () => {
     });
 
     it('Should send all tracking requests if queue is populated and user is human', (done) => {
-      const requests = trackerRequests();
+      const requests = new RequestQueue();
 
       requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
       requests.queue('https://ac.cnstrc.com/behavior?action=focus');
@@ -106,7 +106,7 @@ describe('ConstructorIO - Tracker - Requests', () => {
     });
 
     it('Should not send tracking requests if queue is populated and user is not human', (done) => {
-      const requests = trackerRequests();
+      const requests = new RequestQueue();
 
       requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
       requests.queue('https://ac.cnstrc.com/behavior?action=focus');
@@ -122,7 +122,7 @@ describe('ConstructorIO - Tracker - Requests', () => {
     });
 
     it('Should not send tracking requests if queue is populated and user is human and page is unloading', (done) => {
-      const requests = trackerRequests();
+      const requests = new RequestQueue();
 
       requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
       requests.queue('https://ac.cnstrc.com/behavior?action=focus');
@@ -146,7 +146,7 @@ describe('ConstructorIO - Tracker - Requests', () => {
         'https://ac.cnstrc.com/behavior?action=magic_number_three',
       ]);
 
-      const requests = trackerRequests();
+      const requests = new RequestQueue();
 
       expect(requests.get()).to.be.an('array').length(3);
       helpers.triggerResize();
@@ -165,7 +165,7 @@ describe('ConstructorIO - Tracker - Requests', () => {
         'https://ac.cnstrc.com/behavior?action=magic_number_three',
       ]);
 
-      const requests = trackerRequests();
+      const requests = new RequestQueue();
 
       expect(requests.get()).to.be.an('array').length(3);
       requests.send();
@@ -183,7 +183,7 @@ describe('ConstructorIO - Tracker - Requests', () => {
         'https://ac.cnstrc.com/behavior?action=magic_number_three',
       ]);
 
-      const requests = trackerRequests();
+      const requests = new RequestQueue();
 
       expect(requests.get()).to.be.an('array').length(3);
       helpers.triggerResize();

@@ -2,7 +2,7 @@
 const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
-const { throwHttpErrorFromResponse, cleanParams } = require('../utils');
+const { throwHttpErrorFromResponse, cleanParams } = require('../utils/helpers');
 
 // Create URL from supplied parameters
 function createRecommendationsUrl(parameters, endpoint, options) {

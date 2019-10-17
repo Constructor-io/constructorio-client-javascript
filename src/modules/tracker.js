@@ -1,7 +1,7 @@
 /* eslint-disable object-curly-newline, no-underscore-dangle, camelcase */
 const qs = require('qs');
-const utils = require('../utils');
-const trackerRequests = require('./tracker-requests');
+const helpers = require('../utils/helpers');
+const RequestQueue = require('../utils/request-queue');
 
 // Append common parameters to supplied parameters object
 function createQueryString(parameters, options) {
@@ -33,7 +33,7 @@ function createQueryString(parameters, options) {
   }
 
   queryParams._dt = Date.now();
-  queryParams = utils.cleanParams(queryParams);
+  queryParams = helpers.cleanParams(queryParams);
 
   return qs.stringify(queryParams, { indices: false });
 }
@@ -48,7 +48,7 @@ function createQueryString(parameters, options) {
 class Tracker {
   constructor(options) {
     this.options = options;
-    this.requests = trackerRequests(options);
+    this.requests = new RequestQueue(options);
   }
 
   /**
@@ -102,7 +102,7 @@ class Tracker {
     if (term && typeof term === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-        const url = `${this.options.serviceUrl}/autocomplete/${utils.ourEncodeURIComponent(term)}/select?`;
+        const url = `${this.options.serviceUrl}/autocomplete/${helpers.ourEncodeURIComponent(term)}/select?`;
         const queryParams = {};
         const {
           original_query,
@@ -170,7 +170,7 @@ class Tracker {
     if (term && typeof term === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-        const url = `${this.options.serviceUrl}/autocomplete/${utils.ourEncodeURIComponent(term)}/search?`;
+        const url = `${this.options.serviceUrl}/autocomplete/${helpers.ourEncodeURIComponent(term)}/search?`;
         const queryParams = {};
         const { original_query, result_id, group_id, display_name } = parameters;
 
@@ -264,7 +264,7 @@ class Tracker {
     if (term && typeof term === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-        const url = `${this.options.serviceUrl}/autocomplete/${utils.ourEncodeURIComponent(term)}/click_through?`;
+        const url = `${this.options.serviceUrl}/autocomplete/${helpers.ourEncodeURIComponent(term)}/click_through?`;
         const queryParams = {};
         const { name, customer_id, result_id } = parameters;
 
@@ -312,7 +312,7 @@ class Tracker {
   trackConversion(term, parameters) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const searchTerm = utils.ourEncodeURIComponent(term) || 'TERM_UNKNOWN';
+      const searchTerm = helpers.ourEncodeURIComponent(term) || 'TERM_UNKNOWN';
       const url = `${this.options.serviceUrl}/autocomplete/${searchTerm}/conversion?`;
       const queryParams = {};
       const { name, customer_id, result_id, revenue, section } = parameters;

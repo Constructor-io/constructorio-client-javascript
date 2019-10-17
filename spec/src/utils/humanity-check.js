@@ -1,14 +1,14 @@
 const dotenv = require('dotenv');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
-const store = require('../../../src/store/store');
-const trackerHumanity = require('../../../src/modules/tracker-humanity');
+const store = require('../../../src/utils/store');
+const HumanityCheck = require('../../../src/utils/humanity-check');
 const helpers = require('../../mocha.helpers');
 
 chai.use(chaiAsPromised);
 dotenv.config();
 
-describe('ConstructorIO - Tracker - Humanity', () => {
+describe('ConstructorIO - Utils - Humanity Check', () => {
   describe('isHuman', () => {
     const storageKey = '_constructorio_is_human';
 
@@ -26,14 +26,14 @@ describe('ConstructorIO - Tracker - Humanity', () => {
     });
 
     it('Should not have isHuman flag set on initial instantiation', () => {
-      const humanity = trackerHumanity();
+      const humanity = new HumanityCheck();
 
       expect(humanity.isHuman()).to.equal(false);
       expect(store.session.get(storageKey)).to.equal(null);
     });
 
     it('Should have isHuman flag set if human-like actions are detected', () => {
-      const humanity = trackerHumanity();
+      const humanity = new HumanityCheck();
 
       expect(humanity.isHuman()).to.equal(false);
       helpers.triggerResize();
@@ -42,7 +42,7 @@ describe('ConstructorIO - Tracker - Humanity', () => {
     });
 
     it('Should have isHuman flag set if session variable is set', () => {
-      const humanity = trackerHumanity();
+      const humanity = new HumanityCheck();
 
       expect(humanity.isHuman()).to.equal(false);
       store.session.set(storageKey, true);
