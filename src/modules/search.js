@@ -207,6 +207,7 @@ class Search {
         return throwHttpErrorFromResponse(new Error(), response);
       })
       .then((json) => {
+        // Search results
         if (json.response && json.response.results) {
           if (json.result_id) {
             json.response.results.forEach((result) => {
@@ -215,6 +216,11 @@ class Search {
             });
           }
 
+          return json;
+        }
+
+        // Redirect rules
+        if (json.response && json.response.redirect) {
           return json;
         }
 
