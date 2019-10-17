@@ -30,7 +30,7 @@ class HumanityCheck {
     };
 
     // Add handlers to prove humanity
-    if (!this.isHumanBoolean) {
+    if (!this.isHumanBoolean && window) {
       humanEvents.forEach((eventType) => {
         window.addEventListener(eventType, remove, true);
       });
