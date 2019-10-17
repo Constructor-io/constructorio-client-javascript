@@ -251,6 +251,19 @@ describe('ConstructorIO - Search', () => {
       });
     });
 
+    it('Should return a redirect rule response with a valid query and section', (done) => {
+      const query = 'rolling';
+      const { search } = new ConstructorIO({ apiKey: testApiKey });
+
+      search.getSearchResults(query, { section }).then((res) => {
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.response).to.have.property('redirect');
+        done();
+      });
+    });
+
     it('Should be rejected when invalid query is provided', () => {
       const { search } = new ConstructorIO({ apiKey: testApiKey });
 
