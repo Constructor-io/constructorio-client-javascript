@@ -14,11 +14,13 @@ class RequestQueue {
     this.requestQueue = store.local.get(storageKey) || [];
 
     // Flush requests to storage on unload
-    window.addEventListener('beforeunload', () => {
-      this.flushScheduled = true;
+    if (window) {
+      window.addEventListener('beforeunload', () => {
+        this.flushScheduled = true;
 
-      store.local.set(storageKey, this.requestQueue);
-    });
+        store.local.set(storageKey, this.requestQueue);
+      });
+    }
   }
 
   // Add request to queue to be dispatched
