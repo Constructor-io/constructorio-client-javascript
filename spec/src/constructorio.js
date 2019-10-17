@@ -26,6 +26,10 @@ describe('ConstructorIO', () => {
     expect(instance.options).to.have.property('serviceUrl');
     expect(instance.options).to.have.property('clientId');
     expect(instance.options).to.have.property('sessionId');
+    expect(instance).to.have.property('search');
+    expect(instance).to.have.property('autocomplete');
+    expect(instance).to.have.property('recommendations');
+    expect(instance).to.have.property('tracker');
   });
 
   it('Should return an instance with custom options when valid API key is provided', () => {
@@ -43,6 +47,24 @@ describe('ConstructorIO', () => {
     expect(instance.options).to.have.property('clientId').to.equal(clientId);
     expect(instance.options).to.have.property('sessionId').to.equal(sessionId);
     expect(instance.options).to.have.property('serviceUrl').to.equal(serviceUrl);
+  });
+
+  it('Should return an instance without tracking module if window is not defined', () => {
+    // eslint-disable-next-line no-global-assign
+    window = undefined;
+
+    const clientId = 'client-id';
+    const sessionId = 'session-id';
+    const serviceUrl = 'http://constructor.io';
+    const instance = new ConstructorIO({
+      apiKey: validApiKey,
+      clientId,
+      sessionId,
+      serviceUrl,
+    });
+
+    expect(instance).to.be.an('object');
+    expect(instance).to.not.have.property('tracker');
   });
 
   it('Should throw an error when invalid API key is provided', () => {
