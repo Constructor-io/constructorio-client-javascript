@@ -2,6 +2,7 @@ const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
 const store = require('../utils/store');
 const HumanityCheck = require('../utils/humanity-check');
+const helpers = require('../utils/helpers');
 
 const storageKey = '_constructorio_requests';
 
@@ -14,13 +15,11 @@ class RequestQueue {
     this.requestQueue = store.local.get(storageKey) || [];
 
     // Flush requests to storage on unload
-    if (window) {
-      window.addEventListener('beforeunload', () => {
-        this.flushScheduled = true;
+    helpers.addEventListener('beforeunload', () => {
+      this.flushScheduled = true;
 
-        store.local.set(storageKey, this.requestQueue);
-      });
-    }
+      store.local.set(storageKey, this.requestQueue);
+    });
   }
 
   // Add request to queue to be dispatched

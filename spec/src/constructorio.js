@@ -49,24 +49,6 @@ describe('ConstructorIO', () => {
     expect(instance.options).to.have.property('serviceUrl').to.equal(serviceUrl);
   });
 
-  it('Should return an instance without tracking module if window is not defined', () => {
-    // eslint-disable-next-line no-global-assign
-    window = undefined;
-
-    const clientId = 'client-id';
-    const sessionId = 'session-id';
-    const serviceUrl = 'http://constructor.io';
-    const instance = new ConstructorIO({
-      apiKey: validApiKey,
-      clientId,
-      sessionId,
-      serviceUrl,
-    });
-
-    expect(instance).to.be.an('object');
-    expect(instance).to.not.have.property('tracker');
-  });
-
   it('Should throw an error when invalid API key is provided', () => {
     expect(() => new ConstructorIO({ apiKey: 123456789 })).to.throw('API key is a required parameter of type string');
   });
