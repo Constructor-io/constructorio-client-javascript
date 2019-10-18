@@ -46,6 +46,29 @@ const utils = {
 
     throw error;
   }),
+
+  addEventListener: (eventType, callback, useCapture) => {
+    if (typeof window !== 'undefined') {
+      window.addEventListener(eventType, callback, useCapture);
+    }
+  },
+
+  removeEventListener: (eventType, callback, useCapture) => {
+    if (typeof window !== 'undefined') {
+      window.removeEventListener(eventType, callback, useCapture);
+    }
+  },
+
+  getNavigator: () => {
+    if (typeof window !== 'undefined') {
+      return window.navigator;
+    }
+
+    return {
+      userAgent: '',
+      webdriver: false,
+    };
+  },
 };
 
 module.exports = utils;

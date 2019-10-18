@@ -61,11 +61,7 @@ class ConstructorIO {
     this.search = new Search(this.options);
     this.autocomplete = new Autocomplete(this.options);
     this.recommendations = new Recommendations(this.options);
-
-    // Expose client-side only modules
-    if (typeof window !== 'undefined') {
-      this.tracker = new Tracker(this.options);
-    }
+    this.tracker = new Tracker(this.options);
   }
 }
 

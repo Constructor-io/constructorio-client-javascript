@@ -1,6 +1,7 @@
 /* eslint-disable class-methods-use-this */
 const store = require('../utils/store');
 const botList = require('./botlist');
+const helpers = require('./helpers');
 
 const storageKey = '_constructorio_is_human';
 const humanEvents = [
@@ -25,14 +26,14 @@ class HumanityCheck {
 
       store.session.set(storageKey, true);
       humanEvents.forEach((eventType) => {
-        window.removeEventListener(eventType, remove, true);
+        helpers.removeEventListener(eventType, remove, true);
       });
     };
 
     // Add handlers to prove humanity
-    if (!this.isHumanBoolean && typeof window !== 'undefined') {
+    if (!this.isHumanBoolean) {
       humanEvents.forEach((eventType) => {
-        window.addEventListener(eventType, remove, true);
+        helpers.addEventListener(eventType, remove, true);
       });
     }
   }
@@ -44,7 +45,7 @@ class HumanityCheck {
 
   // Return boolean indicating if useragent matches botlist
   isBot() {
-    const { userAgent, webdriver } = window && window.navigator;
+    const { userAgent, webdriver } = helpers.getNavigator();
     const botRegex = new RegExp(`(${botList.join('|')})`);
 
     return Boolean(userAgent.match(botRegex)) || Boolean(webdriver);
