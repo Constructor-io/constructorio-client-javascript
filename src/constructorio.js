@@ -63,7 +63,7 @@ class ConstructorIO {
     this.recommendations = new Recommendations(this.options);
 
     // Expose client-side only modules
-    if (window) {
+    if (typeof window !== 'undefined') {
       this.tracker = new Tracker(this.options);
     }
   }

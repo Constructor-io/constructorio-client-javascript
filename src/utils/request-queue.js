@@ -14,7 +14,7 @@ class RequestQueue {
     this.requestQueue = store.local.get(storageKey) || [];
 
     // Flush requests to storage on unload
-    if (window) {
+    if (typeof window !== 'undefined') {
       window.addEventListener('beforeunload', () => {
         this.flushScheduled = true;
 
