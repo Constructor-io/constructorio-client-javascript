@@ -13,6 +13,11 @@ function createRecommendationsUrl(placement, parameters, options) {
   queryParams.i = clientId;
   queryParams.s = sessionId;
 
+  // Validate placement is provided
+  if (!placement || typeof placement !== 'string') {
+    throw new Error('placement is a required parameter of type string');
+  }
+
   // Pull user segments from options
   if (segments && segments.length) {
     queryParams.us = segments;
@@ -46,7 +51,7 @@ function createRecommendationsUrl(placement, parameters, options) {
 
   const queryString = qs.stringify(queryParams, { indices: false });
 
-  return `${serviceUrl}recommendations/v1/placements/${placement}/?${queryString}`;
+  return `${serviceUrl}/recommendations/v1/placements/${placement}?${queryString}`;
 }
 
 /**
@@ -84,6 +89,7 @@ class Recommendations {
     } catch (e) {
       return Promise.reject(e);
     }
+
 
     return fetch(requestUrl)
       .then((response) => {

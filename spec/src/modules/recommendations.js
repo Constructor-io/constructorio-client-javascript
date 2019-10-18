@@ -34,7 +34,8 @@ describe('ConstructorIO - Recommendations', () => {
     fetchSpy = null;
   });
 
-  describe('getAlternativeItems', () => {
+  describe('getRecommendations', () => {
+    const placement = 'item_page_1';
     const itemId = 'power_drill';
     const itemIds = [itemId, 'drill'];
 
@@ -44,7 +45,7 @@ describe('ConstructorIO - Recommendations', () => {
         fetch: fetchSpy,
       });
 
-      recommendations.getAlternativeItems(itemId).then((res) => {
+      recommendations.getRecommendations(placement, { itemIds: itemId }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -68,7 +69,7 @@ describe('ConstructorIO - Recommendations', () => {
         fetch: fetchSpy,
       });
 
-      recommendations.getAlternativeItems(itemIds).then((res) => {
+      recommendations.getRecommendations(placement, { itemIds }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -89,7 +90,7 @@ describe('ConstructorIO - Recommendations', () => {
         fetch: fetchSpy,
       });
 
-      recommendations.getAlternativeItems(itemId).then((res) => {
+      recommendations.getRecommendations(placement, { itemIds }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -108,7 +109,7 @@ describe('ConstructorIO - Recommendations', () => {
         fetch: fetchSpy,
       });
 
-      recommendations.getAlternativeItems(itemId).then((res) => {
+      recommendations.getRecommendations(placement, { itemIds }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -126,7 +127,10 @@ describe('ConstructorIO - Recommendations', () => {
         fetch: fetchSpy,
       });
 
-      recommendations.getAlternativeItems(itemId, { results }).then((res) => {
+      recommendations.getRecommendations(placement, {
+        itemIds,
+        results,
+      }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -134,6 +138,28 @@ describe('ConstructorIO - Recommendations', () => {
         expect(res).to.have.property('result_id').to.be.an('string');
         expect(res.request.num_results).to.equal(results);
         expect(requestedUrlParams).to.have.property('num_results').to.equal(results.toString());
+        done();
+      });
+    });
+
+    it('Should return a response with valid itemIds, and section', (done) => {
+      const section = 'Products';
+      const { recommendations } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      recommendations.getRecommendations(placement, {
+        itemIds,
+        section,
+      }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.section).to.equal(section);
+        expect(requestedUrlParams).to.have.property('section').to.equal(section);
         done();
       });
     });
@@ -141,7 +167,7 @@ describe('ConstructorIO - Recommendations', () => {
     it('Should return a response with valid itemIds, with a result_id appended to each result', (done) => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
-      recommendations.getAlternativeItems(itemId).then((res) => {
+      recommendations.getRecommendations(placement, { itemIds }).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
@@ -153,402 +179,46 @@ describe('ConstructorIO - Recommendations', () => {
       });
     });
 
-    it('Should be rejected when invalid itemIds are provided', () => {
+    it('Should be rejected when invalid placements parameter is provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(recommendations.getAlternativeItems({})).to.eventually.be.rejected;
+      return expect(recommendations.getRecommendations([], {
+        itemIds,
+      })).to.eventually.be.rejected;
     });
 
-    it('Should be rejected when no itemIds are provided', () => {
+    it('Should be rejected when no placements parameter is provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(recommendations.getAlternativeItems()).to.eventually.be.rejected;
+      return expect(recommendations.getRecommendations(null, {
+        itemIds,
+      })).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid results parameter is provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(recommendations.getAlternativeItems(itemId, { results: 'abc' })).to.eventually.be.rejected;
+      return expect(recommendations.getRecommendations(placement, {
+        itemIds,
+        results: 'abc',
+      })).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected when invalid section parameter is provided', () => {
+      const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(recommendations.getRecommendations(placement, {
+        itemIds,
+        section: 'Nonsense',
+      })).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid apiKey is provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
 
-      return expect(recommendations.getAlternativeItems(itemId)).to.eventually.be.rejected;
-    });
-  });
-
-  describe('getComplementaryItems', () => {
-    const itemId = 'power_drill';
-    const itemIds = [itemId, 'drill'];
-
-    it('Should return a response with valid itemIds (singular)', (done) => {
-      const { recommendations } = new ConstructorIO({
-        apiKey: testApiKey,
-        fetch: fetchSpy,
-      });
-
-      recommendations.getComplementaryItems(itemId).then((res) => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-
-        expect(res).to.have.property('request').to.be.an('object');
-        expect(res).to.have.property('response').to.be.an('object');
-        expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.item_id).to.equal(itemId);
-        expect(res.response).to.have.property('results').to.be.an('array');
-        expect(fetchSpy).to.have.been.called;
-        expect(requestedUrlParams).to.have.property('key');
-        expect(requestedUrlParams).to.have.property('i');
-        expect(requestedUrlParams).to.have.property('s');
-        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
-        expect(requestedUrlParams).to.have.property('item_id').to.equal(itemId);
-        done();
-      });
-    });
-
-    it('Should return a response with valid itemIds (multiple)', (done) => {
-      const { recommendations } = new ConstructorIO({
-        apiKey: testApiKey,
-        fetch: fetchSpy,
-      });
-
-      recommendations.getComplementaryItems(itemIds).then((res) => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-
-        expect(res).to.have.property('request').to.be.an('object');
-        expect(res).to.have.property('response').to.be.an('object');
-        expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.item_id).to.deep.equal(itemIds);
-        expect(res.response).to.have.property('results').to.be.an('array');
-        expect(requestedUrlParams).to.have.property('item_id').to.deep.equal(itemIds);
-        done();
-      });
-    });
-
-    it('Should return a response with valid itemIds, and segments', (done) => {
-      const segments = 'segments';
-      const { recommendations } = new ConstructorIO({
-        apiKey: testApiKey,
-        segments,
-        fetch: fetchSpy,
-      });
-
-      recommendations.getComplementaryItems(itemId).then((res) => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-
-        expect(res).to.have.property('request').to.be.an('object');
-        expect(res).to.have.property('response').to.be.an('object');
-        expect(res).to.have.property('result_id').to.be.an('string');
-        expect(requestedUrlParams).to.have.property('us').to.equal(segments);
-        done();
-      });
-    });
-
-    it('Should return a response with valid itemIds, and user id', (done) => {
-      const userId = 'user-id';
-      const { recommendations } = new ConstructorIO({
-        apiKey: testApiKey,
-        userId,
-        fetch: fetchSpy,
-      });
-
-      recommendations.getComplementaryItems(itemId).then((res) => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-
-        expect(res).to.have.property('request').to.be.an('object');
-        expect(res).to.have.property('response').to.be.an('object');
-        expect(res).to.have.property('result_id').to.be.an('string');
-        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
-        done();
-      });
-    });
-
-    it('Should return a response with valid itemIds, and results', (done) => {
-      const results = 2;
-      const { recommendations } = new ConstructorIO({
-        apiKey: testApiKey,
-        fetch: fetchSpy,
-      });
-
-      recommendations.getComplementaryItems(itemId, { results }).then((res) => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-
-        expect(res).to.have.property('request').to.be.an('object');
-        expect(res).to.have.property('response').to.be.an('object');
-        expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.num_results).to.equal(results);
-        expect(requestedUrlParams).to.have.property('num_results').to.equal(results.toString());
-        done();
-      });
-    });
-
-    it('Should return a response with valid itemIds, with a result_id appended to each result', (done) => {
-      const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
-
-      recommendations.getComplementaryItems(itemId).then((res) => {
-        expect(res).to.have.property('request').to.be.an('object');
-        expect(res).to.have.property('response').to.be.an('object');
-        expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.response).to.have.property('results').to.be.an('array');
-        res.response.results.forEach((item) => {
-          expect(item).to.have.property('result_id').to.be.a('string').to.equal(res.result_id);
-        });
-        done();
-      });
-    });
-
-    it('Should be rejected when invalid itemIds are provided', () => {
-      const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
-
-      return expect(recommendations.getComplementaryItems({})).to.eventually.be.rejected;
-    });
-
-    it('Should be rejected when no itemIds are provided', () => {
-      const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
-
-      return expect(recommendations.getComplementaryItems()).to.eventually.be.rejected;
-    });
-
-    it('Should be rejected when invalid results parameter is provided', () => {
-      const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
-
-      return expect(recommendations.getComplementaryItems(itemId, { results: 'abc' })).to.eventually.be.rejected;
-    });
-
-    it('Should be rejected when invalid apiKey is provided', () => {
-      const { recommendations } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
-
-      return expect(recommendations.getComplementaryItems(itemId)).to.eventually.be.rejected;
-    });
-  });
-
-  describe('getRecentlyViewedItems', () => {
-    beforeEach(() => {
-      global.CLIENT_VERSION = 'cio-mocha';
-    });
-
-    afterEach(() => {
-      delete global.CLIENT_VERSION;
-    });
-
-    it('Should return a response', (done) => {
-      const { recommendations } = new ConstructorIO({
-        apiKey: testApiKey,
-        fetch: fetchSpy,
-      });
-
-      recommendations.getRecentlyViewedItems().then((res) => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-
-        expect(res).to.have.property('request').to.be.an('object');
-        expect(res).to.have.property('response').to.be.an('object');
-        expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.response).to.have.property('results').to.be.an('array');
-        expect(requestedUrlParams).to.have.property('key');
-        expect(requestedUrlParams).to.have.property('i');
-        expect(requestedUrlParams).to.have.property('s');
-        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
-        done();
-      });
-    });
-
-    it('Should return a response with valid segments', (done) => {
-      const segments = 'segments';
-      const { recommendations } = new ConstructorIO({
-        apiKey: testApiKey,
-        segments,
-        fetch: fetchSpy,
-      });
-
-      recommendations.getRecentlyViewedItems().then((res) => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-
-        expect(res).to.have.property('request').to.be.an('object');
-        expect(res).to.have.property('response').to.be.an('object');
-        expect(res).to.have.property('result_id').to.be.an('string');
-        expect(requestedUrlParams).to.have.property('us').to.equal(segments);
-        done();
-      });
-    });
-
-    it('Should return a response with valid user id', (done) => {
-      const userId = 'user-id';
-      const { recommendations } = new ConstructorIO({
-        apiKey: testApiKey,
-        userId,
-        fetch: fetchSpy,
-      });
-
-      recommendations.getRecentlyViewedItems().then((res) => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-
-        expect(res).to.have.property('request').to.be.an('object');
-        expect(res).to.have.property('response').to.be.an('object');
-        expect(res).to.have.property('result_id').to.be.an('string');
-        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
-        done();
-      });
-    });
-
-    it('Should return a response with valid results', (done) => {
-      const results = 2;
-      const { recommendations } = new ConstructorIO({
-        apiKey: testApiKey,
-        fetch: fetchSpy,
-      });
-
-      recommendations.getRecentlyViewedItems({ results }).then((res) => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-
-        expect(res).to.have.property('request').to.be.an('object');
-        expect(res).to.have.property('response').to.be.an('object');
-        expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.num_results).to.equal(results);
-        expect(requestedUrlParams).to.have.property('num_results').to.equal(results.toString());
-        done();
-      });
-    });
-
-    it('Should return a response with a result_id appended to each result', (done) => {
-      const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
-
-      recommendations.getRecentlyViewedItems().then((res) => {
-        expect(res).to.have.property('request').to.be.an('object');
-        expect(res).to.have.property('response').to.be.an('object');
-        expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.response).to.have.property('results').to.be.an('array');
-        res.response.results.forEach((item) => {
-          expect(item).to.have.property('result_id').to.be.a('string').to.equal(res.result_id);
-        });
-        done();
-      });
-    });
-
-    it('Should be rejected when invalid results parameter is provided', () => {
-      const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
-
-      return expect(recommendations.getRecentlyViewedItems({ results: 'abc' })).to.eventually.be.rejected;
-    });
-
-    it('Should be rejected when invalid apiKey is provided', () => {
-      const { recommendations } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
-
-      return expect(recommendations.getRecentlyViewedItems()).to.eventually.be.rejected;
-    });
-  });
-
-  describe('getUserFeaturedItems', () => {
-    beforeEach(() => {
-      global.CLIENT_VERSION = 'cio-mocha';
-    });
-
-    afterEach(() => {
-      delete global.CLIENT_VERSION;
-    });
-
-    it('Should return a response', (done) => {
-      const { recommendations } = new ConstructorIO({
-        apiKey: testApiKey,
-        fetch: fetchSpy,
-      });
-
-      recommendations.getUserFeaturedItems().then((res) => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-
-        expect(res).to.have.property('request').to.be.an('object');
-        expect(res).to.have.property('response').to.be.an('object');
-        expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.response).to.have.property('results').to.be.an('array');
-        expect(requestedUrlParams).to.have.property('key');
-        expect(requestedUrlParams).to.have.property('i');
-        expect(requestedUrlParams).to.have.property('s');
-        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
-        done();
-      });
-    });
-
-    it('Should return a response with valid segments', (done) => {
-      const segments = 'segments';
-      const { recommendations } = new ConstructorIO({
-        apiKey: testApiKey,
-        segments,
-        fetch: fetchSpy,
-      });
-
-      recommendations.getUserFeaturedItems().then((res) => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-
-        expect(res).to.have.property('request').to.be.an('object');
-        expect(res).to.have.property('response').to.be.an('object');
-        expect(res).to.have.property('result_id').to.be.an('string');
-        expect(requestedUrlParams).to.have.property('us').to.equal(segments);
-        done();
-      });
-    });
-
-    it('Should return a response with valid user id', (done) => {
-      const userId = 'user-id';
-      const { recommendations } = new ConstructorIO({
-        apiKey: testApiKey,
-        userId,
-        fetch: fetchSpy,
-      });
-
-      recommendations.getUserFeaturedItems().then((res) => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-
-        expect(res).to.have.property('request').to.be.an('object');
-        expect(res).to.have.property('response').to.be.an('object');
-        expect(res).to.have.property('result_id').to.be.an('string');
-        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
-        done();
-      });
-    });
-
-    it('Should return a response with valid results', (done) => {
-      const results = 2;
-      const { recommendations } = new ConstructorIO({
-        apiKey: testApiKey,
-        fetch: fetchSpy,
-      });
-
-      recommendations.getUserFeaturedItems({ results }).then((res) => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-
-        expect(res).to.have.property('request').to.be.an('object');
-        expect(res).to.have.property('response').to.be.an('object');
-        expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.num_results).to.equal(results);
-        expect(requestedUrlParams).to.have.property('num_results').to.equal(results.toString());
-        done();
-      });
-    });
-
-    it('Should return a response with a result_id appended to each result', (done) => {
-      const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
-
-      recommendations.getUserFeaturedItems().then((res) => {
-        expect(res).to.have.property('request').to.be.an('object');
-        expect(res).to.have.property('response').to.be.an('object');
-        expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.response).to.have.property('results').to.be.an('array');
-        res.response.results.forEach((item) => {
-          expect(item).to.have.property('result_id').to.be.a('string').to.equal(res.result_id);
-        });
-        done();
-      });
-    });
-
-    it('Should be rejected when invalid results parameter is provided', () => {
-      const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
-
-      return expect(recommendations.getUserFeaturedItems({ results: 'abc' })).to.eventually.be.rejected;
-    });
-
-    it('Should be rejected when invalid apiKey is provided', () => {
-      const { recommendations } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
-
-      return expect(recommendations.getUserFeaturedItems()).to.eventually.be.rejected;
+      return expect(recommendations.getRecommendations(placement, {
+        itemIds,
+      })).to.eventually.be.rejected;
     });
   });
 });
