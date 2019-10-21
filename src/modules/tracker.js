@@ -39,7 +39,7 @@ function createQueryString(parameters, options) {
 }
 
 /**
- * Interface to tracking related API calls.
+ * Interface to tracking related API calls
  *
  * @module Tracker
  * @inner

@@ -3,6 +3,7 @@ const ConstructorioID = require('@constructor-io/constructorio-id');
 
 // Modules
 const Search = require('./modules/search');
+const Browse = require('./modules/browse');
 const Autocomplete = require('./modules/autocomplete');
 const Recommendations = require('./modules/recommendations');
 const Tracker = require('./modules/tracker');
@@ -21,6 +22,7 @@ class ConstructorIO {
    * @param {string} [sessionId] - Session id, defaults to value supplied by 'constructorio-id'
    * @param {string} [userId] - User id
    * @property {object} [search] - Interface to {@link module:search}
+   * @property {object} [search] - Interface to {@link module:browse}
    * @property {object} [autocomplete] - Interface to {@link module:autocomplete}
    * @property {object} [recommendations] - Interface to {@link module:recommendations}
    * @property {object} [tracker] - Interface to {@link module:tracker}
@@ -59,6 +61,7 @@ class ConstructorIO {
 
     // Expose global modules
     this.search = new Search(this.options);
+    this.browse = new Browse(this.options);
     this.autocomplete = new Autocomplete(this.options);
     this.recommendations = new Recommendations(this.options);
     this.tracker = new Tracker(this.options);
