@@ -88,14 +88,14 @@ class Autocomplete {
   /**
    * Retrieve autocomplete results from API
    *
-   * @function getResults
+   * @function getAutocompleteResults
    * @param {object} [parameters] - Additional parameters to refine result set
    * @param {number} [parameters.numResults] - The number of results to return
    * @param {object} [parameters.filters] - Filters used to refine search
    * @returns {Promise}
    * @see https://docs.constructor.io/rest-api.html#autocomplete
    */
-  getResults(query, parameters) {
+  getAutocompleteResults(query, parameters) {
     let requestUrl;
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
 
@@ -134,7 +134,7 @@ class Autocomplete {
           return json;
         }
 
-        throw new Error('getResults response data is malformed');
+        throw new Error('getAutocompleteResults response data is malformed');
       });
   }
 }

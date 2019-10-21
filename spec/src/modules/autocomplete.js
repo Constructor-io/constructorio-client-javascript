@@ -34,7 +34,7 @@ describe('ConstructorIO - Autocomplete', () => {
     fetchSpy = null;
   });
 
-  describe('getResults', () => {
+  describe('getAutocompleteResults', () => {
     const query = 'drill';
 
     it('Should return a response with a valid query', (done) => {
@@ -43,7 +43,7 @@ describe('ConstructorIO - Autocomplete', () => {
         fetch: fetchSpy,
       });
 
-      autocomplete.getResults(query).then((res) => {
+      autocomplete.getAutocompleteResults(query).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -68,7 +68,7 @@ describe('ConstructorIO - Autocomplete', () => {
         fetch: fetchSpy,
       });
 
-      autocomplete.getResults(query).then((res) => {
+      autocomplete.getAutocompleteResults(query).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -88,7 +88,7 @@ describe('ConstructorIO - Autocomplete', () => {
         fetch: fetchSpy,
       });
 
-      autocomplete.getResults(query).then((res) => {
+      autocomplete.getAutocompleteResults(query).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -108,7 +108,7 @@ describe('ConstructorIO - Autocomplete', () => {
         fetch: fetchSpy,
       });
 
-      autocomplete.getResults(query).then((res) => {
+      autocomplete.getAutocompleteResults(query).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -126,7 +126,7 @@ describe('ConstructorIO - Autocomplete', () => {
         fetch: fetchSpy,
       });
 
-      autocomplete.getResults(query, { numResults }).then((res) => {
+      autocomplete.getAutocompleteResults(query, { numResults }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
         const sectionKeys = Object.keys(res.sections);
         let resultCount = 0;
@@ -157,7 +157,7 @@ describe('ConstructorIO - Autocomplete', () => {
         fetch: fetchSpy,
       });
 
-      autocomplete.getResults(query, { resultsPerSection }).then((res) => {
+      autocomplete.getAutocompleteResults(query, { resultsPerSection }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -178,7 +178,7 @@ describe('ConstructorIO - Autocomplete', () => {
         fetch: fetchSpy,
       });
 
-      autocomplete.getResults(query, { filters }).then((res) => {
+      autocomplete.getAutocompleteResults(query, { filters }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -194,7 +194,7 @@ describe('ConstructorIO - Autocomplete', () => {
     it('Should return a response with a valid query, with a result_id appended to each result', (done) => {
       const { autocomplete } = new ConstructorIO({ apiKey: testApiKey });
 
-      autocomplete.getResults(query).then((res) => {
+      autocomplete.getAutocompleteResults(query).then((res) => {
         const sectionKeys = Object.keys(res.sections);
         let sectionItems = [];
 
@@ -215,7 +215,7 @@ describe('ConstructorIO - Autocomplete', () => {
     it('Should be rejected when invalid query is provided', () => {
       const { autocomplete } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(autocomplete.getResults([])).to.eventually.be.rejected;
+      return expect(autocomplete.getAutocompleteResults([])).to.eventually.be.rejected;
     });
 
     it('Should be rejected when no query is provided', () => {
@@ -223,25 +223,25 @@ describe('ConstructorIO - Autocomplete', () => {
         apiKey: testApiKey,
       });
 
-      return expect(autocomplete.getResults(null)).to.eventually.be.rejected;
+      return expect(autocomplete.getAutocompleteResults(null)).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid numResults parameter is provided', () => {
       const { autocomplete } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(autocomplete.getResults(query, { numResults: 'abc' })).to.eventually.be.rejected;
+      return expect(autocomplete.getAutocompleteResults(query, { numResults: 'abc' })).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid filters parameter is provided', () => {
       const { autocomplete } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(autocomplete.getResults(query, { filters: 'abc' })).to.eventually.be.rejected;
+      return expect(autocomplete.getAutocompleteResults(query, { filters: 'abc' })).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid apiKey is provided', () => {
       const { autocomplete } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
 
-      return expect(autocomplete.getResults(query)).to.eventually.be.rejected;
+      return expect(autocomplete.getAutocompleteResults(query)).to.eventually.be.rejected;
     });
   });
 });
