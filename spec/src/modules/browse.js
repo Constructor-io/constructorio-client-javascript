@@ -34,7 +34,7 @@ describe('ConstructorIO - Browse', () => {
     fetchSpy = null;
   });
 
-  describe.only('getBrowseResults', () => {
+  describe('getBrowseResults', () => {
     const filterName = 'group_id';
     const filterValue = 'drill_collection';
 
@@ -251,6 +251,30 @@ describe('ConstructorIO - Browse', () => {
         });
         done();
       });
+    });
+
+    it('Should be rejected when invalid filterName is provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseResults([], filterValue)).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected when no filterName is provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseResults(null, filterValue)).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected when invalid filterValue is provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseResults(filterName, [])).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected when no filterValue is provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseResults(filterName, null)).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid page parameter is provided', () => {
