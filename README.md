@@ -81,7 +81,7 @@ constructorio.autocomplete.getResults('dogs', {
 | Parameter | Type | Description |
 | --- | --- | --- |
 | `section` | string | Section to display results from |
-| `results` | number | Number of results to retrieve |
+| `numResults` | number | Number of results to retrieve |
 | `resultsPerSection` | object | Object of pairs in the form of `section: number` for number results to display |
 | `filters` | object | The criteria by which search results should be filtered |
 | `sortOrder` | string | The sort order by which search results should be sorted (descending or ascending) |
