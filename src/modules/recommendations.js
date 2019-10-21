@@ -29,11 +29,11 @@ function createRecommendationsUrl(pod, parameters, options) {
   }
 
   if (parameters) {
-    const { results, itemIds, section } = parameters;
+    const { numResults, itemIds, section } = parameters;
 
-    // Pull results number from parameters
-    if (results) {
-      queryParams.num_results = results;
+    // Pull num results number from parameters
+    if (numResults) {
+      queryParams.num_results = numResults;
     }
 
     // Pull item ids from parameters
@@ -73,7 +73,7 @@ class Recommendations {
    * @param {string} pod - Pod identifier
    * @param {object} [parameters] - Additional parameters to refine results
    * @param {string|array} [parameters.itemIds] - Item ID(s) to retrieve recommendations for
-   * @param {number} [parameters.results] - The number of results to return
+   * @param {number} [parameters.numResults] - The number of results to return
    * @param {string} [parameters.section] - The section to return results from
    * @returns {Promise}
    * @see https://docs.constructor.io

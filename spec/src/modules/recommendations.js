@@ -120,8 +120,8 @@ describe('ConstructorIO - Recommendations', () => {
       });
     });
 
-    it('Should return a response with valid itemIds, and results', (done) => {
-      const results = 2;
+    it('Should return a response with valid itemIds, and numResults', (done) => {
+      const numResults = 2;
       const { recommendations } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -129,15 +129,15 @@ describe('ConstructorIO - Recommendations', () => {
 
       recommendations.getRecommendations(pod, {
         itemIds,
-        results,
+        numResults,
       }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.num_results).to.equal(results);
-        expect(requestedUrlParams).to.have.property('num_results').to.equal(results.toString());
+        expect(res.request.num_results).to.equal(numResults);
+        expect(requestedUrlParams).to.have.property('num_results').to.equal(numResults.toString());
         done();
       });
     });
@@ -195,12 +195,12 @@ describe('ConstructorIO - Recommendations', () => {
       })).to.eventually.be.rejected;
     });
 
-    it('Should be rejected when invalid results parameter is provided', () => {
+    it('Should be rejected when invalid numResults parameter is provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(recommendations.getRecommendations(pod, {
         itemIds,
-        results: 'abc',
+        numResults: 'abc',
       })).to.eventually.be.rejected;
     });
 
