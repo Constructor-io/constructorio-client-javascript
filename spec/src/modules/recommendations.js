@@ -35,7 +35,7 @@ describe('ConstructorIO - Recommendations', () => {
   });
 
   describe('getRecommendations', () => {
-    const placement = 'item_page_1';
+    const pod = 'item_page_1';
     const itemId = 'power_drill';
     const itemIds = [itemId, 'drill'];
 
@@ -45,7 +45,7 @@ describe('ConstructorIO - Recommendations', () => {
         fetch: fetchSpy,
       });
 
-      recommendations.getRecommendations(placement, { itemIds: itemId }).then((res) => {
+      recommendations.getRecommendations(pod, { itemIds: itemId }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -69,7 +69,7 @@ describe('ConstructorIO - Recommendations', () => {
         fetch: fetchSpy,
       });
 
-      recommendations.getRecommendations(placement, { itemIds }).then((res) => {
+      recommendations.getRecommendations(pod, { itemIds }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -90,7 +90,7 @@ describe('ConstructorIO - Recommendations', () => {
         fetch: fetchSpy,
       });
 
-      recommendations.getRecommendations(placement, { itemIds }).then((res) => {
+      recommendations.getRecommendations(pod, { itemIds }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -109,7 +109,7 @@ describe('ConstructorIO - Recommendations', () => {
         fetch: fetchSpy,
       });
 
-      recommendations.getRecommendations(placement, { itemIds }).then((res) => {
+      recommendations.getRecommendations(pod, { itemIds }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -127,7 +127,7 @@ describe('ConstructorIO - Recommendations', () => {
         fetch: fetchSpy,
       });
 
-      recommendations.getRecommendations(placement, {
+      recommendations.getRecommendations(pod, {
         itemIds,
         results,
       }).then((res) => {
@@ -149,7 +149,7 @@ describe('ConstructorIO - Recommendations', () => {
         fetch: fetchSpy,
       });
 
-      recommendations.getRecommendations(placement, {
+      recommendations.getRecommendations(pod, {
         itemIds,
         section,
       }).then((res) => {
@@ -167,7 +167,7 @@ describe('ConstructorIO - Recommendations', () => {
     it('Should return a response with valid itemIds, with a result_id appended to each result', (done) => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
-      recommendations.getRecommendations(placement, { itemIds }).then((res) => {
+      recommendations.getRecommendations(pod, { itemIds }).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
@@ -179,7 +179,7 @@ describe('ConstructorIO - Recommendations', () => {
       });
     });
 
-    it('Should be rejected when invalid placements parameter is provided', () => {
+    it('Should be rejected when invalid pod parameter is provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(recommendations.getRecommendations([], {
@@ -187,7 +187,7 @@ describe('ConstructorIO - Recommendations', () => {
       })).to.eventually.be.rejected;
     });
 
-    it('Should be rejected when no placements parameter is provided', () => {
+    it('Should be rejected when no pod parameter is provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(recommendations.getRecommendations(null, {
@@ -198,7 +198,7 @@ describe('ConstructorIO - Recommendations', () => {
     it('Should be rejected when invalid results parameter is provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(recommendations.getRecommendations(placement, {
+      return expect(recommendations.getRecommendations(pod, {
         itemIds,
         results: 'abc',
       })).to.eventually.be.rejected;
@@ -207,7 +207,7 @@ describe('ConstructorIO - Recommendations', () => {
     it('Should be rejected when invalid section parameter is provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(recommendations.getRecommendations(placement, {
+      return expect(recommendations.getRecommendations(pod, {
         itemIds,
         section: 'Nonsense',
       })).to.eventually.be.rejected;
@@ -216,7 +216,7 @@ describe('ConstructorIO - Recommendations', () => {
     it('Should be rejected when invalid apiKey is provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
 
-      return expect(recommendations.getRecommendations(placement, {
+      return expect(recommendations.getRecommendations(pod, {
         itemIds,
       })).to.eventually.be.rejected;
     });

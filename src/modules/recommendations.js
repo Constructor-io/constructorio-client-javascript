@@ -5,7 +5,7 @@ const Promise = require('es6-promise');
 const { throwHttpErrorFromResponse, cleanParams } = require('../utils/helpers');
 
 // Create URL from supplied parameters
-function createRecommendationsUrl(placement, parameters, options) {
+function createRecommendationsUrl(pod, parameters, options) {
   const { apiKey, version, serviceUrl, sessionId, userId, clientId, segments } = options;
   let queryParams = { c: version };
 
@@ -13,9 +13,9 @@ function createRecommendationsUrl(placement, parameters, options) {
   queryParams.i = clientId;
   queryParams.s = sessionId;
 
-  // Validate placement is provided
-  if (!placement || typeof placement !== 'string') {
-    throw new Error('placement is a required parameter of type string');
+  // Validate pod is provided
+  if (!pod || typeof pod !== 'string') {
+    throw new Error('pod is a required parameter of type string');
   }
 
   // Pull user segments from options
@@ -51,11 +51,11 @@ function createRecommendationsUrl(placement, parameters, options) {
 
   const queryString = qs.stringify(queryParams, { indices: false });
 
-  return `${serviceUrl}/recommendations/v1/placements/${placement}?${queryString}`;
+  return `${serviceUrl}/recommendations/v1/pods/${pod}?${queryString}`;
 }
 
 /**
- * Interface to recommendations related API calls.
+ * Interface to recommendations related API calls
  *
  * @module recommendations
  * @inner
@@ -67,10 +67,10 @@ class Recommendations {
   }
 
   /**
-   * Get recommendations for supplied placement identifier
+   * Get recommendations for supplied pod identifier
    *
    * @function getRecommendations
-   * @param {string} placement - Placement identifier
+   * @param {string} pod - Pod identifier
    * @param {object} [parameters] - Additional parameters to refine results
    * @param {string|array} [parameters.itemIds] - Item ID(s) to retrieve recommendations for
    * @param {number} [parameters.results] - The number of results to return
@@ -78,14 +78,14 @@ class Recommendations {
    * @returns {Promise}
    * @see https://docs.constructor.io
    */
-  getRecommendations(placement, parameters) {
+  getRecommendations(pod, parameters) {
     let requestUrl;
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
 
     parameters = parameters || {};
 
     try {
-      requestUrl = createRecommendationsUrl(placement, parameters, this.options);
+      requestUrl = createRecommendationsUrl(pod, parameters, this.options);
     } catch (e) {
       return Promise.reject(e);
     }
