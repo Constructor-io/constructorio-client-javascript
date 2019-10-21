@@ -45,11 +45,11 @@ function createAutocompleteUrl(query, parameters, options) {
   }
 
   if (parameters) {
-    const { results, resultsPerSection, filters } = parameters;
+    const { numResults, resultsPerSection, filters } = parameters;
 
     // Pull results number from parameters
-    if (results) {
-      queryParams.num_results = results;
+    if (numResults) {
+      queryParams.num_results = numResults;
     }
 
     // Pull results number per section from parameters
@@ -90,7 +90,7 @@ class Autocomplete {
    *
    * @function getResults
    * @param {object} [parameters] - Additional parameters to refine result set
-   * @param {number} [parameters.results] - The number of results to return
+   * @param {number} [parameters.numResults] - The number of results to return
    * @param {object} [parameters.filters] - Filters used to refine search
    * @returns {Promise}
    * @see https://docs.constructor.io/rest-api.html#autocomplete
