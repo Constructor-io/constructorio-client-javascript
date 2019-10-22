@@ -87,7 +87,7 @@ function createBrowseUrl(filterName, filterValue, parameters, options) {
 
   const queryString = qs.stringify(queryParams, { indices: false });
 
-  return `${serviceUrl}/browse/${filterName}/${filterValue}?${queryString}`;
+  return `${serviceUrl}/browse/${encodeURIComponent(filterName)}/${encodeURIComponent(filterValue)}?${queryString}`;
 }
 
 /**

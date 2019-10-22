@@ -22,7 +22,7 @@ class ConstructorIO {
    * @param {string} [sessionId] - Session id, defaults to value supplied by 'constructorio-id'
    * @param {string} [userId] - User id
    * @property {object} [search] - Interface to {@link module:search}
-   * @property {object} [search] - Interface to {@link module:browse}
+   * @property {object} [browse] - Interface to {@link module:browse}
    * @property {object} [autocomplete] - Interface to {@link module:autocomplete}
    * @property {object} [recommendations] - Interface to {@link module:recommendations}
    * @property {object} [tracker] - Interface to {@link module:tracker}
