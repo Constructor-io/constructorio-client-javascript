@@ -55,6 +55,7 @@ describe('ConstructorIO - Recommendations', () => {
         expect(res.response).to.have.property('results').to.be.an('array');
         expect(res.response).to.have.property('pod');
         expect(res.response.pod).to.have.property('id').to.equal(pod);
+        expect(res.response.pod).to.have.property('display_name');
         expect(fetchSpy).to.have.been.called;
         expect(requestedUrlParams).to.have.property('key');
         expect(requestedUrlParams).to.have.property('i');
@@ -81,6 +82,7 @@ describe('ConstructorIO - Recommendations', () => {
         expect(res.response).to.have.property('results').to.be.an('array');
         expect(res.response).to.have.property('pod');
         expect(res.response.pod).to.have.property('id').to.equal(pod);
+        expect(res.response.pod).to.have.property('display_name');
         expect(requestedUrlParams).to.have.property('item_id').to.deep.equal(itemIds);
         done();
       });
