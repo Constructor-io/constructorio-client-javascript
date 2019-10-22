@@ -17,7 +17,7 @@ dotenv.config();
 const testApiKey = process.env.TEST_API_KEY;
 const { fetch } = fetchPonyfill({ Promise });
 
-describe('ConstructorIO - Search', () => {
+describe('ConstructorIO - Browse', () => {
   const clientVersion = 'cio-mocha';
   let fetchSpy;
 
@@ -34,45 +34,45 @@ describe('ConstructorIO - Search', () => {
     fetchSpy = null;
   });
 
-  describe('getSearchResults', () => {
-    const query = 'drill';
-    const section = 'Products';
+  describe('getBrowseResults', () => {
+    const filterName = 'group_id';
+    const filterValue = 'drill_collection';
 
-    it('Should return a response with a valid query, and section', (done) => {
-      const { search } = new ConstructorIO({
+    it('Should return a response with a valid filterName and filterValue', (done) => {
+      const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
       });
 
-      search.getSearchResults(query, { section }).then((res) => {
+      browse.getBrowseResults(filterName, filterValue).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.term).to.equal(query);
-        expect(res.request.section).to.equal(section);
+        expect(res.request).to.have.property('searchandizing_filter');
+        expect(res.request.searchandizing_filter).to.have.property(filterName);
+        expect(res.request.searchandizing_filter[filterName]).to.equal(filterValue);
         expect(res.response).to.have.property('results').to.be.an('array');
         expect(fetchSpy).to.have.been.called;
         expect(requestedUrlParams).to.have.property('key');
         expect(requestedUrlParams).to.have.property('i');
         expect(requestedUrlParams).to.have.property('s');
-        expect(requestedUrlParams).to.have.property('section').to.equal(section);
         expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
         expect(requestedUrlParams).to.have.property('_dt');
         done();
       });
     });
 
-    it('Should return a response with a valid query, section and testCells', (done) => {
+    it('Should return a response with a valid filterName, filterValue and testCells', (done) => {
       const testCells = { foo: 'bar' };
-      const { search } = new ConstructorIO({
+      const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         testCells,
         fetch: fetchSpy,
       });
 
-      search.getSearchResults(query, { section }).then((res) => {
+      browse.getBrowseResults(filterName, filterValue).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -84,35 +84,34 @@ describe('ConstructorIO - Search', () => {
       });
     });
 
-    it('Should return a response with a valid query, section and segments', (done) => {
+    it('Should return a response with a valid filterName, filterValue and segments', (done) => {
       const segments = ['foo', 'bar'];
-      const { search } = new ConstructorIO({
+      const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         segments,
         fetch: fetchSpy,
       });
 
-      search.getSearchResults(query, { section }).then((res) => {
+      browse.getBrowseResults(filterName, filterValue).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.us).to.deep.equal(segments);
         expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
         done();
       });
     });
 
-    it('Should return a response with a valid query, section and user id', (done) => {
+    it('Should return a response with a valid filterName, filterValue and user id', (done) => {
       const userId = 'user-id';
-      const { search } = new ConstructorIO({
+      const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         userId,
         fetch: fetchSpy,
       });
 
-      search.getSearchResults(query, { section }).then((res) => {
+      browse.getBrowseResults(filterName, filterValue).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -123,17 +122,14 @@ describe('ConstructorIO - Search', () => {
       });
     });
 
-    it('Should return a response with a valid query, section, and page', (done) => {
+    it('Should return a response with a valid filterName, filterValue and page', (done) => {
       const page = 1;
-      const { search } = new ConstructorIO({
+      const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
       });
 
-      search.getSearchResults(query, {
-        section,
-        page,
-      }).then((res) => {
+      browse.getBrowseResults(filterName, filterValue, { page }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -145,17 +141,14 @@ describe('ConstructorIO - Search', () => {
       });
     });
 
-    it('Should return a response with a valid query, section, and resultsPerPage', (done) => {
+    it('Should return a response with a valid filterName, filterValue and resultsPerPage', (done) => {
       const resultsPerPage = 2;
-      const { search } = new ConstructorIO({
+      const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
       });
 
-      search.getSearchResults(query, {
-        section,
-        resultsPerPage,
-      }).then((res) => {
+      browse.getBrowseResults(filterName, filterValue, { resultsPerPage }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -163,23 +156,19 @@ describe('ConstructorIO - Search', () => {
         expect(res).to.have.property('result_id').to.be.an('string');
         expect(res.request.num_results_per_page).to.equal(resultsPerPage);
         expect(res.response).to.have.property('results').to.be.an('array');
-        expect(res.response.results.length).to.equal(resultsPerPage);
         expect(requestedUrlParams).to.have.property('num_results_per_page').to.equal(resultsPerPage.toString());
         done();
       });
     });
 
-    it('Should return a response with a valid query, section, and filters', (done) => {
+    it('Should return a response with a valid filterName, filterValue and additional filters', (done) => {
       const filters = { keywords: ['battery-powered'] };
-      const { search } = new ConstructorIO({
+      const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
       });
 
-      search.getSearchResults(query, {
-        section,
-        filters,
-      }).then((res) => {
+      browse.getBrowseResults(filterName, filterValue, { filters }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -192,17 +181,14 @@ describe('ConstructorIO - Search', () => {
       });
     });
 
-    it('Should return a response with a valid query, section, and sortBy', (done) => {
+    it('Should return a response with a valid filterName, filterValue and sortBy', (done) => {
       const sortBy = 'relevance';
-      const { search } = new ConstructorIO({
+      const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
       });
 
-      search.getSearchResults(query, {
-        section,
-        sortBy,
-      }).then((res) => {
+      browse.getBrowseResults(filterName, filterValue, { sortBy }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -214,17 +200,14 @@ describe('ConstructorIO - Search', () => {
       });
     });
 
-    it('Should return a response with a valid query, section, and sortOrder', (done) => {
+    it('Should return a response with a valid filterName, filterValue and sortOrder', (done) => {
       const sortOrder = 'ascending';
-      const { search } = new ConstructorIO({
+      const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
       });
 
-      search.getSearchResults(query, {
-        section,
-        sortOrder,
-      }).then((res) => {
+      browse.getBrowseResults(filterName, filterValue, { sortOrder }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -236,10 +219,29 @@ describe('ConstructorIO - Search', () => {
       });
     });
 
-    it('Should return a response with a valid query, section with a result_id appended to each result', (done) => {
-      const { search } = new ConstructorIO({ apiKey: testApiKey });
+    it('Should return a response with a valid filterName, filterValue and section', (done) => {
+      const section = 'Products';
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
 
-      search.getSearchResults(query, { section }).then((res) => {
+      browse.getBrowseResults(filterName, filterValue, { section }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.section).to.equal(section);
+        expect(requestedUrlParams).to.have.property('section').to.equal(section);
+        done();
+      });
+    });
+
+    it('Should return a response with a valid filterName and filterValue with a result_id appended to each result', (done) => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      browse.getBrowseResults(filterName, filterValue).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
@@ -251,94 +253,82 @@ describe('ConstructorIO - Search', () => {
       });
     });
 
-    it('Should return a redirect rule response with a valid query and section', (done) => {
-      const redirectQuery = 'rolling';
-      const { search } = new ConstructorIO({ apiKey: testApiKey });
+    it('Should be rejected when invalid filterName is provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
-      search.getSearchResults(redirectQuery, { section }).then((res) => {
-        expect(res).to.have.property('request').to.be.an('object');
-        expect(res).to.have.property('response').to.be.an('object');
-        expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.response).to.have.property('redirect');
-        expect(res.response.redirect).to.have.property('matched_terms').includes(redirectQuery);
-        expect(res.response.redirect).to.have.property('data');
-        expect(res.response.redirect.data).to.have.property('url');
-        done();
-      });
+      return expect(browse.getBrowseResults([], filterValue)).to.eventually.be.rejected;
     });
 
-    it('Should be rejected when invalid query is provided', () => {
-      const { search } = new ConstructorIO({ apiKey: testApiKey });
+    it('Should be rejected when no filterName is provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(search.getSearchResults([], { section })).to.eventually.be.rejected;
+      return expect(browse.getBrowseResults(null, filterValue)).to.eventually.be.rejected;
     });
 
-    it('Should be rejected when no query is provided', () => {
-      const { search } = new ConstructorIO({ apiKey: testApiKey });
+    it('Should be rejected when invalid filterValue is provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(search.getSearchResults(null, { section })).to.eventually.be.rejected;
+      return expect(browse.getBrowseResults(filterName, [])).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected when no filterValue is provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseResults(filterName, null)).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid page parameter is provided', () => {
-      const { search } = new ConstructorIO({ apiKey: testApiKey });
-      const searchParams = {
-        section,
-        page: 'abc',
-      };
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(search.getSearchResults(query, searchParams)).to.eventually.be.rejected;
+      return expect(browse.getBrowseResults(filterName, filterValue, {
+        page: 'abc',
+      })).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid resultsPerPage parameter is provided', () => {
-      const { search } = new ConstructorIO({ apiKey: testApiKey });
-      const searchParams = {
-        section,
-        resultsPerPage: 'abc',
-      };
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(search.getSearchResults(query, searchParams)).to.eventually.be.rejected;
+      return expect(browse.getBrowseResults(filterName, filterValue, {
+        resultsPerPage: 'abc',
+      })).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid filters parameter is provided', () => {
-      const { search } = new ConstructorIO({ apiKey: testApiKey });
-      const searchParams = {
-        section,
-        filters: 'abc',
-      };
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(search.getSearchResults(query, searchParams)).to.eventually.be.rejected;
+      return expect(browse.getBrowseResults(filterName, filterValue, {
+        filters: 123,
+      })).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid sortBy parameter is provided', () => {
-      const { search } = new ConstructorIO({ apiKey: testApiKey });
-      const searchParams = {
-        section,
-        sortBy: ['foo', 'bar'],
-      };
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(search.getSearchResults(query, searchParams)).to.eventually.be.rejected;
+      return expect(browse.getBrowseResults(filterName, filterValue, {
+        sortBy: { foo: 'bar' },
+      })).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid sortOrder parameter is provided', () => {
-      const { search } = new ConstructorIO({ apiKey: testApiKey });
-      const searchParams = {
-        section,
-        sortOrder: 123,
-      };
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(search.getSearchResults(query, searchParams)).to.eventually.be.rejected;
+      return expect(browse.getBrowseResults(filterName, filterValue, {
+        sortOrder: 'abc',
+      })).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid section parameter is provided', () => {
-      const { search } = new ConstructorIO({ apiKey: testApiKey });
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(search.getSearchResults(query, { section: 123 })).to.eventually.be.rejected;
+      return expect(browse.getBrowseResults(filterName, filterValue, {
+        section: 123,
+      })).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid apiKey is provided', () => {
-      const { search } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
+      const { browse } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
 
-      return expect(search.getSearchResults(query, { section })).to.eventually.be.rejected;
+      return expect(browse.getBrowseResults(filterName, filterValue)).to.eventually.be.rejected;
     });
   });
 });
