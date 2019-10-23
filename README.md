@@ -101,38 +101,11 @@ constructorio.autocomplete.getAutocompleteResults('dogs', {
 
 ### Recommendations
 
-The recommendations module can be used to retrieve item recommendation results. Responses will be delivered via a Promise. The `parameters` object is optional. Item id's may be of type string or array.
+The recommendations module can be used to retrieve recommendations for a given pod. Responses will be delivered via a Promise. The `parameters` object is optional.
 
-#### Retrieve alternative item recommendations
+#### Retrieve recommendations
 ```javascript
-constructorio.recommendations.getAlternativeItems('item-id', { parameters }).then(function(response) {
-  console.log(response);
-}).catch(function(err) {
-  console.error(err);
-});
-```
-
-#### Retrieve complementary item recommendations
-```javascript
-constructorio.recommendations.getComplementaryItems('item-id', { parameters }).then(function(response) {
-  console.log(response);
-}).catch(function(err) {
-  console.error(err);
-});
-```
-
-#### Retrieve recently viewed item recommendations
-```javascript
-constructorio.recommendations.getRecentlyViewedItems({ parameters }).then(function(response) {
-  console.log(response);
-}).catch(function(err) {
-  console.error(err);
-});
-```
-
-#### Retrieve user featured item recommendations
-```javascript
-constructorio.recommendations.getUserFeaturedItems({ parameters }).then(function(response) {
+constructorio.recommendations.getRecommendations('pod-id', { parameters }).then(function(response) {
   console.log(response);
 }).catch(function(err) {
   console.error(err);
@@ -141,7 +114,9 @@ constructorio.recommendations.getUserFeaturedItems({ parameters }).then(function
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `results` | number | Number of results to retrieve |
+| `numResults` | number | Number of results to retrieve |
+| `itemIds` | string or array | Item ID(s) to retrieve recommendations for |
+| `section` | string | Section to display results from |
 
 ### Tracker
 
