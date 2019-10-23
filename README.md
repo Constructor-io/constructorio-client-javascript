@@ -26,11 +26,11 @@ var constructorio = new ConstructorIOClient({
 
 ## 4. Retrieve Results
 
-After instantiating an instance of the client, four modules will be exposed as properties to help retrieve data from Constructor.io: `search`, `autocomplete`, `recommendations` and `tracking`.
+After instantiating an instance of the client, four modules will be exposed as properties to help retrieve data from Constructor.io: `search`, `browse`, `autocomplete`, `recommendations` and `tracker`.
 
 ### Search
 
-The search module can be used to retrieve search and browse results. Responses will be delivered via a Promise. The `parameters` object is optional.
+The search module can be used to retrieve search results. Responses will be delivered via a Promise. The `parameters` object is optional.
 
 #### Retrieve search results
 ```javascript
@@ -43,9 +43,22 @@ constructorio.search.getSearchResults('dogs', {
 });
 ```
 
-##### Retrieve browse results
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `section` | string | Section to display results from |
+| `page` | number | Page number of results |
+| `resultsPerPage` | number | Number of results per page |
+| `filters` | object | The criteria by which search results should be filtered |
+| `sortBy` | string | The criteria by which search results should be sorted |
+| `sortOrder` | string | The sort order by which search results should be sorted (descending or ascending) |
+
+### Browse
+
+The browse module can be used to retrieve browse results. Responses will be delivered via a Promise. The `parameters` object is optional.
+
+#### Retrieve search results
 ```javascript
-constructorio.search.getBrowseResults({
+constructorio.browse.getBrowseResults('filter-name', 'filter-value', {
   parameters
 }).then(function(response) {
   console.log(response);
@@ -81,7 +94,7 @@ constructorio.autocomplete.getResults('dogs', {
 | Parameter | Type | Description |
 | --- | --- | --- |
 | `section` | string | Section to display results from |
-| `results` | number | Number of results to retrieve |
+| `numResults` | number | Number of results to retrieve |
 | `resultsPerSection` | object | Object of pairs in the form of `section: number` for number results to display |
 | `filters` | object | The criteria by which search results should be filtered |
 | `sortOrder` | string | The sort order by which search results should be sorted (descending or ascending) |

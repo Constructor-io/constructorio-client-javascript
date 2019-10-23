@@ -119,14 +119,14 @@ describe('ConstructorIO - Autocomplete', () => {
       });
     });
 
-    it('Should return a response with a valid query, and results', (done) => {
-      const results = 2;
+    it('Should return a response with a valid query, and numResults', (done) => {
+      const numResults = 2;
       const { autocomplete } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
       });
 
-      autocomplete.getResults(query, { results }).then((res) => {
+      autocomplete.getResults(query, { numResults }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
         const sectionKeys = Object.keys(res.sections);
         let resultCount = 0;
@@ -140,9 +140,9 @@ describe('ConstructorIO - Autocomplete', () => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('sections').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.num_results).to.equal(results);
-        expect(resultCount).to.equal(results);
-        expect(requestedUrlParams).to.have.property('num_results').to.equal(results.toString());
+        expect(res.request.num_results).to.equal(numResults);
+        expect(resultCount).to.equal(numResults);
+        expect(requestedUrlParams).to.have.property('num_results').to.equal(numResults.toString());
         done();
       });
     });
@@ -226,10 +226,10 @@ describe('ConstructorIO - Autocomplete', () => {
       return expect(autocomplete.getResults(null)).to.eventually.be.rejected;
     });
 
-    it('Should be rejected when invalid results parameter is provided', () => {
+    it('Should be rejected when invalid numResults parameter is provided', () => {
       const { autocomplete } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(autocomplete.getResults(query, { results: 'abc' })).to.eventually.be.rejected;
+      return expect(autocomplete.getResults(query, { numResults: 'abc' })).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid filters parameter is provided', () => {

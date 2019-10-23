@@ -4,8 +4,8 @@ const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
 const { throwHttpErrorFromResponse, cleanParams } = require('../utils/helpers');
 
-// Create URL from supplied query (term) and parameters
-function createSearchUrl(query, parameters, options) {
+// Create URL from supplied filter name, value and parameters
+function createBrowseUrl(filterName, filterValue, parameters, options) {
   const {
     apiKey,
     version,
@@ -22,9 +22,14 @@ function createSearchUrl(query, parameters, options) {
   queryParams.i = clientId;
   queryParams.s = sessionId;
 
-  // Validate query (term) is provided
-  if (!query || typeof query !== 'string') {
-    throw new Error('query is a required parameter of type string');
+  // Validate filter name is provided
+  if (!filterName || typeof filterName !== 'string') {
+    throw new Error('filterName is a required parameter of type string');
+  }
+
+  // Validate filter value is provided
+  if (!filterValue || typeof filterValue !== 'string') {
+    throw new Error('filterValue is a required parameter of type string');
   }
 
   // Pull test cells from options
@@ -57,7 +62,6 @@ function createSearchUrl(query, parameters, options) {
       queryParams.num_results_per_page = resultsPerPage;
     }
 
-    // Pull filters from parameters
     if (filters) {
       queryParams.filters = filters;
     }
@@ -83,41 +87,42 @@ function createSearchUrl(query, parameters, options) {
 
   const queryString = qs.stringify(queryParams, { indices: false });
 
-  return `${serviceUrl}/search/${encodeURIComponent(query)}?${queryString}`;
+  return `${serviceUrl}/browse/${encodeURIComponent(filterName)}/${encodeURIComponent(filterValue)}?${queryString}`;
 }
 
 /**
- * Interface to search related API calls
+ * Interface to browse related API calls
  *
- * @module search
+ * @module browse
  * @inner
  * @returns {object}
  */
-class Search {
+class Browse {
   constructor(options) {
     this.options = options;
   }
 
   /**
-   * Retrieve search results from API
+   * Retrieve browse results from API
    *
-   * @function getSearchResults
-   * @param {string} query - Term to use to perform a search
+   * @function getBrowseResults
+   * @param {string} filterName - Filter name to display results from
+   * @param {string} filterValue - Filter value to display results from
    * @param {object} [parameters] - Additional parameters to refine result set
    * @param {number} [parameters.page] - The page number of the results
    * @param {number} [parameters.resultsPerPage] - The number of results per page to return
-   * @param {object} [parameters.filters] - Filters used to refine search
+   * @param {object} [parameters.filters] - Filters used to refine
    * @param {string} [parameters.sortBy='relevance'] - The sorting method
    * @param {string} [parameters.sortOrder='descending'] - The sort order for search results
    * @returns {Promise}
-   * @see https://docs.constructor.io/rest-api.html#search
+   * @see https://docs.constructor.io
    */
-  getSearchResults(query, parameters) {
+  getBrowseResults(filterName, filterValue, parameters) {
     let requestUrl;
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
 
     try {
-      requestUrl = createSearchUrl(query, parameters, this.options);
+      requestUrl = createBrowseUrl(filterName, filterValue, parameters, this.options);
     } catch (e) {
       return Promise.reject(e);
     }
@@ -131,9 +136,9 @@ class Search {
         return throwHttpErrorFromResponse(new Error(), response);
       })
       .then((json) => {
-        // Search results
         if (json.response && json.response.results) {
           if (json.result_id) {
+            // Append `result_id` to each result item
             json.response.results.forEach((result) => {
               // eslint-disable-next-line no-param-reassign
               result.result_id = json.result_id;
@@ -143,14 +148,9 @@ class Search {
           return json;
         }
 
-        // Redirect rules
-        if (json.response && json.response.redirect) {
-          return json;
-        }
-
-        throw new Error('getSearchResults response data is malformed');
+        throw new Error('getBrowseResults response data is malformed');
       });
   }
 }
 
-module.exports = Search;
+module.exports = Browse;
