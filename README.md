@@ -82,7 +82,7 @@ The autocomplete module can be used to retrieve autocomplete results. Responses 
 
 #### Retrieve autocomplete results
 ```javascript
-constructorio.autocomplete.getResults('dogs', {
+constructorio.autocomplete.getAutocompleteResults('dogs', {
     parameters
 }).then(function(response) {
   console.log(response);
