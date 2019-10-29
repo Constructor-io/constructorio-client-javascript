@@ -35,7 +35,7 @@ describe('ConstructorIO - Recommendations', () => {
   });
 
   describe('getRecommendations', () => {
-    const pod = 'item_page_1';
+    const podId = 'item_page_1';
     const itemId = 'power_drill';
     const itemIds = [itemId, 'drill'];
 
@@ -45,7 +45,7 @@ describe('ConstructorIO - Recommendations', () => {
         fetch: fetchSpy,
       });
 
-      recommendations.getRecommendations(pod, { itemIds: itemId }).then((res) => {
+      recommendations.getRecommendations(podId, { itemIds: itemId }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -54,7 +54,7 @@ describe('ConstructorIO - Recommendations', () => {
         expect(res.request.item_id).to.equal(itemId);
         expect(res.response).to.have.property('results').to.be.an('array');
         expect(res.response).to.have.property('pod');
-        expect(res.response.pod).to.have.property('id').to.equal(pod);
+        expect(res.response.pod).to.have.property('id').to.equal(podId);
         expect(res.response.pod).to.have.property('display_name');
         expect(fetchSpy).to.have.been.called;
         expect(requestedUrlParams).to.have.property('key');
@@ -72,7 +72,7 @@ describe('ConstructorIO - Recommendations', () => {
         fetch: fetchSpy,
       });
 
-      recommendations.getRecommendations(pod, { itemIds }).then((res) => {
+      recommendations.getRecommendations(podId, { itemIds }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -81,7 +81,7 @@ describe('ConstructorIO - Recommendations', () => {
         expect(res.request.item_id).to.deep.equal(itemIds);
         expect(res.response).to.have.property('results').to.be.an('array');
         expect(res.response).to.have.property('pod');
-        expect(res.response.pod).to.have.property('id').to.equal(pod);
+        expect(res.response.pod).to.have.property('id').to.equal(podId);
         expect(res.response.pod).to.have.property('display_name');
         expect(requestedUrlParams).to.have.property('item_id').to.deep.equal(itemIds);
         done();
@@ -96,7 +96,7 @@ describe('ConstructorIO - Recommendations', () => {
         fetch: fetchSpy,
       });
 
-      recommendations.getRecommendations(pod, { itemIds }).then((res) => {
+      recommendations.getRecommendations(podId, { itemIds }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -115,7 +115,7 @@ describe('ConstructorIO - Recommendations', () => {
         fetch: fetchSpy,
       });
 
-      recommendations.getRecommendations(pod, { itemIds }).then((res) => {
+      recommendations.getRecommendations(podId, { itemIds }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -133,7 +133,7 @@ describe('ConstructorIO - Recommendations', () => {
         fetch: fetchSpy,
       });
 
-      recommendations.getRecommendations(pod, {
+      recommendations.getRecommendations(podId, {
         itemIds,
         numResults,
       }).then((res) => {
@@ -155,7 +155,7 @@ describe('ConstructorIO - Recommendations', () => {
         fetch: fetchSpy,
       });
 
-      recommendations.getRecommendations(pod, {
+      recommendations.getRecommendations(podId, {
         itemIds,
         section,
       }).then((res) => {
@@ -173,7 +173,7 @@ describe('ConstructorIO - Recommendations', () => {
     it('Should return a response with valid itemIds, with a result_id appended to each result', (done) => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
-      recommendations.getRecommendations(pod, { itemIds }).then((res) => {
+      recommendations.getRecommendations(podId, { itemIds }).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
@@ -185,7 +185,7 @@ describe('ConstructorIO - Recommendations', () => {
       });
     });
 
-    it('Should be rejected when invalid pod parameter is provided', () => {
+    it('Should be rejected when invalid pod id parameter is provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(recommendations.getRecommendations([], {
@@ -193,7 +193,7 @@ describe('ConstructorIO - Recommendations', () => {
       })).to.eventually.be.rejected;
     });
 
-    it('Should be rejected when no pod parameter is provided', () => {
+    it('Should be rejected when no pod id parameter is provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(recommendations.getRecommendations(null, {
@@ -204,7 +204,7 @@ describe('ConstructorIO - Recommendations', () => {
     it('Should be rejected when invalid numResults parameter is provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(recommendations.getRecommendations(pod, {
+      return expect(recommendations.getRecommendations(podId, {
         itemIds,
         numResults: 'abc',
       })).to.eventually.be.rejected;
@@ -213,7 +213,7 @@ describe('ConstructorIO - Recommendations', () => {
     it('Should be rejected when invalid section parameter is provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(recommendations.getRecommendations(pod, {
+      return expect(recommendations.getRecommendations(podId, {
         itemIds,
         section: 'Nonsense',
       })).to.eventually.be.rejected;
@@ -222,7 +222,7 @@ describe('ConstructorIO - Recommendations', () => {
     it('Should be rejected when invalid apiKey is provided', () => {
       const { recommendations } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
 
-      return expect(recommendations.getRecommendations(pod, {
+      return expect(recommendations.getRecommendations(podId, {
         itemIds,
       })).to.eventually.be.rejected;
     });
