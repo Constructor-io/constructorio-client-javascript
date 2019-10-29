@@ -101,7 +101,7 @@ constructorio.autocomplete.getAutocompleteResults('dogs', {
 
 ### Recommendations
 
-The recommendations module can be used to retrieve recommendations for a given pod. Responses will be delivered via a Promise. The `parameters` object is optional.
+The recommendations module can be used to retrieve recommendations for a given pod identifier. Responses will be delivered via a Promise. The `parameters` object is optional.
 
 #### Retrieve recommendations
 ```javascript

@@ -5,7 +5,7 @@ const Promise = require('es6-promise');
 const { throwHttpErrorFromResponse, cleanParams } = require('../utils/helpers');
 
 // Create URL from supplied parameters
-function createRecommendationsUrl(pod, parameters, options) {
+function createRecommendationsUrl(podId, parameters, options) {
   const { apiKey, version, serviceUrl, sessionId, userId, clientId, segments } = options;
   let queryParams = { c: version };
 
@@ -13,9 +13,9 @@ function createRecommendationsUrl(pod, parameters, options) {
   queryParams.i = clientId;
   queryParams.s = sessionId;
 
-  // Validate pod is provided
-  if (!pod || typeof pod !== 'string') {
-    throw new Error('pod is a required parameter of type string');
+  // Validate pod identifier is provided
+  if (!podId || typeof podId !== 'string') {
+    throw new Error('podId is a required parameter of type string');
   }
 
   // Pull user segments from options
@@ -51,7 +51,7 @@ function createRecommendationsUrl(pod, parameters, options) {
 
   const queryString = qs.stringify(queryParams, { indices: false });
 
-  return `${serviceUrl}/recommendations/v1/pods/${pod}?${queryString}`;
+  return `${serviceUrl}/recommendations/v1/pods/${podId}?${queryString}`;
 }
 
 /**
@@ -70,7 +70,7 @@ class Recommendations {
    * Get recommendations for supplied pod identifier
    *
    * @function getRecommendations
-   * @param {string} pod - Pod identifier
+   * @param {string} podId - Pod identifier
    * @param {object} [parameters] - Additional parameters to refine results
    * @param {string|array} [parameters.itemIds] - Item ID(s) to retrieve recommendations for
    * @param {number} [parameters.numResults] - The number of results to return
@@ -78,14 +78,14 @@ class Recommendations {
    * @returns {Promise}
    * @see https://docs.constructor.io
    */
-  getRecommendations(pod, parameters) {
+  getRecommendations(podId, parameters) {
     let requestUrl;
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
 
     parameters = parameters || {};
 
     try {
-      requestUrl = createRecommendationsUrl(pod, parameters, this.options);
+      requestUrl = createRecommendationsUrl(podId, parameters, this.options);
     } catch (e) {
       return Promise.reject(e);
     }
