@@ -4,38 +4,44 @@ const helpers = require('../utils/helpers');
 const RequestQueue = require('../utils/request-queue');
 
 // Append common parameters to supplied parameters object
-function createQueryString(parameters, options) {
+function applyParameters(parameters, options, returnType = 'string') {
   const { apiKey, version, sessionId, clientId, userId, segments } = options;
-  let queryParams = Object.assign(parameters);
+  let aggregateParams = Object.assign(parameters);
 
   if (version) {
-    queryParams.c = version;
+    aggregateParams.c = version;
   }
 
   if (clientId) {
-    queryParams.i = clientId;
+    aggregateParams.i = clientId;
   }
 
   if (sessionId) {
-    queryParams.s = sessionId;
+    aggregateParams.s = sessionId;
   }
 
   if (userId) {
-    queryParams.ui = userId;
+    aggregateParams.ui = userId;
   }
 
   if (segments && segments.length) {
-    queryParams.us = segments;
+    aggregateParams.us = segments;
   }
 
   if (apiKey) {
-    queryParams.key = apiKey;
+    aggregateParams.key = apiKey;
   }
 
-  queryParams._dt = Date.now();
-  queryParams = helpers.cleanParams(queryParams);
+  aggregateParams._dt = Date.now();
+  aggregateParams = helpers.cleanParams(aggregateParams);
 
-  return qs.stringify(queryParams, { indices: false });
+  // Return as object to be used with GET requests
+  if (returnType === 'string') {
+    return qs.stringify(aggregateParams, { indices: false });
+  }
+
+  // Return as query string to be used with POST requests
+  return aggregateParams;
 }
 
 /**
@@ -61,7 +67,7 @@ class Tracker {
     const url = `${this.options.serviceUrl}/behavior?`;
     const queryParams = { action: 'session_start' };
 
-    this.requests.queue(`${url}${createQueryString(queryParams, this.options)}`);
+    this.requests.queue(`${url}${applyParameters(queryParams, this.options)}`);
     this.requests.send();
 
     return true;
@@ -77,7 +83,7 @@ class Tracker {
     const url = `${this.options.serviceUrl}/behavior?`;
     const queryParams = { action: 'focus' };
 
-    this.requests.queue(`${url}${createQueryString(queryParams, this.options)}`);
+    this.requests.queue(`${url}${applyParameters(queryParams, this.options)}`);
     this.requests.send();
 
     return true;
@@ -137,7 +143,7 @@ class Tracker {
           queryParams.result_id = result_id;
         }
 
-        this.requests.queue(`${url}${createQueryString(queryParams, this.options)}`);
+        this.requests.queue(`${url}${applyParameters(queryParams, this.options)}`);
         this.requests.send();
 
         return true;
@@ -189,7 +195,7 @@ class Tracker {
           queryParams.result_id = result_id;
         }
 
-        this.requests.queue(`${url}${createQueryString(queryParams, this.options)}`);
+        this.requests.queue(`${url}${applyParameters(queryParams, this.options)}`);
         this.requests.send();
 
         return true;
@@ -232,7 +238,7 @@ class Tracker {
           queryParams.customer_ids = customer_ids.join(',');
         }
 
-        this.requests.queue(`${url}${createQueryString(queryParams, this.options)}`);
+        this.requests.queue(`${url}${applyParameters(queryParams, this.options)}`);
         this.requests.send();
 
         return true;
@@ -280,7 +286,7 @@ class Tracker {
           queryParams.result_id = result_id;
         }
 
-        this.requests.queue(`${url}${createQueryString(queryParams, this.options)}`);
+        this.requests.queue(`${url}${applyParameters(queryParams, this.options)}`);
         this.requests.send();
 
         return true;
@@ -339,7 +345,7 @@ class Tracker {
         queryParams.section = 'Products';
       }
 
-      this.requests.queue(`${url}${createQueryString(queryParams, this.options)}`);
+      this.requests.queue(`${url}${applyParameters(queryParams, this.options)}`);
       this.requests.send();
 
       return true;
@@ -382,7 +388,7 @@ class Tracker {
         queryParams.section = 'Products';
       }
 
-      this.requests.queue(`${url}${createQueryString(queryParams, this.options)}`);
+      this.requests.queue(`${url}${applyParameters(queryParams, this.options)}`);
       this.requests.send();
 
       return true;
@@ -430,7 +436,7 @@ class Tracker {
         bodyParams.num_results_viewed = num_results_viewed;
       }
 
-      this.requests.queue(url, 'POST', bodyParams);
+      this.requests.queue(url, 'POST', applyParameters(bodyParams, this.options, 'object'));
       this.requests.send();
 
       return true;

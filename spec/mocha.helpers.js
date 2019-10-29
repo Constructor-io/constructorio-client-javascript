@@ -63,6 +63,19 @@ const extractUrlParamsFromFetch = (fetch) => {
   return null;
 };
 
+// Extract body parameters as object from request
+const extractBodyParamsFromFetch = (fetch) => {
+  const lastCallArguments = fetch && fetch.args && fetch.args[fetch.args.length - 1];
+  const requestData = lastCallArguments[1];
+  const { body } = requestData;
+
+  if (body) {
+    return body;
+  }
+
+  return null;
+};
+
 module.exports = {
   setupDOM,
   teardownDOM,
@@ -70,4 +83,5 @@ module.exports = {
   triggerUnload,
   clearStorage,
   extractUrlParamsFromFetch,
+  extractBodyParamsFromFetch,
 };
