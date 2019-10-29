@@ -392,6 +392,54 @@ class Tracker {
 
     return new Error('parameters are required of type object');
   }
+
+  /**
+   * Send recommendation view event to API
+   *
+   * @function trackRecommendationView
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.result_id - Result identifier
+   * @param {string} parameters.section - Results section (defaults to "Products")
+   * @param {string} parameters.pod_id - Pod identifier
+   * @param {number} parameters.num_results_viewed - Number of results viewed
+   * @returns {(true|Error)}
+   */
+  trackRecommendationView(parameters) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const url = `${this.options.serviceUrl}/v2/behavior/recommendation_result_view`;
+      const bodyParams = {};
+
+      const { result_id, section, pod_id, num_results_viewed } = parameters;
+
+      if (result_id) {
+        bodyParams.result_id = result_id;
+      }
+
+      if (section) {
+        bodyParams.section = section;
+      } else {
+        bodyParams.section = 'Products';
+      }
+
+      if (pod_id) {
+        bodyParams.pod_id = pod_id;
+      }
+
+      if (num_results_viewed) {
+        bodyParams.num_results_viewed = num_results_viewed;
+      }
+
+      this.requests.queue(url, 'POST', bodyParams);
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
 }
 
 module.exports = Tracker;
