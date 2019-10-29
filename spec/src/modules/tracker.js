@@ -525,7 +525,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.trackConversion(term, parameters)).to.equal(true);
+      expect(tracker.trackConversion(term, {})).to.equal(true);
 
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
