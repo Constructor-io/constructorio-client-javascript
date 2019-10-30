@@ -205,6 +205,37 @@ constructorio.tracker.trackPurchase({
 | `revenue` | string | ? |
 | `section` | string | ? |
 
+#### Send recommendation view event
+```javascript
+constructorio.tracker.trackRecommendationView({
+    parameters
+});
+```
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `result_id` | string | ? |
+| `section` | string | ? |
+| `pod_id` | string | ? |
+| `num_results_viewed` | number | ? |
+
+#### Send recommendation click through event
+```javascript
+constructorio.tracker.trackRecommendationClickThrough({
+    parameters
+});
+```
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `result_id` | string | ? |
+| `section` | string | ? |
+| `pod_id` | string | ? |
+| `item_id` | string | ? |
+| `variation_id` | string | ? |
+| `item_position` | string | ? |
+| `strategy_id` | string | ? |
+
 ## Development / npm commands
 
 ```bash

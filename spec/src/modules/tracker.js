@@ -525,7 +525,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.trackConversion(term, parameters)).to.equal(true);
+      expect(tracker.trackConversion(term, {})).to.equal(true);
 
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
@@ -615,14 +615,14 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.trackPurchase(parameters)).to.equal(true);
+      expect(tracker.trackPurchase({})).to.equal(true);
 
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
       expect(requestedUrlParams).to.have.property('section').to.equal('Products');
     });
 
-    it('Should respond with a valid response parameters and segments are provided', () => {
+    it('Should respond with a valid response when parameters and segments are provided', () => {
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -662,6 +662,188 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
       expect(tracker.trackPurchase()).to.be.an('error');
+    });
+  });
+
+  describe('trackRecommendationView', () => {
+    const parameters = {
+      result_id: 'result-id',
+      section: 'Products',
+      pod_id: 'pod-id',
+      num_results_viewed: 5,
+    };
+
+    it('Should respond with a valid response when parameters are provided', () => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      expect(tracker.trackRecommendationView(parameters)).to.equal(true);
+
+      const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+      expect(fetchSpy).to.have.been.called;
+      expect(requestedBodyParams).to.have.property('key');
+      expect(requestedBodyParams).to.have.property('i');
+      expect(requestedBodyParams).to.have.property('s');
+      expect(requestedBodyParams).to.have.property('c').to.equal(clientVersion);
+      expect(requestedBodyParams).to.have.property('_dt');
+      expect(requestedBodyParams).to.have.property('result_id').to.deep.equal(parameters.result_id);
+      expect(requestedBodyParams).to.have.property('section').to.equal(parameters.section);
+      expect(requestedBodyParams).to.have.property('pod_id').to.equal(parameters.pod_id);
+      expect(requestedBodyParams).to.have.property('num_results_viewed').to.equal(parameters.num_results_viewed);
+    });
+
+    it('Should respond with a valid response and section should be defaulted when parameters are provided', () => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      expect(tracker.trackRecommendationView({
+        result_id: parameters.result_id,
+        pod_id: parameters.pod_id,
+        num_results_viewed: parameters.num_results_viewed,
+      })).to.equal(true);
+
+      const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+      expect(requestedBodyParams).to.have.property('section').to.equal('Products');
+    });
+
+    it('Should respond with a valid response when parameters and segments are provided', () => {
+      const segments = ['foo', 'bar'];
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        segments,
+        fetch: fetchSpy,
+      });
+
+      expect(tracker.trackRecommendationView(parameters)).to.equal(true);
+
+      const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+      expect(requestedBodyParams).to.have.property('us').to.deep.equal(segments);
+    });
+
+    it('Should respond with a valid response when parameters and user id are provided', () => {
+      const userId = 'user-id';
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        userId,
+        fetch: fetchSpy,
+      });
+
+      expect(tracker.trackRecommendationView(parameters)).to.equal(true);
+
+      const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+      expect(requestedBodyParams).to.have.property('ui').to.equal(userId);
+    });
+
+    it('Should throw an error when invalid parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackRecommendationView([])).to.be.an('error');
+    });
+
+    it('Should throw an error when no parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackRecommendationView()).to.be.an('error');
+    });
+  });
+
+  describe('trackRecommendationClickThrough', () => {
+    const parameters = {
+      result_id: 'result-id',
+      section: 'Products',
+      pod_id: 'pod-id',
+      item_id: 'item-id',
+      variation_id: 'variation-id',
+      item_position: 5,
+      strategy_id: 'strategy-id',
+    };
+
+    it('Should respond with a valid response when parameters are provided', () => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      expect(tracker.trackRecommendationClickThrough(parameters)).to.equal(true);
+
+      const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+      expect(fetchSpy).to.have.been.called;
+      expect(requestedBodyParams).to.have.property('key');
+      expect(requestedBodyParams).to.have.property('i');
+      expect(requestedBodyParams).to.have.property('s');
+      expect(requestedBodyParams).to.have.property('c').to.equal(clientVersion);
+      expect(requestedBodyParams).to.have.property('_dt');
+      expect(requestedBodyParams).to.have.property('result_id').to.deep.equal(parameters.result_id);
+      expect(requestedBodyParams).to.have.property('section').to.equal(parameters.section);
+      expect(requestedBodyParams).to.have.property('pod_id').to.equal(parameters.pod_id);
+      expect(requestedBodyParams).to.have.property('item_id').to.equal(parameters.item_id);
+      expect(requestedBodyParams).to.have.property('variation_id').to.equal(parameters.variation_id);
+      expect(requestedBodyParams).to.have.property('position').to.equal(parameters.item_position);
+      expect(requestedBodyParams).to.have.property('strategy_id').to.equal(parameters.strategy_id);
+    });
+
+    it('Should respond with a valid response and section should be defaulted when parameters are provided', () => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      expect(tracker.trackRecommendationClickThrough({})).to.equal(true);
+
+      const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+      expect(requestedBodyParams).to.have.property('section').to.equal('Products');
+    });
+
+    it('Should respond with a valid response when parameters and segments are provided', () => {
+      const segments = ['foo', 'bar'];
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        segments,
+        fetch: fetchSpy,
+      });
+
+      expect(tracker.trackRecommendationClickThrough(parameters)).to.equal(true);
+
+      const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+      expect(requestedBodyParams).to.have.property('us').to.deep.equal(segments);
+    });
+
+    it('Should respond with a valid response when parameters and user id are provided', () => {
+      const userId = 'user-id';
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        userId,
+        fetch: fetchSpy,
+      });
+
+      expect(tracker.trackRecommendationClickThrough(parameters)).to.equal(true);
+
+      const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+      expect(requestedBodyParams).to.have.property('ui').to.equal(userId);
+    });
+
+    it('Should throw an error when invalid parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackRecommendationClickThrough([])).to.be.an('error');
+    });
+
+    it('Should throw an error when no parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackRecommendationClickThrough()).to.be.an('error');
     });
   });
 });

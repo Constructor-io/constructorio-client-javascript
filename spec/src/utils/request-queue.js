@@ -45,6 +45,18 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       expect(store.local.get(storageKey)).to.be.an('array').length(3);
     });
 
+    it('Should add requests to the queue and persist on unload event - POST with body', () => {
+      const requests = new RequestQueue();
+
+      requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'session_start' });
+      requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'focus' });
+      requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'magic_number_three' });
+
+      expect(requests.get()).to.be.an('array').length(3);
+      helpers.triggerUnload();
+      expect(store.local.get(storageKey)).to.be.an('array').length(3);
+    });
+
     it('Should not add requests to the queue if the user has a bot-like useragent', () => {
       const requests = new RequestQueue();
 
@@ -105,6 +117,23 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       }, waitInterval);
     });
 
+    it('Should send all tracking requests if queue is populated and user is human - POST with body', (done) => {
+      const requests = new RequestQueue();
+
+      requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'session_start' });
+      requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'focus' });
+      requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'magic_number_three' });
+
+      expect(requests.get()).to.be.an('array').length(3);
+      helpers.triggerResize();
+      requests.send();
+
+      setTimeout(() => {
+        expect(requests.get()).to.be.an('array').length(0);
+        done();
+      }, waitInterval);
+    });
+
     it('Should not send tracking requests if queue is populated and user is not human', (done) => {
       const requests = new RequestQueue();
 
@@ -139,7 +168,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       }, waitInterval);
     });
 
-    it('Should send all tracking requests if requests exist in storage and user is human', (done) => {
+    it('Should send all tracking requests if requests exist in storage and user is human - backwards compatibility', (done) => {
       store.local.set(storageKey, [
         'https://ac.cnstrc.com/behavior?action=session_start',
         'https://ac.cnstrc.com/behavior?action=focus',
@@ -158,11 +187,48 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       }, waitInterval);
     });
 
+    it('Should send all tracking requests if requests exist in storage and user is human', (done) => {
+      store.local.set(storageKey, [
+        {
+          url: 'https://ac.cnstrc.com/behavior?action=session_start',
+          method: 'GET',
+        },
+        {
+          url: 'https://ac.cnstrc.com/behavior?action=focus',
+          method: 'GET',
+        },
+        {
+          url: 'https://ac.cnstrc.com/behavior?action=magic_number_three',
+          method: 'GET',
+        },
+      ]);
+
+      const requests = new RequestQueue();
+
+      expect(requests.get()).to.be.an('array').length(3);
+      helpers.triggerResize();
+      requests.send();
+
+      setTimeout(() => {
+        expect(requests.get()).to.be.an('array').length(0);
+        done();
+      }, waitInterval);
+    });
+
     it('Should not send tracking requests if requests exist in storage and user is not human', (done) => {
       store.local.set(storageKey, [
-        'https://ac.cnstrc.com/behavior?action=session_start',
-        'https://ac.cnstrc.com/behavior?action=focus',
-        'https://ac.cnstrc.com/behavior?action=magic_number_three',
+        {
+          url: 'https://ac.cnstrc.com/behavior?action=session_start',
+          method: 'GET',
+        },
+        {
+          url: 'https://ac.cnstrc.com/behavior?action=focus',
+          method: 'GET',
+        },
+        {
+          url: 'https://ac.cnstrc.com/behavior?action=magic_number_three',
+          method: 'GET',
+        },
       ]);
 
       const requests = new RequestQueue();
@@ -178,9 +244,18 @@ describe('ConstructorIO - Utils - Request Queue', () => {
 
     it('Should not send tracking requests if requests exist in storage and user is human and page is unloading', (done) => {
       store.local.set(storageKey, [
-        'https://ac.cnstrc.com/behavior?action=session_start',
-        'https://ac.cnstrc.com/behavior?action=focus',
-        'https://ac.cnstrc.com/behavior?action=magic_number_three',
+        {
+          url: 'https://ac.cnstrc.com/behavior?action=session_start',
+          method: 'GET',
+        },
+        {
+          url: 'https://ac.cnstrc.com/behavior?action=focus',
+          method: 'GET',
+        },
+        {
+          url: 'https://ac.cnstrc.com/behavior?action=magic_number_three',
+          method: 'GET',
+        },
       ]);
 
       const requests = new RequestQueue();

@@ -4,38 +4,43 @@ const helpers = require('../utils/helpers');
 const RequestQueue = require('../utils/request-queue');
 
 // Append common parameters to supplied parameters object
-function createQueryString(parameters, options) {
+function applyParams(parameters, options) {
   const { apiKey, version, sessionId, clientId, userId, segments } = options;
-  let queryParams = Object.assign(parameters);
+  let aggregateParams = Object.assign(parameters);
 
   if (version) {
-    queryParams.c = version;
+    aggregateParams.c = version;
   }
 
   if (clientId) {
-    queryParams.i = clientId;
+    aggregateParams.i = clientId;
   }
 
   if (sessionId) {
-    queryParams.s = sessionId;
+    aggregateParams.s = sessionId;
   }
 
   if (userId) {
-    queryParams.ui = userId;
+    aggregateParams.ui = userId;
   }
 
   if (segments && segments.length) {
-    queryParams.us = segments;
+    aggregateParams.us = segments;
   }
 
   if (apiKey) {
-    queryParams.key = apiKey;
+    aggregateParams.key = apiKey;
   }
 
-  queryParams._dt = Date.now();
-  queryParams = helpers.cleanParams(queryParams);
+  aggregateParams._dt = Date.now();
+  aggregateParams = helpers.cleanParams(aggregateParams);
 
-  return qs.stringify(queryParams, { indices: false });
+  return aggregateParams;
+}
+
+// Append common parameters to supplied parameters object and return as string
+function applyParamsAsString(parameters, options) {
+  return qs.stringify(applyParams(parameters, options), { indices: false });
 }
 
 /**
@@ -61,7 +66,7 @@ class Tracker {
     const url = `${this.options.serviceUrl}/behavior?`;
     const queryParams = { action: 'session_start' };
 
-    this.requests.queue(`${url}${createQueryString(queryParams, this.options)}`);
+    this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
     this.requests.send();
 
     return true;
@@ -77,7 +82,7 @@ class Tracker {
     const url = `${this.options.serviceUrl}/behavior?`;
     const queryParams = { action: 'focus' };
 
-    this.requests.queue(`${url}${createQueryString(queryParams, this.options)}`);
+    this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
     this.requests.send();
 
     return true;
@@ -137,7 +142,7 @@ class Tracker {
           queryParams.result_id = result_id;
         }
 
-        this.requests.queue(`${url}${createQueryString(queryParams, this.options)}`);
+        this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
         this.requests.send();
 
         return true;
@@ -189,7 +194,7 @@ class Tracker {
           queryParams.result_id = result_id;
         }
 
-        this.requests.queue(`${url}${createQueryString(queryParams, this.options)}`);
+        this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
         this.requests.send();
 
         return true;
@@ -232,7 +237,7 @@ class Tracker {
           queryParams.customer_ids = customer_ids.join(',');
         }
 
-        this.requests.queue(`${url}${createQueryString(queryParams, this.options)}`);
+        this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
         this.requests.send();
 
         return true;
@@ -280,7 +285,7 @@ class Tracker {
           queryParams.result_id = result_id;
         }
 
-        this.requests.queue(`${url}${createQueryString(queryParams, this.options)}`);
+        this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
         this.requests.send();
 
         return true;
@@ -339,7 +344,7 @@ class Tracker {
         queryParams.section = 'Products';
       }
 
-      this.requests.queue(`${url}${createQueryString(queryParams, this.options)}`);
+      this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
       this.requests.send();
 
       return true;
@@ -382,7 +387,126 @@ class Tracker {
         queryParams.section = 'Products';
       }
 
-      this.requests.queue(`${url}${createQueryString(queryParams, this.options)}`);
+      this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send recommendation view event to API
+   *
+   * @function trackRecommendationView
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.result_id - Result identifier
+   * @param {string} parameters.section - Results section (defaults to "Products")
+   * @param {string} parameters.pod_id - Pod identifier
+   * @param {number} parameters.num_results_viewed - Number of results viewed
+   * @returns {(true|Error)}
+   */
+  trackRecommendationView(parameters) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const url = `${this.options.serviceUrl}/v2/behavior/recommendation_result_view`;
+      const bodyParams = {};
+
+      const { result_id, section, pod_id, num_results_viewed } = parameters;
+
+      if (result_id) {
+        bodyParams.result_id = result_id;
+      }
+
+      if (section) {
+        bodyParams.section = section;
+      } else {
+        bodyParams.section = 'Products';
+      }
+
+      if (pod_id) {
+        bodyParams.pod_id = pod_id;
+      }
+
+      if (num_results_viewed) {
+        bodyParams.num_results_viewed = num_results_viewed;
+      }
+
+      this.requests.queue(url, 'POST', applyParams(bodyParams, this.options));
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send recommendation click through event to API
+   *
+   * @function trackRecommendationClickThrough
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.result_id - Result identifier
+   * @param {string} parameters.section - Results section (defaults to "Products")
+   * @param {string} parameters.pod_id - Pod identifier
+   * @param {string} parameters.item_id - ID of clicked item
+   * @param {string} parameters.variation_id - Variation ID of clicked item
+   * @param {number} parameters.item_position - Position of clicked item
+   * @param {string} parameters.strategy_id - Strategy identifier
+   * @returns {(true|Error)}
+   */
+  trackRecommendationClickThrough(parameters) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const url = `${this.options.serviceUrl}/v2/behavior/recommendation_result_click_through`;
+      const bodyParams = {};
+
+      const {
+        result_id,
+        section,
+        pod_id,
+        item_id,
+        variation_id,
+        item_position,
+        strategy_id,
+      } = parameters;
+
+      if (result_id) {
+        bodyParams.result_id = result_id;
+      }
+
+      if (section) {
+        bodyParams.section = section;
+      } else {
+        bodyParams.section = 'Products';
+      }
+
+      if (pod_id) {
+        bodyParams.pod_id = pod_id;
+      }
+
+      if (item_id) {
+        bodyParams.item_id = item_id;
+      }
+
+      if (variation_id) {
+        bodyParams.variation_id = variation_id;
+      }
+
+      if (item_position) {
+        bodyParams.position = item_position;
+      }
+
+      if (strategy_id) {
+        bodyParams.strategy_id = strategy_id;
+      }
+
+      this.requests.queue(url, 'POST', applyParams(bodyParams, this.options));
       this.requests.send();
 
       return true;

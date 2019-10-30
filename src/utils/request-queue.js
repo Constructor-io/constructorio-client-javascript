@@ -23,9 +23,13 @@ class RequestQueue {
   }
 
   // Add request to queue to be dispatched
-  queue(request) {
+  queue(url, method = 'GET', body) {
     if (!this.humanity.isBot()) {
-      this.requestQueue.push(request);
+      this.requestQueue.push({
+        url,
+        method,
+        body,
+      });
     }
   }
 
@@ -39,8 +43,28 @@ class RequestQueue {
       && !this.requestPending
       && !this.flushScheduled
     ) {
-      const nextInQueue = this.requestQueue.shift();
-      const request = fetch(nextInQueue);
+      let nextInQueue = this.requestQueue.shift();
+      let request;
+
+      // Backwards compatibility with versions <= 2.0.0, can be removed in future
+      // - Request queue entries used to be strings with 'GET' method assumed
+      if (typeof nextInQueue === 'string') {
+        nextInQueue = {
+          url: nextInQueue,
+          method: 'GET',
+        };
+      }
+
+      if (nextInQueue.method === 'GET') {
+        request = fetch(nextInQueue.url);
+      }
+
+      if (nextInQueue.method === 'POST') {
+        request = fetch(nextInQueue.url, {
+          method: nextInQueue.method,
+          body: nextInQueue.body,
+        });
+      }
 
       if (request) {
         this.requestPending = true;
