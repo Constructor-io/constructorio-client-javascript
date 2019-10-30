@@ -4,7 +4,7 @@ const helpers = require('../utils/helpers');
 const RequestQueue = require('../utils/request-queue');
 
 // Append common parameters to supplied parameters object
-function applyParameters(parameters, options, returnType = 'string') {
+function applyParams(parameters, options) {
   const { apiKey, version, sessionId, clientId, userId, segments } = options;
   let aggregateParams = Object.assign(parameters);
 
@@ -35,13 +35,12 @@ function applyParameters(parameters, options, returnType = 'string') {
   aggregateParams._dt = Date.now();
   aggregateParams = helpers.cleanParams(aggregateParams);
 
-  // Return as object to be used with GET requests
-  if (returnType === 'string') {
-    return qs.stringify(aggregateParams, { indices: false });
-  }
-
-  // Return as query string to be used with POST requests
   return aggregateParams;
+}
+
+// Append common parameters to supplied parameters object and return as string
+function applyParamsAsString(parameters, options) {
+  return qs.stringify(applyParams(parameters, options), { indices: false });
 }
 
 /**
@@ -67,7 +66,7 @@ class Tracker {
     const url = `${this.options.serviceUrl}/behavior?`;
     const queryParams = { action: 'session_start' };
 
-    this.requests.queue(`${url}${applyParameters(queryParams, this.options)}`);
+    this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
     this.requests.send();
 
     return true;
@@ -83,7 +82,7 @@ class Tracker {
     const url = `${this.options.serviceUrl}/behavior?`;
     const queryParams = { action: 'focus' };
 
-    this.requests.queue(`${url}${applyParameters(queryParams, this.options)}`);
+    this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
     this.requests.send();
 
     return true;
@@ -143,7 +142,7 @@ class Tracker {
           queryParams.result_id = result_id;
         }
 
-        this.requests.queue(`${url}${applyParameters(queryParams, this.options)}`);
+        this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
         this.requests.send();
 
         return true;
@@ -195,7 +194,7 @@ class Tracker {
           queryParams.result_id = result_id;
         }
 
-        this.requests.queue(`${url}${applyParameters(queryParams, this.options)}`);
+        this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
         this.requests.send();
 
         return true;
@@ -238,7 +237,7 @@ class Tracker {
           queryParams.customer_ids = customer_ids.join(',');
         }
 
-        this.requests.queue(`${url}${applyParameters(queryParams, this.options)}`);
+        this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
         this.requests.send();
 
         return true;
@@ -286,7 +285,7 @@ class Tracker {
           queryParams.result_id = result_id;
         }
 
-        this.requests.queue(`${url}${applyParameters(queryParams, this.options)}`);
+        this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
         this.requests.send();
 
         return true;
@@ -345,7 +344,7 @@ class Tracker {
         queryParams.section = 'Products';
       }
 
-      this.requests.queue(`${url}${applyParameters(queryParams, this.options)}`);
+      this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
       this.requests.send();
 
       return true;
@@ -388,7 +387,7 @@ class Tracker {
         queryParams.section = 'Products';
       }
 
-      this.requests.queue(`${url}${applyParameters(queryParams, this.options)}`);
+      this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
       this.requests.send();
 
       return true;
@@ -436,7 +435,7 @@ class Tracker {
         bodyParams.num_results_viewed = num_results_viewed;
       }
 
-      this.requests.queue(url, 'POST', applyParameters(bodyParams, this.options, 'object'));
+      this.requests.queue(url, 'POST', applyParams(bodyParams, this.options));
       this.requests.send();
 
       return true;
@@ -507,7 +506,7 @@ class Tracker {
         bodyParams.strategy_id = strategy_id;
       }
 
-      this.requests.queue(url, 'POST', applyParameters(bodyParams, this.options, 'object'));
+      this.requests.queue(url, 'POST', applyParams(bodyParams, this.options));
       this.requests.send();
 
       return true;
