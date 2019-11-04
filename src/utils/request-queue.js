@@ -35,47 +35,50 @@ class RequestQueue {
 
   // Read from queue and send requests to server
   send() {
-    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    // Defer sending of events to give beforeunload time to register (avoids race condition)
+    setTimeout(() => {
+      const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
 
-    if (
-      this.humanity.isHuman()
-      && this.requestQueue.length
-      && !this.requestPending
-      && !this.flushScheduled
-    ) {
-      let nextInQueue = this.requestQueue.shift();
-      let request;
+      if (
+        this.humanity.isHuman()
+        && this.requestQueue.length
+        && !this.requestPending
+        && !this.flushScheduled
+      ) {
+        let nextInQueue = this.requestQueue.shift();
+        let request;
 
-      // Backwards compatibility with versions <= 2.0.0, can be removed in future
-      // - Request queue entries used to be strings with 'GET' method assumed
-      if (typeof nextInQueue === 'string') {
-        nextInQueue = {
-          url: nextInQueue,
-          method: 'GET',
-        };
+        // Backwards compatibility with versions <= 2.0.0, can be removed in future
+        // - Request queue entries used to be strings with 'GET' method assumed
+        if (typeof nextInQueue === 'string') {
+          nextInQueue = {
+            url: nextInQueue,
+            method: 'GET',
+          };
+        }
+
+        if (nextInQueue.method === 'GET') {
+          request = fetch(nextInQueue.url);
+        }
+
+        if (nextInQueue.method === 'POST') {
+          request = fetch(nextInQueue.url, {
+            method: nextInQueue.method,
+            body: nextInQueue.body,
+          });
+        }
+
+        if (request) {
+          this.requestPending = true;
+
+          request.finally(() => {
+            this.requestPending = false;
+
+            this.send();
+          });
+        }
       }
-
-      if (nextInQueue.method === 'GET') {
-        request = fetch(nextInQueue.url);
-      }
-
-      if (nextInQueue.method === 'POST') {
-        request = fetch(nextInQueue.url, {
-          method: nextInQueue.method,
-          body: nextInQueue.body,
-        });
-      }
-
-      if (request) {
-        this.requestPending = true;
-
-        request.finally(() => {
-          this.requestPending = false;
-
-          this.send();
-        });
-      }
-    }
+    }, 200);
   }
 
   // Return current request queue

@@ -9,7 +9,7 @@ const helpers = require('../../mocha.helpers');
 chai.use(chaiAsPromised);
 dotenv.config();
 
-describe('ConstructorIO - Utils - Request Queue', () => {
+describe.only('ConstructorIO - Utils - Request Queue', () => {
   const storageKey = '_constructorio_requests';
   const waitInterval = 1000;
 
@@ -161,6 +161,24 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       helpers.triggerResize();
       helpers.triggerUnload();
       requests.send();
+
+      setTimeout(() => {
+        expect(requests.get()).to.be.an('array').length(3);
+        done();
+      }, waitInterval);
+    });
+
+    it('Should not send tracking requests if queue is populated and user is human and page is unloading and send was called before unload', (done) => {
+      const requests = new RequestQueue();
+
+      requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+      requests.queue('https://ac.cnstrc.com/behavior?action=focus');
+      requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
+
+      expect(requests.get()).to.be.an('array').length(3);
+      helpers.triggerResize();
+      requests.send();
+      helpers.triggerUnload();
 
       setTimeout(() => {
         expect(requests.get()).to.be.an('array').length(3);
