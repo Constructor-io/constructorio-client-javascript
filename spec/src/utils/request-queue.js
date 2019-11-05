@@ -168,6 +168,24 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       }, waitInterval);
     });
 
+    it('Should not send tracking requests if queue is populated and user is human and page is unloading and send was called before unload', (done) => {
+      const requests = new RequestQueue();
+
+      requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+      requests.queue('https://ac.cnstrc.com/behavior?action=focus');
+      requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
+
+      expect(requests.get()).to.be.an('array').length(3);
+      helpers.triggerResize();
+      requests.send();
+      helpers.triggerUnload();
+
+      setTimeout(() => {
+        expect(requests.get()).to.be.an('array').length(3);
+        done();
+      }, waitInterval);
+    });
+
     it('Should send all tracking requests if requests exist in storage and user is human - backwards compatibility', (done) => {
       store.local.set(storageKey, [
         'https://ac.cnstrc.com/behavior?action=session_start',
