@@ -1,5 +1,6 @@
 /* eslint-disable object-curly-newline, no-underscore-dangle, camelcase */
 const qs = require('qs');
+const EventEmitter = require('events');
 const helpers = require('../utils/helpers');
 const RequestQueue = require('../utils/request-queue');
 
@@ -53,7 +54,8 @@ function applyParamsAsString(parameters, options) {
 class Tracker {
   constructor(options) {
     this.options = options;
-    this.requests = new RequestQueue(options);
+    this.eventemitter = new EventEmitter();
+    this.requests = new RequestQueue(options, this.eventemitter);
   }
 
   /**
@@ -515,6 +517,28 @@ class Tracker {
     this.requests.send();
 
     return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send recommendation click through event to API
+   *
+   * @function on
+   * @param {string} messageType - Type of message to listen for ('success' or 'error')
+   * @param {function} callback - Callback to be invoked when message received
+   * @returns {(true|Error)}
+   */
+  on(messageType, callback) {
+    if (messageType !== 'success' && messageType !== 'error') {
+      return new Error('messageType must be a string of value "success" or "error"');
+    }
+
+    if (!callback || typeof callback !== 'function') {
+      return new Error('callback is required and must be a function');
+    }
+
+    this.eventemitter.on(messageType, callback);
+
+    return true;
   }
 }
 

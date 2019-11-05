@@ -50,6 +50,7 @@
   "dependencies": {
     "@constructor-io/constructorio-id": "^2.2.1",
     "es6-promise": "^4.2.8",
+    "events": "^3.0.0",
     "fetch-ponyfill": "^6.1.0",
     "qs": "^6.8.0",
     "store2": "^2.9.0"

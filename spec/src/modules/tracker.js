@@ -949,4 +949,80 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackRecommendationClickThrough()).to.be.an('error');
     });
   });
+
+  describe('on', () => {
+    it('Should throw an error when providing an invalid messageType parameter', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.on('invalid')).to.be.an('error');
+    });
+
+    it('Should throw an error when providing no messageType parameter', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.on(null, () => {})).to.be.an('error');
+    });
+
+    it('Should throw an error when providing an invalid callback parameter', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.on('success', {})).to.be.an('error');
+    });
+
+    it('Should throw an error when providing no callback parameter', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.on('success', null)).to.be.an('error');
+    });
+
+    it('Should receive a success message when making a request to a valid endpoint', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      tracker.sendSessionStart();
+
+      tracker.on('success', (response) => {
+        expect(response).to.have.property('url');
+        expect(response).to.have.property('method');
+        expect(response).to.have.property('message').to.equal('ok');
+        done();
+      });
+    });
+
+    it('Should receive an error message when making a request to an endpoint that does not return valid JSON', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        serviceUrl: 'http://constructor.io',
+      });
+
+      tracker.sendSessionStart();
+
+      tracker.on('error', (response) => {
+        expect(response).to.have.property('url');
+        expect(response).to.have.property('method');
+        expect(response).to.have.property('message');
+        done();
+      });
+    });
+
+    it('Should receive an error message when making a request to an invalid endpoint', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        serviceUrl: 'invalid',
+      });
+
+      tracker.sendSessionStart();
+
+      tracker.on('error', (response) => {
+        expect(response).to.have.property('url');
+        expect(response).to.have.property('method');
+        expect(response).to.have.property('message');
+        done();
+      });
+    });
+  });
 });
