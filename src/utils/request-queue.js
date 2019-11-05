@@ -22,6 +22,11 @@ class RequestQueue {
 
       store.local.set(storageKey, this.requestQueue);
     });
+
+    // Send any items that exist in queue on initialization
+    if (this.requestQueue.length) {
+      this.send();
+    }
   }
 
   // Add request to queue to be dispatched
