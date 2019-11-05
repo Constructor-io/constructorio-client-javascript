@@ -532,6 +532,10 @@ class Tracker {
       return new Error('messageType must be a string of value "success" or "error"');
     }
 
+    if (!callback || typeof callback !== 'function') {
+      return new Error('callback is required and must be a function');
+    }
+
     this.ee.on(messageType, callback);
 
     return true;

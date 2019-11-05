@@ -77,8 +77,8 @@ class RequestQueue {
             // Request was successful, and returned a 2XX status code
             if (response.ok) {
               this.ee.emit('success', {
-                url: response.url,
-                status: response.status,
+                url: nextInQueue.url,
+                method: nextInQueue.method,
                 message: 'ok',
               });
             }
@@ -87,16 +87,23 @@ class RequestQueue {
             else {
               response.json().then((json) => {
                 this.ee.emit('error', {
-                  url: response.url,
-                  status: response.status,
+                  url: nextInQueue.url,
+                  method: nextInQueue.method,
                   message: json && json.message,
+                });
+              }).catch((error) => {
+                this.ee.emit('error', {
+                  url: nextInQueue.url,
+                  method: nextInQueue.method,
+                  message: error.type,
                 });
               });
             }
-          }).catch((response) => {
+          }).catch((error) => {
             this.ee.emit('error', {
-              url: response.url,
-              message: 'bad request',
+              url: nextInQueue.url,
+              method: nextInQueue.method,
+              message: error.toString(),
             });
           }).finally(() => {
             this.requestPending = false;
