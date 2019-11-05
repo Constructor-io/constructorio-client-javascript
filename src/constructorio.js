@@ -7,7 +7,7 @@ const Browse = require('./modules/browse');
 const Autocomplete = require('./modules/autocomplete');
 const Recommendations = require('./modules/recommendations');
 const Tracker = require('./modules/tracker');
-const { version } = require('../package.json');
+const { version: packageVersion } = require('../package.json');
 
 /**
  * Class to instantiate the ConstructorIO client.
@@ -31,6 +31,7 @@ class ConstructorIO {
   constructor(options = {}) {
     const {
       apiKey,
+      version,
       serviceUrl,
       segments,
       testCells,
@@ -38,6 +39,7 @@ class ConstructorIO {
       sessionId,
       userId,
       fetch,
+      trackingSendDelay,
     } = options;
 
     if (!apiKey || typeof apiKey !== 'string') {
@@ -49,7 +51,7 @@ class ConstructorIO {
 
     this.options = {
       apiKey,
-      version: global.CLIENT_VERSION || `ciojs-client-${version}`,
+      version: version || global.CLIENT_VERSION || `ciojs-client-${packageVersion}`,
       serviceUrl: serviceUrl || 'https://ac.cnstrc.com',
       sessionId: sessionId || session_id,
       clientId: clientId || client_id,
@@ -57,6 +59,7 @@ class ConstructorIO {
       segments,
       testCells,
       fetch,
+      trackingSendDelay,
     };
 
     // Expose global modules

@@ -20,6 +20,7 @@ const { fetch } = fetchPonyfill({ Promise });
 
 describe.only('ConstructorIO - Tracker', () => {
   const clientVersion = 'cio-mocha';
+  const waitInterval = 500;
   let fetchSpy;
 
   jsdom({ url: 'http://localhost' });
@@ -48,23 +49,21 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.sendSessionStart()).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(fetchSpy).to.have.been.called;
-      expect(requestedUrlParams).to.have.property('key');
-      expect(requestedUrlParams).to.have.property('i');
-      expect(requestedUrlParams).to.have.property('s');
-      expect(requestedUrlParams).to.have.property('action').to.equal('session_start');
-      expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
-      expect(requestedUrlParams).to.have.property('_dt');
-
-      tracker.on('success', (response) => {
-        expect(response).to.have.property('message').to.equal('ok');
+        expect(fetchSpy).to.have.been.called;
+        expect(requestedUrlParams).to.have.property('key');
+        expect(requestedUrlParams).to.have.property('i');
+        expect(requestedUrlParams).to.have.property('s');
+        expect(requestedUrlParams).to.have.property('action').to.equal('session_start');
+        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestedUrlParams).to.have.property('_dt');
         done();
-      });
+      }, waitInterval);
     });
 
-    it('Should respond with a valid response with segments', () => {
+    it('Should respond with a valid response with segments', (done) => {
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -74,12 +73,15 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.sendSessionStart()).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        done();
+      }, waitInterval);
     });
 
-    it('Should respond with a valid response with user id', () => {
+    it('Should respond with a valid response with user id', (done) => {
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -89,9 +91,12 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.sendSessionStart()).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        done();
+      }, waitInterval);
     });
 
     it('Should respond with an error when invalid apiKey is provided', (done) => {
@@ -107,7 +112,7 @@ describe.only('ConstructorIO - Tracker', () => {
   });
 
   describe('sendInputFocus', () => {
-    it('Should respond with a valid response', () => {
+    it('Should respond with a valid response', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -115,18 +120,21 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.sendInputFocus()).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(fetchSpy).to.have.been.called;
-      expect(requestedUrlParams).to.have.property('key');
-      expect(requestedUrlParams).to.have.property('i');
-      expect(requestedUrlParams).to.have.property('s');
-      expect(requestedUrlParams).to.have.property('action').to.equal('focus');
-      expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
-      expect(requestedUrlParams).to.have.property('_dt');
+        expect(fetchSpy).to.have.been.called;
+        expect(requestedUrlParams).to.have.property('key');
+        expect(requestedUrlParams).to.have.property('i');
+        expect(requestedUrlParams).to.have.property('s');
+        expect(requestedUrlParams).to.have.property('action').to.equal('focus');
+        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestedUrlParams).to.have.property('_dt');
+        done();
+      }, waitInterval);
     });
 
-    it('Should respond with a valid response with segments', () => {
+    it('Should respond with a valid response with segments', (done) => {
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -136,12 +144,15 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.sendInputFocus()).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        done();
+      }, waitInterval);
     });
 
-    it('Should respond with a valid response with user id', () => {
+    it('Should respond with a valid response with user id', (done) => {
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -151,9 +162,12 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.sendInputFocus()).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        done();
+      }, waitInterval);
     });
   });
 
@@ -168,7 +182,7 @@ describe.only('ConstructorIO - Tracker', () => {
       display_name: 'display-name',
     };
 
-    it('Should respond with a valid response when term and parameters are provided', () => {
+    it('Should respond with a valid response when term and parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -176,24 +190,27 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackAutocompleteSelect(term, parameters)).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(fetchSpy).to.have.been.called;
-      expect(requestedUrlParams).to.have.property('key');
-      expect(requestedUrlParams).to.have.property('i');
-      expect(requestedUrlParams).to.have.property('s');
-      expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
-      expect(requestedUrlParams).to.have.property('_dt');
-      expect(requestedUrlParams).to.have.property('original_query').to.equal(parameters.original_query);
-      expect(requestedUrlParams).to.have.property('section').to.equal(parameters.section);
-      expect(requestedUrlParams).to.have.property('result_id').to.equal(parameters.result_id);
-      expect(requestedUrlParams).to.have.property('group').to.deep.equal({
-        group_id: parameters.group_id,
-        display_name: parameters.display_name,
-      });
+        expect(fetchSpy).to.have.been.called;
+        expect(requestedUrlParams).to.have.property('key');
+        expect(requestedUrlParams).to.have.property('i');
+        expect(requestedUrlParams).to.have.property('s');
+        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestedUrlParams).to.have.property('_dt');
+        expect(requestedUrlParams).to.have.property('original_query').to.equal(parameters.original_query);
+        expect(requestedUrlParams).to.have.property('section').to.equal(parameters.section);
+        expect(requestedUrlParams).to.have.property('result_id').to.equal(parameters.result_id);
+        expect(requestedUrlParams).to.have.property('group').to.deep.equal({
+          group_id: parameters.group_id,
+          display_name: parameters.display_name,
+        });
+        done();
+      }, waitInterval);
     });
 
-    it('Should respond with a valid response when term, parameters and segments are provided', () => {
+    it('Should respond with a valid response when term, parameters and segments are provided', (done) => {
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -203,12 +220,15 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackAutocompleteSelect(term, parameters)).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        done();
+      }, waitInterval);
     });
 
-    it('Should respond with a valid response when term, parameters and user id are provided', () => {
+    it('Should respond with a valid response when term, parameters and user id are provided', (done) => {
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -218,9 +238,12 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackAutocompleteSelect(term, parameters)).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        done();
+      }, waitInterval);
     });
 
     it('Should throw an error when invalid term is provided', () => {
@@ -257,7 +280,7 @@ describe.only('ConstructorIO - Tracker', () => {
       display_name: 'display-name',
     };
 
-    it('Should respond with a valid response when term and parameters are provided', () => {
+    it('Should respond with a valid response when term and parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -265,23 +288,26 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackSearchSubmit(term, parameters)).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(fetchSpy).to.have.been.called;
-      expect(requestedUrlParams).to.have.property('key');
-      expect(requestedUrlParams).to.have.property('i');
-      expect(requestedUrlParams).to.have.property('s');
-      expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
-      expect(requestedUrlParams).to.have.property('_dt');
-      expect(requestedUrlParams).to.have.property('original_query').to.equal(parameters.original_query);
-      expect(requestedUrlParams).to.have.property('result_id').to.equal(parameters.result_id);
-      expect(requestedUrlParams).to.have.property('group').to.deep.equal({
-        group_id: parameters.group_id,
-        display_name: parameters.display_name,
-      });
+        expect(fetchSpy).to.have.been.called;
+        expect(requestedUrlParams).to.have.property('key');
+        expect(requestedUrlParams).to.have.property('i');
+        expect(requestedUrlParams).to.have.property('s');
+        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestedUrlParams).to.have.property('_dt');
+        expect(requestedUrlParams).to.have.property('original_query').to.equal(parameters.original_query);
+        expect(requestedUrlParams).to.have.property('result_id').to.equal(parameters.result_id);
+        expect(requestedUrlParams).to.have.property('group').to.deep.equal({
+          group_id: parameters.group_id,
+          display_name: parameters.display_name,
+        });
+        done();
+      }, waitInterval);
     });
 
-    it('Should respond with a valid response when term, parameters and segments are provided', () => {
+    it('Should respond with a valid response when term, parameters and segments are provided', (done) => {
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -291,12 +317,15 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackSearchSubmit(term, parameters)).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        done();
+      }, waitInterval);
     });
 
-    it('Should respond with a valid response when term, parameters and user id are provided', () => {
+    it('Should respond with a valid response when term, parameters and user id are provided', (done) => {
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -306,9 +335,12 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackSearchSubmit(term, parameters)).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        done();
+      }, waitInterval);
     });
 
     it('Should throw an error when invalid term is provided', () => {
@@ -343,7 +375,7 @@ describe.only('ConstructorIO - Tracker', () => {
       customer_ids: [1, 2, 3],
     };
 
-    it('Should respond with a valid response when term and parameters are provided', () => {
+    it('Should respond with a valid response when term and parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -351,19 +383,22 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackSearchResultsLoaded(term, parameters)).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(fetchSpy).to.have.been.called;
-      expect(requestedUrlParams).to.have.property('key');
-      expect(requestedUrlParams).to.have.property('i');
-      expect(requestedUrlParams).to.have.property('s');
-      expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
-      expect(requestedUrlParams).to.have.property('_dt');
-      expect(requestedUrlParams).to.have.property('num_results').to.equal(parameters.num_results.toString());
-      expect(requestedUrlParams).to.have.property('customer_ids').to.equal(parameters.customer_ids.join(','));
+        expect(fetchSpy).to.have.been.called;
+        expect(requestedUrlParams).to.have.property('key');
+        expect(requestedUrlParams).to.have.property('i');
+        expect(requestedUrlParams).to.have.property('s');
+        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestedUrlParams).to.have.property('_dt');
+        expect(requestedUrlParams).to.have.property('num_results').to.equal(parameters.num_results.toString());
+        expect(requestedUrlParams).to.have.property('customer_ids').to.equal(parameters.customer_ids.join(','));
+        done();
+      }, waitInterval);
     });
 
-    it('Should respond with a valid response when term, parameters and segments are provided', () => {
+    it('Should respond with a valid response when term, parameters and segments are provided', (done) => {
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -373,12 +408,15 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackSearchResultsLoaded(term, parameters)).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        done();
+      }, waitInterval);
     });
 
-    it('Should respond with a valid response when term, parameters and user id are provided', () => {
+    it('Should respond with a valid response when term, parameters and user id are provided', (done) => {
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -388,9 +426,12 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackSearchResultsLoaded(term, parameters)).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        done();
+      }, waitInterval);
     });
 
     it('Should throw an error when invalid term is provided', () => {
@@ -426,7 +467,7 @@ describe.only('ConstructorIO - Tracker', () => {
       result_id: 'result-id',
     };
 
-    it('Should respond with a valid response when term and parmeters are provided', () => {
+    it('Should respond with a valid response when term and parmeters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -434,20 +475,23 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackSearchResultClick(term, parameters)).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(fetchSpy).to.have.been.called;
-      expect(requestedUrlParams).to.have.property('key');
-      expect(requestedUrlParams).to.have.property('i');
-      expect(requestedUrlParams).to.have.property('s');
-      expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
-      expect(requestedUrlParams).to.have.property('_dt');
-      expect(requestedUrlParams).to.have.property('name').to.equal(parameters.name);
-      expect(requestedUrlParams).to.have.property('customer_id').to.equal(parameters.customer_id);
-      expect(requestedUrlParams).to.have.property('result_id').to.equal(parameters.result_id);
+        expect(fetchSpy).to.have.been.called;
+        expect(requestedUrlParams).to.have.property('key');
+        expect(requestedUrlParams).to.have.property('i');
+        expect(requestedUrlParams).to.have.property('s');
+        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestedUrlParams).to.have.property('_dt');
+        expect(requestedUrlParams).to.have.property('name').to.equal(parameters.name);
+        expect(requestedUrlParams).to.have.property('customer_id').to.equal(parameters.customer_id);
+        expect(requestedUrlParams).to.have.property('result_id').to.equal(parameters.result_id);
+        done();
+      }, waitInterval);
     });
 
-    it('Should respond with a valid response when term, parameters and segments are provided', () => {
+    it('Should respond with a valid response when term, parameters and segments are provided', (done) => {
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -457,12 +501,15 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackSearchResultClick(term, parameters)).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        done();
+      }, waitInterval);
     });
 
-    it('Should respond with a valid response when term, parameters and user id are provided', () => {
+    it('Should respond with a valid response when term, parameters and user id are provided', (done) => {
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -472,9 +519,12 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackSearchResultClick(term, parameters)).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        done();
+      }, waitInterval);
     });
 
     it('Should throw an error when invalid term is provided', () => {
@@ -512,7 +562,7 @@ describe.only('ConstructorIO - Tracker', () => {
       section: 'Products',
     };
 
-    it('Should respond with a valid response when term and parameters are provided', () => {
+    it('Should respond with a valid response when term and parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -520,22 +570,25 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackConversion(term, parameters)).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(fetchSpy).to.have.been.called;
-      expect(requestedUrlParams).to.have.property('key');
-      expect(requestedUrlParams).to.have.property('i');
-      expect(requestedUrlParams).to.have.property('s');
-      expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
-      expect(requestedUrlParams).to.have.property('_dt');
-      expect(requestedUrlParams).to.have.property('name').to.equal(parameters.name);
-      expect(requestedUrlParams).to.have.property('customer_id').to.equal(parameters.customer_id);
-      expect(requestedUrlParams).to.have.property('result_id').to.equal(parameters.result_id);
-      expect(requestedUrlParams).to.have.property('revenue').to.equal(parameters.revenue.toString());
-      expect(requestedUrlParams).to.have.property('section').to.equal(parameters.section);
+        expect(fetchSpy).to.have.been.called;
+        expect(requestedUrlParams).to.have.property('key');
+        expect(requestedUrlParams).to.have.property('i');
+        expect(requestedUrlParams).to.have.property('s');
+        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestedUrlParams).to.have.property('_dt');
+        expect(requestedUrlParams).to.have.property('name').to.equal(parameters.name);
+        expect(requestedUrlParams).to.have.property('customer_id').to.equal(parameters.customer_id);
+        expect(requestedUrlParams).to.have.property('result_id').to.equal(parameters.result_id);
+        expect(requestedUrlParams).to.have.property('revenue').to.equal(parameters.revenue.toString());
+        expect(requestedUrlParams).to.have.property('section').to.equal(parameters.section);
+        done();
+      }, waitInterval);
     });
 
-    it('Should respond with a valid response and section should be defaulted when term and parameters are provided', () => {
+    it('Should respond with a valid response and section should be defaulted when term and parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -543,12 +596,15 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackConversion(term, {})).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(requestedUrlParams).to.have.property('section').to.equal('Products');
+        expect(requestedUrlParams).to.have.property('section').to.equal('Products');
+        done();
+      }, waitInterval);
     });
 
-    it('Should respond with a valid response when term, parameters and segments are provided', () => {
+    it('Should respond with a valid response when term, parameters and segments are provided', (done) => {
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -558,12 +614,15 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackConversion(term, parameters)).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        done();
+      }, waitInterval);
     });
 
-    it('Should respond with a valid response when term, parameters and user id are provided', () => {
+    it('Should respond with a valid response when term, parameters and user id are provided', (done) => {
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -573,9 +632,12 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackConversion(term, parameters)).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        done();
+      }, waitInterval);
     });
 
     it('Should respond with a valid response when no term is provided, but parameters are', () => {
@@ -604,7 +666,7 @@ describe.only('ConstructorIO - Tracker', () => {
       section: 'Products',
     };
 
-    it('Should respond with a valid response when parameters are provided', () => {
+    it('Should respond with a valid response when parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -612,20 +674,23 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackPurchase(parameters)).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(fetchSpy).to.have.been.called;
-      expect(requestedUrlParams).to.have.property('key');
-      expect(requestedUrlParams).to.have.property('i');
-      expect(requestedUrlParams).to.have.property('s');
-      expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
-      expect(requestedUrlParams).to.have.property('_dt');
-      expect(requestedUrlParams).to.have.property('customer_ids').to.deep.equal(parameters.customer_ids);
-      expect(requestedUrlParams).to.have.property('revenue').to.equal(parameters.revenue.toString());
-      expect(requestedUrlParams).to.have.property('section').to.equal(parameters.section);
+        expect(fetchSpy).to.have.been.called;
+        expect(requestedUrlParams).to.have.property('key');
+        expect(requestedUrlParams).to.have.property('i');
+        expect(requestedUrlParams).to.have.property('s');
+        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestedUrlParams).to.have.property('_dt');
+        expect(requestedUrlParams).to.have.property('customer_ids').to.deep.equal(parameters.customer_ids);
+        expect(requestedUrlParams).to.have.property('revenue').to.equal(parameters.revenue.toString());
+        expect(requestedUrlParams).to.have.property('section').to.equal(parameters.section);
+        done();
+      }, waitInterval);
     });
 
-    it('Should respond with a valid response and section should be defaulted when term and parameters are provided', () => {
+    it('Should respond with a valid response and section should be defaulted when term and parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -633,12 +698,15 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackPurchase({})).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(requestedUrlParams).to.have.property('section').to.equal('Products');
+        expect(requestedUrlParams).to.have.property('section').to.equal('Products');
+        done();
+      }, waitInterval);
     });
 
-    it('Should respond with a valid response when parameters and segments are provided', () => {
+    it('Should respond with a valid response when parameters and segments are provided', (done) => {
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -648,12 +716,15 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackPurchase(parameters)).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        done();
+      }, waitInterval);
     });
 
-    it('Should respond with a valid response when parameters and user id are provided', () => {
+    it('Should respond with a valid response when parameters and user id are provided', (done) => {
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -663,9 +734,12 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackPurchase(parameters)).to.equal(true);
 
-      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-      expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        done();
+      }, waitInterval);
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
@@ -689,7 +763,7 @@ describe.only('ConstructorIO - Tracker', () => {
       num_results_viewed: 5,
     };
 
-    it('Should respond with a valid response when parameters are provided', () => {
+    it('Should respond with a valid response when parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -697,21 +771,24 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackRecommendationView(parameters)).to.equal(true);
 
-      const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
 
-      expect(fetchSpy).to.have.been.called;
-      expect(requestedBodyParams).to.have.property('key');
-      expect(requestedBodyParams).to.have.property('i');
-      expect(requestedBodyParams).to.have.property('s');
-      expect(requestedBodyParams).to.have.property('c').to.equal(clientVersion);
-      expect(requestedBodyParams).to.have.property('_dt');
-      expect(requestedBodyParams).to.have.property('result_id').to.deep.equal(parameters.result_id);
-      expect(requestedBodyParams).to.have.property('section').to.equal(parameters.section);
-      expect(requestedBodyParams).to.have.property('pod_id').to.equal(parameters.pod_id);
-      expect(requestedBodyParams).to.have.property('num_results_viewed').to.equal(parameters.num_results_viewed);
+        expect(fetchSpy).to.have.been.called;
+        expect(requestedBodyParams).to.have.property('key');
+        expect(requestedBodyParams).to.have.property('i');
+        expect(requestedBodyParams).to.have.property('s');
+        expect(requestedBodyParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestedBodyParams).to.have.property('_dt');
+        expect(requestedBodyParams).to.have.property('result_id').to.deep.equal(parameters.result_id);
+        expect(requestedBodyParams).to.have.property('section').to.equal(parameters.section);
+        expect(requestedBodyParams).to.have.property('pod_id').to.equal(parameters.pod_id);
+        expect(requestedBodyParams).to.have.property('num_results_viewed').to.equal(parameters.num_results_viewed);
+        done();
+      }, waitInterval);
     });
 
-    it('Should respond with a valid response and section should be defaulted when parameters are provided', () => {
+    it('Should respond with a valid response and section should be defaulted when parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -723,12 +800,15 @@ describe.only('ConstructorIO - Tracker', () => {
         num_results_viewed: parameters.num_results_viewed,
       })).to.equal(true);
 
-      const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
 
-      expect(requestedBodyParams).to.have.property('section').to.equal('Products');
+        expect(requestedBodyParams).to.have.property('section').to.equal('Products');
+        done();
+      }, waitInterval);
     });
 
-    it('Should respond with a valid response when parameters and segments are provided', () => {
+    it('Should respond with a valid response when parameters and segments are provided', (done) => {
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -738,12 +818,15 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackRecommendationView(parameters)).to.equal(true);
 
-      const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
 
-      expect(requestedBodyParams).to.have.property('us').to.deep.equal(segments);
+        expect(requestedBodyParams).to.have.property('us').to.deep.equal(segments);
+        done();
+      }, waitInterval);
     });
 
-    it('Should respond with a valid response when parameters and user id are provided', () => {
+    it('Should respond with a valid response when parameters and user id are provided', (done) => {
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -753,9 +836,12 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackRecommendationView(parameters)).to.equal(true);
 
-      const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
 
-      expect(requestedBodyParams).to.have.property('ui').to.equal(userId);
+        expect(requestedBodyParams).to.have.property('ui').to.equal(userId);
+        done();
+      }, waitInterval);
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
@@ -782,7 +868,7 @@ describe.only('ConstructorIO - Tracker', () => {
       strategy_id: 'strategy-id',
     };
 
-    it('Should respond with a valid response when parameters are provided', () => {
+    it('Should respond with a valid response when parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -790,24 +876,27 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackRecommendationClickThrough(parameters)).to.equal(true);
 
-      const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
 
-      expect(fetchSpy).to.have.been.called;
-      expect(requestedBodyParams).to.have.property('key');
-      expect(requestedBodyParams).to.have.property('i');
-      expect(requestedBodyParams).to.have.property('s');
-      expect(requestedBodyParams).to.have.property('c').to.equal(clientVersion);
-      expect(requestedBodyParams).to.have.property('_dt');
-      expect(requestedBodyParams).to.have.property('result_id').to.deep.equal(parameters.result_id);
-      expect(requestedBodyParams).to.have.property('section').to.equal(parameters.section);
-      expect(requestedBodyParams).to.have.property('pod_id').to.equal(parameters.pod_id);
-      expect(requestedBodyParams).to.have.property('item_id').to.equal(parameters.item_id);
-      expect(requestedBodyParams).to.have.property('variation_id').to.equal(parameters.variation_id);
-      expect(requestedBodyParams).to.have.property('position').to.equal(parameters.item_position);
-      expect(requestedBodyParams).to.have.property('strategy_id').to.equal(parameters.strategy_id);
+        expect(fetchSpy).to.have.been.called;
+        expect(requestedBodyParams).to.have.property('key');
+        expect(requestedBodyParams).to.have.property('i');
+        expect(requestedBodyParams).to.have.property('s');
+        expect(requestedBodyParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestedBodyParams).to.have.property('_dt');
+        expect(requestedBodyParams).to.have.property('result_id').to.deep.equal(parameters.result_id);
+        expect(requestedBodyParams).to.have.property('section').to.equal(parameters.section);
+        expect(requestedBodyParams).to.have.property('pod_id').to.equal(parameters.pod_id);
+        expect(requestedBodyParams).to.have.property('item_id').to.equal(parameters.item_id);
+        expect(requestedBodyParams).to.have.property('variation_id').to.equal(parameters.variation_id);
+        expect(requestedBodyParams).to.have.property('position').to.equal(parameters.item_position);
+        expect(requestedBodyParams).to.have.property('strategy_id').to.equal(parameters.strategy_id);
+        done();
+      }, waitInterval);
     });
 
-    it('Should respond with a valid response and section should be defaulted when parameters are provided', () => {
+    it('Should respond with a valid response and section should be defaulted when parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -815,12 +904,15 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackRecommendationClickThrough({})).to.equal(true);
 
-      const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
 
-      expect(requestedBodyParams).to.have.property('section').to.equal('Products');
+        expect(requestedBodyParams).to.have.property('section').to.equal('Products');
+        done();
+      }, waitInterval);
     });
 
-    it('Should respond with a valid response when parameters and segments are provided', () => {
+    it('Should respond with a valid response when parameters and segments are provided', (done) => {
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -830,12 +922,15 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackRecommendationClickThrough(parameters)).to.equal(true);
 
-      const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
 
-      expect(requestedBodyParams).to.have.property('us').to.deep.equal(segments);
+        expect(requestedBodyParams).to.have.property('us').to.deep.equal(segments);
+        done();
+      }, waitInterval);
     });
 
-    it('Should respond with a valid response when parameters and user id are provided', () => {
+    it('Should respond with a valid response when parameters and user id are provided', (done) => {
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -845,9 +940,12 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackRecommendationClickThrough(parameters)).to.equal(true);
 
-      const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+      setTimeout(() => {
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
 
-      expect(requestedBodyParams).to.have.property('ui').to.equal(userId);
+        expect(requestedBodyParams).to.have.property('ui').to.equal(userId);
+        done();
+      }, waitInterval);
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
