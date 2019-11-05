@@ -236,6 +236,12 @@ constructorio.tracker.trackRecommendationClickThrough({
 | `item_position` | string | ? |
 | `strategy_id` | string | ? |
 
+#### Receive status of tracking requests
+The status of tracking requests can be observed through emitted events. `messageType` must be either "success" or "error", and the `callback` parameter must be a function that will be passed the message data as the first and only argument.
+```javascript
+constructorio.tracker.on(messageType, callback);
+```
+
 ## Development / npm commands
 
 ```bash
