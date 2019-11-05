@@ -78,7 +78,7 @@ class RequestQueue {
           });
         }
       }
-    }, (this.options && this.options.requestQueueDeferTime) || 200);
+    }, (this.options && this.options.trackingSendDelay) || 200);
   }
 
   // Return current request queue
