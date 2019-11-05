@@ -36,17 +36,20 @@ describe('ConstructorIO', () => {
     const clientId = 'client-id';
     const sessionId = 'session-id';
     const serviceUrl = 'http://constructor.io';
+    const version = 'custom-version';
     const instance = new ConstructorIO({
       apiKey: validApiKey,
       clientId,
       sessionId,
       serviceUrl,
+      version,
     });
 
     expect(instance).to.be.an('object');
     expect(instance.options).to.have.property('clientId').to.equal(clientId);
     expect(instance.options).to.have.property('sessionId').to.equal(sessionId);
     expect(instance.options).to.have.property('serviceUrl').to.equal(serviceUrl);
+    expect(instance.options).to.have.property('version').to.equal(version);
   });
 
   it('Should throw an error when invalid API key is provided', () => {
