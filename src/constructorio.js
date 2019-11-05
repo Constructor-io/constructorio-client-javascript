@@ -38,6 +38,7 @@ class ConstructorIO {
       sessionId,
       userId,
       fetch,
+      requestQueueDeferTime,
     } = options;
 
     if (!apiKey || typeof apiKey !== 'string') {
@@ -57,6 +58,7 @@ class ConstructorIO {
       segments,
       testCells,
       fetch,
+      requestQueueDeferTime,
     };
 
     // Expose global modules
