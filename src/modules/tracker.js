@@ -54,8 +54,8 @@ function applyParamsAsString(parameters, options) {
 class Tracker {
   constructor(options) {
     this.options = options;
-    this.ee = new EventEmitter();
-    this.requests = new RequestQueue(options, this.ee);
+    this.eventemitter = new EventEmitter();
+    this.requests = new RequestQueue(options, this.eventemitter);
   }
 
   /**
@@ -536,7 +536,7 @@ class Tracker {
       return new Error('callback is required and must be a function');
     }
 
-    this.ee.on(messageType, callback);
+    this.eventemitter.on(messageType, callback);
 
     return true;
   }

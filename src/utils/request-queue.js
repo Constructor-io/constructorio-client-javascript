@@ -8,9 +8,9 @@ const helpers = require('../utils/helpers');
 const storageKey = '_constructorio_requests';
 
 class RequestQueue {
-  constructor(options, ee) {
+  constructor(options, eventemitter) {
     this.options = options;
-    this.ee = ee;
+    this.eventemitter = eventemitter;
     this.humanity = new HumanityCheck();
     this.requestPending = false;
     this.flushScheduled = false;
@@ -76,7 +76,7 @@ class RequestQueue {
           request.then((response) => {
             // Request was successful, and returned a 2XX status code
             if (response.ok) {
-              this.ee.emit('success', {
+              this.eventemitter.emit('success', {
                 url: nextInQueue.url,
                 method: nextInQueue.method,
                 message: 'ok',
@@ -86,13 +86,13 @@ class RequestQueue {
             // Request was successful, but returned a non-2XX status code
             else {
               response.json().then((json) => {
-                this.ee.emit('error', {
+                this.eventemitter.emit('error', {
                   url: nextInQueue.url,
                   method: nextInQueue.method,
                   message: json && json.message,
                 });
               }).catch((error) => {
-                this.ee.emit('error', {
+                this.eventemitter.emit('error', {
                   url: nextInQueue.url,
                   method: nextInQueue.method,
                   message: error.type,
@@ -100,7 +100,7 @@ class RequestQueue {
               });
             }
           }).catch((error) => {
-            this.ee.emit('error', {
+            this.eventemitter.emit('error', {
               url: nextInQueue.url,
               method: nextInQueue.method,
               message: error.toString(),
