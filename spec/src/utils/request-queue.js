@@ -233,6 +233,33 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       }, waitInterval);
     });
 
+    it('Should send all tracking requests on initialization if requests exist in storage and user is human', (done) => {
+      store.local.set(storageKey, [
+        {
+          url: 'https://ac.cnstrc.com/behavior?action=session_start',
+          method: 'GET',
+        },
+        {
+          url: 'https://ac.cnstrc.com/behavior?action=focus',
+          method: 'GET',
+        },
+        {
+          url: 'https://ac.cnstrc.com/behavior?action=magic_number_three',
+          method: 'GET',
+        },
+      ]);
+
+      const requests = new RequestQueue();
+
+      expect(requests.get()).to.be.an('array').length(3);
+      helpers.triggerResize();
+
+      setTimeout(() => {
+        expect(requests.get()).to.be.an('array').length(0);
+        done();
+      }, waitInterval);
+    });
+
     it('Should not send tracking requests if requests exist in storage and user is not human', (done) => {
       store.local.set(storageKey, [
         {
