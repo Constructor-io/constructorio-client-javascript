@@ -1,3 +1,4 @@
+/* eslint-disable brace-style */
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
 const store = require('../utils/store');
@@ -7,8 +8,9 @@ const helpers = require('../utils/helpers');
 const storageKey = '_constructorio_requests';
 
 class RequestQueue {
-  constructor(options) {
+  constructor(options, ee) {
     this.options = options;
+    this.ee = ee;
     this.humanity = new HumanityCheck();
     this.requestPending = false;
     this.flushScheduled = false;
@@ -69,7 +71,32 @@ class RequestQueue {
       if (request) {
         this.requestPending = true;
 
-        request.finally(() => {
+        request.then((response) => {
+          // Request was successful, and returned a 2XX status code
+          if (response.ok) {
+            this.ee.emit('success', {
+              url: response.url,
+              status: response.status,
+              message: 'ok',
+            });
+          }
+
+          // Request was successful, but returned a non-2XX status code
+          else {
+            response.json().then((json) => {
+              this.ee.emit('error', {
+                url: response.url,
+                status: response.status,
+                message: json && json.message,
+              });
+            });
+          }
+        }).catch((response) => {
+          this.ee.emit('error', {
+            url: response.url,
+            message: 'bad request',
+          });
+        }).finally(() => {
           this.requestPending = false;
 
           this.send();

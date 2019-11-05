@@ -18,7 +18,7 @@ dotenv.config();
 const testApiKey = process.env.TEST_API_KEY;
 const { fetch } = fetchPonyfill({ Promise });
 
-describe('ConstructorIO - Tracker', () => {
+describe.only('ConstructorIO - Tracker', () => {
   const clientVersion = 'cio-mocha';
   let fetchSpy;
 
@@ -40,7 +40,7 @@ describe('ConstructorIO - Tracker', () => {
   });
 
   describe('sendSessionStart', () => {
-    it('Should respond with a valid response', () => {
+    it('Should respond with a valid response', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -57,6 +57,11 @@ describe('ConstructorIO - Tracker', () => {
       expect(requestedUrlParams).to.have.property('action').to.equal('session_start');
       expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
       expect(requestedUrlParams).to.have.property('_dt');
+
+      tracker.on('success', (response) => {
+        expect(response).to.have.property('message').to.equal('ok');
+        done();
+      });
     });
 
     it('Should respond with a valid response with segments', () => {
@@ -87,6 +92,17 @@ describe('ConstructorIO - Tracker', () => {
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
       expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+    });
+
+    it('Should respond with an error when invalid apiKey is provided', (done) => {
+      const { tracker } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
+
+      expect(tracker.sendSessionStart()).to.equal(true);
+
+      tracker.on('error', (response) => {
+        expect(response).to.have.property('status').to.equal(400);
+        done();
+      });
     });
   });
 
