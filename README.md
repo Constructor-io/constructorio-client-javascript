@@ -221,7 +221,7 @@ constructorio.tracker.trackRecommendationView({
 
 #### Send recommendation click through event
 ```javascript
-constructorio.tracker.trackRecommendationClickThrough({
+constructorio.tracker.trackRecommendationClick({
     parameters
 });
 ```

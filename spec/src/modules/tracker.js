@@ -746,6 +746,8 @@ describe('ConstructorIO - Tracker', () => {
 
   describe('trackRecommendationView', () => {
     const parameters = {
+      result_count: 5,
+      result_page: 1,
       result_id: 'result-id',
       section: 'Products',
       pod_id: 'pod-id',
@@ -769,6 +771,8 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestedBodyParams).to.have.property('s');
         expect(requestedBodyParams).to.have.property('c').to.equal(clientVersion);
         expect(requestedBodyParams).to.have.property('_dt');
+        expect(requestedBodyParams).to.have.property('result_count').to.deep.equal(parameters.result_count);
+        expect(requestedBodyParams).to.have.property('result_page').to.deep.equal(parameters.result_page);
         expect(requestedBodyParams).to.have.property('result_id').to.deep.equal(parameters.result_id);
         expect(requestedBodyParams).to.have.property('section').to.equal(parameters.section);
         expect(requestedBodyParams).to.have.property('pod_id').to.equal(parameters.pod_id);
@@ -784,6 +788,8 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       expect(tracker.trackRecommendationView({
+        result_count: 5,
+        result_page: 1,
         result_id: parameters.result_id,
         pod_id: parameters.pod_id,
         num_results_viewed: parameters.num_results_viewed,
@@ -846,7 +852,7 @@ describe('ConstructorIO - Tracker', () => {
     });
   });
 
-  describe('trackRecommendationClickThrough', () => {
+  describe('trackRecommendationClick', () => {
     const parameters = {
       result_id: 'result-id',
       section: 'Products',
@@ -863,7 +869,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.trackRecommendationClickThrough(parameters)).to.equal(true);
+      expect(tracker.trackRecommendationClick(parameters)).to.equal(true);
 
       setTimeout(() => {
         const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
@@ -891,7 +897,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.trackRecommendationClickThrough({})).to.equal(true);
+      expect(tracker.trackRecommendationClick({})).to.equal(true);
 
       setTimeout(() => {
         const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
@@ -909,7 +915,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.trackRecommendationClickThrough(parameters)).to.equal(true);
+      expect(tracker.trackRecommendationClick(parameters)).to.equal(true);
 
       setTimeout(() => {
         const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
@@ -927,7 +933,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.trackRecommendationClickThrough(parameters)).to.equal(true);
+      expect(tracker.trackRecommendationClick(parameters)).to.equal(true);
 
       setTimeout(() => {
         const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
@@ -940,13 +946,13 @@ describe('ConstructorIO - Tracker', () => {
     it('Should throw an error when invalid parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackRecommendationClickThrough([])).to.be.an('error');
+      expect(tracker.trackRecommendationClick([])).to.be.an('error');
     });
 
     it('Should throw an error when no parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackRecommendationClickThrough()).to.be.an('error');
+      expect(tracker.trackRecommendationClick()).to.be.an('error');
     });
   });
 

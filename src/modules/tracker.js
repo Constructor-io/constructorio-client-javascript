@@ -405,6 +405,8 @@ class Tracker {
    *
    * @function trackRecommendationView
    * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.result_count - Number of results displayed
+   * @param {string} parameters.result_page - Page number of results
    * @param {string} parameters.result_id - Result identifier
    * @param {string} parameters.section - Results section (defaults to "Products")
    * @param {string} parameters.pod_id - Pod identifier
@@ -417,7 +419,22 @@ class Tracker {
       const url = `${this.options.serviceUrl}/v2/behavior/recommendation_result_view`;
       const bodyParams = {};
 
-      const { result_id, section, pod_id, num_results_viewed } = parameters;
+      const {
+        result_count,
+        result_page,
+        result_id,
+        section,
+        pod_id,
+        num_results_viewed,
+      } = parameters;
+
+      if (result_count) {
+        bodyParams.result_count = result_count;
+      }
+
+      if (result_page) {
+        bodyParams.result_page = result_page;
+      }
 
       if (result_id) {
         bodyParams.result_id = result_id;
@@ -451,7 +468,7 @@ class Tracker {
   /**
    * Send recommendation click through event to API
    *
-   * @function trackRecommendationClickThrough
+   * @function trackRecommendationClick
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.result_id - Result identifier
    * @param {string} parameters.section - Results section (defaults to "Products")
@@ -462,7 +479,7 @@ class Tracker {
    * @param {string} parameters.strategy_id - Strategy identifier
    * @returns {(true|Error)}
    */
-  trackRecommendationClickThrough(parameters) {
+  trackRecommendationClick(parameters) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const url = `${this.options.serviceUrl}/v2/behavior/recommendation_result_click_through`;
@@ -520,7 +537,7 @@ class Tracker {
   }
 
   /**
-   * Send recommendation click through event to API
+   * Subscribe to success or error messages emitted by tracking requests
    *
    * @function on
    * @param {string} messageType - Type of message to listen for ('success' or 'error')
