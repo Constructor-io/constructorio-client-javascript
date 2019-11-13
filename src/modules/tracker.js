@@ -520,22 +520,22 @@ class Tracker {
   }
 
   /**
-   * Send browse results load event to API
+   * Send browse result load event to API
    *
    * @function trackBrowseResultLoad
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {number} parameters.result_count - Number of results displayed
    * @param {number} parameters.result_page - Page number of results
    * @param {string} parameters.result_id - Result identifier
-   * @param {string} parameters.section - Results section (defaults to "Products")
-   * @param {string} parameters.selected_filters -  Selected filters
-   * @param {string} parameters.sort_order - The sort order ('ascending' or 'descending')
-   * @param {string} parameters.sort_by - The sorting method
+   * @param {string} [parameters.section="Products"] - Results section
+   * @param {string} [parameters.selected_filters] -  Selected filters
+   * @param {string} parameters.sort_order - Sort order ('ascending' or 'descending')
+   * @param {string} parameters.sort_by - Sorting method
    * @param {string} parameters.filter_name - Filter name
    * @param {string} parameters.filter_value - Filter value
    * @returns {(true|Error)}
    */
-  trackBrowseResultLoad(parameters) {
+  trackBrowseResultsLoad(parameters) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const url = `${this.options.serviceUrl}/v2/behavior/browse_result_load`;
@@ -589,6 +589,101 @@ class Tracker {
 
       if (filter_value) {
         bodyParams.filter_value = filter_value;
+      }
+
+      this.requests.queue(url, 'POST', applyParams(bodyParams, this.options));
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send browse result click event to API
+   *
+   * @function trackBrowseResultClick
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {number} [parameters.result_count] - Number of results displayed
+   * @param {number} [parameters.result_page] - Page number of results
+   * @param {string} [parameters.result_id] - Result identifier
+   * @param {string} [parameters.section="Products"] - Results section
+   * @param {string} [parameters.selected_filters] -  Selected filters
+   * @param {string} parameters.filter_name - Filter name
+   * @param {string} parameters.filter_value - Filter value
+   * @param {string} parameters.item_id - ID of clicked item
+   * @param {string} [parameters.variation_id] - Variation ID of clicked item
+   * @param {string} [parameters.result_position_on_page] - Position of clicked item
+   * @param {string} [parameters.num_results_per_page] - Number of results shown
+   * @returns {(true|Error)}
+   */
+  trackBrowseResultClick(parameters) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const url = `${this.options.serviceUrl}/v2/behavior/browse_result_click`;
+      const bodyParams = {};
+
+      const {
+        result_count,
+        result_page,
+        result_id,
+        section,
+        selected_filters,
+        filter_name,
+        filter_value,
+        item_id,
+        variation_id,
+        result_position_on_page,
+        num_results_per_page,
+      } = parameters;
+
+      if (result_count) {
+        bodyParams.result_count = result_count;
+      }
+
+      if (result_page) {
+        bodyParams.result_page = result_page;
+      }
+
+      if (result_id) {
+        bodyParams.result_id = result_id;
+      }
+
+      if (section) {
+        bodyParams.section = section;
+      } else {
+        bodyParams.section = 'Products';
+      }
+
+      if (selected_filters) {
+        bodyParams.selected_filters = selected_filters;
+      }
+
+      if (filter_name) {
+        bodyParams.filter_name = filter_name;
+      }
+
+      if (filter_value) {
+        bodyParams.filter_value = filter_value;
+      }
+
+      if (item_id) {
+        bodyParams.item_id = item_id;
+      }
+
+      if (variation_id) {
+        bodyParams.variation_id = variation_id;
+      }
+
+      if (result_position_on_page) {
+        bodyParams.result_position_on_page = result_position_on_page;
+      }
+
+      if (num_results_per_page) {
+        bodyParams.num_results_per_page = num_results_per_page;
       }
 
       this.requests.queue(url, 'POST', applyParams(bodyParams, this.options));
