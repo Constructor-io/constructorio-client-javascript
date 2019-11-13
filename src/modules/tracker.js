@@ -470,12 +470,11 @@ class Tracker {
    *
    * @function trackRecommendationClick
    * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.result_count - Number of results displayed
+   * @param {string} parameters.result_page - Page number of results
    * @param {string} parameters.result_id - Result identifier
    * @param {string} parameters.section - Results section (defaults to "Products")
    * @param {string} parameters.pod_id - Pod identifier
-   * @param {string} parameters.item_id - ID of clicked item
-   * @param {string} parameters.variation_id - Variation ID of clicked item
-   * @param {number} parameters.item_position - Position of clicked item
    * @param {string} parameters.strategy_id - Strategy identifier
    * @returns {(true|Error)}
    */
@@ -486,14 +485,21 @@ class Tracker {
       const bodyParams = {};
 
       const {
+        result_count,
+        result_page,
         result_id,
         section,
         pod_id,
-        item_id,
-        variation_id,
-        item_position,
         strategy_id,
       } = parameters;
+
+      if (result_count) {
+        bodyParams.result_count = result_count;
+      }
+
+      if (result_page) {
+        bodyParams.result_page = result_page;
+      }
 
       if (result_id) {
         bodyParams.result_id = result_id;
@@ -507,18 +513,6 @@ class Tracker {
 
       if (pod_id) {
         bodyParams.pod_id = pod_id;
-      }
-
-      if (item_id) {
-        bodyParams.item_id = item_id;
-      }
-
-      if (variation_id) {
-        bodyParams.variation_id = variation_id;
-      }
-
-      if (item_position) {
-        bodyParams.position = item_position;
       }
 
       if (strategy_id) {

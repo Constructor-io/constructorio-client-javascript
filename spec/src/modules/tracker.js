@@ -788,8 +788,8 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       expect(tracker.trackRecommendationView({
-        result_count: 5,
-        result_page: 1,
+        result_count: parameters.result_count,
+        result_page: parameters.result_page,
         result_id: parameters.result_id,
         pod_id: parameters.pod_id,
         num_results_viewed: parameters.num_results_viewed,
@@ -854,12 +854,11 @@ describe('ConstructorIO - Tracker', () => {
 
   describe('trackRecommendationClick', () => {
     const parameters = {
+      result_count: 5,
+      result_page: 1,
       result_id: 'result-id',
       section: 'Products',
       pod_id: 'pod-id',
-      item_id: 'item-id',
-      variation_id: 'variation-id',
-      item_position: 5,
       strategy_id: 'strategy-id',
     };
 
@@ -880,12 +879,11 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestedBodyParams).to.have.property('s');
         expect(requestedBodyParams).to.have.property('c').to.equal(clientVersion);
         expect(requestedBodyParams).to.have.property('_dt');
+        expect(requestedBodyParams).to.have.property('result_count').to.deep.equal(parameters.result_count);
+        expect(requestedBodyParams).to.have.property('result_page').to.deep.equal(parameters.result_page);
         expect(requestedBodyParams).to.have.property('result_id').to.deep.equal(parameters.result_id);
         expect(requestedBodyParams).to.have.property('section').to.equal(parameters.section);
         expect(requestedBodyParams).to.have.property('pod_id').to.equal(parameters.pod_id);
-        expect(requestedBodyParams).to.have.property('item_id').to.equal(parameters.item_id);
-        expect(requestedBodyParams).to.have.property('variation_id').to.equal(parameters.variation_id);
-        expect(requestedBodyParams).to.have.property('position').to.equal(parameters.item_position);
         expect(requestedBodyParams).to.have.property('strategy_id').to.equal(parameters.strategy_id);
         done();
       }, waitInterval);
@@ -897,7 +895,13 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.trackRecommendationClick({})).to.equal(true);
+      expect(tracker.trackRecommendationClick({
+        result_count: parameters.result_count,
+        result_page: parameters.result_page,
+        result_id: parameters.result_id,
+        pod_id: parameters.pod_id,
+        strategy_id: parameters.strategy_id,
+      })).to.equal(true);
 
       setTimeout(() => {
         const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
