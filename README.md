@@ -214,6 +214,8 @@ constructorio.tracker.trackRecommendationView({
 
 | Parameter | Type | Description |
 | --- | --- | --- |
+| `result_count` | integer | ? |
+| `result_page` | integer | ? |
 | `result_id` | string | ? |
 | `section` | string | ? |
 | `pod_id` | string | ? |
@@ -228,12 +230,11 @@ constructorio.tracker.trackRecommendationClick({
 
 | Parameter | Type | Description |
 | --- | --- | --- |
+| `result_count` | integer | ? |
+| `result_page` | integer | ? |
 | `result_id` | string | ? |
 | `section` | string | ? |
 | `pod_id` | string | ? |
-| `item_id` | string | ? |
-| `variation_id` | string | ? |
-| `item_position` | string | ? |
 | `strategy_id` | string | ? |
 
 #### Receive status of tracking requests
