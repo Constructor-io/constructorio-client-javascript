@@ -481,7 +481,7 @@ class Tracker {
   trackRecommendationClick(parameters) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const url = `${this.options.serviceUrl}/v2/behavior/recommendation_result_click_through`;
+      const url = `${this.options.serviceUrl}/v2/behavior/recommendation_result_click`;
       const bodyParams = {};
 
       const {
