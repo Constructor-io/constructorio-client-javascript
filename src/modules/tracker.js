@@ -520,6 +520,89 @@ class Tracker {
   }
 
   /**
+   * Send browse results load event to API
+   *
+   * @function trackBrowseResultLoad
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {number} parameters.result_count - Number of results displayed
+   * @param {number} parameters.result_page - Page number of results
+   * @param {string} parameters.result_id - Result identifier
+   * @param {string} parameters.section - Results section (defaults to "Products")
+   * @param {string} parameters.selected_filters -  Selected filters
+   * @param {string} parameters.sort_order - The sort order ('ascending' or 'descending')
+   * @param {string} parameters.sort_by - The sorting method
+   * @param {string} parameters.filter_name - Filter name
+   * @param {string} parameters.filter_value - Filter value
+   * @returns {(true|Error)}
+   */
+  trackBrowseResultLoad(parameters) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const url = `${this.options.serviceUrl}/v2/behavior/browse_result_load`;
+      const bodyParams = {};
+
+      const {
+        result_count,
+        result_page,
+        result_id,
+        section,
+        selected_filters,
+        sort_order,
+        sort_by,
+        filter_name,
+        filter_value,
+      } = parameters;
+
+      if (result_count) {
+        bodyParams.result_count = result_count;
+      }
+
+      if (result_page) {
+        bodyParams.result_page = result_page;
+      }
+
+      if (result_id) {
+        bodyParams.result_id = result_id;
+      }
+
+      if (section) {
+        bodyParams.section = section;
+      } else {
+        bodyParams.section = 'Products';
+      }
+
+      if (selected_filters) {
+        bodyParams.selected_filters = selected_filters;
+      }
+
+      if (sort_order) {
+        bodyParams.sort_order = sort_order;
+      }
+
+      if (sort_by) {
+        bodyParams.sort_by = sort_by;
+      }
+
+      if (filter_name) {
+        bodyParams.filter_name = filter_name;
+      }
+
+      if (filter_value) {
+        bodyParams.filter_value = filter_value;
+      }
+
+      this.requests.queue(url, 'POST', applyParams(bodyParams, this.options));
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
    * Send recommendation click through event to API
    *
    * @function on
