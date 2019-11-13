@@ -405,10 +405,10 @@ class Tracker {
    *
    * @function trackRecommendationView
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.result_count - Number of results displayed
-   * @param {string} parameters.result_page - Page number of results
+   * @param {number} parameters.result_count - Number of results displayed
+   * @param {number} parameters.result_page - Page number of results
    * @param {string} parameters.result_id - Result identifier
-   * @param {string} parameters.section - Results section (defaults to "Products")
+   * @param {string} [parameters.section="Products"] - Results section
    * @param {string} parameters.pod_id - Pod identifier
    * @param {number} parameters.num_results_viewed - Number of results viewed
    * @returns {(true|Error)}
@@ -470,10 +470,10 @@ class Tracker {
    *
    * @function trackRecommendationClick
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.result_count - Number of results displayed
-   * @param {string} parameters.result_page - Page number of results
+   * @param {number} parameters.result_count - Number of results displayed
+   * @param {number} parameters.result_page - Page number of results
    * @param {string} parameters.result_id - Result identifier
-   * @param {string} parameters.section - Results section (defaults to "Products")
+   * @param {string} [parameters.section="Products"] - Results section
    * @param {string} parameters.pod_id - Pod identifier
    * @param {string} parameters.strategy_id - Strategy identifier
    * @returns {(true|Error)}
