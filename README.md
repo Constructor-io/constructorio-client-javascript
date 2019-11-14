@@ -122,14 +122,9 @@ constructorio.recommendations.getRecommendations('pod-id', { parameters }).then(
 
 The tracker module can be used to send tracking events. Returns `true` when successful, or will throw an error if an issue is encountered.
 
-#### Send session start event
-```javascript
-constructorio.tracker.sendSessionStart();
-```
-
 #### Send input focus event
 ```javascript
-constructorio.tracker.sendInputFocus();
+constructorio.tracker.trackInputFocus();
 ```
 
 #### Send autocomplete select event
