@@ -22,6 +22,12 @@ describe('ConstructorIO - Tracker', () => {
   const clientVersion = 'cio-mocha';
   const waitInterval = 500;
   let fetchSpy;
+  const listeners = {
+    success: () => {},
+    error: () => {},
+  };
+  const successSpy = sinon.spy(listeners, 'success');
+  const errorSpy = sinon.spy(listeners, 'error');
 
   jsdom({ url: 'http://localhost' });
 
@@ -40,25 +46,34 @@ describe('ConstructorIO - Tracker', () => {
     fetchSpy = null;
   });
 
-  describe('sendSessionStart', () => {
+  describe.only('sendSessionStart', () => {
     it('Should respond with a valid response', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
       });
 
+      tracker.on('success', listeners.success);
+
       expect(tracker.sendSessionStart()).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(successSpy);
 
+        // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestedUrlParams).to.have.property('key');
-        expect(requestedUrlParams).to.have.property('i');
-        expect(requestedUrlParams).to.have.property('s');
-        expect(requestedUrlParams).to.have.property('action').to.equal('session_start');
-        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
-        expect(requestedUrlParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('action').to.equal('session_start');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+
+        // Response
+        expect(successSpy).to.have.been.called;
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
         done();
       }, waitInterval);
     });
@@ -71,12 +86,22 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
+      tracker.on('success', listeners.success);
+
       expect(tracker.sendSessionStart()).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(successSpy);
 
-        expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('us').to.deep.equal(segments);
+
+        // Response
+        expect(successSpy).to.have.been.called;
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
         done();
       }, waitInterval);
     });
@@ -89,12 +114,40 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
+      tracker.on('success', listeners.success);
+
       expect(tracker.sendSessionStart()).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(successSpy);
 
-        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('ui').to.equal(userId);
+
+        // Response
+        expect(successSpy).to.have.been.called;
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should emit an error when invalid API key is provided', (done) => {
+      const { tracker } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
+
+      tracker.on('error', listeners.error);
+
+      expect(tracker.sendSessionStart()).to.equal(true);
+
+      setTimeout(() => {
+        const responseParams = helpers.extractResponseParamsFromListener(errorSpy);
+
+        // Response
+        expect(errorSpy).to.have.been.called;
+        expect(responseParams).to.have.property('message');
+
         done();
       }, waitInterval);
     });
@@ -110,15 +163,15 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.sendInputFocus()).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(fetchSpy).to.have.been.called;
-        expect(requestedUrlParams).to.have.property('key');
-        expect(requestedUrlParams).to.have.property('i');
-        expect(requestedUrlParams).to.have.property('s');
-        expect(requestedUrlParams).to.have.property('action').to.equal('focus');
-        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
-        expect(requestedUrlParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('action').to.equal('focus');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
         done();
       }, waitInterval);
     });
@@ -134,9 +187,9 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.sendInputFocus()).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        expect(requestParams).to.have.property('us').to.deep.equal(segments);
         done();
       }, waitInterval);
     });
@@ -152,9 +205,9 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.sendInputFocus()).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        expect(requestParams).to.have.property('ui').to.equal(userId);
         done();
       }, waitInterval);
     });
@@ -180,18 +233,18 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackAutocompleteSelect(term, parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(fetchSpy).to.have.been.called;
-        expect(requestedUrlParams).to.have.property('key');
-        expect(requestedUrlParams).to.have.property('i');
-        expect(requestedUrlParams).to.have.property('s');
-        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
-        expect(requestedUrlParams).to.have.property('_dt');
-        expect(requestedUrlParams).to.have.property('original_query').to.equal(parameters.original_query);
-        expect(requestedUrlParams).to.have.property('section').to.equal(parameters.section);
-        expect(requestedUrlParams).to.have.property('result_id').to.equal(parameters.result_id);
-        expect(requestedUrlParams).to.have.property('group').to.deep.equal({
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('original_query').to.equal(parameters.original_query);
+        expect(requestParams).to.have.property('section').to.equal(parameters.section);
+        expect(requestParams).to.have.property('result_id').to.equal(parameters.result_id);
+        expect(requestParams).to.have.property('group').to.deep.equal({
           group_id: parameters.group_id,
           display_name: parameters.display_name,
         });
@@ -210,9 +263,9 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackAutocompleteSelect(term, parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        expect(requestParams).to.have.property('us').to.deep.equal(segments);
         done();
       }, waitInterval);
     });
@@ -228,9 +281,9 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackAutocompleteSelect(term, parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        expect(requestParams).to.have.property('ui').to.equal(userId);
         done();
       }, waitInterval);
     });
@@ -278,17 +331,17 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackSearchSubmit(term, parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(fetchSpy).to.have.been.called;
-        expect(requestedUrlParams).to.have.property('key');
-        expect(requestedUrlParams).to.have.property('i');
-        expect(requestedUrlParams).to.have.property('s');
-        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
-        expect(requestedUrlParams).to.have.property('_dt');
-        expect(requestedUrlParams).to.have.property('original_query').to.equal(parameters.original_query);
-        expect(requestedUrlParams).to.have.property('result_id').to.equal(parameters.result_id);
-        expect(requestedUrlParams).to.have.property('group').to.deep.equal({
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('original_query').to.equal(parameters.original_query);
+        expect(requestParams).to.have.property('result_id').to.equal(parameters.result_id);
+        expect(requestParams).to.have.property('group').to.deep.equal({
           group_id: parameters.group_id,
           display_name: parameters.display_name,
         });
@@ -307,9 +360,9 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackSearchSubmit(term, parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        expect(requestParams).to.have.property('us').to.deep.equal(segments);
         done();
       }, waitInterval);
     });
@@ -325,9 +378,9 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackSearchSubmit(term, parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        expect(requestParams).to.have.property('ui').to.equal(userId);
         done();
       }, waitInterval);
     });
@@ -373,16 +426,16 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackSearchResultsLoaded(term, parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(fetchSpy).to.have.been.called;
-        expect(requestedUrlParams).to.have.property('key');
-        expect(requestedUrlParams).to.have.property('i');
-        expect(requestedUrlParams).to.have.property('s');
-        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
-        expect(requestedUrlParams).to.have.property('_dt');
-        expect(requestedUrlParams).to.have.property('num_results').to.equal(parameters.num_results.toString());
-        expect(requestedUrlParams).to.have.property('customer_ids').to.equal(parameters.customer_ids.join(','));
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('num_results').to.equal(parameters.num_results.toString());
+        expect(requestParams).to.have.property('customer_ids').to.equal(parameters.customer_ids.join(','));
         done();
       }, waitInterval);
     });
@@ -398,9 +451,9 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackSearchResultsLoaded(term, parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        expect(requestParams).to.have.property('us').to.deep.equal(segments);
         done();
       }, waitInterval);
     });
@@ -416,9 +469,9 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackSearchResultsLoaded(term, parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        expect(requestParams).to.have.property('ui').to.equal(userId);
         done();
       }, waitInterval);
     });
@@ -465,17 +518,17 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackSearchResultClick(term, parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(fetchSpy).to.have.been.called;
-        expect(requestedUrlParams).to.have.property('key');
-        expect(requestedUrlParams).to.have.property('i');
-        expect(requestedUrlParams).to.have.property('s');
-        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
-        expect(requestedUrlParams).to.have.property('_dt');
-        expect(requestedUrlParams).to.have.property('name').to.equal(parameters.name);
-        expect(requestedUrlParams).to.have.property('customer_id').to.equal(parameters.customer_id);
-        expect(requestedUrlParams).to.have.property('result_id').to.equal(parameters.result_id);
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('name').to.equal(parameters.name);
+        expect(requestParams).to.have.property('customer_id').to.equal(parameters.customer_id);
+        expect(requestParams).to.have.property('result_id').to.equal(parameters.result_id);
         done();
       }, waitInterval);
     });
@@ -491,9 +544,9 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackSearchResultClick(term, parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        expect(requestParams).to.have.property('us').to.deep.equal(segments);
         done();
       }, waitInterval);
     });
@@ -509,9 +562,9 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackSearchResultClick(term, parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        expect(requestParams).to.have.property('ui').to.equal(userId);
         done();
       }, waitInterval);
     });
@@ -560,19 +613,19 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackConversion(term, parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(fetchSpy).to.have.been.called;
-        expect(requestedUrlParams).to.have.property('key');
-        expect(requestedUrlParams).to.have.property('i');
-        expect(requestedUrlParams).to.have.property('s');
-        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
-        expect(requestedUrlParams).to.have.property('_dt');
-        expect(requestedUrlParams).to.have.property('name').to.equal(parameters.name);
-        expect(requestedUrlParams).to.have.property('customer_id').to.equal(parameters.customer_id);
-        expect(requestedUrlParams).to.have.property('result_id').to.equal(parameters.result_id);
-        expect(requestedUrlParams).to.have.property('revenue').to.equal(parameters.revenue.toString());
-        expect(requestedUrlParams).to.have.property('section').to.equal(parameters.section);
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('name').to.equal(parameters.name);
+        expect(requestParams).to.have.property('customer_id').to.equal(parameters.customer_id);
+        expect(requestParams).to.have.property('result_id').to.equal(parameters.result_id);
+        expect(requestParams).to.have.property('revenue').to.equal(parameters.revenue.toString());
+        expect(requestParams).to.have.property('section').to.equal(parameters.section);
         done();
       }, waitInterval);
     });
@@ -586,9 +639,9 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackConversion(term, {})).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        expect(requestedUrlParams).to.have.property('section').to.equal('Products');
+        expect(requestParams).to.have.property('section').to.equal('Products');
         done();
       }, waitInterval);
     });
@@ -604,9 +657,9 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackConversion(term, parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        expect(requestParams).to.have.property('us').to.deep.equal(segments);
         done();
       }, waitInterval);
     });
@@ -622,9 +675,9 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackConversion(term, parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        expect(requestParams).to.have.property('ui').to.equal(userId);
         done();
       }, waitInterval);
     });
@@ -664,17 +717,17 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackPurchase(parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(fetchSpy).to.have.been.called;
-        expect(requestedUrlParams).to.have.property('key');
-        expect(requestedUrlParams).to.have.property('i');
-        expect(requestedUrlParams).to.have.property('s');
-        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
-        expect(requestedUrlParams).to.have.property('_dt');
-        expect(requestedUrlParams).to.have.property('customer_ids').to.deep.equal(parameters.customer_ids);
-        expect(requestedUrlParams).to.have.property('revenue').to.equal(parameters.revenue.toString());
-        expect(requestedUrlParams).to.have.property('section').to.equal(parameters.section);
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('customer_ids').to.deep.equal(parameters.customer_ids);
+        expect(requestParams).to.have.property('revenue').to.equal(parameters.revenue.toString());
+        expect(requestParams).to.have.property('section').to.equal(parameters.section);
         done();
       }, waitInterval);
     });
@@ -688,9 +741,9 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackPurchase({})).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        expect(requestedUrlParams).to.have.property('section').to.equal('Products');
+        expect(requestParams).to.have.property('section').to.equal('Products');
         done();
       }, waitInterval);
     });
@@ -706,9 +759,9 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackPurchase(parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        expect(requestParams).to.have.property('us').to.deep.equal(segments);
         done();
       }, waitInterval);
     });
@@ -724,9 +777,9 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackPurchase(parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        expect(requestParams).to.have.property('ui').to.equal(userId);
         done();
       }, waitInterval);
     });
