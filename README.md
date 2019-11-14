@@ -241,6 +241,46 @@ constructorio.tracker.trackRecommendationClick({
 | `num_results_per_page` | integer |
 | `result_position_on_page` | integer |
 
+#### Send browse results load event
+```javascript
+constructorio.tracker.trackBrowseResultsLoaded({
+    parameters
+});
+```
+
+| Parameter | Type |
+| --- | --- |
+| `section` | string |
+| `result_id` | string |
+| `result_count` | integer |
+| `result_page` | integer |
+| `selected_filters` | string or array |
+| `sort_by` | string |
+| `sort_order` | string |
+| `filter_name` | string |
+| `filter_value` | string |
+
+#### Send browse result click event
+```javascript
+constructorio.tracker.trackBrowseResultClick({
+    parameters
+});
+```
+
+| Parameter | Type |
+| --- | --- |
+| `item_id` | string |
+| `variation_id` | string |
+| `section` | string |
+| `result_id` | string |
+| `result_count` | integer |
+| `result_page` | integer |
+| `result_position_on_page` | integer |
+| `num_results_per_page` | integer |
+| `selected_filters` | string or array |
+| `filter_name` | string |
+| `filter_value` | string |
+
 #### Receive status of tracking requests
 The status of tracking requests can be observed through emitted events. `messageType` must be either "success" or "error", and the `callback` parameter must be a function that will be passed the message data as the first and only argument.
 ```javascript
