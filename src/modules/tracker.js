@@ -405,9 +405,9 @@ class Tracker {
    *
    * @function trackRecommendationView
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {number} parameters.result_count - Number of results displayed
-   * @param {number} parameters.result_page - Page number of results
-   * @param {string} parameters.result_id - Result identifier
+   * @param {number} [parameters.result_count] - Number of results displayed
+   * @param {number} [parameters.result_page] - Page number of results
+   * @param {string} [parameters.result_id] - Result identifier
    * @param {string} [parameters.section="Products"] - Results section
    * @param {string} parameters.pod_id - Pod identifier
    * @param {number} parameters.num_results_viewed - Number of results viewed
@@ -476,7 +476,7 @@ class Tracker {
    * @param {number} [parameters.result_count] - Number of results displayed
    * @param {number} [parameters.result_page] - Page number of results
    * @param {number} [parameters.result_position_on_page] - Position of result on page
-   * @param {number} [parameters.num_results_on_page] - Number of results on page
+   * @param {number} [parameters.num_results_per_page] - Number of results on page
    * @param {string} parameters.pod_id - Pod identifier
    * @param {string} parameters.strategy_id - Strategy identifier
    * @param {string} parameters.item_id - Identifier of clicked item
@@ -495,7 +495,7 @@ class Tracker {
         result_count,
         result_page,
         result_position_on_page,
-        num_results_on_page,
+        num_results_per_page,
         pod_id,
         strategy_id,
         item_id,
@@ -527,8 +527,8 @@ class Tracker {
         bodyParams.result_position_on_page = result_position_on_page;
       }
 
-      if (num_results_on_page) {
-        bodyParams.num_results_on_page = num_results_on_page;
+      if (num_results_per_page) {
+        bodyParams.num_results_per_page = num_results_per_page;
       }
 
       if (pod_id) {
