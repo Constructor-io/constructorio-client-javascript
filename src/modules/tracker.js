@@ -607,17 +607,17 @@ class Tracker {
    *
    * @function trackBrowseResultClick
    * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} [parameters.section="Products"] - Results section
+   * @param {string} [parameters.variation_id] - Variation ID of clicked item
+   * @param {string} [parameters.result_id] - Result identifier
    * @param {number} [parameters.result_count] - Number of results displayed
    * @param {number} [parameters.result_page] - Page number of results
-   * @param {string} [parameters.result_id] - Result identifier
-   * @param {string} [parameters.section="Products"] - Results section
+   * @param {number} [parameters.result_position_on_page] - Position of clicked item
+   * @param {number} [parameters.num_results_per_page] - Number of results shown
    * @param {string} [parameters.selected_filters] -  Selected filters
    * @param {string} parameters.filter_name - Filter name
    * @param {string} parameters.filter_value - Filter value
    * @param {string} parameters.item_id - ID of clicked item
-   * @param {string} [parameters.variation_id] - Variation ID of clicked item
-   * @param {string} [parameters.result_position_on_page] - Position of clicked item
-   * @param {string} [parameters.num_results_per_page] - Number of results shown
    * @returns {(true|Error)}
    */
   trackBrowseResultClick(parameters) {
@@ -627,18 +627,32 @@ class Tracker {
       const bodyParams = {};
 
       const {
+        section,
+        variation_id,
+        result_id,
         result_count,
         result_page,
-        result_id,
-        section,
+        result_position_on_page,
+        num_results_per_page,
         selected_filters,
         filter_name,
         filter_value,
         item_id,
-        variation_id,
-        result_position_on_page,
-        num_results_per_page,
       } = parameters;
+
+      if (section) {
+        bodyParams.section = section;
+      } else {
+        bodyParams.section = 'Products';
+      }
+
+      if (variation_id) {
+        bodyParams.variation_id = variation_id;
+      }
+
+      if (result_id) {
+        bodyParams.result_id = result_id;
+      }
 
       if (result_count) {
         bodyParams.result_count = result_count;
@@ -648,14 +662,12 @@ class Tracker {
         bodyParams.result_page = result_page;
       }
 
-      if (result_id) {
-        bodyParams.result_id = result_id;
+      if (result_position_on_page) {
+        bodyParams.result_position_on_page = result_position_on_page;
       }
 
-      if (section) {
-        bodyParams.section = section;
-      } else {
-        bodyParams.section = 'Products';
+      if (num_results_per_page) {
+        bodyParams.num_results_per_page = num_results_per_page;
       }
 
       if (selected_filters) {
@@ -672,18 +684,6 @@ class Tracker {
 
       if (item_id) {
         bodyParams.item_id = item_id;
-      }
-
-      if (variation_id) {
-        bodyParams.variation_id = variation_id;
-      }
-
-      if (result_position_on_page) {
-        bodyParams.result_position_on_page = result_position_on_page;
-      }
-
-      if (num_results_per_page) {
-        bodyParams.num_results_per_page = num_results_per_page;
       }
 
       this.requests.queue(url, 'POST', applyParams(bodyParams, this.options));
