@@ -470,12 +470,16 @@ class Tracker {
    *
    * @function trackRecommendationClick
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {number} parameters.result_count - Number of results displayed
-   * @param {number} parameters.result_page - Page number of results
-   * @param {string} parameters.result_id - Result identifier
+   * @param {string} [parameters.variation_id] - Variation identifier
    * @param {string} [parameters.section="Products"] - Results section
+   * @param {string} [parameters.result_id] - Result identifier
+   * @param {number} [parameters.result_count] - Number of results displayed
+   * @param {number} [parameters.result_page] - Page number of results
+   * @param {number} [parameters.result_position_on_page] - Position of result on page
+   * @param {number} [parameters.num_results_on_page] - Number of results on page
    * @param {string} parameters.pod_id - Pod identifier
    * @param {string} parameters.strategy_id - Strategy identifier
+   * @param {string} parameters.item_id - Identifier of clicked item
    * @returns {(true|Error)}
    */
   trackRecommendationClick(parameters) {
@@ -485,13 +489,31 @@ class Tracker {
       const bodyParams = {};
 
       const {
+        variation_id,
+        section,
+        result_id,
         result_count,
         result_page,
-        result_id,
-        section,
+        result_position_on_page,
+        num_results_on_page,
         pod_id,
         strategy_id,
+        item_id,
       } = parameters;
+
+      if (variation_id) {
+        bodyParams.variation_id = variation_id;
+      }
+
+      if (section) {
+        bodyParams.section = section;
+      } else {
+        bodyParams.section = 'Products';
+      }
+
+      if (result_id) {
+        bodyParams.result_id = result_id;
+      }
 
       if (result_count) {
         bodyParams.result_count = result_count;
@@ -501,14 +523,12 @@ class Tracker {
         bodyParams.result_page = result_page;
       }
 
-      if (result_id) {
-        bodyParams.result_id = result_id;
+      if (result_position_on_page) {
+        bodyParams.result_position_on_page = result_position_on_page;
       }
 
-      if (section) {
-        bodyParams.section = section;
-      } else {
-        bodyParams.section = 'Products';
+      if (num_results_on_page) {
+        bodyParams.num_results_on_page = num_results_on_page;
       }
 
       if (pod_id) {
@@ -517,6 +537,10 @@ class Tracker {
 
       if (strategy_id) {
         bodyParams.strategy_id = strategy_id;
+      }
+
+      if (item_id) {
+        bodyParams.item_id = item_id;
       }
 
       this.requests.queue(url, 'POST', applyParams(bodyParams, this.options));
