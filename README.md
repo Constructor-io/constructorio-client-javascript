@@ -212,30 +212,34 @@ constructorio.tracker.trackRecommendationView({
 });
 ```
 
-| Parameter | Type | Description |
-| --- | --- | --- |
-| `result_count` | integer | ? |
-| `result_page` | integer | ? |
-| `result_id` | string | ? |
-| `section` | string | ? |
-| `pod_id` | string | ? |
-| `num_results_viewed` | number | ? |
+| Parameter | Type |
+| --- | --- |
+| `result_count` | integer |
+| `result_page` | integer |
+| `result_id` | string |
+| `section` | string |
+| `pod_id` | string |
+| `num_results_viewed` |
 
-#### Send recommendation click through event
+#### Send recommendation click event
 ```javascript
 constructorio.tracker.trackRecommendationClick({
     parameters
 });
 ```
 
-| Parameter | Type | Description |
-| --- | --- | --- |
-| `result_count` | integer | ? |
-| `result_page` | integer | ? |
-| `result_id` | string | ? |
-| `section` | string | ? |
-| `pod_id` | string | ? |
-| `strategy_id` | string | ? |
+| Parameter | Type |
+| --- | --- |
+| `result_count` | integer |
+| `result_page` | integer |
+| `result_id` | string |
+| `section` | string |
+| `pod_id` | string |
+| `strategy_id` | string |
+| `variation_id` | string |
+| `item_id` | string |
+| `num_results_per_page` | integer |
+| `result_position_on_page` | integer |
 
 #### Receive status of tracking requests
 The status of tracking requests can be observed through emitted events. `messageType` must be either "success" or "error", and the `callback` parameter must be a function that will be passed the message data as the first and only argument.

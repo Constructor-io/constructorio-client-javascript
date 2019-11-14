@@ -466,7 +466,7 @@ class Tracker {
   }
 
   /**
-   * Send recommendation click through event to API
+   * Send recommendation click event to API
    *
    * @function trackRecommendationClick
    * @param {object} parameters - Additional parameters to be sent with request
