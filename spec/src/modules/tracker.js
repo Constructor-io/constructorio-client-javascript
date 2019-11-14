@@ -747,6 +747,8 @@ describe('ConstructorIO - Tracker', () => {
 
   describe('trackRecommendationView', () => {
     const parameters = {
+      result_count: 5,
+      result_page: 1,
       result_id: 'result-id',
       section: 'Products',
       pod_id: 'pod-id',
@@ -770,7 +772,9 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestedBodyParams).to.have.property('s');
         expect(requestedBodyParams).to.have.property('c').to.equal(clientVersion);
         expect(requestedBodyParams).to.have.property('_dt');
-        expect(requestedBodyParams).to.have.property('result_id').to.deep.equal(parameters.result_id);
+        expect(requestedBodyParams).to.have.property('result_count').to.equal(parameters.result_count);
+        expect(requestedBodyParams).to.have.property('result_page').to.equal(parameters.result_page);
+        expect(requestedBodyParams).to.have.property('result_id').to.equal(parameters.result_id);
         expect(requestedBodyParams).to.have.property('section').to.equal(parameters.section);
         expect(requestedBodyParams).to.have.property('pod_id').to.equal(parameters.pod_id);
         expect(requestedBodyParams).to.have.property('num_results_viewed').to.equal(parameters.num_results_viewed);
@@ -779,16 +783,15 @@ describe('ConstructorIO - Tracker', () => {
     });
 
     it('Should respond with a valid response and section should be defaulted when parameters are provided', (done) => {
+      const clonedParameters = cloneDeep(parameters);
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
       });
 
-      expect(tracker.trackRecommendationView({
-        result_id: parameters.result_id,
-        pod_id: parameters.pod_id,
-        num_results_viewed: parameters.num_results_viewed,
-      })).to.equal(true);
+      delete clonedParameters.section;
+
+      expect(tracker.trackRecommendationView(clonedParameters)).to.equal(true);
 
       setTimeout(() => {
         const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
@@ -847,15 +850,18 @@ describe('ConstructorIO - Tracker', () => {
     });
   });
 
-  describe('trackRecommendationClickThrough', () => {
+  describe('trackRecommendationClick', () => {
     const parameters = {
+      variation_id: 'variation-id',
+      result_position_on_page: 10,
+      num_results_per_page: 5,
+      result_count: 5,
+      result_page: 1,
       result_id: 'result-id',
       section: 'Products',
       pod_id: 'pod-id',
-      item_id: 'item-id',
-      variation_id: 'variation-id',
-      item_position: 5,
       strategy_id: 'strategy-id',
+      item_id: 'item-id',
     };
 
     it('Should respond with a valid response when parameters are provided', (done) => {
@@ -864,7 +870,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.trackRecommendationClickThrough(parameters)).to.equal(true);
+      expect(tracker.trackRecommendationClick(parameters)).to.equal(true);
 
       setTimeout(() => {
         const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
@@ -875,24 +881,30 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestedBodyParams).to.have.property('s');
         expect(requestedBodyParams).to.have.property('c').to.equal(clientVersion);
         expect(requestedBodyParams).to.have.property('_dt');
-        expect(requestedBodyParams).to.have.property('result_id').to.deep.equal(parameters.result_id);
+        expect(requestedBodyParams).to.have.property('variation_id').to.equal(parameters.variation_id);
+        expect(requestedBodyParams).to.have.property('result_position_on_page').to.equal(parameters.result_position_on_page);
+        expect(requestedBodyParams).to.have.property('num_results_per_page').to.equal(parameters.num_results_per_page);
+        expect(requestedBodyParams).to.have.property('result_count').to.equal(parameters.result_count);
+        expect(requestedBodyParams).to.have.property('result_page').to.equal(parameters.result_page);
+        expect(requestedBodyParams).to.have.property('result_id').to.equal(parameters.result_id);
         expect(requestedBodyParams).to.have.property('section').to.equal(parameters.section);
         expect(requestedBodyParams).to.have.property('pod_id').to.equal(parameters.pod_id);
-        expect(requestedBodyParams).to.have.property('item_id').to.equal(parameters.item_id);
-        expect(requestedBodyParams).to.have.property('variation_id').to.equal(parameters.variation_id);
-        expect(requestedBodyParams).to.have.property('position').to.equal(parameters.item_position);
         expect(requestedBodyParams).to.have.property('strategy_id').to.equal(parameters.strategy_id);
+        expect(requestedBodyParams).to.have.property('item_id').to.equal(parameters.item_id);
         done();
       }, waitInterval);
     });
 
     it('Should respond with a valid response and section should be defaulted when parameters are provided', (done) => {
+      const clonedParameters = cloneDeep(parameters);
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
       });
 
-      expect(tracker.trackRecommendationClickThrough({})).to.equal(true);
+      delete clonedParameters.section;
+
+      expect(tracker.trackRecommendationClick(clonedParameters)).to.equal(true);
 
       setTimeout(() => {
         const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
@@ -910,7 +922,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.trackRecommendationClickThrough(parameters)).to.equal(true);
+      expect(tracker.trackRecommendationClick(parameters)).to.equal(true);
 
       setTimeout(() => {
         const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
@@ -928,7 +940,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.trackRecommendationClickThrough(parameters)).to.equal(true);
+      expect(tracker.trackRecommendationClick(parameters)).to.equal(true);
 
       setTimeout(() => {
         const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
@@ -941,13 +953,13 @@ describe('ConstructorIO - Tracker', () => {
     it('Should throw an error when invalid parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackRecommendationClickThrough([])).to.be.an('error');
+      expect(tracker.trackRecommendationClick([])).to.be.an('error');
     });
 
     it('Should throw an error when no parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackRecommendationClickThrough()).to.be.an('error');
+      expect(tracker.trackRecommendationClick()).to.be.an('error');
     });
   });
 

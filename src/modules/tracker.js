@@ -405,8 +405,10 @@ class Tracker {
    *
    * @function trackRecommendationView
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.result_id - Result identifier
-   * @param {string} parameters.section - Results section (defaults to "Products")
+   * @param {number} [parameters.result_count] - Number of results displayed
+   * @param {number} [parameters.result_page] - Page number of results
+   * @param {string} [parameters.result_id] - Result identifier
+   * @param {string} [parameters.section="Products"] - Results section
    * @param {string} parameters.pod_id - Pod identifier
    * @param {number} parameters.num_results_viewed - Number of results viewed
    * @returns {(true|Error)}
@@ -417,7 +419,22 @@ class Tracker {
       const url = `${this.options.serviceUrl}/v2/behavior/recommendation_result_view`;
       const bodyParams = {};
 
-      const { result_id, section, pod_id, num_results_viewed } = parameters;
+      const {
+        result_count,
+        result_page,
+        result_id,
+        section,
+        pod_id,
+        num_results_viewed,
+      } = parameters;
+
+      if (result_count) {
+        bodyParams.result_count = result_count;
+      }
+
+      if (result_page) {
+        bodyParams.result_page = result_page;
+      }
 
       if (result_id) {
         bodyParams.result_id = result_id;
@@ -449,37 +466,43 @@ class Tracker {
   }
 
   /**
-   * Send recommendation click through event to API
+   * Send recommendation click event to API
    *
-   * @function trackRecommendationClickThrough
+   * @function trackRecommendationClick
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.result_id - Result identifier
-   * @param {string} parameters.section - Results section (defaults to "Products")
+   * @param {string} [parameters.variation_id] - Variation identifier
+   * @param {string} [parameters.section="Products"] - Results section
+   * @param {string} [parameters.result_id] - Result identifier
+   * @param {number} [parameters.result_count] - Number of results displayed
+   * @param {number} [parameters.result_page] - Page number of results
+   * @param {number} [parameters.result_position_on_page] - Position of result on page
+   * @param {number} [parameters.num_results_per_page] - Number of results on page
    * @param {string} parameters.pod_id - Pod identifier
-   * @param {string} parameters.item_id - ID of clicked item
-   * @param {string} parameters.variation_id - Variation ID of clicked item
-   * @param {number} parameters.item_position - Position of clicked item
    * @param {string} parameters.strategy_id - Strategy identifier
+   * @param {string} parameters.item_id - Identifier of clicked item
    * @returns {(true|Error)}
    */
-  trackRecommendationClickThrough(parameters) {
+  trackRecommendationClick(parameters) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const url = `${this.options.serviceUrl}/v2/behavior/recommendation_result_click_through`;
+      const url = `${this.options.serviceUrl}/v2/behavior/recommendation_result_click`;
       const bodyParams = {};
 
       const {
-        result_id,
-        section,
-        pod_id,
-        item_id,
         variation_id,
-        item_position,
+        section,
+        result_id,
+        result_count,
+        result_page,
+        result_position_on_page,
+        num_results_per_page,
+        pod_id,
         strategy_id,
+        item_id,
       } = parameters;
 
-      if (result_id) {
-        bodyParams.result_id = result_id;
+      if (variation_id) {
+        bodyParams.variation_id = variation_id;
       }
 
       if (section) {
@@ -488,24 +511,36 @@ class Tracker {
         bodyParams.section = 'Products';
       }
 
+      if (result_id) {
+        bodyParams.result_id = result_id;
+      }
+
+      if (result_count) {
+        bodyParams.result_count = result_count;
+      }
+
+      if (result_page) {
+        bodyParams.result_page = result_page;
+      }
+
+      if (result_position_on_page) {
+        bodyParams.result_position_on_page = result_position_on_page;
+      }
+
+      if (num_results_per_page) {
+        bodyParams.num_results_per_page = num_results_per_page;
+      }
+
       if (pod_id) {
         bodyParams.pod_id = pod_id;
       }
 
-      if (item_id) {
-        bodyParams.item_id = item_id;
-      }
-
-      if (variation_id) {
-        bodyParams.variation_id = variation_id;
-      }
-
-      if (item_position) {
-        bodyParams.position = item_position;
-      }
-
       if (strategy_id) {
         bodyParams.strategy_id = strategy_id;
+      }
+
+      if (item_id) {
+        bodyParams.item_id = item_id;
       }
 
       this.requests.queue(url, 'POST', applyParams(bodyParams, this.options));
@@ -698,7 +733,7 @@ class Tracker {
   }
 
   /**
-   * Send recommendation click through event to API
+   * Subscribe to success or error messages emitted by tracking requests
    *
    * @function on
    * @param {string} messageType - Type of message to listen for ('success' or 'error')

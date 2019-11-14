@@ -212,29 +212,34 @@ constructorio.tracker.trackRecommendationView({
 });
 ```
 
-| Parameter | Type | Description |
-| --- | --- | --- |
-| `result_id` | string | ? |
-| `section` | string | ? |
-| `pod_id` | string | ? |
-| `num_results_viewed` | number | ? |
+| Parameter | Type |
+| --- | --- |
+| `result_count` | integer |
+| `result_page` | integer |
+| `result_id` | string |
+| `section` | string |
+| `pod_id` | string |
+| `num_results_viewed` |
 
-#### Send recommendation click through event
+#### Send recommendation click event
 ```javascript
-constructorio.tracker.trackRecommendationClickThrough({
+constructorio.tracker.trackRecommendationClick({
     parameters
 });
 ```
 
-| Parameter | Type | Description |
-| --- | --- | --- |
-| `result_id` | string | ? |
-| `section` | string | ? |
-| `pod_id` | string | ? |
-| `item_id` | string | ? |
-| `variation_id` | string | ? |
-| `item_position` | string | ? |
-| `strategy_id` | string | ? |
+| Parameter | Type |
+| --- | --- |
+| `result_count` | integer |
+| `result_page` | integer |
+| `result_id` | string |
+| `section` | string |
+| `pod_id` | string |
+| `strategy_id` | string |
+| `variation_id` | string |
+| `item_id` | string |
+| `num_results_per_page` | integer |
+| `result_position_on_page` | integer |
 
 #### Send browse results load event
 ```javascript
