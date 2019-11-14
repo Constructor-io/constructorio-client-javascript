@@ -236,6 +236,25 @@ constructorio.tracker.trackRecommendationClickThrough({
 | `item_position` | string | ? |
 | `strategy_id` | string | ? |
 
+#### Send browse results load event
+```javascript
+constructorio.tracker.trackBrowseResultsLoaded({
+    parameters
+});
+```
+
+| Parameter | Type |
+| --- | --- |
+| `section` | string |
+| `result_id` | string |
+| `result_count` | integer |
+| `result_page` | integer |
+| `selected_filters` | string or array |
+| `sort_by` | string |
+| `sort_order` | string |
+| `filter_name` | string |
+| `filter_value` | string |
+
 #### Send browse result click event
 ```javascript
 constructorio.tracker.trackBrowseResultClick({

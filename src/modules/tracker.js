@@ -520,14 +520,14 @@ class Tracker {
   }
 
   /**
-   * Send browse result load event to API
+   * Send browse results loaded event to API
    *
-   * @function trackBrowseResultLoad
+   * @function trackBrowseResultsLoaded
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {number} parameters.result_count - Number of results displayed
-   * @param {number} parameters.result_page - Page number of results
-   * @param {string} parameters.result_id - Result identifier
    * @param {string} [parameters.section="Products"] - Results section
+   * @param {number} [parameters.result_count] - Number of results displayed
+   * @param {number} [parameters.result_page] - Page number of results
+   * @param {string} [parameters.result_id] - Result identifier
    * @param {string} [parameters.selected_filters] -  Selected filters
    * @param {string} parameters.sort_order - Sort order ('ascending' or 'descending')
    * @param {string} parameters.sort_by - Sorting method
@@ -535,23 +535,29 @@ class Tracker {
    * @param {string} parameters.filter_value - Filter value
    * @returns {(true|Error)}
    */
-  trackBrowseResultsLoad(parameters) {
+  trackBrowseResultsLoaded(parameters) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const url = `${this.options.serviceUrl}/v2/behavior/browse_result_load`;
       const bodyParams = {};
 
       const {
+        section,
         result_count,
         result_page,
         result_id,
-        section,
         selected_filters,
         sort_order,
         sort_by,
         filter_name,
         filter_value,
       } = parameters;
+
+      if (section) {
+        bodyParams.section = section;
+      } else {
+        bodyParams.section = 'Products';
+      }
 
       if (result_count) {
         bodyParams.result_count = result_count;
@@ -563,12 +569,6 @@ class Tracker {
 
       if (result_id) {
         bodyParams.result_id = result_id;
-      }
-
-      if (section) {
-        bodyParams.section = section;
-      } else {
-        bodyParams.section = 'Products';
       }
 
       if (selected_filters) {
