@@ -416,7 +416,7 @@ class Tracker {
   trackRecommendationView(parameters) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const url = `${this.options.serviceUrl}/v2/behavior/recommendation_result_view`;
+      const url = `${this.options.serviceUrl}/v2/behavioral_action/recommendation_result_view`;
       const bodyParams = {};
 
       const {
@@ -485,7 +485,7 @@ class Tracker {
   trackRecommendationClick(parameters) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const url = `${this.options.serviceUrl}/v2/behavior/recommendation_result_click`;
+      const url = `${this.options.serviceUrl}/v2/behavioral_action/recommendation_result_click`;
       const bodyParams = {};
 
       const {
@@ -573,7 +573,7 @@ class Tracker {
   trackBrowseResultsLoaded(parameters) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const url = `${this.options.serviceUrl}/v2/behavior/browse_result_load`;
+      const url = `${this.options.serviceUrl}/v2/behavioral_action/browse_result_load`;
       const bodyParams = {};
 
       const {
@@ -658,7 +658,7 @@ class Tracker {
   trackBrowseResultClick(parameters) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const url = `${this.options.serviceUrl}/v2/behavior/browse_result_click`;
+      const url = `${this.options.serviceUrl}/v2/behavioral_action/browse_result_click`;
       const bodyParams = {};
 
       const {

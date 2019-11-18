@@ -71,7 +71,7 @@ class RequestQueue {
         if (nextInQueue.method === 'POST') {
           request = fetch(nextInQueue.url, {
             method: nextInQueue.method,
-            body: nextInQueue.body,
+            body: JSON.stringify(nextInQueue.body),
           });
         }
 
