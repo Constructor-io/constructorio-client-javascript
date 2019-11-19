@@ -255,6 +255,7 @@ constructorio.tracker.trackBrowseResultsLoaded({
 | `result_count` | integer |
 | `result_page` | integer |
 | `selected_filters` | string or array |
+| `url` | string |
 | `sort_by` | string |
 | `sort_order` | string |
 | `filter_name` | string |

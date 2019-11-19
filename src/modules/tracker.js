@@ -416,7 +416,7 @@ class Tracker {
   trackRecommendationView(parameters) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const url = `${this.options.serviceUrl}/v2/behavior/recommendation_result_view`;
+      const url = `${this.options.serviceUrl}/v2/behavioral_action/recommendation_result_view`;
       const bodyParams = {};
 
       const {
@@ -485,7 +485,7 @@ class Tracker {
   trackRecommendationClick(parameters) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const url = `${this.options.serviceUrl}/v2/behavior/recommendation_result_click`;
+      const url = `${this.options.serviceUrl}/v2/behavioral_action/recommendation_result_click`;
       const bodyParams = {};
 
       const {
@@ -564,6 +564,7 @@ class Tracker {
    * @param {number} [parameters.result_page] - Page number of results
    * @param {string} [parameters.result_id] - Result identifier
    * @param {string} [parameters.selected_filters] -  Selected filters
+   * @param {string} parameters.url - Current page URL
    * @param {string} parameters.sort_order - Sort order ('ascending' or 'descending')
    * @param {string} parameters.sort_by - Sorting method
    * @param {string} parameters.filter_name - Filter name
@@ -573,7 +574,7 @@ class Tracker {
   trackBrowseResultsLoaded(parameters) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const url = `${this.options.serviceUrl}/v2/behavior/browse_result_load`;
+      const requestUrl = `${this.options.serviceUrl}/v2/behavioral_action/browse_result_load`;
       const bodyParams = {};
 
       const {
@@ -582,6 +583,7 @@ class Tracker {
         result_page,
         result_id,
         selected_filters,
+        url,
         sort_order,
         sort_by,
         filter_name,
@@ -610,6 +612,10 @@ class Tracker {
         bodyParams.selected_filters = selected_filters;
       }
 
+      if (url) {
+        bodyParams.url = url;
+      }
+
       if (sort_order) {
         bodyParams.sort_order = sort_order;
       }
@@ -626,7 +632,7 @@ class Tracker {
         bodyParams.filter_value = filter_value;
       }
 
-      this.requests.queue(url, 'POST', applyParams(bodyParams, this.options));
+      this.requests.queue(requestUrl, 'POST', applyParams(bodyParams, this.options));
       this.requests.send();
 
       return true;
@@ -658,7 +664,7 @@ class Tracker {
   trackBrowseResultClick(parameters) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const url = `${this.options.serviceUrl}/v2/behavior/browse_result_click`;
+      const url = `${this.options.serviceUrl}/v2/behavioral_action/browse_result_click`;
       const bodyParams = {};
 
       const {
