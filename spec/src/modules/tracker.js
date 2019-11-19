@@ -764,7 +764,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackRecommendationView(parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedBodyParams = JSON.parse(helpers.extractBodyParamsFromFetch(fetchSpy));
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
 
         expect(fetchSpy).to.have.been.called;
         expect(requestedBodyParams).to.have.property('key');
@@ -794,7 +794,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackRecommendationView(clonedParameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedBodyParams = JSON.parse(helpers.extractBodyParamsFromFetch(fetchSpy));
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
 
         expect(requestedBodyParams).to.have.property('section').to.equal('Products');
         done();
@@ -812,7 +812,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackRecommendationView(parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedBodyParams = JSON.parse(helpers.extractBodyParamsFromFetch(fetchSpy));
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
 
         expect(requestedBodyParams).to.have.property('us').to.deep.equal(segments);
         done();
@@ -830,7 +830,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackRecommendationView(parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedBodyParams = JSON.parse(helpers.extractBodyParamsFromFetch(fetchSpy));
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
 
         expect(requestedBodyParams).to.have.property('ui').to.equal(userId);
         done();
@@ -873,7 +873,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackRecommendationClick(parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedBodyParams = JSON.parse(helpers.extractBodyParamsFromFetch(fetchSpy));
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
 
         expect(fetchSpy).to.have.been.called;
         expect(requestedBodyParams).to.have.property('key');
@@ -907,7 +907,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackRecommendationClick(clonedParameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedBodyParams = JSON.parse(helpers.extractBodyParamsFromFetch(fetchSpy));
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
 
         expect(requestedBodyParams).to.have.property('section').to.equal('Products');
         done();
@@ -925,7 +925,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackRecommendationClick(parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedBodyParams = JSON.parse(helpers.extractBodyParamsFromFetch(fetchSpy));
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
 
         expect(requestedBodyParams).to.have.property('us').to.deep.equal(segments);
         done();
@@ -943,7 +943,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackRecommendationClick(parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedBodyParams = JSON.parse(helpers.extractBodyParamsFromFetch(fetchSpy));
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
 
         expect(requestedBodyParams).to.have.property('ui').to.equal(userId);
         done();
@@ -985,7 +985,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackBrowseResultsLoaded(parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedBodyParams = JSON.parse(helpers.extractBodyParamsFromFetch(fetchSpy));
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
 
         expect(fetchSpy).to.have.been.called;
         expect(requestedBodyParams).to.have.property('key');
@@ -1018,7 +1018,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackBrowseResultsLoaded(clonedParameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedBodyParams = JSON.parse(helpers.extractBodyParamsFromFetch(fetchSpy));
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
 
         expect(requestedBodyParams).to.have.property('section').to.equal('Products');
         done();
@@ -1036,7 +1036,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackBrowseResultsLoaded(parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedBodyParams = JSON.parse(helpers.extractBodyParamsFromFetch(fetchSpy));
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
 
         expect(requestedBodyParams).to.have.property('us').to.deep.equal(segments);
         done();
@@ -1054,7 +1054,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackBrowseResultsLoaded(parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedBodyParams = JSON.parse(helpers.extractBodyParamsFromFetch(fetchSpy));
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
 
         expect(requestedBodyParams).to.have.property('ui').to.equal(userId);
         done();
@@ -1098,7 +1098,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackBrowseResultClick(parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedBodyParams = JSON.parse(helpers.extractBodyParamsFromFetch(fetchSpy));
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
 
         expect(fetchSpy).to.have.been.called;
         expect(requestedBodyParams).to.have.property('key');
@@ -1133,7 +1133,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackBrowseResultClick(clonedParameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedBodyParams = JSON.parse(helpers.extractBodyParamsFromFetch(fetchSpy));
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
 
         expect(requestedBodyParams).to.have.property('section').to.equal('Products');
         done();
@@ -1151,7 +1151,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackBrowseResultClick(parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedBodyParams = JSON.parse(helpers.extractBodyParamsFromFetch(fetchSpy));
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
 
         expect(requestedBodyParams).to.have.property('us').to.deep.equal(segments);
         done();
@@ -1169,7 +1169,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackBrowseResultClick(parameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestedBodyParams = JSON.parse(helpers.extractBodyParamsFromFetch(fetchSpy));
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
 
         expect(requestedBodyParams).to.have.property('ui').to.equal(userId);
         done();
