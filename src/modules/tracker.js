@@ -454,7 +454,7 @@ class Tracker {
         bodyParams.num_results_viewed = num_results_viewed;
       }
 
-      this.requests.queue(url, 'POST', applyParams(bodyParams, this.options));
+      this.requests.queue(`${url}${applyParamsAsString({}, this.options)}`, 'POST', bodyParams);
       this.requests.send();
 
       return true;
@@ -543,7 +543,7 @@ class Tracker {
         bodyParams.item_id = item_id;
       }
 
-      this.requests.queue(url, 'POST', applyParams(bodyParams, this.options));
+      this.requests.queue(`${url}${applyParamsAsString({}, this.options)}`, 'POST', bodyParams);
       this.requests.send();
 
       return true;
@@ -632,7 +632,7 @@ class Tracker {
         bodyParams.filter_value = filter_value;
       }
 
-      this.requests.queue(requestUrl, 'POST', applyParams(bodyParams, this.options));
+      this.requests.queue(`${requestUrl}${applyParamsAsString({}, this.options)}`, 'POST', bodyParams);
       this.requests.send();
 
       return true;
@@ -727,7 +727,7 @@ class Tracker {
         bodyParams.item_id = item_id;
       }
 
-      this.requests.queue(url, 'POST', applyParams(bodyParams, this.options));
+      this.requests.queue(`${url}${applyParamsAsString({}, this.options)}`, 'POST', bodyParams);
       this.requests.send();
 
       return true;
