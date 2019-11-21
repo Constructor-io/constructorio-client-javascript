@@ -1,0 +1,51 @@
+{
+  "env": {
+    "browser": true,
+    "mocha": true
+  },
+  "extends": "airbnb-base",
+  "globals": {
+    "CLIENT_VERSION": true,
+    "expect": true
+  },
+  "rules": {
+    "global-require": "off",
+    "max-len": [
+      "error",
+      120,
+      2,
+      {
+        "ignoreUrls": true,
+        "ignoreComments": false,
+        "ignoreRegExpLiterals": true,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true
+      }
+    ],
+    "object-curly-newline": "off",
+    "padded-blocks": "off",
+    "react/prefer-stateless-function": "off",
+    "no-unused-vars": [
+      "error",
+      {
+        "varsIgnorePattern": "style"
+      }
+    ],
+    "max-depth": [
+      "error",
+      4
+    ],
+    "max-nested-callbacks": [
+      "error",
+      5
+    ],
+    "max-params": [
+      "error",
+      4
+    ],
+    "complexity": [
+      "error",
+      20
+    ]
+  }
+}
