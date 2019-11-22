@@ -1500,11 +1500,12 @@ describe('ConstructorIO - Tracker', () => {
       result_count: 5,
       result_page: 1,
       result_id: 'result-id',
-      selected_filters: ['foo', 'bar'],
+      selected_filters: { foo: ['bar'] },
       sort_by: 'price',
       sort_order: 'ascending',
       filter_name: 'group_id',
       filter_value: 'Clothing',
+      url: 'http://constructor.io',
     };
 
     it('Should respond with a valid response when parameters are provided', (done) => {
@@ -1513,11 +1514,15 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
+      tracker.on('success', eventSpy);
+
       expect(tracker.trackBrowseResultsLoaded(parameters)).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
+        // Request
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('key');
         expect(requestParams).to.have.property('i');
@@ -1533,6 +1538,13 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('sort_order').to.equal(parameters.sort_order);
         expect(requestParams).to.have.property('filter_name').to.equal(parameters.filter_name);
         expect(requestParams).to.have.property('filter_value').to.equal(parameters.filter_value);
+        expect(requestParams).to.have.property('url').to.equal(parameters.url);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
         done();
       }, waitInterval);
     });
@@ -1544,14 +1556,24 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
+      tracker.on('success', eventSpy);
+
       delete clonedParameters.section;
 
       expect(tracker.trackBrowseResultsLoaded(clonedParameters)).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
+        // Request
         expect(requestParams).to.have.property('section').to.equal('Products');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
         done();
       }, waitInterval);
     });
@@ -1564,12 +1586,22 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
+      tracker.on('success', eventSpy);
+
       expect(tracker.trackBrowseResultsLoaded(parameters)).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
+        // Request
         expect(requestParams).to.have.property('us').to.deep.equal(segments);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
         done();
       }, waitInterval);
     });
@@ -1582,12 +1614,22 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
+      tracker.on('success', eventSpy);
+
       expect(tracker.trackBrowseResultsLoaded(parameters)).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
+        // Request
         expect(requestParams).to.have.property('ui').to.equal(userId);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
         done();
       }, waitInterval);
     });
@@ -1603,6 +1645,25 @@ describe('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackBrowseResultsLoaded()).to.be.an('error');
     });
+
+    it('Should emit an error when invalid API key is provided', (done) => {
+      const { tracker } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
+
+      tracker.on('error', eventSpy);
+
+      expect(tracker.trackBrowseResultsLoaded(parameters)).to.equal(true);
+
+      setTimeout(() => {
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      }, waitInterval);
+    });
   });
 
   describe('trackBrowseResultClick', () => {
@@ -1615,7 +1676,7 @@ describe('ConstructorIO - Tracker', () => {
       result_id: 'result-id',
       result_position_on_page: 10,
       num_results_per_page: 5,
-      selected_filters: ['foo', 'bar'],
+      selected_filters: { foo: ['bar'] },
       filter_name: 'group_id',
       filter_value: 'Clothing',
     };
@@ -1626,11 +1687,15 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
+      tracker.on('success', eventSpy);
+
       expect(tracker.trackBrowseResultClick(parameters)).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
+        // Request
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('key');
         expect(requestParams).to.have.property('i');
@@ -1648,6 +1713,12 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('selected_filters').to.deep.equal(parameters.selected_filters);
         expect(requestParams).to.have.property('filter_name').to.equal(parameters.filter_name);
         expect(requestParams).to.have.property('filter_value').to.equal(parameters.filter_value);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
         done();
       }, waitInterval);
     });
@@ -1659,14 +1730,24 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
+      tracker.on('success', eventSpy);
+
       delete clonedParameters.section;
 
       expect(tracker.trackBrowseResultClick(clonedParameters)).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
+        // Request
         expect(requestParams).to.have.property('section').to.equal('Products');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
         done();
       }, waitInterval);
     });
@@ -1679,12 +1760,22 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
+      tracker.on('success', eventSpy);
+
       expect(tracker.trackBrowseResultClick(parameters)).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
+        // Request
         expect(requestParams).to.have.property('us').to.deep.equal(segments);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
         done();
       }, waitInterval);
     });
@@ -1697,12 +1788,22 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
+      tracker.on('success', eventSpy);
+
       expect(tracker.trackBrowseResultClick(parameters)).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
+        // Request
         expect(requestParams).to.have.property('ui').to.equal(userId);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
         done();
       }, waitInterval);
     });
@@ -1717,6 +1818,25 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
       expect(tracker.trackBrowseResultClick()).to.be.an('error');
+    });
+
+    it('Should emit an error when invalid API key is provided', (done) => {
+      const { tracker } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
+
+      tracker.on('error', eventSpy);
+
+      expect(tracker.trackBrowseResultClick(parameters)).to.equal(true);
+
+      setTimeout(() => {
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      }, waitInterval);
     });
   });
 
