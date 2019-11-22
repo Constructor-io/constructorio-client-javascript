@@ -7,6 +7,7 @@ const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
+const cloneDeep = require('lodash.clonedeep');
 const store = require('../../../src/utils/store');
 const ConstructorIO = require('../../../src/constructorio');
 const helpers = require('../../mocha.helpers');
@@ -799,6 +800,8 @@ describe('ConstructorIO - Tracker', () => {
 
   describe('trackRecommendationView', () => {
     const parameters = {
+      result_count: 5,
+      result_page: 1,
       result_id: 'result-id',
       section: 'Products',
       pod_id: 'pod-id',
@@ -822,7 +825,9 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestedBodyParams).to.have.property('s');
         expect(requestedBodyParams).to.have.property('c').to.equal(clientVersion);
         expect(requestedBodyParams).to.have.property('_dt');
-        expect(requestedBodyParams).to.have.property('result_id').to.deep.equal(parameters.result_id);
+        expect(requestedBodyParams).to.have.property('result_count').to.equal(parameters.result_count);
+        expect(requestedBodyParams).to.have.property('result_page').to.equal(parameters.result_page);
+        expect(requestedBodyParams).to.have.property('result_id').to.equal(parameters.result_id);
         expect(requestedBodyParams).to.have.property('section').to.equal(parameters.section);
         expect(requestedBodyParams).to.have.property('pod_id').to.equal(parameters.pod_id);
         expect(requestedBodyParams).to.have.property('num_results_viewed').to.equal(parameters.num_results_viewed);
@@ -831,16 +836,15 @@ describe('ConstructorIO - Tracker', () => {
     });
 
     it('Should respond with a valid response and section should be defaulted when parameters are provided', (done) => {
+      const clonedParameters = cloneDeep(parameters);
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
       });
 
-      expect(tracker.trackRecommendationView({
-        result_id: parameters.result_id,
-        pod_id: parameters.pod_id,
-        num_results_viewed: parameters.num_results_viewed,
-      })).to.equal(true);
+      delete clonedParameters.section;
+
+      expect(tracker.trackRecommendationView(clonedParameters)).to.equal(true);
 
       setTimeout(() => {
         const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
@@ -899,15 +903,18 @@ describe('ConstructorIO - Tracker', () => {
     });
   });
 
-  describe('trackRecommendationClickThrough', () => {
+  describe('trackRecommendationClick', () => {
     const parameters = {
+      variation_id: 'variation-id',
+      result_position_on_page: 10,
+      num_results_per_page: 5,
+      result_count: 5,
+      result_page: 1,
       result_id: 'result-id',
       section: 'Products',
       pod_id: 'pod-id',
-      item_id: 'item-id',
-      variation_id: 'variation-id',
-      item_position: 5,
       strategy_id: 'strategy-id',
+      item_id: 'item-id',
     };
 
     it('Should respond with a valid response when parameters are provided', (done) => {
@@ -916,7 +923,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.trackRecommendationClickThrough(parameters)).to.equal(true);
+      expect(tracker.trackRecommendationClick(parameters)).to.equal(true);
 
       setTimeout(() => {
         const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
@@ -927,24 +934,30 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestedBodyParams).to.have.property('s');
         expect(requestedBodyParams).to.have.property('c').to.equal(clientVersion);
         expect(requestedBodyParams).to.have.property('_dt');
-        expect(requestedBodyParams).to.have.property('result_id').to.deep.equal(parameters.result_id);
+        expect(requestedBodyParams).to.have.property('variation_id').to.equal(parameters.variation_id);
+        expect(requestedBodyParams).to.have.property('result_position_on_page').to.equal(parameters.result_position_on_page);
+        expect(requestedBodyParams).to.have.property('num_results_per_page').to.equal(parameters.num_results_per_page);
+        expect(requestedBodyParams).to.have.property('result_count').to.equal(parameters.result_count);
+        expect(requestedBodyParams).to.have.property('result_page').to.equal(parameters.result_page);
+        expect(requestedBodyParams).to.have.property('result_id').to.equal(parameters.result_id);
         expect(requestedBodyParams).to.have.property('section').to.equal(parameters.section);
         expect(requestedBodyParams).to.have.property('pod_id').to.equal(parameters.pod_id);
-        expect(requestedBodyParams).to.have.property('item_id').to.equal(parameters.item_id);
-        expect(requestedBodyParams).to.have.property('variation_id').to.equal(parameters.variation_id);
-        expect(requestedBodyParams).to.have.property('position').to.equal(parameters.item_position);
         expect(requestedBodyParams).to.have.property('strategy_id').to.equal(parameters.strategy_id);
+        expect(requestedBodyParams).to.have.property('item_id').to.equal(parameters.item_id);
         done();
       }, waitInterval);
     });
 
     it('Should respond with a valid response and section should be defaulted when parameters are provided', (done) => {
+      const clonedParameters = cloneDeep(parameters);
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
       });
 
-      expect(tracker.trackRecommendationClickThrough({})).to.equal(true);
+      delete clonedParameters.section;
+
+      expect(tracker.trackRecommendationClick(clonedParameters)).to.equal(true);
 
       setTimeout(() => {
         const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
@@ -962,7 +975,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.trackRecommendationClickThrough(parameters)).to.equal(true);
+      expect(tracker.trackRecommendationClick(parameters)).to.equal(true);
 
       setTimeout(() => {
         const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
@@ -980,7 +993,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      expect(tracker.trackRecommendationClickThrough(parameters)).to.equal(true);
+      expect(tracker.trackRecommendationClick(parameters)).to.equal(true);
 
       setTimeout(() => {
         const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
@@ -993,13 +1006,239 @@ describe('ConstructorIO - Tracker', () => {
     it('Should throw an error when invalid parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackRecommendationClickThrough([])).to.be.an('error');
+      expect(tracker.trackRecommendationClick([])).to.be.an('error');
     });
 
     it('Should throw an error when no parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackRecommendationClickThrough()).to.be.an('error');
+      expect(tracker.trackRecommendationClick()).to.be.an('error');
+    });
+  });
+
+  describe('trackBrowseResultsLoaded', () => {
+    const parameters = {
+      section: 'Products',
+      result_count: 5,
+      result_page: 1,
+      result_id: 'result-id',
+      selected_filters: ['foo', 'bar'],
+      sort_by: 'price',
+      sort_order: 'ascending',
+      filter_name: 'group_id',
+      filter_value: 'Clothing',
+    };
+
+    it('Should respond with a valid response when parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      expect(tracker.trackBrowseResultsLoaded(parameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        expect(fetchSpy).to.have.been.called;
+        expect(requestedBodyParams).to.have.property('key');
+        expect(requestedBodyParams).to.have.property('i');
+        expect(requestedBodyParams).to.have.property('s');
+        expect(requestedBodyParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestedBodyParams).to.have.property('_dt');
+        expect(requestedBodyParams).to.have.property('section').to.equal(parameters.section);
+        expect(requestedBodyParams).to.have.property('result_count').to.equal(parameters.result_count);
+        expect(requestedBodyParams).to.have.property('result_page').to.equal(parameters.result_page);
+        expect(requestedBodyParams).to.have.property('result_id').to.equal(parameters.result_id);
+        expect(requestedBodyParams).to.have.property('selected_filters').to.deep.equal(parameters.selected_filters);
+        expect(requestedBodyParams).to.have.property('sort_by').to.equal(parameters.sort_by);
+        expect(requestedBodyParams).to.have.property('sort_order').to.equal(parameters.sort_order);
+        expect(requestedBodyParams).to.have.property('filter_name').to.equal(parameters.filter_name);
+        expect(requestedBodyParams).to.have.property('filter_value').to.equal(parameters.filter_value);
+        done();
+      }, waitInterval);
+    });
+
+    it('Should respond with a valid response and section should be defaulted when parameters are provided', (done) => {
+      const clonedParameters = cloneDeep(parameters);
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      delete clonedParameters.section;
+
+      expect(tracker.trackBrowseResultsLoaded(clonedParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        expect(requestedBodyParams).to.have.property('section').to.equal('Products');
+        done();
+      }, waitInterval);
+    });
+
+    it('Should respond with a valid response when parameters and segments are provided', (done) => {
+      const segments = ['foo', 'bar'];
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        segments,
+        fetch: fetchSpy,
+      });
+
+      expect(tracker.trackBrowseResultsLoaded(parameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        expect(requestedBodyParams).to.have.property('us').to.deep.equal(segments);
+        done();
+      }, waitInterval);
+    });
+
+    it('Should respond with a valid response when parameters and user id are provided', (done) => {
+      const userId = 'user-id';
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        userId,
+        fetch: fetchSpy,
+      });
+
+      expect(tracker.trackBrowseResultsLoaded(parameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        expect(requestedBodyParams).to.have.property('ui').to.equal(userId);
+        done();
+      }, waitInterval);
+    });
+
+    it('Should throw an error when invalid parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackBrowseResultsLoaded([])).to.be.an('error');
+    });
+
+    it('Should throw an error when no parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackBrowseResultsLoaded()).to.be.an('error');
+    });
+  });
+
+  describe('trackBrowseResultClick', () => {
+    const parameters = {
+      item_id: 'item-id',
+      variation_id: 'variation-id',
+      section: 'Products',
+      result_count: 5,
+      result_page: 1,
+      result_id: 'result-id',
+      result_position_on_page: 10,
+      num_results_per_page: 5,
+      selected_filters: ['foo', 'bar'],
+      filter_name: 'group_id',
+      filter_value: 'Clothing',
+    };
+
+    it('Should respond with a valid response when parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      expect(tracker.trackBrowseResultClick(parameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        expect(fetchSpy).to.have.been.called;
+        expect(requestedBodyParams).to.have.property('key');
+        expect(requestedBodyParams).to.have.property('i');
+        expect(requestedBodyParams).to.have.property('s');
+        expect(requestedBodyParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestedBodyParams).to.have.property('_dt');
+        expect(requestedBodyParams).to.have.property('item_id').to.equal(parameters.item_id);
+        expect(requestedBodyParams).to.have.property('variation_id').to.deep.equal(parameters.variation_id);
+        expect(requestedBodyParams).to.have.property('section').to.equal(parameters.section);
+        expect(requestedBodyParams).to.have.property('result_count').to.equal(parameters.result_count);
+        expect(requestedBodyParams).to.have.property('result_page').to.equal(parameters.result_page);
+        expect(requestedBodyParams).to.have.property('result_id').to.equal(parameters.result_id);
+        expect(requestedBodyParams).to.have.property('result_position_on_page').to.equal(parameters.result_position_on_page);
+        expect(requestedBodyParams).to.have.property('num_results_per_page').to.equal(parameters.num_results_per_page);
+        expect(requestedBodyParams).to.have.property('selected_filters').to.deep.equal(parameters.selected_filters);
+        expect(requestedBodyParams).to.have.property('filter_name').to.equal(parameters.filter_name);
+        expect(requestedBodyParams).to.have.property('filter_value').to.equal(parameters.filter_value);
+        done();
+      }, waitInterval);
+    });
+
+    it('Should respond with a valid response and section should be defaulted when parameters are provided', (done) => {
+      const clonedParameters = cloneDeep(parameters);
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      delete clonedParameters.section;
+
+      expect(tracker.trackBrowseResultClick(clonedParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        expect(requestedBodyParams).to.have.property('section').to.equal('Products');
+        done();
+      }, waitInterval);
+    });
+
+    it('Should respond with a valid response when parameters and segments are provided', (done) => {
+      const segments = ['foo', 'bar'];
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        segments,
+        fetch: fetchSpy,
+      });
+
+      expect(tracker.trackBrowseResultClick(parameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        expect(requestedBodyParams).to.have.property('us').to.deep.equal(segments);
+        done();
+      }, waitInterval);
+    });
+
+    it('Should respond with a valid response when parameters and user id are provided', (done) => {
+      const userId = 'user-id';
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        userId,
+        fetch: fetchSpy,
+      });
+
+      expect(tracker.trackBrowseResultClick(parameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestedBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        expect(requestedBodyParams).to.have.property('ui').to.equal(userId);
+        done();
+      }, waitInterval);
+    });
+
+    it('Should throw an error when invalid parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackBrowseResultClick([])).to.be.an('error');
+    });
+
+    it('Should throw an error when no parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackBrowseResultClick()).to.be.an('error');
     });
   });
 

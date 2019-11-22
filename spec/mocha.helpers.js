@@ -70,7 +70,7 @@ const extractBodyParamsFromFetch = (fetch) => {
   const { body } = requestData;
 
   if (body) {
-    return body;
+    return JSON.parse(body);
   }
 
   return null;
