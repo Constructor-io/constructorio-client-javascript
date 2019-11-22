@@ -50,9 +50,10 @@ describe('ConstructorIO - Browse', () => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request).to.have.property('searchandizing_filter');
-        expect(res.request.searchandizing_filter).to.have.property(filterName);
-        expect(res.request.searchandizing_filter[filterName]).to.equal(filterValue);
+        expect(res.request).to.have.property('browse_filter_name');
+        expect(res.request).to.have.property('browse_filter_value');
+        expect(res.request.browse_filter_name).to.equal(filterName);
+        expect(res.request.browse_filter_value).to.equal(filterValue);
         expect(res.response).to.have.property('results').to.be.an('array');
         expect(fetchSpy).to.have.been.called;
         expect(requestedUrlParams).to.have.property('key');

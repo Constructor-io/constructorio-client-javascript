@@ -91,14 +91,16 @@ class RequestQueue {
 
             // Request was successful, but returned a non-2XX status code
             else {
+              const instance = this;
+
               response.json().then((json) => {
-                this.eventemitter.emit('error', {
+                instance.eventemitter.emit('error', {
                   url: nextInQueue.url,
                   method: nextInQueue.method,
                   message: json && json.message,
                 });
               }).catch((error) => {
-                this.eventemitter.emit('error', {
+                instance.eventemitter.emit('error', {
                   url: nextInQueue.url,
                   method: nextInQueue.method,
                   message: error.type,

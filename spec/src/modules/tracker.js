@@ -21,7 +21,7 @@ const { fetch } = fetchPonyfill({ Promise });
 
 describe('ConstructorIO - Tracker', () => {
   const clientVersion = 'cio-mocha';
-  const waitInterval = 500;
+  const waitInterval = 1000;
   const fetchSpy = sinon.spy(fetch);
   const eventSpy = sinon.stub();
 
@@ -1667,9 +1667,9 @@ describe('ConstructorIO - Tracker', () => {
   });
 
   describe('trackBrowseResultClick', () => {
+    // Note: `variation_id` parameter not being passed as none are defined
     const parameters = {
-      item_id: 'item-id',
-      variation_id: 'variation-id',
+      item_id: 'product0f662200-dba1-11e9-8543-816778507fbd-new',
       section: 'Products',
       result_count: 5,
       result_page: 1,
@@ -1703,7 +1703,6 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('item_id').to.equal(parameters.item_id);
-        expect(requestParams).to.have.property('variation_id').to.deep.equal(parameters.variation_id);
         expect(requestParams).to.have.property('section').to.equal(parameters.section);
         expect(requestParams).to.have.property('result_count').to.equal(parameters.result_count);
         expect(requestParams).to.have.property('result_page').to.equal(parameters.result_page);
