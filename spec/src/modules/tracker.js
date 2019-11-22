@@ -19,16 +19,11 @@ dotenv.config();
 const testApiKey = process.env.TEST_API_KEY;
 const { fetch } = fetchPonyfill({ Promise });
 
-describe('ConstructorIO - Tracker', () => {
+describe.only('ConstructorIO - Tracker', () => {
   const clientVersion = 'cio-mocha';
   const waitInterval = 500;
-  let fetchSpy;
-  const listeners = {
-    success: () => {},
-    error: () => {},
-  };
-  const successSpy = sinon.spy(listeners, 'success');
-  const errorSpy = sinon.spy(listeners, 'error');
+  const fetchSpy = sinon.spy(fetch);
+  const eventSpy = sinon.stub();
 
   jsdom({ url: 'http://localhost' });
 
@@ -36,31 +31,28 @@ describe('ConstructorIO - Tracker', () => {
     store.session.set('_constructorio_is_human', true);
 
     global.CLIENT_VERSION = clientVersion;
-    fetchSpy = sinon.spy(fetch);
   });
 
   afterEach(() => {
     helpers.clearStorage();
 
     delete global.CLIENT_VERSION;
-
-    fetchSpy = null;
   });
 
-  describe.only('sendSessionStart', () => {
+  describe('sendSessionStart', () => {
     it('Should respond with a valid response', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
       });
 
-      tracker.on('success', listeners.success);
+      tracker.on('success', eventSpy);
 
       expect(tracker.sendSessionStart()).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-        const responseParams = helpers.extractResponseParamsFromListener(successSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
         // Request
         expect(fetchSpy).to.have.been.called;
@@ -72,7 +64,8 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('_dt');
 
         // Response
-        expect(successSpy).to.have.been.called;
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
         expect(responseParams).to.have.property('message').to.equal('ok');
 
         done();
@@ -87,20 +80,21 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      tracker.on('success', listeners.success);
+      tracker.on('success', eventSpy);
 
       expect(tracker.sendSessionStart()).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-        const responseParams = helpers.extractResponseParamsFromListener(successSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
         // Request
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('us').to.deep.equal(segments);
 
         // Response
-        expect(successSpy).to.have.been.called;
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
         expect(responseParams).to.have.property('message').to.equal('ok');
 
         done();
@@ -115,20 +109,21 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      tracker.on('success', listeners.success);
+      tracker.on('success', eventSpy);
 
       expect(tracker.sendSessionStart()).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-        const responseParams = helpers.extractResponseParamsFromListener(successSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
         // Request
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('ui').to.equal(userId);
 
         // Response
-        expect(successSpy).to.have.been.called;
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
         expect(responseParams).to.have.property('message').to.equal('ok');
 
         done();
@@ -138,15 +133,16 @@ describe('ConstructorIO - Tracker', () => {
     it('Should emit an error when invalid API key is provided', (done) => {
       const { tracker } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
 
-      tracker.on('error', listeners.error);
+      tracker.on('error', eventSpy);
 
       expect(tracker.sendSessionStart()).to.equal(true);
 
       setTimeout(() => {
-        const responseParams = helpers.extractResponseParamsFromListener(errorSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
         // Response
-        expect(errorSpy).to.have.been.called;
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
         expect(responseParams).to.have.property('message');
 
         done();
