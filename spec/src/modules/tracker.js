@@ -157,11 +157,15 @@ describe.only('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
+      tracker.on('success', eventSpy);
+
       expect(tracker.sendInputFocus()).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
+        // Request
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('key');
         expect(requestParams).to.have.property('i');
@@ -169,6 +173,12 @@ describe.only('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('action').to.equal('focus');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
         done();
       }, waitInterval);
     });
@@ -181,12 +191,22 @@ describe.only('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
+      tracker.on('success', eventSpy);
+
       expect(tracker.sendInputFocus()).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
+        // Request
         expect(requestParams).to.have.property('us').to.deep.equal(segments);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
         done();
       }, waitInterval);
     });
@@ -199,12 +219,41 @@ describe.only('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
+      tracker.on('success', eventSpy);
+
       expect(tracker.sendInputFocus()).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
+        // Request
         expect(requestParams).to.have.property('ui').to.equal(userId);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should emit an error when invalid API key is provided', (done) => {
+      const { tracker } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
+
+      tracker.on('error', eventSpy);
+
+      expect(tracker.sendInputFocus()).to.equal(true);
+
+      setTimeout(() => {
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message');
+
         done();
       }, waitInterval);
     });
@@ -227,11 +276,15 @@ describe.only('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
+      tracker.on('success', eventSpy);
+
       expect(tracker.trackAutocompleteSelect(term, parameters)).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
+        // Request
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('key');
         expect(requestParams).to.have.property('i');
@@ -245,6 +298,12 @@ describe.only('ConstructorIO - Tracker', () => {
           group_id: parameters.group_id,
           display_name: parameters.display_name,
         });
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
         done();
       }, waitInterval);
     });
@@ -257,12 +316,22 @@ describe.only('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
+      tracker.on('success', eventSpy);
+
       expect(tracker.trackAutocompleteSelect(term, parameters)).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
+        // Request
         expect(requestParams).to.have.property('us').to.deep.equal(segments);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
         done();
       }, waitInterval);
     });
@@ -275,12 +344,22 @@ describe.only('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
+      tracker.on('success', eventSpy);
+
       expect(tracker.trackAutocompleteSelect(term, parameters)).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
+        // Request
         expect(requestParams).to.have.property('ui').to.equal(userId);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
         done();
       }, waitInterval);
     });
@@ -308,6 +387,25 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackAutocompleteSelect(term)).to.be.an('error');
     });
+
+    it('Should emit an error when invalid API key is provided', (done) => {
+      const { tracker } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
+
+      tracker.on('error', eventSpy);
+
+      expect(tracker.trackAutocompleteSelect(term, parameters)).to.equal(true);
+
+      setTimeout(() => {
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      }, waitInterval);
+    });
   });
 
   describe('trackSearchSubmit', () => {
@@ -325,11 +423,15 @@ describe.only('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
+      tracker.on('success', eventSpy);
+
       expect(tracker.trackSearchSubmit(term, parameters)).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
+        // Request
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('key');
         expect(requestParams).to.have.property('i');
@@ -342,6 +444,12 @@ describe.only('ConstructorIO - Tracker', () => {
           group_id: parameters.group_id,
           display_name: parameters.display_name,
         });
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
         done();
       }, waitInterval);
     });
@@ -354,12 +462,22 @@ describe.only('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
+      tracker.on('success', eventSpy);
+
       expect(tracker.trackSearchSubmit(term, parameters)).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
+        // Request
         expect(requestParams).to.have.property('us').to.deep.equal(segments);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
         done();
       }, waitInterval);
     });
@@ -372,12 +490,22 @@ describe.only('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
+      tracker.on('success', eventSpy);
+
       expect(tracker.trackSearchSubmit(term, parameters)).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
+        // Request
         expect(requestParams).to.have.property('ui').to.equal(userId);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
         done();
       }, waitInterval);
     });
@@ -405,9 +533,28 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackSearchSubmit(term)).to.be.an('error');
     });
+
+    it('Should emit an error when invalid API key is provided', (done) => {
+      const { tracker } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
+
+      tracker.on('error', eventSpy);
+
+      expect(tracker.trackSearchSubmit(term, parameters)).to.equal(true);
+
+      setTimeout(() => {
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      }, waitInterval);
+    });
   });
 
-  describe('trackSearchResultsLoaded', () => {
+  describe.only('trackSearchResultsLoaded', () => {
     const term = 'Cat in the Hat';
     const parameters = {
       num_results: 1337,
@@ -420,11 +567,15 @@ describe.only('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
+      tracker.on('success', eventSpy);
+
       expect(tracker.trackSearchResultsLoaded(term, parameters)).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
+        // Request
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('key');
         expect(requestParams).to.have.property('i');
@@ -433,6 +584,13 @@ describe.only('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('num_results').to.equal(parameters.num_results.toString());
         expect(requestParams).to.have.property('customer_ids').to.equal(parameters.customer_ids.join(','));
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+
         done();
       }, waitInterval);
     });
@@ -445,12 +603,22 @@ describe.only('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
+      tracker.on('success', eventSpy);
+
       expect(tracker.trackSearchResultsLoaded(term, parameters)).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
+        // Request
         expect(requestParams).to.have.property('us').to.deep.equal(segments);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
         done();
       }, waitInterval);
     });
@@ -463,12 +631,22 @@ describe.only('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
+      tracker.on('success', eventSpy);
+
       expect(tracker.trackSearchResultsLoaded(term, parameters)).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
+        // Request
         expect(requestParams).to.have.property('ui').to.equal(userId);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
         done();
       }, waitInterval);
     });
@@ -495,6 +673,25 @@ describe.only('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
       expect(tracker.trackSearchResultsLoaded(term)).to.be.an('error');
+    });
+
+    it('Should emit an error when invalid API key is provided', (done) => {
+      const { tracker } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
+
+      tracker.on('error', eventSpy);
+
+      expect(tracker.trackSearchResultsLoaded(term, parameters)).to.equal(true);
+
+      setTimeout(() => {
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      }, waitInterval);
     });
   });
 
