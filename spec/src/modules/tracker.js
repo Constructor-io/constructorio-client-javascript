@@ -228,16 +228,18 @@ describe('ConstructorIO - Tracker', () => {
 
   describe('trackAutocompleteSelect', () => {
     const term = 'Where The Wild Things Are';
-    const parameters = {
+    const requiredParameters = {
       original_query: 'original-query',
       result_id: 'result-id',
       section: 'Search Suggestions',
+    };
+    const optionalParameters = {
       tr: 'click',
       group_id: 'group-id',
       display_name: 'display-name',
     };
 
-    it('Should respond with a valid response when term and parameters are provided', (done) => {
+    it('Should respond with a valid response when term and required parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -245,7 +247,7 @@ describe('ConstructorIO - Tracker', () => {
 
       tracker.on('success', eventSpy);
 
-      expect(tracker.trackAutocompleteSelect(term, parameters)).to.equal(true);
+      expect(tracker.trackAutocompleteSelect(term, requiredParameters)).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
@@ -258,13 +260,9 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('original_query').to.equal(parameters.original_query);
-        expect(requestParams).to.have.property('section').to.equal(parameters.section);
-        expect(requestParams).to.have.property('result_id').to.equal(parameters.result_id);
-        expect(requestParams).to.have.property('group').to.deep.equal({
-          group_id: parameters.group_id,
-          display_name: parameters.display_name,
-        });
+        expect(requestParams).to.have.property('original_query').to.equal(requiredParameters.original_query);
+        expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
+        expect(requestParams).to.have.property('result_id').to.equal(requiredParameters.result_id);
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -275,7 +273,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should respond with a valid response when term, parameters and segments are provided', (done) => {
+    it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -285,7 +283,7 @@ describe('ConstructorIO - Tracker', () => {
 
       tracker.on('success', eventSpy);
 
-      expect(tracker.trackAutocompleteSelect(term, parameters)).to.equal(true);
+      expect(tracker.trackAutocompleteSelect(term, requiredParameters)).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
@@ -303,7 +301,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should respond with a valid response when term, parameters and user id are provided', (done) => {
+    it('Should respond with a valid response when term, required parameters and user id are provided', (done) => {
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -313,7 +311,7 @@ describe('ConstructorIO - Tracker', () => {
 
       tracker.on('success', eventSpy);
 
-      expect(tracker.trackAutocompleteSelect(term, parameters)).to.equal(true);
+      expect(tracker.trackAutocompleteSelect(term, requiredParameters)).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
@@ -331,16 +329,47 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
+    it('Should respond with a valid response when term, required and optional parameters are provided', (done) => {
+      const segments = ['foo', 'bar'];
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackAutocompleteSelect(term, Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(requestParams).to.have.property('tr').to.equal(optionalParameters.tr);
+        expect(requestParams).to.have.property('group').to.deep.equal({
+          group_id: optionalParameters.group_id,
+          display_name: optionalParameters.display_name,
+        });
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
     it('Should throw an error when invalid term is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackAutocompleteSelect([], parameters)).to.be.an('error');
+      expect(tracker.trackAutocompleteSelect([], requiredParameters)).to.be.an('error');
     });
 
     it('Should throw an error when no term is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackAutocompleteSelect(null, parameters)).to.be.an('error');
+      expect(tracker.trackAutocompleteSelect(null, requiredParameters)).to.be.an('error');
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
