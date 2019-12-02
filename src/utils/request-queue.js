@@ -78,11 +78,12 @@ class RequestQueue {
 
         if (request) {
           this.requestPending = true;
+          const instance = this;
 
           request.then((response) => {
             // Request was successful, and returned a 2XX status code
             if (response.ok) {
-              this.eventemitter.emit('success', {
+              instance.eventemitter.emit('success', {
                 url: nextInQueue.url,
                 method: nextInQueue.method,
                 message: 'ok',
@@ -91,8 +92,6 @@ class RequestQueue {
 
             // Request was successful, but returned a non-2XX status code
             else {
-              const instance = this;
-
               response.json().then((json) => {
                 instance.eventemitter.emit('error', {
                   url: nextInQueue.url,
@@ -108,7 +107,7 @@ class RequestQueue {
               });
             }
           }).catch((error) => {
-            this.eventemitter.emit('error', {
+            instance.eventemitter.emit('error', {
               url: nextInQueue.url,
               method: nextInQueue.method,
               message: error.toString(),
