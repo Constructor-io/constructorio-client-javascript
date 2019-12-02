@@ -693,13 +693,13 @@ describe.only('ConstructorIO - Tracker', () => {
 
   describe('trackSearchResultClick', () => {
     const term = 'Where The Wild Things Are';
-    const parameters = {
+    const requiredParameters = {
       name: 'name',
       customer_id: 'customer-id',
       result_id: 'result-id',
     };
 
-    it('Should respond with a valid response when term and parmeters are provided', (done) => {
+    it('Should respond with a valid response when term and required parmeters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -707,7 +707,7 @@ describe.only('ConstructorIO - Tracker', () => {
 
       tracker.on('success', eventSpy);
 
-      expect(tracker.trackSearchResultClick(term, parameters)).to.equal(true);
+      expect(tracker.trackSearchResultClick(term, requiredParameters)).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
@@ -720,9 +720,9 @@ describe.only('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('name').to.equal(parameters.name);
-        expect(requestParams).to.have.property('customer_id').to.equal(parameters.customer_id);
-        expect(requestParams).to.have.property('result_id').to.equal(parameters.result_id);
+        expect(requestParams).to.have.property('name').to.equal(requiredParameters.name);
+        expect(requestParams).to.have.property('customer_id').to.equal(requiredParameters.customer_id);
+        expect(requestParams).to.have.property('result_id').to.equal(requiredParameters.result_id);
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -733,7 +733,7 @@ describe.only('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should respond with a valid response when term, parameters and segments are provided', (done) => {
+    it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -743,7 +743,7 @@ describe.only('ConstructorIO - Tracker', () => {
 
       tracker.on('success', eventSpy);
 
-      expect(tracker.trackSearchResultClick(term, parameters)).to.equal(true);
+      expect(tracker.trackSearchResultClick(term, requiredParameters)).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
@@ -761,7 +761,7 @@ describe.only('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should respond with a valid response when term, parameters and user id are provided', (done) => {
+    it('Should respond with a valid response when term, required parameters and user id are provided', (done) => {
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -771,7 +771,7 @@ describe.only('ConstructorIO - Tracker', () => {
 
       tracker.on('success', eventSpy);
 
-      expect(tracker.trackSearchResultClick(term, parameters)).to.equal(true);
+      expect(tracker.trackSearchResultClick(term, requiredParameters)).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
@@ -792,13 +792,13 @@ describe.only('ConstructorIO - Tracker', () => {
     it('Should throw an error when invalid term is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackSearchResultClick([], parameters)).to.be.an('error');
+      expect(tracker.trackSearchResultClick([], requiredParameters)).to.be.an('error');
     });
 
     it('Should throw an error when no term is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackSearchResultClick(null, parameters)).to.be.an('error');
+      expect(tracker.trackSearchResultClick(null, requiredParameters)).to.be.an('error');
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
