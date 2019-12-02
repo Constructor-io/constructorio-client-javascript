@@ -219,27 +219,73 @@ constructorio.tracker.trackRecommendationView({
 
 | Parameter | Type |
 | --- | --- |
+| `result_count` | integer |
+| `result_page` | integer |
 | `result_id` | string |
 | `section` | string |
 | `pod_id` | string |
 | `num_results_viewed` | number |
 
-#### Send recommendation click through event
+#### Send recommendation click event
 ```javascript
-constructorio.tracker.trackRecommendationClickThrough({
+constructorio.tracker.trackRecommendationClick({
     parameters
 });
 ```
 
 | Parameter | Type |
 | --- | --- |
+| `result_count` | integer |
+| `result_page` | integer |
 | `result_id` | string |
 | `section` | string |
 | `pod_id` | string |
+| `strategy_id` | string |
+| `variation_id` | string |
+| `item_id` | string |
+| `num_results_per_page` | integer |
+| `result_position_on_page` | integer |
+
+#### Send browse results load event
+```javascript
+constructorio.tracker.trackBrowseResultsLoaded({
+    parameters
+});
+```
+
+| Parameter | Type |
+| --- | --- |
+| `section` | string |
+| `result_id` | string |
+| `result_count` | integer |
+| `result_page` | integer |
+| `selected_filters` | string or array |
+| `url` | string |
+| `sort_by` | string |
+| `sort_order` | string |
+| `filter_name` | string |
+| `filter_value` | string |
+
+#### Send browse result click event
+```javascript
+constructorio.tracker.trackBrowseResultClick({
+    parameters
+});
+```
+
+| Parameter | Type |
+| --- | --- |
 | `item_id` | string |
 | `variation_id` | string |
-| `item_position` | string |
-| `strategy_id` | string |
+| `section` | string |
+| `result_id` | string |
+| `result_count` | integer |
+| `result_page` | integer |
+| `result_position_on_page` | integer |
+| `num_results_per_page` | integer |
+| `selected_filters` | string or array |
+| `filter_name` | string |
+| `filter_value` | string |
 
 #### Receive status of tracking requests
 The status of tracking requests can be observed through emitted events. `messageType` must be either "success" or "error", and the `callback` parameter must be a function that will be passed the message data as the first and only argument.
