@@ -1,9 +1,8 @@
-/* eslint-disable import/no-dynamic-require, import/newline-after-import */
 const dotenv = require('dotenv');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
-const store = require(`../../../${testPath}/utils/store`);
-const HumanityCheck = require(`../../../${testPath}/utils/humanity-check`);
+const store = require('../../../src/utils/store');
+const HumanityCheck = require('../../../src/utils/humanity-check');
 const helpers = require('../../mocha.helpers');
 
 chai.use(chaiAsPromised);

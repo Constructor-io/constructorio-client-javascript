@@ -1,13 +1,9 @@
-/* eslint-disable no-restricted-properties,
-  no-underscore-dangle,
-  import/no-dynamic-require,
-  import/newline-after-import
-*/
+/* eslint-disable no-restricted-properties, no-underscore-dangle */
 const dotenv = require('dotenv');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
-const store = require(`../../../${testPath}/utils/store`);
-const RequestQueue = require(`../../../${testPath}/utils/request-queue`);
+const store = require('../../../src/utils/store');
+const RequestQueue = require('../../../src/utils/request-queue');
 const helpers = require('../../mocha.helpers');
 
 chai.use(chaiAsPromised);

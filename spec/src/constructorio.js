@@ -1,6 +1,5 @@
-/* eslint-disable import/no-dynamic-require, import/newline-after-import */
 const jsdom = require('mocha-jsdom');
-const ConstructorIO = require(`../../${testPath}/constructorio`);
+const ConstructorIO = require('../../src/constructorio');
 
 const validApiKey = 'testing';
 
