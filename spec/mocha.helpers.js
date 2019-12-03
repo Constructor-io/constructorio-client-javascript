@@ -76,6 +76,16 @@ const extractBodyParamsFromFetch = (fetch) => {
   return null;
 };
 
+// Extract response parameters from event listener
+const extractResponseParamsFromListener = (listener) => {
+  const lastCallArguments = listener
+    && listener.args
+    && listener.args[listener.args.length - 1]
+    && listener.args[listener.args.length - 1][0];
+
+  return lastCallArguments;
+};
+
 module.exports = {
   setupDOM,
   teardownDOM,
@@ -84,4 +94,5 @@ module.exports = {
   clearStorage,
   extractUrlParamsFromFetch,
   extractBodyParamsFromFetch,
+  extractResponseParamsFromListener,
 };
