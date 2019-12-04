@@ -1,6 +1,7 @@
+/* eslint-disable import/no-unresolved */
 const qs = require('qs');
 const { JSDOM } = require('jsdom');
-const store = require('../src/utils/store');
+const store = require('../test/utils/store');
 
 // Setup mock DOM environment
 const setupDOM = () => {

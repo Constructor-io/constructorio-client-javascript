@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-expressions */
+/* eslint-disable no-unused-expressions, import/no-unresolved */
 const jsdom = require('mocha-jsdom');
 const dotenv = require('dotenv');
 const chai = require('chai');
@@ -7,7 +7,7 @@ const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
-const ConstructorIO = require('../../../src/constructorio');
+const ConstructorIO = require('../../../test/constructorio');
 const helpers = require('../../mocha.helpers');
 
 chai.use(chaiAsPromised);

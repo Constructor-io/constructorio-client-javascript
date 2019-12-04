@@ -1,5 +1,6 @@
+/* eslint-disable import/no-unresolved */
 const jsdom = require('mocha-jsdom');
-const ConstructorIO = require('../../src/constructorio');
+const ConstructorIO = require('../../test/constructorio');
 
 const validApiKey = 'testing';
 
