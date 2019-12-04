@@ -409,6 +409,7 @@ class Tracker {
    * @param {number} [parameters.result_page] - Page number of results
    * @param {string} [parameters.result_id] - Result identifier
    * @param {string} [parameters.section="Products"] - Results section
+   * @param {string} parameters.url - Current page URL
    * @param {string} parameters.pod_id - Pod identifier
    * @param {number} parameters.num_results_viewed - Number of results viewed
    * @returns {(true|Error)}
@@ -416,7 +417,7 @@ class Tracker {
   trackRecommendationView(parameters) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const url = `${this.options.serviceUrl}/v2/behavioral_action/recommendation_result_view?`;
+      const requestUrl = `${this.options.serviceUrl}/v2/behavioral_action/recommendation_result_view?`;
       const bodyParams = {};
 
       const {
@@ -424,6 +425,7 @@ class Tracker {
         result_page,
         result_id,
         section,
+        url,
         pod_id,
         num_results_viewed,
       } = parameters;
@@ -446,6 +448,10 @@ class Tracker {
         bodyParams.section = 'Products';
       }
 
+      if (url) {
+        bodyParams.url = url;
+      }
+
       if (pod_id) {
         bodyParams.pod_id = pod_id;
       }
@@ -454,7 +460,7 @@ class Tracker {
         bodyParams.num_results_viewed = num_results_viewed;
       }
 
-      this.requests.queue(`${url}${applyParamsAsString({}, this.options)}`, 'POST', applyParams(bodyParams, this.options));
+      this.requests.queue(`${requestUrl}${applyParamsAsString({}, this.options)}`, 'POST', applyParams(bodyParams, this.options));
       this.requests.send();
 
       return true;

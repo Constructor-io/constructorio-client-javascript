@@ -223,6 +223,7 @@ constructorio.tracker.trackRecommendationView({
 | `result_page` | integer |
 | `result_id` | string |
 | `section` | string |
+| `url` | string |
 | `pod_id` | string |
 | `num_results_viewed` | number |
 

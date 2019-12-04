@@ -1,18 +1,20 @@
 {
   "name": "@constructor-io/constructorio-client-javascript",
-  "version": "2.3.2",
+  "version": "2.3.4",
   "description": "Constructor.io JavaScript client",
-  "main": "src/constructorio.js",
+  "main": "lib/constructorio.js",
   "scripts": {
     "clean": "rm -rf node_modules",
     "check-deps": "npm-check",
     "check-lisc": "license-checker --production --onlyAllow 'Apache-2.0;BSD-3-Clause;MIT'",
-    "lint": "eslint '**/*.js'",
+    "lint": "eslint 'src/**/*.js' 'spec/**/*.js'",
     "test": "mocha ./spec/* --opts ./mocha.opts --recursive",
     "precoverage": "rm -rf ./coverage && rm -rf ./.nyc_output",
     "coverage": "nyc --all --reporter=html npm test",
     "postcoverage": "http-server ./coverage -p 8081 -o -c-1",
-    "docs": "jsdoc --configure ./.jsdoc.json ./README.md --recurse ./src --destination ./docs && http-server ./docs -p 8082 -o -c-1"
+    "docs": "jsdoc --configure ./.jsdoc.json ./README.md --recurse ./src --destination ./docs && http-server ./docs -p 8082 -o -c-1",
+    "compile": "babel -d lib/ src/",
+    "prepublish": "npm run compile"
   },
   "repository": {
     "type": "git",
@@ -26,6 +28,9 @@
   "homepage": "https://github.com/Constructor-io/constructorio-client-javascript#readme",
   "pre-push": [
     "lint"
+  ],
+  "files": [
+    "lib/**/*"
   ],
   "devDependencies": {
     "@babel/cli": "^7.4.4",
