@@ -122,6 +122,11 @@ constructorio.recommendations.getRecommendations('pod-id', { parameters }).then(
 
 The tracker module can be used to send tracking events. Returns `true` when successful, or will throw an error if an issue is encountered.
 
+#### Send input focus event
+```javascript
+constructorio.tracker.trackInputFocus();
+```
+
 #### Send autocomplete select event
 ```javascript
 constructorio.tracker.trackAutocompleteSelect('dogs', {
@@ -129,14 +134,14 @@ constructorio.tracker.trackAutocompleteSelect('dogs', {
 });
 ```
 
-| Parameter | Type | Description |
-| --- | --- | --- |
-| `original_query` | string | ? |
-| `result_id` | string | ? |
-| `section` | string | ? |
-| `tr` | string | ? |
-| `group_id` | string | ? |
-| `display_name` | string | ? |
+| Parameter | Type |
+| --- | --- |
+| `original_query` | string |
+| `result_id` | string |
+| `section` | string |
+| `tr` | string |
+| `group_id` | string |
+| `display_name` | string |
 
 #### Send autocomplete search event
 ```javascript
@@ -145,12 +150,12 @@ constructorio.tracker.trackSearchSubmit('dogs', {
 });
 ```
 
-| Parameter | Type | Description |
-| --- | --- | --- |
-| `original_query` | string | ? |
-| `result_id` | string | ? |
-| `group_id` | string | ? |
-| `display_name` | string | ? |
+| Parameter | Type |
+| --- | --- |
+| `original_query` | string |
+| `result_id` | string |
+| `group_id` | string |
+| `display_name` | string |
 
 #### Send search results event
 ```javascript
@@ -159,10 +164,10 @@ constructorio.tracker.trackSearchResultsLoaded('dogs', {
 });
 ```
 
-| Parameter | Type | Description |
-| --- | --- | --- |
-| `num_results` | string | ? |
-| `customer_ids` | string | ? |
+| Parameter | Type |
+| --- | --- |
+| `num_results` | string |
+| `customer_ids` | string |
 
 #### Send search result click event
 ```javascript
@@ -171,11 +176,11 @@ constructorio.tracker.trackSearchResultClick('dogs', {
 });
 ```
 
-| Parameter | Type | Description |
-| --- | --- | --- |
-| `name` | string | ? |
-| `customer_id` | string | ? |
-| `result_id` | string | ? |
+| Parameter | Type |
+| --- | --- |
+| `name` | string |
+| `customer_id` | string |
+| `result_id` | string |
 
 #### Send conversion event
 ```javascript
@@ -184,13 +189,13 @@ constructorio.tracker.trackConversion('dogs', {
 });
 ```
 
-| Parameter | Type | Description |
-| --- | --- | --- |
-| `name` | string | ? |
-| `customer_id` | string | ? |
-| `result_id` | string | ? |
-| `revenue` | string | ? |
-| `section` | string | ? |
+| Parameter | Type |
+| --- | --- |
+| `name` | string |
+| `customer_id` | string |
+| `result_id` | string |
+| `revenue` | string |
+| `section` | string |
 
 #### Send purchase event
 ```javascript
@@ -199,11 +204,11 @@ constructorio.tracker.trackPurchase({
 });
 ```
 
-| Parameter | Type | Description |
-| --- | --- | --- |
-| `customer_ids` | string | ? |
-| `revenue` | string | ? |
-| `section` | string | ? |
+| Parameter | Type |
+| --- | --- |
+| `customer_ids` | string |
+| `revenue` | string |
+| `section` | string |
 
 #### Send recommendation view event
 ```javascript
@@ -220,7 +225,7 @@ constructorio.tracker.trackRecommendationView({
 | `section` | string |
 | `url` | string |
 | `pod_id` | string |
-| `num_results_viewed` |
+| `num_results_viewed` | number |
 
 #### Send recommendation click event
 ```javascript

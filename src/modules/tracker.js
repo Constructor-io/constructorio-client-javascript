@@ -61,10 +61,10 @@ class Tracker {
   /**
    * Send session start event to API
    *
-   * @function sendSessionStart
+   * @function trackSessionStart
    * @returns {(true|Error)}
    */
-  sendSessionStart() {
+  trackSessionStart() {
     const url = `${this.options.serviceUrl}/behavior?`;
     const queryParams = { action: 'session_start' };
 
@@ -77,10 +77,10 @@ class Tracker {
   /**
    * Send input focus event to API
    *
-   * @function sendInputFocus
+   * @function trackInputFocus
    * @returns {(true|Error)}
    */
-  sendInputFocus() {
+  trackInputFocus() {
     const url = `${this.options.serviceUrl}/behavior?`;
     const queryParams = { action: 'focus' };
 

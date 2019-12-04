@@ -44,7 +44,7 @@ describe('ConstructorIO - Tracker', () => {
     delete global.CLIENT_VERSION;
   });
 
-  describe('sendSessionStart', () => {
+  describe('trackSessionStart', () => {
     it('Should respond with a valid response', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -53,7 +53,7 @@ describe('ConstructorIO - Tracker', () => {
 
       tracker.on('success', eventSpy);
 
-      expect(tracker.sendSessionStart()).to.equal(true);
+      expect(tracker.trackSessionStart()).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
@@ -87,7 +87,7 @@ describe('ConstructorIO - Tracker', () => {
 
       tracker.on('success', eventSpy);
 
-      expect(tracker.sendSessionStart()).to.equal(true);
+      expect(tracker.trackSessionStart()).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
@@ -116,7 +116,7 @@ describe('ConstructorIO - Tracker', () => {
 
       tracker.on('success', eventSpy);
 
-      expect(tracker.sendSessionStart()).to.equal(true);
+      expect(tracker.trackSessionStart()).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
@@ -136,7 +136,7 @@ describe('ConstructorIO - Tracker', () => {
     });
   });
 
-  describe('sendInputFocus', () => {
+  describe('trackInputFocus', () => {
     it('Should respond with a valid response', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -145,7 +145,7 @@ describe('ConstructorIO - Tracker', () => {
 
       tracker.on('success', eventSpy);
 
-      expect(tracker.sendInputFocus()).to.equal(true);
+      expect(tracker.trackInputFocus()).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
@@ -179,7 +179,7 @@ describe('ConstructorIO - Tracker', () => {
 
       tracker.on('success', eventSpy);
 
-      expect(tracker.sendInputFocus()).to.equal(true);
+      expect(tracker.trackInputFocus()).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
@@ -207,7 +207,7 @@ describe('ConstructorIO - Tracker', () => {
 
       tracker.on('success', eventSpy);
 
-      expect(tracker.sendInputFocus()).to.equal(true);
+      expect(tracker.trackInputFocus()).to.equal(true);
 
       setTimeout(() => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
@@ -1859,7 +1859,7 @@ describe('ConstructorIO - Tracker', () => {
         fetch: fetchSpy,
       });
 
-      tracker.sendSessionStart();
+      tracker.trackSessionStart();
 
       tracker.on('success', (response) => {
         expect(response).to.have.property('url');
@@ -1876,7 +1876,7 @@ describe('ConstructorIO - Tracker', () => {
         serviceUrl: 'http://constructor.io',
       });
 
-      tracker.sendSessionStart();
+      tracker.trackSessionStart();
 
       tracker.on('error', (response) => {
         expect(response).to.have.property('url');
@@ -1893,7 +1893,7 @@ describe('ConstructorIO - Tracker', () => {
         serviceUrl: 'invalid',
       });
 
-      tracker.sendSessionStart();
+      tracker.trackSessionStart();
 
       tracker.on('error', (response) => {
         expect(response).to.have.property('url');
