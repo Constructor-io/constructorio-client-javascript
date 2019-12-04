@@ -40,7 +40,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       requests.queue('https://ac.cnstrc.com/behavior?action=focus');
       requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-      expect(requests.get()).to.be.an('array').length(3);
+      expect(RequestQueue.get()).to.be.an('array').length(3);
       helpers.triggerUnload();
       expect(store.local.get(storageKey)).to.be.an('array').length(3);
     });
@@ -52,7 +52,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'focus' });
       requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'magic_number_three' });
 
-      expect(requests.get()).to.be.an('array').length(3);
+      expect(RequestQueue.get()).to.be.an('array').length(3);
       helpers.triggerUnload();
       expect(store.local.get(storageKey)).to.be.an('array').length(3);
     });
@@ -66,9 +66,8 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       requests.queue('https://ac.cnstrc.com/behavior?action=focus');
       requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-      expect(requests.get()).to.be.an('array').length(0);
+      expect(RequestQueue.get()).to.be.an('array').length(0);
       helpers.triggerUnload();
-      expect(store.local.get(storageKey)).to.be.an('array').length(0);
     });
 
     it('Should not add requests to the queue if the user is webdriver', () => {
@@ -80,9 +79,8 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       requests.queue('https://ac.cnstrc.com/behavior?action=focus');
       requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-      expect(requests.get()).to.be.an('array').length(0);
+      expect(RequestQueue.get()).to.be.an('array').length(0);
       helpers.triggerUnload();
-      expect(store.local.get(storageKey)).to.be.an('array').length(0);
     });
   });
 
@@ -107,12 +105,12 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       requests.queue('https://ac.cnstrc.com/behavior?action=focus');
       requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-      expect(requests.get()).to.be.an('array').length(3);
+      expect(RequestQueue.get()).to.be.an('array').length(3);
       helpers.triggerResize();
       requests.send();
 
       setTimeout(() => {
-        expect(requests.get()).to.be.an('array').length(0);
+        expect(RequestQueue.get()).to.be.an('array').length(0);
         done();
       }, waitInterval);
     });
@@ -124,12 +122,12 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'focus' });
       requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'magic_number_three' });
 
-      expect(requests.get()).to.be.an('array').length(3);
+      expect(RequestQueue.get()).to.be.an('array').length(3);
       helpers.triggerResize();
       requests.send();
 
       setTimeout(() => {
-        expect(requests.get()).to.be.an('array').length(0);
+        expect(RequestQueue.get()).to.be.an('array').length(0);
         done();
       }, waitInterval);
     });
@@ -141,11 +139,11 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       requests.queue('https://ac.cnstrc.com/behavior?action=focus');
       requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-      expect(requests.get()).to.be.an('array').length(3);
+      expect(RequestQueue.get()).to.be.an('array').length(3);
       requests.send();
 
       setTimeout(() => {
-        expect(requests.get()).to.be.an('array').length(3);
+        expect(RequestQueue.get()).to.be.an('array').length(3);
         done();
       }, waitInterval);
     });
@@ -157,13 +155,13 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       requests.queue('https://ac.cnstrc.com/behavior?action=focus');
       requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-      expect(requests.get()).to.be.an('array').length(3);
+      expect(RequestQueue.get()).to.be.an('array').length(3);
       helpers.triggerResize();
       helpers.triggerUnload();
       requests.send();
 
       setTimeout(() => {
-        expect(requests.get()).to.be.an('array').length(3);
+        expect(RequestQueue.get()).to.be.an('array').length(3);
         done();
       }, waitInterval);
     });
@@ -175,13 +173,13 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       requests.queue('https://ac.cnstrc.com/behavior?action=focus');
       requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-      expect(requests.get()).to.be.an('array').length(3);
+      expect(RequestQueue.get()).to.be.an('array').length(3);
       helpers.triggerResize();
       requests.send();
       helpers.triggerUnload();
 
       setTimeout(() => {
-        expect(requests.get()).to.be.an('array').length(3);
+        expect(RequestQueue.get()).to.be.an('array').length(3);
         done();
       }, waitInterval);
     });
@@ -195,12 +193,12 @@ describe('ConstructorIO - Utils - Request Queue', () => {
 
       const requests = new RequestQueue();
 
-      expect(requests.get()).to.be.an('array').length(3);
+      expect(RequestQueue.get()).to.be.an('array').length(3);
       helpers.triggerResize();
       requests.send();
 
       setTimeout(() => {
-        expect(requests.get()).to.be.an('array').length(0);
+        expect(RequestQueue.get()).to.be.an('array').length(0);
         done();
       }, waitInterval);
     });
@@ -223,12 +221,12 @@ describe('ConstructorIO - Utils - Request Queue', () => {
 
       const requests = new RequestQueue();
 
-      expect(requests.get()).to.be.an('array').length(3);
+      expect(RequestQueue.get()).to.be.an('array').length(3);
       helpers.triggerResize();
       requests.send();
 
       setTimeout(() => {
-        expect(requests.get()).to.be.an('array').length(0);
+        expect(RequestQueue.get()).to.be.an('array').length(0);
         done();
       }, waitInterval);
     });
@@ -251,11 +249,11 @@ describe('ConstructorIO - Utils - Request Queue', () => {
 
       const requests = new RequestQueue();
 
-      expect(requests.get()).to.be.an('array').length(3);
+      expect(RequestQueue.get()).to.be.an('array').length(3);
       helpers.triggerResize();
 
       setTimeout(() => {
-        expect(requests.get()).to.be.an('array').length(0);
+        expect(RequestQueue.get()).to.be.an('array').length(0);
         done();
       }, waitInterval);
     });
@@ -278,11 +276,11 @@ describe('ConstructorIO - Utils - Request Queue', () => {
 
       const requests = new RequestQueue();
 
-      expect(requests.get()).to.be.an('array').length(3);
+      expect(RequestQueue.get()).to.be.an('array').length(3);
       requests.send();
 
       setTimeout(() => {
-        expect(requests.get()).to.be.an('array').length(3);
+        expect(RequestQueue.get()).to.be.an('array').length(3);
         done();
       }, waitInterval);
     });
@@ -305,13 +303,13 @@ describe('ConstructorIO - Utils - Request Queue', () => {
 
       const requests = new RequestQueue();
 
-      expect(requests.get()).to.be.an('array').length(3);
+      expect(RequestQueue.get()).to.be.an('array').length(3);
       helpers.triggerResize();
       helpers.triggerUnload();
       requests.send();
 
       setTimeout(() => {
-        expect(requests.get()).to.be.an('array').length(3);
+        expect(RequestQueue.get()).to.be.an('array').length(3);
         done();
       }, waitInterval);
     });

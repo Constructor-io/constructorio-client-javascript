@@ -13,30 +13,27 @@ class RequestQueue {
     this.eventemitter = eventemitter;
     this.humanity = new HumanityCheck();
     this.requestPending = false;
-    this.flushScheduled = false;
-    this.requestQueue = store.local.get(storageKey) || [];
+    this.pageUnloading = false;
 
-    // Flush requests to storage on unload
+    // Mark if we're unloading
     helpers.addEventListener('beforeunload', () => {
-      this.flushScheduled = true;
-
-      store.local.set(storageKey, this.requestQueue);
+      this.pageUnloading = true;
     });
 
-    // Send any items that exist in queue on initialization
-    if (this.requestQueue.length) {
-      this.send();
-    }
+    this.send();
   }
 
   // Add request to queue to be dispatched
   queue(url, method = 'GET', body) {
     if (!this.humanity.isBot()) {
-      this.requestQueue.push({
+      const queue = RequestQueue.get();
+
+      queue.push({
         url,
         method,
         body,
       });
+      RequestQueue.set(queue);
     }
   }
 
@@ -45,15 +42,18 @@ class RequestQueue {
     // Defer sending of events to give beforeunload time to register (avoids race condition)
     setTimeout(() => {
       const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+      const queue = RequestQueue.get();
 
       if (
         this.humanity.isHuman()
-        && this.requestQueue.length
         && !this.requestPending
-        && !this.flushScheduled
+        && !this.pageUnloading
+        && queue.length
       ) {
-        let nextInQueue = this.requestQueue.shift();
         let request;
+        let nextInQueue = queue.shift();
+
+        RequestQueue.set(queue);
 
         // Backwards compatibility with versions <= 2.0.0, can be removed in future
         // - Request queue entries used to be strings with 'GET' method assumed
@@ -123,8 +123,13 @@ class RequestQueue {
   }
 
   // Return current request queue
-  get() {
-    return this.requestQueue;
+  static get() {
+    return store.local.get(storageKey) || [];
+  }
+
+  // Update current request queue
+  static set(queue) {
+    store.local.set(storageKey, queue);
   }
 }
 
