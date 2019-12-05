@@ -251,6 +251,8 @@ describe('ConstructorIO - Utils - Request Queue', () => {
           },
         ]);
 
+        const requests = new RequestQueue();
+
         expect(RequestQueue.get()).to.be.an('array').length(3);
         helpers.triggerResize();
 
