@@ -2,12 +2,17 @@
 const dotenv = require('dotenv');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
+const sinon = require('sinon');
+const sinonChai = require('sinon-chai');
+const fetchPonyfill = require('fetch-ponyfill');
 const store = require('../../../src/utils/store');
 const RequestQueue = require('../../../src/utils/request-queue');
 const helpers = require('../../mocha.helpers');
 
 chai.use(chaiAsPromised);
+chai.use(sinonChai);
 dotenv.config();
+const { fetch } = fetchPonyfill({ Promise });
 
 describe('ConstructorIO - Utils - Request Queue', () => {
   const storageKey = '_constructorio_requests';
@@ -98,218 +103,264 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       helpers.clearStorage();
     });
 
-    it('Should send all tracking requests if queue is populated and user is human', (done) => {
-      const requests = new RequestQueue();
+    describe('single queue', () => {
+      it('Should send all tracking requests if queue is populated and user is human', (done) => {
+        const requests = new RequestQueue();
 
-      requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
-      requests.queue('https://ac.cnstrc.com/behavior?action=focus');
-      requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
+        requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+        requests.queue('https://ac.cnstrc.com/behavior?action=focus');
+        requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-      expect(RequestQueue.get()).to.be.an('array').length(3);
-      helpers.triggerResize();
-      requests.send();
-
-      setTimeout(() => {
-        expect(RequestQueue.get()).to.be.an('array').length(0);
-        done();
-      }, waitInterval);
-    });
-
-    it('Should send all tracking requests if queue is populated and user is human - POST with body', (done) => {
-      const requests = new RequestQueue();
-
-      requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'session_start' });
-      requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'focus' });
-      requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'magic_number_three' });
-
-      expect(RequestQueue.get()).to.be.an('array').length(3);
-      helpers.triggerResize();
-      requests.send();
-
-      setTimeout(() => {
-        expect(RequestQueue.get()).to.be.an('array').length(0);
-        done();
-      }, waitInterval);
-    });
-
-    it('Should not send tracking requests if queue is populated and user is not human', (done) => {
-      const requests = new RequestQueue();
-
-      requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
-      requests.queue('https://ac.cnstrc.com/behavior?action=focus');
-      requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
-
-      expect(RequestQueue.get()).to.be.an('array').length(3);
-      requests.send();
-
-      setTimeout(() => {
         expect(RequestQueue.get()).to.be.an('array').length(3);
-        done();
-      }, waitInterval);
-    });
+        helpers.triggerResize();
+        requests.send();
 
-    it('Should not send tracking requests if queue is populated and user is human and page is unloading', (done) => {
-      const requests = new RequestQueue();
+        setTimeout(() => {
+          expect(RequestQueue.get()).to.be.an('array').length(0);
+          done();
+        }, waitInterval);
+      });
 
-      requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
-      requests.queue('https://ac.cnstrc.com/behavior?action=focus');
-      requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
+      it('Should send all tracking requests if queue is populated and user is human - POST with body', (done) => {
+        const requests = new RequestQueue();
 
-      expect(RequestQueue.get()).to.be.an('array').length(3);
-      helpers.triggerResize();
-      helpers.triggerUnload();
-      requests.send();
+        requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'session_start' });
+        requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'focus' });
+        requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'magic_number_three' });
 
-      setTimeout(() => {
         expect(RequestQueue.get()).to.be.an('array').length(3);
-        done();
-      }, waitInterval);
-    });
+        helpers.triggerResize();
+        requests.send();
 
-    it('Should not send tracking requests if queue is populated and user is human and page is unloading and send was called before unload', (done) => {
-      const requests = new RequestQueue();
+        setTimeout(() => {
+          expect(RequestQueue.get()).to.be.an('array').length(0);
+          done();
+        }, waitInterval);
+      });
 
-      requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
-      requests.queue('https://ac.cnstrc.com/behavior?action=focus');
-      requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
+      it('Should not send tracking requests if queue is populated and user is not human', (done) => {
+        const requests = new RequestQueue();
 
-      expect(RequestQueue.get()).to.be.an('array').length(3);
-      helpers.triggerResize();
-      requests.send();
-      helpers.triggerUnload();
+        requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+        requests.queue('https://ac.cnstrc.com/behavior?action=focus');
+        requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-      setTimeout(() => {
         expect(RequestQueue.get()).to.be.an('array').length(3);
-        done();
-      }, waitInterval);
-    });
+        requests.send();
 
-    it('Should send all tracking requests if requests exist in storage and user is human - backwards compatibility', (done) => {
-      store.local.set(storageKey, [
-        'https://ac.cnstrc.com/behavior?action=session_start',
-        'https://ac.cnstrc.com/behavior?action=focus',
-        'https://ac.cnstrc.com/behavior?action=magic_number_three',
-      ]);
+        setTimeout(() => {
+          expect(RequestQueue.get()).to.be.an('array').length(3);
+          done();
+        }, waitInterval);
+      });
 
-      const requests = new RequestQueue();
+      it('Should not send tracking requests if queue is populated and user is human and page is unloading', (done) => {
+        const requests = new RequestQueue();
 
-      expect(RequestQueue.get()).to.be.an('array').length(3);
-      helpers.triggerResize();
-      requests.send();
+        requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+        requests.queue('https://ac.cnstrc.com/behavior?action=focus');
+        requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-      setTimeout(() => {
-        expect(RequestQueue.get()).to.be.an('array').length(0);
-        done();
-      }, waitInterval);
-    });
-
-    it('Should send all tracking requests if requests exist in storage and user is human', (done) => {
-      store.local.set(storageKey, [
-        {
-          url: 'https://ac.cnstrc.com/behavior?action=session_start',
-          method: 'GET',
-        },
-        {
-          url: 'https://ac.cnstrc.com/behavior?action=focus',
-          method: 'GET',
-        },
-        {
-          url: 'https://ac.cnstrc.com/behavior?action=magic_number_three',
-          method: 'GET',
-        },
-      ]);
-
-      const requests = new RequestQueue();
-
-      expect(RequestQueue.get()).to.be.an('array').length(3);
-      helpers.triggerResize();
-      requests.send();
-
-      setTimeout(() => {
-        expect(RequestQueue.get()).to.be.an('array').length(0);
-        done();
-      }, waitInterval);
-    });
-
-    it('Should send all tracking requests on initialization if requests exist in storage and user is human', (done) => {
-      store.local.set(storageKey, [
-        {
-          url: 'https://ac.cnstrc.com/behavior?action=session_start',
-          method: 'GET',
-        },
-        {
-          url: 'https://ac.cnstrc.com/behavior?action=focus',
-          method: 'GET',
-        },
-        {
-          url: 'https://ac.cnstrc.com/behavior?action=magic_number_three',
-          method: 'GET',
-        },
-      ]);
-
-      expect(RequestQueue.get()).to.be.an('array').length(3);
-      helpers.triggerResize();
-
-      setTimeout(() => {
-        expect(RequestQueue.get()).to.be.an('array').length(0);
-        done();
-      }, waitInterval);
-    });
-
-    it('Should not send tracking requests if requests exist in storage and user is not human', (done) => {
-      store.local.set(storageKey, [
-        {
-          url: 'https://ac.cnstrc.com/behavior?action=session_start',
-          method: 'GET',
-        },
-        {
-          url: 'https://ac.cnstrc.com/behavior?action=focus',
-          method: 'GET',
-        },
-        {
-          url: 'https://ac.cnstrc.com/behavior?action=magic_number_three',
-          method: 'GET',
-        },
-      ]);
-
-      const requests = new RequestQueue();
-
-      expect(RequestQueue.get()).to.be.an('array').length(3);
-      requests.send();
-
-      setTimeout(() => {
         expect(RequestQueue.get()).to.be.an('array').length(3);
-        done();
-      }, waitInterval);
+        helpers.triggerResize();
+        helpers.triggerUnload();
+        requests.send();
+
+        setTimeout(() => {
+          expect(RequestQueue.get()).to.be.an('array').length(3);
+          done();
+        }, waitInterval);
+      });
+
+      it('Should not send tracking requests if queue is populated and user is human and page is unloading and send was called before unload', (done) => {
+        const requests = new RequestQueue();
+
+        requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+        requests.queue('https://ac.cnstrc.com/behavior?action=focus');
+        requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
+
+        expect(RequestQueue.get()).to.be.an('array').length(3);
+        helpers.triggerResize();
+        requests.send();
+        helpers.triggerUnload();
+
+        setTimeout(() => {
+          expect(RequestQueue.get()).to.be.an('array').length(3);
+          done();
+        }, waitInterval);
+      });
+
+      it('Should send all tracking requests if requests exist in storage and user is human - backwards compatibility', (done) => {
+        store.local.set(storageKey, [
+          'https://ac.cnstrc.com/behavior?action=session_start',
+          'https://ac.cnstrc.com/behavior?action=focus',
+          'https://ac.cnstrc.com/behavior?action=magic_number_three',
+        ]);
+
+        const requests = new RequestQueue();
+
+        expect(RequestQueue.get()).to.be.an('array').length(3);
+        helpers.triggerResize();
+        requests.send();
+
+        setTimeout(() => {
+          expect(RequestQueue.get()).to.be.an('array').length(0);
+          done();
+        }, waitInterval);
+      });
+
+      it('Should send all tracking requests if requests exist in storage and user is human', (done) => {
+        store.local.set(storageKey, [
+          {
+            url: 'https://ac.cnstrc.com/behavior?action=session_start',
+            method: 'GET',
+          },
+          {
+            url: 'https://ac.cnstrc.com/behavior?action=focus',
+            method: 'GET',
+          },
+          {
+            url: 'https://ac.cnstrc.com/behavior?action=magic_number_three',
+            method: 'GET',
+          },
+        ]);
+
+        const requests = new RequestQueue();
+
+        expect(RequestQueue.get()).to.be.an('array').length(3);
+        helpers.triggerResize();
+        requests.send();
+
+        setTimeout(() => {
+          expect(RequestQueue.get()).to.be.an('array').length(0);
+          done();
+        }, waitInterval);
+      });
+
+      it('Should send all tracking requests on initialization if requests exist in storage and user is human', (done) => {
+        store.local.set(storageKey, [
+          {
+            url: 'https://ac.cnstrc.com/behavior?action=session_start',
+            method: 'GET',
+          },
+          {
+            url: 'https://ac.cnstrc.com/behavior?action=focus',
+            method: 'GET',
+          },
+          {
+            url: 'https://ac.cnstrc.com/behavior?action=magic_number_three',
+            method: 'GET',
+          },
+        ]);
+
+        expect(RequestQueue.get()).to.be.an('array').length(3);
+        helpers.triggerResize();
+
+        setTimeout(() => {
+          expect(RequestQueue.get()).to.be.an('array').length(0);
+          done();
+        }, waitInterval);
+      });
+
+      it('Should not send tracking requests if requests exist in storage and user is not human', (done) => {
+        store.local.set(storageKey, [
+          {
+            url: 'https://ac.cnstrc.com/behavior?action=session_start',
+            method: 'GET',
+          },
+          {
+            url: 'https://ac.cnstrc.com/behavior?action=focus',
+            method: 'GET',
+          },
+          {
+            url: 'https://ac.cnstrc.com/behavior?action=magic_number_three',
+            method: 'GET',
+          },
+        ]);
+
+        const requests = new RequestQueue();
+
+        expect(RequestQueue.get()).to.be.an('array').length(3);
+        requests.send();
+
+        setTimeout(() => {
+          expect(RequestQueue.get()).to.be.an('array').length(3);
+          done();
+        }, waitInterval);
+      });
+
+      it('Should not send tracking requests if requests exist in storage and user is human and page is unloading', (done) => {
+        store.local.set(storageKey, [
+          {
+            url: 'https://ac.cnstrc.com/behavior?action=session_start',
+            method: 'GET',
+          },
+          {
+            url: 'https://ac.cnstrc.com/behavior?action=focus',
+            method: 'GET',
+          },
+          {
+            url: 'https://ac.cnstrc.com/behavior?action=magic_number_three',
+            method: 'GET',
+          },
+        ]);
+
+        const requests = new RequestQueue();
+
+        expect(RequestQueue.get()).to.be.an('array').length(3);
+        helpers.triggerResize();
+        helpers.triggerUnload();
+        requests.send();
+
+        setTimeout(() => {
+          expect(RequestQueue.get()).to.be.an('array').length(3);
+          done();
+        }, waitInterval);
+      });
     });
 
-    it('Should not send tracking requests if requests exist in storage and user is human and page is unloading', (done) => {
-      store.local.set(storageKey, [
-        {
-          url: 'https://ac.cnstrc.com/behavior?action=session_start',
-          method: 'GET',
-        },
-        {
-          url: 'https://ac.cnstrc.com/behavior?action=focus',
-          method: 'GET',
-        },
-        {
-          url: 'https://ac.cnstrc.com/behavior?action=magic_number_three',
-          method: 'GET',
-        },
-      ]);
+    describe('double queue', () => {
+      it('Should send all tracking requests if requests exist in storage and user is human', (done) => {
+        store.local.set(storageKey, [
+          {
+            url: 'https://ac.cnstrc.com/behavior?action=session_start',
+            method: 'GET',
+          },
+          {
+            url: 'https://ac.cnstrc.com/behavior?action=focus',
+            method: 'GET',
+          },
+          {
+            url: 'https://ac.cnstrc.com/behavior?action=magic_number_three',
+            method: 'GET',
+          },
+          {
+            url: 'https://ac.cnstrc.com/behavior?action=magic_number_four',
+            method: 'GET',
+          },
+          {
+            url: 'https://ac.cnstrc.com/behavior?action=magic_number_five',
+            method: 'GET',
+          },
+        ]);
 
-      const requests = new RequestQueue();
+        const requests1 = new RequestQueue();
+        const requests2 = new RequestQueue();
+        const sendSpy1 = sinon.spy(requests1, 'send');
+        const sendSpy2 = sinon.spy(requests2, 'send');
 
-      expect(RequestQueue.get()).to.be.an('array').length(3);
-      helpers.triggerResize();
-      helpers.triggerUnload();
-      requests.send();
+        expect(RequestQueue.get()).to.be.an('array').length(5);
+        helpers.triggerResize();
+        requests1.send();
+        requests2.send();
 
-      setTimeout(() => {
-        expect(RequestQueue.get()).to.be.an('array').length(3);
-        done();
-      }, waitInterval);
+        setTimeout(() => {
+          expect(sendSpy1.callCount).to.equal(3 + 1); // 3 sent + 1 finally
+          expect(sendSpy2.callCount).to.equal(2 + 1); // 2 sent + 1 finally
+          expect(RequestQueue.get()).to.be.an('array').length(0);
+          done();
+        }, waitInterval);
+      });
     });
   });
 });
