@@ -4,7 +4,6 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
-const fetchPonyfill = require('fetch-ponyfill');
 const store = require('../../../src/utils/store');
 const RequestQueue = require('../../../src/utils/request-queue');
 const helpers = require('../../mocha.helpers');
@@ -12,7 +11,6 @@ const helpers = require('../../mocha.helpers');
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
 dotenv.config();
-const { fetch } = fetchPonyfill({ Promise });
 
 describe('ConstructorIO - Utils - Request Queue', () => {
   const storageKey = '_constructorio_requests';
