@@ -1,9 +1,9 @@
 {
   "exclude": [
-    "src/utils/store*"
+    "test/utils/store*"
   ],
   "include": [
-    "src/*"
+    "test/*"
   ],
   "extension": [
     ".js"

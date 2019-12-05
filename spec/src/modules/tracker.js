@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-expressions */
+/* eslint-disable no-unused-expressions, import/no-unresolved */
 const jsdom = require('mocha-jsdom');
 const dotenv = require('dotenv');
 const chai = require('chai');
@@ -8,8 +8,8 @@ const sinonChai = require('sinon-chai');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
 const cloneDeep = require('lodash.clonedeep');
-const store = require('../../../src/utils/store');
-const ConstructorIO = require('../../../src/constructorio');
+const store = require('../../../test/utils/store');
+const ConstructorIO = require('../../../test/constructorio');
 const helpers = require('../../mocha.helpers');
 
 chai.use(chaiAsPromised);
