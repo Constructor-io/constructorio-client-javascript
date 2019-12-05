@@ -16,6 +16,7 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 dotenv.config();
 
+const sendTimeout = 25;
 const testApiKey = process.env.TEST_API_KEY;
 const { fetch } = fetchPonyfill({ Promise });
 
@@ -35,13 +36,14 @@ describe('ConstructorIO - Tracker', () => {
     global.CLIENT_VERSION = clientVersion;
   });
 
-  afterEach(() => {
+  afterEach((done) => {
     helpers.clearStorage();
 
     fetchSpy = null;
     eventSpy = null;
 
     delete global.CLIENT_VERSION;
+    setTimeout(done, sendTimeout);
   });
 
   describe('trackSessionStart', () => {
