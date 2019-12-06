@@ -321,7 +321,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
     });
 
     describe('Two Instances', () => {
-      it('Should send tracking requests from both queues if requests exist in storage and user is human', (done) => {
+      it('Should send tracking requests using multiple queues if requests exist in storage and user is human', (done) => {
         store.local.set(storageKey, [
           {
             url: 'https://ac.cnstrc.com/behavior?action=session_start',
@@ -364,7 +364,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
         }, waitInterval);
       });
 
-      it('Should send tracking requests from both queues when items are queued in one and user is human', (done) => {
+      it('Should send tracking requests using multiple queues when items are queued in one and user is human', (done) => {
         const requests1 = new RequestQueue();
         const requests2 = new RequestQueue();
         const sendSpy1 = sinon.spy(requests1, 'send');
@@ -389,7 +389,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
         }, waitInterval);
       });
 
-      it('Should send tracking requests from both queues when items are queued in both and user is human', (done) => {
+      it('Should send tracking requests using multiple queues when items are queued in both and user is human', (done) => {
         const requests1 = new RequestQueue();
         const requests2 = new RequestQueue();
         const sendSpy1 = sinon.spy(requests1, 'send');
