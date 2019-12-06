@@ -1181,8 +1181,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    // TODO: Test skipped as segments (us) parameters not supported
-    it.skip('Should respond with a valid response when required parameters and segments are provided', (done) => {
+    it('Should respond with a valid response when required parameters and segments are provided', (done) => {
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1361,8 +1360,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    // TODO: Test skipped as segments (us) parameters not supported
-    it.skip('Should respond with a valid response when parameters and segments are provided', (done) => {
+    it('Should respond with a valid response when parameters and segments are provided', (done) => {
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1544,8 +1542,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    // TODO: Test skipped as segments (us) parameters not supported
-    it.skip('Should respond with a valid response when required parameters and segments are provided', (done) => {
+    it('Should respond with a valid response when required parameters and segments are provided', (done) => {
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1725,8 +1722,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    // TODO: Test skipped as segments (us) parameters not supported
-    it.skip('Should respond with a valid response when required parameters and segments are provided', (done) => {
+    it('Should respond with a valid response when required parameters and segments are provided', (done) => {
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
