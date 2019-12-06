@@ -14,7 +14,7 @@ dotenv.config();
 
 describe('ConstructorIO - Utils - Request Queue', () => {
   const storageKey = '_constructorio_requests';
-  const waitInterval = 1500;
+  const waitInterval = 700;
 
   describe('queue', () => {
     let defaultAgent;
@@ -101,7 +101,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       helpers.clearStorage();
     });
 
-    describe('single queue', () => {
+    describe('Single Instance', () => {
       it('Should send all tracking requests if queue is populated and user is human', (done) => {
         const requests = new RequestQueue();
 
@@ -320,8 +320,8 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       });
     });
 
-    describe('double queue', () => {
-      it('Should send tracking requests using both queues if requests exist in storage and user is human', (done) => {
+    describe('Two Instances', () => {
+      it('Should send tracking requests using both instances if requests exist in storage and user is human', (done) => {
         store.local.set(storageKey, [
           {
             url: 'https://ac.cnstrc.com/behavior?action=session_start',
@@ -356,14 +356,13 @@ describe('ConstructorIO - Utils - Request Queue', () => {
         requests2.send();
 
         setTimeout(() => {
-          expect(sendSpy1.callCount).to.equal(3 + 1); // 3 sent + 1 finally
-          expect(sendSpy2.callCount).to.equal(2 + 1); // 2 sent + 1 finally
+          expect(sendSpy1.callCount + sendSpy2.callCount).to.equal(5 + 2); // 5 sent + 2 finally
           expect(RequestQueue.get()).to.be.an('array').length(0);
           done();
         }, waitInterval);
       });
 
-      it('Should send tracking requests using both queues if requests are pushed into one queue and user is human', (done) => {
+      it('Should send tracking requests when items are queued using only one instance and user is human', (done) => {
         const requests1 = new RequestQueue();
         const requests2 = new RequestQueue();
         const sendSpy1 = sinon.spy(requests1, 'send');
@@ -380,14 +379,13 @@ describe('ConstructorIO - Utils - Request Queue', () => {
         requests2.send();
 
         setTimeout(() => {
-          expect(sendSpy1.callCount).to.equal(3 + 1); // 3 sent + 1 finally
-          expect(sendSpy2.callCount).to.equal(2 + 1); // 2 sent + 1 finally
+          expect(sendSpy1.callCount + sendSpy2.callCount).to.equal(5 + 2); // 5 sent + 2 finally
           expect(RequestQueue.get()).to.be.an('array').length(0);
           done();
         }, waitInterval);
       });
 
-      it('Should send tracking requests using both queues if requests are pushed into both queues and user is human', (done) => {
+      it('Should send tracking requests when items are queued using two instances and user is human', (done) => {
         const requests1 = new RequestQueue();
         const requests2 = new RequestQueue();
         const sendSpy1 = sinon.spy(requests1, 'send');
@@ -404,8 +402,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
         requests2.send();
 
         setTimeout(() => {
-          expect(sendSpy1.callCount).to.equal(3 + 1); // 3 sent + 1 finally
-          expect(sendSpy2.callCount).to.equal(2 + 1); // 2 sent + 1 finally
+          expect(sendSpy1.callCount + sendSpy2.callCount).to.equal(5 + 2); // 5 sent + 2 finally
           expect(RequestQueue.get()).to.be.an('array').length(0);
           done();
         }, waitInterval);

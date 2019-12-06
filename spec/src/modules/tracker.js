@@ -22,7 +22,7 @@ const { fetch } = fetchPonyfill({ Promise });
 
 describe('ConstructorIO - Tracker', () => {
   const clientVersion = 'cio-mocha';
-  const waitInterval = 1000;
+  const waitInterval = 700;
   let fetchSpy = null;
   let eventSpy = null;
 

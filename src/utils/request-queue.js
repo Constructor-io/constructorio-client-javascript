@@ -6,7 +6,6 @@ const HumanityCheck = require('../utils/humanity-check');
 const helpers = require('../utils/helpers');
 
 const storageKey = '_constructorio_requests';
-let id = 1;
 
 class RequestQueue {
   constructor(options, eventemitter) {
@@ -15,9 +14,8 @@ class RequestQueue {
     this.humanity = new HumanityCheck();
     this.requestPending = false;
     this.pageUnloading = false;
-    this.id = id++;
 
-    // Mark if we're unloading
+    // Mark if page environment is unloading
     helpers.addEventListener('beforeunload', () => {
       this.pageUnloading = true;
     });
@@ -116,7 +114,6 @@ class RequestQueue {
             });
           }).finally(() => {
             this.requestPending = false;
-            console.log(`sent ${this.id} ${nextInQueue.url}`);
             this.send();
           });
         }
