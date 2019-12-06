@@ -36,7 +36,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       helpers.clearStorage();
     });
 
-    it('Should add requests to the queue and persist on unload event', () => {
+    it('Should add url requests to the queue', () => {
       const requests = new RequestQueue();
 
       requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
@@ -48,7 +48,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       expect(store.local.get(storageKey)).to.be.an('array').length(3);
     });
 
-    it('Should add requests to the queue and persist on unload event - POST with body', () => {
+    it('Should add object requests to the queue - POST with body', () => {
       const requests = new RequestQueue();
 
       requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'session_start' });
@@ -102,7 +102,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
     });
 
     describe('Single Instance', () => {
-      it('Should send all tracking requests if queue is populated and user is human', (done) => {
+      it('Should send all url tracking requests if queue is populated and user is human', (done) => {
         const requests = new RequestQueue();
 
         requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
@@ -119,7 +119,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
         }, waitInterval);
       });
 
-      it('Should send all tracking requests if queue is populated and user is human - POST with body', (done) => {
+      it('Should send all object tracking requests if queue is populated and user is human - POST with body', (done) => {
         const requests = new RequestQueue();
 
         requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'session_start' });
@@ -321,7 +321,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
     });
 
     describe('Two Instances', () => {
-      it('Should send tracking requests using both instances if requests exist in storage and user is human', (done) => {
+      it('Should send tracking requests from both queues if requests exist in storage and user is human', (done) => {
         store.local.set(storageKey, [
           {
             url: 'https://ac.cnstrc.com/behavior?action=session_start',
@@ -356,13 +356,15 @@ describe('ConstructorIO - Utils - Request Queue', () => {
         requests2.send();
 
         setTimeout(() => {
+          expect(sendSpy1.callCount).to.be.at.least(2 + 1); // 2 min sent + 1 finally
+          expect(sendSpy2.callCount).to.be.at.least(2 + 1); // 2 min sent + 1 finally
           expect(sendSpy1.callCount + sendSpy2.callCount).to.equal(5 + 2); // 5 sent + 2 finally
           expect(RequestQueue.get()).to.be.an('array').length(0);
           done();
         }, waitInterval);
       });
 
-      it('Should send tracking requests when items are queued using only one instance and user is human', (done) => {
+      it('Should send tracking requests from both queues when items are queued in one and user is human', (done) => {
         const requests1 = new RequestQueue();
         const requests2 = new RequestQueue();
         const sendSpy1 = sinon.spy(requests1, 'send');
@@ -379,13 +381,15 @@ describe('ConstructorIO - Utils - Request Queue', () => {
         requests2.send();
 
         setTimeout(() => {
+          expect(sendSpy1.callCount).to.be.at.least(2 + 1); // 2 min sent + 1 finally
+          expect(sendSpy2.callCount).to.be.at.least(2 + 1); // 2 min sent + 1 finally
           expect(sendSpy1.callCount + sendSpy2.callCount).to.equal(5 + 2); // 5 sent + 2 finally
           expect(RequestQueue.get()).to.be.an('array').length(0);
           done();
         }, waitInterval);
       });
 
-      it('Should send tracking requests when items are queued using two instances and user is human', (done) => {
+      it('Should send tracking requests from both queues when items are queued in both and user is human', (done) => {
         const requests1 = new RequestQueue();
         const requests2 = new RequestQueue();
         const sendSpy1 = sinon.spy(requests1, 'send');
@@ -402,6 +406,8 @@ describe('ConstructorIO - Utils - Request Queue', () => {
         requests2.send();
 
         setTimeout(() => {
+          expect(sendSpy1.callCount).to.be.at.least(2 + 1); // 2 min sent + 1 finally
+          expect(sendSpy2.callCount).to.be.at.least(2 + 1); // 2 min sent + 1 finally
           expect(sendSpy1.callCount + sendSpy2.callCount).to.equal(5 + 2); // 5 sent + 2 finally
           expect(RequestQueue.get()).to.be.an('array').length(0);
           done();
