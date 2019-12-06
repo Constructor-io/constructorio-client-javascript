@@ -14,7 +14,7 @@ dotenv.config();
 
 describe('ConstructorIO - Utils - Request Queue', () => {
   const storageKey = '_constructorio_requests';
-  const waitInterval = 1000;
+  const waitInterval = 1500;
 
   describe('queue', () => {
     let defaultAgent;
@@ -251,6 +251,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
           },
         ]);
 
+        // eslint-disable-next-line no-unused-vars
         const requests = new RequestQueue();
 
         expect(RequestQueue.get()).to.be.an('array').length(3);
@@ -320,7 +321,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
     });
 
     describe('double queue', () => {
-      it('Should send all tracking requests if requests exist in storage and user is human', (done) => {
+      it('Should send tracking requests using both queues if requests exist in storage and user is human', (done) => {
         store.local.set(storageKey, [
           {
             url: 'https://ac.cnstrc.com/behavior?action=session_start',
@@ -350,6 +351,54 @@ describe('ConstructorIO - Utils - Request Queue', () => {
         const sendSpy2 = sinon.spy(requests2, 'send');
 
         expect(RequestQueue.get()).to.be.an('array').length(5);
+        helpers.triggerResize();
+        requests1.send();
+        requests2.send();
+
+        setTimeout(() => {
+          expect(sendSpy1.callCount).to.equal(3 + 1); // 3 sent + 1 finally
+          expect(sendSpy2.callCount).to.equal(2 + 1); // 2 sent + 1 finally
+          expect(RequestQueue.get()).to.be.an('array').length(0);
+          done();
+        }, waitInterval);
+      });
+
+      it('Should send tracking requests using both queues if requests are pushed into one queue and user is human', (done) => {
+        const requests1 = new RequestQueue();
+        const requests2 = new RequestQueue();
+        const sendSpy1 = sinon.spy(requests1, 'send');
+        const sendSpy2 = sinon.spy(requests2, 'send');
+
+        requests1.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'number_one' });
+        requests1.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'number_two' });
+        requests1.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'number_three' });
+        requests1.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'number_four' });
+        requests1.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'number_five' });
+
+        helpers.triggerResize();
+        requests1.send();
+        requests2.send();
+
+        setTimeout(() => {
+          expect(sendSpy1.callCount).to.equal(3 + 1); // 3 sent + 1 finally
+          expect(sendSpy2.callCount).to.equal(2 + 1); // 2 sent + 1 finally
+          expect(RequestQueue.get()).to.be.an('array').length(0);
+          done();
+        }, waitInterval);
+      });
+
+      it('Should send tracking requests using both queues if requests are pushed into both queues and user is human', (done) => {
+        const requests1 = new RequestQueue();
+        const requests2 = new RequestQueue();
+        const sendSpy1 = sinon.spy(requests1, 'send');
+        const sendSpy2 = sinon.spy(requests2, 'send');
+
+        requests1.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'number_one' });
+        requests2.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'number_two' });
+        requests1.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'number_three' });
+        requests2.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'number_four' });
+        requests1.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'number_five' });
+
         helpers.triggerResize();
         requests1.send();
         requests2.send();
