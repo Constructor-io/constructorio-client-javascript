@@ -1,6 +1,9 @@
 # Transpiled output
 lib
 
+# Test temporary directory
+test
+
 # Logs
 logs
 *.log

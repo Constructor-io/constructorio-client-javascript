@@ -1,8 +1,9 @@
+/* eslint-disable import/no-unresolved */
 const dotenv = require('dotenv');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
-const store = require('../../../src/utils/store');
-const HumanityCheck = require('../../../src/utils/humanity-check');
+const store = require('../../../test/utils/store');
+const HumanityCheck = require('../../../test/utils/humanity-check');
 const helpers = require('../../mocha.helpers');
 
 chai.use(chaiAsPromised);
