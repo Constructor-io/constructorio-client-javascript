@@ -32,11 +32,6 @@ const utils = {
     return cleanedParams;
   },
 
-  /**
-   * Returns a thenable that throws an http error based on a fetch response
-   * @param {Error} An error (to preserve the stack trace)
-   * @param {Object} A fetch response
-   */
   throwHttpErrorFromResponse: (error, response) => response.json().then((json) => {
     error.message = json.message;
     error.status = response.status;
@@ -69,6 +64,8 @@ const utils = {
       webdriver: false,
     };
   },
+
+  isNil: value => value == null,
 };
 
 module.exports = utils;
