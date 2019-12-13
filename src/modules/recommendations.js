@@ -2,7 +2,7 @@
 const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
-const { throwHttpErrorFromResponse, cleanParams } = require('../utils/helpers');
+const helpers = require('../utils/helpers');
 
 // Create URL from supplied parameters
 function createRecommendationsUrl(podId, parameters, options) {
@@ -32,7 +32,7 @@ function createRecommendationsUrl(podId, parameters, options) {
     const { numResults, itemIds, section } = parameters;
 
     // Pull num results number from parameters
-    if (numResults) {
+    if (!helpers.isNil(numResults)) {
       queryParams.num_results = numResults;
     }
 
@@ -47,7 +47,7 @@ function createRecommendationsUrl(podId, parameters, options) {
     }
   }
 
-  queryParams = cleanParams(queryParams);
+  queryParams = helpers.cleanParams(queryParams);
 
   const queryString = qs.stringify(queryParams, { indices: false });
 
@@ -97,7 +97,7 @@ class Recommendations {
           return response.json();
         }
 
-        return throwHttpErrorFromResponse(new Error(), response);
+        return helpers.throwHttpErrorFromResponse(new Error(), response);
       })
       .then((json) => {
         if (json.response && json.response.results) {

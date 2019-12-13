@@ -231,7 +231,7 @@ class Tracker {
         const queryParams = { action: 'search-results', term };
         const { num_results, customer_ids } = parameters;
 
-        if (num_results) {
+        if (!helpers.isNil(num_results)) {
           queryParams.num_results = num_results;
         }
 
@@ -430,11 +430,11 @@ class Tracker {
         num_results_viewed,
       } = parameters;
 
-      if (result_count) {
+      if (!helpers.isNil(result_count)) {
         bodyParams.result_count = result_count;
       }
 
-      if (result_page) {
+      if (!helpers.isNil(result_page)) {
         bodyParams.result_page = result_page;
       }
 
@@ -456,7 +456,7 @@ class Tracker {
         bodyParams.pod_id = pod_id;
       }
 
-      if (num_results_viewed) {
+      if (!helpers.isNil(num_results_viewed)) {
         bodyParams.num_results_viewed = num_results_viewed;
       }
 
@@ -521,19 +521,19 @@ class Tracker {
         bodyParams.result_id = result_id;
       }
 
-      if (result_count) {
+      if (!helpers.isNil(result_count)) {
         bodyParams.result_count = result_count;
       }
 
-      if (result_page) {
+      if (!helpers.isNil(result_page)) {
         bodyParams.result_page = result_page;
       }
 
-      if (result_position_on_page) {
+      if (!helpers.isNil(result_position_on_page)) {
         bodyParams.result_position_on_page = result_position_on_page;
       }
 
-      if (num_results_per_page) {
+      if (!helpers.isNil(num_results_per_page)) {
         bodyParams.num_results_per_page = num_results_per_page;
       }
 
@@ -602,11 +602,11 @@ class Tracker {
         bodyParams.section = 'Products';
       }
 
-      if (result_count) {
+      if (!helpers.isNil(result_count)) {
         bodyParams.result_count = result_count;
       }
 
-      if (result_page) {
+      if (!helpers.isNil(result_page)) {
         bodyParams.result_page = result_page;
       }
 
@@ -701,19 +701,19 @@ class Tracker {
         bodyParams.result_id = result_id;
       }
 
-      if (result_count) {
+      if (!helpers.isNil(result_count)) {
         bodyParams.result_count = result_count;
       }
 
-      if (result_page) {
+      if (!helpers.isNil(result_page)) {
         bodyParams.result_page = result_page;
       }
 
-      if (result_position_on_page) {
+      if (!helpers.isNil(result_position_on_page)) {
         bodyParams.result_position_on_page = result_position_on_page;
       }
 
-      if (num_results_per_page) {
+      if (!helpers.isNil(num_results_per_page)) {
         bodyParams.num_results_per_page = num_results_per_page;
       }
 

@@ -2,7 +2,7 @@
 const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
-const { throwHttpErrorFromResponse, cleanParams } = require('../utils/helpers');
+const helpers = require('../utils/helpers');
 
 // Create URL from supplied filter name, value and parameters
 function createBrowseUrl(filterName, filterValue, parameters, options) {
@@ -53,12 +53,12 @@ function createBrowseUrl(filterName, filterValue, parameters, options) {
     const { page, resultsPerPage, filters, sortBy, sortOrder, section } = parameters;
 
     // Pull page from parameters
-    if (page) {
+    if (!helpers.isNil(page)) {
       queryParams.page = page;
     }
 
     // Pull results per page from parameters
-    if (resultsPerPage) {
+    if (!helpers.isNil(resultsPerPage)) {
       queryParams.num_results_per_page = resultsPerPage;
     }
 
@@ -83,7 +83,7 @@ function createBrowseUrl(filterName, filterValue, parameters, options) {
   }
 
   queryParams._dt = Date.now();
-  queryParams = cleanParams(queryParams);
+  queryParams = helpers.cleanParams(queryParams);
 
   const queryString = qs.stringify(queryParams, { indices: false });
 
@@ -133,7 +133,7 @@ class Browse {
           return response.json();
         }
 
-        return throwHttpErrorFromResponse(new Error(), response);
+        return helpers.throwHttpErrorFromResponse(new Error(), response);
       })
       .then((json) => {
         if (json.response && json.response.results) {

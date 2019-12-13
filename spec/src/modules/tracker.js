@@ -669,6 +669,34 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
+    it('Should respond with a valid response when term, and zero value num_results parameter are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackSearchResultsLoaded(term, { num_results: 0 })).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('num_results').to.equal('0');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+
+        done();
+      }, waitInterval);
+    });
+
     it('Should throw an error when invalid term is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
