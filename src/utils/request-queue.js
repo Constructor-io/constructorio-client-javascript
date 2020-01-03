@@ -72,7 +72,7 @@ class RequestQueue {
           request = fetch(nextInQueue.url, {
             method: nextInQueue.method,
             body: JSON.stringify(nextInQueue.body),
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'text/plain' },
           });
         }
 
