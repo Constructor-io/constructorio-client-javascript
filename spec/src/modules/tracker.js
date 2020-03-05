@@ -1316,7 +1316,7 @@ describe('ConstructorIO - Tracker', () => {
     const requiredParameters = {
       pod_id: 'test_pod_id',
       strategy_id: 'strategy-id',
-      item_id: 'product0f662200-dba1-11e9-8543-816778507fbd-new',
+      item_id: 'product0dbae320-3950-11ea-9251-8dee6d0eb3cd-new',
     };
     const optionalParameters = {
       result_position_on_page: 10,
@@ -1675,7 +1675,7 @@ describe('ConstructorIO - Tracker', () => {
   describe('trackBrowseResultClick', () => {
     // Note: `variation_id` parameter not being passed as none are defined
     const requiredParameters = {
-      item_id: 'product0f662200-dba1-11e9-8543-816778507fbd-new',
+      item_id: 'product0dbae320-3950-11ea-9251-8dee6d0eb3cd-new',
       filter_name: 'group_id',
       filter_value: 'Clothing',
     };
