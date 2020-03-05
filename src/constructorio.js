@@ -61,7 +61,7 @@ class ConstructorIO {
       testCells,
       fetch,
       trackingSendDelay,
-      sendTrackingEvents: sendTrackingEvents || true,
+      sendTrackingEvents: sendTrackingEvents === false ? false : true,
     };
 
     // Expose global modules
