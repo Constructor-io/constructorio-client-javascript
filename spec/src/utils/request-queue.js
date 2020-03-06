@@ -85,6 +85,20 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       expect(RequestQueue.get()).to.be.an('array').length(0);
       helpers.triggerUnload();
     });
+
+
+    it('Should not add requests to the queue if the sendTrackingRequests option is false', () => {
+      const requests = new RequestQueue({
+        sendTrackingEvents: false,
+      });
+
+      requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+      requests.queue('https://ac.cnstrc.com/behavior?action=focus');
+      requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
+
+      expect(RequestQueue.get()).to.be.an('array').length(0);
+      helpers.triggerUnload();
+    });
   });
 
   describe('send', () => {
