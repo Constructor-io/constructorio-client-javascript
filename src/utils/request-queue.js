@@ -16,7 +16,7 @@ class RequestQueue {
     this.pageUnloading = false;
 
     // eslint-disable-next-line no-unneeded-ternary
-    this.sendTrackingEvents = options && options.sendTrackingEvents === false ? false : true;
+    this.sendTrackingEvents = (options && options.sendTrackingEvents === false) ? false : true;
 
     // Mark if page environment is unloading
     helpers.addEventListener('beforeunload', () => {
