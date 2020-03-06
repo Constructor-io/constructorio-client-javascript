@@ -61,7 +61,7 @@ class ConstructorIO {
       testCells,
       fetch,
       trackingSendDelay,
-      sendTrackingEvents: sendTrackingEvents === false ? false : true, /* eslint-disable-line no-unneeded-ternary */
+      sendTrackingEvents,
     };
 
     // Expose global modules

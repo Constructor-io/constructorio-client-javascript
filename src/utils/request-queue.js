@@ -15,6 +15,9 @@ class RequestQueue {
     this.requestPending = false;
     this.pageUnloading = false;
 
+    // eslint-disable-next-line no-unneeded-ternary
+    this.sendTrackingEvents = options && options.sendTrackingEvents === false ? false : true;
+
     // Mark if page environment is unloading
     helpers.addEventListener('beforeunload', () => {
       this.pageUnloading = true;
@@ -25,7 +28,7 @@ class RequestQueue {
 
   // Add request to queue to be dispatched
   queue(url, method = 'GET', body) {
-    if (this.options.sendTrackingEvents && !this.humanity.isBot()) {
+    if (this.sendTrackingEvents && !this.humanity.isBot()) {
       const queue = RequestQueue.get();
 
       queue.push({
