@@ -86,6 +86,20 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       expect(RequestQueue.get()).to.be.an('array').length(0);
       helpers.triggerUnload();
     });
+
+
+    it('Should not add requests to the queue if the sendTrackingRequests option is false', () => {
+      const requests = new RequestQueue({
+        sendTrackingEvents: false,
+      });
+
+      requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+      requests.queue('https://ac.cnstrc.com/behavior?action=focus');
+      requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
+
+      expect(RequestQueue.get()).to.be.an('array').length(0);
+      helpers.triggerUnload();
+    });
   });
 
   describe('send', () => {
@@ -312,35 +326,6 @@ describe('ConstructorIO - Utils - Request Queue', () => {
         expect(RequestQueue.get()).to.be.an('array').length(3);
         helpers.triggerResize();
         helpers.triggerUnload();
-        requests.send();
-
-        setTimeout(() => {
-          expect(RequestQueue.get()).to.be.an('array').length(3);
-          done();
-        }, waitInterval);
-      });
-
-      it('Should not send tracking requests if the sendTrackingRequests option is false', (done) => {
-        store.local.set(storageKey, [
-          {
-            url: 'https://ac.cnstrc.com/behavior?action=session_start',
-            method: 'GET',
-          },
-          {
-            url: 'https://ac.cnstrc.com/behavior?action=focus',
-            method: 'GET',
-          },
-          {
-            url: 'https://ac.cnstrc.com/behavior?action=magic_number_three',
-            method: 'GET',
-          },
-        ]);
-
-        const requests = new RequestQueue({
-          sendTrackingEvents: false,
-        });
-
-        expect(RequestQueue.get()).to.be.an('array').length(3);
         requests.send();
 
         setTimeout(() => {
