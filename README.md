@@ -156,6 +156,7 @@ constructorio.tracker.trackSearchSubmit('dogs', {
 | `result_id` | string |
 | `group_id` | string |
 | `display_name` | string |
+| `referrer` | string |
 
 #### Send search results event
 ```javascript
@@ -168,6 +169,7 @@ constructorio.tracker.trackSearchResultsLoaded('dogs', {
 | --- | --- |
 | `num_results` | string |
 | `customer_ids` | string |
+| `referrer` | string |
 
 #### Send search result click event
 ```javascript
@@ -181,6 +183,7 @@ constructorio.tracker.trackSearchResultClick('dogs', {
 | `name` | string |
 | `customer_id` | string |
 | `result_id` | string |
+| `referrer` | string |
 
 #### Send conversion event
 ```javascript
@@ -196,6 +199,7 @@ constructorio.tracker.trackConversion('dogs', {
 | `result_id` | string |
 | `revenue` | string |
 | `section` | string |
+| `referrer` | string |
 
 #### Send purchase event
 ```javascript

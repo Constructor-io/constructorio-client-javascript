@@ -170,6 +170,7 @@ class Tracker {
    * @param {string} parameters.result_id - Customer ID of the selected autocomplete item
    * @param {string} [parameters.group_id] - Group identifier of selected item
    * @param {string} [parameters.display_name] - Display name of group of selected item
+   * @param {string} [parameters.referrer] - URL of where the event occured
    * @returns {(true|Error)}
    */
   trackSearchSubmit(term, parameters) {
@@ -179,7 +180,7 @@ class Tracker {
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
         const url = `${this.options.serviceUrl}/autocomplete/${helpers.ourEncodeURIComponent(term)}/search?`;
         const queryParams = {};
-        const { original_query, result_id, group_id, display_name } = parameters;
+        const { original_query, result_id, group_id, display_name, referrer } = parameters;
 
         if (original_query) {
           queryParams.original_query = original_query;
@@ -194,6 +195,10 @@ class Tracker {
 
         if (result_id) {
           queryParams.result_id = result_id;
+        }
+
+        if (referrer) {
+          queryParams.referrer = referrer;
         }
 
         this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
@@ -220,6 +225,7 @@ class Tracker {
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {number} parameters.num_results - Number of search results in total
    * @param {array} [parameters.customer_ids] - List of customer item id's returned from search
+   * @param {string} [parameters.referrer] - URL of where the event occured
    * @returns {(true|Error)}
    */
   trackSearchResultsLoaded(term, parameters) {
@@ -229,7 +235,7 @@ class Tracker {
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
         const url = `${this.options.serviceUrl}/behavior?`;
         const queryParams = { action: 'search-results', term };
-        const { num_results, customer_ids } = parameters;
+        const { num_results, customer_ids, referrer } = parameters;
 
         if (!helpers.isNil(num_results)) {
           queryParams.num_results = num_results;
@@ -237,6 +243,10 @@ class Tracker {
 
         if (customer_ids && Array.isArray(customer_ids)) {
           queryParams.customer_ids = customer_ids.join(',');
+        }
+
+        if (referrer) {
+          queryParams.referrer = referrer;
         }
 
         this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
@@ -264,6 +274,7 @@ class Tracker {
    * @param {string} parameters.name - Identifier
    * @param {string} parameters.customer_id - Customer id
    * @param {string} parameters.result_id - Result id
+   * @param {string} parameters.referrer - Referrer
    * @returns {(true|Error)}
    */
   trackSearchResultClick(term, parameters) {
@@ -273,7 +284,7 @@ class Tracker {
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
         const url = `${this.options.serviceUrl}/autocomplete/${helpers.ourEncodeURIComponent(term)}/click_through?`;
         const queryParams = {};
-        const { name, customer_id, result_id } = parameters;
+        const { name, customer_id, result_id, referrer } = parameters;
 
         if (name) {
           queryParams.name = name;
@@ -285,6 +296,10 @@ class Tracker {
 
         if (result_id) {
           queryParams.result_id = result_id;
+        }
+
+        if (referrer) {
+          queryParams.referrer = referrer;
         }
 
         this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
@@ -314,6 +329,7 @@ class Tracker {
    * @param {string} parameters.result_id - Result id
    * @param {string} parameters.revenue - Revenue
    * @param {string} parameters.section - Autocomplete section
+   * @param {string} parameters.referrer - Referrer
    * @returns {(true|Error)}
    */
   trackConversion(term, parameters) {
@@ -322,7 +338,7 @@ class Tracker {
       const searchTerm = helpers.ourEncodeURIComponent(term) || 'TERM_UNKNOWN';
       const url = `${this.options.serviceUrl}/autocomplete/${searchTerm}/conversion?`;
       const queryParams = {};
-      const { name, customer_id, result_id, revenue, section } = parameters;
+      const { name, customer_id, result_id, revenue, section, referrer } = parameters;
 
       if (name) {
         queryParams.name = name;
@@ -339,11 +355,15 @@ class Tracker {
       if (revenue) {
         queryParams.revenue = revenue;
       }
-
+      
       if (section) {
         queryParams.section = section;
       } else {
         queryParams.section = 'Products';
+      }
+
+      if (referrer) {
+        queryParams.referrer = referrer;
       }
 
       this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
