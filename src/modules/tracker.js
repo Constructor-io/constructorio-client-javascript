@@ -274,7 +274,7 @@ class Tracker {
    * @param {string} parameters.name - Identifier
    * @param {string} parameters.customer_id - Customer id
    * @param {string} parameters.result_id - Result id
-   * @param {string} parameters.referrer - Referrer
+   * @param {string} parameters.referrer - URL of where the event occured
    * @returns {(true|Error)}
    */
   trackSearchResultClick(term, parameters) {
@@ -329,7 +329,7 @@ class Tracker {
    * @param {string} parameters.result_id - Result id
    * @param {string} parameters.revenue - Revenue
    * @param {string} parameters.section - Autocomplete section
-   * @param {string} parameters.referrer - Referrer
+   * @param {string} parameters.referrer - URL of where the event occured
    * @returns {(true|Error)}
    */
   trackConversion(term, parameters) {
