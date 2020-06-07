@@ -151,7 +151,7 @@ constructorio.tracker.trackSearchSubmit('dogs', {
 ```
 
 | Parameter | Type | Required |
-| --- | --- | --- |
+| --- | --- | :---: |
 | `original_query` | string | ✔ |
 | `result_id` | string | ✔ |
 | `group_id` | string | |
@@ -165,7 +165,7 @@ constructorio.tracker.trackSearchResultsLoaded('dogs', {
 ```
 
 | Parameter | Type | Required |
-| --- | --- | --- |
+| --- | --- | :---: |
 | `num_results` | string | ✔ |
 | `customer_ids` | string | |
 
@@ -177,7 +177,7 @@ constructorio.tracker.trackSearchResultClick('dogs', {
 ```
 
 | Parameter | Type | Required |
-| --- | --- | --- |
+| --- | --- | :---: |
 | `name` | string | ✔ |
 | `customer_id` | string | ✔ |
 | `result_id` | string | ✔ |
@@ -190,7 +190,7 @@ constructorio.tracker.trackConversion('dogs', {
 ```
 
 | Parameter | Type | Required |
-| --- | --- | --- |
+| --- | --- | :---: |
 | `name` | string | ✔ |
 | `customer_id` | string | ✔ |
 | `result_id` | string | ✔ |
@@ -205,7 +205,7 @@ constructorio.tracker.trackPurchase({
 ```
 
 | Parameter | Type | Required |
-| --- | --- | --- |
+| --- | --- | :---: |
 | `customer_ids` | string | ✔ |
 | `revenue` | string | ✔ |
 | `section` | string | ✔ |
@@ -218,7 +218,7 @@ constructorio.tracker.trackRecommendationView({
 ```
 
 | Parameter | Type | Required |
-| --- | --- | --- |
+| --- | --- | :---: |
 | `url` | string | ✔ |
 | `pod_id` | string | ✔ |
 | `num_results_viewed` | number | ✔ |
@@ -235,7 +235,7 @@ constructorio.tracker.trackRecommendationClick({
 ```
 
 | Parameter | Type | Required |
-| --- | --- | --- |
+| --- | --- | :---: |
 | `pod_id` | string | ✔ |
 | `strategy_id` | string | ✔ |
 | `item_id` | string | ✔ |
@@ -255,7 +255,7 @@ constructorio.tracker.trackBrowseResultsLoaded({
 ```
 
 | Parameter | Type | Required |
-| --- | --- | --- |
+| --- | --- | :---: |
 | `url` | string | ✔ |
 | `filter_name` | string | ✔ |
 | `filter_value` | string | ✔ |
@@ -275,7 +275,7 @@ constructorio.tracker.trackBrowseResultClick({
 ```
 
 | Parameter | Type | Required |
-| --- | --- | --- |
+| --- | --- | :---: |
 | `item_id` | string | ✔ |
 | `filter_name` | string | ✔ |
 | `filter_value` | string | ✔ |
