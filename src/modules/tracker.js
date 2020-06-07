@@ -570,9 +570,9 @@ class Tracker {
    * @param {number} [parameters.result_page] - Page number of results
    * @param {string} [parameters.result_id] - Result identifier
    * @param {string} [parameters.selected_filters] -  Selected filters
+   * @param {string} [parameters.sort_order] - Sort order ('ascending' or 'descending')
+   * @param {string} [parameters.sort_by] - Sorting method
    * @param {string} parameters.url - Current page URL
-   * @param {string} parameters.sort_order - Sort order ('ascending' or 'descending')
-   * @param {string} parameters.sort_by - Sorting method
    * @param {string} parameters.filter_name - Filter name
    * @param {string} parameters.filter_value - Filter value
    * @returns {(true|Error)}
