@@ -135,7 +135,7 @@ constructorio.tracker.trackAutocompleteSelect('dogs', {
 ```
 
 | Parameter | Type | Required |
-| --- | --- | --- |
+| --- | --- | :---: |
 | `original_query` | string | ✔ |
 | `result_id` | string | ✔ |
 | `section` | string | ✔ |
