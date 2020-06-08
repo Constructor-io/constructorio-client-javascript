@@ -850,6 +850,7 @@ describe('ConstructorIO - Tracker', () => {
     const requiredParameters = {
       name: 'name',
       customer_id: 'customer-id',
+      variation_id: 'variation-id',
       result_id: 'result-id',
       revenue: 123,
       section: 'Products',

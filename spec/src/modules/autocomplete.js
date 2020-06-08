@@ -80,8 +80,8 @@ describe('ConstructorIO - Autocomplete', () => {
       });
     });
 
-    it('Should return a response with a valid query, and segments', (done) => {
-      const segments = 'segments';
+    it('Should return a response with a valid query and segments', (done) => {
+      const segments = ['segment1', 'segment2'];
       const { autocomplete } = new ConstructorIO({
         apiKey: testApiKey,
         segments,
