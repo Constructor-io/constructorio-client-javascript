@@ -68,7 +68,7 @@ function createAutocompleteUrl(query, parameters, options) {
   queryParams._dt = Date.now();
   queryParams = cleanParams(queryParams);
 
-  const queryString = qs.stringify(queryParams, { indices: false, arrayFormat: 'repeat' });
+  const queryString = qs.stringify(queryParams, { indices: false });
 
   return `${serviceUrl}/autocomplete/${encodeURIComponent(query)}?${queryString}`;
 }
