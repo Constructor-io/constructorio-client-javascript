@@ -193,7 +193,7 @@ constructorio.tracker.trackConversion('dogs', {
 | --- | --- |
 | `name` | string |
 | `customer_id` | string |
-| `variation_id` | string |
+| `variation_id` | string | ✔ |
 | `result_id` | string |
 | `revenue` | string |
 | `section` | string |
