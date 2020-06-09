@@ -855,6 +855,10 @@ describe('ConstructorIO - Tracker', () => {
       section: 'Products',
     };
 
+    const optionalParameters = {
+      variation_id: 'variation-id',
+    };
+
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -881,6 +885,43 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('result_id').to.equal(requiredParameters.result_id);
         expect(requestParams).to.have.property('revenue').to.equal(requiredParameters.revenue.toString());
         expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should respond with a valid response when term, required parameters, and optional parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackConversion(term, Object.assign({}, requiredParameters, optionalParameters))).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('name').to.equal(requiredParameters.name);
+        expect(requestParams).to.have.property('customer_id').to.equal(requiredParameters.customer_id);
+        expect(requestParams).to.have.property('result_id').to.equal(requiredParameters.result_id);
+        expect(requestParams).to.have.property('revenue').to.equal(requiredParameters.revenue.toString());
+        expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
+        expect(requestParams).to.have.property('variation_id').to.equal(optionalParameters.variation_id);
 
         // Response
         expect(eventSpy).to.have.been.called;

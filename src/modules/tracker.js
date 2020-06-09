@@ -312,6 +312,7 @@ class Tracker {
    * @param {string} parameters.name - Identifier
    * @param {string} parameters.customer_id - Customer id
    * @param {string} parameters.revenue - Revenue
+   * @param {string} [parameters.variation_id] - Variation id
    * @param {string} [parameters.section] - Autocomplete section
    * @param {string} [parameters.result_id] - Result id
    * @returns {(true|Error)}
@@ -322,7 +323,7 @@ class Tracker {
       const searchTerm = helpers.ourEncodeURIComponent(term) || 'TERM_UNKNOWN';
       const url = `${this.options.serviceUrl}/autocomplete/${searchTerm}/conversion?`;
       const queryParams = {};
-      const { name, customer_id, result_id, revenue, section } = parameters;
+      const { name, customer_id, variation_id, result_id, revenue, section } = parameters;
 
       if (name) {
         queryParams.name = name;
@@ -330,6 +331,10 @@ class Tracker {
 
       if (customer_id) {
         queryParams.customer_id = customer_id;
+      }
+
+      if (variation_id) {
+        queryParams.variation_id = variation_id;
       }
 
       if (result_id) {
