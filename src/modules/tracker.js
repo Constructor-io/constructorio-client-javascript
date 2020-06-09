@@ -263,7 +263,7 @@ class Tracker {
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.name - Identifier
    * @param {string} parameters.customer_id - Customer id
-   * @param {string} parameters.result_id - Result id
+   * @param {string} [parameters.result_id] - Result id
    * @returns {(true|Error)}
    */
   trackSearchResultClick(term, parameters) {
@@ -311,9 +311,9 @@ class Tracker {
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.name - Identifier
    * @param {string} parameters.customer_id - Customer id
-   * @param {string} parameters.result_id - Result id
    * @param {string} parameters.revenue - Revenue
-   * @param {string} parameters.section - Autocomplete section
+   * @param {string} [parameters.section] - Autocomplete section
+   * @param {string} [parameters.result_id] - Result id
    * @returns {(true|Error)}
    */
   trackConversion(term, parameters) {
@@ -368,7 +368,7 @@ class Tracker {
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {array} parameters.customer_ids - List of customer item id's
    * @param {string} parameters.revenue - Revenue
-   * @param {string} parameters.section - Autocomplete section
+   * @param {string} [parameters.section] - Autocomplete section
    * @returns {(true|Error)}
    */
   trackPurchase(parameters) {
@@ -574,9 +574,9 @@ class Tracker {
    * @param {number} [parameters.result_page] - Page number of results
    * @param {string} [parameters.result_id] - Result identifier
    * @param {string} [parameters.selected_filters] -  Selected filters
+   * @param {string} [parameters.sort_order] - Sort order ('ascending' or 'descending')
+   * @param {string} [parameters.sort_by] - Sorting method
    * @param {string} parameters.url - Current page URL
-   * @param {string} parameters.sort_order - Sort order ('ascending' or 'descending')
-   * @param {string} parameters.sort_by - Sorting method
    * @param {string} parameters.filter_name - Filter name
    * @param {string} parameters.filter_value - Filter value
    * @returns {(true|Error)}

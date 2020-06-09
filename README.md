@@ -134,14 +134,14 @@ constructorio.tracker.trackAutocompleteSelect('dogs', {
 });
 ```
 
-| Parameter | Type |
-| --- | --- |
-| `original_query` | string |
-| `result_id` | string |
-| `section` | string |
-| `tr` | string |
-| `group_id` | string |
-| `display_name` | string |
+| Parameter | Type | Required |
+| --- | --- | :---: |
+| `original_query` | string | ✔ |
+| `result_id` | string | ✔ |
+| `section` | string | ✔ |
+| `tr` | string | |
+| `group_id` | string | |
+| `display_name` | string | |
 
 #### Send autocomplete search event
 ```javascript
@@ -150,12 +150,12 @@ constructorio.tracker.trackSearchSubmit('dogs', {
 });
 ```
 
-| Parameter | Type |
-| --- | --- |
-| `original_query` | string |
-| `result_id` | string |
-| `group_id` | string |
-| `display_name` | string |
+| Parameter | Type | Required |
+| --- | --- | :---: |
+| `original_query` | string | ✔ |
+| `result_id` | string | ✔ |
+| `group_id` | string | |
+| `display_name` | string | |
 
 #### Send search results event
 ```javascript
@@ -164,10 +164,10 @@ constructorio.tracker.trackSearchResultsLoaded('dogs', {
 });
 ```
 
-| Parameter | Type |
-| --- | --- |
-| `num_results` | string |
-| `customer_ids` | string |
+| Parameter | Type | Required |
+| --- | --- | :---: |
+| `num_results` | string | ✔ |
+| `customer_ids` | string | |
 
 #### Send search result click event
 ```javascript
@@ -176,11 +176,11 @@ constructorio.tracker.trackSearchResultClick('dogs', {
 });
 ```
 
-| Parameter | Type |
-| --- | --- |
-| `name` | string |
-| `customer_id` | string |
-| `result_id` | string |
+| Parameter | Type | Required |
+| --- | --- | :---: |
+| `name` | string | ✔ |
+| `customer_id` | string | ✔ |
+| `result_id` | string | |
 
 #### Send conversion event
 ```javascript
@@ -189,14 +189,14 @@ constructorio.tracker.trackConversion('dogs', {
 });
 ```
 
-| Parameter | Type |
-| --- | --- |
-| `name` | string |
-| `customer_id` | string |
+| Parameter | Type | Required |
+| --- | --- | :---: |
+| `name` | string | ✔ |
+| `customer_id` | string | ✔ |
 | `variation_id` | string | ✔ |
-| `result_id` | string |
-| `revenue` | string |
-| `section` | string |
+| `revenue` | string | ✔ |
+| `section` | string | |
+| `result_id` | string | |
 
 #### Send purchase event
 ```javascript
@@ -205,11 +205,11 @@ constructorio.tracker.trackPurchase({
 });
 ```
 
-| Parameter | Type |
-| --- | --- |
-| `customer_ids` | string |
-| `revenue` | string |
-| `section` | string |
+| Parameter | Type | Required |
+| --- | --- | :---: |
+| `customer_ids` | string | ✔ |
+| `revenue` | string | ✔ |
+| `section` | string | |
 
 #### Send recommendation view event
 ```javascript
@@ -218,15 +218,15 @@ constructorio.tracker.trackRecommendationView({
 });
 ```
 
-| Parameter | Type |
-| --- | --- |
-| `result_count` | integer |
-| `result_page` | integer |
-| `result_id` | string |
-| `section` | string |
-| `url` | string |
-| `pod_id` | string |
-| `num_results_viewed` | number |
+| Parameter | Type | Required |
+| --- | --- | :---: |
+| `url` | string | ✔ |
+| `pod_id` | string | ✔ |
+| `num_results_viewed` | number | ✔ |
+| `result_count` | integer | |
+| `result_page` | integer | |
+| `result_id` | string | |
+| `section` | string | |
 
 #### Send recommendation click event
 ```javascript
@@ -235,18 +235,18 @@ constructorio.tracker.trackRecommendationClick({
 });
 ```
 
-| Parameter | Type |
-| --- | --- |
-| `result_count` | integer |
-| `result_page` | integer |
-| `result_id` | string |
-| `section` | string |
-| `pod_id` | string |
-| `strategy_id` | string |
-| `variation_id` | string |
-| `item_id` | string |
-| `num_results_per_page` | integer |
-| `result_position_on_page` | integer |
+| Parameter | Type | Required |
+| --- | --- | :---: |
+| `pod_id` | string | ✔ |
+| `strategy_id` | string | ✔ |
+| `item_id` | string | ✔ |
+| `result_count` | integer | |
+| `result_page` | integer | |
+| `result_id` | string | |
+| `section` | string | |
+| `variation_id` | string | |
+| `num_results_per_page` | integer | |
+| `result_position_on_page` | integer | |
 
 #### Send browse results load event
 ```javascript
@@ -255,18 +255,18 @@ constructorio.tracker.trackBrowseResultsLoaded({
 });
 ```
 
-| Parameter | Type |
-| --- | --- |
-| `section` | string |
-| `result_id` | string |
-| `result_count` | integer |
-| `result_page` | integer |
-| `selected_filters` | string or array |
-| `url` | string |
-| `sort_by` | string |
-| `sort_order` | string |
-| `filter_name` | string |
-| `filter_value` | string |
+| Parameter | Type | Required |
+| --- | --- | :---: |
+| `url` | string | ✔ |
+| `filter_name` | string | ✔ |
+| `filter_value` | string | ✔ |
+| `section` | string | |
+| `result_id` | string | |
+| `result_count` | integer | |
+| `result_page` | integer | |
+| `selected_filters` | string or array | |
+| `sort_by` | string | |
+| `sort_order` | string | |
 
 #### Send browse result click event
 ```javascript
@@ -275,19 +275,19 @@ constructorio.tracker.trackBrowseResultClick({
 });
 ```
 
-| Parameter | Type |
-| --- | --- |
-| `item_id` | string |
-| `variation_id` | string |
-| `section` | string |
-| `result_id` | string |
-| `result_count` | integer |
-| `result_page` | integer |
-| `result_position_on_page` | integer |
-| `num_results_per_page` | integer |
-| `selected_filters` | string or array |
-| `filter_name` | string |
-| `filter_value` | string |
+| Parameter | Type | Required |
+| --- | --- | :---: |
+| `item_id` | string | ✔ |
+| `filter_name` | string | ✔ |
+| `filter_value` | string | ✔ |
+| `variation_id` | string | |
+| `section` | string | |
+| `result_id` | string | |
+| `result_count` | integer | |
+| `result_page` | integer | |
+| `result_position_on_page` | integer | |
+| `num_results_per_page` | integer | |
+| `selected_filters` | string or array | |
 
 #### Receive status of tracking requests
 The status of tracking requests can be observed through emitted events. `messageType` must be either "success" or "error", and the `callback` parameter must be a function that will be passed the message data as the first and only argument.
