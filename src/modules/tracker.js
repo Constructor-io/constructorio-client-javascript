@@ -263,7 +263,7 @@ class Tracker {
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.name - Identifier
    * @param {string} parameters.customer_id - Customer id
-   * @param {string} parameters.result_id - Result id
+   * @param {string} [parameters.result_id] - Result id
    * @returns {(true|Error)}
    */
   trackSearchResultClick(term, parameters) {
@@ -311,9 +311,9 @@ class Tracker {
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.name - Identifier
    * @param {string} parameters.customer_id - Customer id
-   * @param {string} parameters.result_id - Result id
    * @param {string} parameters.revenue - Revenue
-   * @param {string} parameters.section - Autocomplete section
+   * @param {string} [parameters.section] - Autocomplete section
+   * @param {string} [parameters.result_id] - Result id
    * @returns {(true|Error)}
    */
   trackConversion(term, parameters) {
@@ -364,7 +364,7 @@ class Tracker {
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {array} parameters.customer_ids - List of customer item id's
    * @param {string} parameters.revenue - Revenue
-   * @param {string} parameters.section - Autocomplete section
+   * @param {string} [parameters.section] - Autocomplete section
    * @returns {(true|Error)}
    */
   trackPurchase(parameters) {
