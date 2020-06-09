@@ -18,9 +18,13 @@ class ConstructorIO {
    * @param {string} [serviceUrl='https://ac.cnstrc.com'] - API URL endpoint
    * @param {string} [segments] - User segments
    * @param {object} [testCells] - User test cells
-   * @param {string} [clientId] - Client ID, defaults to value supplied by 'constructorio-id'
-   * @param {string} [sessionId] - Session id, defaults to value supplied by 'constructorio-id'
-   * @param {string} [userId] - User id
+   * @param {string} [clientId] - Client ID, defaults to value supplied by 'constructorio-id' module
+   * @param {string} [sessionId] - Session id, defaults to value supplied by 'constructorio-id' module
+   * @param {string} [userId] - User ID
+   * @param {function} [fetch] - If supplied, will be utilized for requests rather than default Fetch API
+   * @param {number} [trackingSendDelay] - Amount of time to wait before sending tracking events (in ms)
+   * @param {boolean} [sendTrackingEvents] - Indicates if tracking events should be dispatched
+   * @param {object} [idOptions] - Options object to be supplied to 'constructorio-id' module
    * @property {object} [search] - Interface to {@link module:search}
    * @property {object} [browse] - Interface to {@link module:browse}
    * @property {object} [autocomplete] - Interface to {@link module:autocomplete}
@@ -41,6 +45,7 @@ class ConstructorIO {
       fetch,
       trackingSendDelay,
       sendTrackingEvents,
+      idOptions,
     } = options;
 
     if (!apiKey || typeof apiKey !== 'string') {
@@ -48,7 +53,7 @@ class ConstructorIO {
     }
 
     // Initialize ID session
-    const { session_id, client_id } = new ConstructorioID();
+    const { session_id, client_id } = new ConstructorioID(idOptions || {});
 
     this.options = {
       apiKey,
