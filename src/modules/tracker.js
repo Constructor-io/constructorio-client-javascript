@@ -312,6 +312,7 @@ class Tracker {
    * @param {string} parameters.name - Identifier
    * @param {string} parameters.customer_id - Customer id
    * @param {string} parameters.revenue - Revenue
+   * @param {string} [parameters.variation_id] - Variation id
    * @param {string} [parameters.section] - Autocomplete section
    * @param {string} [parameters.result_id] - Result id
    * @returns {(true|Error)}
