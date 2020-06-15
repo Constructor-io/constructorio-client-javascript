@@ -66,6 +66,25 @@ const utils = {
   },
 
   isNil: value => value == null,
+
+  // Dispatch an event on `window` of supplied name and data
+  dispatchEvent: (name, data) => {
+    const createCustomEvent = (name, data) => {
+      try {
+        return new CustomEvent(name, data);
+      } catch (e) {
+        const evt = document.createEvent('CustomEvent');
+
+        evt.initCustomEvent(name, false, false, data);
+
+        return evt;
+      }
+    };
+
+    if (window && window.dispatchEvent) {
+      window.dispatchEvent(createCustomEvent(name, data));
+    }
+  }
 };
 
 module.exports = utils;
