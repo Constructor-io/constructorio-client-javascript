@@ -295,6 +295,15 @@ The status of tracking requests can be observed through emitted events. `message
 constructorio.tracker.on(messageType, callback);
 ```
 
+#### Emitted events
+The `search`, `browse` and `recommendations` module may emit custom events on `window` with response data when a request has been completed. The event name follows the following structure: `ConstructorIO.[moduleName].[methodName].response`. Example consuming code can be found below:
+
+```javascript
+window.addEventListener('ConstructorIO.search.getSearchResults.response', (event) => {
+  // `event.detail` will be response data
+}, false);
+```
+
 ## Development / npm commands
 
 ```bash
