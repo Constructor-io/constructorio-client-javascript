@@ -9,7 +9,7 @@ const helpers = require('../../mocha.helpers');
 chai.use(chaiAsPromised);
 dotenv.config();
 
-describe('ConstructorIO - Utils - Event Dispatcher', () => {
+describe.only('ConstructorIO - Utils - Event Dispatcher', () => {
   const eventData = {
     module: 'search',
     method: 'getSearchResults',
@@ -36,7 +36,7 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
     const eventDispatcher = new EventDispatcher();
 
     expect(eventDispatcher.events).to.deep.equal([]);
-    expect(eventDispatcher.enabled).to.equal(true);
+    expect(eventDispatcher.active).to.equal(true);
     expect(eventDispatcher.waitForBeacon).to.equal(false);
   });
 
@@ -44,7 +44,7 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
     const eventDispatcher = new EventDispatcher({ enabled: false });
 
     expect(eventDispatcher.events).to.deep.equal([]);
-    expect(eventDispatcher.enabled).to.equal(false);
+    expect(eventDispatcher.active).to.equal(false);
     expect(eventDispatcher.waitForBeacon).to.equal(false);
   });
 
@@ -52,7 +52,7 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
     const eventDispatcher = new EventDispatcher({ waitForBeacon: true });
 
     expect(eventDispatcher.events).to.deep.equal([]);
-    expect(eventDispatcher.enabled).to.equal(false);
+    expect(eventDispatcher.active).to.equal(false);
     expect(eventDispatcher.waitForBeacon).to.equal(true);
   });
 
@@ -63,19 +63,19 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
     });
 
     expect(eventDispatcher.events).to.deep.equal([]);
-    expect(eventDispatcher.enabled).to.equal(false);
+    expect(eventDispatcher.active).to.equal(false);
     expect(eventDispatcher.waitForBeacon).to.equal(true);
   });
 
   it('Should set enabled to be true when beacon event received and waitForBeacon option is provided', () => {
     const eventDispatcher = new EventDispatcher({ waitForBeacon: true });
 
-    expect(eventDispatcher.enabled).to.equal(false);
+    expect(eventDispatcher.active).to.equal(false);
     expect(eventDispatcher.waitForBeacon).to.equal(true);
 
     window.dispatchEvent(new window.CustomEvent('ConstructorIOAutocomplete.loaded'));
 
-    expect(eventDispatcher.enabled).to.equal(true);
+    expect(eventDispatcher.active).to.equal(true);
     expect(eventDispatcher.waitForBeacon).to.equal(true);
   });
 
@@ -83,15 +83,52 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
     const eventDispatcher = new EventDispatcher({ waitForBeacon: true });
     const dispatchEventsSpy = sinon.spy(eventDispatcher, 'dispatchEvents');
 
-    expect(eventDispatcher.enabled).to.equal(false);
+    expect(eventDispatcher.active).to.equal(false);
     expect(eventDispatcher.waitForBeacon).to.equal(true);
     expect(dispatchEventsSpy).to.not.have.been.called;
 
     window.dispatchEvent(new window.CustomEvent('ConstructorIOAutocomplete.loaded'));
 
-    expect(eventDispatcher.enabled).to.equal(true);
+    expect(eventDispatcher.active).to.equal(true);
     expect(eventDispatcher.waitForBeacon).to.equal(true);
     expect(dispatchEventsSpy).to.have.been.called;
+  });
+
+  it('Should not call dispatchEvents until beacon event is received and waitForBeacon option is provided', () => {
+    const eventDispatcher = new EventDispatcher({ waitForBeacon: true });
+    const dispatchEventsSpy = sinon.spy(eventDispatcher, 'dispatchEvents');
+
+    eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
+    eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
+    eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
+
+    expect(eventDispatcher.events.length).to.equal(3);
+    expect(dispatchEventsSpy).to.not.have.been.called;
+
+    window.dispatchEvent(new window.CustomEvent('ConstructorIOAutocomplete.loaded'));
+
+    expect(eventDispatcher.events.length).to.equal(0);
+    expect(dispatchEventsSpy).to.have.been.called;
+  });
+
+  it('Should not call dispatchEvents even if beacon event is received and waitForBeacon option is provided and enabled is set to false', () => {
+    const eventDispatcher = new EventDispatcher({
+      waitForBeacon: true,
+      enabled: false,
+    });
+    const dispatchEventsSpy = sinon.spy(eventDispatcher, 'dispatchEvents');
+
+    eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
+    eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
+    eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
+
+    expect(eventDispatcher.events.length).to.equal(3);
+    expect(dispatchEventsSpy).to.not.have.been.called;
+
+    window.dispatchEvent(new window.CustomEvent('ConstructorIOAutocomplete.loaded'));
+
+    expect(eventDispatcher.events.length).to.equal(3);
+    expect(dispatchEventsSpy).to.not.have.been.called;
   });
 
   describe('queue', () => {

@@ -24,15 +24,23 @@ class EventDispatcher {
       ? true
       : false; // Defaults to 'false'
 
+    // `enabled` is a supplied option
+    // - if false, events will never be dispatched
+    // `active` is a variable determining if events will be dispatched
+    // - if `waitForBeacon` is set to true, `active` will be false until beacon event is received
+    this.active = this.enabled;
+
     // If `waitForBeacon` option is set, only enable event dispatching once event is received from beacon
     if (this.waitForBeacon) {
-      this.enabled = false;
+      this.active = false;
 
       // Mark if page environment is unloading
       helpers.addEventListener('ConstructorIOAutocomplete.loaded', () => {
-        this.enabled = true;
+        if (this.enabled) {
+          this.active = true;
 
-        this.dispatchEvents();
+          this.dispatchEvents();
+        }
       });
     }
   }
@@ -46,7 +54,7 @@ class EventDispatcher {
       data,
     });
 
-    if (this.enabled) {
+    if (this.active) {
       this.dispatchEvents();
     }
   }

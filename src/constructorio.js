@@ -26,7 +26,7 @@ class ConstructorIO {
    * @param {boolean} [sendTrackingEvents] - Indicates if tracking events should be dispatched
    * @param {object} [idOptions] - Options object to be supplied to 'constructorio-id' module
    * @param {object} [eventDispatcher] - Options related to 'EventDispatcher' class
-   * @param {boolean} [eventDispatcher.enabled] - Determine if events should be dispatched on `window`
+   * @param {boolean} [eventDispatcher.enabled] - Determine if events should be dispatched
    * @param {boolean} [eventDispatcher.waitForBeacon] - Wait for beacon before dispatching events
    * @property {object} [search] - Interface to {@link module:search}
    * @property {object} [browse] - Interface to {@link module:browse}
