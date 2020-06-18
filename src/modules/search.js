@@ -98,7 +98,7 @@ class Search {
   constructor(options) {
     this.options = options;
     this.module = 'search';
-    this.eventDispatcher = new EventDispatcher();
+    this.eventDispatcher = new EventDispatcher(options);
   }
 
   /**

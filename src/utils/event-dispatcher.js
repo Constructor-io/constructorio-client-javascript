@@ -1,3 +1,5 @@
+/* eslint-disable no-unneeded-ternary */
+
 // Create `CustomEvent` with fallback
 const createCustomEvent = (eventName, detail) => {
   try {
@@ -12,9 +14,18 @@ const createCustomEvent = (eventName, detail) => {
 };
 
 class EventDispatcher {
-  constructor() {
+  constructor(options) {
     this.events = [];
-    this.active = true;
+    this.enabled = (options && options.eventDispatcher && options.eventDispatcher.enabled === false)
+      ? false
+      : true; // Defaults to 'true'
+    this.waitForBeacon = (options && options.eventDispatcher && options.eventDispatcher.waitForBeacon === true)
+      ? true
+      : false; // Defaults to 'false'
+
+    if (this.waitForBeacon) {
+      this.enabled = false;
+    }
   }
 
   // Push event data to queue
@@ -26,7 +37,7 @@ class EventDispatcher {
       data,
     });
 
-    if (this.active) {
+    if (this.enabled) {
       this.dispatchEvents();
     }
   }
