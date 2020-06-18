@@ -100,6 +100,7 @@ function createBrowseUrl(filterName, filterValue, parameters, options) {
 class Browse {
   constructor(options) {
     this.options = options;
+    this.module = 'browse';
   }
 
   /**
@@ -119,6 +120,7 @@ class Browse {
    */
   getBrowseResults(filterName, filterValue, parameters) {
     let requestUrl;
+    const method = 'getBrowseResults';
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
 
     try {
@@ -144,6 +146,8 @@ class Browse {
               result.result_id = json.result_id;
             });
           }
+
+          helpers.dispatchEvent(this.module, method, 'response', json);
 
           return json;
         }

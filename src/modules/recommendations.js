@@ -64,6 +64,7 @@ function createRecommendationsUrl(podId, parameters, options) {
 class Recommendations {
   constructor(options) {
     this.options = options;
+    this.module = 'recommendations';
   }
 
   /**
@@ -80,6 +81,7 @@ class Recommendations {
    */
   getRecommendations(podId, parameters) {
     let requestUrl;
+    const method = 'getRecommendations';
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
 
     parameters = parameters || {};
@@ -107,6 +109,8 @@ class Recommendations {
               result.result_id = json.result_id;
             });
           }
+
+          helpers.dispatchEvent(this.module, method, 'response', json);
 
           return json;
         }
