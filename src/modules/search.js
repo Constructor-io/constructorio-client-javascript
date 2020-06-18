@@ -96,6 +96,7 @@ function createSearchUrl(query, parameters, options) {
 class Search {
   constructor(options) {
     this.options = options;
+    this.module = 'search';
   }
 
   /**
@@ -115,6 +116,7 @@ class Search {
   getSearchResults(query, parameters) {
     let requestUrl;
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const method = 'getSearchResults';
 
     try {
       requestUrl = createSearchUrl(query, parameters, this.options);
@@ -140,11 +142,15 @@ class Search {
             });
           }
 
+          helpers.dispatchEvent(this.module, method, 'response', json);
+
           return json;
         }
 
         // Redirect rules
         if (json.response && json.response.redirect) {
+          helpers.dispatchEvent(this.module, method, 'response', json);
+
           return json;
         }
 

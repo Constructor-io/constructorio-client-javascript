@@ -68,23 +68,23 @@ const utils = {
   isNil: value => value == null,
 
   // Dispatch an event on `window` of supplied name and data
-  dispatchEvent: (name, data) => {
-    const createCustomEvent = (name, data) => {
+  dispatchEvent: (module, method, name, data) => {
+    const createCustomEvent = (eventName, detail) => {
       try {
-        return new CustomEvent(name, data);
+        return new CustomEvent(eventName, { detail });
       } catch (e) {
         const evt = document.createEvent('CustomEvent');
 
-        evt.initCustomEvent(name, false, false, data);
+        evt.initCustomEvent(eventName, false, false, detail);
 
         return evt;
       }
     };
 
     if (window && window.dispatchEvent) {
-      window.dispatchEvent(createCustomEvent(name, data));
+      window.dispatchEvent(createCustomEvent(`ConstructorIO.${module}.${method}.${name}`, data));
     }
-  }
+  },
 };
 
 module.exports = utils;
