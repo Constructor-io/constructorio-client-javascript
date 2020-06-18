@@ -102,7 +102,7 @@ class Browse {
   constructor(options) {
     this.options = options;
     this.module = 'browse';
-    this.eventDispatcher = new EventDispatcher(options);
+    this.eventDispatcher = new EventDispatcher(options && options.eventDispatcher);
   }
 
   /**

@@ -17,10 +17,10 @@ const createCustomEvent = (eventName, detail) => {
 class EventDispatcher {
   constructor(options) {
     this.events = [];
-    this.enabled = (options && options.eventDispatcher && options.eventDispatcher.enabled === false)
+    this.enabled = (options && options.enabled === false)
       ? false
       : true; // Defaults to 'true'
-    this.waitForBeacon = (options && options.eventDispatcher && options.eventDispatcher.waitForBeacon === true)
+    this.waitForBeacon = (options && options.waitForBeacon === true)
       ? true
       : false; // Defaults to 'false'
 
@@ -31,6 +31,8 @@ class EventDispatcher {
       // Mark if page environment is unloading
       helpers.addEventListener('ConstructorIOAutocomplete.loaded', () => {
         this.enabled = true;
+
+        this.dispatchEvents();
       });
     }
   }
@@ -52,12 +54,13 @@ class EventDispatcher {
   // Dispatch all custom events within queue on `window` of supplied name with data
   dispatchEvents() {
     if (this.events.length) {
-      this.events.forEach((item) => {
+      while (this.events.length) {
+        const item = this.events.pop();
         const { module, method, name, data } = item;
         const eventName = `ConstructorIO.${module}.${method}.${name}`;
 
         window.dispatchEvent(createCustomEvent(eventName, data));
-      });
+      }
     }
   }
 }
