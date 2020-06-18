@@ -9,7 +9,7 @@ const helpers = require('../../mocha.helpers');
 chai.use(chaiAsPromised);
 dotenv.config();
 
-describe.only('ConstructorIO - Utils - Event Dispatcher', () => {
+describe('ConstructorIO - Utils - Event Dispatcher', () => {
   const eventData = {
     module: 'search',
     method: 'getSearchResults',
