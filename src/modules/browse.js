@@ -2,6 +2,7 @@
 const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
+const EventDispatcher = require('../utils/event-dispatcher');
 const helpers = require('../utils/helpers');
 
 // Create URL from supplied filter name, value and parameters
@@ -101,6 +102,7 @@ class Browse {
   constructor(options) {
     this.options = options;
     this.module = 'browse';
+    this.eventDispatcher = new EventDispatcher();
   }
 
   /**
@@ -147,7 +149,7 @@ class Browse {
             });
           }
 
-          helpers.dispatchEvent(this.module, method, 'response', json);
+          this.eventDispatcher.queue(this.module, method, 'response', json);
 
           return json;
         }

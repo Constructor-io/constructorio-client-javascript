@@ -2,6 +2,7 @@
 const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
+const EventDispatcher = require('../utils/event-dispatcher');
 const helpers = require('../utils/helpers');
 
 // Create URL from supplied query (term) and parameters
@@ -97,6 +98,7 @@ class Search {
   constructor(options) {
     this.options = options;
     this.module = 'search';
+    this.eventDispatcher = new EventDispatcher();
   }
 
   /**
@@ -142,14 +144,14 @@ class Search {
             });
           }
 
-          helpers.dispatchEvent(this.module, method, 'response', json);
+          this.eventDispatcher.queue(this.module, method, 'response', json);
 
           return json;
         }
 
         // Redirect rules
         if (json.response && json.response.redirect) {
-          helpers.dispatchEvent(this.module, method, 'response', json);
+          this.eventDispatcher.queue(this.module, method, 'response', json);
 
           return json;
         }
