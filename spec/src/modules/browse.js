@@ -257,7 +257,7 @@ describe('ConstructorIO - Browse', () => {
     it('Should emit an event with response data', (done) => {
       const { browse } = new ConstructorIO({ apiKey: testApiKey });
       const customEventSpy = sinon.spy(window, 'CustomEvent');
-      const eventName = 'ConstructorIO.browse.getBrowseResults.response';
+      const eventName = 'cio.browse.getBrowseResults.completed';
 
       // Note: `CustomEvent` in Node context not containing `detail`, so checking arguments instead
       window.addEventListener(eventName, () => {

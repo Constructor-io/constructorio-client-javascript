@@ -10,6 +10,7 @@ chai.use(chaiAsPromised);
 dotenv.config();
 
 describe('ConstructorIO - Utils - Event Dispatcher', () => {
+  const beaconEventName = 'cio.beacon.loaded';
   const eventData = {
     module: 'search',
     method: 'getSearchResults',
@@ -73,7 +74,7 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
     expect(eventDispatcher.active).to.equal(false);
     expect(eventDispatcher.waitForBeacon).to.equal(true);
 
-    window.dispatchEvent(new window.CustomEvent('ConstructorIOAutocomplete.loaded'));
+    window.dispatchEvent(new window.CustomEvent(beaconEventName));
 
     expect(eventDispatcher.active).to.equal(true);
     expect(eventDispatcher.waitForBeacon).to.equal(true);
@@ -87,7 +88,7 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
     expect(eventDispatcher.waitForBeacon).to.equal(true);
     expect(dispatchEventsSpy).to.not.have.been.called;
 
-    window.dispatchEvent(new window.CustomEvent('ConstructorIOAutocomplete.loaded'));
+    window.dispatchEvent(new window.CustomEvent(beaconEventName));
 
     expect(eventDispatcher.active).to.equal(true);
     expect(eventDispatcher.waitForBeacon).to.equal(true);
@@ -105,7 +106,7 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
     expect(eventDispatcher.events.length).to.equal(3);
     expect(dispatchEventsSpy).to.not.have.been.called;
 
-    window.dispatchEvent(new window.CustomEvent('ConstructorIOAutocomplete.loaded'));
+    window.dispatchEvent(new window.CustomEvent(beaconEventName));
 
     expect(eventDispatcher.events.length).to.equal(0);
     expect(dispatchEventsSpy).to.have.been.called;
@@ -125,7 +126,7 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
     expect(eventDispatcher.events.length).to.equal(3);
     expect(dispatchEventsSpy).to.not.have.been.called;
 
-    window.dispatchEvent(new window.CustomEvent('ConstructorIOAutocomplete.loaded'));
+    window.dispatchEvent(new window.CustomEvent(beaconEventName));
 
     expect(eventDispatcher.events.length).to.equal(3);
     expect(dispatchEventsSpy).to.not.have.been.called;
@@ -180,7 +181,7 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
       const eventDispatcher = new EventDispatcher({ waitForBeacon: true });
       const dispatchEventsSpy = sinon.spy(eventDispatcher, 'dispatchEvents');
 
-      window.dispatchEvent(new window.CustomEvent('ConstructorIOAutocomplete.loaded'));
+      window.dispatchEvent(new window.CustomEvent(beaconEventName));
 
       eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
 

@@ -270,7 +270,7 @@ describe('ConstructorIO - Search', () => {
     it('Should emit an event with response data', (done) => {
       const { search } = new ConstructorIO({ apiKey: testApiKey });
       const customEventSpy = sinon.spy(window, 'CustomEvent');
-      const eventName = 'ConstructorIO.search.getSearchResults.response';
+      const eventName = 'cio.search.getSearchResults.completed';
 
       // Note: `CustomEvent` in Node context not containing `detail`, so checking arguments instead
       window.addEventListener(eventName, () => {

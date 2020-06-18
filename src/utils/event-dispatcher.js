@@ -35,7 +35,7 @@ class EventDispatcher {
       this.active = false;
 
       // Mark if page environment is unloading
-      helpers.addEventListener('ConstructorIOAutocomplete.loaded', () => {
+      helpers.addEventListener('cio.beacon.loaded', () => {
         if (this.enabled) {
           this.active = true;
 
@@ -65,7 +65,7 @@ class EventDispatcher {
       while (this.events.length) {
         const item = this.events.pop();
         const { module, method, name, data } = item;
-        const eventName = `ConstructorIO.${module}.${method}.${name}`;
+        const eventName = `cio.${module}.${method}.${name}`;
 
         window.dispatchEvent(createCustomEvent(eventName, data));
       }

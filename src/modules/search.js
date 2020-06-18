@@ -144,14 +144,14 @@ class Search {
             });
           }
 
-          this.eventDispatcher.queue(this.module, method, 'response', json);
+          this.eventDispatcher.queue(this.module, method, 'completed', json);
 
           return json;
         }
 
         // Redirect rules
         if (json.response && json.response.redirect) {
-          this.eventDispatcher.queue(this.module, method, 'response', json);
+          this.eventDispatcher.queue(this.module, method, 'completed', json);
 
           return json;
         }

@@ -149,7 +149,7 @@ class Browse {
             });
           }
 
-          this.eventDispatcher.queue(this.module, method, 'response', json);
+          this.eventDispatcher.queue(this.module, method, 'completed', json);
 
           return json;
         }

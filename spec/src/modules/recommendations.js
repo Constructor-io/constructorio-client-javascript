@@ -188,7 +188,7 @@ describe('ConstructorIO - Recommendations', () => {
     it('Should emit an event with response data', (done) => {
       const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
       const customEventSpy = sinon.spy(window, 'CustomEvent');
-      const eventName = 'ConstructorIO.recommendations.getRecommendations.response';
+      const eventName = 'cio.recommendations.getRecommendations.completed';
 
       // Note: `CustomEvent` in Node context not containing `detail`, so checking arguments instead
       window.addEventListener(eventName, () => {
