@@ -1,4 +1,5 @@
 /* eslint-disable no-unneeded-ternary */
+const helpers = require('../utils/helpers');
 
 // Create `CustomEvent` with fallback
 const createCustomEvent = (eventName, detail) => {
@@ -23,8 +24,14 @@ class EventDispatcher {
       ? true
       : false; // Defaults to 'false'
 
+    // If `waitForBeacon` option is set, only enable event dispatching once event is received from beacon
     if (this.waitForBeacon) {
       this.enabled = false;
+
+      // Mark if page environment is unloading
+      helpers.addEventListener('ConstructorIOAutocomplete.loaded', () => {
+        this.enabled = true;
+      });
     }
   }
 
