@@ -71,7 +71,7 @@ const utils = {
   dispatchEvent: (module, method, name, data) => {
     const createCustomEvent = (eventName, detail) => {
       try {
-        return new CustomEvent(eventName, { detail });
+        return new window.CustomEvent(eventName, { detail });
       } catch (e) {
         const evt = document.createEvent('CustomEvent');
 
