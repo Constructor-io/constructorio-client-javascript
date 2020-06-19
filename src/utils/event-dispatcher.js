@@ -20,9 +20,9 @@ class EventDispatcher {
     this.enabled = (options && options.enabled === false)
       ? false
       : true; // Defaults to 'true'
-    this.waitForBeacon = (options && options.waitForBeacon === true)
-      ? true
-      : false; // Defaults to 'false'
+    this.waitForBeacon = (options && options.waitForBeacon === false)
+      ? false
+      : true; // Defaults to 'true'
 
     // `enabled` is a supplied option
     // - if false, events will never be dispatched

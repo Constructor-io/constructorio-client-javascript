@@ -9,7 +9,7 @@ const helpers = require('../../mocha.helpers');
 chai.use(chaiAsPromised);
 dotenv.config();
 
-describe('ConstructorIO - Utils - Event Dispatcher', () => {
+describe.only('ConstructorIO - Utils - Event Dispatcher', () => {
   const beaconEventName = 'cio.beacon.loaded';
   const eventData = {
     module: 'search',
@@ -37,8 +37,8 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
     const eventDispatcher = new EventDispatcher();
 
     expect(eventDispatcher.events).to.deep.equal([]);
-    expect(eventDispatcher.active).to.equal(true);
-    expect(eventDispatcher.waitForBeacon).to.equal(false);
+    expect(eventDispatcher.active).to.equal(false);
+    expect(eventDispatcher.waitForBeacon).to.equal(true);
   });
 
   it('Should set correct defaults when enabled option is provided', () => {
@@ -46,42 +46,30 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
 
     expect(eventDispatcher.events).to.deep.equal([]);
     expect(eventDispatcher.active).to.equal(false);
-    expect(eventDispatcher.waitForBeacon).to.equal(false);
+    expect(eventDispatcher.waitForBeacon).to.equal(true);
   });
 
   it('Should set correct defaults when waitForBeacon option is provided', () => {
-    const eventDispatcher = new EventDispatcher({ waitForBeacon: true });
+    const eventDispatcher = new EventDispatcher({ waitForBeacon: false });
 
     expect(eventDispatcher.events).to.deep.equal([]);
-    expect(eventDispatcher.active).to.equal(false);
-    expect(eventDispatcher.waitForBeacon).to.equal(true);
+    expect(eventDispatcher.active).to.equal(true);
+    expect(eventDispatcher.waitForBeacon).to.equal(false);
   });
 
   it('Should set correct defaults when both enabled and waitForBeacon options are provided', () => {
     const eventDispatcher = new EventDispatcher({
-      enabled: true,
-      waitForBeacon: true,
+      enabled: false,
+      waitForBeacon: false,
     });
 
     expect(eventDispatcher.events).to.deep.equal([]);
     expect(eventDispatcher.active).to.equal(false);
-    expect(eventDispatcher.waitForBeacon).to.equal(true);
+    expect(eventDispatcher.waitForBeacon).to.equal(false);
   });
 
-  it('Should set enabled to be true when beacon event received and waitForBeacon option is provided', () => {
-    const eventDispatcher = new EventDispatcher({ waitForBeacon: true });
-
-    expect(eventDispatcher.active).to.equal(false);
-    expect(eventDispatcher.waitForBeacon).to.equal(true);
-
-    window.dispatchEvent(new window.CustomEvent(beaconEventName));
-
-    expect(eventDispatcher.active).to.equal(true);
-    expect(eventDispatcher.waitForBeacon).to.equal(true);
-  });
-
-  it('Should set enabled to be true and call dispatchEvents when beacon event received and waitForBeacon option is provided', () => {
-    const eventDispatcher = new EventDispatcher({ waitForBeacon: true });
+  it('Should set active to be true and call dispatchEvents when beacon event received and waitForBeacon option is provided', () => {
+    const eventDispatcher = new EventDispatcher();
     const dispatchEventsSpy = sinon.spy(eventDispatcher, 'dispatchEvents');
 
     expect(eventDispatcher.active).to.equal(false);
@@ -96,7 +84,7 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
   });
 
   it('Should not call dispatchEvents until beacon event is received and waitForBeacon option is provided', () => {
-    const eventDispatcher = new EventDispatcher({ waitForBeacon: true });
+    const eventDispatcher = new EventDispatcher();
     const dispatchEventsSpy = sinon.spy(eventDispatcher, 'dispatchEvents');
 
     eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
@@ -112,9 +100,8 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
     expect(dispatchEventsSpy).to.have.been.called;
   });
 
-  it('Should not call dispatchEvents even if beacon event is received and waitForBeacon option is provided and enabled is set to false', () => {
+  it('Should not call dispatchEvents even if beacon event is received and enabled is set to false', () => {
     const eventDispatcher = new EventDispatcher({
-      waitForBeacon: true,
       enabled: false,
     });
     const dispatchEventsSpy = sinon.spy(eventDispatcher, 'dispatchEvents');
@@ -150,8 +137,8 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
       expect(eventDispatcher.events.length).to.equal(3);
     });
 
-    it('Should call dispatchEvents method if dispatcher is enabled', () => {
-      const eventDispatcher = new EventDispatcher({ enabled: true });
+    it('Should call dispatchEvents method if dispatcher is enabled and waitForBeacon is set to false', () => {
+      const eventDispatcher = new EventDispatcher({ enabled: true, waitForBeacon: false });
       const dispatchEventsSpy = sinon.spy(eventDispatcher, 'dispatchEvents');
 
       eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
@@ -168,8 +155,8 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
       expect(dispatchEventsSpy).to.not.have.been.called;
     });
 
-    it('Should not call dispatchEvents method if dispatcher set to waitForBeacon', () => {
-      const eventDispatcher = new EventDispatcher({ waitForBeacon: true });
+    it('Should not call dispatchEvents method until beacon event is received', () => {
+      const eventDispatcher = new EventDispatcher();
       const dispatchEventsSpy = sinon.spy(eventDispatcher, 'dispatchEvents');
 
       eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
@@ -177,8 +164,8 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
       expect(dispatchEventsSpy).to.not.have.been.called;
     });
 
-    it('Should call dispatchEvents method if dispatcher set to waitForBeacon and beacon event is received', () => {
-      const eventDispatcher = new EventDispatcher({ waitForBeacon: true });
+    it('Should call dispatchEvents method if beacon event is received', () => {
+      const eventDispatcher = new EventDispatcher();
       const dispatchEventsSpy = sinon.spy(eventDispatcher, 'dispatchEvents');
 
       window.dispatchEvent(new window.CustomEvent(beaconEventName));
