@@ -101,7 +101,6 @@ function createBrowseUrl(filterName, filterValue, parameters, options) {
 class Browse {
   constructor(options) {
     this.options = options;
-    this.module = 'browse';
     this.eventDispatcher = new EventDispatcher(options && options.eventDispatcher);
   }
 
@@ -122,7 +121,6 @@ class Browse {
    */
   getBrowseResults(filterName, filterValue, parameters) {
     let requestUrl;
-    const method = 'getBrowseResults';
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
 
     try {
@@ -149,7 +147,7 @@ class Browse {
             });
           }
 
-          this.eventDispatcher.queue(this.module, method, 'completed', json);
+          this.eventDispatcher.queue('browse', 'getBrowseResults', 'completed', json);
 
           return json;
         }

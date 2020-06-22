@@ -96,9 +96,8 @@ function createSearchUrl(query, parameters, options) {
  */
 class Search {
   constructor(options) {
-    this.options = options;
-    this.module = 'search';
-    this.eventDispatcher = new EventDispatcher(options && options.eventDispatcher);
+    this.options = options || {};
+    this.eventDispatcher = new EventDispatcher(options.eventDispatcher);
   }
 
   /**
@@ -118,7 +117,6 @@ class Search {
   getSearchResults(query, parameters) {
     let requestUrl;
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
-    const method = 'getSearchResults';
 
     try {
       requestUrl = createSearchUrl(query, parameters, this.options);
@@ -144,14 +142,14 @@ class Search {
             });
           }
 
-          this.eventDispatcher.queue(this.module, method, 'completed', json);
+          this.eventDispatcher.queue('search', 'getSearchResults', 'completed', json);
 
           return json;
         }
 
         // Redirect rules
         if (json.response && json.response.redirect) {
-          this.eventDispatcher.queue(this.module, method, 'completed', json);
+          this.eventDispatcher.queue('search', 'getSearchResults', 'completed', json);
 
           return json;
         }

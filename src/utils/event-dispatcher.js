@@ -34,7 +34,7 @@ class EventDispatcher {
     if (this.waitForBeacon) {
       this.active = false;
 
-      // Mark if page environment is unloading
+      // Bind listener to beacon loaded event
       helpers.addEventListener('cio.beacon.loaded', () => {
         if (this.enabled) {
           this.active = true;
@@ -61,14 +61,12 @@ class EventDispatcher {
 
   // Dispatch all custom events within queue on `window` of supplied name with data
   dispatchEvents() {
-    if (this.events.length) {
-      while (this.events.length) {
-        const item = this.events.pop();
-        const { module, method, name, data } = item;
-        const eventName = `cio.${module}.${method}.${name}`;
+    while (this.events.length) {
+      const item = this.events.pop();
+      const { module, method, name, data } = item;
+      const eventName = `cio.${module}.${method}.${name}`;
 
-        window.dispatchEvent(createCustomEvent(eventName, data));
-      }
+      window.dispatchEvent(createCustomEvent(eventName, data));
     }
   }
 }

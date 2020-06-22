@@ -83,7 +83,6 @@ class Recommendations {
    */
   getRecommendations(podId, parameters) {
     let requestUrl;
-    const method = 'getRecommendations';
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
 
     parameters = parameters || {};
@@ -112,7 +111,7 @@ class Recommendations {
             });
           }
 
-          this.eventDispatcher.queue(this.module, method, 'completed', json);
+          this.eventDispatcher.queue('recommendations', 'getRecommendations', 'completed', json);
 
           return json;
         }
