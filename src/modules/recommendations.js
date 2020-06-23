@@ -64,9 +64,8 @@ function createRecommendationsUrl(podId, parameters, options) {
  */
 class Recommendations {
   constructor(options) {
-    this.options = options;
-    this.module = 'recommendations';
-    this.eventDispatcher = new EventDispatcher(options && options.eventDispatcher);
+    this.options = options || {};
+    this.eventDispatcher = new EventDispatcher(options.eventDispatcher);
   }
 
   /**

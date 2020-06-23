@@ -268,7 +268,12 @@ describe('ConstructorIO - Search', () => {
     });
 
     it('Should emit an event with response data', (done) => {
-      const { search } = new ConstructorIO({ apiKey: testApiKey });
+      const { search } = new ConstructorIO({
+        apiKey: testApiKey,
+        eventDispatcher: {
+          waitForBeacon: false,
+        },
+      });
       const customEventSpy = sinon.spy(window, 'CustomEvent');
       const eventName = 'cio.search.getSearchResults.completed';
 

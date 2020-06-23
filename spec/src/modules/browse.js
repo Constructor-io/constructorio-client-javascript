@@ -255,7 +255,12 @@ describe('ConstructorIO - Browse', () => {
     });
 
     it('Should emit an event with response data', (done) => {
-      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        eventDispatcher: {
+          waitForBeacon: false,
+        },
+      });
       const customEventSpy = sinon.spy(window, 'CustomEvent');
       const eventName = 'cio.browse.getBrowseResults.completed';
 

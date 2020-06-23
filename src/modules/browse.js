@@ -100,8 +100,8 @@ function createBrowseUrl(filterName, filterValue, parameters, options) {
  */
 class Browse {
   constructor(options) {
-    this.options = options;
-    this.eventDispatcher = new EventDispatcher(options && options.eventDispatcher);
+    this.options = options || {};
+    this.eventDispatcher = new EventDispatcher(options.eventDispatcher);
   }
 
   /**

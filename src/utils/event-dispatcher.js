@@ -62,7 +62,7 @@ class EventDispatcher {
   // Dispatch all custom events within queue on `window` of supplied name with data
   dispatchEvents() {
     while (this.events.length) {
-      const item = this.events.pop();
+      const item = this.events.shift();
       const { module, method, name, data } = item;
       const eventName = `cio.${module}.${method}.${name}`;
 
