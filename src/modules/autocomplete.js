@@ -2,6 +2,7 @@
 const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
+const EventDispatcher = require('../utils/event-dispatcher');
 const { throwHttpErrorFromResponse, cleanParams } = require('../utils/helpers');
 
 // Create URL from supplied query (term) and parameters
@@ -82,7 +83,8 @@ function createAutocompleteUrl(query, parameters, options) {
  */
 class Autocomplete {
   constructor(options) {
-    this.options = options;
+    this.options = options || {};
+    this.eventDispatcher = new EventDispatcher(options.eventDispatcher);
   }
 
   /**
@@ -130,6 +132,8 @@ class Autocomplete {
               }
             });
           }
+
+          this.eventDispatcher.queue('autocomplete', 'getAutocompleteResults', 'completed', json);
 
           return json;
         }
