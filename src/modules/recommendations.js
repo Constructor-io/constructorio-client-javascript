@@ -2,6 +2,7 @@
 const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
+const EventDispatcher = require('../utils/event-dispatcher');
 const helpers = require('../utils/helpers');
 
 // Create URL from supplied parameters
@@ -63,7 +64,8 @@ function createRecommendationsUrl(podId, parameters, options) {
  */
 class Recommendations {
   constructor(options) {
-    this.options = options;
+    this.options = options || {};
+    this.eventDispatcher = new EventDispatcher(options.eventDispatcher);
   }
 
   /**
@@ -107,6 +109,8 @@ class Recommendations {
               result.result_id = json.result_id;
             });
           }
+
+          this.eventDispatcher.queue('recommendations', 'getRecommendations', 'completed', json);
 
           return json;
         }

@@ -25,6 +25,9 @@ class ConstructorIO {
    * @param {number} [trackingSendDelay] - Amount of time to wait before sending tracking events (in ms)
    * @param {boolean} [sendTrackingEvents] - Indicates if tracking events should be dispatched
    * @param {object} [idOptions] - Options object to be supplied to 'constructorio-id' module
+   * @param {object} [eventDispatcher] - Options related to 'EventDispatcher' class
+   * @param {boolean} [eventDispatcher.enabled] - Determine if events should be dispatched
+   * @param {boolean} [eventDispatcher.waitForBeacon] - Wait for beacon before dispatching events
    * @property {object} [search] - Interface to {@link module:search}
    * @property {object} [browse] - Interface to {@link module:browse}
    * @property {object} [autocomplete] - Interface to {@link module:autocomplete}
@@ -45,6 +48,7 @@ class ConstructorIO {
       fetch,
       trackingSendDelay,
       sendTrackingEvents,
+      eventDispatcher,
       idOptions,
     } = options;
 
@@ -66,6 +70,7 @@ class ConstructorIO {
       testCells,
       fetch,
       trackingSendDelay,
+      eventDispatcher,
       sendTrackingEvents,
     };
 

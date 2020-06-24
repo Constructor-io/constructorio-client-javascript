@@ -254,6 +254,32 @@ describe('ConstructorIO - Browse', () => {
       });
     });
 
+    it('Should emit an event with response data', (done) => {
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        eventDispatcher: {
+          waitForBeacon: false,
+        },
+      });
+      const customEventSpy = sinon.spy(window, 'CustomEvent');
+      const eventName = 'cio.browse.getBrowseResults.completed';
+
+      // Note: `CustomEvent` in Node context not containing `detail`, so checking arguments instead
+      window.addEventListener(eventName, () => {
+        const customEventSpyArgs = customEventSpy.getCall(0).args;
+        const { detail: customEventDetails } = customEventSpyArgs[1];
+
+        expect(customEventSpy).to.have.been.called;
+        expect(customEventSpyArgs[0]).to.equal(eventName);
+        expect(customEventDetails).to.have.property('request').to.be.an('object');
+        expect(customEventDetails).to.have.property('response').to.be.an('object');
+        expect(customEventDetails).to.have.property('result_id').to.be.an('string');
+        done();
+      }, false);
+
+      browse.getBrowseResults(filterName, filterValue);
+    });
+
     it('Should be rejected when invalid filterName is provided', () => {
       const { browse } = new ConstructorIO({ apiKey: testApiKey });
 

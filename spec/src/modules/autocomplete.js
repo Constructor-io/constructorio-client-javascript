@@ -212,6 +212,32 @@ describe('ConstructorIO - Autocomplete', () => {
       });
     });
 
+    it('Should emit an event with response data', (done) => {
+      const { autocomplete } = new ConstructorIO({
+        apiKey: testApiKey,
+        eventDispatcher: {
+          waitForBeacon: false,
+        },
+      });
+      const customEventSpy = sinon.spy(window, 'CustomEvent');
+      const eventName = 'cio.autocomplete.getAutocompleteResults.completed';
+
+      // Note: `CustomEvent` in Node context not containing `detail`, so checking arguments instead
+      window.addEventListener(eventName, () => {
+        const customEventSpyArgs = customEventSpy.getCall(0).args;
+        const { detail: customEventDetails } = customEventSpyArgs[1];
+
+        expect(customEventSpy).to.have.been.called;
+        expect(customEventSpyArgs[0]).to.equal(eventName);
+        expect(customEventDetails).to.have.property('request').to.be.an('object');
+        expect(customEventDetails).to.have.property('sections').to.be.an('object');
+        expect(customEventDetails).to.have.property('result_id').to.be.an('string');
+        done();
+      }, false);
+
+      autocomplete.getAutocompleteResults(query);
+    });
+
     it('Should be rejected when invalid query is provided', () => {
       const { autocomplete } = new ConstructorIO({ apiKey: testApiKey });
 

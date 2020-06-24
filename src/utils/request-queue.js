@@ -1,4 +1,4 @@
-/* eslint-disable brace-style */
+/* eslint-disable brace-style, no-unneeded-ternary */
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
 const store = require('../utils/store');
@@ -15,8 +15,9 @@ class RequestQueue {
     this.requestPending = false;
     this.pageUnloading = false;
 
-    // eslint-disable-next-line no-unneeded-ternary
-    this.sendTrackingEvents = (options && options.sendTrackingEvents === false) ? false : true;
+    this.sendTrackingEvents = (options && options.sendTrackingEvents === false)
+      ? false
+      : true; // Defaults to 'true'
 
     // Mark if page environment is unloading
     helpers.addEventListener('beforeunload', () => {

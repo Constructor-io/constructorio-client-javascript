@@ -2,6 +2,7 @@
 const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
+const EventDispatcher = require('../utils/event-dispatcher');
 const helpers = require('../utils/helpers');
 
 // Create URL from supplied filter name, value and parameters
@@ -99,7 +100,8 @@ function createBrowseUrl(filterName, filterValue, parameters, options) {
  */
 class Browse {
   constructor(options) {
-    this.options = options;
+    this.options = options || {};
+    this.eventDispatcher = new EventDispatcher(options.eventDispatcher);
   }
 
   /**
@@ -144,6 +146,8 @@ class Browse {
               result.result_id = json.result_id;
             });
           }
+
+          this.eventDispatcher.queue('browse', 'getBrowseResults', 'completed', json);
 
           return json;
         }
