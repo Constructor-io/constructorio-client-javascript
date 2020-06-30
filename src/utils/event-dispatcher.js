@@ -36,7 +36,11 @@ class EventDispatcher {
 
       // Check browser environment to determine if beacon has been loaded
       // - Important for the case where the beacon has loaded before client library instantiated
-      if (window.ConstructorioAutocomplete || window.ConstructorioBeacon) {
+      if (
+        window.ConstructorioAutocomplete
+        || window.ConstructorioBeacon
+        || window.ConstructorioTracker
+      ) {
         if (this.enabled) {
           this.active = true;
 

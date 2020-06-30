@@ -68,7 +68,7 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
     expect(eventDispatcher.waitForBeacon).to.equal(false);
   });
 
-  it('Should set active to be true and call dispatchEvents when beacon event received and waitForBeacon option is provided', () => {
+  it('Should set active to be true and call dispatchEvents when beacon event received', () => {
     const eventDispatcher = new EventDispatcher();
     const dispatchEventsSpy = sinon.spy(eventDispatcher, 'dispatchEvents');
 
@@ -83,7 +83,46 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
     expect(dispatchEventsSpy).to.have.been.called;
   });
 
-  it('Should not call dispatchEvents until beacon event is received and waitForBeacon option is provided', () => {
+  it('Should set active to be true and call dispatchEvents when beacon window objects found - `ConstructorioAutocomplete`', () => {
+    window.ConstructorioAutocomplete = true;
+
+    const eventDispatcher = new EventDispatcher();
+    const dispatchEventSpy = sinon.spy(window, 'dispatchEvent');
+
+    eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
+
+    expect(eventDispatcher.active).to.equal(true);
+    expect(eventDispatcher.waitForBeacon).to.equal(true);
+    expect(dispatchEventSpy).to.have.been.called;
+  });
+
+  it('Should set active to be true and call dispatchEvents when beacon window objects found - `ConstructorioBeacon`', () => {
+    window.ConstructorioBeacon = true;
+
+    const eventDispatcher = new EventDispatcher();
+    const dispatchEventSpy = sinon.spy(window, 'dispatchEvent');
+
+    eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
+
+    expect(eventDispatcher.active).to.equal(true);
+    expect(eventDispatcher.waitForBeacon).to.equal(true);
+    expect(dispatchEventSpy).to.have.been.called;
+  });
+
+  it('Should set active to be true and call dispatchEvents when beacon window objects found - `ConstructorioTracker`', () => {
+    window.ConstructorioTracker = true;
+
+    const eventDispatcher = new EventDispatcher();
+    const dispatchEventSpy = sinon.spy(window, 'dispatchEvent');
+
+    eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
+
+    expect(eventDispatcher.active).to.equal(true);
+    expect(eventDispatcher.waitForBeacon).to.equal(true);
+    expect(dispatchEventSpy).to.have.been.called;
+  });
+
+  it('Should not call dispatchEvents until beacon event is received', () => {
     const eventDispatcher = new EventDispatcher();
     const dispatchEventsSpy = sinon.spy(eventDispatcher, 'dispatchEvents');
 
@@ -117,6 +156,22 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
 
     expect(eventDispatcher.events.length).to.equal(3);
     expect(dispatchEventsSpy).to.not.have.been.called;
+  });
+
+  it('Should not call dispatchEvents even if beacon window object is found and enabled is set to false', () => {
+    window.ConstructorioAutocomplete = true;
+
+    const eventDispatcher = new EventDispatcher({
+      enabled: false,
+    });
+    const dispatchEventSpy = sinon.spy(window, 'dispatchEvent');
+
+    eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
+    eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
+    eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
+
+    expect(eventDispatcher.events.length).to.equal(3);
+    expect(dispatchEventSpy).to.not.have.been.called;
   });
 
   describe('queue', () => {
