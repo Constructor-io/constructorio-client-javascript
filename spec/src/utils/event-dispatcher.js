@@ -12,9 +12,7 @@ dotenv.config();
 describe('ConstructorIO - Utils - Event Dispatcher', () => {
   const beaconEventName = 'cio.beacon.loaded';
   const eventData = {
-    module: 'search',
-    method: 'getSearchResults',
-    name: 'response',
+    name: 'search.getSearchResults.completed',
     data: {
       foo: 'bar',
     },
@@ -89,7 +87,7 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
     const eventDispatcher = new EventDispatcher();
     const dispatchEventSpy = sinon.spy(window, 'dispatchEvent');
 
-    eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
+    eventDispatcher.queue(eventData.name, eventData.data);
 
     expect(eventDispatcher.active).to.equal(true);
     expect(eventDispatcher.waitForBeacon).to.equal(true);
@@ -102,7 +100,7 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
     const eventDispatcher = new EventDispatcher();
     const dispatchEventSpy = sinon.spy(window, 'dispatchEvent');
 
-    eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
+    eventDispatcher.queue(eventData.name, eventData.data);
 
     expect(eventDispatcher.active).to.equal(true);
     expect(eventDispatcher.waitForBeacon).to.equal(true);
@@ -115,7 +113,7 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
     const eventDispatcher = new EventDispatcher();
     const dispatchEventSpy = sinon.spy(window, 'dispatchEvent');
 
-    eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
+    eventDispatcher.queue(eventData.name, eventData.data);
 
     expect(eventDispatcher.active).to.equal(true);
     expect(eventDispatcher.waitForBeacon).to.equal(true);
@@ -126,9 +124,9 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
     const eventDispatcher = new EventDispatcher();
     const dispatchEventsSpy = sinon.spy(eventDispatcher, 'dispatchEvents');
 
-    eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
-    eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
-    eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
+    eventDispatcher.queue(eventData.name, eventData.data);
+    eventDispatcher.queue(eventData.name, eventData.data);
+    eventDispatcher.queue(eventData.name, eventData.data);
 
     expect(eventDispatcher.events.length).to.equal(3);
     expect(dispatchEventsSpy).to.not.have.been.called;
@@ -145,9 +143,9 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
     });
     const dispatchEventsSpy = sinon.spy(eventDispatcher, 'dispatchEvents');
 
-    eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
-    eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
-    eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
+    eventDispatcher.queue(eventData.name, eventData.data);
+    eventDispatcher.queue(eventData.name, eventData.data);
+    eventDispatcher.queue(eventData.name, eventData.data);
 
     expect(eventDispatcher.events.length).to.equal(3);
     expect(dispatchEventsSpy).to.not.have.been.called;
@@ -166,9 +164,9 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
     });
     const dispatchEventSpy = sinon.spy(window, 'dispatchEvent');
 
-    eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
-    eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
-    eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
+    eventDispatcher.queue(eventData.name, eventData.data);
+    eventDispatcher.queue(eventData.name, eventData.data);
+    eventDispatcher.queue(eventData.name, eventData.data);
 
     expect(eventDispatcher.events.length).to.equal(3);
     expect(dispatchEventSpy).to.not.have.been.called;
@@ -178,16 +176,14 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
     it('Should add events to queue when valid options are provided', () => {
       const eventDispatcher = new EventDispatcher({ enabled: false });
 
-      eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
+      eventDispatcher.queue(eventData.name, eventData.data);
 
       expect(eventDispatcher.events.length).to.equal(1);
-      expect(eventDispatcher.events[0]).to.have.property('module').to.be.a('string').to.equal(eventData.module);
-      expect(eventDispatcher.events[0]).to.have.property('method').to.be.a('string').to.equal(eventData.method);
       expect(eventDispatcher.events[0]).to.have.property('name').to.be.a('string').to.equal(eventData.name);
       expect(eventDispatcher.events[0]).to.have.property('data').to.be.an('object').to.equal(eventData.data);
 
-      eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
-      eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
+      eventDispatcher.queue(eventData.name, eventData.data);
+      eventDispatcher.queue(eventData.name, eventData.data);
 
       expect(eventDispatcher.events.length).to.equal(3);
     });
@@ -196,7 +192,7 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
       const eventDispatcher = new EventDispatcher({ enabled: true, waitForBeacon: false });
       const dispatchEventsSpy = sinon.spy(eventDispatcher, 'dispatchEvents');
 
-      eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
+      eventDispatcher.queue(eventData.name, eventData.data);
 
       expect(dispatchEventsSpy).to.have.been.called;
     });
@@ -205,7 +201,7 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
       const eventDispatcher = new EventDispatcher({ enabled: false });
       const dispatchEventsSpy = sinon.spy(eventDispatcher, 'dispatchEvents');
 
-      eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
+      eventDispatcher.queue(eventData.name, eventData.data);
 
       expect(dispatchEventsSpy).to.not.have.been.called;
     });
@@ -214,7 +210,7 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
       const eventDispatcher = new EventDispatcher();
       const dispatchEventsSpy = sinon.spy(eventDispatcher, 'dispatchEvents');
 
-      eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
+      eventDispatcher.queue(eventData.name, eventData.data);
 
       expect(dispatchEventsSpy).to.not.have.been.called;
     });
@@ -225,7 +221,7 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
 
       window.dispatchEvent(new window.CustomEvent(beaconEventName));
 
-      eventDispatcher.queue(eventData.module, eventData.method, eventData.name, eventData.data);
+      eventDispatcher.queue(eventData.name, eventData.data);
 
       expect(dispatchEventsSpy).to.have.been.called;
     });

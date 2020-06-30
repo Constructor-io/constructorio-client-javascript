@@ -62,7 +62,7 @@ describe('ConstructorIO', () => {
       },
     };
     const customEventSpy = sinon.spy(window, 'CustomEvent');
-    const eventName = 'cio.constructor.instantiation.completed';
+    const eventName = 'cio.client.instantiated';
 
     // Note: `CustomEvent` in Node context not containing `detail`, so checking arguments instead
     window.addEventListener(eventName, () => {

@@ -83,7 +83,7 @@ class ConstructorIO {
     this.tracker = new Tracker(this.options);
 
     // Dispatch initialization event
-    new EventDispatcher(options.eventDispatcher).queue('constructor', 'instantiation', 'completed', this.options);
+    new EventDispatcher(options.eventDispatcher).queue('instantiated', this.options);
   }
 }
 

@@ -147,7 +147,7 @@ class Browse {
             });
           }
 
-          this.eventDispatcher.queue('browse', 'getBrowseResults', 'completed', json);
+          this.eventDispatcher.queue('browse.getBrowseResults.completed', json);
 
           return json;
         }

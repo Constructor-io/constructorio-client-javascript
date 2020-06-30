@@ -262,7 +262,7 @@ describe('ConstructorIO - Browse', () => {
         },
       });
       const customEventSpy = sinon.spy(window, 'CustomEvent');
-      const eventName = 'cio.browse.getBrowseResults.completed';
+      const eventName = 'cio.client.browse.getBrowseResults.completed';
 
       // Note: `CustomEvent` in Node context not containing `detail`, so checking arguments instead
       window.addEventListener(eventName, () => {

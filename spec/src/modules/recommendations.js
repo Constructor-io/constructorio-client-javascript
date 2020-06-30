@@ -193,7 +193,7 @@ describe('ConstructorIO - Recommendations', () => {
         },
       });
       const customEventSpy = sinon.spy(window, 'CustomEvent');
-      const eventName = 'cio.recommendations.getRecommendations.completed';
+      const eventName = 'cio.client.recommendations.getRecommendations.completed';
 
       // Note: `CustomEvent` in Node context not containing `detail`, so checking arguments instead
       window.addEventListener(eventName, () => {

@@ -61,10 +61,8 @@ class EventDispatcher {
   }
 
   // Push event data to queue
-  queue(module, method, name, data) {
+  queue(name, data) {
     this.events.push({
-      module,
-      method,
       name,
       data,
     });
@@ -78,8 +76,8 @@ class EventDispatcher {
   dispatchEvents() {
     while (this.events.length) {
       const item = this.events.shift();
-      const { module, method, name, data } = item;
-      const eventName = `cio.${module}.${method}.${name}`;
+      const { name, data } = item;
+      const eventName = `cio.client.${name}`;
 
       window.dispatchEvent(createCustomEvent(eventName, data));
     }
