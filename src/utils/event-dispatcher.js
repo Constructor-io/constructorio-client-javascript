@@ -34,7 +34,22 @@ class EventDispatcher {
     if (this.waitForBeacon) {
       this.active = false;
 
+      // Check browser environment to determine if beacon has been loaded
+      // - Important for the case where the beacon has loaded before client library instantiated
+      if (
+        window.ConstructorioAutocomplete
+        || window.ConstructorioBeacon
+        || window.ConstructorioTracker
+      ) {
+        if (this.enabled) {
+          this.active = true;
+
+          this.dispatchEvents();
+        }
+      }
+
       // Bind listener to beacon loaded event
+      // - Important for the case where client library instantiated before beacon has loaded
       helpers.addEventListener('cio.beacon.loaded', () => {
         if (this.enabled) {
           this.active = true;
@@ -46,10 +61,8 @@ class EventDispatcher {
   }
 
   // Push event data to queue
-  queue(module, method, name, data) {
+  queue(name, data) {
     this.events.push({
-      module,
-      method,
       name,
       data,
     });
@@ -63,8 +76,8 @@ class EventDispatcher {
   dispatchEvents() {
     while (this.events.length) {
       const item = this.events.shift();
-      const { module, method, name, data } = item;
-      const eventName = `cio.${module}.${method}.${name}`;
+      const { name, data } = item;
+      const eventName = `cio.client.${name}`;
 
       window.dispatchEvent(createCustomEvent(eventName, data));
     }

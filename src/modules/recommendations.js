@@ -110,7 +110,7 @@ class Recommendations {
             });
           }
 
-          this.eventDispatcher.queue('recommendations', 'getRecommendations', 'completed', json);
+          this.eventDispatcher.queue('recommendations.getRecommendations.completed', json);
 
           return json;
         }

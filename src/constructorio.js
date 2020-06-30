@@ -7,6 +7,7 @@ const Browse = require('./modules/browse');
 const Autocomplete = require('./modules/autocomplete');
 const Recommendations = require('./modules/recommendations');
 const Tracker = require('./modules/tracker');
+const EventDispatcher = require('./utils/event-dispatcher');
 const { version: packageVersion } = require('../package.json');
 
 /**
@@ -80,6 +81,9 @@ class ConstructorIO {
     this.autocomplete = new Autocomplete(this.options);
     this.recommendations = new Recommendations(this.options);
     this.tracker = new Tracker(this.options);
+
+    // Dispatch initialization event
+    new EventDispatcher(options.eventDispatcher).queue('instantiated', this.options);
   }
 }
 

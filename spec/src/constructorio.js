@@ -1,5 +1,6 @@
-/* eslint-disable import/no-unresolved */
+/* eslint-disable no-unused-expressions, import/no-unresolved, no-new */
 const jsdom = require('mocha-jsdom');
+const sinon = require('sinon');
 const ConstructorIO = require('../../test/constructorio');
 
 const validApiKey = 'testing';
@@ -51,6 +52,32 @@ describe('ConstructorIO', () => {
     expect(instance.options).to.have.property('sessionId').to.equal(sessionId);
     expect(instance.options).to.have.property('serviceUrl').to.equal(serviceUrl);
     expect(instance.options).to.have.property('version').to.equal(version);
+  });
+
+  it('Should emit an event with options data', (done) => {
+    const options = {
+      apiKey: validApiKey,
+      eventDispatcher: {
+        waitForBeacon: false,
+      },
+    };
+    const customEventSpy = sinon.spy(window, 'CustomEvent');
+    const eventName = 'cio.client.instantiated';
+
+    // Note: `CustomEvent` in Node context not containing `detail`, so checking arguments instead
+    window.addEventListener(eventName, () => {
+      const customEventSpyArgs = customEventSpy.getCall(0).args;
+      const { detail: customEventDetails } = customEventSpyArgs[1];
+
+      expect(customEventSpy).to.have.been.called;
+      expect(customEventSpyArgs[0]).to.equal(eventName);
+      expect(customEventDetails).to.be.an('object');
+      expect(customEventDetails).to.have.property('apiKey').to.equal(options.apiKey);
+      expect(customEventDetails).to.have.property('eventDispatcher').to.deep.equal(options.eventDispatcher);
+      done();
+    }, false);
+
+    new ConstructorIO(options);
   });
 
   it('Should throw an error when invalid API key is provided', () => {

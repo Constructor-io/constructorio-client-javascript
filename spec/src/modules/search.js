@@ -275,7 +275,7 @@ describe('ConstructorIO - Search', () => {
         },
       });
       const customEventSpy = sinon.spy(window, 'CustomEvent');
-      const eventName = 'cio.search.getSearchResults.completed';
+      const eventName = 'cio.client.search.getSearchResults.completed';
 
       // Note: `CustomEvent` in Node context not containing `detail`, so checking arguments instead
       window.addEventListener(eventName, () => {

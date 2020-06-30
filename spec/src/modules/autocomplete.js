@@ -220,7 +220,7 @@ describe('ConstructorIO - Autocomplete', () => {
         },
       });
       const customEventSpy = sinon.spy(window, 'CustomEvent');
-      const eventName = 'cio.autocomplete.getAutocompleteResults.completed';
+      const eventName = 'cio.client.autocomplete.getAutocompleteResults.completed';
 
       // Note: `CustomEvent` in Node context not containing `detail`, so checking arguments instead
       window.addEventListener(eventName, () => {

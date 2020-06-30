@@ -133,7 +133,7 @@ class Autocomplete {
             });
           }
 
-          this.eventDispatcher.queue('autocomplete', 'getAutocompleteResults', 'completed', json);
+          this.eventDispatcher.queue('autocomplete.getAutocompleteResults.completed', json);
 
           return json;
         }

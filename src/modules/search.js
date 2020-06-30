@@ -142,14 +142,14 @@ class Search {
             });
           }
 
-          this.eventDispatcher.queue('search', 'getSearchResults', 'completed', json);
+          this.eventDispatcher.queue('search.getSearchResults.completed', json);
 
           return json;
         }
 
         // Redirect rules
         if (json.response && json.response.redirect) {
-          this.eventDispatcher.queue('search', 'getSearchResults', 'completed', json);
+          this.eventDispatcher.queue('search.getSearchResults.completed', json);
 
           return json;
         }
