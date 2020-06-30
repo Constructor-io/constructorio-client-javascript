@@ -34,7 +34,18 @@ class EventDispatcher {
     if (this.waitForBeacon) {
       this.active = false;
 
+      // Check browser environment to determine if beacon has been loaded
+      // - Important for the case where the beacon has loaded before client library instantiated
+      if (window.ConstructorioAutocomplete || window.ConstructorioBeacon) {
+        if (this.enabled) {
+          this.active = true;
+
+          this.dispatchEvents();
+        }
+      }
+
       // Bind listener to beacon loaded event
+      // - Important for the case where client library instantiated before beacon has loaded
       helpers.addEventListener('cio.beacon.loaded', () => {
         if (this.enabled) {
           this.active = true;
