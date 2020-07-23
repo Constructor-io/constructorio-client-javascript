@@ -37,6 +37,7 @@ describe('ConstructorIO - Search', () => {
   describe('getSearchResults', () => {
     const query = 'drill';
     const section = 'Products';
+    const collectionId = 'test';
 
     it('Should return a response with a valid query, and section', (done) => {
       const { search } = new ConstructorIO({
@@ -267,6 +268,24 @@ describe('ConstructorIO - Search', () => {
       });
     });
 
+    it('Should return a response from collection with a valid query and collection id', (done) => {
+      const { search } = new ConstructorIO({ apiKey: testApiKey });
+
+      search.getSearchResults(query, {
+        section,
+        collectionId,
+      }).then((res) => {
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.response).to.have.property('results').to.be.an('array');
+        res.response.results.forEach((result) => {
+          expect(result).to.have.property('result_id').to.be.a('string').to.equal(res.result_id);
+        });
+        done();
+      });
+    });
+
     it('Should emit an event with response data', (done) => {
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -359,6 +378,16 @@ describe('ConstructorIO - Search', () => {
       const { search } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(search.getSearchResults(query, { section: 123 })).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected when invalid collection id parameter is provided', () => {
+      const { search } = new ConstructorIO({ apiKey: testApiKey });
+      const searchParams = {
+        section,
+        collectionId: 123,
+      };
+
+      return expect(search.getSearchResults(query, searchParams)).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid apiKey is provided', () => {

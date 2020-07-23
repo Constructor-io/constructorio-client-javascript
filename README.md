@@ -51,6 +51,7 @@ constructorio.search.getSearchResults('dogs', {
 | `filters` | object | The criteria by which search results should be filtered |
 | `sortBy` | string | The criteria by which search results should be sorted |
 | `sortOrder` | string | The sort order by which search results should be sorted (descending or ascending) |
+| `collectionId` | string | The collection ID to retrieve results from |
 
 ### Browse
 
