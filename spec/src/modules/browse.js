@@ -37,6 +37,8 @@ describe('ConstructorIO - Browse', () => {
   describe('getBrowseResults', () => {
     const filterName = 'group_id';
     const filterValue = 'drill_collection';
+    const filterNameCollection = 'collection_id';
+    const filterValueCollection = 'test';
 
     it('Should return a response with a valid filterName and filterValue', (done) => {
       const { browse } = new ConstructorIO({
@@ -239,6 +241,25 @@ describe('ConstructorIO - Browse', () => {
       });
     });
 
+    it('Should return a response with a valid collection filterName and collection filterValue', (done) => {
+      const section = 'Products';
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResults(filterNameCollection, filterValueCollection, { section }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.section).to.equal(section);
+        expect(requestedUrlParams).to.have.property('section').to.equal(section);
+        done();
+      });
+    });
+
     it('Should return a response with a valid filterName and filterValue with a result_id appended to each result', (done) => {
       const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
@@ -350,6 +371,12 @@ describe('ConstructorIO - Browse', () => {
       return expect(browse.getBrowseResults(filterName, filterValue, {
         section: 123,
       })).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected when invalid collection filterValue parameter is provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseResults(filterNameCollection, 123, {})).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid apiKey is provided', () => {
