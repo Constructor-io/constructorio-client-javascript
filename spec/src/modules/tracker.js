@@ -1206,7 +1206,6 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
-      tracker.on('error', eventSpy);
 
       expect(tracker.trackRecommendationView(requiredParameters)).to.equal(true);
 
@@ -1243,7 +1242,6 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
-      tracker.on('error', eventSpy);
 
       delete clonedParameters.section;
 
@@ -1274,7 +1272,6 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
-      tracker.on('error', eventSpy);
 
       expect(tracker.trackRecommendationView(requiredParameters)).to.equal(true);
 
@@ -1303,7 +1300,6 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
-      tracker.on('error', eventSpy);
 
       expect(tracker.trackRecommendationView(requiredParameters)).to.equal(true);
 
@@ -1330,7 +1326,6 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
-      tracker.on('error', eventSpy);
 
       expect(tracker.trackRecommendationView(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
 
@@ -1390,7 +1385,6 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
-      tracker.on('error', eventSpy);
 
       expect(tracker.trackRecommendationClick(requiredParameters)).to.equal(true);
 
@@ -1427,7 +1421,6 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
-      tracker.on('error', eventSpy);
 
       delete clonedParameters.section;
 
@@ -1458,7 +1451,6 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
-      tracker.on('error', eventSpy);
 
       expect(tracker.trackRecommendationClick(requiredParameters)).to.equal(true);
 
@@ -1487,7 +1479,6 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
-      tracker.on('error', eventSpy);
 
       expect(tracker.trackRecommendationClick(requiredParameters)).to.equal(true);
 
@@ -1514,7 +1505,6 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
-      tracker.on('error', eventSpy);
 
       expect(tracker.trackRecommendationClick(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
 
@@ -1576,7 +1566,6 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
-      tracker.on('error', eventSpy);
 
       expect(tracker.trackBrowseResultsLoaded(requiredParameters)).to.equal(true);
 
@@ -1615,7 +1604,6 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
-      tracker.on('error', eventSpy);
 
       delete clonedParameters.section;
 
@@ -1646,7 +1634,6 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
-      tracker.on('error', eventSpy);
 
       expect(tracker.trackBrowseResultsLoaded(requiredParameters)).to.equal(true);
 
@@ -1675,7 +1662,6 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
-      tracker.on('error', eventSpy);
 
       expect(tracker.trackBrowseResultsLoaded(requiredParameters)).to.equal(true);
 
@@ -1702,7 +1688,6 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
-      tracker.on('error', eventSpy);
 
       expect(tracker.trackBrowseResultsLoaded(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
 
@@ -1764,7 +1749,6 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
-      tracker.on('error', eventSpy);
 
       expect(tracker.trackBrowseResultClick(requiredParameters)).to.equal(true);
 
@@ -1801,7 +1785,6 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
-      tracker.on('error', eventSpy);
 
       delete clonedParameters.section;
 
@@ -1832,7 +1815,6 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
-      tracker.on('error', eventSpy);
 
       expect(tracker.trackBrowseResultClick(requiredParameters)).to.equal(true);
 
@@ -1861,7 +1843,6 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
-      tracker.on('error', eventSpy);
 
       expect(tracker.trackBrowseResultClick(requiredParameters)).to.equal(true);
 
@@ -1888,7 +1869,6 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
-      tracker.on('error', eventSpy);
 
       expect(tracker.trackBrowseResultClick(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
 
