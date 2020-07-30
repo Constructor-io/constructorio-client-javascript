@@ -26,7 +26,9 @@ describe('ConstructorIO - Tracker', () => {
   let fetchSpy = null;
   let eventSpy = null;
 
-  jsdom({ url: 'http://localhost' });
+  jsdom({
+    url: 'http://localhost',
+  });
 
   beforeEach(() => {
     store.session.set('_constructorio_is_human', true);
@@ -69,6 +71,7 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('action').to.equal('session_start');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('origin_referrer').to.equal('http://localhost/');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -161,6 +164,7 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('action').to.equal('focus');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('origin_referrer').to.equal('http://localhost/');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -265,6 +269,7 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('original_query').to.equal(requiredParameters.original_query);
         expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
         expect(requestParams).to.have.property('result_id').to.equal(requiredParameters.result_id);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('http://localhost/');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -421,6 +426,7 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('original_query').to.equal(requiredParameters.original_query);
         expect(requestParams).to.have.property('result_id').to.equal(requiredParameters.result_id);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('http://localhost/');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -573,6 +579,7 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('num_results').to.equal(requiredParameters.num_results.toString());
+        expect(requestParams).to.have.property('origin_referrer').to.equal('http://localhost/');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -754,6 +761,7 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('name').to.equal(requiredParameters.name);
         expect(requestParams).to.have.property('customer_id').to.equal(requiredParameters.customer_id);
         expect(requestParams).to.have.property('result_id').to.equal(requiredParameters.result_id);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('http://localhost/');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -885,6 +893,7 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('result_id').to.equal(requiredParameters.result_id);
         expect(requestParams).to.have.property('revenue').to.equal(requiredParameters.revenue.toString());
         expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('http://localhost/');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -922,6 +931,7 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('revenue').to.equal(requiredParameters.revenue.toString());
         expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
         expect(requestParams).to.have.property('variation_id').to.equal(optionalParameters.variation_id);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('http://localhost/');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -1067,6 +1077,7 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('customer_ids').to.deep.equal(requiredParameters.customer_ids);
         expect(requestParams).to.have.property('revenue').to.equal(requiredParameters.revenue.toString());
         expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('http://localhost/');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -1213,6 +1224,7 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('url').to.equal(requiredParameters.url);
         expect(requestParams).to.have.property('pod_id').to.equal(requiredParameters.pod_id);
         expect(requestParams).to.have.property('num_results_viewed').to.equal(requiredParameters.num_results_viewed);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('http://localhost/');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -1231,6 +1243,7 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
+      tracker.on('error', eventSpy);
 
       delete clonedParameters.section;
 
@@ -1261,6 +1274,7 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
+      tracker.on('error', eventSpy);
 
       expect(tracker.trackRecommendationView(requiredParameters)).to.equal(true);
 
@@ -1280,7 +1294,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should respond with a valid response when parameters and user id are provided', (done) => {
+    it('Should respond with a valid response when required parameters and user id are provided', (done) => {
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1289,6 +1303,7 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
+      tracker.on('error', eventSpy);
 
       expect(tracker.trackRecommendationView(requiredParameters)).to.equal(true);
 
@@ -1375,6 +1390,7 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
+      tracker.on('error', eventSpy);
 
       expect(tracker.trackRecommendationClick(requiredParameters)).to.equal(true);
 
@@ -1392,6 +1408,7 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('pod_id').to.equal(requiredParameters.pod_id);
         expect(requestParams).to.have.property('strategy_id').to.equal(requiredParameters.strategy_id);
         expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.item_id);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('http://localhost/');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -1410,6 +1427,7 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
+      tracker.on('error', eventSpy);
 
       delete clonedParameters.section;
 
@@ -1440,6 +1458,7 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
+      tracker.on('error', eventSpy);
 
       expect(tracker.trackRecommendationClick(requiredParameters)).to.equal(true);
 
@@ -1468,6 +1487,7 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
+      tracker.on('error', eventSpy);
 
       expect(tracker.trackRecommendationClick(requiredParameters)).to.equal(true);
 
@@ -1494,6 +1514,7 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
+      tracker.on('error', eventSpy);
 
       expect(tracker.trackRecommendationClick(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
 
@@ -1555,6 +1576,7 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
+      tracker.on('error', eventSpy);
 
       expect(tracker.trackBrowseResultsLoaded(requiredParameters)).to.equal(true);
 
@@ -1574,6 +1596,7 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('filter_name').to.equal(requiredParameters.filter_name);
         expect(requestParams).to.have.property('filter_value').to.equal(requiredParameters.filter_value);
         expect(requestParams).to.have.property('url').to.equal(requiredParameters.url);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('http://localhost/');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -1592,6 +1615,7 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
+      tracker.on('error', eventSpy);
 
       delete clonedParameters.section;
 
@@ -1622,6 +1646,7 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
+      tracker.on('error', eventSpy);
 
       expect(tracker.trackBrowseResultsLoaded(requiredParameters)).to.equal(true);
 
@@ -1650,6 +1675,7 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
+      tracker.on('error', eventSpy);
 
       expect(tracker.trackBrowseResultsLoaded(requiredParameters)).to.equal(true);
 
@@ -1676,6 +1702,7 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
+      tracker.on('error', eventSpy);
 
       expect(tracker.trackBrowseResultsLoaded(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
 
@@ -1737,6 +1764,7 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
+      tracker.on('error', eventSpy);
 
       expect(tracker.trackBrowseResultClick(requiredParameters)).to.equal(true);
 
@@ -1754,6 +1782,7 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.item_id);
         expect(requestParams).to.have.property('filter_name').to.equal(requiredParameters.filter_name);
         expect(requestParams).to.have.property('filter_value').to.equal(requiredParameters.filter_value);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('http://localhost/');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -1772,6 +1801,7 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
+      tracker.on('error', eventSpy);
 
       delete clonedParameters.section;
 
@@ -1802,6 +1832,7 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
+      tracker.on('error', eventSpy);
 
       expect(tracker.trackBrowseResultClick(requiredParameters)).to.equal(true);
 
@@ -1830,6 +1861,7 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
+      tracker.on('error', eventSpy);
 
       expect(tracker.trackBrowseResultClick(requiredParameters)).to.equal(true);
 
@@ -1856,6 +1888,7 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       tracker.on('success', eventSpy);
+      tracker.on('error', eventSpy);
 
       expect(tracker.trackBrowseResultClick(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
 

@@ -4,9 +4,9 @@ const EventEmitter = require('events');
 const helpers = require('../utils/helpers');
 const RequestQueue = require('../utils/request-queue');
 
-// Append common parameters to supplied parameters object
 function applyParams(parameters, options) {
   const { apiKey, version, sessionId, clientId, userId, segments } = options;
+  const { href } = helpers.getWindowLocation();
   let aggregateParams = Object.assign(parameters);
 
   if (version) {
@@ -31,6 +31,10 @@ function applyParams(parameters, options) {
 
   if (apiKey) {
     aggregateParams.key = apiKey;
+  }
+
+  if (href) {
+    aggregateParams.origin_referrer = href;
   }
 
   aggregateParams._dt = Date.now();
