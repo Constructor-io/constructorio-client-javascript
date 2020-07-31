@@ -6,7 +6,7 @@ const RequestQueue = require('../utils/request-queue');
 
 function applyParams(parameters, options) {
   const { apiKey, version, sessionId, clientId, userId, segments } = options;
-  const { href } = helpers.getWindowLocation();
+  const { host, pathname } = helpers.getWindowLocation();
   let aggregateParams = Object.assign(parameters);
 
   if (version) {
@@ -33,8 +33,8 @@ function applyParams(parameters, options) {
     aggregateParams.key = apiKey;
   }
 
-  if (href) {
-    aggregateParams.origin_referrer = href;
+  if (host) {
+    aggregateParams.origin_referrer = host + pathname;
   }
 
   aggregateParams._dt = Date.now();
