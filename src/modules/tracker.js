@@ -6,7 +6,7 @@ const RequestQueue = require('../utils/request-queue');
 
 // Append common parameters to supplied parameters object
 function applyParams(parameters, options) {
-  const { apiKey, version, sessionId, clientId, userId, segments } = options;
+  const { apiKey, version, sessionId, clientId, userId, segments, testCells } = options;
   let aggregateParams = Object.assign(parameters);
 
   if (version) {
@@ -31,6 +31,12 @@ function applyParams(parameters, options) {
 
   if (apiKey) {
     aggregateParams.key = apiKey;
+  }
+
+  if (testCells) {
+    Object.keys(testCells).forEach((testCellKey) => {
+      aggregateParams[`ef-${testCellKey}`] = testCells[testCellKey];
+    });
   }
 
   aggregateParams._dt = Date.now();
