@@ -5,7 +5,15 @@ const helpers = require('../utils/helpers');
 const RequestQueue = require('../utils/request-queue');
 
 function applyParams(parameters, options) {
-  const { apiKey, version, sessionId, clientId, userId, segments } = options;
+  const {
+    apiKey,
+    version,
+    sessionId,
+    clientId,
+    userId,
+    segments,
+    sendReferrerWithTrackingEvents,
+  } = options;
   const { host, pathname } = helpers.getWindowLocation();
   let aggregateParams = Object.assign(parameters);
 
@@ -33,7 +41,7 @@ function applyParams(parameters, options) {
     aggregateParams.key = apiKey;
   }
 
-  if (host) {
+  if (sendReferrerWithTrackingEvents && host) {
     aggregateParams.origin_referrer = host + pathname;
   }
 
