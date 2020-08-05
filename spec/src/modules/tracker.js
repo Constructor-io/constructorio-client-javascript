@@ -108,7 +108,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should respond with a valid response with user id', (done) => {
+    it('Should respond with a valid response with userId', (done) => {
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -228,7 +228,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should respond with a valid response with user id', (done) => {
+    it('Should respond with a valid response with userId', (done) => {
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -361,7 +361,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should respond with a valid response when term, required parameters and user id are provided', (done) => {
+    it('Should respond with a valid response when term, required parameters and userId are provided', (done) => {
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -545,7 +545,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should respond with a valid response when term, required parameters and user id are provided', (done) => {
+    it('Should respond with a valid response when term, required parameters and userId are provided', (done) => {
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -726,7 +726,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should respond with a valid response when term, required parameters and user id are provided', (done) => {
+    it('Should respond with a valid response when term, required parameters and userId are provided', (done) => {
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -934,7 +934,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should respond with a valid response when term, required parameters and user id are provided', (done) => {
+    it('Should respond with a valid response when term, required parameters and userId are provided', (done) => {
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1159,7 +1159,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should respond with a valid response when term, required parameters and user id are provided', (done) => {
+    it('Should respond with a valid response when term, required parameters and userId are provided', (done) => {
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1332,7 +1332,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should respond with a valid response when required parameters and user id are provided', (done) => {
+    it('Should respond with a valid response when required parameters and userId are provided', (done) => {
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1534,7 +1534,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should respond with a valid response when parameters and user id are provided', (done) => {
+    it('Should respond with a valid response when parameters and userId are provided', (done) => {
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1713,7 +1713,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should respond with a valid response when required parameters and user id are provided', (done) => {
+    it('Should respond with a valid response when required parameters and userId are provided', (done) => {
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1923,7 +1923,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should respond with a valid response when required parameters and user id are provided', (done) => {
+    it('Should respond with a valid response when required parameters and userId are provided', (done) => {
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -2131,7 +2131,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should respond with a valid response when required parameters and user id are provided', (done) => {
+    it('Should respond with a valid response when required parameters and userId are provided', (done) => {
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
