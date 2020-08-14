@@ -583,6 +583,7 @@ class Tracker {
    * @param {string} [parameters.selected_filters] -  Selected filters
    * @param {string} [parameters.sort_order] - Sort order ('ascending' or 'descending')
    * @param {string} [parameters.sort_by] - Sorting method
+   * @param {array} [parameters.items] - List of objects of customer items returned from browse
    * @param {string} parameters.url - Current page URL
    * @param {string} parameters.filter_name - Filter name
    * @param {string} parameters.filter_value - Filter value
@@ -605,6 +606,7 @@ class Tracker {
         sort_by,
         filter_name,
         filter_value,
+        items,
       } = parameters;
 
       if (section) {
@@ -647,6 +649,10 @@ class Tracker {
 
       if (filter_value) {
         bodyParams.filter_value = filter_value;
+      }
+
+      if (items && Array.isArray(items)) {
+        bodyParams.items = items;
       }
 
       this.requests.queue(`${requestUrl}${applyParamsAsString({}, this.options)}`, 'POST', applyParams(bodyParams, this.options));

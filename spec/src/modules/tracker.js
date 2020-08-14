@@ -1863,6 +1863,15 @@ describe('ConstructorIO - Tracker', () => {
       result_page: 1,
       result_id: 'result-id',
       selected_filters: { foo: ['bar'] },
+      items: [
+        {
+          item_id: '123',
+          variation_id: '456',
+        },
+        {
+          item_id: '789'
+        },
+      ],
     };
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
@@ -2035,6 +2044,7 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('result_page').to.equal(optionalParameters.result_page);
         expect(requestParams).to.have.property('result_id').to.equal(optionalParameters.result_id);
         expect(requestParams).to.have.property('selected_filters').to.deep.equal(optionalParameters.selected_filters);
+        expect(requestParams).to.have.property('items').to.deep.equal(optionalParameters.items);
 
         // Response
         expect(eventSpy).to.have.been.called;
