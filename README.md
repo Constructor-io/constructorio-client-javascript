@@ -168,7 +168,7 @@ constructorio.tracker.trackSearchResultsLoaded('dogs', {
 | Parameter | Type | Required |
 | --- | --- | :---: |
 | `num_results` | string | ✔ |
-| `customer_ids` | string | |
+| `customer_ids` | array | |
 
 #### Send search result click event
 ```javascript
@@ -208,7 +208,7 @@ constructorio.tracker.trackPurchase({
 
 | Parameter | Type | Required |
 | --- | --- | :---: |
-| `customer_ids` | string | ✔ |
+| `customer_ids` | array | ✔ |
 | `revenue` | string | ✔ |
 | `section` | string | |
 
@@ -268,6 +268,7 @@ constructorio.tracker.trackBrowseResultsLoaded({
 | `selected_filters` | string or array | |
 | `sort_by` | string | |
 | `sort_order` | string | |
+| `items` | array | |
 
 #### Send browse result click event
 ```javascript
