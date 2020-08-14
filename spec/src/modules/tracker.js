@@ -1869,7 +1869,7 @@ describe('ConstructorIO - Tracker', () => {
           variation_id: '456',
         },
         {
-          item_id: '789'
+          item_id: '789',
         },
       ],
     };
