@@ -208,9 +208,8 @@ constructorio.tracker.trackPurchase({
 
 | Parameter | Type | Required |
 | --- | --- | :---: |
-| `customer_ids` | array | ✔ |
+| `items` | array | ✔ |
 | `revenue` | string | ✔ |
-| `section` | string | |
 
 #### Send recommendation view event
 ```javascript
