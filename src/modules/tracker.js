@@ -373,7 +373,7 @@ class Tracker {
    *
    * @function trackPurchase
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {array} parameters.customer_ids - List of customer item id's
+   * @param {array} parameters.items - List of objects of customer items returned from browse
    * @param {string} parameters.revenue - Revenue
    * @param {string} [parameters.section] - Autocomplete section
    * @returns {(true|Error)}
@@ -381,17 +381,17 @@ class Tracker {
   trackPurchase(parameters) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const url = `${this.options.serviceUrl}/autocomplete/TERM_UNKNOWN/purchase?`;
+      const requestUrl = `${this.options.serviceUrl}/v2/behavioral_action/purchase?`;
       const queryParams = {};
+      const bodyParams = {};
+      const { items, revenue, section } = parameters;
 
-      const { customer_ids, revenue, section } = parameters;
-
-      if (customer_ids) {
-        queryParams.customer_ids = customer_ids;
+      if (items && Array.isArray(items)) {
+        bodyParams.items = items;
       }
 
       if (revenue) {
-        queryParams.revenue = revenue;
+        bodyParams.revenue = revenue;
       }
 
       if (section) {
@@ -400,7 +400,7 @@ class Tracker {
         queryParams.section = 'Products';
       }
 
-      this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
+      this.requests.queue(`${requestUrl}${applyParamsAsString(queryParams, this.options)}`, 'POST', applyParams(bodyParams, this.options));
       this.requests.send();
 
       return true;
@@ -430,7 +430,6 @@ class Tracker {
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const requestUrl = `${this.options.serviceUrl}/v2/behavioral_action/recommendation_result_view?`;
       const bodyParams = {};
-
       const {
         result_count,
         result_page,
@@ -504,7 +503,6 @@ class Tracker {
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const url = `${this.options.serviceUrl}/v2/behavioral_action/recommendation_result_click?`;
       const bodyParams = {};
-
       const {
         variation_id,
         section,
@@ -594,7 +592,6 @@ class Tracker {
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const requestUrl = `${this.options.serviceUrl}/v2/behavioral_action/browse_result_load?`;
       const bodyParams = {};
-
       const {
         section,
         result_count,
@@ -689,7 +686,6 @@ class Tracker {
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const url = `${this.options.serviceUrl}/v2/behavioral_action/browse_result_click?`;
       const bodyParams = {};
-
       const {
         section,
         variation_id,
