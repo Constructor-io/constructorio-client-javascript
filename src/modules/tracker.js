@@ -375,14 +375,16 @@ class Tracker {
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {array} parameters.items - List of objects of customer items returned from browse
    * @param {string} parameters.revenue - Revenue
+   * @param {string} [parameters.section] - Autocomplete section
    * @returns {(true|Error)}
    */
   trackPurchase(parameters) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const requestUrl = `${this.options.serviceUrl}/v2/behavioral_action/purchase?`;
+      const queryParams = {};
       const bodyParams = {};
-      const { items, revenue } = parameters;
+      const { items, revenue, section } = parameters;
 
       if (items && Array.isArray(items)) {
         bodyParams.items = items;
@@ -392,7 +394,13 @@ class Tracker {
         bodyParams.revenue = revenue;
       }
 
-      this.requests.queue(`${requestUrl}${applyParamsAsString({}, this.options)}`, 'POST', applyParams(bodyParams, this.options));
+      if (section) {
+        queryParams.section = section;
+      } else {
+        queryParams.section = 'Products';
+      }
+
+      this.requests.queue(`${requestUrl}${applyParamsAsString(queryParams, this.options)}`, 'POST', applyParams(bodyParams, this.options));
       this.requests.send();
 
       return true;
