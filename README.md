@@ -116,8 +116,9 @@ constructorio.recommendations.getRecommendations('pod-id', { parameters }).then(
 | Parameter | Type | Description |
 | --- | --- | --- |
 | `numResults` | number | Number of results to retrieve |
-| `itemIds` | string or array | Item ID(s) to retrieve recommendations for |
+| `itemIds` | string or array | Item ID(s) to retrieve recommendations for (strategy specific) |
 | `section` | string | Section to display results from |
+| `term` | string | Term to retrieve recommendations for (strategy specific) |
 
 ### Tracker
 
