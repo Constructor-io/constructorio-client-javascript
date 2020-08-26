@@ -1282,7 +1282,10 @@ describe('ConstructorIO - Tracker', () => {
       ],
       revenue: 123.45,
     };
-    const optionalParameters = { section: 'Products' };
+    const optionalParameters = {
+      order_id: '123938123',
+      section: 'Products',
+    };
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({

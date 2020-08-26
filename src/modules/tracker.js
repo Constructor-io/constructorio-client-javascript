@@ -375,6 +375,7 @@ class Tracker {
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {array} parameters.items - List of objects of customer items returned from browse
    * @param {string} parameters.revenue - Revenue
+   * @param {string} [parameters.order_id] - Customer unique order identifier
    * @param {string} [parameters.section] - Autocomplete section
    * @returns {(true|Error)}
    */
@@ -384,7 +385,7 @@ class Tracker {
       const requestUrl = `${this.options.serviceUrl}/v2/behavioral_action/purchase?`;
       const queryParams = {};
       const bodyParams = {};
-      const { items, revenue, section } = parameters;
+      const { items, revenue, order_id, section } = parameters;
 
       if (items && Array.isArray(items)) {
         bodyParams.items = items;
@@ -392,6 +393,10 @@ class Tracker {
 
       if (revenue) {
         bodyParams.revenue = revenue;
+      }
+
+      if (order_id) {
+        bodyParams.order_id = order_id;
       }
 
       if (section) {
