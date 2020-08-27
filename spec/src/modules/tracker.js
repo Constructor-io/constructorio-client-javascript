@@ -1282,7 +1282,10 @@ describe('ConstructorIO - Tracker', () => {
       ],
       revenue: 123.45,
     };
-    const optionalParameters = { section: 'Products' };
+    const optionalParameters = {
+      order_id: '123938123',
+      section: 'Products',
+    };
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
@@ -1328,12 +1331,14 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackPurchase(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
 
       setTimeout(() => {
-        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestQueryParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
         const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
+        expect(requestQueryParams).to.have.property('section').to.equal(optionalParameters.section);
+        expect(requestBodyParams).to.have.property('order_id').to.equal(optionalParameters.order_id);
 
         // Response
         expect(eventSpy).to.have.been.called;
