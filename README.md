@@ -19,7 +19,7 @@ You can find this in your [Constructor.io dashboard](https://constructor.io/dash
 Once imported, an instance of the client can be created as follows:
 
 ```javascript
-import ConstructorIOClient from '@constructor-io/constructorio-client-javascript';
+const ConstructorIOClient = require('@constructor-io/constructorio-client-javascript');
 
 var constructorio = new ConstructorIOClient({
     apiKey: 'YOUR API KEY',
