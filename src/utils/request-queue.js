@@ -76,6 +76,7 @@ class RequestQueue {
           request = fetch(nextInQueue.url, {
             method: nextInQueue.method,
             body: JSON.stringify(nextInQueue.body),
+            mode: 'cors',
             headers: { 'Content-Type': 'text/plain' },
           });
         }
