@@ -25,6 +25,9 @@ class ConstructorIO {
    * @param {function} [fetch] - If supplied, will be utilized for requests rather than default Fetch API
    * @param {number} [trackingSendDelay] - Amount of time to wait before sending tracking events (in ms)
    * @param {boolean} [sendTrackingEvents] - Indicates if tracking events should be dispatched
+   * @param {object} [requestQueue] - Options related to 'RequestQueue' class
+   * @param {boolean} [requestQueue.sendTrackingEvents] - Indicates if tracking events should be dispatched
+   * @param {boolean} [requestQueue.trackingSendDelay] - Amount of time to wait before sending tracking events (in ms)
    * @param {object} [idOptions] - Options object to be supplied to 'constructorio-id' module
    * @param {object} [eventDispatcher] - Options related to 'EventDispatcher' class
    * @param {boolean} [eventDispatcher.enabled] - Determine if events should be dispatched
@@ -47,8 +50,7 @@ class ConstructorIO {
       sessionId,
       userId,
       fetch,
-      trackingSendDelay,
-      sendTrackingEvents,
+      requestQueue,
       eventDispatcher,
       idOptions,
     } = options;
@@ -70,9 +72,8 @@ class ConstructorIO {
       segments,
       testCells,
       fetch,
-      trackingSendDelay,
+      requestQueue,
       eventDispatcher,
-      sendTrackingEvents,
     };
 
     // Expose global modules
