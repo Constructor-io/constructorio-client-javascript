@@ -113,9 +113,9 @@ class Browse {
    * @param {object} [parameters] - Additional parameters to refine result set
    * @param {number} [parameters.page] - The page number of the results
    * @param {number} [parameters.resultsPerPage] - The number of results per page to return
-   * @param {object} [parameters.filters] - Filters used to refine
-   * @param {string} [parameters.sortBy='relevance'] - The sorting method
-   * @param {string} [parameters.sortOrder='descending'] - The sort order for search results
+   * @param {object} [parameters.filters] - Filters used to refine results
+   * @param {string} [parameters.sortBy='relevance'] - The sort method for results
+   * @param {string} [parameters.sortOrder='descending'] - The sort order for results
    * @returns {Promise}
    * @see https://docs.constructor.io
    */
