@@ -25,6 +25,11 @@ describe('ConstructorIO - Tracker', () => {
   const waitInterval = 1000;
   let fetchSpy = null;
   let eventSpy = null;
+  const requestQueueOptions = {
+    requestQueue: {
+      sendTrackingEvents: true,
+    },
+  };
 
   jsdom({ url: 'http://localhost' });
 
@@ -51,6 +56,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -85,6 +91,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         segments,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -114,6 +121,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         userId,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -143,6 +151,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         testCells,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -176,6 +185,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         testCells,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -207,6 +217,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -241,6 +252,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         segments,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -269,6 +281,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         userId,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -297,6 +310,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         testCells,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -338,6 +352,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -374,6 +389,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         segments,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -402,6 +418,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         userId,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -430,6 +447,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         testCells,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -456,6 +474,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -523,6 +542,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -558,6 +578,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         segments,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -586,6 +607,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         userId,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -614,6 +636,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         testCells,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -640,6 +663,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -704,6 +728,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -739,6 +764,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         segments,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -767,6 +793,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         userId,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -795,6 +822,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         testCells,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -821,6 +849,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -850,6 +879,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -911,6 +941,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -947,6 +978,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         segments,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -975,6 +1007,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         userId,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1003,6 +1036,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         testCells,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1068,6 +1102,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1104,6 +1139,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1142,6 +1178,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1172,6 +1209,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         segments,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1200,6 +1238,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         userId,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1228,6 +1267,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         testCells,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1291,6 +1331,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1324,6 +1365,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1355,6 +1397,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         segments,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1381,6 +1424,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1410,6 +1454,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         userId,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1438,6 +1483,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         testCells,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1490,6 +1536,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1526,6 +1573,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1556,6 +1604,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         segments,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1584,6 +1633,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         testCells,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1612,6 +1662,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         userId,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1638,6 +1689,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1698,6 +1750,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1733,6 +1786,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1763,6 +1817,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         segments,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1791,6 +1846,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         userId,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1819,6 +1875,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         testCells,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1845,6 +1902,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1915,6 +1973,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1952,6 +2011,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1982,6 +2042,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         segments,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -2010,6 +2071,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         userId,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -2038,6 +2100,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         testCells,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -2064,6 +2127,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -2126,6 +2190,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -2161,6 +2226,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -2191,6 +2257,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         segments,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -2219,6 +2286,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         userId,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -2247,6 +2315,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         testCells,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -2273,6 +2342,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -2344,6 +2414,7 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        ...requestQueueOptions,
       });
 
       tracker.trackSessionStart();
@@ -2361,6 +2432,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         serviceUrl: 'http://constructor.io',
+        ...requestQueueOptions,
       });
 
       tracker.trackSessionStart();
@@ -2378,6 +2450,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         serviceUrl: 'invalid',
+        ...requestQueueOptions,
       });
 
       tracker.trackSessionStart();
