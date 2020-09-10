@@ -37,6 +37,7 @@ describe('ConstructorIO - Recommendations', () => {
   describe('getRecommendations', () => {
     const podId = 'item_page_1';
     const queryRecommendationsPodId = 'query_recommendations';
+    const filteredItemsRecommendationsPodId = 'filtered_items';
     const itemId = 'power_drill';
     const itemIds = [itemId, 'drill'];
 
@@ -108,6 +109,57 @@ describe('ConstructorIO - Recommendations', () => {
         expect(res.response.pod).to.have.property('id').to.equal(queryRecommendationsPodId);
         expect(res.response.pod).to.have.property('display_name');
         expect(requestedUrlParams).to.have.property('term').to.deep.equal(term);
+        done();
+      });
+    });
+
+    it('Should return a response with valid filters for filtered items strategy pod', (done) => {
+      const filters = { keywords: 'battery-powered' };
+      const { recommendations } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      recommendations.getRecommendations(filteredItemsRecommendationsPodId, { filters }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.filters).to.deep.equal(filters);
+        expect(res.response).to.have.property('results').to.be.an('array');
+        expect(res.response).to.have.property('pod');
+        expect(res.response.pod).to.have.property('id').to.equal(filteredItemsRecommendationsPodId);
+        expect(res.response.pod).to.have.property('display_name');
+        expect(requestedUrlParams).to.have.property('filters').to.deep.equal(filters);
+        done();
+      });
+    });
+
+    it('Should return a response with valid filters and item id for filtered items strategy pod', (done) => {
+      const filters = { keywords: 'battery-powered' };
+      const { recommendations } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      recommendations.getRecommendations(filteredItemsRecommendationsPodId, {
+        filters,
+        itemIds: itemId,
+      }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.filters).to.deep.equal(filters);
+        expect(res.request.item_id).to.equal(itemId);
+        expect(res.response).to.have.property('results').to.be.an('array');
+        expect(res.response).to.have.property('pod');
+        expect(res.response.pod).to.have.property('id').to.equal(filteredItemsRecommendationsPodId);
+        expect(res.response.pod).to.have.property('display_name');
+        expect(requestedUrlParams).to.have.property('filters').to.deep.equal(filters);
+        expect(requestedUrlParams).to.have.property('item_id').to.equal(itemId);
         done();
       });
     });
