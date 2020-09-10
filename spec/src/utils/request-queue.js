@@ -16,9 +16,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
   const storageKey = '_constructorio_requests';
   const waitInterval = 700;
   const requestQueueOptions = {
-    requestQueue: {
-      sendTrackingEvents: true,
-    },
+    sendTrackingEvents: true,
   };
 
   describe('queue', () => {

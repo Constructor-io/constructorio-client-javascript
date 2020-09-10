@@ -26,9 +26,7 @@ describe('ConstructorIO - Tracker', () => {
   let fetchSpy = null;
   let eventSpy = null;
   const requestQueueOptions = {
-    requestQueue: {
-      sendTrackingEvents: true,
-    },
+    sendTrackingEvents: true,
   };
 
   jsdom({ url: 'http://localhost' });

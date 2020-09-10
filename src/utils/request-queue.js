@@ -15,11 +15,9 @@ class RequestQueue {
     this.requestPending = false;
     this.pageUnloading = false;
 
-    this.sendTrackingEvents = (
-      options
-      && options.requestQueue
-      && options.requestQueue.sendTrackingEvents === true
-    ) ? true : false; // Defaults to 'false'
+    this.sendTrackingEvents = (options && options.sendTrackingEvents === true)
+      ? true
+      : false; // Defaults to 'false'
 
     // Mark if page environment is unloading
     helpers.addEventListener('beforeunload', () => {
@@ -128,11 +126,7 @@ class RequestQueue {
             });
           }
         }
-      }, (
-        this.options
-        && this.options.requestQueue
-        && this.options.requestQueue.trackingSendDelay
-      ) || 25);
+      }, (this.options && this.options.trackingSendDelay) || 25);
     }
   }
 
