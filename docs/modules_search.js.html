@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>modules/search.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="ConstructorIO.html">ConstructorIO</a></span></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-autocomplete.html">autocomplete</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-autocomplete.html#~getAutocompleteResults">getAutocompleteResults</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-browse.html">browse</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-browse.html#~getBrowseResults">getBrowseResults</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-recommendations.html">recommendations</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-recommendations.html#~getRecommendations">getRecommendations</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-search.html">search</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-search.html#~getSearchResults">getSearchResults</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-Tracker.html">Tracker</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~on">on</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackAutocompleteSelect">trackAutocompleteSelect</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackBrowseResultClick">trackBrowseResultClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackBrowseResultsLoaded">trackBrowseResultsLoaded</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackConversion">trackConversion</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackInputFocus">trackInputFocus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackPurchase">trackPurchase</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackRecommendationClick">trackRecommendationClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackRecommendationView">trackRecommendationView</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackSearchResultClick">trackSearchResultClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackSearchResultsLoaded">trackSearchResultsLoaded</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackSearchSubmit">trackSearchSubmit</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackSessionStart">trackSessionStart</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">modules/search.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* eslint-disable object-curly-newline, no-underscore-dangle */
+const qs = require('qs');
+const fetchPonyfill = require('fetch-ponyfill');
+const Promise = require('es6-promise');
+const EventDispatcher = require('../utils/event-dispatcher');
+const helpers = require('../utils/helpers');
+
+// Create URL from supplied query (term) and parameters
+function createSearchUrl(query, parameters, options) {
+  const {
+    apiKey,
+    version,
+    serviceUrl,
+    sessionId,
+    clientId,
+    userId,
+    segments,
+    testCells,
+  } = options;
+  let queryParams = { c: version };
+
+  queryParams.key = apiKey;
+  queryParams.i = clientId;
+  queryParams.s = sessionId;
+
+  // Validate query (term) is provided
+  if (!query || typeof query !== 'string') {
+    throw new Error('query is a required parameter of type string');
+  }
+
+  // Pull test cells from options
+  if (testCells) {
+    Object.keys(testCells).forEach((testCellKey) => {
+      queryParams[`ef-${testCellKey}`] = testCells[testCellKey];
+    });
+  }
+
+  // Pull user segments from options
+  if (segments &amp;&amp; segments.length) {
+    queryParams.us = segments;
+  }
+
+  // Pull user id from options
+  if (userId) {
+    queryParams.ui = userId;
+  }
+
+  if (parameters) {
+    const { page, resultsPerPage, filters, sortBy, sortOrder, section, collectionId } = parameters;
+
+    // Pull page from parameters
+    if (!helpers.isNil(page)) {
+      queryParams.page = page;
+    }
+
+    // Pull results per page from parameters
+    if (!helpers.isNil(resultsPerPage)) {
+      queryParams.num_results_per_page = resultsPerPage;
+    }
+
+    // Pull filters from parameters
+    if (filters) {
+      queryParams.filters = filters;
+    }
+
+    // Pull sort by from parameters
+    if (sortBy) {
+      queryParams.sort_by = sortBy;
+    }
+
+    // Pull sort order from parameters
+    if (sortOrder) {
+      queryParams.sort_order = sortOrder;
+    }
+
+    // Pull section from parameters
+    if (section) {
+      queryParams.section = section;
+    }
+
+    // Pull collection id from parameters
+    if (collectionId) {
+      queryParams.collection_id = collectionId;
+    }
+  }
+
+  queryParams._dt = Date.now();
+  queryParams = helpers.cleanParams(queryParams);
+
+  const queryString = qs.stringify(queryParams, { indices: false });
+
+  return `${serviceUrl}/search/${encodeURIComponent(query)}?${queryString}`;
+}
+
+/**
+ * Interface to search related API calls
+ *
+ * @module search
+ * @inner
+ * @returns {object}
+ */
+class Search {
+  constructor(options) {
+    this.options = options || {};
+    this.eventDispatcher = new EventDispatcher(options.eventDispatcher);
+  }
+
+  /**
+   * Retrieve search results from API
+   *
+   * @function getSearchResults
+   * @param {string} query - Term to use to perform a search
+   * @param {object} [parameters] - Additional parameters to refine result set
+   * @param {number} [parameters.page] - The page number of the results
+   * @param {number} [parameters.resultsPerPage] - The number of results per page to return
+   * @param {object} [parameters.filters] - Filters used to refine search
+   * @param {string} [parameters.sortBy='relevance'] - The sorting method
+   * @param {string} [parameters.sortOrder='descending'] - The sort order for search results
+   * @returns {Promise}
+   * @see https://docs.constructor.io/rest-api.html#search
+   */
+  getSearchResults(query, parameters) {
+    let requestUrl;
+    const fetch = (this.options &amp;&amp; this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+
+    try {
+      requestUrl = createSearchUrl(query, parameters, this.options);
+    } catch (e) {
+      return Promise.reject(e);
+    }
+
+    return fetch(requestUrl)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+
+        return helpers.throwHttpErrorFromResponse(new Error(), response);
+      })
+      .then((json) => {
+        // Search results
+        if (json.response &amp;&amp; json.response.results) {
+          if (json.result_id) {
+            json.response.results.forEach((result) => {
+              // eslint-disable-next-line no-param-reassign
+              result.result_id = json.result_id;
+            });
+          }
+
+          this.eventDispatcher.queue('search.getSearchResults.completed', json);
+
+          return json;
+        }
+
+        // Redirect rules
+        if (json.response &amp;&amp; json.response.redirect) {
+          this.eventDispatcher.queue('search.getSearchResults.completed', json);
+
+          return json;
+        }
+
+        throw new Error('getSearchResults response data is malformed');
+      });
+  }
+}
+
+module.exports = Search;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Thu Sep 10 2020 17:41:47 GMT-0600 (Mountain Daylight Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
