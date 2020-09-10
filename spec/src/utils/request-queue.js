@@ -15,6 +15,11 @@ dotenv.config();
 describe('ConstructorIO - Utils - Request Queue', () => {
   const storageKey = '_constructorio_requests';
   const waitInterval = 700;
+  const requestQueueOptions = {
+    requestQueue: {
+      sendTrackingEvents: true,
+    },
+  };
 
   describe('queue', () => {
     let defaultAgent;
@@ -37,7 +42,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
     });
 
     it('Should add url requests to the queue', () => {
-      const requests = new RequestQueue();
+      const requests = new RequestQueue(requestQueueOptions);
 
       requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
       requests.queue('https://ac.cnstrc.com/behavior?action=focus');
@@ -49,7 +54,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
     });
 
     it('Should add object requests to the queue - POST with body', () => {
-      const requests = new RequestQueue();
+      const requests = new RequestQueue(requestQueueOptions);
 
       requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'session_start' });
       requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'focus' });
@@ -61,7 +66,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
     });
 
     it('Should not add requests to the queue if the user has a bot-like useragent', () => {
-      const requests = new RequestQueue();
+      const requests = new RequestQueue(requestQueueOptions);
 
       window.navigator.__defineGetter__('userAgent', () => 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Googlebot/2.1; +http://www.google.com/bot.html) Safari/537.36');
 
@@ -74,7 +79,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
     });
 
     it('Should not add requests to the queue if the user is webdriver', () => {
-      const requests = new RequestQueue();
+      const requests = new RequestQueue(requestQueueOptions);
 
       window.navigator.__defineGetter__('webdriver', () => true);
 
@@ -87,16 +92,29 @@ describe('ConstructorIO - Utils - Request Queue', () => {
     });
 
 
-    it('Should not add requests to the queue if the sendTrackingRequests option is false', () => {
+    it('Should add requests to the queue if the sendTrackingRequests option is false', () => {
       const requests = new RequestQueue({
-        sendTrackingEvents: false,
+        requestQueue: {
+          sendTrackingEvents: false,
+        },
       });
 
       requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
       requests.queue('https://ac.cnstrc.com/behavior?action=focus');
       requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-      expect(RequestQueue.get()).to.be.an('array').length(0);
+      expect(RequestQueue.get()).to.be.an('array').length(3);
+      helpers.triggerUnload();
+    });
+
+    it('Should not add requests to the queue if the sendTrackingRequests option is not defined', () => {
+      const requests = new RequestQueue();
+
+      requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+      requests.queue('https://ac.cnstrc.com/behavior?action=focus');
+      requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
+
+      expect(RequestQueue.get()).to.be.an('array').length(3);
       helpers.triggerUnload();
     });
   });
@@ -117,7 +135,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
 
     describe('Single Instance', () => {
       it('Should send all url tracking requests if queue is populated and user is human', (done) => {
-        const requests = new RequestQueue();
+        const requests = new RequestQueue(requestQueueOptions);
 
         requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
         requests.queue('https://ac.cnstrc.com/behavior?action=focus');
@@ -134,7 +152,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       });
 
       it('Should send all object tracking requests if queue is populated and user is human - POST with body', (done) => {
-        const requests = new RequestQueue();
+        const requests = new RequestQueue(requestQueueOptions);
 
         requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'session_start' });
         requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'focus' });
@@ -151,7 +169,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       });
 
       it('Should not send tracking requests if queue is populated and user is not human', (done) => {
-        const requests = new RequestQueue();
+        const requests = new RequestQueue(requestQueueOptions);
 
         requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
         requests.queue('https://ac.cnstrc.com/behavior?action=focus');
@@ -167,7 +185,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       });
 
       it('Should not send tracking requests if queue is populated and user is human and page is unloading', (done) => {
-        const requests = new RequestQueue();
+        const requests = new RequestQueue(requestQueueOptions);
 
         requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
         requests.queue('https://ac.cnstrc.com/behavior?action=focus');
@@ -185,7 +203,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       });
 
       it('Should not send tracking requests if queue is populated and user is human and page is unloading and send was called before unload', (done) => {
-        const requests = new RequestQueue();
+        const requests = new RequestQueue(requestQueueOptions);
 
         requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
         requests.queue('https://ac.cnstrc.com/behavior?action=focus');
@@ -209,7 +227,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
           'https://ac.cnstrc.com/behavior?action=magic_number_three',
         ]);
 
-        const requests = new RequestQueue();
+        const requests = new RequestQueue(requestQueueOptions);
 
         expect(RequestQueue.get()).to.be.an('array').length(3);
         helpers.triggerResize();
@@ -237,7 +255,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
           },
         ]);
 
-        const requests = new RequestQueue();
+        const requests = new RequestQueue(requestQueueOptions);
 
         expect(RequestQueue.get()).to.be.an('array').length(3);
         helpers.triggerResize();
@@ -266,7 +284,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
         ]);
 
         // eslint-disable-next-line no-unused-vars
-        const requests = new RequestQueue();
+        const requests = new RequestQueue(requestQueueOptions);
 
         expect(RequestQueue.get()).to.be.an('array').length(3);
         helpers.triggerResize();
@@ -293,7 +311,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
           },
         ]);
 
-        const requests = new RequestQueue();
+        const requests = new RequestQueue(requestQueueOptions);
 
         expect(RequestQueue.get()).to.be.an('array').length(3);
         requests.send();
@@ -320,7 +338,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
           },
         ]);
 
-        const requests = new RequestQueue();
+        const requests = new RequestQueue(requestQueueOptions);
 
         expect(RequestQueue.get()).to.be.an('array').length(3);
         helpers.triggerResize();
@@ -359,8 +377,8 @@ describe('ConstructorIO - Utils - Request Queue', () => {
           },
         ]);
 
-        const requests1 = new RequestQueue();
-        const requests2 = new RequestQueue();
+        const requests1 = new RequestQueue(requestQueueOptions);
+        const requests2 = new RequestQueue(requestQueueOptions);
         const sendSpy1 = sinon.spy(requests1, 'send');
         const sendSpy2 = sinon.spy(requests2, 'send');
 
@@ -379,8 +397,8 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       });
 
       it('Should send tracking requests using multiple queues when items are queued in one and user is human', (done) => {
-        const requests1 = new RequestQueue();
-        const requests2 = new RequestQueue();
+        const requests1 = new RequestQueue(requestQueueOptions);
+        const requests2 = new RequestQueue(requestQueueOptions);
         const sendSpy1 = sinon.spy(requests1, 'send');
         const sendSpy2 = sinon.spy(requests2, 'send');
 
@@ -404,8 +422,8 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       });
 
       it('Should send tracking requests using multiple queues when items are queued in both and user is human', (done) => {
-        const requests1 = new RequestQueue();
-        const requests2 = new RequestQueue();
+        const requests1 = new RequestQueue(requestQueueOptions);
+        const requests2 = new RequestQueue(requestQueueOptions);
         const sendSpy1 = sinon.spy(requests1, 'send');
         const sendSpy2 = sinon.spy(requests2, 'send');
 

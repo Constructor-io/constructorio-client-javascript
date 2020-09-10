@@ -23,8 +23,6 @@ class ConstructorIO {
    * @param {string} [sessionId] - Session id, defaults to value supplied by 'constructorio-id' module
    * @param {string} [userId] - User ID
    * @param {function} [fetch] - If supplied, will be utilized for requests rather than default Fetch API
-   * @param {number} [trackingSendDelay] - Amount of time to wait before sending tracking events (in ms)
-   * @param {boolean} [sendTrackingEvents] - Indicates if tracking events should be dispatched
    * @param {object} [requestQueue] - Options related to 'RequestQueue' class
    * @param {boolean} [requestQueue.sendTrackingEvents] - Indicates if tracking events should be dispatched
    * @param {boolean} [requestQueue.trackingSendDelay] - Amount of time to wait before sending tracking events (in ms)
