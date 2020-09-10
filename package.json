@@ -28,8 +28,7 @@
   },
   "homepage": "https://github.com/Constructor-io/constructorio-client-javascript#readme",
   "pre-push": [
-    "lint",
-    "docs"
+    "lint"
   ],
   "files": [
     "lib/**/*"
