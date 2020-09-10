@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>modules/tracker.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="ConstructorIO.html">ConstructorIO</a></span></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-autocomplete.html">autocomplete</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-autocomplete.html#~getAutocompleteResults">getAutocompleteResults</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-browse.html">browse</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-browse.html#~getBrowseResults">getBrowseResults</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-recommendations.html">recommendations</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-recommendations.html#~getRecommendations">getRecommendations</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-search.html">search</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-search.html#~getSearchResults">getSearchResults</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-Tracker.html">Tracker</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~on">on</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackAutocompleteSelect">trackAutocompleteSelect</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackBrowseResultClick">trackBrowseResultClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackBrowseResultsLoaded">trackBrowseResultsLoaded</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackConversion">trackConversion</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackInputFocus">trackInputFocus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackPurchase">trackPurchase</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackRecommendationClick">trackRecommendationClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackRecommendationView">trackRecommendationView</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackSearchResultClick">trackSearchResultClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackSearchResultsLoaded">trackSearchResultsLoaded</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackSearchSubmit">trackSearchSubmit</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackSessionStart">trackSessionStart</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">modules/tracker.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* eslint-disable object-curly-newline, no-underscore-dangle, camelcase */
+const qs = require('qs');
+const EventEmitter = require('events');
+const helpers = require('../utils/helpers');
+const RequestQueue = require('../utils/request-queue');
+
+// Append common parameters to supplied parameters object
+function applyParams(parameters, options) {
+  const { apiKey, version, sessionId, clientId, userId, segments, testCells } = options;
+  let aggregateParams = Object.assign(parameters);
+
+  if (version) {
+    aggregateParams.c = version;
+  }
+
+  if (clientId) {
+    aggregateParams.i = clientId;
+  }
+
+  if (sessionId) {
+    aggregateParams.s = sessionId;
+  }
+
+  if (userId) {
+    aggregateParams.ui = userId;
+  }
+
+  if (segments &amp;&amp; segments.length) {
+    aggregateParams.us = segments;
+  }
+
+  if (apiKey) {
+    aggregateParams.key = apiKey;
+  }
+
+  if (testCells) {
+    Object.keys(testCells).forEach((testCellKey) => {
+      aggregateParams[`ef-${testCellKey}`] = testCells[testCellKey];
+    });
+  }
+
+  aggregateParams._dt = Date.now();
+  aggregateParams = helpers.cleanParams(aggregateParams);
+
+  return aggregateParams;
+}
+
+// Append common parameters to supplied parameters object and return as string
+function applyParamsAsString(parameters, options) {
+  return qs.stringify(applyParams(parameters, options), { indices: false });
+}
+
+/**
+ * Interface to tracking related API calls
+ *
+ * @module Tracker
+ * @inner
+ * @returns {object}
+ */
+class Tracker {
+  constructor(options) {
+    this.options = options;
+    this.eventemitter = new EventEmitter();
+    this.requests = new RequestQueue(options, this.eventemitter);
+  }
+
+  /**
+   * Send session start event to API
+   *
+   * @function trackSessionStart
+   * @returns {(true|Error)}
+   */
+  trackSessionStart() {
+    const url = `${this.options.serviceUrl}/behavior?`;
+    const queryParams = { action: 'session_start' };
+
+    this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
+    this.requests.send();
+
+    return true;
+  }
+
+  /**
+   * Send input focus event to API
+   *
+   * @function trackInputFocus
+   * @returns {(true|Error)}
+   */
+  trackInputFocus() {
+    const url = `${this.options.serviceUrl}/behavior?`;
+    const queryParams = { action: 'focus' };
+
+    this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
+    this.requests.send();
+
+    return true;
+  }
+
+  /**
+   * Send autocomplete select event to API
+   *
+   * @function trackAutocompleteSelect
+   * @param {string} term - Term of selected autocomplete item
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.original_query - The current autocomplete search query
+   * @param {string} parameters.result_id - Customer id of the selected autocomplete item
+   * @param {string} parameters.section - Section the selected item resides within
+   * @param {string} [parameters.tr] - Trigger used to select the item (click, etc.)
+   * @param {string} [parameters.group_id] - Group identifier of selected item
+   * @param {string} [parameters.display_name] - Display name of group of selected item
+   * @returns {(true|Error)}
+   */
+  trackAutocompleteSelect(term, parameters) {
+    // Ensure term is provided (required)
+    if (term &amp;&amp; typeof term === 'string') {
+      // Ensure parameters are provided (required)
+      if (parameters &amp;&amp; typeof parameters === 'object' &amp;&amp; !Array.isArray(parameters)) {
+        const url = `${this.options.serviceUrl}/autocomplete/${helpers.ourEncodeURIComponent(term)}/select?`;
+        const queryParams = {};
+        const {
+          original_query,
+          result_id,
+          section,
+          original_section,
+          tr,
+          group_id,
+          display_name,
+        } = parameters;
+
+        if (original_query) {
+          queryParams.original_query = original_query;
+        }
+
+        if (tr) {
+          queryParams.tr = tr;
+        }
+
+        if (original_section || section) {
+          queryParams.section = original_section || section;
+        }
+
+        if (group_id) {
+          queryParams.group = {
+            group_id,
+            display_name,
+          };
+        }
+
+        if (result_id) {
+          queryParams.result_id = result_id;
+        }
+
+        this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
+        this.requests.send();
+
+        return true;
+      }
+
+      this.requests.send();
+
+      return new Error('parameters are required of type object');
+    }
+
+    this.requests.send();
+
+    return new Error('term is a required parameter of type string');
+  }
+
+  /**
+   * Send autocomplete search event to API
+   *
+   * @function trackSearchSubmit
+   * @param {string} term - Term of submitted autocomplete event
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.original_query - The current autocomplete search query
+   * @param {string} parameters.result_id - Customer ID of the selected autocomplete item
+   * @param {string} [parameters.group_id] - Group identifier of selected item
+   * @param {string} [parameters.display_name] - Display name of group of selected item
+   * @returns {(true|Error)}
+   */
+  trackSearchSubmit(term, parameters) {
+    // Ensure term is provided (required)
+    if (term &amp;&amp; typeof term === 'string') {
+      // Ensure parameters are provided (required)
+      if (parameters &amp;&amp; typeof parameters === 'object' &amp;&amp; !Array.isArray(parameters)) {
+        const url = `${this.options.serviceUrl}/autocomplete/${helpers.ourEncodeURIComponent(term)}/search?`;
+        const queryParams = {};
+        const { original_query, result_id, group_id, display_name } = parameters;
+
+        if (original_query) {
+          queryParams.original_query = original_query;
+        }
+
+        if (group_id) {
+          queryParams.group = {
+            group_id,
+            display_name,
+          };
+        }
+
+        if (result_id) {
+          queryParams.result_id = result_id;
+        }
+
+        this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
+        this.requests.send();
+
+        return true;
+      }
+
+      this.requests.send();
+
+      return new Error('parameters are required of type object');
+    }
+
+    this.requests.send();
+
+    return new Error('term is a required parameter of type string');
+  }
+
+  /**
+   * Send search results event to API
+   *
+   * @function trackSearchResultsLoaded
+   * @param {string} term - Search results query term
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {number} parameters.num_results - Number of search results in total
+   * @param {array} [parameters.customer_ids] - List of customer item id's returned from search
+   * @returns {(true|Error)}
+   */
+  trackSearchResultsLoaded(term, parameters) {
+    // Ensure term is provided (required)
+    if (term &amp;&amp; typeof term === 'string') {
+      // Ensure parameters are provided (required)
+      if (parameters &amp;&amp; typeof parameters === 'object' &amp;&amp; !Array.isArray(parameters)) {
+        const url = `${this.options.serviceUrl}/behavior?`;
+        const queryParams = { action: 'search-results', term };
+        const { num_results, customer_ids } = parameters;
+
+        if (!helpers.isNil(num_results)) {
+          queryParams.num_results = num_results;
+        }
+
+        if (customer_ids &amp;&amp; Array.isArray(customer_ids)) {
+          queryParams.customer_ids = customer_ids.join(',');
+        }
+
+        this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
+        this.requests.send();
+
+        return true;
+      }
+
+      this.requests.send();
+
+      return new Error('parameters are required of type object');
+    }
+
+    this.requests.send();
+
+    return new Error('term is a required parameter of type string');
+  }
+
+  /**
+   * Send click through event to API
+   *
+   * @function trackSearchResultClick
+   * @param {string} term - Search results query term
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.name - Identifier
+   * @param {string} parameters.customer_id - Customer id
+   * @param {string} [parameters.result_id] - Result id
+   * @returns {(true|Error)}
+   */
+  trackSearchResultClick(term, parameters) {
+    // Ensure term is provided (required)
+    if (term &amp;&amp; typeof term === 'string') {
+      // Ensure parameters are provided (required)
+      if (parameters &amp;&amp; typeof parameters === 'object' &amp;&amp; !Array.isArray(parameters)) {
+        const url = `${this.options.serviceUrl}/autocomplete/${helpers.ourEncodeURIComponent(term)}/click_through?`;
+        const queryParams = {};
+        const { name, customer_id, result_id } = parameters;
+
+        if (name) {
+          queryParams.name = name;
+        }
+
+        if (customer_id) {
+          queryParams.customer_id = customer_id;
+        }
+
+        if (result_id) {
+          queryParams.result_id = result_id;
+        }
+
+        this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
+        this.requests.send();
+
+        return true;
+      }
+
+      this.requests.send();
+
+      return new Error('parameters are required of type object');
+    }
+
+    this.requests.send();
+
+    return new Error('term is a required parameter of type string');
+  }
+
+  /**
+   * Send conversion event to API
+   *
+   * @function trackConversion
+   * @param {string} term - Search results query term
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.name - Identifier
+   * @param {string} parameters.customer_id - Customer id
+   * @param {string} parameters.revenue - Revenue
+   * @param {string} [parameters.variation_id] - Variation id
+   * @param {string} [parameters.section] - Autocomplete section
+   * @param {string} [parameters.result_id] - Result id
+   * @returns {(true|Error)}
+   */
+  trackConversion(term, parameters) {
+    // Ensure parameters are provided (required)
+    if (parameters &amp;&amp; typeof parameters === 'object' &amp;&amp; !Array.isArray(parameters)) {
+      const searchTerm = helpers.ourEncodeURIComponent(term) || 'TERM_UNKNOWN';
+      const url = `${this.options.serviceUrl}/autocomplete/${searchTerm}/conversion?`;
+      const queryParams = {};
+      const { name, customer_id, variation_id, result_id, revenue, section } = parameters;
+
+      if (name) {
+        queryParams.name = name;
+      }
+
+      if (customer_id) {
+        queryParams.customer_id = customer_id;
+      }
+
+      if (variation_id) {
+        queryParams.variation_id = variation_id;
+      }
+
+      if (result_id) {
+        queryParams.result_id = result_id;
+      }
+
+      if (revenue) {
+        queryParams.revenue = revenue;
+      }
+
+      if (section) {
+        queryParams.section = section;
+      } else {
+        queryParams.section = 'Products';
+      }
+
+      this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send purchase event to API
+   *
+   * @function trackPurchase
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {array} parameters.items - List of objects of customer items returned from browse
+   * @param {string} parameters.revenue - Revenue
+   * @param {string} [parameters.order_id] - Customer unique order identifier
+   * @param {string} [parameters.section] - Autocomplete section
+   * @returns {(true|Error)}
+   */
+  trackPurchase(parameters) {
+    // Ensure parameters are provided (required)
+    if (parameters &amp;&amp; typeof parameters === 'object' &amp;&amp; !Array.isArray(parameters)) {
+      const requestUrl = `${this.options.serviceUrl}/v2/behavioral_action/purchase?`;
+      const queryParams = {};
+      const bodyParams = {};
+      const { items, revenue, order_id, section } = parameters;
+
+      if (items &amp;&amp; Array.isArray(items)) {
+        bodyParams.items = items;
+      }
+
+      if (revenue) {
+        bodyParams.revenue = revenue;
+      }
+
+      if (order_id) {
+        bodyParams.order_id = order_id;
+      }
+
+      if (section) {
+        queryParams.section = section;
+      } else {
+        queryParams.section = 'Products';
+      }
+
+      this.requests.queue(`${requestUrl}${applyParamsAsString(queryParams, this.options)}`, 'POST', applyParams(bodyParams, this.options));
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send recommendation view event to API
+   *
+   * @function trackRecommendationView
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {number} [parameters.result_count] - Number of results displayed
+   * @param {number} [parameters.result_page] - Page number of results
+   * @param {string} [parameters.result_id] - Result identifier
+   * @param {string} [parameters.section="Products"] - Results section
+   * @param {string} parameters.url - Current page URL
+   * @param {string} parameters.pod_id - Pod identifier
+   * @param {number} parameters.num_results_viewed - Number of results viewed
+   * @returns {(true|Error)}
+   */
+  trackRecommendationView(parameters) {
+    // Ensure parameters are provided (required)
+    if (parameters &amp;&amp; typeof parameters === 'object' &amp;&amp; !Array.isArray(parameters)) {
+      const requestUrl = `${this.options.serviceUrl}/v2/behavioral_action/recommendation_result_view?`;
+      const bodyParams = {};
+      const {
+        result_count,
+        result_page,
+        result_id,
+        section,
+        url,
+        pod_id,
+        num_results_viewed,
+      } = parameters;
+
+      if (!helpers.isNil(result_count)) {
+        bodyParams.result_count = result_count;
+      }
+
+      if (!helpers.isNil(result_page)) {
+        bodyParams.result_page = result_page;
+      }
+
+      if (result_id) {
+        bodyParams.result_id = result_id;
+      }
+
+      if (section) {
+        bodyParams.section = section;
+      } else {
+        bodyParams.section = 'Products';
+      }
+
+      if (url) {
+        bodyParams.url = url;
+      }
+
+      if (pod_id) {
+        bodyParams.pod_id = pod_id;
+      }
+
+      if (!helpers.isNil(num_results_viewed)) {
+        bodyParams.num_results_viewed = num_results_viewed;
+      }
+
+      this.requests.queue(`${requestUrl}${applyParamsAsString({}, this.options)}`, 'POST', applyParams(bodyParams, this.options));
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send recommendation click event to API
+   *
+   * @function trackRecommendationClick
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} [parameters.variation_id] - Variation identifier
+   * @param {string} [parameters.section="Products"] - Results section
+   * @param {string} [parameters.result_id] - Result identifier
+   * @param {number} [parameters.result_count] - Number of results displayed
+   * @param {number} [parameters.result_page] - Page number of results
+   * @param {number} [parameters.result_position_on_page] - Position of result on page
+   * @param {number} [parameters.num_results_per_page] - Number of results on page
+   * @param {string} parameters.pod_id - Pod identifier
+   * @param {string} parameters.strategy_id - Strategy identifier
+   * @param {string} parameters.item_id - Identifier of clicked item
+   * @returns {(true|Error)}
+   */
+  trackRecommendationClick(parameters) {
+    // Ensure parameters are provided (required)
+    if (parameters &amp;&amp; typeof parameters === 'object' &amp;&amp; !Array.isArray(parameters)) {
+      const url = `${this.options.serviceUrl}/v2/behavioral_action/recommendation_result_click?`;
+      const bodyParams = {};
+      const {
+        variation_id,
+        section,
+        result_id,
+        result_count,
+        result_page,
+        result_position_on_page,
+        num_results_per_page,
+        pod_id,
+        strategy_id,
+        item_id,
+      } = parameters;
+
+      if (variation_id) {
+        bodyParams.variation_id = variation_id;
+      }
+
+      if (section) {
+        bodyParams.section = section;
+      } else {
+        bodyParams.section = 'Products';
+      }
+
+      if (result_id) {
+        bodyParams.result_id = result_id;
+      }
+
+      if (!helpers.isNil(result_count)) {
+        bodyParams.result_count = result_count;
+      }
+
+      if (!helpers.isNil(result_page)) {
+        bodyParams.result_page = result_page;
+      }
+
+      if (!helpers.isNil(result_position_on_page)) {
+        bodyParams.result_position_on_page = result_position_on_page;
+      }
+
+      if (!helpers.isNil(num_results_per_page)) {
+        bodyParams.num_results_per_page = num_results_per_page;
+      }
+
+      if (pod_id) {
+        bodyParams.pod_id = pod_id;
+      }
+
+      if (strategy_id) {
+        bodyParams.strategy_id = strategy_id;
+      }
+
+      if (item_id) {
+        bodyParams.item_id = item_id;
+      }
+
+      this.requests.queue(`${url}${applyParamsAsString({}, this.options)}`, 'POST', applyParams(bodyParams, this.options));
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send browse results loaded event to API
+   *
+   * @function trackBrowseResultsLoaded
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} [parameters.section="Products"] - Results section
+   * @param {number} [parameters.result_count] - Number of results displayed
+   * @param {number} [parameters.result_page] - Page number of results
+   * @param {string} [parameters.result_id] - Result identifier
+   * @param {string} [parameters.selected_filters] -  Selected filters
+   * @param {string} [parameters.sort_order] - Sort order ('ascending' or 'descending')
+   * @param {string} [parameters.sort_by] - Sorting method
+   * @param {array} [parameters.items] - List of objects of customer items returned from browse
+   * @param {string} parameters.url - Current page URL
+   * @param {string} parameters.filter_name - Filter name
+   * @param {string} parameters.filter_value - Filter value
+   * @returns {(true|Error)}
+   */
+  trackBrowseResultsLoaded(parameters) {
+    // Ensure parameters are provided (required)
+    if (parameters &amp;&amp; typeof parameters === 'object' &amp;&amp; !Array.isArray(parameters)) {
+      const requestUrl = `${this.options.serviceUrl}/v2/behavioral_action/browse_result_load?`;
+      const bodyParams = {};
+      const {
+        section,
+        result_count,
+        result_page,
+        result_id,
+        selected_filters,
+        url,
+        sort_order,
+        sort_by,
+        filter_name,
+        filter_value,
+        items,
+      } = parameters;
+
+      if (section) {
+        bodyParams.section = section;
+      } else {
+        bodyParams.section = 'Products';
+      }
+
+      if (!helpers.isNil(result_count)) {
+        bodyParams.result_count = result_count;
+      }
+
+      if (!helpers.isNil(result_page)) {
+        bodyParams.result_page = result_page;
+      }
+
+      if (result_id) {
+        bodyParams.result_id = result_id;
+      }
+
+      if (selected_filters) {
+        bodyParams.selected_filters = selected_filters;
+      }
+
+      if (url) {
+        bodyParams.url = url;
+      }
+
+      if (sort_order) {
+        bodyParams.sort_order = sort_order;
+      }
+
+      if (sort_by) {
+        bodyParams.sort_by = sort_by;
+      }
+
+      if (filter_name) {
+        bodyParams.filter_name = filter_name;
+      }
+
+      if (filter_value) {
+        bodyParams.filter_value = filter_value;
+      }
+
+      if (items &amp;&amp; Array.isArray(items)) {
+        bodyParams.items = items;
+      }
+
+      this.requests.queue(`${requestUrl}${applyParamsAsString({}, this.options)}`, 'POST', applyParams(bodyParams, this.options));
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send browse result click event to API
+   *
+   * @function trackBrowseResultClick
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} [parameters.section="Products"] - Results section
+   * @param {string} [parameters.variation_id] - Variation ID of clicked item
+   * @param {string} [parameters.result_id] - Result identifier
+   * @param {number} [parameters.result_count] - Number of results displayed
+   * @param {number} [parameters.result_page] - Page number of results
+   * @param {number} [parameters.result_position_on_page] - Position of clicked item
+   * @param {number} [parameters.num_results_per_page] - Number of results shown
+   * @param {string} [parameters.selected_filters] -  Selected filters
+   * @param {string} parameters.filter_name - Filter name
+   * @param {string} parameters.filter_value - Filter value
+   * @param {string} parameters.item_id - ID of clicked item
+   * @returns {(true|Error)}
+   */
+  trackBrowseResultClick(parameters) {
+    // Ensure parameters are provided (required)
+    if (parameters &amp;&amp; typeof parameters === 'object' &amp;&amp; !Array.isArray(parameters)) {
+      const url = `${this.options.serviceUrl}/v2/behavioral_action/browse_result_click?`;
+      const bodyParams = {};
+      const {
+        section,
+        variation_id,
+        result_id,
+        result_count,
+        result_page,
+        result_position_on_page,
+        num_results_per_page,
+        selected_filters,
+        filter_name,
+        filter_value,
+        item_id,
+      } = parameters;
+
+      if (section) {
+        bodyParams.section = section;
+      } else {
+        bodyParams.section = 'Products';
+      }
+
+      if (variation_id) {
+        bodyParams.variation_id = variation_id;
+      }
+
+      if (result_id) {
+        bodyParams.result_id = result_id;
+      }
+
+      if (!helpers.isNil(result_count)) {
+        bodyParams.result_count = result_count;
+      }
+
+      if (!helpers.isNil(result_page)) {
+        bodyParams.result_page = result_page;
+      }
+
+      if (!helpers.isNil(result_position_on_page)) {
+        bodyParams.result_position_on_page = result_position_on_page;
+      }
+
+      if (!helpers.isNil(num_results_per_page)) {
+        bodyParams.num_results_per_page = num_results_per_page;
+      }
+
+      if (selected_filters) {
+        bodyParams.selected_filters = selected_filters;
+      }
+
+      if (filter_name) {
+        bodyParams.filter_name = filter_name;
+      }
+
+      if (filter_value) {
+        bodyParams.filter_value = filter_value;
+      }
+
+      if (item_id) {
+        bodyParams.item_id = item_id;
+      }
+
+      this.requests.queue(`${url}${applyParamsAsString({}, this.options)}`, 'POST', applyParams(bodyParams, this.options));
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Subscribe to success or error messages emitted by tracking requests
+   *
+   * @function on
+   * @param {string} messageType - Type of message to listen for ('success' or 'error')
+   * @param {function} callback - Callback to be invoked when message received
+   * @returns {(true|Error)}
+   */
+  on(messageType, callback) {
+    if (messageType !== 'success' &amp;&amp; messageType !== 'error') {
+      return new Error('messageType must be a string of value "success" or "error"');
+    }
+
+    if (!callback || typeof callback !== 'function') {
+      return new Error('callback is required and must be a function');
+    }
+
+    this.eventemitter.on(messageType, callback);
+
+    return true;
+  }
+}
+
+module.exports = Tracker;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Thu Sep 10 2020 17:41:47 GMT-0600 (Mountain Daylight Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

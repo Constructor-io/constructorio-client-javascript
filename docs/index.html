@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Home - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="ConstructorIO.html">ConstructorIO</a></span></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-autocomplete.html">autocomplete</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-autocomplete.html#~getAutocompleteResults">getAutocompleteResults</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-browse.html">browse</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-browse.html#~getBrowseResults">getBrowseResults</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-recommendations.html">recommendations</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-recommendations.html#~getRecommendations">getRecommendations</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-search.html">search</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-search.html#~getSearchResults">getSearchResults</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-Tracker.html">Tracker</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~on">on</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackAutocompleteSelect">trackAutocompleteSelect</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackBrowseResultClick">trackBrowseResultClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackBrowseResultsLoaded">trackBrowseResultsLoaded</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackConversion">trackConversion</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackInputFocus">trackInputFocus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackPurchase">trackPurchase</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackRecommendationClick">trackRecommendationClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackRecommendationView">trackRecommendationView</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackSearchResultClick">trackSearchResultClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackSearchResultsLoaded">trackSearchResultsLoaded</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackSearchSubmit">trackSearchSubmit</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackSessionStart">trackSessionStart</a></span></li>
+</nav>
+
+<div id="main">
+    
+
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+    
+
+
+    <section class="readme">
+        <article><h1>Constructor.io JavaScript Client</h1>
+<p><a href="https://www.npmjs.com/package/@constructor-io/constructorio-client-javascript"><img src="https://img.shields.io/npm/v/@constructor-io/constructorio-client-javascript" alt="npm"></a>
+<img src="https://img.shields.io/david/Constructor-io/constructorio-client-javascript" alt="David (path)">
+<a href="https://github.com/Constructor-io/constructorio-client-javascript/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT licensed"></a></p>
+<p>A JavaScript client for <a href="http://constructor.io/">Constructor.io</a>. <a href="http://constructor.io/">Constructor.io</a> provides search as a service that optimizes results using artificial intelligence (including natural language processing, re-ranking to optimize for conversions, and user personalization).</p>
+<h2>1. Install</h2>
+<p>This package can be installed via npm: <code>npm i @constructor-io/constructorio-client-javascript</code>. Once installed, simply import or require the package into your repository.</p>
+<h2>2. Retrieve an API key</h2>
+<p>You can find this in your <a href="https://constructor.io/dashboard">Constructor.io dashboard</a>. Contact sales if you'd like to sign up, or support if you believe your company already has an account.</p>
+<h2>3. Implement the Client</h2>
+<p>Once imported, an instance of the client can be created as follows:</p>
+<pre class="prettyprint source lang-javascript"><code>const ConstructorIOClient = require('@constructor-io/constructorio-client-javascript');
+
+var constructorio = new ConstructorIOClient({
+    apiKey: 'YOUR API KEY',
+});
+</code></pre>
+<h2>4. Retrieve Results</h2>
+<p>After instantiating an instance of the client, four modules will be exposed as properties to help retrieve data from Constructor.io: <code>search</code>, <code>browse</code>, <code>autocomplete</code>, <code>recommendations</code> and <code>tracker</code>.</p>
+<h3>Search</h3>
+<p>The search module can be used to retrieve search results. Responses will be delivered via a Promise. The <code>parameters</code> object is optional.</p>
+<h4>Retrieve search results</h4>
+<pre class="prettyprint source lang-javascript"><code>constructorio.search.getSearchResults('dogs', {
+  parameters
+}).then(function(response) {
+  console.log(response);
+}).catch(function(err) {
+  console.error(err);
+});
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>section</code></td>
+<td>string</td>
+<td>Section to display results from</td>
+</tr>
+<tr>
+<td><code>page</code></td>
+<td>number</td>
+<td>Page number of results</td>
+</tr>
+<tr>
+<td><code>resultsPerPage</code></td>
+<td>number</td>
+<td>Number of results per page</td>
+</tr>
+<tr>
+<td><code>filters</code></td>
+<td>object</td>
+<td>The criteria by which search results should be filtered</td>
+</tr>
+<tr>
+<td><code>sortBy</code></td>
+<td>string</td>
+<td>The criteria by which search results should be sorted</td>
+</tr>
+<tr>
+<td><code>sortOrder</code></td>
+<td>string</td>
+<td>The sort order by which search results should be sorted (descending or ascending)</td>
+</tr>
+<tr>
+<td><code>collectionId</code></td>
+<td>string</td>
+<td>The collection ID to retrieve results from</td>
+</tr>
+</tbody>
+</table>
+<h3>Browse</h3>
+<p>The browse module can be used to retrieve browse results. Responses will be delivered via a Promise. The <code>parameters</code> object is optional.</p>
+<h4>Retrieve search results</h4>
+<pre class="prettyprint source lang-javascript"><code>constructorio.browse.getBrowseResults('filter-name', 'filter-value', {
+  parameters
+}).then(function(response) {
+  console.log(response);
+}).catch(function(err) {
+  console.error(err);
+});
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>section</code></td>
+<td>string</td>
+<td>Section to display results from</td>
+</tr>
+<tr>
+<td><code>page</code></td>
+<td>number</td>
+<td>Page number of results</td>
+</tr>
+<tr>
+<td><code>resultsPerPage</code></td>
+<td>number</td>
+<td>Number of results per page</td>
+</tr>
+<tr>
+<td><code>filters</code></td>
+<td>object</td>
+<td>The criteria by which search results should be filtered</td>
+</tr>
+<tr>
+<td><code>sortBy</code></td>
+<td>string</td>
+<td>The criteria by which search results should be sorted</td>
+</tr>
+<tr>
+<td><code>sortOrder</code></td>
+<td>string</td>
+<td>The sort order by which search results should be sorted (descending or ascending)</td>
+</tr>
+</tbody>
+</table>
+<h3>Autocomplete</h3>
+<p>The autocomplete module can be used to retrieve autocomplete results. Responses will be delivered via a Promise. The <code>parameters</code> object is optional.</p>
+<h4>Retrieve autocomplete results</h4>
+<pre class="prettyprint source lang-javascript"><code>constructorio.autocomplete.getAutocompleteResults('dogs', {
+    parameters
+}).then(function(response) {
+  console.log(response);
+}).catch(function(err) {
+  console.error(err);
+});
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>section</code></td>
+<td>string</td>
+<td>Section to display results from</td>
+</tr>
+<tr>
+<td><code>numResults</code></td>
+<td>number</td>
+<td>Number of results to retrieve</td>
+</tr>
+<tr>
+<td><code>resultsPerSection</code></td>
+<td>object</td>
+<td>Object of pairs in the form of <code>section: number</code> for number results to display</td>
+</tr>
+<tr>
+<td><code>filters</code></td>
+<td>object</td>
+<td>The criteria by which search results should be filtered</td>
+</tr>
+<tr>
+<td><code>sortOrder</code></td>
+<td>string</td>
+<td>The sort order by which search results should be sorted (descending or ascending)</td>
+</tr>
+</tbody>
+</table>
+<h3>Recommendations</h3>
+<p>The recommendations module can be used to retrieve recommendations for a given pod identifier. Responses will be delivered via a Promise. The <code>parameters</code> object is optional.</p>
+<h4>Retrieve recommendations</h4>
+<pre class="prettyprint source lang-javascript"><code>constructorio.recommendations.getRecommendations('pod-id', { parameters }).then(function(response) {
+  console.log(response);
+}).catch(function(err) {
+  console.error(err);
+});
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>numResults</code></td>
+<td>number</td>
+<td>Number of results to retrieve</td>
+</tr>
+<tr>
+<td><code>itemIds</code></td>
+<td>string or array</td>
+<td>Item ID(s) to retrieve recommendations for (strategy specific)</td>
+</tr>
+<tr>
+<td><code>section</code></td>
+<td>string</td>
+<td>Section to display results from</td>
+</tr>
+<tr>
+<td><code>term</code></td>
+<td>string</td>
+<td>Term to retrieve recommendations for (strategy specific)</td>
+</tr>
+</tbody>
+</table>
+<h3>Tracker</h3>
+<p>The tracker module can be used to send tracking events. Returns <code>true</code> when successful, or will throw an error if an issue is encountered.</p>
+<h4>Send input focus event</h4>
+<pre class="prettyprint source lang-javascript"><code>constructorio.tracker.trackInputFocus();
+</code></pre>
+<h4>Send autocomplete select event</h4>
+<pre class="prettyprint source lang-javascript"><code>constructorio.tracker.trackAutocompleteSelect('dogs', {
+    parameters
+});
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th style="text-align:center">Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>original_query</code></td>
+<td>string</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>result_id</code></td>
+<td>string</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>section</code></td>
+<td>string</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>tr</code></td>
+<td>string</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>group_id</code></td>
+<td>string</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>display_name</code></td>
+<td>string</td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<h4>Send autocomplete search event</h4>
+<pre class="prettyprint source lang-javascript"><code>constructorio.tracker.trackSearchSubmit('dogs', {
+    parameters
+});
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th style="text-align:center">Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>original_query</code></td>
+<td>string</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>result_id</code></td>
+<td>string</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>group_id</code></td>
+<td>string</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>display_name</code></td>
+<td>string</td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<h4>Send search results event</h4>
+<pre class="prettyprint source lang-javascript"><code>constructorio.tracker.trackSearchResultsLoaded('dogs', {
+    parameters
+});
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th style="text-align:center">Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>num_results</code></td>
+<td>string</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>customer_ids</code></td>
+<td>array</td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<h4>Send search result click event</h4>
+<pre class="prettyprint source lang-javascript"><code>constructorio.tracker.trackSearchResultClick('dogs', {
+    parameters
+});
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th style="text-align:center">Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>customer_id</code></td>
+<td>string</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>result_id</code></td>
+<td>string</td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<h4>Send conversion event</h4>
+<pre class="prettyprint source lang-javascript"><code>constructorio.tracker.trackConversion('dogs', {
+    parameters
+});
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th style="text-align:center">Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>customer_id</code></td>
+<td>string</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>variation_id</code></td>
+<td>string</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>revenue</code></td>
+<td>string</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>section</code></td>
+<td>string</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>result_id</code></td>
+<td>string</td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<h4>Send purchase event</h4>
+<pre class="prettyprint source lang-javascript"><code>constructorio.tracker.trackPurchase({
+    parameters
+});
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th style="text-align:center">Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>items</code></td>
+<td>array</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>revenue</code></td>
+<td>string</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>order_id</code></td>
+<td>string</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>section</code></td>
+<td>string</td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<h4>Send recommendation view event</h4>
+<pre class="prettyprint source lang-javascript"><code>constructorio.tracker.trackRecommendationView({
+    parameters
+});
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th style="text-align:center">Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>url</code></td>
+<td>string</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>pod_id</code></td>
+<td>string</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>num_results_viewed</code></td>
+<td>number</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>result_count</code></td>
+<td>integer</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>result_page</code></td>
+<td>integer</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>result_id</code></td>
+<td>string</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>section</code></td>
+<td>string</td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<h4>Send recommendation click event</h4>
+<pre class="prettyprint source lang-javascript"><code>constructorio.tracker.trackRecommendationClick({
+    parameters
+});
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th style="text-align:center">Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pod_id</code></td>
+<td>string</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>strategy_id</code></td>
+<td>string</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>item_id</code></td>
+<td>string</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>result_count</code></td>
+<td>integer</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>result_page</code></td>
+<td>integer</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>result_id</code></td>
+<td>string</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>section</code></td>
+<td>string</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>variation_id</code></td>
+<td>string</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>num_results_per_page</code></td>
+<td>integer</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>result_position_on_page</code></td>
+<td>integer</td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<h4>Send browse results load event</h4>
+<pre class="prettyprint source lang-javascript"><code>constructorio.tracker.trackBrowseResultsLoaded({
+    parameters
+});
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th style="text-align:center">Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>url</code></td>
+<td>string</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>filter_name</code></td>
+<td>string</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>filter_value</code></td>
+<td>string</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>section</code></td>
+<td>string</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>result_id</code></td>
+<td>string</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>result_count</code></td>
+<td>integer</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>result_page</code></td>
+<td>integer</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>selected_filters</code></td>
+<td>string or array</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>sort_by</code></td>
+<td>string</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>sort_order</code></td>
+<td>string</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>items</code></td>
+<td>array</td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<h4>Send browse result click event</h4>
+<pre class="prettyprint source lang-javascript"><code>constructorio.tracker.trackBrowseResultClick({
+    parameters
+});
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th style="text-align:center">Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>item_id</code></td>
+<td>string</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>filter_name</code></td>
+<td>string</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>filter_value</code></td>
+<td>string</td>
+<td style="text-align:center">✔</td>
+</tr>
+<tr>
+<td><code>variation_id</code></td>
+<td>string</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>section</code></td>
+<td>string</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>result_id</code></td>
+<td>string</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>result_count</code></td>
+<td>integer</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>result_page</code></td>
+<td>integer</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>result_position_on_page</code></td>
+<td>integer</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>num_results_per_page</code></td>
+<td>integer</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td><code>selected_filters</code></td>
+<td>string or array</td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<h4>Receive status of tracking requests</h4>
+<p>The status of tracking requests can be observed through emitted events. <code>messageType</code> must be either &quot;success&quot; or &quot;error&quot;, and the <code>callback</code> parameter must be a function that will be passed the message data as the first and only argument.</p>
+<pre class="prettyprint source lang-javascript"><code>constructorio.tracker.on(messageType, callback);
+</code></pre>
+<h4>Dispatched events</h4>
+<p>The <code>search</code>, <code>browse</code> and <code>recommendations</code> module may dispatch custom events on <code>window</code> with response data when a request has been completed. The event name follows the following structure: <code>cio.client.[moduleName].[methodName].completed</code>. Example consuming code can be found below:</p>
+<pre class="prettyprint source lang-javascript"><code>window.addEventListener('cio.client.search.getSearchResults.completed', (event) => {
+  // `event.detail` will be response data
+}, false);
+</code></pre>
+<h2>Development / npm commands</h2>
+<pre class="prettyprint source lang-bash"><code>npm run lint          # run lint on source code and tests
+npm run test          # run tests
+npm run coverage      # run tests and serves coverage reports from localhost:8081
+npm run docs          # build and serve documentation from localhost:8082
+</code></pre></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Thu Sep 10 2020 17:41:47 GMT-0600 (Mountain Daylight Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

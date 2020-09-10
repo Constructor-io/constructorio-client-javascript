@@ -92,6 +92,3 @@ typings/
 
 # DynamoDB Local files
 .dynamodb/
-
-# JSDoc output files
-docs
