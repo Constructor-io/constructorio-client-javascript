@@ -92,7 +92,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
     });
 
 
-    it('Should add requests to the queue if the sendTrackingRequests option is false', () => {
+    it('Should add requests to the queue if the sendTrackingEvents option is false', () => {
       const requests = new RequestQueue({
         requestQueue: {
           sendTrackingEvents: false,
@@ -107,7 +107,7 @@ describe('ConstructorIO - Utils - Request Queue', () => {
       helpers.triggerUnload();
     });
 
-    it('Should not add requests to the queue if the sendTrackingRequests option is not defined', () => {
+    it('Should add requests to the queue if the sendTrackingEvents option is not defined', () => {
       const requests = new RequestQueue();
 
       requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
@@ -343,6 +343,44 @@ describe('ConstructorIO - Utils - Request Queue', () => {
         expect(RequestQueue.get()).to.be.an('array').length(3);
         helpers.triggerResize();
         helpers.triggerUnload();
+        requests.send();
+
+        setTimeout(() => {
+          expect(RequestQueue.get()).to.be.an('array').length(3);
+          done();
+        }, waitInterval);
+      });
+
+      it('Should not send any tracking requests if queue is populated and user is human and sendTrackingEvents is set to false', (done) => {
+        const requests = new RequestQueue({
+          requestQueue: {
+            sendTrackingEvents: false,
+          },
+        });
+
+        requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+        requests.queue('https://ac.cnstrc.com/behavior?action=focus');
+        requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
+
+        expect(RequestQueue.get()).to.be.an('array').length(3);
+        helpers.triggerResize();
+        requests.send();
+
+        setTimeout(() => {
+          expect(RequestQueue.get()).to.be.an('array').length(3);
+          done();
+        }, waitInterval);
+      });
+
+      it('Should not send any tracking requests if queue is populated and user is human and sendTrackingEvents is not defined', (done) => {
+        const requests = new RequestQueue();
+
+        requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+        requests.queue('https://ac.cnstrc.com/behavior?action=focus');
+        requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
+
+        expect(RequestQueue.get()).to.be.an('array').length(3);
+        helpers.triggerResize();
         requests.send();
 
         setTimeout(() => {
