@@ -32,3 +32,21 @@ var constructorio = new ConstructorIOClient({
 After instantiating an instance of the client, four modules will be exposed as properties to help retrieve data from Constructor.io: `search`, `browse`, `autocomplete`, `recommendations` and `tracker`.
 
 Full API documentation is available on [Github Pages](https://constructor-io.github.io/constructorio-client-javascript/index.html)
+
+#### Dispatched events
+The `search`, `browse` and `recommendations` module may dispatch custom events on `window` with response data when a request has been completed. The event name follows the following structure: `cio.client.[moduleName].[methodName].completed`. Example consuming code can be found below:
+
+```javascript
+window.addEventListener('cio.client.search.getSearchResults.completed', (event) => {
+  // `event.detail` will be response data
+}, false);
+```
+
+## Development / npm commands
+
+```bash
+npm run lint          # run lint on source code and tests
+npm run test          # run tests
+npm run coverage      # run tests and serves coverage reports from localhost:8081
+npm run docs          # output documentation to `./docs` directory
+```
