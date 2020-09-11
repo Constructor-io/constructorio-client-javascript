@@ -30,7 +30,7 @@ function createRecommendationsUrl(podId, parameters, options) {
   }
 
   if (parameters) {
-    const { numResults, itemIds, section, term } = parameters;
+    const { numResults, itemIds, section, term, filters } = parameters;
 
     // Pull num results number from parameters
     if (!helpers.isNil(numResults)) {
@@ -50,6 +50,11 @@ function createRecommendationsUrl(podId, parameters, options) {
     // Pull term from parameters
     if (term) {
       queryParams.term = term;
+    }
+
+    // Pull filters from parameters
+    if (filters) {
+      queryParams.filters = filters;
     }
   }
 
@@ -83,6 +88,7 @@ class Recommendations {
    * @param {number} [parameters.numResults] - The number of results to return
    * @param {string} [parameters.section] - The section to return results from
    * @param {string} [parameters.term] - The term to use to refine results (strategy specific)
+   * @param {object} [parameters.filters] - Filters used to refine results (strategy specific)
    * @returns {Promise}
    * @see https://docs.constructor.io
    */
@@ -97,7 +103,6 @@ class Recommendations {
     } catch (e) {
       return Promise.reject(e);
     }
-
 
     return fetch(requestUrl)
       .then((response) => {

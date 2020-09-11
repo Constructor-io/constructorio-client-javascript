@@ -99,7 +99,7 @@ constructorio.autocomplete.getAutocompleteResults('dogs', {
 | `section` | string | Section to display results from |
 | `numResults` | number | Number of results to retrieve |
 | `resultsPerSection` | object | Object of pairs in the form of `section: number` for number results to display |
-| `filters` | object | The criteria by which search results should be filtered |
+| `filters` | object | Filters used to refine results |
 | `sortOrder` | string | The sort order by which search results should be sorted (descending or ascending) |
 
 ### Recommendations
@@ -121,6 +121,7 @@ constructorio.recommendations.getRecommendations('pod-id', { parameters }).then(
 | `itemIds` | string or array | Item ID(s) to retrieve recommendations for (strategy specific) |
 | `section` | string | Section to display results from |
 | `term` | string | Term to retrieve recommendations for (strategy specific) |
+| `filters` | object | Filters used to refine results (strategy specific) |
 
 ### Tracker
 
