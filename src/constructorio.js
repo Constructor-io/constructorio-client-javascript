@@ -71,8 +71,8 @@ class ConstructorIO {
       testCells,
       fetch,
       trackingSendDelay,
-      eventDispatcher,
       sendTrackingEvents,
+      eventDispatcher,
     };
 
     // Expose global modules
