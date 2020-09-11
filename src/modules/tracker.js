@@ -53,7 +53,7 @@ function applyParamsAsString(parameters, options) {
 /**
  * Interface to tracking related API calls
  *
- * @module Tracker
+ * @module tracker
  * @inner
  * @returns {object}
  */
