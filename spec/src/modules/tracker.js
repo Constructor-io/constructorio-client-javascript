@@ -369,6 +369,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -397,6 +398,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -648,6 +650,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -676,6 +679,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -893,6 +897,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -921,6 +926,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1164,6 +1170,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1192,6 +1199,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1376,6 +1384,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1404,6 +1413,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1659,6 +1669,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1687,6 +1698,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1751,7 +1763,6 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
         expect(requestParams).to.have.property('items').to.deep.equal(requiredParameters.items);
         expect(requestParams).to.have.property('revenue').to.equal(requiredParameters.revenue);
@@ -1927,6 +1938,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1943,7 +1955,7 @@ describe('ConstructorIO - Tracker', () => {
 
         // Response
         expect(eventSpy).to.have.been.called;
-        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('method').to.equal('POST');
         expect(responseParams).to.have.property('message').to.equal('ok');
 
         done();
@@ -1955,6 +1967,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -1971,7 +1984,7 @@ describe('ConstructorIO - Tracker', () => {
 
         // Response
         expect(eventSpy).to.have.been.called;
-        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('method').to.equal('POST');
         expect(responseParams).to.have.property('message').to.equal('ok');
 
         done();
@@ -2193,6 +2206,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -2221,6 +2235,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -2464,6 +2479,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -2492,6 +2508,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -2746,6 +2763,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -2774,6 +2792,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -3019,6 +3038,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
@@ -3047,6 +3067,7 @@ describe('ConstructorIO - Tracker', () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
       });
 
       tracker.on('success', eventSpy);
