@@ -73,9 +73,9 @@ class ConstructorIO {
       testCells,
       fetch,
       trackingSendDelay,
-      eventDispatcher,
-      sendReferrerWithTrackingEvents: (sendReferrerWithTrackingEvents === false) ? false : true, // Defaults to 'true',
       sendTrackingEvents,
+      sendReferrerWithTrackingEvents: (sendReferrerWithTrackingEvents === false) ? false : true, // Defaults to 'true',
+      eventDispatcher,
     };
 
     // Expose global modules

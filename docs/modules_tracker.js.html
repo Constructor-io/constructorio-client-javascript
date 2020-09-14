@@ -1,21 +1,53 @@
-/* eslint-disable object-curly-newline, no-underscore-dangle, camelcase */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>modules/tracker.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="ConstructorIO.html">ConstructorIO</a></span></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-autocomplete.html">autocomplete</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-autocomplete.html#~getAutocompleteResults">getAutocompleteResults</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-browse.html">browse</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-browse.html#~getBrowseResults">getBrowseResults</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-recommendations.html">recommendations</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-recommendations.html#~getRecommendations">getRecommendations</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-search.html">search</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-search.html#~getSearchResults">getSearchResults</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-Tracker.html">Tracker</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~on">on</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackAutocompleteSelect">trackAutocompleteSelect</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackBrowseResultClick">trackBrowseResultClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackBrowseResultsLoaded">trackBrowseResultsLoaded</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackConversion">trackConversion</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackInputFocus">trackInputFocus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackPurchase">trackPurchase</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackRecommendationClick">trackRecommendationClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackRecommendationView">trackRecommendationView</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackSearchResultClick">trackSearchResultClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackSearchResultsLoaded">trackSearchResultsLoaded</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackSearchSubmit">trackSearchSubmit</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackSessionStart">trackSessionStart</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">modules/tracker.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* eslint-disable object-curly-newline, no-underscore-dangle, camelcase */
 const qs = require('qs');
 const EventEmitter = require('events');
 const helpers = require('../utils/helpers');
 const RequestQueue = require('../utils/request-queue');
 
+// Append common parameters to supplied parameters object
 function applyParams(parameters, options) {
-  const {
-    apiKey,
-    version,
-    sessionId,
-    clientId,
-    userId,
-    segments,
-    testCells,
-    sendReferrerWithTrackingEvents,
-  } = options;
-  const { host, pathname } = helpers.getWindowLocation();
+  const { apiKey, version, sessionId, clientId, userId, segments, testCells } = options;
   let aggregateParams = Object.assign(parameters);
 
   if (version) {
@@ -34,7 +66,7 @@ function applyParams(parameters, options) {
     aggregateParams.ui = userId;
   }
 
-  if (segments && segments.length) {
+  if (segments &amp;&amp; segments.length) {
     aggregateParams.us = segments;
   }
 
@@ -46,10 +78,6 @@ function applyParams(parameters, options) {
     Object.keys(testCells).forEach((testCellKey) => {
       aggregateParams[`ef-${testCellKey}`] = testCells[testCellKey];
     });
-  }
-
-  if (sendReferrerWithTrackingEvents && host) {
-    aggregateParams.origin_referrer = host + pathname;
   }
 
   aggregateParams._dt = Date.now();
@@ -66,7 +94,7 @@ function applyParamsAsString(parameters, options) {
 /**
  * Interface to tracking related API calls
  *
- * @module tracker
+ * @module Tracker
  * @inner
  * @returns {object}
  */
@@ -125,9 +153,9 @@ class Tracker {
    */
   trackAutocompleteSelect(term, parameters) {
     // Ensure term is provided (required)
-    if (term && typeof term === 'string') {
+    if (term &amp;&amp; typeof term === 'string') {
       // Ensure parameters are provided (required)
-      if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      if (parameters &amp;&amp; typeof parameters === 'object' &amp;&amp; !Array.isArray(parameters)) {
         const url = `${this.options.serviceUrl}/autocomplete/${helpers.ourEncodeURIComponent(term)}/select?`;
         const queryParams = {};
         const {
@@ -193,9 +221,9 @@ class Tracker {
    */
   trackSearchSubmit(term, parameters) {
     // Ensure term is provided (required)
-    if (term && typeof term === 'string') {
+    if (term &amp;&amp; typeof term === 'string') {
       // Ensure parameters are provided (required)
-      if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      if (parameters &amp;&amp; typeof parameters === 'object' &amp;&amp; !Array.isArray(parameters)) {
         const url = `${this.options.serviceUrl}/autocomplete/${helpers.ourEncodeURIComponent(term)}/search?`;
         const queryParams = {};
         const { original_query, result_id, group_id, display_name } = parameters;
@@ -243,9 +271,9 @@ class Tracker {
    */
   trackSearchResultsLoaded(term, parameters) {
     // Ensure term is provided (required)
-    if (term && typeof term === 'string') {
+    if (term &amp;&amp; typeof term === 'string') {
       // Ensure parameters are provided (required)
-      if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      if (parameters &amp;&amp; typeof parameters === 'object' &amp;&amp; !Array.isArray(parameters)) {
         const url = `${this.options.serviceUrl}/behavior?`;
         const queryParams = { action: 'search-results', term };
         const { num_results, customer_ids } = parameters;
@@ -254,7 +282,7 @@ class Tracker {
           queryParams.num_results = num_results;
         }
 
-        if (customer_ids && Array.isArray(customer_ids)) {
+        if (customer_ids &amp;&amp; Array.isArray(customer_ids)) {
           queryParams.customer_ids = customer_ids.join(',');
         }
 
@@ -287,9 +315,9 @@ class Tracker {
    */
   trackSearchResultClick(term, parameters) {
     // Ensure term is provided (required)
-    if (term && typeof term === 'string') {
+    if (term &amp;&amp; typeof term === 'string') {
       // Ensure parameters are provided (required)
-      if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      if (parameters &amp;&amp; typeof parameters === 'object' &amp;&amp; !Array.isArray(parameters)) {
         const url = `${this.options.serviceUrl}/autocomplete/${helpers.ourEncodeURIComponent(term)}/click_through?`;
         const queryParams = {};
         const { name, customer_id, result_id } = parameters;
@@ -338,7 +366,7 @@ class Tracker {
    */
   trackConversion(term, parameters) {
     // Ensure parameters are provided (required)
-    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+    if (parameters &amp;&amp; typeof parameters === 'object' &amp;&amp; !Array.isArray(parameters)) {
       const searchTerm = helpers.ourEncodeURIComponent(term) || 'TERM_UNKNOWN';
       const url = `${this.options.serviceUrl}/autocomplete/${searchTerm}/conversion?`;
       const queryParams = {};
@@ -394,13 +422,13 @@ class Tracker {
    */
   trackPurchase(parameters) {
     // Ensure parameters are provided (required)
-    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+    if (parameters &amp;&amp; typeof parameters === 'object' &amp;&amp; !Array.isArray(parameters)) {
       const requestUrl = `${this.options.serviceUrl}/v2/behavioral_action/purchase?`;
       const queryParams = {};
       const bodyParams = {};
       const { items, revenue, order_id, section } = parameters;
 
-      if (items && Array.isArray(items)) {
+      if (items &amp;&amp; Array.isArray(items)) {
         bodyParams.items = items;
       }
 
@@ -445,7 +473,7 @@ class Tracker {
    */
   trackRecommendationView(parameters) {
     // Ensure parameters are provided (required)
-    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+    if (parameters &amp;&amp; typeof parameters === 'object' &amp;&amp; !Array.isArray(parameters)) {
       const requestUrl = `${this.options.serviceUrl}/v2/behavioral_action/recommendation_result_view?`;
       const bodyParams = {};
       const {
@@ -518,7 +546,7 @@ class Tracker {
    */
   trackRecommendationClick(parameters) {
     // Ensure parameters are provided (required)
-    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+    if (parameters &amp;&amp; typeof parameters === 'object' &amp;&amp; !Array.isArray(parameters)) {
       const url = `${this.options.serviceUrl}/v2/behavioral_action/recommendation_result_click?`;
       const bodyParams = {};
       const {
@@ -607,7 +635,7 @@ class Tracker {
    */
   trackBrowseResultsLoaded(parameters) {
     // Ensure parameters are provided (required)
-    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+    if (parameters &amp;&amp; typeof parameters === 'object' &amp;&amp; !Array.isArray(parameters)) {
       const requestUrl = `${this.options.serviceUrl}/v2/behavioral_action/browse_result_load?`;
       const bodyParams = {};
       const {
@@ -666,7 +694,7 @@ class Tracker {
         bodyParams.filter_value = filter_value;
       }
 
-      if (items && Array.isArray(items)) {
+      if (items &amp;&amp; Array.isArray(items)) {
         bodyParams.items = items;
       }
 
@@ -701,7 +729,7 @@ class Tracker {
    */
   trackBrowseResultClick(parameters) {
     // Ensure parameters are provided (required)
-    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+    if (parameters &amp;&amp; typeof parameters === 'object' &amp;&amp; !Array.isArray(parameters)) {
       const url = `${this.options.serviceUrl}/v2/behavioral_action/browse_result_click?`;
       const bodyParams = {};
       const {
@@ -784,7 +812,7 @@ class Tracker {
    * @returns {(true|Error)}
    */
   on(messageType, callback) {
-    if (messageType !== 'success' && messageType !== 'error') {
+    if (messageType !== 'success' &amp;&amp; messageType !== 'error') {
       return new Error('messageType must be a string of value "success" or "error"');
     }
 
@@ -799,3 +827,22 @@ class Tracker {
 }
 
 module.exports = Tracker;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Fri Sep 11 2020 13:08:34 GMT-0600 (Mountain Daylight Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

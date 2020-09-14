@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>utils/store.overflow.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="ConstructorIO.html">ConstructorIO</a></span></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-autocomplete.html">autocomplete</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-autocomplete.html#~getAutocompleteResults">getAutocompleteResults</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-browse.html">browse</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-browse.html#~getBrowseResults">getBrowseResults</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-recommendations.html">recommendations</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-recommendations.html#~getRecommendations">getRecommendations</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-search.html">search</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-search.html#~getSearchResults">getSearchResults</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-Tracker.html">Tracker</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~on">on</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackAutocompleteSelect">trackAutocompleteSelect</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackBrowseResultClick">trackBrowseResultClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackBrowseResultsLoaded">trackBrowseResultsLoaded</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackConversion">trackConversion</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackInputFocus">trackInputFocus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackPurchase">trackPurchase</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackRecommendationClick">trackRecommendationClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackRecommendationView">trackRecommendationView</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackSearchResultClick">trackSearchResultClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackSearchResultsLoaded">trackSearchResultsLoaded</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackSearchSubmit">trackSearchSubmit</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Tracker.html#~trackSessionStart">trackSessionStart</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">utils/store.overflow.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* eslint-disable */
+/**
+ * Copyright (c) 2013 ESHA Research
+ * Dual licensed under the MIT and GPL licenses:
+ *   http://www.opensource.org/licenses/mit-license.php
+ *   http://www.gnu.org/licenses/gpl.html
+ *
+ * When quota is reached on a storage area, this shifts incoming values to 
+ * fake storage, so they last only as long as the page does. This is useful
+ * because it is more burdensome for localStorage to recover from quota errors
+ * than incomplete caches. In other words, it is wiser to rely on store.js
+ * never complaining than never missing data. You should already be checking
+ * the integrity of cached data on every page load.
+ *
+ * Status: BETA
+ */
+module.exports = function (store, _) {
+  var _set = _.set,
+    _get = _.get,
+    _remove = _.remove,
+    _key = _.key,
+    _length = _.length,
+    _clear = _.clear;
+
+  _.overflow = function (area, create) {
+    var name = area === _.areas.local ? '+local+' :
+      area === _.areas.session ? '+session+' : false;
+    if (name) {
+      var overflow = _.areas[name];
+      if (create &amp;&amp; !overflow) {
+        overflow = store.area(name)._area; // area() copies to _.areas
+      } else if (create === false) {
+        delete _.areas[name];
+        delete store[name];
+      }
+      return overflow;
+    }
+  };
+  _.set = function (area, key, string) {
+    try {
+      _set.apply(this, arguments);
+    } catch (e) {
+      if (e.name === 'QUOTA_EXCEEDED_ERR' ||
+        e.name === 'NS_ERROR_DOM_QUOTA_REACHED' ||
+        e.toString().indexOf("QUOTA_EXCEEDED_ERR") !== -1 ||
+        e.toString().indexOf("QuotaExceededError") !== -1) {
+        // the e.toString is needed for IE9 / IE10, cos name is empty there
+        return _.set(_.overflow(area, true), key, string);
+      }
+      throw e;
+    }
+  };
+  _.get = function (area, key) {
+    var overflow = _.overflow(area);
+    return (overflow &amp;&amp; _get.call(this, overflow, key)) ||
+      _get.apply(this, arguments);
+  };
+  _.remove = function (area, key) {
+    var overflow = _.overflow(area);
+    if (overflow) {
+      _remove.call(this, overflow, key);
+    }
+    _remove.apply(this, arguments);
+  };
+  _.key = function (area, i) {
+    var overflow = _.overflow(area);
+    if (overflow) {
+      var l = _length.call(this, area);
+      if (i >= l) {
+        i = i - l; // make i overflow-relative
+        for (var j = 0, m = _length.call(this, overflow); j &lt; m; j++) {
+          if (j === i) { // j is overflow index
+            return _key.call(this, overflow, j);
+          }
+        }
+      }
+    }
+    return _key.apply(this, arguments);
+  };
+  _.length = function (area) {
+    var length = _length(area),
+      overflow = _.overflow(area);
+    return overflow ? length + _length(overflow) : length;
+  };
+  _.clear = function (area) {
+    _.overflow(area, false);
+    _clear.apply(this, arguments);
+  };
+
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Fri Sep 11 2020 13:08:34 GMT-0600 (Mountain Daylight Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
