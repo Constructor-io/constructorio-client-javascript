@@ -176,16 +176,14 @@ describe('ConstructorIO - Tracker', () => {
     });
 
     it('Should NOT send along `origin_referrer` query param if `sendReferrerWithTrackingEvents` is false', (done) => {
-      const {
-        tracker
-      } = new ConstructorIO({
+      const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: false,
         ...requestQueueOptions,
       });
 
-      tracker.on('success', eventSpy) / ;
+      tracker.on('success', eventSpy);
 
       expect(tracker.trackSessionStart()).to.equal(true);
 
@@ -205,7 +203,7 @@ describe('ConstructorIO - Tracker', () => {
         done();
       }, waitInterval);
     });
-    
+
     it('Should respond with a valid response with testCells', (done) => {
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
@@ -384,7 +382,7 @@ describe('ConstructorIO - Tracker', () => {
         // Request
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
-      
+
         // Response
         expect(eventSpy).to.have.been.called;
         expect(responseParams).to.have.property('method').to.equal('GET');
