@@ -1,13 +1,24 @@
-/* eslint-disable object-curly-newline, no-underscore-dangle, camelcase */
+/* eslint-disable object-curly-newline, no-underscore-dangle, camelcase, no-unneeded-ternary */
 const qs = require('qs');
 const EventEmitter = require('events');
 const helpers = require('../utils/helpers');
 const RequestQueue = require('../utils/request-queue');
 
-// Append common parameters to supplied parameters object
 function applyParams(parameters, options) {
-  const { apiKey, version, sessionId, clientId, userId, segments, testCells } = options;
+  const {
+    apiKey,
+    version,
+    sessionId,
+    clientId,
+    userId,
+    segments,
+    testCells,
+  } = options;
+  const { host, pathname } = helpers.getWindowLocation();
   let aggregateParams = Object.assign(parameters);
+  const sendReferrerWithTrackingEvents = (options.sendReferrerWithTrackingEvents === false)
+    ? false
+    : true; // Defaults to 'true'
 
   if (version) {
     aggregateParams.c = version;
@@ -37,6 +48,14 @@ function applyParams(parameters, options) {
     Object.keys(testCells).forEach((testCellKey) => {
       aggregateParams[`ef-${testCellKey}`] = testCells[testCellKey];
     });
+  }
+
+  if (sendReferrerWithTrackingEvents && host) {
+    aggregateParams.origin_referrer = host;
+
+    if (pathname) {
+      aggregateParams.origin_referrer += pathname;
+    }
   }
 
   aggregateParams._dt = Date.now();

@@ -66,6 +66,14 @@ const utils = {
   },
 
   isNil: value => value == null,
+
+  getWindowLocation: () => {
+    if (typeof window !== 'undefined') {
+      return window.location;
+    }
+
+    return {};
+  },
 };
 
 module.exports = utils;
