@@ -146,7 +146,35 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should send along `origin_referrer` query param if `sendReferrerWithTrackingEvents` is true', (done) => {
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is not defined', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackSessionStart()).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -175,7 +203,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should NOT send along `origin_referrer` query param if `sendReferrerWithTrackingEvents` is false', (done) => {
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -364,7 +392,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should send along `origin_referrer` query param if `sendReferrerWithTrackingEvents` is true', (done) => {
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -393,7 +421,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should NOT send along `origin_referrer` query param if `sendReferrerWithTrackingEvents` is false', (done) => {
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -645,7 +673,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackAutocompleteSelect(term)).to.be.an('error');
     });
 
-    it('Should send along `origin_referrer` query param if `sendReferrerWithTrackingEvents` is true', (done) => {
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -674,7 +702,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should NOT send along `origin_referrer` query param if `sendReferrerWithTrackingEvents` is false', (done) => {
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -892,7 +920,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackSearchSubmit(term)).to.be.an('error');
     });
 
-    it('Should send along `origin_referrer` query param if `sendReferrerWithTrackingEvents` is true', (done) => {
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -921,7 +949,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should NOT send along `origin_referrer` query param if `sendReferrerWithTrackingEvents` is false', (done) => {
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1165,7 +1193,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackSearchResultsLoaded(term)).to.be.an('error');
     });
 
-    it('Should send along `origin_referrer` query param if `sendReferrerWithTrackingEvents` is true', (done) => {
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1194,7 +1222,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should NOT send along `origin_referrer` query param if `sendReferrerWithTrackingEvents` is false', (done) => {
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1379,7 +1407,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackSearchResultClick(term)).to.be.an('error');
     });
 
-    it('Should send along `origin_referrer` query param if `sendReferrerWithTrackingEvents` is true', (done) => {
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1408,7 +1436,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should NOT send along `origin_referrer` query param if `sendReferrerWithTrackingEvents` is false', (done) => {
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1664,7 +1692,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackSearchResultClick(term)).to.be.an('error');
     });
 
-    it('Should send along `origin_referrer` query param if `sendReferrerWithTrackingEvents` is true', (done) => {
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1693,7 +1721,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should NOT send along `origin_referrer` query param if `sendReferrerWithTrackingEvents` is false', (done) => {
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1933,7 +1961,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackPurchase()).to.be.an('error');
     });
 
-    it('Should send along `origin_referrer` query param if `sendReferrerWithTrackingEvents` is true', (done) => {
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1962,7 +1990,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should NOT send along `origin_referrer` query param if `sendReferrerWithTrackingEvents` is false', (done) => {
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -2201,7 +2229,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackRecommendationView()).to.be.an('error');
     });
 
-    it('Should send along `origin_referrer` query param if `sendReferrerWithTrackingEvents` is true', (done) => {
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -2230,7 +2258,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should NOT send along `origin_referrer` query param if `sendReferrerWithTrackingEvents` is false', (done) => {
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -2474,7 +2502,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackRecommendationClick()).to.be.an('error');
     });
 
-    it('Should send along `origin_referrer` query param if `sendReferrerWithTrackingEvents` is true', (done) => {
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -2503,7 +2531,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should NOT send along `origin_referrer` query param if `sendReferrerWithTrackingEvents` is false', (done) => {
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -2758,7 +2786,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackBrowseResultsLoaded()).to.be.an('error');
     });
 
-    it('Should send along `origin_referrer` query param if `sendReferrerWithTrackingEvents` is true', (done) => {
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -2787,7 +2815,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should NOT send along `origin_referrer` query param if `sendReferrerWithTrackingEvents` is false', (done) => {
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -3033,7 +3061,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackBrowseResultClick()).to.be.an('error');
     });
 
-    it('Should send along `origin_referrer` query param if `sendReferrerWithTrackingEvents` is true', (done) => {
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -3062,7 +3090,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('Should NOT send along `origin_referrer` query param if `sendReferrerWithTrackingEvents` is false', (done) => {
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,

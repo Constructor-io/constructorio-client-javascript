@@ -1,4 +1,4 @@
-/* eslint-disable camelcase, no-unneeded-ternary */
+/* eslint-disable camelcase */
 const ConstructorioID = require('@constructor-io/constructorio-id');
 
 // Modules
@@ -74,7 +74,7 @@ class ConstructorIO {
       fetch,
       trackingSendDelay,
       sendTrackingEvents,
-      sendReferrerWithTrackingEvents: (sendReferrerWithTrackingEvents === false) ? false : true, // Defaults to 'true',
+      sendReferrerWithTrackingEvents,
       eventDispatcher,
     };
 

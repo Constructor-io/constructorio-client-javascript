@@ -1,4 +1,4 @@
-/* eslint-disable object-curly-newline, no-underscore-dangle, camelcase */
+/* eslint-disable object-curly-newline, no-underscore-dangle, camelcase, no-unneeded-ternary */
 const qs = require('qs');
 const EventEmitter = require('events');
 const helpers = require('../utils/helpers');
@@ -13,10 +13,12 @@ function applyParams(parameters, options) {
     userId,
     segments,
     testCells,
-    sendReferrerWithTrackingEvents,
   } = options;
   const { host, pathname } = helpers.getWindowLocation();
   let aggregateParams = Object.assign(parameters);
+  const sendReferrerWithTrackingEvents = (options.sendReferrerWithTrackingEvents === false)
+    ? false
+    : true; // Defaults to 'true'
 
   if (version) {
     aggregateParams.c = version;
@@ -49,7 +51,11 @@ function applyParams(parameters, options) {
   }
 
   if (sendReferrerWithTrackingEvents && host) {
-    aggregateParams.origin_referrer = host + pathname;
+    aggregateParams.origin_referrer = host;
+
+    if (pathname) {
+      aggregateParams.origin_referrer += pathname;
+    }
   }
 
   aggregateParams._dt = Date.now();
