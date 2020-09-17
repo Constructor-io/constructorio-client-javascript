@@ -6,7 +6,7 @@ const RequestQueue = require('../utils/request-queue');
 
 // Append common parameters to supplied parameters object
 function applyParams(parameters, options) {
-  const { apiKey, version, sessionId, clientId, userId, segments, testCells } = options;
+  const { apiKey, version, sessionId, clientId, userId, segments, testCells, requestMethod } = options;
   let aggregateParams = Object.assign(parameters);
 
   if (version) {
@@ -37,6 +37,10 @@ function applyParams(parameters, options) {
     Object.keys(testCells).forEach((testCellKey) => {
       aggregateParams[`ef-${testCellKey}`] = testCells[testCellKey];
     });
+  }
+
+  if (requestMethod && requestMethod.match(/POST/i)) {
+    aggregateParams.beacon = true;
   }
 
   aggregateParams._dt = Date.now();
@@ -386,6 +390,7 @@ class Tracker {
       const queryParams = {};
       const bodyParams = {};
       const { items, revenue, order_id, section } = parameters;
+      const requestMethod = 'POST';
 
       if (items && Array.isArray(items)) {
         bodyParams.items = items;
@@ -405,7 +410,11 @@ class Tracker {
         queryParams.section = 'Products';
       }
 
-      this.requests.queue(`${requestUrl}${applyParamsAsString(queryParams, this.options)}`, 'POST', applyParams(bodyParams, this.options));
+      this.requests.queue(
+        `${requestUrl}${applyParamsAsString(queryParams, this.options)}`,
+        requestMethod,
+        applyParams(bodyParams, { ...this.options, requestMethod }),
+      );
       this.requests.send();
 
       return true;
@@ -444,6 +453,7 @@ class Tracker {
         pod_id,
         num_results_viewed,
       } = parameters;
+      const requestMethod = 'POST';
 
       if (!helpers.isNil(result_count)) {
         bodyParams.result_count = result_count;
@@ -475,7 +485,11 @@ class Tracker {
         bodyParams.num_results_viewed = num_results_viewed;
       }
 
-      this.requests.queue(`${requestUrl}${applyParamsAsString({}, this.options)}`, 'POST', applyParams(bodyParams, this.options));
+      this.requests.queue(
+        `${requestUrl}${applyParamsAsString({}, this.options)}`,
+        requestMethod,
+        applyParams(bodyParams, { ...this.options, requestMethod }),
+      );
       this.requests.send();
 
       return true;
@@ -520,6 +534,7 @@ class Tracker {
         strategy_id,
         item_id,
       } = parameters;
+      const requestMethod = 'POST';
 
       if (variation_id) {
         bodyParams.variation_id = variation_id;
@@ -563,7 +578,11 @@ class Tracker {
         bodyParams.item_id = item_id;
       }
 
-      this.requests.queue(`${url}${applyParamsAsString({}, this.options)}`, 'POST', applyParams(bodyParams, this.options));
+      this.requests.queue(
+        `${url}${applyParamsAsString({}, this.options)}`,
+        requestMethod,
+        applyParams(bodyParams, { ...this.options, requestMethod }),
+      );
       this.requests.send();
 
       return true;
@@ -610,6 +629,7 @@ class Tracker {
         filter_value,
         items,
       } = parameters;
+      const requestMethod = 'POST';
 
       if (section) {
         bodyParams.section = section;
@@ -657,7 +677,11 @@ class Tracker {
         bodyParams.items = items;
       }
 
-      this.requests.queue(`${requestUrl}${applyParamsAsString({}, this.options)}`, 'POST', applyParams(bodyParams, this.options));
+      this.requests.queue(
+        `${requestUrl}${applyParamsAsString({}, this.options)}`,
+        requestMethod,
+        applyParams(bodyParams, { ...this.options, requestMethod }),
+      );
       this.requests.send();
 
       return true;
@@ -704,6 +728,7 @@ class Tracker {
         filter_value,
         item_id,
       } = parameters;
+      const requestMethod = 'POST';
 
       if (section) {
         bodyParams.section = section;
@@ -751,7 +776,11 @@ class Tracker {
         bodyParams.item_id = item_id;
       }
 
-      this.requests.queue(`${url}${applyParamsAsString({}, this.options)}`, 'POST', applyParams(bodyParams, this.options));
+      this.requests.queue(
+        `${url}${applyParamsAsString({}, this.options)}`,
+        requestMethod,
+        applyParams(bodyParams, { ...this.options, requestMethod }),
+      );
       this.requests.send();
 
       return true;
