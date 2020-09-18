@@ -1,4 +1,4 @@
-/* eslint-disable object-curly-newline, no-underscore-dangle, camelcase */
+/* eslint-disable object-curly-newline, no-underscore-dangle, camelcase, no-unneeded-ternary */
 const qs = require('qs');
 const EventEmitter = require('events');
 const helpers = require('../utils/helpers');
@@ -6,7 +6,7 @@ const RequestQueue = require('../utils/request-queue');
 
 // Append common parameters to supplied parameters object
 function applyParams(parameters, options) {
-  const { apiKey, version, sessionId, clientId, userId, segments, testCells, requestMethod } = options;
+  const { apiKey, version, sessionId, clientId, userId, segments, testCells, requestMethod, beaconMode } = options;
   let aggregateParams = Object.assign(parameters);
 
   if (version) {
@@ -39,7 +39,7 @@ function applyParams(parameters, options) {
     });
   }
 
-  if (requestMethod && requestMethod.match(/POST/i)) {
+  if (beaconMode && requestMethod && requestMethod.match(/POST/i)) {
     aggregateParams.beacon = true;
   }
 
@@ -64,6 +64,7 @@ function applyParamsAsString(parameters, options) {
 class Tracker {
   constructor(options) {
     this.options = options;
+    this.options.beaconMode = (options && options.beaconMode === false) ? false : true; // Defaults to 'true'
     this.eventemitter = new EventEmitter();
     this.requests = new RequestQueue(options, this.eventemitter);
   }
