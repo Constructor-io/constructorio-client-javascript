@@ -20,7 +20,7 @@ const sendTimeout = 25;
 const testApiKey = process.env.TEST_API_KEY;
 const { fetch } = fetchPonyfill({ Promise });
 
-describe('ConstructorIO - Tracker', () => {
+describe.only('ConstructorIO - Tracker', () => {
   const clientVersion = 'cio-mocha';
   const waitInterval = 1000;
   let fetchSpy = null;
@@ -1499,6 +1499,83 @@ describe('ConstructorIO - Tracker', () => {
         expect(eventSpy).to.have.been.called;
         expect(responseParams).to.have.property('method').to.equal('POST');
         expect(responseParams).to.have.property('message');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should respond with a success if beacon=true and a non-existent item_id is provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackPurchase({
+        ...requiredParameters,
+        items: [
+          {
+            item_id: 'bad-item-id-10',
+            variation_id: '456',
+          },
+          {
+            item_id: 'bad-item-id-11',
+          },
+        ],
+      })).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(requestParams).to.have.property('beacon').to.equal(true);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should respond with an error if beacon=true is not in the request and a non-existent item_id is provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+        beaconMode: false,
+      });
+
+      tracker.on('error', eventSpy);
+
+      expect(tracker.trackPurchase({
+        ...requiredParameters,
+        items: [
+          {
+            item_id: 'bad-item-id-10',
+            variation_id: '456',
+          },
+          {
+            item_id: 'bad-item-id-11',
+          },
+        ],
+      })).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(requestParams).to.not.have.property('beacon');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.contain('There is no item with item_id="bad-item-id-10".');
 
         done();
       }, waitInterval);
