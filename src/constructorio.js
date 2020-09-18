@@ -24,6 +24,7 @@ class ConstructorIO {
    * @param {string} [userId] - User ID
    * @param {function} [fetch] - If supplied, will be utilized for requests rather than default Fetch API
    * @param {number} [trackingSendDelay] - Amount of time to wait before sending tracking events (in ms)
+   * @param {boolean} [sendReferrerWithTrackingEvents] - Indicates if the referrer is sent along with tracking events
    * @param {boolean} [sendTrackingEvents] - Indicates if tracking events should be dispatched
    * @param {object} [idOptions] - Options object to be supplied to 'constructorio-id' module
    * @param {object} [eventDispatcher] - Options related to 'EventDispatcher' class
@@ -48,6 +49,7 @@ class ConstructorIO {
       userId,
       fetch,
       trackingSendDelay,
+      sendReferrerWithTrackingEvents,
       sendTrackingEvents,
       eventDispatcher,
       idOptions,
@@ -73,6 +75,7 @@ class ConstructorIO {
       fetch,
       trackingSendDelay,
       sendTrackingEvents,
+      sendReferrerWithTrackingEvents,
       eventDispatcher,
       beaconMode,
     };

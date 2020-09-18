@@ -29,7 +29,9 @@ describe.only('ConstructorIO - Tracker', () => {
     sendTrackingEvents: true,
   };
 
-  jsdom({ url: 'http://localhost' });
+  jsdom({
+    url: 'http://localhost.test/path/name?query=term&category=cat',
+  });
 
   beforeEach(() => {
     store.session.set('_constructorio_is_human', true);
@@ -73,6 +75,7 @@ describe.only('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('action').to.equal('session_start');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -133,6 +136,92 @@ describe.only('ConstructorIO - Tracker', () => {
         // Request
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('ui').to.equal(userId);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is not defined', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackSessionStart()).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackSessionStart()).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackSessionStart()).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('origin_referrer');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -234,6 +323,7 @@ describe.only('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('action').to.equal('focus');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -292,6 +382,64 @@ describe.only('ConstructorIO - Tracker', () => {
 
         // Request
         expect(requestParams).to.have.property('ui').to.equal(userId);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackInputFocus()).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackInputFocus()).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).not.to.have.property('origin_referrer');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -371,6 +519,7 @@ describe.only('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('original_query').to.equal(requiredParameters.original_query);
         expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
         expect(requestParams).to.have.property('result_id').to.equal(requiredParameters.result_id);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -523,6 +672,64 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackAutocompleteSelect(term)).to.be.an('error');
     });
+
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackAutocompleteSelect(term, requiredParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackAutocompleteSelect(term, requiredParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('origin_referrer');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
   });
 
   describe('trackSearchSubmit', () => {
@@ -560,6 +767,7 @@ describe.only('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('original_query').to.equal(requiredParameters.original_query);
         expect(requestParams).to.have.property('result_id').to.equal(requiredParameters.result_id);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -711,6 +919,64 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackSearchSubmit(term)).to.be.an('error');
     });
+
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackSearchSubmit(term, requiredParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackSearchSubmit(term, requiredParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('origin_referrer');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
   });
 
   describe('trackSearchResultsLoaded', () => {
@@ -745,6 +1011,7 @@ describe.only('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('num_results').to.equal(requiredParameters.num_results.toString());
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -925,6 +1192,64 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackSearchResultsLoaded(term)).to.be.an('error');
     });
+
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackSearchResultsLoaded(term, requiredParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackSearchResultsLoaded(term, requiredParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('origin_referrer');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
   });
 
   describe('trackSearchResultClick', () => {
@@ -960,6 +1285,7 @@ describe.only('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('name').to.equal(requiredParameters.name);
         expect(requestParams).to.have.property('customer_id').to.equal(requiredParameters.customer_id);
         expect(requestParams).to.have.property('result_id').to.equal(requiredParameters.result_id);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -1080,6 +1406,64 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackSearchResultClick(term)).to.be.an('error');
     });
+
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackSearchResultClick(term, requiredParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackSearchResultClick(term, requiredParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('origin_referrer');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
   });
 
   describe('trackConversion', () => {
@@ -1123,6 +1507,7 @@ describe.only('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('result_id').to.equal(requiredParameters.result_id);
         expect(requestParams).to.have.property('revenue').to.equal(requiredParameters.revenue.toString());
         expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -1161,6 +1546,7 @@ describe.only('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('revenue').to.equal(requiredParameters.revenue.toString());
         expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
         expect(requestParams).to.have.property('variation_id').to.equal(optionalParameters.variation_id);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -1305,6 +1691,64 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackSearchResultClick(term)).to.be.an('error');
     });
+
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackConversion(term, requiredParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackConversion(term, requiredParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('origin_referrer');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
   });
 
   describe('trackPurchase', () => {
@@ -1347,6 +1791,7 @@ describe.only('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
         expect(requestParams).to.have.property('items').to.deep.equal(requiredParameters.items);
         expect(requestParams).to.have.property('revenue').to.equal(requiredParameters.revenue);
 
@@ -1504,6 +1949,18 @@ describe.only('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
+    it('Should throw an error when invalid parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackPurchase([])).to.be.an('error');
+    });
+
+    it('Should throw an error when no parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackPurchase()).to.be.an('error');
+    });
+
     it('Should respond with a success if beacon=true and a non-existent item_id is provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1581,6 +2038,64 @@ describe.only('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackPurchase(requiredParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackPurchase(requiredParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('origin_referrer');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
     it('Should throw an error when invalid parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
@@ -1632,6 +2147,7 @@ describe.only('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('url').to.equal(requiredParameters.url);
         expect(requestParams).to.have.property('pod_id').to.equal(requiredParameters.pod_id);
         expect(requestParams).to.have.property('num_results_viewed').to.equal(requiredParameters.num_results_viewed);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -1801,6 +2317,64 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackRecommendationView()).to.be.an('error');
     });
+
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackRecommendationView(requiredParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackRecommendationView(requiredParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('origin_referrer');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
   });
 
   describe('trackRecommendationClick', () => {
@@ -1844,6 +2418,7 @@ describe.only('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('pod_id').to.equal(requiredParameters.pod_id);
         expect(requestParams).to.have.property('strategy_id').to.equal(requiredParameters.strategy_id);
         expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.item_id);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -2092,6 +2667,64 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackRecommendationClick()).to.be.an('error');
     });
+
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackRecommendationClick(requiredParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackRecommendationClick(requiredParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('origin_referrer');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
   });
 
   describe('trackBrowseResultsLoaded', () => {
@@ -2146,6 +2779,7 @@ describe.only('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('filter_name').to.equal(requiredParameters.filter_name);
         expect(requestParams).to.have.property('filter_value').to.equal(requiredParameters.filter_value);
         expect(requestParams).to.have.property('url').to.equal(requiredParameters.url);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -2317,6 +2951,64 @@ describe.only('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackBrowseResultsLoaded()).to.be.an('error');
     });
+
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackBrowseResultsLoaded(requiredParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackBrowseResultsLoaded(requiredParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('origin_referrer');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
   });
 
   describe('trackBrowseResultClick', () => {
@@ -2361,6 +3053,7 @@ describe.only('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.item_id);
         expect(requestParams).to.have.property('filter_name').to.equal(requiredParameters.filter_name);
         expect(requestParams).to.have.property('filter_value').to.equal(requiredParameters.filter_value);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Response
         expect(eventSpy).to.have.been.called;
@@ -2611,6 +3304,64 @@ describe.only('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
       expect(tracker.trackBrowseResultClick()).to.be.an('error');
+    });
+
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackBrowseResultClick(requiredParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackBrowseResultClick(requiredParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('origin_referrer');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
     });
   });
 
