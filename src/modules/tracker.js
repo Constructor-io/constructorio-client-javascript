@@ -17,10 +17,10 @@ function applyParams(parameters, options) {
     beaconMode,
   } = options;
   const { host, pathname } = helpers.getWindowLocation();
-  let aggregateParams = Object.assign(parameters);
   const sendReferrerWithTrackingEvents = (options.sendReferrerWithTrackingEvents === false)
     ? false
     : true; // Defaults to 'true'
+  let aggregateParams = Object.assign(parameters);
 
   if (version) {
     aggregateParams.c = version;
