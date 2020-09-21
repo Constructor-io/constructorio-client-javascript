@@ -408,11 +408,10 @@ class Tracker {
   trackPurchase(parameters) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const requestUrl = `${this.options.serviceUrl}/v2/behavioral_action/purchase?`;
+      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/purchase?`;
       const queryParams = {};
       const bodyParams = {};
       const { items, revenue, order_id, section } = parameters;
-      const requestMethod = 'POST';
 
       if (items && Array.isArray(items)) {
         bodyParams.items = items;
@@ -432,10 +431,14 @@ class Tracker {
         queryParams.section = 'Products';
       }
 
+      const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
+
       this.requests.queue(
-        `${requestUrl}${applyParamsAsString(queryParams, this.options)}`,
+        requestURL,
         requestMethod,
-        applyParams(bodyParams, { ...this.options, requestMethod }),
+        requestBody,
       );
       this.requests.send();
 
@@ -464,7 +467,7 @@ class Tracker {
   trackRecommendationView(parameters) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const requestUrl = `${this.options.serviceUrl}/v2/behavioral_action/recommendation_result_view?`;
+      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/recommendation_result_view?`;
       const bodyParams = {};
       const {
         result_count,
@@ -475,7 +478,6 @@ class Tracker {
         pod_id,
         num_results_viewed,
       } = parameters;
-      const requestMethod = 'POST';
 
       if (!helpers.isNil(result_count)) {
         bodyParams.result_count = result_count;
@@ -507,10 +509,14 @@ class Tracker {
         bodyParams.num_results_viewed = num_results_viewed;
       }
 
+      const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
+
       this.requests.queue(
-        `${requestUrl}${applyParamsAsString({}, this.options)}`,
+        requestURL,
         requestMethod,
-        applyParams(bodyParams, { ...this.options, requestMethod }),
+        requestBody,
       );
       this.requests.send();
 
@@ -542,7 +548,7 @@ class Tracker {
   trackRecommendationClick(parameters) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const url = `${this.options.serviceUrl}/v2/behavioral_action/recommendation_result_click?`;
+      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/recommendation_result_click?`;
       const bodyParams = {};
       const {
         variation_id,
@@ -556,7 +562,6 @@ class Tracker {
         strategy_id,
         item_id,
       } = parameters;
-      const requestMethod = 'POST';
 
       if (variation_id) {
         bodyParams.variation_id = variation_id;
@@ -600,10 +605,14 @@ class Tracker {
         bodyParams.item_id = item_id;
       }
 
+      const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
+
       this.requests.queue(
-        `${url}${applyParamsAsString({}, this.options)}`,
+        requestURL,
         requestMethod,
-        applyParams(bodyParams, { ...this.options, requestMethod }),
+        requestBody,
       );
       this.requests.send();
 
@@ -636,7 +645,7 @@ class Tracker {
   trackBrowseResultsLoaded(parameters) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const requestUrl = `${this.options.serviceUrl}/v2/behavioral_action/browse_result_load?`;
+      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/browse_result_load?`;
       const bodyParams = {};
       const {
         section,
@@ -651,7 +660,6 @@ class Tracker {
         filter_value,
         items,
       } = parameters;
-      const requestMethod = 'POST';
 
       if (section) {
         bodyParams.section = section;
@@ -699,10 +707,14 @@ class Tracker {
         bodyParams.items = items;
       }
 
+      const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
+
       this.requests.queue(
-        `${requestUrl}${applyParamsAsString({}, this.options)}`,
+        requestURL,
         requestMethod,
-        applyParams(bodyParams, { ...this.options, requestMethod }),
+        requestBody,
       );
       this.requests.send();
 
@@ -735,7 +747,7 @@ class Tracker {
   trackBrowseResultClick(parameters) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const url = `${this.options.serviceUrl}/v2/behavioral_action/browse_result_click?`;
+      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/browse_result_click?`;
       const bodyParams = {};
       const {
         section,
@@ -750,7 +762,6 @@ class Tracker {
         filter_value,
         item_id,
       } = parameters;
-      const requestMethod = 'POST';
 
       if (section) {
         bodyParams.section = section;
@@ -798,10 +809,14 @@ class Tracker {
         bodyParams.item_id = item_id;
       }
 
+      const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
+
       this.requests.queue(
-        `${url}${applyParamsAsString({}, this.options)}`,
+        requestURL,
         requestMethod,
-        applyParams(bodyParams, { ...this.options, requestMethod }),
+        requestBody,
       );
       this.requests.send();
 
