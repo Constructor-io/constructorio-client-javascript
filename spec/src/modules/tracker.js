@@ -1961,6 +1961,83 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackPurchase()).to.be.an('error');
     });
 
+    it('Should respond with a success if beacon=true and a non-existent item_id is provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackPurchase({
+        ...requiredParameters,
+        items: [
+          {
+            item_id: 'bad-item-id-10',
+            variation_id: '456',
+          },
+          {
+            item_id: 'bad-item-id-11',
+          },
+        ],
+      })).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(requestParams).to.have.property('beacon').to.equal(true);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should respond with an error if beacon=true is not in the request and a non-existent item_id is provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+        beaconMode: false,
+      });
+
+      tracker.on('error', eventSpy);
+
+      expect(tracker.trackPurchase({
+        ...requiredParameters,
+        items: [
+          {
+            item_id: 'bad-item-id-10',
+            variation_id: '456',
+          },
+          {
+            item_id: 'bad-item-id-11',
+          },
+        ],
+      })).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(requestParams).to.not.have.property('beacon');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.contain('There is no item with item_id="bad-item-id-10".');
+
+        done();
+      }, waitInterval);
+    });
+
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -2017,6 +2094,18 @@ describe('ConstructorIO - Tracker', () => {
 
         done();
       }, waitInterval);
+    });
+
+    it('Should throw an error when invalid parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackPurchase([])).to.be.an('error');
+    });
+
+    it('Should throw an error when no parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackPurchase()).to.be.an('error');
     });
   });
 
@@ -2485,6 +2574,83 @@ describe('ConstructorIO - Tracker', () => {
         expect(eventSpy).to.have.been.called;
         expect(responseParams).to.have.property('method').to.equal('POST');
         expect(responseParams).to.have.property('message');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should respond with a success if beacon=true and a non-existent item_id is provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const parameters = {
+        ...requiredParameters,
+        ...optionalParameters,
+        item_id: 'non-existent-item-id',
+      };
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackRecommendationClick(parameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('result_position_on_page').to.equal(parameters.result_position_on_page);
+        expect(requestParams).to.have.property('num_results_per_page').to.equal(parameters.num_results_per_page);
+        expect(requestParams).to.have.property('result_count').to.equal(parameters.result_count);
+        expect(requestParams).to.have.property('result_page').to.equal(parameters.result_page);
+        expect(requestParams).to.have.property('result_id').to.equal(parameters.result_id);
+        expect(requestParams).to.have.property('section').to.equal(parameters.section);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should respond with an error if beacon=true is not in the request and a non-existent item_id is provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+        beaconMode: false,
+      });
+      const parameters = {
+        ...requiredParameters,
+        ...optionalParameters,
+        item_id: 'non-existent-item-id',
+      };
+
+      tracker.on('error', eventSpy);
+
+      expect(tracker.trackRecommendationClick(parameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('result_position_on_page').to.equal(parameters.result_position_on_page);
+        expect(requestParams).to.have.property('num_results_per_page').to.equal(parameters.num_results_per_page);
+        expect(requestParams).to.have.property('result_count').to.equal(parameters.result_count);
+        expect(requestParams).to.have.property('result_page').to.equal(parameters.result_page);
+        expect(requestParams).to.have.property('result_id').to.equal(parameters.result_id);
+        expect(requestParams).to.have.property('section').to.equal(parameters.section);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.contain('There is no item with item_id="non-existent-item-id"');
 
         done();
       }, waitInterval);
@@ -3044,6 +3210,85 @@ describe('ConstructorIO - Tracker', () => {
         expect(eventSpy).to.have.been.called;
         expect(responseParams).to.have.property('method').to.equal('POST');
         expect(responseParams).to.have.property('message');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const parameters = {
+        ...requiredParameters,
+        ...optionalParameters,
+        item_id: 'non-existent-item-id',
+      };
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackBrowseResultClick(parameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('section').to.equal(parameters.section);
+        expect(requestParams).to.have.property('result_count').to.equal(parameters.result_count);
+        expect(requestParams).to.have.property('result_page').to.equal(parameters.result_page);
+        expect(requestParams).to.have.property('result_id').to.equal(parameters.result_id);
+        expect(requestParams).to.have.property('result_position_on_page').to.equal(parameters.result_position_on_page);
+        expect(requestParams).to.have.property('num_results_per_page').to.equal(parameters.num_results_per_page);
+        expect(requestParams).to.have.property('selected_filters').to.deep.equal(parameters.selected_filters);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+        beaconMode: false,
+      });
+      const parameters = {
+        ...requiredParameters,
+        ...optionalParameters,
+        item_id: 'non-existent-item-id',
+      };
+
+      tracker.on('error', eventSpy);
+
+      expect(tracker.trackBrowseResultClick(parameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('section').to.equal(parameters.section);
+        expect(requestParams).to.have.property('result_count').to.equal(parameters.result_count);
+        expect(requestParams).to.have.property('result_page').to.equal(parameters.result_page);
+        expect(requestParams).to.have.property('result_id').to.equal(parameters.result_id);
+        expect(requestParams).to.have.property('result_position_on_page').to.equal(parameters.result_position_on_page);
+        expect(requestParams).to.have.property('num_results_per_page').to.equal(parameters.num_results_per_page);
+        expect(requestParams).to.have.property('selected_filters').to.deep.equal(parameters.selected_filters);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.contain('There is no item with item_id="non-existent-item-id"');
 
         done();
       }, waitInterval);

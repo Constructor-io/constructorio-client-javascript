@@ -53,6 +53,7 @@ class ConstructorIO {
       sendTrackingEvents,
       eventDispatcher,
       idOptions,
+      beaconMode,
     } = options;
 
     if (!apiKey || typeof apiKey !== 'string') {
@@ -76,6 +77,7 @@ class ConstructorIO {
       sendTrackingEvents,
       sendReferrerWithTrackingEvents,
       eventDispatcher,
+      beaconMode,
     };
 
     // Expose global modules
