@@ -163,8 +163,8 @@ describe('ConstructorIO - Autocomplete', () => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('sections').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.num_results_Products).to.equal(resultsPerSection.Products.toString());
-        expect(res.request['num_results_Search Suggestions']).to.equal(resultsPerSection['Search Suggestions'].toString());
+        expect(res.request.num_results_Products).to.equal(resultsPerSection.Products);
+        expect(res.request['num_results_Search Suggestions']).to.equal(resultsPerSection['Search Suggestions']);
         expect(requestedUrlParams).to.have.property('num_results_Products').to.equal(resultsPerSection.Products.toString());
         expect(requestedUrlParams).to.have.property('num_results_Search Suggestions').to.equal(resultsPerSection['Search Suggestions'].toString());
         done();
