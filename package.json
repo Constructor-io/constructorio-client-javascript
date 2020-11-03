@@ -59,7 +59,7 @@
     "sinon-chai": "^3.3.0"
   },
   "dependencies": {
-    "@constructor-io/constructorio-id": "^2.2.1",
+    "@constructor-io/constructorio-id": "^2.4.1",
     "es6-promise": "^4.2.8",
     "events": "^3.0.0",
     "fetch-ponyfill": "^6.1.0",
