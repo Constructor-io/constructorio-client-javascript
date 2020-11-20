@@ -1751,7 +1751,7 @@ describe('ConstructorIO - Tracker', () => {
     });
   });
 
-  describe.only('trackPurchase', () => {
+  describe('trackPurchase', () => {
     const requiredParameters = {
       items: [
         {
@@ -2106,10 +2106,13 @@ describe('ConstructorIO - Tracker', () => {
       tracker.on('success', eventSpy);
 
       store.session.set('_constructorio_track_purchase', JSON.stringify({
-        123938123: true,
+        848291039: true,
       }));
 
-      expect(tracker.trackPurchase(Object.assign(requiredParameters, optionalParameters))).to.equal(false);
+      expect(tracker.trackPurchase(Object.assign(requiredParameters, {
+        ...optionalParameters,
+        order_id: '848291039',
+      }))).to.equal(false);
 
       setTimeout(() => {
         // Request
@@ -2136,7 +2139,10 @@ describe('ConstructorIO - Tracker', () => {
         482039192: true,
       }));
 
-      expect(tracker.trackPurchase(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackPurchase(Object.assign(requiredParameters, {
+        ...optionalParameters,
+        order_id: '328192019',
+      }))).to.equal(true);
 
       setTimeout(() => {
         const requestQueryParams = helpers.extractUrlParamsFromFetch(fetchSpy);
@@ -2146,7 +2152,7 @@ describe('ConstructorIO - Tracker', () => {
         // Request
         expect(fetchSpy).to.have.been.called;
         expect(requestQueryParams).to.have.property('section').to.equal(optionalParameters.section);
-        expect(requestBodyParams).to.have.property('order_id').to.equal(optionalParameters.order_id);
+        expect(requestBodyParams).to.have.property('order_id').to.equal('328192019');
 
         // Response
         expect(eventSpy).to.have.been.called;
