@@ -2109,7 +2109,7 @@ describe('ConstructorIO - Tracker', () => {
         123938123: true,
       }));
 
-      expect(tracker.trackPurchase(requiredParameters)).to.equal(false);
+      expect(tracker.trackPurchase(Object.assign(requiredParameters, optionalParameters))).to.equal(false);
 
       setTimeout(() => {
         // Request
@@ -2117,6 +2117,41 @@ describe('ConstructorIO - Tracker', () => {
 
         // Response
         expect(eventSpy).to.not.have.been.called;
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should send a purchase event if the order has not been tracked yet', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      store.session.set('_constructorio_track_purchase', JSON.stringify({
+        239402919: true,
+        482039192: true,
+      }));
+
+      expect(tracker.trackPurchase(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+
+      setTimeout(() => {
+        const requestQueryParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestQueryParams).to.have.property('section').to.equal(optionalParameters.section);
+        expect(requestBodyParams).to.have.property('order_id').to.equal(optionalParameters.order_id);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
 
         done();
       }, waitInterval);
