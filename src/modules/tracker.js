@@ -4,8 +4,6 @@ const EventEmitter = require('events');
 const helpers = require('../utils/helpers');
 const RequestQueue = require('../utils/request-queue');
 
-const purchaseEventStorageKey = '_constructorio_purchase_order_ids';
-
 function applyParams(parameters, options) {
   const {
     apiKey,
@@ -419,11 +417,11 @@ class Tracker {
 
       if (order_id) {
         // Don't send another purchase event if we have already tracked the order
-        if (helpers.checkOrderId(purchaseEventStorageKey, order_id)) {
+        if (helpers.hasOrderIdRecord(order_id)) {
           return false;
         }
 
-        helpers.setOrderId(purchaseEventStorageKey, order_id);
+        helpers.addOrderIdRecord(order_id);
 
         // Add order_id to the tracking params
         bodyParams.order_id = order_id;

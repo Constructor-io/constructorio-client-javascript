@@ -3,6 +3,8 @@ const qs = require('qs');
 const CRC32 = require('crc-32');
 const store = require('./store');
 
+const purchaseEventStorageKey = '_constructorio_purchase_order_ids';
+
 const utils = {
   ourEncodeURIComponent: (str) => {
     if (str) {
@@ -77,19 +79,19 @@ const utils = {
     return {};
   },
 
-  checkOrderId(storageKey, orderId) {
-    const purchaseEventStorage = JSON.parse(store.session.get(storageKey));
+  hasOrderIdRecord(orderId) {
+    const purchaseEventStorage = JSON.parse(store.session.get(purchaseEventStorageKey));
     const orderIdHash = CRC32.str(orderId.toString());
 
     if (purchaseEventStorage && purchaseEventStorage[orderIdHash]) {
-      return orderId;
+      return true;
     }
 
     return null;
   },
 
-  setOrderId(storageKey, orderId) {
-    let purchaseEventStorage = JSON.parse(store.session.get(storageKey));
+  addOrderIdRecord(orderId) {
+    let purchaseEventStorage = JSON.parse(store.session.get(purchaseEventStorageKey));
     const orderIdHash = CRC32.str(orderId.toString());
 
     if (purchaseEventStorage) {
@@ -109,7 +111,7 @@ const utils = {
     }
 
     // Push the order id map into session storage
-    store.session.set(storageKey, JSON.stringify(purchaseEventStorage));
+    store.session.set(purchaseEventStorageKey, JSON.stringify(purchaseEventStorage));
   },
 };
 
