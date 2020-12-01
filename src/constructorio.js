@@ -92,6 +92,8 @@ class ConstructorIO {
   }
 
   /**
+   * Sets the client options
+   *
    * @param {string} apiKey - Constructor.io API key
    * @param {array} [segments] - User segments
    * @param {object} [testCells] - User test cells
