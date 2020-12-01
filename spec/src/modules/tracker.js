@@ -11,6 +11,7 @@ const cloneDeep = require('lodash.clonedeep');
 const store = require('../../../test/utils/store');
 const ConstructorIO = require('../../../test/constructorio');
 const helpers = require('../../mocha.helpers');
+const { setOrderId } = require('../../../src/utils/helpers');
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
@@ -2105,9 +2106,7 @@ describe('ConstructorIO - Tracker', () => {
 
       tracker.on('success', eventSpy);
 
-      store.session.set('_constructorio_track_purchase', JSON.stringify({
-        848291039: true,
-      }));
+      setOrderId('_constructorio_purchase_order_ids', '848291039');
 
       expect(tracker.trackPurchase(Object.assign(requiredParameters, {
         ...optionalParameters,
@@ -2134,10 +2133,8 @@ describe('ConstructorIO - Tracker', () => {
 
       tracker.on('success', eventSpy);
 
-      store.session.set('_constructorio_track_purchase', JSON.stringify({
-        239402919: true,
-        482039192: true,
-      }));
+      setOrderId('_constructorio_purchase_order_ids', '239402919');
+      setOrderId('_constructorio_purchase_order_ids', '482039192');
 
       expect(tracker.trackPurchase(Object.assign(requiredParameters, {
         ...optionalParameters,

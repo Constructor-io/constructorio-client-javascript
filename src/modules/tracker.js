@@ -2,10 +2,9 @@
 const qs = require('qs');
 const EventEmitter = require('events');
 const helpers = require('../utils/helpers');
-const store = require('../utils/store');
 const RequestQueue = require('../utils/request-queue');
 
-const purchaseEventStorageKey = '_constructorio_track_purchase';
+const purchaseEventStorageKey = '_constructorio_purchase_order_ids';
 
 function applyParams(parameters, options) {
   const {
@@ -419,24 +418,12 @@ class Tracker {
       const { items, revenue, order_id, section } = parameters;
 
       if (order_id) {
-        let purchaseEventStorage = JSON.parse(store.session.get(purchaseEventStorageKey));
-
-        if (purchaseEventStorage) {
-          // Don't send another purchase event if we have already tracked the order
-
-          if (purchaseEventStorage[order_id]) {
-            return false;
-          }
-
-          purchaseEventStorage[order_id] = true;
-        } else {
-          purchaseEventStorage = {
-            [order_id]: true,
-          };
+        // Don't send another purchase event if we have already tracked the order
+        if (helpers.checkOrderId(purchaseEventStorageKey, order_id)) {
+          return false;
         }
 
-        // Add the current order id to the storage
-        store.session.set(purchaseEventStorageKey, JSON.stringify(purchaseEventStorage));
+        helpers.setOrderId(purchaseEventStorageKey, order_id);
 
         // Add order_id to the tracking params
         bodyParams.order_id = order_id;

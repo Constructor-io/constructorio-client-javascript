@@ -1,5 +1,7 @@
 /* eslint-disable no-param-reassign */
 const qs = require('qs');
+const CRC32 = require('crc-32');
+const store = require('./store');
 
 const utils = {
   ourEncodeURIComponent: (str) => {
@@ -73,6 +75,41 @@ const utils = {
     }
 
     return {};
+  },
+
+  checkOrderId(storageKey, orderId) {
+    const purchaseEventStorage = JSON.parse(store.session.get(storageKey));
+    const orderIdHash = CRC32.str(orderId.toString());
+
+    if (purchaseEventStorage && purchaseEventStorage[orderIdHash]) {
+      return orderId;
+    }
+
+    return null;
+  },
+
+  setOrderId(storageKey, orderId) {
+    let purchaseEventStorage = JSON.parse(store.session.get(storageKey));
+    const orderIdHash = CRC32.str(orderId.toString());
+
+    if (purchaseEventStorage) {
+
+      // If the order already exists, do nothing
+      if (purchaseEventStorage[orderIdHash]) {
+        return;
+      }
+
+      purchaseEventStorage[orderIdHash] = true;
+    } else {
+
+      // Create a new object map for the order ids
+      purchaseEventStorage = {
+        [orderIdHash]: true,
+      };
+    }
+
+    // Push the order id map into session storage
+    store.session.set(storageKey, JSON.stringify(purchaseEventStorage));
   },
 };
 
