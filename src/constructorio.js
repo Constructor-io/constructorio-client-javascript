@@ -100,9 +100,11 @@ class ConstructorIO {
   setClientOptions(options) {
     if (Object.keys(options).length) {
       const { apiKey, segments, testCells, userId } = options;
+
       if (apiKey) {
         this.options.apiKey = apiKey;
       }
+
       if (segments) {
         this.options.segments = segments;
       }
