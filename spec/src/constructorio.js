@@ -91,4 +91,75 @@ describe('ConstructorIO', () => {
   it('Should throw an error when no options are provided', () => {
     expect(() => new ConstructorIO()).to.throw('API key is a required parameter of type string');
   });
+
+  describe('setClientOptions', () => {
+    it('should update the client options with a new apiKey', () => {
+      const newAPIKey = 'newAPIKey';
+      const instance = new ConstructorIO({ apiKey: validApiKey });
+
+      expect(instance.options).to.have.property('apiKey').to.equal(validApiKey);
+
+      instance.setClientOptions({
+        apiKey: newAPIKey,
+      });
+
+      expect(instance.options).to.have.property('apiKey').to.equal(newAPIKey);
+    });
+
+    it('should update the client options with new segments', () => {
+      const oldSegments = ['old_segment_1', 'old_segment_2'];
+      const newSegments = ['new_segment_1'];
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        segments: oldSegments,
+      });
+
+      expect(instance.options).to.have.property('segments').to.deep.equal(oldSegments);
+
+      instance.setClientOptions({
+        segments: newSegments,
+      });
+
+      expect(instance.options).to.have.property('segments').to.deep.equal(newSegments);
+    });
+
+    it('should update the client options with new test cells', () => {
+      const oldTestCells = {
+        'old-cell-name-1': 'old-cell-value-1',
+        'old-cell-name-2': 'old-cell-value-2',
+      };
+      const newTestCells = {
+        'new-cell-name-1': 'new-cell-value-1',
+      };
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        testCells: oldTestCells,
+      });
+
+      expect(instance.options).to.have.property('testCells').to.deep.equal(oldTestCells);
+
+      instance.setClientOptions({
+        testCells: newTestCells,
+      });
+
+      expect(instance.options).to.have.property('testCells').to.deep.equal(newTestCells);
+    });
+
+    it('should update the client options with a new user id', () => {
+      const oldUserId = 'old_user_id';
+      const newUserId = 'new_user_id';
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        userId: oldUserId,
+      });
+
+      expect(instance.options).to.have.property('userId').to.deep.equal(oldUserId);
+
+      instance.setClientOptions({
+        userId: newUserId,
+      });
+
+      expect(instance.options).to.have.property('userId').to.deep.equal(newUserId);
+    });
+  });
 });

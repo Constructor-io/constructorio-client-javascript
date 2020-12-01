@@ -90,6 +90,32 @@ class ConstructorIO {
     // Dispatch initialization event
     new EventDispatcher(options.eventDispatcher).queue('instantiated', this.options);
   }
+
+  /**
+   * @param {string} apiKey - Constructor.io API key
+   * @param {string} [segments] - User segments
+   * @param {object} [testCells] - User test cells
+   * @param {string} [userId] - User ID
+   */
+  setClientOptions(options) {
+    if (Object.keys(options).length) {
+      const { apiKey, segments, testCells, userId } = options;
+      if (apiKey) {
+        this.options.apiKey = apiKey;
+      }
+      if (segments) {
+        this.options.segments = segments;
+      }
+
+      if (testCells) {
+        this.options.testCells = testCells;
+      }
+
+      if (userId) {
+        this.options.userId = userId;
+      }
+    }
+  }
 }
 
 module.exports = ConstructorIO;
