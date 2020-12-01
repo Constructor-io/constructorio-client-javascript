@@ -165,7 +165,7 @@ describe('ConstructorIO - Recommendations', () => {
     });
 
     it('Should return a response with valid itemIds, and segments', (done) => {
-      const segments = 'segments';
+      const segments = ['foo', 'bar'];
       const { recommendations } = new ConstructorIO({
         apiKey: testApiKey,
         segments,
