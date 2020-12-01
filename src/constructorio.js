@@ -17,7 +17,7 @@ class ConstructorIO {
   /**
    * @param {string} apiKey - Constructor.io API key
    * @param {string} [serviceUrl='https://ac.cnstrc.com'] - API URL endpoint
-   * @param {string} [segments] - User segments
+   * @param {array} [segments] - User segments
    * @param {object} [testCells] - User test cells
    * @param {string} [clientId] - Client ID, defaults to value supplied by 'constructorio-id' module
    * @param {string} [sessionId] - Session id, defaults to value supplied by 'constructorio-id' module
@@ -93,7 +93,7 @@ class ConstructorIO {
 
   /**
    * @param {string} apiKey - Constructor.io API key
-   * @param {string} [segments] - User segments
+   * @param {array} [segments] - User segments
    * @param {object} [testCells] - User test cells
    * @param {string} [userId] - User ID
    */
