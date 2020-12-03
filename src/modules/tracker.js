@@ -1,4 +1,4 @@
-/* eslint-disable object-curly-newline, no-underscore-dangle, camelcase */
+/* eslint-disable object-curly-newline, no-underscore-dangle, camelcase, no-unneeded-ternary */
 const qs = require('qs');
 const EventEmitter = require('events');
 const helpers = require('../utils/helpers');
