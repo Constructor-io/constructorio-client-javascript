@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/* eslint-disable camelcase, no-unneeded-ternary */
 const ConstructorioID = require('@constructor-io/constructorio-id');
 
 // Modules
@@ -77,7 +77,7 @@ class ConstructorIO {
       sendTrackingEvents,
       sendReferrerWithTrackingEvents,
       eventDispatcher,
-      beaconMode,
+      beaconMode: (beaconMode === false) ? false : true, // Defaults to 'true',
     };
 
     // Expose global modules
