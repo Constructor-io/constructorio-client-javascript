@@ -93,7 +93,7 @@ describe('ConstructorIO', () => {
     expect(() => new ConstructorIO()).to.throw('API key is a required parameter of type string');
   });
 
-  describe.only('setClientOptions', () => {
+  describe('setClientOptions', () => {
     describe('with a new apiKey', () => {
       it('should update the client options', () => {
         const newAPIKey = 'newAPIKey';
