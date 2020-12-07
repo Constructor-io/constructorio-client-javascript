@@ -60,6 +60,7 @@
   },
   "dependencies": {
     "@constructor-io/constructorio-id": "^2.4.1",
+    "crc-32": "^1.2.0",
     "es6-promise": "^4.2.8",
     "events": "^3.0.0",
     "fetch-ponyfill": "^6.1.0",

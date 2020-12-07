@@ -415,16 +415,24 @@ class Tracker {
       const bodyParams = {};
       const { items, revenue, order_id, section } = parameters;
 
+      if (order_id) {
+        // Don't send another purchase event if we have already tracked the order
+        if (helpers.hasOrderIdRecord(order_id)) {
+          return false;
+        }
+
+        helpers.addOrderIdRecord(order_id);
+
+        // Add order_id to the tracking params
+        bodyParams.order_id = order_id;
+      }
+
       if (items && Array.isArray(items)) {
         bodyParams.items = items;
       }
 
       if (revenue) {
         bodyParams.revenue = revenue;
-      }
-
-      if (order_id) {
-        bodyParams.order_id = order_id;
       }
 
       if (section) {

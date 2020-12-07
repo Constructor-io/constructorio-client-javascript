@@ -11,6 +11,7 @@ const cloneDeep = require('lodash.clonedeep');
 const store = require('../../../test/utils/store');
 const ConstructorIO = require('../../../test/constructorio');
 const helpers = require('../../mocha.helpers');
+const { addOrderIdRecord } = require('../../../src/utils/helpers');
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
@@ -22,7 +23,7 @@ const { fetch } = fetchPonyfill({ Promise });
 
 describe('ConstructorIO - Tracker', () => {
   const clientVersion = 'cio-mocha';
-  const waitInterval = 1000;
+  const waitInterval = 1100;
   let fetchSpy = null;
   let eventSpy = null;
   const requestQueueOptions = {
@@ -2091,6 +2092,69 @@ describe('ConstructorIO - Tracker', () => {
         expect(eventSpy).to.have.been.called;
         expect(responseParams).to.have.property('method').to.equal('POST');
         expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should not send a purchase event if the order has been tracked already', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      addOrderIdRecord('848291039');
+
+      expect(tracker.trackPurchase(Object.assign(requiredParameters, {
+        ...optionalParameters,
+        order_id: '848291039',
+      }))).to.equal(false);
+
+      setTimeout(() => {
+        // Request
+        expect(fetchSpy).to.not.have.been.called;
+
+        // Response
+        expect(eventSpy).to.not.have.been.called;
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should send a purchase event if the order has not been tracked yet', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', eventSpy);
+
+      addOrderIdRecord('239402919');
+      addOrderIdRecord('482039192');
+
+      expect(tracker.trackPurchase(Object.assign(requiredParameters, {
+        ...optionalParameters,
+        order_id: '328192019',
+      }))).to.equal(true);
+
+      setTimeout(() => {
+        const requestQueryParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestBodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestQueryParams).to.have.property('section').to.equal(optionalParameters.section);
+        expect(requestBodyParams).to.have.property('order_id').to.equal('328192019');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
 
         done();
       }, waitInterval);
