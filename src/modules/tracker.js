@@ -858,14 +858,14 @@ class Tracker {
   }
 
   /**
-   * Expose helper function to add order id to storage (used in other clients/repos)
+   * Expose helper function to add order id to storage
    */
   static addOrderIdRecord(order_id) {
     helpers.addOrderIdRecord(order_id);
   }
 
   /**
-   * Expose helper function to check existence of order id in storage (used in other clients/repos)
+   * Expose helper function to check existence of order id in storage
    */
   static hasOrderIdRecord(order_id) {
     return helpers.hasOrderIdRecord(order_id);
