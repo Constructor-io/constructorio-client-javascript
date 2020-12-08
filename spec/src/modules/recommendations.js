@@ -165,7 +165,7 @@ describe('ConstructorIO - Recommendations', () => {
     });
 
     it('Should return a response with valid itemIds, and segments', (done) => {
-      const segments = 'segments';
+      const segments = ['foo', 'bar'];
       const { recommendations } = new ConstructorIO({
         apiKey: testApiKey,
         segments,
@@ -178,7 +178,7 @@ describe('ConstructorIO - Recommendations', () => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(requestedUrlParams).to.have.property('us').to.equal(segments);
+        expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
         done();
       });
     });

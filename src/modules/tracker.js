@@ -84,10 +84,7 @@ function applyParamsAsString(parameters, options) {
  */
 class Tracker {
   constructor(options) {
-    this.options = {
-      ...options,
-      beaconMode: (options && options.beaconMode === false) ? false : true, // Defaults to 'true'
-    };
+    this.options = options || {};
     this.eventemitter = new EventEmitter();
     this.requests = new RequestQueue(options, this.eventemitter);
   }

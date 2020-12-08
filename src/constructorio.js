@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/* eslint-disable camelcase, no-unneeded-ternary */
 const ConstructorioID = require('@constructor-io/constructorio-id');
 
 // Modules
@@ -17,7 +17,7 @@ class ConstructorIO {
   /**
    * @param {string} apiKey - Constructor.io API key
    * @param {string} [serviceUrl='https://ac.cnstrc.com'] - API URL endpoint
-   * @param {string} [segments] - User segments
+   * @param {array} [segments] - User segments
    * @param {object} [testCells] - User test cells
    * @param {string} [clientId] - Client ID, defaults to value supplied by 'constructorio-id' module
    * @param {string} [sessionId] - Session id, defaults to value supplied by 'constructorio-id' module
@@ -77,7 +77,7 @@ class ConstructorIO {
       sendTrackingEvents,
       sendReferrerWithTrackingEvents,
       eventDispatcher,
-      beaconMode,
+      beaconMode: (beaconMode === false) ? false : true, // Defaults to 'true',
     };
 
     // Expose global modules
@@ -89,6 +89,36 @@ class ConstructorIO {
 
     // Dispatch initialization event
     new EventDispatcher(options.eventDispatcher).queue('instantiated', this.options);
+  }
+
+  /**
+   * Sets the client options
+   *
+   * @param {string} apiKey - Constructor.io API key
+   * @param {array} [segments] - User segments
+   * @param {object} [testCells] - User test cells
+   * @param {string} [userId] - User ID
+   */
+  setClientOptions(options) {
+    if (Object.keys(options).length) {
+      const { apiKey, segments, testCells, userId } = options;
+
+      if (apiKey) {
+        this.options.apiKey = apiKey;
+      }
+
+      if (segments) {
+        this.options.segments = segments;
+      }
+
+      if (testCells) {
+        this.options.testCells = testCells;
+      }
+
+      if (userId) {
+        this.options.userId = userId;
+      }
+    }
   }
 }
 
