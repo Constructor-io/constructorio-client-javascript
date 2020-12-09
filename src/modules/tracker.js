@@ -418,11 +418,11 @@ class Tracker {
 
       if (order_id) {
         // Don't send another purchase event if we have already tracked the order
-        if (Tracker.hasOrderIdRecord(order_id)) {
+        if (this.hasOrderIdRecord(order_id)) {
           return false;
         }
 
-        Tracker.addOrderIdRecord(order_id);
+        this.addOrderIdRecord(order_id);
 
         // Add order_id to the tracking params
         bodyParams.order_id = order_id;
@@ -864,7 +864,7 @@ class Tracker {
   /**
    * Expose helper function to add order id to storage
    */
-  static addOrderIdRecord(orderId) {
+  addOrderIdRecord(orderId) { /* eslint-disable-line class-methods-use-this */
     let purchaseEventStorage = JSON.parse(store.session.get(purchaseEventStorageKey));
     const orderIdHash = CRC32.str(orderId.toString());
 
@@ -891,7 +891,7 @@ class Tracker {
   /**
    * Expose helper function to check existence of order id in storage
    */
-  static hasOrderIdRecord(orderId) {
+  hasOrderIdRecord(orderId) { /* eslint-disable-line class-methods-use-this */
     const purchaseEventStorage = JSON.parse(store.session.get(purchaseEventStorageKey));
     const orderIdHash = CRC32.str(orderId.toString());
 

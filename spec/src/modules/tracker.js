@@ -1751,7 +1751,7 @@ describe('ConstructorIO - Tracker', () => {
     });
   });
 
-  describe.only('trackPurchase', () => {
+  describe('trackPurchase', () => {
     const requiredParameters = {
       items: [
         {
@@ -2097,16 +2097,15 @@ describe('ConstructorIO - Tracker', () => {
     });
 
     it('Should not send a purchase event if the order has been tracked already', (done) => {
-      const constructorio = new ConstructorIO({
+      const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
         ...requestQueueOptions,
       });
-      const { tracker } = constructorio;
 
       tracker.on('success', eventSpy);
 
-      constructorio.Tracker.addOrderIdRecord('848291039');
+      tracker.addOrderIdRecord('848291039');
 
       expect(tracker.trackPurchase(Object.assign(requiredParameters, {
         ...optionalParameters,
@@ -2125,17 +2124,16 @@ describe('ConstructorIO - Tracker', () => {
     });
 
     it('Should send a purchase event if the order has not been tracked yet', (done) => {
-      const constructorio = new ConstructorIO({
+      const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
         ...requestQueueOptions,
       });
-      const { tracker } = constructorio;
 
       tracker.on('success', eventSpy);
 
-      constructorio.Tracker.addOrderIdRecord('239402919');
-      constructorio.Tracker.addOrderIdRecord('482039192');
+      tracker.addOrderIdRecord('239402919');
+      tracker.addOrderIdRecord('482039192');
 
       expect(tracker.trackPurchase(Object.assign(requiredParameters, {
         ...optionalParameters,
