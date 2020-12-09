@@ -11,7 +11,6 @@ const cloneDeep = require('lodash.clonedeep');
 const store = require('../../../test/utils/store');
 const ConstructorIO = require('../../../test/constructorio');
 const helpers = require('../../mocha.helpers');
-const { addOrderIdRecord } = require('../../../src/utils/helpers');
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
@@ -1752,7 +1751,7 @@ describe('ConstructorIO - Tracker', () => {
     });
   });
 
-  describe('trackPurchase', () => {
+  describe.only('trackPurchase', () => {
     const requiredParameters = {
       items: [
         {
@@ -2098,15 +2097,16 @@ describe('ConstructorIO - Tracker', () => {
     });
 
     it('Should not send a purchase event if the order has been tracked already', (done) => {
-      const { tracker } = new ConstructorIO({
+      const constructorio = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
         ...requestQueueOptions,
       });
+      const { tracker } = constructorio;
 
       tracker.on('success', eventSpy);
 
-      addOrderIdRecord('848291039');
+      constructorio.Tracker.addOrderIdRecord('848291039');
 
       expect(tracker.trackPurchase(Object.assign(requiredParameters, {
         ...optionalParameters,
@@ -2125,16 +2125,17 @@ describe('ConstructorIO - Tracker', () => {
     });
 
     it('Should send a purchase event if the order has not been tracked yet', (done) => {
-      const { tracker } = new ConstructorIO({
+      const constructorio = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
         ...requestQueueOptions,
       });
+      const { tracker } = constructorio;
 
       tracker.on('success', eventSpy);
 
-      addOrderIdRecord('239402919');
-      addOrderIdRecord('482039192');
+      constructorio.Tracker.addOrderIdRecord('239402919');
+      constructorio.Tracker.addOrderIdRecord('482039192');
 
       expect(tracker.trackPurchase(Object.assign(requiredParameters, {
         ...optionalParameters,

@@ -1,8 +1,12 @@
 /* eslint-disable object-curly-newline, no-underscore-dangle, camelcase, no-unneeded-ternary */
 const qs = require('qs');
 const EventEmitter = require('events');
+const CRC32 = require('crc-32');
+const store = require('../utils/store');
 const helpers = require('../utils/helpers');
 const RequestQueue = require('../utils/request-queue');
+
+const purchaseEventStorageKey = '_constructorio_purchase_order_ids';
 
 function applyParams(parameters, options) {
   const {
@@ -414,11 +418,11 @@ class Tracker {
 
       if (order_id) {
         // Don't send another purchase event if we have already tracked the order
-        if (helpers.hasOrderIdRecord(order_id)) {
+        if (Tracker.hasOrderIdRecord(order_id)) {
           return false;
         }
 
-        helpers.addOrderIdRecord(order_id);
+        Tracker.addOrderIdRecord(order_id);
 
         // Add order_id to the tracking params
         bodyParams.order_id = order_id;
@@ -860,15 +864,42 @@ class Tracker {
   /**
    * Expose helper function to add order id to storage
    */
-  static addOrderIdRecord(order_id) {
-    helpers.addOrderIdRecord(order_id);
+  static addOrderIdRecord(orderId) {
+    let purchaseEventStorage = JSON.parse(store.session.get(purchaseEventStorageKey));
+    const orderIdHash = CRC32.str(orderId.toString());
+
+    if (purchaseEventStorage) {
+
+      // If the order already exists, do nothing
+      if (purchaseEventStorage[orderIdHash]) {
+        return;
+      }
+
+      purchaseEventStorage[orderIdHash] = true;
+    } else {
+
+      // Create a new object map for the order ids
+      purchaseEventStorage = {
+        [orderIdHash]: true,
+      };
+    }
+
+    // Push the order id map into session storage
+    store.session.set(purchaseEventStorageKey, JSON.stringify(purchaseEventStorage));
   }
 
   /**
    * Expose helper function to check existence of order id in storage
    */
-  static hasOrderIdRecord(order_id) {
-    return helpers.hasOrderIdRecord(order_id);
+  static hasOrderIdRecord(orderId) {
+    const purchaseEventStorage = JSON.parse(store.session.get(purchaseEventStorageKey));
+    const orderIdHash = CRC32.str(orderId.toString());
+
+    if (purchaseEventStorage && purchaseEventStorage[orderIdHash]) {
+      return true;
+    }
+
+    return null;
   }
 }
 
