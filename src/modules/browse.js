@@ -51,7 +51,7 @@ function createBrowseUrl(filterName, filterValue, parameters, options) {
   }
 
   if (parameters) {
-    const { page, resultsPerPage, filters, sortBy, sortOrder, section } = parameters;
+    const { page, resultsPerPage, filters, sortBy, sortOrder, section, fmtOptions } = parameters;
 
     // Pull page from parameters
     if (!helpers.isNil(page)) {
@@ -80,6 +80,11 @@ function createBrowseUrl(filterName, filterValue, parameters, options) {
     // Pull section from parameters
     if (section) {
       queryParams.section = section;
+    }
+
+    // Pull ftm options from parameters
+    if (fmtOptions) {
+      queryParams.fmt_options = fmtOptions;
     }
   }
 
