@@ -121,6 +121,7 @@ class Browse {
    * @param {object} [parameters.filters] - Filters used to refine results
    * @param {string} [parameters.sortBy='relevance'] - The sort method for results
    * @param {string} [parameters.sortOrder='descending'] - The sort order for results
+   * @param {object} [parameters.fmtOptions] - fmtOptions used to refine groups
    * @returns {Promise}
    * @see https://docs.constructor.io
    */

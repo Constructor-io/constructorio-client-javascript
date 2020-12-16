@@ -193,6 +193,29 @@ describe('ConstructorIO - Search', () => {
       });
     });
 
+    it('Should return a response with a valid query, section, and fmtOptions', (done) => {
+      const fmtOptions = { groups_max_depth: 2, groups_start: 'current' };
+      const { search } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      search.getSearchResults(query, {
+        section,
+        fmtOptions,
+      }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.fmt_options).to.deep.equal(fmtOptions);
+        expect(requestedUrlParams).to.have.property('fmt_options');
+        expect(requestedUrlParams.fmt_options).to.have.property('groups_max_depth').to.equal(Object.values(fmtOptions)[0][0]);
+        done();
+      });
+    });
+
     it('Should return a response with a valid query, section, and sortBy', (done) => {
       const sortBy = 'relevance';
       const { search } = new ConstructorIO({

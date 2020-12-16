@@ -121,6 +121,7 @@ class Search {
    * @param {object} [parameters.filters] - Filters used to refine search
    * @param {string} [parameters.sortBy='relevance'] - The sort method for results
    * @param {string} [parameters.sortOrder='descending'] - The sort order for results
+   * @param {object} [parameters.fmtOptions] - fmtOptions used to refine groups
    * @returns {Promise}
    * @see https://docs.constructor.io/rest-api.html#search
    */
