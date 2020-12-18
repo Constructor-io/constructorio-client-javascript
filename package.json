@@ -13,7 +13,7 @@
     "test:src": "mkdir -p test && cp -rf src/* test && mocha ./spec/* --opts ./mocha.opts --recursive",
     "precoverage": "rm -rf ./coverage && rm -rf ./.nyc_output",
     "coverage": "nyc --all --reporter=html npm run test:src",
-    "postcoverage": "http-server ./coverage -p 8081 -o -c-1 && rm -rf test",
+    "postcoverage": "serve --config ./serve.json && rm -rf test",
     "docs": "jsdoc --configure ./.jsdoc.json ./README.md --recurse ./src --destination ./docs",
     "compile": "babel -d lib/ src/",
     "prepublish": "npm run compile"
@@ -45,7 +45,6 @@
     "eslint": "^5.12.1",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.15.0",
-    "http-server": "^0.12.3",
     "jsdoc": "^3.6.3",
     "jsdom": "^15.1.1",
     "license-checker": "^25.0.1",
@@ -55,6 +54,7 @@
     "mocha-jsdom": "^2.0.0",
     "nyc": "^14.1.1",
     "pre-push": "^0.1.1",
+    "serve": "^11.3.2",
     "sinon": "^7.5.0",
     "sinon-chai": "^3.3.0"
   },
