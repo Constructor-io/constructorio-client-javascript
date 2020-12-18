@@ -13,7 +13,7 @@
     "test:src": "mkdir -p test && cp -rf src/* test && mocha ./spec/* --opts ./mocha.opts --recursive",
     "precoverage": "rm -rf ./coverage && rm -rf ./.nyc_output",
     "coverage": "nyc --all --reporter=html npm run test:src",
-    "postcoverage": "serve --config ./serve.json && rm -rf test",
+    "postcoverage": "serve --listen 8080 --config ./serve.json && rm -rf test",
     "docs": "jsdoc --configure ./.jsdoc.json ./README.md --recurse ./src --destination ./docs",
     "compile": "babel -d lib/ src/",
     "prepublish": "npm run compile"
