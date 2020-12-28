@@ -274,7 +274,7 @@ describe('ConstructorIO', () => {
   });
 });
 
-describe('ConstructorIO - Node.js', () => {
+describe('ConstructorIO - without `window`', () => {
   beforeEach(() => {
     global.CLIENT_VERSION = 'cio-mocha';
   });
@@ -283,7 +283,7 @@ describe('ConstructorIO - Node.js', () => {
     delete global.CLIENT_VERSION;
   });
 
-  it('Should return an instance when no `window` is available', () => {
+  it('Should return an instance', () => {
     const instance = new ConstructorIO({ apiKey: validApiKey });
 
     expect(instance).to.be.an('object');
@@ -291,11 +291,28 @@ describe('ConstructorIO - Node.js', () => {
     expect(instance.options).to.have.property('apiKey').to.equal(validApiKey);
     expect(instance.options).to.have.property('version').to.equal(global.CLIENT_VERSION);
     expect(instance.options).to.have.property('serviceUrl');
-    expect(instance.options).to.have.property('clientId');
-    expect(instance.options).to.have.property('sessionId');
     expect(instance).to.have.property('search');
     expect(instance).to.have.property('autocomplete');
     expect(instance).to.have.property('recommendations');
     expect(instance).to.have.property('tracker');
+  });
+
+  it('Should have client and session identifiers not defined by default', () => {
+    const instance = new ConstructorIO({ apiKey: validApiKey });
+
+    expect(instance).to.be.an('object');
+    expect(instance).to.have.property('options').to.be.an('object');
+    expect(instance.options).to.have.property('clientId').to.be.undefined;
+    expect(instance.options).to.have.property('sessionId').to.be.undefined;
+  });
+
+  it('Should have event dispatching and tracking events disabled', () => {
+    const instance = new ConstructorIO({ apiKey: validApiKey });
+
+    expect(instance).to.be.an('object');
+    expect(instance).to.have.property('options').to.be.an('object');
+    expect(instance.options).to.have.property('eventDispatcher').to.be.an('object');
+    expect(instance.options.eventDispatcher).to.have.property('enabled').to.be.false;
+    expect(instance.options.sendTrackingEvents).to.be.false;
   });
 });
