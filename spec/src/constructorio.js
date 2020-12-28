@@ -94,190 +94,182 @@ describe('ConstructorIO', () => {
   });
 
   describe('setClientOptions', () => {
-    describe('with a new apiKey', () => {
-      it('should update the client options', () => {
-        const newAPIKey = 'newAPIKey';
-        const instance = new ConstructorIO({ apiKey: validApiKey });
+    it('Should update the client options with new API key', () => {
+      const newAPIKey = 'newAPIKey';
+      const instance = new ConstructorIO({ apiKey: validApiKey });
 
-        expect(instance.options).to.have.property('apiKey').to.equal(validApiKey);
+      expect(instance.options).to.have.property('apiKey').to.equal(validApiKey);
 
-        instance.setClientOptions({
-          apiKey: newAPIKey,
-        });
-
-        expect(instance.options).to.have.property('apiKey').to.equal(newAPIKey);
+      instance.setClientOptions({
+        apiKey: newAPIKey,
       });
 
-      it('should update the options for the search, autocomplete, browse, recommendations, and tracker modules', () => {
-        const newAPIKey = 'newAPIKey';
-        const instance = new ConstructorIO({ apiKey: validApiKey });
-
-        expect(instance.options).to.have.property('apiKey').to.equal(validApiKey);
-        expect(instance.search.options).to.have.property('apiKey').to.equal(validApiKey);
-        expect(instance.autocomplete.options).to.have.property('apiKey').to.equal(validApiKey);
-        expect(instance.browse.options).to.have.property('apiKey').to.equal(validApiKey);
-        expect(instance.recommendations.options).to.have.property('apiKey').to.equal(validApiKey);
-        expect(instance.tracker.options).to.have.property('apiKey').to.equal(validApiKey);
-
-        instance.setClientOptions({
-          apiKey: newAPIKey,
-        });
-
-        expect(instance.options).to.have.property('apiKey').to.equal(newAPIKey);
-        expect(instance.search.options).to.have.property('apiKey').to.equal(newAPIKey);
-        expect(instance.autocomplete.options).to.have.property('apiKey').to.equal(newAPIKey);
-        expect(instance.browse.options).to.have.property('apiKey').to.equal(newAPIKey);
-        expect(instance.recommendations.options).to.have.property('apiKey').to.equal(newAPIKey);
-        expect(instance.tracker.options).to.have.property('apiKey').to.equal(newAPIKey);
-      });
+      expect(instance.options).to.have.property('apiKey').to.equal(newAPIKey);
     });
 
-    describe('with new segments', () => {
-      it('should update the client options with new segments', () => {
-        const oldSegments = ['old_segment_1', 'old_segment_2'];
-        const newSegments = ['new_segment_1'];
-        const instance = new ConstructorIO({
-          apiKey: validApiKey,
-          segments: oldSegments,
-        });
+    it('Should update the options for modules with new API key', () => {
+      const newAPIKey = 'newAPIKey';
+      const instance = new ConstructorIO({ apiKey: validApiKey });
 
-        expect(instance.options).to.have.property('segments').to.deep.equal(oldSegments);
+      expect(instance.options).to.have.property('apiKey').to.equal(validApiKey);
+      expect(instance.search.options).to.have.property('apiKey').to.equal(validApiKey);
+      expect(instance.autocomplete.options).to.have.property('apiKey').to.equal(validApiKey);
+      expect(instance.browse.options).to.have.property('apiKey').to.equal(validApiKey);
+      expect(instance.recommendations.options).to.have.property('apiKey').to.equal(validApiKey);
+      expect(instance.tracker.options).to.have.property('apiKey').to.equal(validApiKey);
 
-        instance.setClientOptions({
-          segments: newSegments,
-        });
-
-        expect(instance.options).to.have.property('segments').to.deep.equal(newSegments);
+      instance.setClientOptions({
+        apiKey: newAPIKey,
       });
 
-      it('should update the options for the search, autocomplete, browse, recommendations, and tracker modules', () => {
-        const oldSegments = ['old_segment_1', 'old_segment_2'];
-        const newSegments = ['new_segment_1'];
-        const instance = new ConstructorIO({
-          apiKey: validApiKey,
-          segments: oldSegments,
-        });
-
-        expect(instance.options).to.have.property('segments').to.equal(oldSegments);
-        expect(instance.search.options).to.have.property('segments').to.equal(oldSegments);
-        expect(instance.autocomplete.options).to.have.property('segments').to.equal(oldSegments);
-        expect(instance.browse.options).to.have.property('segments').to.equal(oldSegments);
-        expect(instance.recommendations.options).to.have.property('segments').to.equal(oldSegments);
-        expect(instance.tracker.options).to.have.property('segments').to.equal(oldSegments);
-
-        instance.setClientOptions({
-          segments: newSegments,
-        });
-
-        expect(instance.options).to.have.property('segments').to.equal(newSegments);
-        expect(instance.search.options).to.have.property('segments').to.equal(newSegments);
-        expect(instance.autocomplete.options).to.have.property('segments').to.equal(newSegments);
-        expect(instance.browse.options).to.have.property('segments').to.equal(newSegments);
-        expect(instance.recommendations.options).to.have.property('segments').to.equal(newSegments);
-        expect(instance.tracker.options).to.have.property('segments').to.equal(newSegments);
-      });
+      expect(instance.options).to.have.property('apiKey').to.equal(newAPIKey);
+      expect(instance.search.options).to.have.property('apiKey').to.equal(newAPIKey);
+      expect(instance.autocomplete.options).to.have.property('apiKey').to.equal(newAPIKey);
+      expect(instance.browse.options).to.have.property('apiKey').to.equal(newAPIKey);
+      expect(instance.recommendations.options).to.have.property('apiKey').to.equal(newAPIKey);
+      expect(instance.tracker.options).to.have.property('apiKey').to.equal(newAPIKey);
     });
 
-    describe('with new test cells', () => {
-      it('should update the client options with new test cells', () => {
-        const oldTestCells = {
-          'old-cell-name-1': 'old-cell-value-1',
-          'old-cell-name-2': 'old-cell-value-2',
-        };
-        const newTestCells = {
-          'new-cell-name-1': 'new-cell-value-1',
-        };
-        const instance = new ConstructorIO({
-          apiKey: validApiKey,
-          testCells: oldTestCells,
-        });
-
-        expect(instance.options).to.have.property('testCells').to.deep.equal(oldTestCells);
-
-        instance.setClientOptions({
-          testCells: newTestCells,
-        });
-
-        expect(instance.options).to.have.property('testCells').to.deep.equal(newTestCells);
+    it('Should update the client options with new segments', () => {
+      const oldSegments = ['old_segment_1', 'old_segment_2'];
+      const newSegments = ['new_segment_1'];
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        segments: oldSegments,
       });
 
-      it('should update the options for the search, browse, autocomplete, recommendations, and tracker modules', () => {
-        const oldTestCells = {
-          'old-cell-name-1': 'old-cell-value-1',
-          'old-cell-name-2': 'old-cell-value-2',
-        };
-        const newTestCells = {
-          'new-cell-name-1': 'new-cell-value-1',
-        };
-        const instance = new ConstructorIO({
-          apiKey: validApiKey,
-          testCells: oldTestCells,
-        });
+      expect(instance.options).to.have.property('segments').to.deep.equal(oldSegments);
 
-        expect(instance.options).to.have.property('testCells').to.deep.equal(oldTestCells);
-        expect(instance.search.options).to.have.property('testCells').to.equal(oldTestCells);
-        expect(instance.autocomplete.options).to.have.property('testCells').to.equal(oldTestCells);
-        expect(instance.browse.options).to.have.property('testCells').to.equal(oldTestCells);
-        expect(instance.recommendations.options).to.have.property('testCells').to.equal(oldTestCells);
-        expect(instance.tracker.options).to.have.property('testCells').to.equal(oldTestCells);
-
-        instance.setClientOptions({
-          testCells: newTestCells,
-        });
-
-        expect(instance.options).to.have.property('testCells').to.deep.equal(newTestCells);
-        expect(instance.search.options).to.have.property('testCells').to.equal(newTestCells);
-        expect(instance.autocomplete.options).to.have.property('testCells').to.equal(newTestCells);
-        expect(instance.browse.options).to.have.property('testCells').to.equal(newTestCells);
-        expect(instance.recommendations.options).to.have.property('testCells').to.equal(newTestCells);
-        expect(instance.tracker.options).to.have.property('testCells').to.equal(newTestCells);
+      instance.setClientOptions({
+        segments: newSegments,
       });
+
+      expect(instance.options).to.have.property('segments').to.deep.equal(newSegments);
     });
 
-    describe('with a new user id', () => {
-      it('should update the client options with a new user id', () => {
-        const oldUserId = 'old_user_id';
-        const newUserId = 'new_user_id';
-        const instance = new ConstructorIO({
-          apiKey: validApiKey,
-          userId: oldUserId,
-        });
-
-        expect(instance.options).to.have.property('userId').to.deep.equal(oldUserId);
-
-        instance.setClientOptions({
-          userId: newUserId,
-        });
-
-        expect(instance.options).to.have.property('userId').to.deep.equal(newUserId);
+    it('Should update the options for modules with new segments', () => {
+      const oldSegments = ['old_segment_1', 'old_segment_2'];
+      const newSegments = ['new_segment_1'];
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        segments: oldSegments,
       });
 
-      it('should update the options for the search, browse, autocomplete, recommendations, and tracker modules', () => {
-        const oldUserId = 'old_user_id';
-        const newUserId = 'new_user_id';
-        const instance = new ConstructorIO({
-          apiKey: validApiKey,
-          userId: oldUserId,
-        });
+      expect(instance.options).to.have.property('segments').to.equal(oldSegments);
+      expect(instance.search.options).to.have.property('segments').to.equal(oldSegments);
+      expect(instance.autocomplete.options).to.have.property('segments').to.equal(oldSegments);
+      expect(instance.browse.options).to.have.property('segments').to.equal(oldSegments);
+      expect(instance.recommendations.options).to.have.property('segments').to.equal(oldSegments);
+      expect(instance.tracker.options).to.have.property('segments').to.equal(oldSegments);
 
-        expect(instance.options).to.have.property('userId').to.deep.equal(oldUserId);
-        expect(instance.search.options).to.have.property('userId').to.equal(oldUserId);
-        expect(instance.autocomplete.options).to.have.property('userId').to.equal(oldUserId);
-        expect(instance.browse.options).to.have.property('userId').to.equal(oldUserId);
-        expect(instance.recommendations.options).to.have.property('userId').to.equal(oldUserId);
-        expect(instance.tracker.options).to.have.property('userId').to.equal(oldUserId);
-
-        instance.setClientOptions({
-          userId: newUserId,
-        });
-
-        expect(instance.options).to.have.property('userId').to.deep.equal(newUserId);
-        expect(instance.search.options).to.have.property('userId').to.equal(newUserId);
-        expect(instance.autocomplete.options).to.have.property('userId').to.equal(newUserId);
-        expect(instance.browse.options).to.have.property('userId').to.equal(newUserId);
-        expect(instance.recommendations.options).to.have.property('userId').to.equal(newUserId);
-        expect(instance.tracker.options).to.have.property('userId').to.equal(newUserId);
+      instance.setClientOptions({
+        segments: newSegments,
       });
+
+      expect(instance.options).to.have.property('segments').to.equal(newSegments);
+      expect(instance.search.options).to.have.property('segments').to.equal(newSegments);
+      expect(instance.autocomplete.options).to.have.property('segments').to.equal(newSegments);
+      expect(instance.browse.options).to.have.property('segments').to.equal(newSegments);
+      expect(instance.recommendations.options).to.have.property('segments').to.equal(newSegments);
+      expect(instance.tracker.options).to.have.property('segments').to.equal(newSegments);
+    });
+
+    it('Should update the client options with new test cells', () => {
+      const oldTestCells = {
+        'old-cell-name-1': 'old-cell-value-1',
+        'old-cell-name-2': 'old-cell-value-2',
+      };
+      const newTestCells = {
+        'new-cell-name-1': 'new-cell-value-1',
+      };
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        testCells: oldTestCells,
+      });
+
+      expect(instance.options).to.have.property('testCells').to.deep.equal(oldTestCells);
+
+      instance.setClientOptions({
+        testCells: newTestCells,
+      });
+
+      expect(instance.options).to.have.property('testCells').to.deep.equal(newTestCells);
+    });
+
+    it('Should update the options for modules with new test cells', () => {
+      const oldTestCells = {
+        'old-cell-name-1': 'old-cell-value-1',
+        'old-cell-name-2': 'old-cell-value-2',
+      };
+      const newTestCells = {
+        'new-cell-name-1': 'new-cell-value-1',
+      };
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        testCells: oldTestCells,
+      });
+
+      expect(instance.options).to.have.property('testCells').to.deep.equal(oldTestCells);
+      expect(instance.search.options).to.have.property('testCells').to.equal(oldTestCells);
+      expect(instance.autocomplete.options).to.have.property('testCells').to.equal(oldTestCells);
+      expect(instance.browse.options).to.have.property('testCells').to.equal(oldTestCells);
+      expect(instance.recommendations.options).to.have.property('testCells').to.equal(oldTestCells);
+      expect(instance.tracker.options).to.have.property('testCells').to.equal(oldTestCells);
+
+      instance.setClientOptions({
+        testCells: newTestCells,
+      });
+
+      expect(instance.options).to.have.property('testCells').to.deep.equal(newTestCells);
+      expect(instance.search.options).to.have.property('testCells').to.equal(newTestCells);
+      expect(instance.autocomplete.options).to.have.property('testCells').to.equal(newTestCells);
+      expect(instance.browse.options).to.have.property('testCells').to.equal(newTestCells);
+      expect(instance.recommendations.options).to.have.property('testCells').to.equal(newTestCells);
+      expect(instance.tracker.options).to.have.property('testCells').to.equal(newTestCells);
+    });
+
+    it('Should update the client options with a new user id', () => {
+      const oldUserId = 'old_user_id';
+      const newUserId = 'new_user_id';
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        userId: oldUserId,
+      });
+
+      expect(instance.options).to.have.property('userId').to.deep.equal(oldUserId);
+
+      instance.setClientOptions({
+        userId: newUserId,
+      });
+
+      expect(instance.options).to.have.property('userId').to.deep.equal(newUserId);
+    });
+
+    it('Should update the options for modules with a new user id', () => {
+      const oldUserId = 'old_user_id';
+      const newUserId = 'new_user_id';
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        userId: oldUserId,
+      });
+
+      expect(instance.options).to.have.property('userId').to.deep.equal(oldUserId);
+      expect(instance.search.options).to.have.property('userId').to.equal(oldUserId);
+      expect(instance.autocomplete.options).to.have.property('userId').to.equal(oldUserId);
+      expect(instance.browse.options).to.have.property('userId').to.equal(oldUserId);
+      expect(instance.recommendations.options).to.have.property('userId').to.equal(oldUserId);
+      expect(instance.tracker.options).to.have.property('userId').to.equal(oldUserId);
+
+      instance.setClientOptions({
+        userId: newUserId,
+      });
+
+      expect(instance.options).to.have.property('userId').to.deep.equal(newUserId);
+      expect(instance.search.options).to.have.property('userId').to.equal(newUserId);
+      expect(instance.autocomplete.options).to.have.property('userId').to.equal(newUserId);
+      expect(instance.browse.options).to.have.property('userId').to.equal(newUserId);
+      expect(instance.recommendations.options).to.have.property('userId').to.equal(newUserId);
+      expect(instance.tracker.options).to.have.property('userId').to.equal(newUserId);
     });
   });
 });
