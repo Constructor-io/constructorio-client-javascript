@@ -46,20 +46,22 @@ const utils = {
     throw error;
   }),
 
+  hasWindow: () => typeof window !== 'undefined',
+
   addEventListener: (eventType, callback, useCapture) => {
-    if (typeof window !== 'undefined') {
+    if (utils.hasWindow()) {
       window.addEventListener(eventType, callback, useCapture);
     }
   },
 
   removeEventListener: (eventType, callback, useCapture) => {
-    if (typeof window !== 'undefined') {
+    if (utils.hasWindow()) {
       window.removeEventListener(eventType, callback, useCapture);
     }
   },
 
   getNavigator: () => {
-    if (typeof window !== 'undefined') {
+    if (utils.hasWindow()) {
       return window.navigator;
     }
 
@@ -72,11 +74,33 @@ const utils = {
   isNil: value => value == null,
 
   getWindowLocation: () => {
-    if (typeof window !== 'undefined') {
+    if (utils.hasWindow()) {
       return window.location;
     }
 
     return {};
+  },
+
+  dispatchEvent: (event) => {
+    if (utils.hasWindow()) {
+      window.dispatchEvent(event);
+    }
+  },
+
+  createCustomEvent: (eventName, detail) => {
+    if (utils.hasWindow()) {
+      try {
+        return new window.CustomEvent(eventName, { detail });
+      } catch (e) {
+        const evt = document.createEvent('CustomEvent');
+
+        evt.initCustomEvent(eventName, false, false, detail);
+
+        return evt;
+      }
+    }
+
+    return null;
   },
 
   hasOrderIdRecord(orderId) {

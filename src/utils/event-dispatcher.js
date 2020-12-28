@@ -1,19 +1,6 @@
 /* eslint-disable no-unneeded-ternary */
 const helpers = require('../utils/helpers');
 
-// Create `CustomEvent` with fallback
-const createCustomEvent = (eventName, detail) => {
-  try {
-    return new window.CustomEvent(eventName, { detail });
-  } catch (e) {
-    const evt = document.createEvent('CustomEvent');
-
-    evt.initCustomEvent(eventName, false, false, detail);
-
-    return evt;
-  }
-};
-
 class EventDispatcher {
   constructor(options) {
     this.events = [];
@@ -37,9 +24,12 @@ class EventDispatcher {
       // Check browser environment to determine if beacon has been loaded
       // - Important for the case where the beacon has loaded before client library instantiated
       if (
-        window.ConstructorioAutocomplete
-        || window.ConstructorioBeacon
-        || window.ConstructorioTracker
+        helpers.hasWindow()
+        && (
+          window.ConstructorioAutocomplete
+          || window.ConstructorioBeacon
+          || window.ConstructorioTracker
+        )
       ) {
         if (this.enabled) {
           this.active = true;
@@ -79,7 +69,7 @@ class EventDispatcher {
       const { name, data } = item;
       const eventName = `cio.client.${name}`;
 
-      window.dispatchEvent(createCustomEvent(eventName, data));
+      helpers.dispatchEvent(helpers.createCustomEvent(eventName, data));
     }
   }
 }
