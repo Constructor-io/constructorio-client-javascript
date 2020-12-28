@@ -83,7 +83,7 @@ function createSearchUrl(query, parameters, options) {
       queryParams.collection_id = collectionId;
     }
 
-    // Pull ftm options from parameters
+    // Pull format options from parameters
     if (fmtOptions) {
       queryParams.fmt_options = fmtOptions;
     }
@@ -121,7 +121,7 @@ class Search {
    * @param {object} [parameters.filters] - Filters used to refine search
    * @param {string} [parameters.sortBy='relevance'] - The sort method for results
    * @param {string} [parameters.sortOrder='descending'] - The sort order for results
-   * @param {object} [parameters.fmtOptions] - fmtOptions used to refine groups
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
    * @returns {Promise}
    * @see https://docs.constructor.io/rest-api.html#search
    */
