@@ -82,7 +82,7 @@ function createBrowseUrl(filterName, filterValue, parameters, options) {
       queryParams.section = section;
     }
 
-    // Pull ftm options from parameters
+    // Pull format options from parameters
     if (fmtOptions) {
       queryParams.fmt_options = fmtOptions;
     }
@@ -121,7 +121,7 @@ class Browse {
    * @param {object} [parameters.filters] - Filters used to refine results
    * @param {string} [parameters.sortBy='relevance'] - The sort method for results
    * @param {string} [parameters.sortOrder='descending'] - The sort order for results
-   * @param {object} [parameters.fmtOptions] - fmtOptions used to refine groups
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
    * @returns {Promise}
    * @see https://docs.constructor.io
    */
