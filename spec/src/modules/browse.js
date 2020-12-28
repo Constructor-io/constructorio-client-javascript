@@ -184,6 +184,27 @@ describe('ConstructorIO - Browse', () => {
       });
     });
 
+    it('Should return a response with a valid filterName, filterValue and additional fmtOptions', (done) => {
+      const fmtOptions = { groups_max_depth: 2, groups_start: 'current' };
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResults(filterName, filterValue, { fmtOptions }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.fmt_options).to.deep.equal(fmtOptions);
+        expect(requestedUrlParams).to.have.property('fmt_options');
+        expect(requestedUrlParams.fmt_options).to.have.property('groups_max_depth').to.equal(Object.values(fmtOptions)[0][0]);
+        done();
+      });
+    });
+
+
     it('Should return a response with a valid filterName, filterValue and sortBy', (done) => {
       const sortBy = 'relevance';
       const { browse } = new ConstructorIO({

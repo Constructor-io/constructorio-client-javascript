@@ -46,7 +46,7 @@ function createSearchUrl(query, parameters, options) {
   }
 
   if (parameters) {
-    const { page, resultsPerPage, filters, sortBy, sortOrder, section, collectionId } = parameters;
+    const { page, resultsPerPage, filters, sortBy, sortOrder, section, collectionId, fmtOptions } = parameters;
 
     // Pull page from parameters
     if (!helpers.isNil(page)) {
@@ -82,6 +82,11 @@ function createSearchUrl(query, parameters, options) {
     if (collectionId) {
       queryParams.collection_id = collectionId;
     }
+
+    // Pull ftm options from parameters
+    if (fmtOptions) {
+      queryParams.fmt_options = fmtOptions;
+    }
   }
 
   queryParams._dt = Date.now();
@@ -116,6 +121,7 @@ class Search {
    * @param {object} [parameters.filters] - Filters used to refine search
    * @param {string} [parameters.sortBy='relevance'] - The sort method for results
    * @param {string} [parameters.sortOrder='descending'] - The sort order for results
+   * @param {object} [parameters.fmtOptions] - fmtOptions used to refine groups
    * @returns {Promise}
    * @see https://docs.constructor.io/rest-api.html#search
    */
