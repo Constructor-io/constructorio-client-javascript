@@ -281,3 +281,29 @@ describe('ConstructorIO', () => {
     });
   });
 });
+
+describe('ConstructorIO - Node.js', () => {
+  beforeEach(() => {
+    global.CLIENT_VERSION = 'cio-mocha';
+  });
+
+  afterEach(() => {
+    delete global.CLIENT_VERSION;
+  });
+
+  it('Should return an instance when no `window` is available', () => {
+    const instance = new ConstructorIO({ apiKey: validApiKey });
+
+    expect(instance).to.be.an('object');
+    expect(instance).to.have.property('options').to.be.an('object');
+    expect(instance.options).to.have.property('apiKey').to.equal(validApiKey);
+    expect(instance.options).to.have.property('version').to.equal(global.CLIENT_VERSION);
+    expect(instance.options).to.have.property('serviceUrl');
+    expect(instance.options).to.have.property('clientId');
+    expect(instance.options).to.have.property('sessionId');
+    expect(instance).to.have.property('search');
+    expect(instance).to.have.property('autocomplete');
+    expect(instance).to.have.property('recommendations');
+    expect(instance).to.have.property('tracker');
+  });
+});
