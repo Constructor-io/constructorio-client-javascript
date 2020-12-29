@@ -8,6 +8,7 @@ const Autocomplete = require('./modules/autocomplete');
 const Recommendations = require('./modules/recommendations');
 const Tracker = require('./modules/tracker');
 const EventDispatcher = require('./utils/event-dispatcher');
+const helpers = require('./utils/helpers');
 const { version: packageVersion } = require('../package.json');
 
 /**
@@ -60,8 +61,13 @@ class ConstructorIO {
       throw new Error('API key is a required parameter of type string');
     }
 
-    // Initialize ID session
-    const { session_id, client_id } = new ConstructorioID(idOptions || {});
+    let session_id;
+    let client_id;
+
+    // Initialize ID session (if within browser context)
+    if (helpers.hasWindow()) {
+      ({ session_id, client_id } = new ConstructorioID(idOptions || {}));
+    }
 
     this.options = {
       apiKey,
@@ -79,6 +85,17 @@ class ConstructorIO {
       eventDispatcher,
       beaconMode: (beaconMode === false) ? false : true, // Defaults to 'true',
     };
+
+    // Disable event dispatcher and tracking events if `window` not available
+    if (!helpers.hasWindow()) {
+      this.options.sendTrackingEvents = false;
+
+      if (!this.options.eventDispatcher) {
+        this.options.eventDispatcher = {};
+      }
+
+      this.options.eventDispatcher.enabled = false;
+    }
 
     // Expose global modules
     this.search = new Search(this.options);
