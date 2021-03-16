@@ -304,7 +304,7 @@ class Tracker {
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
         const url = `${this.options.serviceUrl}/autocomplete/${helpers.ourEncodeURIComponent(term)}/click_through?`;
         const queryParams = {};
-        const { name, customer_id, result_id } = parameters;
+        const { name, customer_id, variation_id, result_id } = parameters;
 
         if (name) {
           queryParams.name = name;
@@ -312,6 +312,10 @@ class Tracker {
 
         if (customer_id) {
           queryParams.customer_id = customer_id;
+        }
+
+        if (variation_id) {
+          queryParams.variation_id = variation_id;
         }
 
         if (result_id) {
