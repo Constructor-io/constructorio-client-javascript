@@ -356,37 +356,66 @@ class Tracker {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const searchTerm = helpers.ourEncodeURIComponent(term) || 'TERM_UNKNOWN';
-      const url = `${this.options.serviceUrl}/autocomplete/${searchTerm}/conversion?`;
-      const queryParams = {};
-      const { name, customer_id, variation_id, result_id, revenue, section } = parameters;
+      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/conversion?`;
+      const bodyParams = {};
+      const {
+        item_name,
+        item_id,
+        customer_id,
+        variation_id,
+        revenue,
+        section = 'Products',
+        display_name,
+        type,
+        is_custom_type = false,
+      } = parameters;
 
-      if (name) {
-        queryParams.name = name;
-      }
-
-      if (customer_id) {
-        queryParams.customer_id = customer_id;
+      // Only take one of item_id, customer_id, or item_name
+      if (item_id) {
+        bodyParams.item_id = item_id;
+      } else if (customer_id) {
+        bodyParams.item_id = customer_id;
+      } else if (item_name) {
+        bodyParams.item_name = item_name;
       }
 
       if (variation_id) {
-        queryParams.variation_id = variation_id;
-      }
-
-      if (result_id) {
-        queryParams.result_id = result_id;
+        bodyParams.variation_id = variation_id;
       }
 
       if (revenue) {
-        queryParams.revenue = revenue;
+        bodyParams.revenue = revenue.toString();
       }
 
       if (section) {
-        queryParams.section = section;
-      } else {
-        queryParams.section = 'Products';
+        bodyParams.section = section;
       }
 
-      this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
+      if (searchTerm) {
+        bodyParams.search_term = searchTerm;
+      }
+
+      if (type) {
+        bodyParams.type = type;
+      }
+
+      if (is_custom_type) {
+        bodyParams.is_custom_type = is_custom_type;
+      }
+
+      if (display_name) {
+        bodyParams.display_name = display_name;
+      }
+
+      const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
+
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+      );
       this.requests.send();
 
       return true;
