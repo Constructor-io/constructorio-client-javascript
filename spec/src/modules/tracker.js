@@ -12,7 +12,6 @@ const store = require('../../../test/utils/store');
 const ConstructorIO = require('../../../test/constructorio');
 const helpers = require('../../mocha.helpers');
 const { addOrderIdRecord } = require('../../../src/utils/helpers');
-const { expect } = require('chai');
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
