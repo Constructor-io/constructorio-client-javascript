@@ -1497,7 +1497,7 @@ describe('ConstructorIO - Tracker', () => {
     });
   });
 
-  describe.only('trackConversion', () => {
+  describe('trackConversion', () => {
     const term = 'Where The Wild Things Are';
     const requiredParameters = {
       customer_id: 'customer-id',
