@@ -367,7 +367,7 @@ class Tracker {
         section = 'Products',
         display_name,
         type,
-        is_custom_type = false,
+        is_custom_type,
       } = parameters;
 
       // Only take one of item_id, customer_id, or item_name
