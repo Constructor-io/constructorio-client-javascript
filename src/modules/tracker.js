@@ -344,12 +344,16 @@ class Tracker {
    * @function trackConversion
    * @param {string} term - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.name - Identifier
    * @param {string} parameters.customer_id - Customer id
    * @param {string} parameters.revenue - Revenue
+   * @param {string} [parameters.item_name] - Identifier
    * @param {string} [parameters.variation_id] - Variation id
-   * @param {string} [parameters.section] - Autocomplete section
+   * @param {string} [parameters.type] - Conversion Type (default: add_to_cart)
+   * @param {boolean} [parameters.is_custom_type] - Specify if it's a custom conversion type
+   * @param {string} [parameters.display_name] - Display name for the custom conversion type
+   * (Required if `is_custom_type` is true)
    * @param {string} [parameters.result_id] - Result id
+   * @param {string} [parameters.section] - Autocomplete section
    * @returns {(true|Error)}
    */
   trackConversion(term, parameters) {
