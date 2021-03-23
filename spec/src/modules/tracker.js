@@ -1522,11 +1522,13 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackConversion(term, requiredParameters)).to.equal(true);
 
       setTimeout(() => {
+        const queryParams = helpers.extractUrlParamsFromFetch(fetchSpy);
         const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
         const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(queryParams).to.have.property('item_id').to.equal(requiredParameters.customer_id);
         expect(requestParams).to.have.property('key');
         expect(requestParams).to.have.property('i');
         expect(requestParams).to.have.property('s');
@@ -1558,11 +1560,14 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackConversion(term, Object.assign({}, requiredParameters, optionalParameters))).to.equal(true);
 
       setTimeout(() => {
+        const queryParams = helpers.extractUrlParamsFromFetch(fetchSpy);
         const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
         const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(queryParams).to.have.property('item_id').to.equal(requiredParameters.customer_id);
+        expect(queryParams).to.have.property('item_name').to.equal(optionalParameters.item_name);
         expect(requestParams).to.have.property('key');
         expect(requestParams).to.have.property('i');
         expect(requestParams).to.have.property('s');

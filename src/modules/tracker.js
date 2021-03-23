@@ -361,6 +361,7 @@ class Tracker {
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const searchTerm = helpers.ourEncodeURIComponent(term) || 'TERM_UNKNOWN';
       const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/conversion?`;
+      const queryParams = {};
       const bodyParams = {};
       const {
         item_name,
@@ -374,10 +375,17 @@ class Tracker {
         is_custom_type,
       } = parameters;
 
+      // Always send item_name in the request URL if it exists
+      if (item_name) {
+        queryParams.item_name = item_name;
+      }
+
       // Only take one of item_id, customer_id, or item_name
       if (item_id) {
+        queryParams.item_id = item_id;
         bodyParams.item_id = item_id;
       } else if (customer_id) {
+        queryParams.item_id = customer_id;
         bodyParams.item_id = customer_id;
       } else if (item_name) {
         bodyParams.item_name = item_name;
@@ -411,7 +419,7 @@ class Tracker {
         bodyParams.display_name = display_name;
       }
 
-      const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
+      const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
       const requestMethod = 'POST';
       const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
 
