@@ -348,7 +348,7 @@ class Tracker {
    * @param {string} parameters.revenue - Revenue
    * @param {string} [parameters.item_name] - Identifier
    * @param {string} [parameters.variation_id] - Variation id
-   * @param {string} [parameters.type] - Conversion Type (default: add_to_cart)
+   * @param {string} [parameters.type] - Conversion type (default: add_to_cart)
    * @param {boolean} [parameters.is_custom_type] - Specify if it's a custom conversion type
    * @param {string} [parameters.display_name] - Display name for the custom conversion type
    * (Required if `is_custom_type` is true)
