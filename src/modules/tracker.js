@@ -403,7 +403,7 @@ class Tracker {
    * @function trackPurchase
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {array} parameters.items - List of objects of customer items returned from browse
-   * @param {string} parameters.revenue - Revenue
+   * @param {number} parameters.revenue - Revenue
    * @param {string} [parameters.order_id] - Customer unique order identifier
    * @param {string} [parameters.section] - Autocomplete section
    * @returns {(true|Error)}
