@@ -26,6 +26,7 @@ class ConstructorIO {
    * @param {function} [fetch] - If supplied, will be utilized for requests rather than default Fetch API
    * @param {number} [trackingSendDelay] - Amount of time to wait before sending tracking events (in ms)
    * @param {boolean} [sendReferrerWithTrackingEvents] - Indicates if the referrer is sent along with tracking events
+   * @param {boolean} [sendEntireURLWithTrackingEvents] - Indicates if the referrer is the entire url
    * @param {boolean} [sendTrackingEvents] - Indicates if tracking events should be dispatched
    * @param {object} [idOptions] - Options object to be supplied to 'constructorio-id' module
    * @param {object} [eventDispatcher] - Options related to 'EventDispatcher' class
@@ -51,6 +52,7 @@ class ConstructorIO {
       fetch,
       trackingSendDelay,
       sendReferrerWithTrackingEvents,
+      sendEntireURLWithTrackingEvents,
       sendTrackingEvents,
       eventDispatcher,
       idOptions,
@@ -82,6 +84,7 @@ class ConstructorIO {
       trackingSendDelay,
       sendTrackingEvents,
       sendReferrerWithTrackingEvents,
+      sendEntireURLWithTrackingEvents,
       eventDispatcher,
       beaconMode: (beaconMode === false) ? false : true, // Defaults to 'true',
     };

@@ -16,10 +16,13 @@ function applyParams(parameters, options) {
     requestMethod,
     beaconMode,
   } = options;
-  const { host, pathname } = helpers.getWindowLocation();
+  const { host, pathname, href } = helpers.getWindowLocation();
   const sendReferrerWithTrackingEvents = (options.sendReferrerWithTrackingEvents === false)
     ? false
     : true; // Defaults to 'true'
+  const sendEntireURLWithTrackingEvents = (options.sendEntireURLWithTrackingEvents === true)
+    ? true
+    : false; // Defaults to 'false'
   let aggregateParams = Object.assign(parameters);
 
   if (version) {
@@ -57,10 +60,14 @@ function applyParams(parameters, options) {
   }
 
   if (sendReferrerWithTrackingEvents && host) {
-    aggregateParams.origin_referrer = host;
+    if (sendEntireURLWithTrackingEvents && href) {
+      aggregateParams.origin_referrer = href;
+    } else {
+      aggregateParams.origin_referrer = host;
 
-    if (pathname) {
-      aggregateParams.origin_referrer += pathname;
+      if (pathname) {
+        aggregateParams.origin_referrer += pathname;
+      }
     }
   }
 
