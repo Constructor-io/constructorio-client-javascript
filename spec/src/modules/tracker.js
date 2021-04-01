@@ -1506,8 +1506,8 @@ describe('ConstructorIO - Tracker', () => {
     };
 
     const optionalParameters = {
-      variation_id: 'variation-id',
       item_name: 'item_name',
+      variation_id: 'variation-id',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -1528,7 +1528,7 @@ describe('ConstructorIO - Tracker', () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(queryParams).to.have.property('item_id').to.equal(requiredParameters.customer_id);
+        expect(queryParams).to.have.property('section').to.equal(requiredParameters.section);
         expect(requestParams).to.have.property('key');
         expect(requestParams).to.have.property('i');
         expect(requestParams).to.have.property('s');
@@ -1566,8 +1566,7 @@ describe('ConstructorIO - Tracker', () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(queryParams).to.have.property('item_id').to.equal(requiredParameters.customer_id);
-        expect(queryParams).to.have.property('item_name').to.equal(optionalParameters.item_name);
+        expect(queryParams).to.have.property('section').to.equal(requiredParameters.section);
         expect(requestParams).to.have.property('key');
         expect(requestParams).to.have.property('i');
         expect(requestParams).to.have.property('s');
@@ -1576,6 +1575,7 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.customer_id);
         expect(requestParams).to.have.property('revenue').to.equal(requiredParameters.revenue.toString());
         expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
+        expect(requestParams).to.have.property('item_name').to.equal(optionalParameters.item_name);
         expect(requestParams).to.have.property('variation_id').to.equal(optionalParameters.variation_id);
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
@@ -1835,7 +1835,7 @@ describe('ConstructorIO - Tracker', () => {
         // Response
         expect(eventSpy).to.have.been.called;
         expect(responseParams).to.have.property('method').to.equal('POST');
-        expect(responseParams).to.have.property('message').to.equal('Conversion type must be one of add_to_wishlist, add_to_cart, like, message, make_offer, read, custom. If you wish to use custom conversion types, please set is_custom_type to true and specify a display_name.');
+        expect(responseParams).to.have.property('message').to.equal('Conversion type must be one of add_to_wishlist, add_to_cart, like, message, make_offer, read. If you wish to use custom conversion types, please set is_custom_type to true and specify a display_name.');
 
         done();
       }, waitInterval);
@@ -2175,10 +2175,6 @@ describe('ConstructorIO - Tracker', () => {
         items: [
           {
             item_id: 'bad-item-id-10',
-            variation_id: '456',
-          },
-          {
-            item_id: 'bad-item-id-11',
           },
         ],
       })).to.equal(true);
@@ -2194,6 +2190,42 @@ describe('ConstructorIO - Tracker', () => {
         expect(eventSpy).to.have.been.called;
         expect(responseParams).to.have.property('method').to.equal('POST');
         expect(responseParams).to.have.property('message').to.contain('There is no item with item_id="bad-item-id-10".');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should respond with an error if beacon=true is not in the request and a non-existent item_id/variation_id is provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+        beaconMode: false,
+      });
+
+      tracker.on('error', eventSpy);
+
+      expect(tracker.trackPurchase({
+        ...requiredParameters,
+        items: [
+          {
+            item_id: 'bad-item-id-10',
+            variation_id: '456',
+          },
+        ],
+      })).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(requestParams).to.not.have.property('beacon');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.contain('There is no variation item with variation_id="456".');
 
         done();
       }, waitInterval);

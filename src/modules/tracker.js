@@ -375,19 +375,14 @@ class Tracker {
         is_custom_type,
       } = parameters;
 
-      // Always send item_name in the request URL if it exists
-      if (item_name) {
-        queryParams.item_name = item_name;
-      }
-
-      // Only take one of item_id, customer_id, or item_name
+      // Only take one of item_id or customer_id
       if (item_id) {
-        queryParams.item_id = item_id;
         bodyParams.item_id = item_id;
       } else if (customer_id) {
-        queryParams.item_id = customer_id;
         bodyParams.item_id = customer_id;
-      } else if (item_name) {
+      }
+
+      if (item_name) {
         bodyParams.item_name = item_name;
       }
 
@@ -400,6 +395,7 @@ class Tracker {
       }
 
       if (section) {
+        queryParams.section = section;
         bodyParams.section = section;
       }
 
