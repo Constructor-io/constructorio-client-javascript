@@ -78,11 +78,6 @@ function createSearchUrl(query, parameters, options) {
       queryParams.section = section;
     }
 
-    // Pull collection id from parameters
-    if (collectionId) {
-      queryParams.collection_id = collectionId;
-    }
-
     // Pull format options from parameters
     if (fmtOptions) {
       queryParams.fmt_options = fmtOptions;
