@@ -46,7 +46,7 @@ function createSearchUrl(query, parameters, options) {
   }
 
   if (parameters) {
-    const { page, resultsPerPage, filters, sortBy, sortOrder, section, collectionId, fmtOptions } = parameters;
+    const { page, resultsPerPage, filters, sortBy, sortOrder, section, fmtOptions } = parameters;
 
     // Pull page from parameters
     if (!helpers.isNil(page)) {
