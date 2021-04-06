@@ -24,13 +24,13 @@ class ConstructorIO {
    * @param {string} [sessionId] - Session id, defaults to value supplied by 'constructorio-id' module
    * @param {string} [userId] - User ID
    * @param {function} [fetch] - If supplied, will be utilized for requests rather than default Fetch API
-   * @param {number} [trackingSendDelay] - Amount of time to wait before sending tracking events (in ms)
-   * @param {boolean} [sendReferrerWithTrackingEvents] - Indicates if the referrer is sent along with tracking events
-   * @param {boolean} [sendTrackingEvents] - Indicates if tracking events should be dispatched
+   * @param {number} [trackingSendDelay=25] - Amount of time to wait before sending tracking events (in ms)
+   * @param {boolean} [sendReferrerWithTrackingEvents=true] - Indicates if the referrer is sent with tracking events
+   * @param {boolean} [sendTrackingEvents=false] - Indicates if tracking events should be dispatched
    * @param {object} [idOptions] - Options object to be supplied to 'constructorio-id' module
    * @param {object} [eventDispatcher] - Options related to 'EventDispatcher' class
-   * @param {boolean} [eventDispatcher.enabled] - Determine if events should be dispatched
-   * @param {boolean} [eventDispatcher.waitForBeacon] - Wait for beacon before dispatching events
+   * @param {boolean} [eventDispatcher.enabled=true] - Determine if events should be dispatched
+   * @param {boolean} [eventDispatcher.waitForBeacon=true] - Wait for beacon before dispatching events
    * @property {object} [search] - Interface to {@link module:search}
    * @property {object} [browse] - Interface to {@link module:browse}
    * @property {object} [autocomplete] - Interface to {@link module:autocomplete}
