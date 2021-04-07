@@ -348,10 +348,9 @@ class Tracker {
    * @param {string} parameters.revenue - Revenue
    * @param {string} [parameters.item_name] - Identifier
    * @param {string} [parameters.variation_id] - Variation id
-   * @param {string} [parameters.type] - Conversion type (default: add_to_cart)
-   * @param {boolean} [parameters.is_custom_type] - Specify if it's a custom conversion type
+   * @param {string} [parameters.type='add_to_cart'] - Conversion type
+   * @param {boolean} [parameters.is_custom_type] - Specify if type is custom conversion type
    * @param {string} [parameters.display_name] - Display name for the custom conversion type
-   * (Required if `is_custom_type` is true)
    * @param {string} [parameters.result_id] - Result id
    * @param {string} [parameters.section] - Autocomplete section
    * @returns {(true|Error)}

@@ -1775,7 +1775,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackConversion(null, requiredParameters)).to.equal(true);
     });
 
-    it('should respond with a valid response if `is_custom_type` is true, `display_name` is provided, and no `type` is specified', (done) => {
+    it('should respond with a valid response if is_custom_type is true, display_name is provided, and no type is specified', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1808,7 +1808,7 @@ describe('ConstructorIO - Tracker', () => {
       }, waitInterval);
     });
 
-    it('should respond with an error if `is_custom_type` is true, `type` is provided, and no `display_name` is specified', (done) => {
+    it('should respond with an error if is_custom_type is true, type is provided, and no display_name is specified', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
