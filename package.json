@@ -5,7 +5,7 @@
   "main": "lib/constructorio.js",
   "scripts": {
     "clean": "rm -rf node_modules",
-    "version": "npm run docs && git add ./docs/*",
+    "version": "chmod +x ./scripts/verify-node-version.sh && ./scripts/verify-node-version.sh && npm run docs && git add ./docs/*",
     "check-deps": "npm-check",
     "check-lisc": "license-checker --production --onlyAllow 'Apache-2.0;BSD-3-Clause;MIT'",
     "lint": "eslint 'src/**/*.js' 'spec/**/*.js'",
