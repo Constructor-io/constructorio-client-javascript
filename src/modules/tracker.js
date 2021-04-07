@@ -363,6 +363,7 @@ class Tracker {
       const queryParams = {};
       const bodyParams = {};
       const {
+        name,
         item_name,
         item_id,
         customer_id,
@@ -383,6 +384,8 @@ class Tracker {
 
       if (item_name) {
         bodyParams.item_name = item_name;
+      } else if (name) {
+        bodyParams.item_name = name;
       }
 
       if (variation_id) {

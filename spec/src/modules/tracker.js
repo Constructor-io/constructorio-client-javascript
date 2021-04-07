@@ -1500,7 +1500,7 @@ describe('ConstructorIO - Tracker', () => {
   describe('trackConversion', () => {
     const term = 'Where The Wild Things Are';
     const requiredParameters = {
-      customer_id: 'customer-id',
+      item_id: 'customer-id',
       revenue: 123,
       section: 'Products',
     };
@@ -1534,7 +1534,7 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.customer_id);
+        expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.item_id);
         expect(requestParams).to.have.property('revenue').to.equal(requiredParameters.revenue.toString());
         expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
@@ -1572,7 +1572,7 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.customer_id);
+        expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.item_id);
         expect(requestParams).to.have.property('revenue').to.equal(requiredParameters.revenue.toString());
         expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
         expect(requestParams).to.have.property('item_name').to.equal(optionalParameters.item_name);
@@ -1836,6 +1836,52 @@ describe('ConstructorIO - Tracker', () => {
         expect(eventSpy).to.have.been.called;
         expect(responseParams).to.have.property('method').to.equal('POST');
         expect(responseParams).to.have.property('message').to.equal('Conversion type must be one of add_to_wishlist, add_to_cart, like, message, make_offer, read. If you wish to use custom conversion types, please set is_custom_type to true and specify a display_name.');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('should support v1 endpoint arguments', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      const parameters = {
+        customer_id: 'customer-id',
+        name: 'name',
+        section: 'Products',
+        revenue: 123,
+      };
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackConversion(term, parameters)).to.equal(true);
+
+      setTimeout(() => {
+        const queryParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(queryParams).to.have.property('section').to.equal(parameters.section);
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('item_id').to.equal(parameters.customer_id);
+        expect(requestParams).to.have.property('item_name').to.equal(parameters.name);
+        expect(requestParams).to.have.property('revenue').to.equal(parameters.revenue.toString());
+        expect(requestParams).to.have.property('section').to.equal(parameters.section);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
 
         done();
       }, waitInterval);
