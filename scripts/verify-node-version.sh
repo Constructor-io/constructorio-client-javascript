@@ -1,8 +1,9 @@
 version=$(node -pe process.release.lts)
+activeLTSCodename="Fermium"
 
-if [ $version == undefined ]
+if [ $version != $activeLTSCodename ]
 then
-  echo "Node version is not LTS - please install LTS via nvm before versioning this library"
+  echo "Node version is not active LTS - please install active LTS version (\"$activeLTSCodename\") before versioning this library"
   exit 1
 else
   exit 0
