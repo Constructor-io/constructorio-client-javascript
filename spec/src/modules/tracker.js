@@ -1500,14 +1500,13 @@ describe('ConstructorIO - Tracker', () => {
   describe('trackConversion', () => {
     const term = 'Where The Wild Things Are';
     const requiredParameters = {
-      name: 'name',
-      customer_id: 'customer-id',
-      result_id: 'result-id',
+      item_id: 'customer-id',
       revenue: 123,
       section: 'Products',
     };
 
     const optionalParameters = {
+      item_name: 'item_name',
       variation_id: 'variation-id',
     };
 
@@ -1523,26 +1522,26 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackConversion(term, requiredParameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const queryParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
         const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(queryParams).to.have.property('section').to.equal(requiredParameters.section);
         expect(requestParams).to.have.property('key');
         expect(requestParams).to.have.property('i');
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('name').to.equal(requiredParameters.name);
-        expect(requestParams).to.have.property('customer_id').to.equal(requiredParameters.customer_id);
-        expect(requestParams).to.have.property('result_id').to.equal(requiredParameters.result_id);
+        expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.item_id);
         expect(requestParams).to.have.property('revenue').to.equal(requiredParameters.revenue.toString());
         expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Response
         expect(eventSpy).to.have.been.called;
-        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('method').to.equal('POST');
         expect(responseParams).to.have.property('message').to.equal('ok');
 
         done();
@@ -1561,27 +1560,28 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackConversion(term, Object.assign({}, requiredParameters, optionalParameters))).to.equal(true);
 
       setTimeout(() => {
-        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const queryParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
         const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(queryParams).to.have.property('section').to.equal(requiredParameters.section);
         expect(requestParams).to.have.property('key');
         expect(requestParams).to.have.property('i');
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('name').to.equal(requiredParameters.name);
-        expect(requestParams).to.have.property('customer_id').to.equal(requiredParameters.customer_id);
-        expect(requestParams).to.have.property('result_id').to.equal(requiredParameters.result_id);
+        expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.item_id);
         expect(requestParams).to.have.property('revenue').to.equal(requiredParameters.revenue.toString());
         expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
+        expect(requestParams).to.have.property('item_name').to.equal(optionalParameters.item_name);
         expect(requestParams).to.have.property('variation_id').to.equal(optionalParameters.variation_id);
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Response
         expect(eventSpy).to.have.been.called;
-        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('method').to.equal('POST');
         expect(responseParams).to.have.property('message').to.equal('ok');
 
         done();
@@ -1603,7 +1603,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackConversion(term, clonedParameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
         const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
         // Request
@@ -1611,7 +1611,7 @@ describe('ConstructorIO - Tracker', () => {
 
         // Response
         expect(eventSpy).to.have.been.called;
-        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('method').to.equal('POST');
         expect(responseParams).to.have.property('message').to.equal('ok');
 
         done();
@@ -1632,7 +1632,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackConversion(term, requiredParameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
         const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
         // Request
@@ -1640,7 +1640,7 @@ describe('ConstructorIO - Tracker', () => {
 
         // Response
         expect(eventSpy).to.have.been.called;
-        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('method').to.equal('POST');
         expect(responseParams).to.have.property('message').to.equal('ok');
 
         done();
@@ -1661,7 +1661,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackConversion(term, requiredParameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
         const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
         // Request
@@ -1669,7 +1669,7 @@ describe('ConstructorIO - Tracker', () => {
 
         // Response
         expect(eventSpy).to.have.been.called;
-        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('method').to.equal('POST');
         expect(responseParams).to.have.property('message').to.equal('ok');
 
         done();
@@ -1690,7 +1690,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackConversion(term, requiredParameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
         const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
         // Request
@@ -1698,7 +1698,71 @@ describe('ConstructorIO - Tracker', () => {
 
         // Response
         expect(eventSpy).to.have.been.called;
-        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should respond with a valid response when term, required parameters and conversion type are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const fullParameters = Object.assign({}, requiredParameters, {
+        type: 'add_to_wishlist',
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackConversion(term, fullParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(requestParams).to.have.property('type').to.equal(fullParameters.type);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should respond with a valid response when term, required parameters and custom conversion type are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const fullParameters = Object.assign({}, requiredParameters, {
+        type: 'add_to_loves',
+        display_name: 'Add To Loves List',
+        is_custom_type: true,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackConversion(term, fullParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(requestParams).to.have.property('type').to.equal(fullParameters.type);
+        expect(requestParams).to.have.property('is_custom_type').to.equal(fullParameters.is_custom_type);
+        expect(requestParams).to.have.property('display_name').to.equal(fullParameters.display_name);
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
         expect(responseParams).to.have.property('message').to.equal('ok');
 
         done();
@@ -1709,6 +1773,118 @@ describe('ConstructorIO - Tracker', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
       expect(tracker.trackConversion(null, requiredParameters)).to.equal(true);
+    });
+
+    it('should respond with a valid response if is_custom_type is true, display_name is provided, and no type is specified', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const fullParameters = Object.assign({}, requiredParameters, {
+        display_name: 'Add To Loves List',
+        is_custom_type: true,
+      });
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackConversion(term, fullParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(requestParams).to.have.property('display_name').to.equal(fullParameters.display_name);
+        expect(requestParams).to.have.property('is_custom_type').to.equal(fullParameters.is_custom_type);
+        expect(requestParams).to.not.have.property('type');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('should respond with an error if is_custom_type is true, type is provided, and no display_name is specified', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const fullParameters = Object.assign({}, requiredParameters, {
+        type: 'add_to_loves',
+        is_custom_type: true,
+      });
+
+      tracker.on('error', eventSpy);
+
+      expect(tracker.trackConversion(term, fullParameters)).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(requestParams).to.have.property('type').to.equal(fullParameters.type);
+        expect(requestParams).to.have.property('is_custom_type').to.equal(fullParameters.is_custom_type);
+        expect(requestParams).to.not.have.property('display_name');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('Conversion type must be one of add_to_wishlist, add_to_cart, like, message, make_offer, read. If you wish to use custom conversion types, please set is_custom_type to true and specify a display_name.');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('should support v1 endpoint arguments', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      const parameters = {
+        customer_id: 'customer-id',
+        name: 'name',
+        section: 'Products',
+        revenue: 123,
+      };
+
+      tracker.on('success', eventSpy);
+
+      expect(tracker.trackConversion(term, parameters)).to.equal(true);
+
+      setTimeout(() => {
+        const queryParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(queryParams).to.have.property('section').to.equal(parameters.section);
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('item_id').to.equal(parameters.customer_id);
+        expect(requestParams).to.have.property('item_name').to.equal(parameters.name);
+        expect(requestParams).to.have.property('revenue').to.equal(parameters.revenue.toString());
+        expect(requestParams).to.have.property('section').to.equal(parameters.section);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      }, waitInterval);
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
@@ -1736,7 +1912,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackConversion(term, requiredParameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
         const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
         // Request
@@ -1745,7 +1921,7 @@ describe('ConstructorIO - Tracker', () => {
 
         // Response
         expect(eventSpy).to.have.been.called;
-        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('method').to.equal('POST');
         expect(responseParams).to.have.property('message').to.equal('ok');
 
         done();
@@ -1765,7 +1941,7 @@ describe('ConstructorIO - Tracker', () => {
       expect(tracker.trackConversion(term, requiredParameters)).to.equal(true);
 
       setTimeout(() => {
-        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
         const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
 
         // Request
@@ -1774,7 +1950,7 @@ describe('ConstructorIO - Tracker', () => {
 
         // Response
         expect(eventSpy).to.have.been.called;
-        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('method').to.equal('POST');
         expect(responseParams).to.have.property('message').to.equal('ok');
 
         done();
@@ -2045,10 +2221,6 @@ describe('ConstructorIO - Tracker', () => {
         items: [
           {
             item_id: 'bad-item-id-10',
-            variation_id: '456',
-          },
-          {
-            item_id: 'bad-item-id-11',
           },
         ],
       })).to.equal(true);
@@ -2064,6 +2236,42 @@ describe('ConstructorIO - Tracker', () => {
         expect(eventSpy).to.have.been.called;
         expect(responseParams).to.have.property('method').to.equal('POST');
         expect(responseParams).to.have.property('message').to.contain('There is no item with item_id="bad-item-id-10".');
+
+        done();
+      }, waitInterval);
+    });
+
+    it('Should respond with an error if beacon=true is not in the request and a non-existent item_id/variation_id is provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+        beaconMode: false,
+      });
+
+      tracker.on('error', eventSpy);
+
+      expect(tracker.trackPurchase({
+        ...requiredParameters,
+        items: [
+          {
+            item_id: 'bad-item-id-10',
+            variation_id: '456',
+          },
+        ],
+      })).to.equal(true);
+
+      setTimeout(() => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const responseParams = helpers.extractResponseParamsFromListener(eventSpy);
+
+        // Request
+        expect(requestParams).to.not.have.property('beacon');
+
+        // Response
+        expect(eventSpy).to.have.been.called;
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.contain('There is no variation item with variation_id="456".');
 
         done();
       }, waitInterval);

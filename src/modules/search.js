@@ -46,7 +46,7 @@ function createSearchUrl(query, parameters, options) {
   }
 
   if (parameters) {
-    const { page, resultsPerPage, filters, sortBy, sortOrder, section, collectionId, fmtOptions } = parameters;
+    const { page, resultsPerPage, filters, sortBy, sortOrder, section, fmtOptions } = parameters;
 
     // Pull page from parameters
     if (!helpers.isNil(page)) {
@@ -76,11 +76,6 @@ function createSearchUrl(query, parameters, options) {
     // Pull section from parameters
     if (section) {
       queryParams.section = section;
-    }
-
-    // Pull collection id from parameters
-    if (collectionId) {
-      queryParams.collection_id = collectionId;
     }
 
     // Pull format options from parameters
