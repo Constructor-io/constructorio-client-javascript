@@ -30,6 +30,7 @@ describe('ConstructorIO', () => {
     expect(instance.options).to.have.property('clientId');
     expect(instance.options).to.have.property('sessionId');
     expect(instance).to.have.property('search');
+    expect(instance).to.have.property('browse');
     expect(instance).to.have.property('autocomplete');
     expect(instance).to.have.property('recommendations');
     expect(instance).to.have.property('tracker');

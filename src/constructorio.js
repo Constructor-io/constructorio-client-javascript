@@ -21,10 +21,10 @@ class ConstructorIO {
    * @param {array} [segments] - User segments
    * @param {object} [testCells] - User test cells
    * @param {string} [clientId] - Client ID, defaults to value supplied by 'constructorio-id' module
-   * @param {string} [sessionId] - Session id, defaults to value supplied by 'constructorio-id' module
+   * @param {string} [sessionId] - Session ID, defaults to value supplied by 'constructorio-id' module
    * @param {string} [userId] - User ID
    * @param {function} [fetch] - If supplied, will be utilized for requests rather than default Fetch API
-   * @param {number} [trackingSendDelay=25] - Amount of time to wait before sending tracking events (in ms)
+   * @param {number} [trackingSendDelay=150] - Amount of time to wait before sending tracking events (in ms)
    * @param {boolean} [sendReferrerWithTrackingEvents=true] - Indicates if the referrer is sent with tracking events
    * @param {boolean} [sendTrackingEvents=false] - Indicates if tracking events should be dispatched
    * @param {object} [idOptions] - Options object to be supplied to 'constructorio-id' module
