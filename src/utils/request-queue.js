@@ -126,7 +126,7 @@ class RequestQueue {
             });
           }
         }
-      }, (this.options && this.options.trackingSendDelay) || 150);
+      }, (this.options && this.options.trackingSendDelay) || 250);
     }
   }
 
