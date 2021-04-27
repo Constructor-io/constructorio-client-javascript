@@ -110,6 +110,7 @@ class Tracker {
    *
    * @function trackInputFocus
    * @returns {(true|Error)}
+   * @description User focused on search input element
    */
   trackInputFocus() {
     const url = `${this.options.serviceUrl}/behavior?`;
@@ -134,6 +135,7 @@ class Tracker {
    * @param {string} [parameters.group_id] - Group identifier of selected item
    * @param {string} [parameters.display_name] - Display name of group of selected item
    * @returns {(true|Error)}
+   * @description User selected (clicked, or navigated to via keyboard) a result that appeared within autocomplete
    */
   trackAutocompleteSelect(term, parameters) {
     // Ensure term is provided (required)
@@ -202,6 +204,7 @@ class Tracker {
    * @param {string} [parameters.group_id] - Group identifier of selected item
    * @param {string} [parameters.display_name] - Display name of group of selected item
    * @returns {(true|Error)}
+   * @description User submitted a search from a search form (pressing enter from input element, or clicking submit element)
    */
   trackSearchSubmit(term, parameters) {
     // Ensure term is provided (required)
@@ -252,6 +255,7 @@ class Tracker {
    * @param {number} parameters.num_results - Number of search results in total
    * @param {array} [parameters.customer_ids] - List of customer item id's returned from search
    * @returns {(true|Error)}
+   * @description User loaded a search product listing page
    */
   trackSearchResultsLoaded(term, parameters) {
     // Ensure term is provided (required)
@@ -296,6 +300,7 @@ class Tracker {
    * @param {string} parameters.customer_id - Customer id
    * @param {string} [parameters.result_id] - Result id
    * @returns {(true|Error)}
+   * @description User clicked a result that appeared within a search product listing page
    */
   trackSearchResultClick(term, parameters) {
     // Ensure term is provided (required)
@@ -354,6 +359,7 @@ class Tracker {
    * @param {string} [parameters.result_id] - Result id
    * @param {string} [parameters.section] - Autocomplete section
    * @returns {(true|Error)}
+   * @description User performed an action indicating interest in an item (add to cart, add to wishlist, etc.)
    */
   trackConversion(term, parameters) {
     // Ensure parameters are provided (required)
@@ -446,6 +452,7 @@ class Tracker {
    * @param {string} [parameters.order_id] - Customer unique order identifier
    * @param {string} [parameters.section] - Autocomplete section
    * @returns {(true|Error)}
+   * @description User completed an order (usually fired on order confirmation page)
    */
   trackPurchase(parameters) {
     // Ensure parameters are provided (required)
@@ -513,6 +520,7 @@ class Tracker {
    * @param {string} parameters.pod_id - Pod identifier
    * @param {number} parameters.num_results_viewed - Number of results viewed
    * @returns {(true|Error)}
+   * @description User clicked a result that appeared within a search product listing page
    */
   trackRecommendationView(parameters) {
     // Ensure parameters are provided (required)
@@ -594,6 +602,7 @@ class Tracker {
    * @param {string} parameters.strategy_id - Strategy identifier
    * @param {string} parameters.item_id - Identifier of clicked item
    * @returns {(true|Error)}
+   * @description User clicked an item that appeared within a list of recommended results
    */
   trackRecommendationClick(parameters) {
     // Ensure parameters are provided (required)
@@ -691,6 +700,7 @@ class Tracker {
    * @param {string} parameters.filter_name - Filter name
    * @param {string} parameters.filter_value - Filter value
    * @returns {(true|Error)}
+   * @description User loaded a browse product listing page
    */
   trackBrowseResultsLoaded(parameters) {
     // Ensure parameters are provided (required)
@@ -793,6 +803,7 @@ class Tracker {
    * @param {string} parameters.filter_value - Filter value
    * @param {string} parameters.item_id - ID of clicked item
    * @returns {(true|Error)}
+   * @description User clicked a result that appeared within a browse product listing page
    */
   trackBrowseResultClick(parameters) {
     // Ensure parameters are provided (required)
