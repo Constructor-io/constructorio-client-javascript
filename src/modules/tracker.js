@@ -204,7 +204,7 @@ class Tracker {
    * @param {string} [parameters.group_id] - Group identifier of selected item
    * @param {string} [parameters.display_name] - Display name of group of selected item
    * @returns {(true|Error)}
-   * @description User submitted a search from a search form (pressing enter from input element, or clicking submit element)
+   * @description User submitted a search (pressing enter within input element, or clicking submit element)
    */
   trackSearchSubmit(term, parameters) {
     // Ensure term is provided (required)
