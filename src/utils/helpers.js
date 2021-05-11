@@ -8,7 +8,7 @@ const purchaseEventStorageKey = '_constructorio_purchase_order_ids';
 const utils = {
   ourEncodeURIComponent: (str) => {
     if (str) {
-      const parsedStrObj = qs.parse(`s=${str.replace(/&/g, '%26')}`);
+      const parsedStrObj = qs.parse(`s=${encodeURIComponent(str)}`);
 
       parsedStrObj.s = parsedStrObj.s.replace(/\s/g, ' ');
 
