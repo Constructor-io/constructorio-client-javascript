@@ -463,12 +463,14 @@ class Tracker {
       const { items, revenue, order_id, section } = parameters;
 
       if (order_id) {
-        // Don't send another purchase event if we have already tracked the order
-        if (helpers.hasOrderIdRecord(order_id)) {
-          return false;
-        }
+        if (this.options.removePurchaseDuplication) {
+          // Don't send another purchase event if we have already tracked the order
+          if (helpers.hasOrderIdRecord(order_id)) {
+            return false;
+          }
 
-        helpers.addOrderIdRecord(order_id);
+          helpers.addOrderIdRecord(order_id);
+        }
 
         // Add order_id to the tracking params
         bodyParams.order_id = order_id;
