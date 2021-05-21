@@ -185,10 +185,10 @@ class Browse {
   }
 
   /**
-   * Retrieve browse results from API using item IDs
+   * Retrieve browse results from API using item id's
    *
    * @function getBrowseResultsByItemIds
-   * @param {string[]} itemIds - IDs to display results from
+   * @param {string[]} itemIds - Item id's of results to fetch
    * @param {object} [parameters] - Additional parameters to refine result set
    * @param {number} [parameters.page] - The page number of the results
    * @param {number} [parameters.resultsPerPage] - The number of results per page to return
