@@ -317,6 +317,7 @@ describe('ConstructorIO - Browse', () => {
         expect(customEventDetails).to.have.property('request').to.be.an('object');
         expect(customEventDetails).to.have.property('response').to.be.an('object');
         expect(customEventDetails).to.have.property('result_id').to.be.an('string');
+        customEventSpy.restore();
         done();
       }, false);
 
@@ -405,6 +406,304 @@ describe('ConstructorIO - Browse', () => {
       const { browse } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
 
       return expect(browse.getBrowseResults(filterName, filterValue)).to.eventually.be.rejected;
+    });
+  });
+
+  describe('getBrowseResultsByItemIds', () => {
+    const ids = ['fc00a355-1e91-49a1-b6c6-c8c74c50259d', '1f32b500-f397-4faa-90e0-4c4625b3e3b5'];
+
+    it('Should return a response with valid ids', (done) => {
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResultsByItemIds(ids).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.response).to.have.property('results').to.be.an('array');
+        expect(fetchSpy).to.have.been.called;
+        expect(requestedUrlParams).to.have.property('key');
+        expect(requestedUrlParams).to.have.property('i');
+        expect(requestedUrlParams).to.have.property('s');
+        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestedUrlParams).to.have.property('_dt');
+        done();
+      });
+    });
+
+    it('Should return a response with valid ids and testCells', (done) => {
+      const testCells = { foo: 'bar' };
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        testCells,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResultsByItemIds(ids).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request).to.have.property(`ef-${Object.keys(testCells)[0]}`).to.equal(Object.values(testCells)[0]);
+        expect(requestedUrlParams).to.have.property(`ef-${Object.keys(testCells)[0]}`).to.equal(Object.values(testCells)[0]);
+        done();
+      });
+    });
+
+    it('Should return a response with valid ids and segments', (done) => {
+      const segments = ['foo', 'bar'];
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        segments,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResultsByItemIds(ids).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+        done();
+      });
+    });
+
+    it('Should return a response with valid ids and user id', (done) => {
+      const userId = 'user-id';
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        userId,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResultsByItemIds(ids).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        done();
+      });
+    });
+
+    it('Should return a response with valid ids and page', (done) => {
+      const page = 1;
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResultsByItemIds(ids, { page }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.page).to.equal(page);
+        expect(requestedUrlParams).to.have.property('page').to.equal(page.toString());
+        done();
+      });
+    });
+
+    it('Should return a response with valid ids and resultsPerPage', (done) => {
+      const resultsPerPage = 2;
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResultsByItemIds(ids, { resultsPerPage }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.num_results_per_page).to.equal(resultsPerPage);
+        expect(res.response).to.have.property('results').to.be.an('array');
+        expect(requestedUrlParams).to.have.property('num_results_per_page').to.equal(resultsPerPage.toString());
+        done();
+      });
+    });
+
+    it('Should return a response with valid ids and additional filters', (done) => {
+      const filters = { keywords: ['battery-powered'] };
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResultsByItemIds(ids, { filters }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.filters).to.deep.equal(filters);
+        expect(requestedUrlParams).to.have.property('filters');
+        expect(requestedUrlParams.filters).to.have.property('keywords').to.equal(Object.values(filters)[0][0]);
+        done();
+      });
+    });
+
+    it('Should return a response with valid ids and additional fmtOptions', (done) => {
+      const fmtOptions = { groups_max_depth: 2, groups_start: 'current' };
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResultsByItemIds(ids, { fmtOptions }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.fmt_options).to.deep.equal(fmtOptions);
+        expect(requestedUrlParams).to.have.property('fmt_options');
+        expect(requestedUrlParams.fmt_options).to.have.property('groups_max_depth').to.equal(Object.values(fmtOptions)[0].toString());
+        expect(requestedUrlParams.fmt_options).to.have.property('groups_start').to.equal(Object.values(fmtOptions)[1]);
+        done();
+      });
+    });
+
+    it('Should return a response with valid ids and section', (done) => {
+      const section = 'Products';
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResultsByItemIds(ids, { section }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.section).to.equal(section);
+        expect(requestedUrlParams).to.have.property('section').to.equal(section);
+        done();
+      });
+    });
+
+    it('Should return a response with valid ids with a result_id appended to each result', (done) => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      browse.getBrowseResultsByItemIds(ids).then((res) => {
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.response).to.have.property('results').to.be.an('array');
+        res.response.results.forEach((result) => {
+          expect(result).to.have.property('result_id').to.be.a('string').to.equal(res.result_id);
+        });
+        done();
+      });
+    });
+
+    it('Should emit an event with response data', (done) => {
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        eventDispatcher: {
+          waitForBeacon: false,
+        },
+      });
+      const customEventSpy = sinon.spy(window, 'CustomEvent');
+      const eventName = 'cio.client.browse.getBrowseResultsByItemIds.completed';
+
+      // Note: `CustomEvent` in Node context not containing `detail`, so checking arguments instead
+      window.addEventListener(eventName, () => {
+        const customEventSpyArgs = customEventSpy.getCall(0).args;
+        const { detail: customEventDetails } = customEventSpyArgs[1];
+
+        expect(customEventSpy).to.have.been.called;
+        expect(customEventSpyArgs[0]).to.equal(eventName);
+        expect(customEventDetails).to.have.property('request').to.be.an('object');
+        expect(customEventDetails).to.have.property('response').to.be.an('object');
+        expect(customEventDetails).to.have.property('result_id').to.be.an('string');
+        customEventSpy.restore();
+        done();
+      }, false);
+
+      browse.getBrowseResultsByItemIds(ids);
+    });
+
+    it('Should be rejected when invalid ids are provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseResultsByItemIds('invalid-ids')).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected when no ids are provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseResultsByItemIds(null)).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected when empty ids array id provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseResultsByItemIds([])).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected when invalid page parameter is provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseResultsByItemIds(ids, {
+        page: 'abc',
+      })).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected when invalid resultsPerPage parameter is provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseResultsByItemIds(ids, {
+        resultsPerPage: 'abc',
+      })).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected when invalid filters parameter is provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseResultsByItemIds(ids, {
+        filters: 123,
+      })).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected when invalid sortBy parameter is provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseResultsByItemIds(ids, {
+        sortBy: { foo: 'bar' },
+      })).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected when invalid sortOrder parameter is provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseResultsByItemIds(ids, {
+        sortOrder: 'abc',
+      })).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected when invalid section parameter is provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseResultsByItemIds(ids, {
+        section: 123,
+      })).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected when invalid apiKey is provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
+
+      return expect(browse.getBrowseResultsByItemIds(ids)).to.eventually.be.rejected;
     });
   });
 });
