@@ -85,9 +85,7 @@ function createQueryParams(parameters, options) {
 
 // Create URL from supplied filter name, value and parameters
 function createBrowseUrlFromFilter(filterName, filterValue, parameters, options) {
-  const {
-    serviceUrl,
-  } = options;
+  const { serviceUrl } = options;
 
   // Validate filter name is provided
   if (!filterName || typeof filterName !== 'string') {
@@ -105,14 +103,12 @@ function createBrowseUrlFromFilter(filterName, filterValue, parameters, options)
   return `${serviceUrl}/browse/${encodeURIComponent(filterName)}/${encodeURIComponent(filterValue)}?${queryString}`;
 }
 
-// Create URL from supplied ids
+// Create URL from supplied id's
 function createBrowseUrlFromIDs(ids, parameters, options) {
-  const {
-    serviceUrl,
-  } = options;
+  const { serviceUrl } = options;
 
-  // Validate filter name is provided
-  if (!ids || !(ids instanceof Array)) {
+  // Validate id's are provided
+  if (!ids || !(ids instanceof Array) || !ids.length) {
     throw new Error('ids is a required parameter of type array');
   }
 

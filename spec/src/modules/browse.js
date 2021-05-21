@@ -634,16 +634,22 @@ describe('ConstructorIO - Browse', () => {
       browse.getBrowseResultsByItemIds(ids);
     });
 
-    it('Should be rejected when invalid ids is provided', () => {
+    it('Should be rejected when invalid ids are provided', () => {
       const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(browse.getBrowseResultsByItemIds('invalid-ids')).to.eventually.be.rejected;
     });
 
-    it('Should be rejected when no ids is provided', () => {
+    it('Should be rejected when no ids are provided', () => {
       const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(browse.getBrowseResultsByItemIds(null)).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected when empty ids array id provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseResultsByItemIds([])).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid page parameter is provided', () => {
