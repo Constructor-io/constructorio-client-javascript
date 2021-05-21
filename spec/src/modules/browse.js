@@ -409,7 +409,6 @@ describe('ConstructorIO - Browse', () => {
     });
   });
 
-
   describe('getBrowseResultsByItemIds', () => {
     const ids = ['fc00a355-1e91-49a1-b6c6-c8c74c50259d', '1f32b500-f397-4faa-90e0-4c4625b3e3b5'];
 
