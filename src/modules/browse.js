@@ -5,12 +5,11 @@ const Promise = require('es6-promise');
 const EventDispatcher = require('../utils/event-dispatcher');
 const helpers = require('../utils/helpers');
 
-// Create URL from supplied filter name, value and parameters
-function createBrowseUrl(filterName, filterValue, parameters, options) {
+// Create query params from parameters and options
+function createQueryParams(parameters, options) {
   const {
     apiKey,
     version,
-    serviceUrl,
     sessionId,
     clientId,
     userId,
@@ -22,16 +21,6 @@ function createBrowseUrl(filterName, filterValue, parameters, options) {
   queryParams.key = apiKey;
   queryParams.i = clientId;
   queryParams.s = sessionId;
-
-  // Validate filter name is provided
-  if (!filterName || typeof filterName !== 'string') {
-    throw new Error('filterName is a required parameter of type string');
-  }
-
-  // Validate filter value is provided
-  if (!filterValue || typeof filterValue !== 'string') {
-    throw new Error('filterValue is a required parameter of type string');
-  }
 
   // Pull test cells from options
   if (testCells) {
@@ -91,9 +80,46 @@ function createBrowseUrl(filterName, filterValue, parameters, options) {
   queryParams._dt = Date.now();
   queryParams = helpers.cleanParams(queryParams);
 
+  return queryParams;
+}
+
+// Create URL from supplied filter name, value and parameters
+function createBrowseUrlFromFilter(filterName, filterValue, parameters, options) {
+  const {
+    serviceUrl,
+  } = options;
+
+  // Validate filter name is provided
+  if (!filterName || typeof filterName !== 'string') {
+    throw new Error('filterName is a required parameter of type string');
+  }
+
+  // Validate filter value is provided
+  if (!filterValue || typeof filterValue !== 'string') {
+    throw new Error('filterValue is a required parameter of type string');
+  }
+
+  const queryParams = createQueryParams(parameters, options);
   const queryString = qs.stringify(queryParams, { indices: false });
 
   return `${serviceUrl}/browse/${encodeURIComponent(filterName)}/${encodeURIComponent(filterValue)}?${queryString}`;
+}
+
+// Create URL from supplied ids
+function createBrowseUrlFromIDs(ids, parameters, options) {
+  const {
+    serviceUrl,
+  } = options;
+
+  // Validate filter name is provided
+  if (!ids || !(ids instanceof Array)) {
+    throw new Error('ids is a required parameter of type array');
+  }
+
+  const queryParams = { ...createQueryParams(parameters, options), ids };
+  const queryString = qs.stringify(queryParams, { indices: false });
+
+  return `${serviceUrl}/browse/items?${queryString}`;
 }
 
 /**
@@ -130,7 +156,7 @@ class Browse {
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
 
     try {
-      requestUrl = createBrowseUrl(filterName, filterValue, parameters, this.options);
+      requestUrl = createBrowseUrlFromFilter(filterName, filterValue, parameters, this.options);
     } catch (e) {
       return Promise.reject(e);
     }
@@ -159,6 +185,58 @@ class Browse {
         }
 
         throw new Error('getBrowseResults response data is malformed');
+      });
+  }
+
+  /**
+   * Retrieve browse results from API using item IDs
+   *
+   * @function getBrowseResultsByItemIds
+   * @param {string[]} ids - IDs to display results from
+   * @param {object} [parameters] - Additional parameters to refine result set
+   * @param {number} [parameters.page] - The page number of the results
+   * @param {number} [parameters.resultsPerPage] - The number of results per page to return
+   * @param {object} [parameters.filters] - Filters used to refine results
+   * @param {string} [parameters.sortBy='relevance'] - The sort method for results
+   * @param {string} [parameters.sortOrder='descending'] - The sort order for results
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
+   * @returns {Promise}
+   * @see https://docs.constructor.io/rest_api/browse/items/
+   */
+  getBrowseResultsByItemIds(ids, parameters) {
+    let requestUrl;
+    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+
+    try {
+      requestUrl = createBrowseUrlFromIDs(ids, parameters, this.options);
+    } catch (e) {
+      return Promise.reject(e);
+    }
+
+    return fetch(requestUrl)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+
+        return helpers.throwHttpErrorFromResponse(new Error(), response);
+      })
+      .then((json) => {
+        if (json.response && json.response.results) {
+          if (json.result_id) {
+            // Append `result_id` to each result item
+            json.response.results.forEach((result) => {
+              // eslint-disable-next-line no-param-reassign
+              result.result_id = json.result_id;
+            });
+          }
+
+          this.eventDispatcher.queue('browse.getBrowseResultsByItemIds.completed', json);
+
+          return json;
+        }
+
+        throw new Error('getBrowseResultsByItemIds response data is malformed');
       });
   }
 }
