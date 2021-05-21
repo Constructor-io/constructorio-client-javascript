@@ -192,7 +192,7 @@ class Browse {
    * Retrieve browse results from API using item IDs
    *
    * @function getBrowseResultsByItemIds
-   * @param {string[]} ids - IDs to display results from
+   * @param {string[]} itemIds - IDs to display results from
    * @param {object} [parameters] - Additional parameters to refine result set
    * @param {number} [parameters.page] - The page number of the results
    * @param {number} [parameters.resultsPerPage] - The number of results per page to return
@@ -203,12 +203,12 @@ class Browse {
    * @returns {Promise}
    * @see https://docs.constructor.io/rest_api/browse/items/
    */
-  getBrowseResultsByItemIds(ids, parameters) {
+  getBrowseResultsByItemIds(itemIds, parameters) {
     let requestUrl;
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
 
     try {
-      requestUrl = createBrowseUrlFromIDs(ids, parameters, this.options);
+      requestUrl = createBrowseUrlFromIDs(itemIds, parameters, this.options);
     } catch (e) {
       return Promise.reject(e);
     }
