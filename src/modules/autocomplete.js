@@ -91,9 +91,10 @@ class Autocomplete {
    * Retrieve autocomplete results from API
    *
    * @function getAutocompleteResults
+   * @description Retrieve autocomplete results from Constructor.io API
    * @param {object} [parameters] - Additional parameters to refine result set
    * @param {number} [parameters.numResults] - The total number of results to return
-   * @param {object} [parameters.filters] - Filters used to refine search
+   * @param {object} [parameters.filters] - Key / value mapping (dictionary) of filters used to refine results
    * @param {object} [parameters.resultsPerSection] - Number of results to return (value) per section (key)
    * @returns {Promise}
    * @see https://docs.constructor.io/rest-api.html#autocomplete

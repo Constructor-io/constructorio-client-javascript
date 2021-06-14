@@ -82,13 +82,14 @@ class Recommendations {
    * Get recommendations for supplied pod identifier
    *
    * @function getRecommendations
+   * @description Retrieve recommendation results from Constructor.io API
    * @param {string} podId - Pod identifier
    * @param {object} [parameters] - Additional parameters to refine results
    * @param {string|array} [parameters.itemIds] - Item ID(s) to retrieve recommendations for (strategy specific)
    * @param {number} [parameters.numResults] - The number of results to return
    * @param {string} [parameters.section] - The section to return results from
    * @param {string} [parameters.term] - The term to use to refine results (strategy specific)
-   * @param {object} [parameters.filters] - Filters used to refine results (strategy specific)
+   * @param {object} [parameters.filters] - Key / value mapping (dictionary) of filters used to refine results (strategy specific)
    * @returns {Promise}
    * @see https://docs.constructor.io
    */

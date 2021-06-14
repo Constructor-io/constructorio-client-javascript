@@ -109,11 +109,12 @@ class Search {
    * Retrieve search results from API
    *
    * @function getSearchResults
+   * @description Retrieve search results from Constructor.io API
    * @param {string} query - Term to use to perform a search
    * @param {object} [parameters] - Additional parameters to refine result set
    * @param {number} [parameters.page] - The page number of the results
    * @param {number} [parameters.resultsPerPage] - The number of results per page to return
-   * @param {object} [parameters.filters] - Filters used to refine search
+   * @param {object} [parameters.filters] - Key / value mapping (dictionary) of filters used to refine results
    * @param {string} [parameters.sortBy='relevance'] - The sort method for results
    * @param {string} [parameters.sortOrder='descending'] - The sort order for results
    * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
