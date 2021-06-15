@@ -2680,7 +2680,7 @@ describe('ConstructorIO - Tracker', () => {
   });
 
   describe('trackRecommendationClick', () => {
-    // Note: `variation_id` parameter not being passed as none are defined
+    // Note: `variation_id` parameter not being passed as none are defined for this item_id in catalog
     const requiredParameters = {
       pod_id: 'test_pod_id',
       strategy_id: 'strategy-id',
@@ -3314,7 +3314,7 @@ describe('ConstructorIO - Tracker', () => {
   });
 
   describe('trackBrowseResultClick', () => {
-    // Note: `variation_id` parameter not being passed as none are defined
+    // Note: `variation_id` parameter not being passed as none are defined for this item_id in catalog
     const requiredParameters = {
       item_id: 'product0dbae320-3950-11ea-9251-8dee6d0eb3cd-new',
       filter_name: 'group_id',
@@ -3669,7 +3669,7 @@ describe('ConstructorIO - Tracker', () => {
 
 
   describe('trackGenericResultClick', () => {
-    // Note: `variation_id` parameter not being passed as none are defined
+    // Note: `variation_id` parameter not being passed as none are defined for this item_id in catalog
     const requiredParameters = {
       item_id: 'product0dbae320-3950-11ea-9251-8dee6d0eb3cd-new',
     };
