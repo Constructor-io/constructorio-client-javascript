@@ -206,6 +206,12 @@ class Browse {
    * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
    * @returns {Promise}
    * @see https://docs.constructor.io/rest_api/browse/items/
+   * @example
+   * constructorio.browse.getBrowseResultsByItemIds(['shirt-123', 'shirt-456', 'shirt-789'], {
+   *     filters: {
+   *         size: 'medium'
+   *     },
+   * });
    */
   getBrowseResultsByItemIds(itemIds, parameters) {
     let requestUrl;
