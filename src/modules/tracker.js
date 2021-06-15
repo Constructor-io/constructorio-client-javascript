@@ -890,6 +890,60 @@ class Tracker {
   }
 
   /**
+   * Send generic result click event to API
+   *
+   * @function trackGenericResultClick
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.item_id - ID of clicked item
+   * @param {string} [parameters.item_name] - Name of clicked item
+   * @param {string} [parameters.variation_id] - Variation ID of clicked item
+   * @param {string} [parameters.section="Products"] - Results section
+   * @returns {(true|Error)}
+   * @description User clicked a result that appeared within a browse product listing page
+   */
+  trackGenericResultClick(parameters) {
+    // Ensure required parameters are provided
+    if (typeof parameters === 'object' && !!parameters.item_id) {
+      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/result_click?`;
+      const bodyParams = {};
+      const {
+        item_id,
+        item_name,
+        variation_id,
+        section,
+      } = parameters;
+
+      bodyParams.section = section || 'Products';
+      bodyParams.item_id = item_id;
+
+      if (item_name) {
+        bodyParams.item_name = item_name;
+      }
+
+      if (variation_id) {
+        bodyParams.variation_id = variation_id;
+      }
+
+      const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
+
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+      );
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('A parameters object with an "item_id" property is required.');
+  }
+
+  /**
    * Subscribe to success or error messages emitted by tracking requests
    *
    * @function on
