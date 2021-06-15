@@ -146,7 +146,14 @@ class Browse {
    * @param {string} [parameters.sortOrder='descending'] - The sort order for results
    * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
    * @returns {Promise}
-   * @see https://docs.constructor.io
+   * @see https://docs.constructor.io/rest_api/browse/
+   * @example
+   * constructorio.browse.getBrowseResults('group_id', 't-shirts', {
+   *     resultsPerPage: 40,
+   *     filters: {
+   *         size: 'medium'
+   *     },
+   * });
    */
   getBrowseResults(filterName, filterValue, parameters) {
     let requestUrl;

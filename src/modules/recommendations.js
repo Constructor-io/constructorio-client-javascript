@@ -91,7 +91,14 @@ class Recommendations {
    * @param {string} [parameters.term] - The term to use to refine results (strategy specific)
    * @param {object} [parameters.filters] - Key / value mapping (dictionary) of filters used to refine results (strategy specific)
    * @returns {Promise}
-   * @see https://docs.constructor.io
+   * @see https://docs.constructor.io/rest_api/recommendations
+   * @example
+   * constructorio.recommendations.getRecommendations('t-shirt-best-sellers', {
+   *     numResults: 5,
+   *     filters: {
+   *         size: 'medium'
+   *     },
+   * });
    */
   getRecommendations(podId, parameters) {
     let requestUrl;

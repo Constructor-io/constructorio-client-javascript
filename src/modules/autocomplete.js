@@ -92,12 +92,23 @@ class Autocomplete {
    *
    * @function getAutocompleteResults
    * @description Retrieve autocomplete results from Constructor.io API
+   * @param {string} query - Term to use to perform an autocomplete search
    * @param {object} [parameters] - Additional parameters to refine result set
    * @param {number} [parameters.numResults] - The total number of results to return
    * @param {object} [parameters.filters] - Key / value mapping (dictionary) of filters used to refine results
    * @param {object} [parameters.resultsPerSection] - Number of results to return (value) per section (key)
    * @returns {Promise}
-   * @see https://docs.constructor.io/rest-api.html#autocomplete
+   * @see https://docs.constructor.io/rest_api/autocomplete_queries
+   * @example
+   * constructorio.autocomplete.getAutocompleteResults('t-shirt', {
+   *     resultsPerSection: {
+   *         Products: 5,
+   *         'Search Suggestions': 10,
+   *     },
+   *     filters: {
+   *         size: 'medium'
+   *     },
+   * });
    */
   getAutocompleteResults(query, parameters) {
     let requestUrl;

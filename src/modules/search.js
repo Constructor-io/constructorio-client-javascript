@@ -119,7 +119,14 @@ class Search {
    * @param {string} [parameters.sortOrder='descending'] - The sort order for results
    * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
    * @returns {Promise}
-   * @see https://docs.constructor.io/rest-api.html#search
+   * @see https://docs.constructor.io/rest_api/search/
+   * @example
+   * constructorio.search.getSearchResults('t-shirt', {
+   *     resultsPerPage: 40,
+   *     filters: {
+   *         size: 'medium'
+   *     },
+   * });
    */
   getSearchResults(query, parameters) {
     let requestUrl;
