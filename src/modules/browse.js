@@ -135,17 +135,25 @@ class Browse {
    * Retrieve browse results from API
    *
    * @function getBrowseResults
+   * @description Retrieve browse results from Constructor.io API
    * @param {string} filterName - Filter name to display results from
    * @param {string} filterValue - Filter value to display results from
    * @param {object} [parameters] - Additional parameters to refine result set
    * @param {number} [parameters.page] - The page number of the results
    * @param {number} [parameters.resultsPerPage] - The number of results per page to return
-   * @param {object} [parameters.filters] - Filters used to refine results
+   * @param {object} [parameters.filters] - Key / value mapping (dictionary) of filters used to refine results
    * @param {string} [parameters.sortBy='relevance'] - The sort method for results
    * @param {string} [parameters.sortOrder='descending'] - The sort order for results
    * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
    * @returns {Promise}
-   * @see https://docs.constructor.io
+   * @see https://docs.constructor.io/rest_api/browse/
+   * @example
+   * constructorio.browse.getBrowseResults('group_id', 't-shirts', {
+   *     resultsPerPage: 40,
+   *     filters: {
+   *         size: 'medium'
+   *     },
+   * });
    */
   getBrowseResults(filterName, filterValue, parameters) {
     let requestUrl;
@@ -198,6 +206,12 @@ class Browse {
    * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
    * @returns {Promise}
    * @see https://docs.constructor.io/rest_api/browse/items/
+   * @example
+   * constructorio.browse.getBrowseResultsByItemIds(['shirt-123', 'shirt-456', 'shirt-789'], {
+   *     filters: {
+   *         size: 'medium'
+   *     },
+   * });
    */
   getBrowseResultsByItemIds(itemIds, parameters) {
     let requestUrl;
