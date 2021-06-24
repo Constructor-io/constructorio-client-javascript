@@ -23,6 +23,10 @@ describe('ConstructorIO - Utils - Request Queue', () => {
   describe('queue', () => {
     let defaultAgent;
 
+    before(() => {
+      helpers.clearStorage();
+    });
+
     beforeEach(() => {
       global.CLIENT_VERSION = 'cio-mocha';
       helpers.setupDOM();
