@@ -17,7 +17,7 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 dotenv.config();
 
-const delayBetweenTests = 250;
+const delayBetweenTests = 25;
 const testApiKey = process.env.TEST_API_KEY;
 const { fetch } = fetchPonyfill({ Promise });
 
