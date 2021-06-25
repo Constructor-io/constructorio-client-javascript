@@ -14,13 +14,18 @@ dotenv.config();
 
 describe('ConstructorIO - Utils - Request Queue', () => {
   const storageKey = '_constructorio_requests';
-  const waitInterval = 700;
+  const waitInterval = 1000;
   const requestQueueOptions = {
     sendTrackingEvents: true,
+    trackingSendDelay: 1,
   };
 
   describe('queue', () => {
     let defaultAgent;
+
+    before(() => {
+      helpers.clearStorage();
+    });
 
     beforeEach(() => {
       global.CLIENT_VERSION = 'cio-mocha';
