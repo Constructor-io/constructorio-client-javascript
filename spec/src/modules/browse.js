@@ -706,4 +706,81 @@ describe('ConstructorIO - Browse', () => {
       return expect(browse.getBrowseResultsByItemIds(ids)).to.eventually.be.rejected;
     });
   });
+
+
+  describe('getBrowseGroups', () => {
+    it('Should return a response without any parameters', (done) => {
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseGroups().then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.response).to.have.property('groups').to.be.an('array');
+        expect(fetchSpy).to.have.been.called;
+        expect(requestedUrlParams).to.have.property('key');
+        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
+        done();
+      });
+    });
+
+    it('Should return a response with valid ids and additional filters', (done) => {
+      const filters = { group_id: ['drill_collection'] };
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseGroups({ filters }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.response).to.have.property('groups').to.be.an('array');
+        expect(res.request.filters).to.deep.equal(filters);
+        expect(requestedUrlParams).to.have.property('filters');
+        done();
+      });
+    });
+
+    it('Should return a response with valid ids and additional fmtOptions', (done) => {
+      const fmtOptions = { groups_max_depth: 2, groups_start: 'current' };
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseGroups({ fmtOptions }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.fmt_options).to.deep.equal(fmtOptions);
+        expect(res.response).to.have.property('groups').to.be.an('array');
+        expect(requestedUrlParams).to.have.property('fmt_options');
+        expect(requestedUrlParams.fmt_options).to.have.property('groups_max_depth').to.equal(Object.values(fmtOptions)[0].toString());
+        done();
+      });
+    });
+
+    it('Should be rejected when invalid filters parameter is provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseGroups({
+        filters: 123,
+      })).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected when invalid apiKey is provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
+
+      return expect(browse.getBrowseGroups()).to.eventually.be.rejected;
+    });
+  });
 });
