@@ -707,7 +707,6 @@ describe('ConstructorIO - Browse', () => {
     });
   });
 
-
   describe('getBrowseGroups', () => {
     it('Should return a response without any parameters', (done) => {
       const { browse } = new ConstructorIO({
