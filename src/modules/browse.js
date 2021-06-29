@@ -253,7 +253,7 @@ class Browse {
   /**
    * Retrieve browse groups from API
    *
-   * @function getBrowseResults
+   * @function getBrowseGroups
    * @param {object} [parameters.filters] - Filters used to refine results
    * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
    * @returns {Promise}
