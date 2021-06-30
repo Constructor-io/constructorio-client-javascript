@@ -271,8 +271,8 @@ class Browse {
   getBrowseGroups(parameters) {
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
     const { serviceUrl } = this.options;
-
     const queryParams = createQueryParams(parameters, this.options);
+
     delete queryParams._dt;
 
     const queryString = qs.stringify(queryParams, { indices: false });
@@ -288,12 +288,12 @@ class Browse {
       })
       .then((json) => {
         if (json.response && json.response.groups) {
-          this.eventDispatcher.queue('browse.getBrowseResults.completed', json);
+          this.eventDispatcher.queue('browse.getBrowseGroups.completed', json);
 
           return json;
         }
 
-        throw new Error('getBrowseResults response data is malformed');
+        throw new Error('getBrowseGroups response data is malformed');
       });
   }
 }
