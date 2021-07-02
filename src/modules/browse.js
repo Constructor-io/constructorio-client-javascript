@@ -118,6 +118,21 @@ function createBrowseUrlFromIDs(ids, parameters, options) {
   return `${serviceUrl}/browse/items?${queryString}`;
 }
 
+// Create URL for facets
+function createBrowseUrlForFacets(parameters, options) {
+  const { serviceUrl } = options;
+  const queryParams = { ...createQueryParams(parameters, options) };
+
+  // Endpoint does not accept _dt
+  delete queryParams._dt;
+  // fmt_options would require a token to be passed along
+  delete queryParams.fmt_options;
+
+  const queryString = qs.stringify(queryParams, { indices: false });
+
+  return `${serviceUrl}/browse/facets?${queryString}`;
+}
+
 /**
  * Interface to browse related API calls
  *
@@ -247,6 +262,50 @@ class Browse {
         }
 
         throw new Error('getBrowseResultsByItemIds response data is malformed');
+      });
+  }
+
+  /**
+   * Retrieve facets from API
+   *
+   * @function getFacets
+   * @param {object} [parameters] - Additional parameters to refine result set
+   * @param {number} [parameters.page] - The page number of the results
+   * @param {number} [parameters.resultsPerPage] - The number of results per page to return
+   * @returns {Promise}
+   * @see https://docs.constructor.io/rest_api/browse/facets
+   * @example
+   * constructorio.browse.getFacets({
+   *     page: 1,
+   *     resultsPerPage: 10,
+   * });
+   */
+  getFacets(parameters) {
+    let requestUrl;
+    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+
+    try {
+      requestUrl = createBrowseUrlForFacets(parameters, this.options);
+    } catch (e) {
+      return Promise.reject(e);
+    }
+
+    return fetch(requestUrl)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+
+        return helpers.throwHttpErrorFromResponse(new Error(), response);
+      })
+      .then((json) => {
+        if (json.response && json.response.facets) {
+          this.eventDispatcher.queue('browse.getFacets.completed', json);
+
+          return json;
+        }
+
+        throw new Error('getFacets response data is malformed');
       });
   }
 }
