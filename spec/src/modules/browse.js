@@ -708,7 +708,7 @@ describe('ConstructorIO - Browse', () => {
   });
 
   describe('getFacets', () => {
-    it('Should return a response', (done) => {
+    it('Should return a response without parameters being passed', (done) => {
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -730,7 +730,7 @@ describe('ConstructorIO - Browse', () => {
       });
     });
 
-    it('Should return a response with parameters passed', (done) => {
+    it('Should return a response with parameters being passed', (done) => {
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
