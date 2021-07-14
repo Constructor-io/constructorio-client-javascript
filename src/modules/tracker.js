@@ -247,7 +247,7 @@ class Tracker {
   }
 
   /**
-   * Send search results event to API
+   * Send search results loaded event to API
    *
    * @function trackSearchResultsLoaded
    * @param {string} term - Search results query term
@@ -255,7 +255,7 @@ class Tracker {
    * @param {number} parameters.num_results - Number of search results in total
    * @param {array} [parameters.customer_ids] - List of customer item id's returned from search
    * @returns {(true|Error)}
-   * @description User loaded a search product listing page
+   * @description User viewed a search product listing page
    */
   trackSearchResultsLoaded(term, parameters) {
     // Ensure term is provided (required)
@@ -520,7 +520,7 @@ class Tracker {
    * @param {string} parameters.pod_id - Pod identifier
    * @param {number} parameters.num_results_viewed - Number of results viewed
    * @returns {(true|Error)}
-   * @description User clicked a result that appeared within a search product listing page
+   * @description User viewed a set of recommendations
    */
   trackRecommendationView(parameters) {
     // Ensure parameters are provided (required)
@@ -700,7 +700,7 @@ class Tracker {
    * @param {string} parameters.filter_name - Filter name
    * @param {string} parameters.filter_value - Filter value
    * @returns {(true|Error)}
-   * @description User loaded a browse product listing page
+   * @description User viewed a browse product listing page
    */
   trackBrowseResultsLoaded(parameters) {
     // Ensure parameters are provided (required)
@@ -899,7 +899,7 @@ class Tracker {
    * @param {string} [parameters.variation_id] - Variation ID of clicked item
    * @param {string} [parameters.section="Products"] - Results section
    * @returns {(true|Error)}
-   * @description User clicked a result that appeared within a browse product listing page
+   * @description User clicked a result that appeared outside of the scope of search / browse / recommendations
    */
   trackGenericResultClick(parameters) {
     // Ensure required parameters are provided
