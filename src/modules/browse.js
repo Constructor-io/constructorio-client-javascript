@@ -195,7 +195,7 @@ class Browse {
   /**
    * Retrieve browse results from API using item id's
    *
-   * @function getBrowseResultsByItemIds
+   * @function getBrowseResultsForItemIds
    * @param {string[]} itemIds - Item id's of results to fetch
    * @param {object} [parameters] - Additional parameters to refine result set
    * @param {number} [parameters.page] - The page number of the results
@@ -207,13 +207,13 @@ class Browse {
    * @returns {Promise}
    * @see https://docs.constructor.io/rest_api/browse/items/
    * @example
-   * constructorio.browse.getBrowseResultsByItemIds(['shirt-123', 'shirt-456', 'shirt-789'], {
+   * constructorio.browse.getBrowseResultsForItemIds(['shirt-123', 'shirt-456', 'shirt-789'], {
    *     filters: {
    *         size: 'medium'
    *     },
    * });
    */
-  getBrowseResultsByItemIds(itemIds, parameters) {
+  getBrowseResultsForItemIds(itemIds, parameters) {
     let requestUrl;
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
 
@@ -241,12 +241,12 @@ class Browse {
             });
           }
 
-          this.eventDispatcher.queue('browse.getBrowseResultsByItemIds.completed', json);
+          this.eventDispatcher.queue('browse.getBrowseResultsForItemIds.completed', json);
 
           return json;
         }
 
-        throw new Error('getBrowseResultsByItemIds response data is malformed');
+        throw new Error('getBrowseResultsForItemIds response data is malformed');
       });
   }
 
