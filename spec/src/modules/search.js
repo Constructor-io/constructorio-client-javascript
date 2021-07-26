@@ -275,6 +275,25 @@ describe('ConstructorIO - Search', () => {
       });
     });
 
+    it('Should return a response with a valid query, section and hiddenFields', (done) => {
+      const hiddenFields = ['hiddenField1', 'hiddenField2'];
+      const { search } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      search.getSearchResults(query, { section, hiddenFields }, {}).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.hidden_fields).to.eql(hiddenFields);
+        expect(requestedUrlParams).to.have.property('hidden_fields').to.eql(hiddenFields);
+        done();
+      });
+    });
+
     it('Should return a redirect rule response with a valid query and section', (done) => {
       const redirectQuery = 'rolling';
       const { search } = new ConstructorIO({ apiKey: testApiKey });

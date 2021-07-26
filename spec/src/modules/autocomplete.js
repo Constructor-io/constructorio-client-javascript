@@ -212,6 +212,25 @@ describe('ConstructorIO - Autocomplete', () => {
       });
     });
 
+    it('Should return a response with a valid query and hiddenFields', (done) => {
+      const hiddenFields = ['hiddenField1', 'hiddenField2'];
+      const { autocomplete } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      autocomplete.getAutocompleteResults(query, { hiddenFields }, {}).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('sections').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.hidden_fields).to.eql(hiddenFields);
+        expect(requestedUrlParams).to.have.property('hidden_fields').to.eql(hiddenFields);
+        done();
+      });
+    });
+
     it('Should emit an event with response data', (done) => {
       const { autocomplete } = new ConstructorIO({
         apiKey: testApiKey,
