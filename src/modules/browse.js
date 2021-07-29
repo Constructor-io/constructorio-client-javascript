@@ -266,6 +266,53 @@ class Browse {
   }
 
   /**
+   * Retrieve browse groups from API
+   *
+   * @function getBrowseGroups
+   * @param {object} [parameters.filters] - Filters used to refine results
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
+   * @returns {Promise}
+   * @see https://docs.constructor.io/rest-api.html#browse-groups
+   * @example
+   * constructorio.browse.getBrowseGroups({
+   *     filters: {
+   *         group_id: 'drill_collection'
+   *     },
+   *     fmt_options: {
+   *         groups_max_depth: 2
+   *     }
+   * });
+   */
+  getBrowseGroups(parameters) {
+    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const { serviceUrl } = this.options;
+    const queryParams = createQueryParams(parameters, this.options);
+
+    delete queryParams._dt;
+
+    const queryString = qs.stringify(queryParams, { indices: false });
+    const requestUrl = `${serviceUrl}/browse/groups?${queryString}`;
+
+    return fetch(requestUrl)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+
+        return helpers.throwHttpErrorFromResponse(new Error(), response);
+      })
+      .then((json) => {
+        if (json.response && json.response.groups) {
+          this.eventDispatcher.queue('browse.getBrowseGroups.completed', json);
+
+          return json;
+        }
+
+        throw new Error('getBrowseGroups response data is malformed');
+      });
+  }
+
+  /**
    * Retrieve facets from API
    *
    * @function getFacets
