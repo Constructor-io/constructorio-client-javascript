@@ -35,7 +35,7 @@ describe('ConstructorIO - Autocomplete', () => {
   });
 
   describe('getAutocompleteResults', () => {
-    const query = 'drill';
+    const query = 'item';
 
     it('Should return a response with a valid query', (done) => {
       const { autocomplete } = new ConstructorIO({
