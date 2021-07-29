@@ -200,7 +200,6 @@ class Tracker {
    * @param {string} term - Term of submitted autocomplete event
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.original_query - The current autocomplete search query
-   * @param {string} parameters.result_id - Customer ID of the selected autocomplete item
    * @param {string} [parameters.group_id] - Group identifier of selected item
    * @param {string} [parameters.display_name] - Display name of group of selected item
    * @returns {(true|Error)}
@@ -213,7 +212,7 @@ class Tracker {
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
         const url = `${this.options.serviceUrl}/autocomplete/${helpers.ourEncodeURIComponent(term)}/search?`;
         const queryParams = {};
-        const { original_query, result_id, group_id, display_name } = parameters;
+        const { original_query, group_id, display_name } = parameters;
 
         if (original_query) {
           queryParams.original_query = original_query;
@@ -224,10 +223,6 @@ class Tracker {
             group_id,
             display_name,
           };
-        }
-
-        if (result_id) {
-          queryParams.result_id = result_id;
         }
 
         this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
