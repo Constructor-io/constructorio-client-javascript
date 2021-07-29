@@ -633,7 +633,7 @@ describe('ConstructorIO - Browse', () => {
         fetch: fetchSpy,
       });
 
-      browse.getBrowseResultsByItemIds(ids, { hiddenFields }).then((res) => {
+      browse.getBrowseResultsForItemIds(ids, { hiddenFields }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
