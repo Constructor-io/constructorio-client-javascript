@@ -46,7 +46,7 @@ function createAutocompleteUrl(query, parameters, options) {
   }
 
   if (parameters) {
-    const { numResults, resultsPerSection, filters } = parameters;
+    const { numResults, resultsPerSection, filters, hiddenFields } = parameters;
 
     // Pull results number from parameters
     if (numResults) {
@@ -63,6 +63,11 @@ function createAutocompleteUrl(query, parameters, options) {
     // Pull filters from parameters
     if (filters) {
       queryParams.filters = filters;
+    }
+
+    // Pull hidden fields from parameters
+    if (hiddenFields) {
+      queryParams.hidden_fields = hiddenFields;
     }
   }
 
@@ -97,6 +102,7 @@ class Autocomplete {
    * @param {number} [parameters.numResults] - The total number of results to return
    * @param {object} [parameters.filters] - Key / value mapping (dictionary) of filters used to refine results
    * @param {object} [parameters.resultsPerSection] - Number of results to return (value) per section (key)
+   * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
    * @returns {Promise}
    * @see https://docs.constructor.io/rest_api/autocomplete_queries
    * @example

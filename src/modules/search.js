@@ -46,7 +46,7 @@ function createSearchUrl(query, parameters, options) {
   }
 
   if (parameters) {
-    const { page, resultsPerPage, filters, sortBy, sortOrder, section, fmtOptions } = parameters;
+    const { page, resultsPerPage, filters, sortBy, sortOrder, section, fmtOptions, hiddenFields } = parameters;
 
     // Pull page from parameters
     if (!helpers.isNil(page)) {
@@ -81,6 +81,11 @@ function createSearchUrl(query, parameters, options) {
     // Pull format options from parameters
     if (fmtOptions) {
       queryParams.fmt_options = fmtOptions;
+    }
+
+    // Pull hidden fields from parameters
+    if (hiddenFields) {
+      queryParams.hidden_fields = hiddenFields;
     }
   }
 
@@ -118,6 +123,7 @@ class Search {
    * @param {string} [parameters.sortBy='relevance'] - The sort method for results
    * @param {string} [parameters.sortOrder='descending'] - The sort order for results
    * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
+   * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
    * @returns {Promise}
    * @see https://docs.constructor.io/rest_api/search/
    * @example

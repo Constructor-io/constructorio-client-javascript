@@ -297,6 +297,25 @@ describe('ConstructorIO - Browse', () => {
       });
     });
 
+    it('Should return a response with a valid filterName, filterValue and hiddenFields', (done) => {
+      const hiddenFields = ['hiddenField1', 'hiddenField2'];
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResults(filterName, filterValue, { hiddenFields }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.hidden_fields).to.eql(hiddenFields);
+        expect(requestedUrlParams).to.have.property('hidden_fields').to.eql(hiddenFields);
+        done();
+      });
+    });
+
     it('Should emit an event with response data', (done) => {
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -603,6 +622,25 @@ describe('ConstructorIO - Browse', () => {
         res.response.results.forEach((result) => {
           expect(result).to.have.property('result_id').to.be.a('string').to.equal(res.result_id);
         });
+        done();
+      });
+    });
+
+    it('Should return a response with valid ids and hiddenFields', (done) => {
+      const hiddenFields = ['hiddenField1', 'hiddenField2'];
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResultsByItemIds(ids, { hiddenFields }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.hidden_fields).to.eql(hiddenFields);
+        expect(requestedUrlParams).to.have.property('hidden_fields').to.eql(hiddenFields);
         done();
       });
     });
