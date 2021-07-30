@@ -129,7 +129,6 @@ class Tracker {
    * @param {string} term - Term of selected autocomplete item
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.original_query - The current autocomplete search query
-   * @param {string} parameters.result_id - Customer id of the selected autocomplete item
    * @param {string} parameters.section - Section the selected item resides within
    * @param {string} [parameters.tr] - Trigger used to select the item (click, etc.)
    * @param {string} [parameters.group_id] - Group identifier of selected item
@@ -146,7 +145,6 @@ class Tracker {
         const queryParams = {};
         const {
           original_query,
-          result_id,
           section,
           original_section,
           tr,
@@ -171,10 +169,6 @@ class Tracker {
             group_id,
             display_name,
           };
-        }
-
-        if (result_id) {
-          queryParams.result_id = result_id;
         }
 
         this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);

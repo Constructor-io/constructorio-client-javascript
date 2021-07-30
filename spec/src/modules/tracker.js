@@ -429,7 +429,6 @@ describe('ConstructorIO - Tracker', () => {
     const term = 'Where The Wild Things Are';
     const requiredParameters = {
       original_query: 'original-query',
-      result_id: 'result-id',
       section: 'Search Suggestions',
     };
     const optionalParameters = {
@@ -457,7 +456,6 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('original_query').to.equal(requiredParameters.original_query);
         expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
-        expect(requestParams).to.have.property('result_id').to.equal(requiredParameters.result_id);
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Response
