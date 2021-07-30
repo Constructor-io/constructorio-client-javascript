@@ -873,9 +873,8 @@ describe('ConstructorIO - Tracker', () => {
     const requiredParameters = {
       num_results: 1337,
     };
-    const optionalParameters = {
-      customer_ids: [1, 2, 3],
-    };
+    const optionalParameters = { item_ids: [1, 2, 3] };
+    const legacyOptionalParameters = { customer_ids: [1, 2, 3] };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
@@ -997,7 +996,7 @@ describe('ConstructorIO - Tracker', () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('customer_ids').to.equal(optionalParameters.customer_ids.join(','));
+        expect(requestParams).to.have.property('customer_ids').to.equal(optionalParameters.item_ids.join(','));
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('GET');
@@ -1008,6 +1007,32 @@ describe('ConstructorIO - Tracker', () => {
       });
 
       expect(tracker.trackSearchResultsLoaded(term, Object.assign(requiredParameters, optionalParameters)))
+        .to.equal(true);
+    });
+
+    it('Should respond with a valid response when term, required and optional legacy parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('customer_ids').to.equal(legacyOptionalParameters.customer_ids.join(','));
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+
+        done();
+      });
+
+      expect(tracker.trackSearchResultsLoaded(term, Object.assign(requiredParameters, legacyOptionalParameters)))
         .to.equal(true);
     });
 
@@ -1115,11 +1140,18 @@ describe('ConstructorIO - Tracker', () => {
     const term = 'Where The Wild Things Are';
     const requiredParameters = {
       name: 'name',
+      item_id: 'customer-id',
+    };
+    const requiredLegacyParameters = {
+      name: 'name',
       customer_id: 'customer-id',
+    };
+    const optionalParameters = {
+      variation_id: 'foobar',
       result_id: 'result-id',
     };
 
-    it('Should respond with a valid response when term and required parmeters are provided', (done) => {
+    it('Should respond with a valid response when term and required parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1137,8 +1169,7 @@ describe('ConstructorIO - Tracker', () => {
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('name').to.equal(requiredParameters.name);
-        expect(requestParams).to.have.property('customer_id').to.equal(requiredParameters.customer_id);
-        expect(requestParams).to.have.property('result_id').to.equal(requiredParameters.result_id);
+        expect(requestParams).to.have.property('customer_id').to.equal(requiredParameters.item_id);
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Response
@@ -1254,6 +1285,58 @@ describe('ConstructorIO - Tracker', () => {
         ...requiredParameters,
         variation_id: 'variation-id',
       })).to.equal(true);
+    });
+
+    it('Should respond with a valid response when term, required parameters and optional parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('result_id').to.equal(optionalParameters.result_id);
+        expect(requestParams).to.have.property('variation_id').to.equal(optionalParameters.variation_id);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackSearchResultClick(term, Object.assign(
+        requiredParameters,
+        optionalParameters,
+      ))).to.equal(true);
+    });
+
+    it('Should respond with a valid response when term and required legacy parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('customer_id').to.equal(requiredLegacyParameters.customer_id);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackSearchResultClick(term, requiredLegacyParameters)).to.equal(true);
     });
 
     it('Should throw an error when invalid term is provided', () => {

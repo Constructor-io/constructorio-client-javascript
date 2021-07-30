@@ -242,7 +242,7 @@ class Tracker {
    * @param {string} term - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {number} parameters.num_results - Number of search results in total
-   * @param {array} [parameters.customer_ids] - List of customer item id's returned from search
+   * @param {array} [parameters.item_ids] - List of product item unique identifiers in search results listing
    * @returns {(true|Error)}
    * @description User viewed a search product listing page
    */
@@ -253,13 +253,16 @@ class Tracker {
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
         const url = `${this.options.serviceUrl}/behavior?`;
         const queryParams = { action: 'search-results', term };
-        const { num_results, customer_ids } = parameters;
+        const { num_results, customer_ids, item_ids } = parameters;
 
         if (!helpers.isNil(num_results)) {
           queryParams.num_results = num_results;
         }
 
-        if (customer_ids && Array.isArray(customer_ids)) {
+        // Ensure support for both item_ids and customer_ids as parameters
+        if (item_ids && Array.isArray(item_ids)) {
+          queryParams.customer_ids = item_ids.join(',');
+        } else if (customer_ids && Array.isArray(customer_ids)) {
           queryParams.customer_ids = customer_ids.join(',');
         }
 
@@ -285,9 +288,10 @@ class Tracker {
    * @function trackSearchResultClick
    * @param {string} term - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.name - Identifier
-   * @param {string} parameters.customer_id - Customer id
-   * @param {string} [parameters.result_id] - Result id
+   * @param {string} parameters.name - Product item name
+   * @param {string} parameters.item_id - Product item unique identifier
+   * @param {string} [parameters.variation_id] - Product item variation unique identifier
+   * @param {string} [parameters.result_id] - Search result identifier (returned in response from Constructor)
    * @returns {(true|Error)}
    * @description User clicked a result that appeared within a search product listing page
    */
@@ -298,13 +302,16 @@ class Tracker {
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
         const url = `${this.options.serviceUrl}/autocomplete/${helpers.ourEncodeURIComponent(term)}/click_through?`;
         const queryParams = {};
-        const { name, customer_id, variation_id, result_id } = parameters;
+        const { name, item_id, customer_id, variation_id, result_id } = parameters;
 
         if (name) {
           queryParams.name = name;
         }
 
-        if (customer_id) {
+        // Ensure support for both item_id and customer_id as parameters
+        if (item_id) {
+          queryParams.customer_id = item_id;
+        } else if (customer_id) {
           queryParams.customer_id = customer_id;
         }
 
