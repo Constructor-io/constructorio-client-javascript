@@ -288,7 +288,7 @@ class Tracker {
    * @function trackSearchResultClick
    * @param {string} term - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.name - Product item name
+   * @param {string} parameters.item_name - Product item name
    * @param {string} parameters.item_id - Product item unique identifier
    * @param {string} [parameters.variation_id] - Product item variation unique identifier
    * @param {string} [parameters.result_id] - Search result identifier (returned in response from Constructor)
@@ -302,9 +302,12 @@ class Tracker {
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
         const url = `${this.options.serviceUrl}/autocomplete/${helpers.ourEncodeURIComponent(term)}/click_through?`;
         const queryParams = {};
-        const { name, item_id, customer_id, variation_id, result_id } = parameters;
+        const { item_name, name, item_id, customer_id, variation_id, result_id } = parameters;
 
-        if (name) {
+        // Ensure support for both item_name and name as parameters
+        if (item_name) {
+          queryParams.name = item_name;
+        } else if (name) {
           queryParams.name = name;
         }
 
@@ -345,14 +348,14 @@ class Tracker {
    * @function trackConversion
    * @param {string} term - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.customer_id - Customer id
-   * @param {string} parameters.revenue - Revenue
-   * @param {string} [parameters.item_name] - Identifier
-   * @param {string} [parameters.variation_id] - Variation id
+   * @param {string} parameters.item_id - Product item unique identifier
+   * @param {string} parameters.revenue - Revenue (price) of product item
+   * @param {string} [parameters.item_name] - Product item name
+   * @param {string} [parameters.variation_id] - Product item variation unique identifier
    * @param {string} [parameters.type='add_to_cart'] - Conversion type
    * @param {boolean} [parameters.is_custom_type] - Specify if type is custom conversion type
    * @param {string} [parameters.display_name] - Display name for the custom conversion type
-   * @param {string} [parameters.result_id] - Result id
+   * @param {string} [parameters.result_id] - Result identifier (returned in response from Constructor)
    * @param {string} [parameters.section] - Autocomplete section
    * @returns {(true|Error)}
    * @description User performed an action indicating interest in an item (add to cart, add to wishlist, etc.)
@@ -377,13 +380,14 @@ class Tracker {
         is_custom_type,
       } = parameters;
 
-      // Only take one of item_id or customer_id
+      // Ensure support for both item_id and customer_id as parameters
       if (item_id) {
         bodyParams.item_id = item_id;
       } else if (customer_id) {
         bodyParams.item_id = customer_id;
       }
 
+      // Ensure support for both item_name and name as parameters
       if (item_name) {
         bodyParams.item_name = item_name;
       } else if (name) {
