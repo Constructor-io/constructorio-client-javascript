@@ -313,21 +313,21 @@ class Browse {
   }
 
   /**
-   * Retrieve facets from API
+   * Retrieve browse facets from API
    *
-   * @function getFacets
+   * @function getBrowseFacets
    * @param {object} [parameters] - Additional parameters to refine result set
    * @param {number} [parameters.page] - The page number of the results
    * @param {number} [parameters.resultsPerPage] - The number of results per page to return
    * @returns {Promise}
    * @see https://docs.constructor.io/rest_api/browse/facets
    * @example
-   * constructorio.browse.getFacets({
+   * constructorio.browse.getBrowseFacets({
    *     page: 1,
    *     resultsPerPage: 10,
    * });
    */
-  getFacets(parameters) {
+  getBrowseFacets(parameters) {
     let requestUrl;
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
 
@@ -347,12 +347,12 @@ class Browse {
       })
       .then((json) => {
         if (json.response && json.response.facets) {
-          this.eventDispatcher.queue('browse.getFacets.completed', json);
+          this.eventDispatcher.queue('browse.getBrowseFacets.completed', json);
 
           return json;
         }
 
-        throw new Error('getFacets response data is malformed');
+        throw new Error('getBrowseFacets response data is malformed');
       });
   }
 }

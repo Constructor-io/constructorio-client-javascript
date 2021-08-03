@@ -784,14 +784,14 @@ describe('ConstructorIO - Browse', () => {
     });
   });
 
-  describe('getFacets', () => {
+  describe('getBrowseFacets', () => {
     it('Should return a response without parameters being passed', (done) => {
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
       });
 
-      browse.getFacets().then((res) => {
+      browse.getBrowseFacets().then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -807,13 +807,13 @@ describe('ConstructorIO - Browse', () => {
       });
     });
 
-    it('Should return a response with parameters being passed', (done) => {
+    it('Should return a response with optional parameters being passed', (done) => {
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
       });
 
-      browse.getFacets({
+      browse.getBrowseFacets({
         page: 1,
         resultsPerPage: 10,
       }).then((res) => {
@@ -835,7 +835,7 @@ describe('ConstructorIO - Browse', () => {
     it('Should be rejected when invalid page parameter is provided', () => {
       const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(browse.getFacets({
+      return expect(browse.getBrowseFacets({
         page: 'abc',
       })).to.eventually.be.rejected;
     });
@@ -843,7 +843,7 @@ describe('ConstructorIO - Browse', () => {
     it('Should be rejected when invalid resultsPerPage parameter is provided', () => {
       const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(browse.getFacets({
+      return expect(browse.getBrowseFacets({
         resultsPerPage: 'abc',
       })).to.eventually.be.rejected;
     });
@@ -851,7 +851,7 @@ describe('ConstructorIO - Browse', () => {
     it('Should be rejected when invalid apiKey is provided', () => {
       const { browse } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
 
-      return expect(browse.getFacets()).to.eventually.be.rejected;
+      return expect(browse.getBrowseFacets()).to.eventually.be.rejected;
     });
   });
 });
