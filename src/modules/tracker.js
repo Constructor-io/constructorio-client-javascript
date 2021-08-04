@@ -94,6 +94,8 @@ class Tracker {
    *
    * @function trackSessionStart
    * @returns {(true|Error)}
+   * @example
+   * constructorio.tracker.trackSessionStart();
    */
   trackSessionStart() {
     const url = `${this.options.serviceUrl}/behavior?`;
@@ -111,6 +113,8 @@ class Tracker {
    * @function trackInputFocus
    * @returns {(true|Error)}
    * @description User focused on search input element
+   * @example
+   * constructorio.tracker.trackInputFocus();
    */
   trackInputFocus() {
     const url = `${this.options.serviceUrl}/behavior?`;
@@ -1045,6 +1049,10 @@ class Tracker {
    * @param {string} messageType - Type of message to listen for ('success' or 'error')
    * @param {function} callback - Callback to be invoked when message received
    * @returns {(true|Error)}
+   * @example
+   * constructorio.tracker.on('error', (data) => {
+   *   // Handle tracking error
+   * });
    */
   on(messageType, callback) {
     if (messageType !== 'success' && messageType !== 'error') {
