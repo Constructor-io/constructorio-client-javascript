@@ -135,6 +135,14 @@ class Tracker {
    * @param {string} [parameters.display_name] - Display name of group of selected item
    * @returns {(true|Error)}
    * @description User selected (clicked, or navigated to via keyboard) a result that appeared within autocomplete
+   * @example
+   * constructorio.tracker.trackAutocompleteSelect('T-Shirt', {
+   *   original_query: 'Shirt',
+   *   section: 'Products',
+   *   tr: 'click',
+   *   group_id: '88JU230',
+   *   display_name: 'apparel',
+   * });
    */
   trackAutocompleteSelect(term, parameters) {
     // Ensure term is provided (required)
@@ -198,6 +206,12 @@ class Tracker {
    * @param {string} [parameters.display_name] - Display name of group of selected item
    * @returns {(true|Error)}
    * @description User submitted a search (pressing enter within input element, or clicking submit element)
+   * @example
+   * constructorio.tracker.trackSearchSubmit('T-Shirt', {
+   *   original_query: 'Shirt',
+   *   group_id: '88JU230',
+   *   display_name: 'apparel',
+   * });
    */
   trackSearchSubmit(term, parameters) {
     // Ensure term is provided (required)
@@ -245,6 +259,11 @@ class Tracker {
    * @param {array} [parameters.item_ids] - List of product item unique identifiers in search results listing
    * @returns {(true|Error)}
    * @description User viewed a search product listing page
+   * @example
+   * constructorio.tracker.trackSearchResultsLoaded('T-Shirt', {
+   *   num_results: 167,
+   *   item_ids: ['KMH876', 'KMH140', 'KMH437'],
+   * });
    */
   trackSearchResultsLoaded(term, parameters) {
     // Ensure term is provided (required)
@@ -294,6 +313,12 @@ class Tracker {
    * @param {string} [parameters.result_id] - Search result identifier (returned in response from Constructor)
    * @returns {(true|Error)}
    * @description User clicked a result that appeared within a search product listing page
+   * @example
+   * constructorio.tracker.trackSearchResultClick('T-Shirt', {
+   *   item_name: 'Red T-Shirt',
+   *   item_id: 'KMH876',
+   *   result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   * });
    */
   trackSearchResultClick(term, parameters) {
     // Ensure term is provided (required)
@@ -359,6 +384,16 @@ class Tracker {
    * @param {string} [parameters.section] - Index section
    * @returns {(true|Error)}
    * @description User performed an action indicating interest in an item (add to cart, add to wishlist, etc.)
+   * @example
+   * constructorio.tracker.trackConversion('T-Shirt', {
+   *   item_id: 'KMH876',
+   *   revenue: 12.00,
+   *   item_name: 'Red T-Shirt',
+   *   variation_id: 'KMH879-7632',
+   *   type: 'like',
+   *   result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *   section: 'Products',
+   * });
    */
   trackConversion(term, parameters) {
     // Ensure parameters are provided (required)
@@ -453,6 +488,13 @@ class Tracker {
    * @param {string} [parameters.section] - Index section
    * @returns {(true|Error)}
    * @description User completed an order (usually fired on order confirmation page)
+   * @example
+   * constructorio.tracker.trackPurchase({
+   *   items: [{ item_id: 'KMH876' }, { item_id: 'KMH140' }],
+   *   revenue: 12.00,
+   *   order_id: 'OUNXBG2HMA',
+   *   section: 'Products',
+   * });
    */
   trackPurchase(parameters) {
     // Ensure parameters are provided (required)
@@ -521,6 +563,15 @@ class Tracker {
    * @param {string} [parameters.section="Products"] - Results section
    * @returns {(true|Error)}
    * @description User viewed a set of recommendations
+   * @example
+   * constructorio.tracker.trackRecommendationView({
+   *   result_count: 22,
+   *   result_page: 2,
+   *   result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *   url: 'https://demo.constructor.io/sandbox/farmstand',
+   *   pod_id: '019927c2-f955-4020',
+   *   num_results_viewed: 3,
+   * });
    */
   trackRecommendationView(parameters) {
     // Ensure parameters are provided (required)
@@ -603,6 +654,18 @@ class Tracker {
    * @param {number} [parameters.num_results_per_page] - Number of results on page
    * @returns {(true|Error)}
    * @description User clicked an item that appeared within a list of recommended results
+   * @example
+   * constructorio.tracker.trackRecommendationClick({
+   *   variation_id: 'KMH879-7632',
+   *   result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *   result_count: 22,
+   *   result_page: 2,
+   *   result_position_on_page: 2,
+   *   num_results_per_page: 12,
+   *   pod_id: '019927c2-f955-4020',
+   *   strategy_id: 'complimentary',
+   *   item_id: 'KMH876',
+   * });
    */
   trackRecommendationClick(parameters) {
     // Ensure parameters are provided (required)
@@ -701,6 +764,19 @@ class Tracker {
    * @param {array} [parameters.items] - List of product item objects
    * @returns {(true|Error)}
    * @description User viewed a browse product listing page
+   * @example
+   * constructorio.tracker.trackBrowseResultsLoaded({
+   *   result_count: 22,
+   *   result_page: 2,
+   *   result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *   selected_filters: [ 'brand', 'color' ],
+   *   sort_order: 'ascending',
+   *   sort_by: 'price',
+   *   items: [{ item_id: 'KMH876' }, { item_id: 'KMH140' }],
+   *   url: 'https://demo.constructor.io/sandbox/farmstand',
+   *   filter_name: 'brand',
+   *   filter_value: 'XYZ',
+   * });
    */
   trackBrowseResultsLoaded(parameters) {
     // Ensure parameters are provided (required)
@@ -804,6 +880,19 @@ class Tracker {
    * @param {string} [parameters.selected_filters] -  Selected filters
    * @returns {(true|Error)}
    * @description User clicked a result that appeared within a browse product listing page
+   * @example
+   * constructorio.tracker.trackBrowseResultClick({
+   *   variation_id: 'KMH879-7632',
+   *   result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *   result_count: 22,
+   *   result_page: 2,
+   *   result_position_on_page: 2,
+   *   num_results_per_page: 12,
+   *   selected_filters: [ 'brand', 'color' ],
+   *   filter_name: 'brand',
+   *   filter_value: 'XYZ',
+   *   item_id: 'KMH876',
+   * });
    */
   trackBrowseResultClick(parameters) {
     // Ensure parameters are provided (required)
@@ -900,6 +989,12 @@ class Tracker {
    * @param {string} [parameters.section="Products"] - Index section
    * @returns {(true|Error)}
    * @description User clicked a result that appeared outside of the scope of search / browse / recommendations
+   * @example
+   * constructorio.tracker.trackGenericResultClick({
+   *   item_id: 'KMH876',
+   *   item_name: 'Red T-Shirt',
+   *   variation_id: 'KMH879-7632',
+   * });
    */
   trackGenericResultClick(parameters) {
     // Ensure required parameters are provided
