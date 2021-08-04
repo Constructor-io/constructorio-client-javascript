@@ -137,8 +137,8 @@ class Tracker {
    * @returns {(true|Error)}
    * @description User selected (clicked, or navigated to via keyboard) a result that appeared within autocomplete
    * @example
-   * constructorio.tracker.trackAutocompleteSelect('t-shirt', {
-   *   original_query: 'shirt',
+   * constructorio.tracker.trackAutocompleteSelect('T-Shirt', {
+   *   original_query: 'Shirt',
    *   section: 'Products',
    *   tr: 'click',
    *   group_id: '88JU230',
@@ -213,8 +213,8 @@ class Tracker {
    * @returns {(true|Error)}
    * @description User submitted a search (pressing enter within input element, or clicking submit element)
    * @example
-   * constructorio.tracker.trackSearchSubmit('t-shirt', {
-   *   original_query: 'shirt',
+   * constructorio.tracker.trackSearchSubmit('T-Shirt', {
+   *   original_query: 'Shirt',
    *   group_id: '88JU230',
    *   display_name: 'apparel',
    * });
@@ -266,7 +266,7 @@ class Tracker {
    * @returns {(true|Error)}
    * @description User viewed a search product listing page
    * @example
-   * constructorio.tracker.trackSearchResultsLoaded('t-shirt', {
+   * constructorio.tracker.trackSearchResultsLoaded('T-Shirt', {
    *   num_results: 167,
    *   item_ids: ['KMH876', 'KMH140', 'KMH437'],
    * });
@@ -316,8 +316,8 @@ class Tracker {
    * @returns {(true|Error)}
    * @description User clicked a result that appeared within a search product listing page
    * @example
-   * constructorio.tracker.trackSearchResultClick('t-shirt', {
-   *   item_name: 'Red t-Shirt',
+   * constructorio.tracker.trackSearchResultClick('T-Shirt', {
+   *   item_name: 'Red T-Shirt',
    *   item_id: 'KMH876',
    *   result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
    * });
@@ -381,10 +381,10 @@ class Tracker {
    * @returns {(true|Error)}
    * @description User performed an action indicating interest in an item (add to cart, add to wishlist, etc.)
    * @example
-   * constructorio.tracker.trackConversion('t-shirt', {
+   * constructorio.tracker.trackConversion('T-Shirt', {
    *   item_id: 'KMH876',
-   *   revenue: 12,
-   *   item_name: 'Red t-shirt',
+   *   revenue: 12.00,
+   *   item_name: 'Red T-Shirt',
    *   variation_id: 'KMH879-7632',
    *   type: 'like',
    *   result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
@@ -486,7 +486,7 @@ class Tracker {
    * @example
    * constructorio.tracker.trackPurchase({
    *   items: [{ item_id: 'KMH876' }, { item_id: 'KMH140' }],
-   *   revenue: 12,
+   *   revenue: 12.00,
    *   order_id: 'OUNXBG2HMA',
    *   section: 'Products',
    * });
@@ -987,7 +987,7 @@ class Tracker {
    * @example
    * constructorio.tracker.trackGenericResultClick({
    *   item_id: 'KMH876',
-   *   item_name: 'Red t-shirt',
+   *   item_name: 'Red T-Shirt',
    *   variation_id: 'KMH879-7632',
    * });
    */
