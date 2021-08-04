@@ -129,7 +129,6 @@ class Tracker {
    * @param {string} term - Term of selected autocomplete item
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.original_query - The current autocomplete search query
-   * @param {string} parameters.result_id - Customer id of the selected autocomplete item
    * @param {string} parameters.section - Section the selected item resides within
    * @param {string} [parameters.tr] - Trigger used to select the item (click, etc.)
    * @param {string} [parameters.group_id] - Group identifier of selected item
@@ -146,7 +145,6 @@ class Tracker {
         const queryParams = {};
         const {
           original_query,
-          result_id,
           section,
           original_section,
           tr,
@@ -171,10 +169,6 @@ class Tracker {
             group_id,
             display_name,
           };
-        }
-
-        if (result_id) {
-          queryParams.result_id = result_id;
         }
 
         this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
@@ -248,7 +242,7 @@ class Tracker {
    * @param {string} term - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {number} parameters.num_results - Number of search results in total
-   * @param {array} [parameters.customer_ids] - List of customer item id's returned from search
+   * @param {array} [parameters.item_ids] - List of product item unique identifiers in search results listing
    * @returns {(true|Error)}
    * @description User viewed a search product listing page
    */
@@ -259,13 +253,16 @@ class Tracker {
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
         const url = `${this.options.serviceUrl}/behavior?`;
         const queryParams = { action: 'search-results', term };
-        const { num_results, customer_ids } = parameters;
+        const { num_results, customer_ids, item_ids } = parameters;
 
         if (!helpers.isNil(num_results)) {
           queryParams.num_results = num_results;
         }
 
-        if (customer_ids && Array.isArray(customer_ids)) {
+        // Ensure support for both item_ids and customer_ids as parameters
+        if (item_ids && Array.isArray(item_ids)) {
+          queryParams.customer_ids = item_ids.join(',');
+        } else if (customer_ids && Array.isArray(customer_ids)) {
           queryParams.customer_ids = customer_ids.join(',');
         }
 
@@ -291,9 +288,10 @@ class Tracker {
    * @function trackSearchResultClick
    * @param {string} term - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.name - Identifier
-   * @param {string} parameters.customer_id - Customer id
-   * @param {string} [parameters.result_id] - Result id
+   * @param {string} parameters.item_name - Product item name
+   * @param {string} parameters.item_id - Product item unique identifier
+   * @param {string} [parameters.variation_id] - Product item variation unique identifier
+   * @param {string} [parameters.result_id] - Search result identifier (returned in response from Constructor)
    * @returns {(true|Error)}
    * @description User clicked a result that appeared within a search product listing page
    */
@@ -304,13 +302,19 @@ class Tracker {
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
         const url = `${this.options.serviceUrl}/autocomplete/${helpers.ourEncodeURIComponent(term)}/click_through?`;
         const queryParams = {};
-        const { name, customer_id, variation_id, result_id } = parameters;
+        const { item_name, name, item_id, customer_id, variation_id, result_id } = parameters;
 
-        if (name) {
+        // Ensure support for both item_name and name as parameters
+        if (item_name) {
+          queryParams.name = item_name;
+        } else if (name) {
           queryParams.name = name;
         }
 
-        if (customer_id) {
+        // Ensure support for both item_id and customer_id as parameters
+        if (item_id) {
+          queryParams.customer_id = item_id;
+        } else if (customer_id) {
           queryParams.customer_id = customer_id;
         }
 
@@ -344,15 +348,15 @@ class Tracker {
    * @function trackConversion
    * @param {string} term - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.customer_id - Customer id
-   * @param {string} parameters.revenue - Revenue
-   * @param {string} [parameters.item_name] - Identifier
-   * @param {string} [parameters.variation_id] - Variation id
+   * @param {string} parameters.item_id - Product item unique identifier
+   * @param {string} parameters.revenue - Revenue (price) of product item
+   * @param {string} [parameters.item_name] - Product item name
+   * @param {string} [parameters.variation_id] - Product item variation unique identifier
    * @param {string} [parameters.type='add_to_cart'] - Conversion type
    * @param {boolean} [parameters.is_custom_type] - Specify if type is custom conversion type
    * @param {string} [parameters.display_name] - Display name for the custom conversion type
-   * @param {string} [parameters.result_id] - Result id
-   * @param {string} [parameters.section] - Autocomplete section
+   * @param {string} [parameters.result_id] - Result identifier (returned in response from Constructor)
+   * @param {string} [parameters.section] - Index section
    * @returns {(true|Error)}
    * @description User performed an action indicating interest in an item (add to cart, add to wishlist, etc.)
    */
@@ -376,13 +380,14 @@ class Tracker {
         is_custom_type,
       } = parameters;
 
-      // Only take one of item_id or customer_id
+      // Ensure support for both item_id and customer_id as parameters
       if (item_id) {
         bodyParams.item_id = item_id;
       } else if (customer_id) {
         bodyParams.item_id = customer_id;
       }
 
+      // Ensure support for both item_name and name as parameters
       if (item_name) {
         bodyParams.item_name = item_name;
       } else if (name) {
@@ -442,10 +447,10 @@ class Tracker {
    *
    * @function trackPurchase
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {array} parameters.items - List of objects of customer items returned from browse
+   * @param {array} parameters.items - List of product item objects
    * @param {number} parameters.revenue - Revenue
-   * @param {string} [parameters.order_id] - Customer unique order identifier
-   * @param {string} [parameters.section] - Autocomplete section
+   * @param {string} [parameters.order_id] - Unique order identifier
+   * @param {string} [parameters.section] - Index section
    * @returns {(true|Error)}
    * @description User completed an order (usually fired on order confirmation page)
    */
@@ -507,13 +512,13 @@ class Tracker {
    *
    * @function trackRecommendationView
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {number} [parameters.result_count] - Number of results displayed
-   * @param {number} [parameters.result_page] - Page number of results
-   * @param {string} [parameters.result_id] - Result identifier
-   * @param {string} [parameters.section="Products"] - Results section
    * @param {string} parameters.url - Current page URL
    * @param {string} parameters.pod_id - Pod identifier
    * @param {number} parameters.num_results_viewed - Number of results viewed
+   * @param {number} [parameters.result_count] - Number of results displayed
+   * @param {number} [parameters.result_page] - Page number of results
+   * @param {string} [parameters.result_id] - Recommendation result identifier (returned in response from Constructor)
+   * @param {string} [parameters.section="Products"] - Results section
    * @returns {(true|Error)}
    * @description User viewed a set of recommendations
    */
@@ -586,16 +591,16 @@ class Tracker {
    *
    * @function trackRecommendationClick
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} [parameters.variation_id] - Variation identifier
-   * @param {string} [parameters.section="Products"] - Results section
-   * @param {string} [parameters.result_id] - Result identifier
+   * @param {string} parameters.pod_id - Pod identifier
+   * @param {string} parameters.strategy_id - Strategy identifier
+   * @param {string} parameters.item_id - Product item unique identifier
+   * @param {string} [parameters.variation_id] - Product item variation unique identifier
+   * @param {string} [parameters.section="Products"] - Index section
+   * @param {string} [parameters.result_id] - Recommendation result identifier (returned in response from Constructor)
    * @param {number} [parameters.result_count] - Number of results displayed
    * @param {number} [parameters.result_page] - Page number of results
    * @param {number} [parameters.result_position_on_page] - Position of result on page
    * @param {number} [parameters.num_results_per_page] - Number of results on page
-   * @param {string} parameters.pod_id - Pod identifier
-   * @param {string} parameters.strategy_id - Strategy identifier
-   * @param {string} parameters.item_id - Identifier of clicked item
    * @returns {(true|Error)}
    * @description User clicked an item that appeared within a list of recommended results
    */
@@ -683,17 +688,17 @@ class Tracker {
    *
    * @function trackBrowseResultsLoaded
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} [parameters.section="Products"] - Results section
-   * @param {number} [parameters.result_count] - Number of results displayed
-   * @param {number} [parameters.result_page] - Page number of results
-   * @param {string} [parameters.result_id] - Result identifier
-   * @param {string} [parameters.selected_filters] -  Selected filters
-   * @param {string} [parameters.sort_order] - Sort order ('ascending' or 'descending')
-   * @param {string} [parameters.sort_by] - Sorting method
-   * @param {array} [parameters.items] - List of objects of customer items returned from browse
    * @param {string} parameters.url - Current page URL
    * @param {string} parameters.filter_name - Filter name
    * @param {string} parameters.filter_value - Filter value
+   * @param {string} [parameters.section="Products"] - Index section
+   * @param {number} [parameters.result_count] - Number of results displayed
+   * @param {number} [parameters.result_page] - Page number of results
+   * @param {string} [parameters.result_id] - Browse result identifier (returned in response from Constructor)
+   * @param {string} [parameters.selected_filters] -  Selected filters
+   * @param {string} [parameters.sort_order] - Sort order ('ascending' or 'descending')
+   * @param {string} [parameters.sort_by] - Sorting method
+   * @param {array} [parameters.items] - List of product item objects
    * @returns {(true|Error)}
    * @description User viewed a browse product listing page
    */
@@ -786,17 +791,17 @@ class Tracker {
    *
    * @function trackBrowseResultClick
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} [parameters.section="Products"] - Results section
-   * @param {string} [parameters.variation_id] - Variation ID of clicked item
-   * @param {string} [parameters.result_id] - Result identifier
+   * @param {string} parameters.filter_name - Filter name
+   * @param {string} parameters.filter_value - Filter value
+   * @param {string} parameters.item_id - Product item unique identifier
+   * @param {string} [parameters.section="Products"] - Index section
+   * @param {string} [parameters.variation_id] - Product item variation unique identifier
+   * @param {string} [parameters.result_id] - Browse result identifier (returned in response from Constructor)
    * @param {number} [parameters.result_count] - Number of results displayed
    * @param {number} [parameters.result_page] - Page number of results
    * @param {number} [parameters.result_position_on_page] - Position of clicked item
    * @param {number} [parameters.num_results_per_page] - Number of results shown
    * @param {string} [parameters.selected_filters] -  Selected filters
-   * @param {string} parameters.filter_name - Filter name
-   * @param {string} parameters.filter_value - Filter value
-   * @param {string} parameters.item_id - ID of clicked item
    * @returns {(true|Error)}
    * @description User clicked a result that appeared within a browse product listing page
    */
@@ -889,10 +894,10 @@ class Tracker {
    *
    * @function trackGenericResultClick
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.item_id - ID of clicked item
-   * @param {string} [parameters.item_name] - Name of clicked item
-   * @param {string} [parameters.variation_id] - Variation ID of clicked item
-   * @param {string} [parameters.section="Products"] - Results section
+   * @param {string} parameters.item_id - Product item unique identifier
+   * @param {string} [parameters.item_name] - Product item name
+   * @param {string} [parameters.variation_id] - Product item variation unique identifier
+   * @param {string} [parameters.section="Products"] - Index section
    * @returns {(true|Error)}
    * @description User clicked a result that appeared outside of the scope of search / browse / recommendations
    */
