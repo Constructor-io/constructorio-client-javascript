@@ -191,6 +191,28 @@ describe('ConstructorIO - Autocomplete', () => {
       });
     });
 
+    it('Should return a response with a valid query, and multiple filters', (done) => {
+      const filters = { group_id: ['All'], Brand: ['XYZ'] };
+      const { autocomplete } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      autocomplete.getAutocompleteResults(query, { filters }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('sections').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.filters).to.eql(filters);
+        expect(res.sections.Products.length).to.be.at.least(1);
+        expect(requestedUrlParams).to.have.property('filters');
+        expect(requestedUrlParams.filters).to.have.property('group_id').to.equal(Object.values(filters)[0][0]);
+        expect(requestedUrlParams.filters).to.have.property('Brand').to.equal(Object.values(filters)[1][0]);
+        done();
+      });
+    });
+
     it('Should return a response with a valid query, with a result_id appended to each result', (done) => {
       const { autocomplete } = new ConstructorIO({ apiKey: testApiKey });
 
