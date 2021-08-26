@@ -1,4 +1,4 @@
-/* eslint-disable camelcase, no-unneeded-ternary */
+/* eslint-disable camelcase, no-unneeded-ternary, max-len */
 const ConstructorioID = require('@constructor-io/constructorio-id');
 
 // Modules
@@ -31,6 +31,8 @@ class ConstructorIO {
    * @param {object} [eventDispatcher] - Options related to 'EventDispatcher' class
    * @param {boolean} [eventDispatcher.enabled=true] - Determine if events should be dispatched
    * @param {boolean} [eventDispatcher.waitForBeacon=true] - Wait for beacon before dispatching events
+   * @param {object} [networkParameters] - Parameters relevant to network requests
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds) - may be overridden within individual method calls
    * @property {object} [search] - Interface to {@link module:search}
    * @property {object} [browse] - Interface to {@link module:browse}
    * @property {object} [autocomplete] - Interface to {@link module:autocomplete}
@@ -55,6 +57,7 @@ class ConstructorIO {
       eventDispatcher,
       idOptions,
       beaconMode,
+      networkParameters,
     } = options;
 
     if (!apiKey || typeof apiKey !== 'string') {
@@ -84,6 +87,7 @@ class ConstructorIO {
       sendReferrerWithTrackingEvents,
       eventDispatcher,
       beaconMode: (beaconMode === false) ? false : true, // Defaults to 'true',
+      networkParameters: networkParameters || {},
     };
 
     // Disable event dispatcher and tracking events if `window` not available
