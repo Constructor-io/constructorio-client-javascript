@@ -3,7 +3,7 @@ const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
 const EventDispatcher = require('../utils/event-dispatcher');
-const { throwHttpErrorFromResponse, cleanParams } = require('../utils/helpers');
+const { throwHttpErrorFromResponse, cleanParams, applyNetworkTimeout } = require('../utils/helpers');
 
 // Create URL from supplied query (term) and parameters
 function createAutocompleteUrl(query, parameters, options) {
@@ -103,6 +103,8 @@ class Autocomplete {
    * @param {object} [parameters.filters] - Key / value mapping (dictionary) of filters used to refine results
    * @param {object} [parameters.resultsPerSection] - Number of results to return (value) per section (key)
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
    * @see https://docs.constructor.io/rest_api/autocomplete_queries
    * @example
@@ -116,9 +118,11 @@ class Autocomplete {
    *     },
    * });
    */
-  getAutocompleteResults(query, parameters) {
+  getAutocompleteResults(query, parameters, networkParameters = {}) {
     let requestUrl;
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const controller = new AbortController();
+    const { signal } = controller;
 
     try {
       requestUrl = createAutocompleteUrl(query, parameters, this.options);
@@ -126,7 +130,10 @@ class Autocomplete {
       return Promise.reject(e);
     }
 
-    return fetch(requestUrl)
+    // Handle network timeout if specified
+    applyNetworkTimeout(this.options, networkParameters, controller);
+
+    return fetch(requestUrl, { signal })
       .then((response) => {
         if (response.ok) {
           return response.json();

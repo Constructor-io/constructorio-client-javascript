@@ -137,6 +137,16 @@ const utils = {
     // Push the order id map into session storage
     store.session.set(purchaseEventStorageKey, JSON.stringify(purchaseEventStorage));
   },
+
+  // Abort network request based on supplied timeout interval (in milliseconds)
+  // - method call parameter takes precedence over global options parameter
+  applyNetworkTimeout: (options = {}, networkParameters = {}, controller) => {
+    const timeout = options.networkParameters.timeout || networkParameters.timeout;
+
+    if (typeof timeout === 'number') {
+      setTimeout(() => controller.abort(), timeout);
+    }
+  },
 };
 
 module.exports = utils;
