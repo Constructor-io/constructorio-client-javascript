@@ -60,11 +60,12 @@ class RequestQueue {
         ) {
           let request;
           let nextInQueue = queue.shift();
-          const controller = new AbortController();
-          const { signal } = controller;
           const { networkParameters } = nextInQueue;
+          let signal;
 
           if (networkParameters) {
+            const controller = new AbortController();
+            ({ signal } = controller);
             helpers.applyNetworkTimeout(this.options, networkParameters, controller);
           }
 
