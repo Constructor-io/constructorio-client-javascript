@@ -46,7 +46,7 @@ const utils = {
     throw error;
   }),
 
-  hasWindow: () => typeof window !== 'undefined',
+  hasWindow: () => typeof window !== 'undefined' && window !== global,
 
   addEventListener: (eventType, callback, useCapture) => {
     if (utils.hasWindow()) {

@@ -40,7 +40,7 @@ class HumanityCheck {
 
   // Return boolean indicating if is human
   isHuman() {
-    return this.isHumanBoolean || !!store.session.get(storageKey);
+    return this.isHumanBoolean || !!store.session.get(storageKey) || window === global;
   }
 
   // Return boolean indicating if useragent matches botlist

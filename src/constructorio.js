@@ -88,7 +88,9 @@ class ConstructorIO {
 
     // Disable event dispatcher and tracking events if `window` not available
     if (!helpers.hasWindow()) {
-      this.options.sendTrackingEvents = false;
+      if (window !== global) {
+        this.options.sendTrackingEvents = false;
+      }
 
       if (!this.options.eventDispatcher) {
         this.options.eventDispatcher = {};
