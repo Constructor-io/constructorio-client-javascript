@@ -276,6 +276,9 @@ describe('ConstructorIO', () => {
 });
 
 describe('ConstructorIO - without DOM context', () => {
+  const clientId = '6c73138f-a87b-49f0-872d-63b00ed0e395';
+  const sessionId = 2;
+
   beforeEach(() => {
     global.CLIENT_VERSION = 'cio-mocha';
   });
@@ -284,8 +287,12 @@ describe('ConstructorIO - without DOM context', () => {
     delete global.CLIENT_VERSION;
   });
 
-  it('Should return an instance', () => {
-    const instance = new ConstructorIO({ apiKey: validApiKey });
+  it('Should return an instance if client and session identifiers are provided', () => {
+    const instance = new ConstructorIO({
+      apiKey: validApiKey,
+      clientId,
+      sessionId,
+    });
 
     expect(instance).to.be.an('object');
     expect(instance).to.have.property('options').to.be.an('object');
@@ -298,17 +305,26 @@ describe('ConstructorIO - without DOM context', () => {
     expect(instance).to.have.property('tracker');
   });
 
-  it('Should have client and session identifiers not defined by default', () => {
-    const instance = new ConstructorIO({ apiKey: validApiKey });
+  it('Should throw an error if client identifier is not provided', () => {
+    expect(() => new ConstructorIO({
+      apiKey: validApiKey,
+      sessionId,
+    })).to.throw('clientId is a required user parameter of type string');
+  });
 
-    expect(instance).to.be.an('object');
-    expect(instance).to.have.property('options').to.be.an('object');
-    expect(instance.options).to.have.property('clientId').to.be.undefined;
-    expect(instance.options).to.have.property('sessionId').to.be.undefined;
+  it('Should throw an error if session identifier is not provided', () => {
+    expect(() => new ConstructorIO({
+      apiKey: validApiKey,
+      clientId,
+    })).to.throw('sessionId is a required user parameter of type number');
   });
 
   it('Should have event dispatching and tracking events disabled', () => {
-    const instance = new ConstructorIO({ apiKey: validApiKey });
+    const instance = new ConstructorIO({
+      apiKey: validApiKey,
+      clientId,
+      sessionId,
+    });
 
     expect(instance).to.be.an('object');
     expect(instance).to.have.property('options').to.be.an('object');

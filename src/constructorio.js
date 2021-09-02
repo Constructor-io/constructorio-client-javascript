@@ -67,6 +67,16 @@ class ConstructorIO {
     // Initialize ID session if DOM context is available
     if (helpers.canUseDOM()) {
       ({ session_id, client_id } = new ConstructorioID(idOptions || {}));
+    } else {
+      // Validate session ID is provided
+      if (!sessionId || typeof sessionId !== 'number') {
+        throw new Error('sessionId is a required user parameter of type number');
+      }
+
+      // Validate client ID is provided
+      if (!clientId || typeof clientId !== 'string') {
+        throw new Error('clientId is a required user parameter of type string');
+      }
     }
 
     this.options = {
