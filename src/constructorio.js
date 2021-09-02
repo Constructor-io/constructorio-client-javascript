@@ -96,15 +96,9 @@ class ConstructorIO {
       beaconMode: (beaconMode === false) ? false : true, // Defaults to 'true',
     };
 
-    // Disable event dispatcher and tracking events if DOM context is not available
+    // Enable sending of tracking events by default if no DOM context is available
     if (!helpers.canUseDOM()) {
-      this.options.sendTrackingEvents = false;
-
-      if (!this.options.eventDispatcher) {
-        this.options.eventDispatcher = {};
-      }
-
-      this.options.eventDispatcher.enabled = false;
+      this.options.sendTrackingEvents = true;
     }
 
     // Expose global modules

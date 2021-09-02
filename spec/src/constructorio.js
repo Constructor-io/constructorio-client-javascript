@@ -312,6 +312,14 @@ describe('ConstructorIO - without DOM context', () => {
     })).to.throw('clientId is a required user parameter of type string');
   });
 
+  it('Should throw an error if client identifier is invalid', () => {
+    expect(() => new ConstructorIO({
+      apiKey: validApiKey,
+      sessionId,
+      clientId: 123,
+    })).to.throw('clientId is a required user parameter of type string');
+  });
+
   it('Should throw an error if session identifier is not provided', () => {
     expect(() => new ConstructorIO({
       apiKey: validApiKey,
@@ -319,7 +327,15 @@ describe('ConstructorIO - without DOM context', () => {
     })).to.throw('sessionId is a required user parameter of type number');
   });
 
-  it('Should have event dispatching and tracking events disabled', () => {
+  it('Should throw an error if session identifier is invalid', () => {
+    expect(() => new ConstructorIO({
+      apiKey: validApiKey,
+      clientId,
+      sessionId: 'aaa',
+    })).to.throw('sessionId is a required user parameter of type number');
+  });
+
+  it('Should have tracking events enabled enabled', () => {
     const instance = new ConstructorIO({
       apiKey: validApiKey,
       clientId,
@@ -327,9 +343,6 @@ describe('ConstructorIO - without DOM context', () => {
     });
 
     expect(instance).to.be.an('object');
-    expect(instance).to.have.property('options').to.be.an('object');
-    expect(instance.options).to.have.property('eventDispatcher').to.be.an('object');
-    expect(instance.options.eventDispatcher).to.have.property('enabled').to.be.false;
-    expect(instance.options.sendTrackingEvents).to.be.false;
+    expect(instance.options.sendTrackingEvents).to.be.true;
   });
 });
