@@ -39,6 +39,7 @@ class ConstructorIO {
    * @returns {class}
    */
   constructor(options = {}) {
+    const canUseDOM = helpers.canUseDOM();
     const {
       apiKey,
       version,
@@ -65,7 +66,7 @@ class ConstructorIO {
     let client_id;
 
     // Initialize ID session if DOM context is available
-    if (helpers.canUseDOM()) {
+    if (canUseDOM) {
       ({ session_id, client_id } = new ConstructorioID(idOptions || {}));
     } else {
       // Validate session ID is provided
@@ -81,7 +82,7 @@ class ConstructorIO {
 
     this.options = {
       apiKey,
-      version: version || global.CLIENT_VERSION || `ciojs-client-${packageVersion}`,
+      version: version || global.CLIENT_VERSION || `ciojs-client-${canUseDOM ? '' : 'domless-'}${packageVersion}`,
       serviceUrl: serviceUrl || 'https://ac.cnstrc.com',
       sessionId: sessionId || session_id,
       clientId: clientId || client_id,
@@ -95,11 +96,6 @@ class ConstructorIO {
       eventDispatcher,
       beaconMode: (beaconMode === false) ? false : true, // Defaults to 'true',
     };
-
-    // Enable sending of tracking events by default if no DOM context is available
-    if (!helpers.canUseDOM()) {
-      this.options.sendTrackingEvents = true;
-    }
 
     // Expose global modules
     this.search = new Search(this.options);

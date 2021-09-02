@@ -94,6 +94,15 @@ describe('ConstructorIO', () => {
     expect(() => new ConstructorIO()).to.throw('API key is a required parameter of type string');
   });
 
+  it('Should not have client version set to indicate no DOM context', () => {
+    global.CLIENT_VERSION = null;
+
+    const instance = new ConstructorIO({ apiKey: validApiKey });
+
+    expect(instance).to.be.an('object');
+    expect(instance.options.version).to.not.include('-domless-');
+  });
+
   describe('setClientOptions', () => {
     it('Should update the client options with new API key', () => {
       const newAPIKey = 'newAPIKey';
@@ -335,7 +344,9 @@ describe('ConstructorIO - without DOM context', () => {
     })).to.throw('sessionId is a required user parameter of type number');
   });
 
-  it('Should have tracking events enabled enabled', () => {
+  it('Should have client version set to indicate no DOM context', () => {
+    global.CLIENT_VERSION = null;
+
     const instance = new ConstructorIO({
       apiKey: validApiKey,
       clientId,
@@ -343,6 +354,6 @@ describe('ConstructorIO - without DOM context', () => {
     });
 
     expect(instance).to.be.an('object');
-    expect(instance.options.sendTrackingEvents).to.be.true;
+    expect(instance.options.version).to.include('-domless-');
   });
 });
