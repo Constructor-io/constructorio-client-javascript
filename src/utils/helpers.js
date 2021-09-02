@@ -46,22 +46,24 @@ const utils = {
     throw error;
   }),
 
-  hasWindow: () => typeof window !== 'undefined' && window !== global,
+  canUseDOM: () => !!(
+    (typeof window !== 'undefined' && window.document && window.document.createElement)
+  ),
 
   addEventListener: (eventType, callback, useCapture) => {
-    if (utils.hasWindow()) {
+    if (utils.canUseDOM()) {
       window.addEventListener(eventType, callback, useCapture);
     }
   },
 
   removeEventListener: (eventType, callback, useCapture) => {
-    if (utils.hasWindow()) {
+    if (utils.canUseDOM()) {
       window.removeEventListener(eventType, callback, useCapture);
     }
   },
 
   getNavigator: () => {
-    if (utils.hasWindow()) {
+    if (utils.canUseDOM()) {
       return window.navigator;
     }
 
@@ -74,7 +76,7 @@ const utils = {
   isNil: value => value == null,
 
   getWindowLocation: () => {
-    if (utils.hasWindow()) {
+    if (utils.canUseDOM()) {
       return window.location;
     }
 
@@ -82,13 +84,13 @@ const utils = {
   },
 
   dispatchEvent: (event) => {
-    if (utils.hasWindow()) {
+    if (utils.canUseDOM()) {
       window.dispatchEvent(event);
     }
   },
 
   createCustomEvent: (eventName, detail) => {
-    if (utils.hasWindow()) {
+    if (utils.canUseDOM()) {
       try {
         return new window.CustomEvent(eventName, { detail });
       } catch (e) {

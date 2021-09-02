@@ -64,8 +64,8 @@ class ConstructorIO {
     let session_id;
     let client_id;
 
-    // Initialize ID session (if within browser context)
-    if (helpers.hasWindow()) {
+    // Initialize ID session if DOM context is available
+    if (helpers.canUseDOM()) {
       ({ session_id, client_id } = new ConstructorioID(idOptions || {}));
     }
 
@@ -86,11 +86,9 @@ class ConstructorIO {
       beaconMode: (beaconMode === false) ? false : true, // Defaults to 'true',
     };
 
-    // Disable event dispatcher and tracking events if `window` not available
-    if (!helpers.hasWindow()) {
-      if (window !== global) {
-        this.options.sendTrackingEvents = false;
-      }
+    // Disable event dispatcher and tracking events if DOM context is not available
+    if (!helpers.canUseDOM()) {
+      this.options.sendTrackingEvents = false;
 
       if (!this.options.eventDispatcher) {
         this.options.eventDispatcher = {};

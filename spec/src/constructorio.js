@@ -275,7 +275,7 @@ describe('ConstructorIO', () => {
   });
 });
 
-describe('ConstructorIO - without `window`', () => {
+describe('ConstructorIO - without DOM context', () => {
   beforeEach(() => {
     global.CLIENT_VERSION = 'cio-mocha';
   });

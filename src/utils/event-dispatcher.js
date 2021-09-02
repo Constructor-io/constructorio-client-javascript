@@ -24,7 +24,7 @@ class EventDispatcher {
       // Check browser environment to determine if beacon has been loaded
       // - Important for the case where the beacon has loaded before client library instantiated
       if (
-        helpers.hasWindow()
+        helpers.canUseDOM()
         && (
           window.ConstructorioAutocomplete
           || window.ConstructorioBeacon
