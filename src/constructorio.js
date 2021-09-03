@@ -39,6 +39,7 @@ class ConstructorIO {
    * @returns {class}
    */
   constructor(options = {}) {
+    const canUseDOM = helpers.canUseDOM();
     const {
       apiKey,
       version,
@@ -64,14 +65,24 @@ class ConstructorIO {
     let session_id;
     let client_id;
 
-    // Initialize ID session (if within browser context)
-    if (helpers.hasWindow()) {
+    // Initialize ID session if DOM context is available
+    if (canUseDOM) {
       ({ session_id, client_id } = new ConstructorioID(idOptions || {}));
+    } else {
+      // Validate session ID is provided
+      if (!sessionId || typeof sessionId !== 'number') {
+        throw new Error('sessionId is a required user parameter of type number');
+      }
+
+      // Validate client ID is provided
+      if (!clientId || typeof clientId !== 'string') {
+        throw new Error('clientId is a required user parameter of type string');
+      }
     }
 
     this.options = {
       apiKey,
-      version: version || global.CLIENT_VERSION || `ciojs-client-${packageVersion}`,
+      version: version || global.CLIENT_VERSION || `ciojs-client-${canUseDOM ? '' : 'domless-'}${packageVersion}`,
       serviceUrl: serviceUrl || 'https://ac.cnstrc.com',
       sessionId: sessionId || session_id,
       clientId: clientId || client_id,
@@ -85,17 +96,6 @@ class ConstructorIO {
       eventDispatcher,
       beaconMode: (beaconMode === false) ? false : true, // Defaults to 'true',
     };
-
-    // Disable event dispatcher and tracking events if `window` not available
-    if (!helpers.hasWindow()) {
-      this.options.sendTrackingEvents = false;
-
-      if (!this.options.eventDispatcher) {
-        this.options.eventDispatcher = {};
-      }
-
-      this.options.eventDispatcher.enabled = false;
-    }
 
     // Expose global modules
     this.search = new Search(this.options);

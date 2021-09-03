@@ -94,6 +94,15 @@ describe('ConstructorIO', () => {
     expect(() => new ConstructorIO()).to.throw('API key is a required parameter of type string');
   });
 
+  it('Should not have client version set to indicate no DOM context', () => {
+    global.CLIENT_VERSION = null;
+
+    const instance = new ConstructorIO({ apiKey: validApiKey });
+
+    expect(instance).to.be.an('object');
+    expect(instance.options.version).to.not.include('-domless-');
+  });
+
   describe('setClientOptions', () => {
     it('Should update the client options with new API key', () => {
       const newAPIKey = 'newAPIKey';
@@ -275,7 +284,10 @@ describe('ConstructorIO', () => {
   });
 });
 
-describe('ConstructorIO - without `window`', () => {
+describe('ConstructorIO - without DOM context', () => {
+  const clientId = '6c73138f-a87b-49f0-872d-63b00ed0e395';
+  const sessionId = 2;
+
   beforeEach(() => {
     global.CLIENT_VERSION = 'cio-mocha';
   });
@@ -284,8 +296,12 @@ describe('ConstructorIO - without `window`', () => {
     delete global.CLIENT_VERSION;
   });
 
-  it('Should return an instance', () => {
-    const instance = new ConstructorIO({ apiKey: validApiKey });
+  it('Should return an instance if client and session identifiers are provided', () => {
+    const instance = new ConstructorIO({
+      apiKey: validApiKey,
+      clientId,
+      sessionId,
+    });
 
     expect(instance).to.be.an('object');
     expect(instance).to.have.property('options').to.be.an('object');
@@ -298,22 +314,46 @@ describe('ConstructorIO - without `window`', () => {
     expect(instance).to.have.property('tracker');
   });
 
-  it('Should have client and session identifiers not defined by default', () => {
-    const instance = new ConstructorIO({ apiKey: validApiKey });
-
-    expect(instance).to.be.an('object');
-    expect(instance).to.have.property('options').to.be.an('object');
-    expect(instance.options).to.have.property('clientId').to.be.undefined;
-    expect(instance.options).to.have.property('sessionId').to.be.undefined;
+  it('Should throw an error if client identifier is not provided', () => {
+    expect(() => new ConstructorIO({
+      apiKey: validApiKey,
+      sessionId,
+    })).to.throw('clientId is a required user parameter of type string');
   });
 
-  it('Should have event dispatching and tracking events disabled', () => {
-    const instance = new ConstructorIO({ apiKey: validApiKey });
+  it('Should throw an error if client identifier is invalid', () => {
+    expect(() => new ConstructorIO({
+      apiKey: validApiKey,
+      sessionId,
+      clientId: 123,
+    })).to.throw('clientId is a required user parameter of type string');
+  });
+
+  it('Should throw an error if session identifier is not provided', () => {
+    expect(() => new ConstructorIO({
+      apiKey: validApiKey,
+      clientId,
+    })).to.throw('sessionId is a required user parameter of type number');
+  });
+
+  it('Should throw an error if session identifier is invalid', () => {
+    expect(() => new ConstructorIO({
+      apiKey: validApiKey,
+      clientId,
+      sessionId: 'aaa',
+    })).to.throw('sessionId is a required user parameter of type number');
+  });
+
+  it('Should have client version set to indicate no DOM context', () => {
+    global.CLIENT_VERSION = null;
+
+    const instance = new ConstructorIO({
+      apiKey: validApiKey,
+      clientId,
+      sessionId,
+    });
 
     expect(instance).to.be.an('object');
-    expect(instance).to.have.property('options').to.be.an('object');
-    expect(instance.options).to.have.property('eventDispatcher').to.be.an('object');
-    expect(instance.options.eventDispatcher).to.have.property('enabled').to.be.false;
-    expect(instance.options.sendTrackingEvents).to.be.false;
+    expect(instance.options.version).to.include('-domless-');
   });
 });
