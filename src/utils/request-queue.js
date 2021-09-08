@@ -32,7 +32,6 @@ class RequestQueue {
   // Add request to queue to be dispatched
   queue(url, method = 'GET', body) {
     if (this.sendTrackingEvents && !this.humanity.isBot()) {
-      console.log(url);
       const queue = RequestQueue.get();
 
       queue.push({
