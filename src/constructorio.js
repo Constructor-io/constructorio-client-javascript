@@ -139,4 +139,7 @@ class ConstructorIO {
   }
 }
 
+// For Testing Purposes
+ConstructorIO.Tracker = Tracker;
+
 module.exports = ConstructorIO;
