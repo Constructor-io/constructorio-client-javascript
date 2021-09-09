@@ -110,9 +110,12 @@ const utils = {
   },
 
   hasOrderIdRecord(orderId) {
-    const purchaseEventStorage = JSON.parse(store.session.get(purchaseEventStorageKey));
     const orderIdHash = CRC32.str(orderId.toString());
+    let purchaseEventStorage = store.session.get(purchaseEventStorageKey);
 
+    if (typeof purchaseEventStorage === 'string') {
+      purchaseEventStorage = JSON.parse(purchaseEventStorage);
+    }
     if (purchaseEventStorage && purchaseEventStorage[orderIdHash]) {
       return true;
     }
@@ -121,9 +124,12 @@ const utils = {
   },
 
   addOrderIdRecord(orderId) {
-    let purchaseEventStorage = JSON.parse(store.session.get(purchaseEventStorageKey));
     const orderIdHash = CRC32.str(orderId.toString());
+    let purchaseEventStorage = store.session.get(purchaseEventStorageKey);
 
+    if (typeof purchaseEventStorage === 'string') {
+      purchaseEventStorage = JSON.parse(purchaseEventStorage);
+    }
     if (purchaseEventStorage) {
 
       // If the order already exists, do nothing
