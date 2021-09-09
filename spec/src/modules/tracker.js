@@ -263,6 +263,37 @@ describe('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackSessionStart()).to.equal(true);
     });
+
+    it('Should be rejected when network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
+        done();
+      });
+
+      expect(tracker.trackSessionStart({ timeout: 10 })).to.equal(true);
+    });
+
+    it('Should be rejected when global network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        networkParameters: {
+          timeout: 20,
+        },
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
+        done();
+      });
+
+      expect(tracker.trackSessionStart()).to.equal(true);
+    });
   });
 
   describe('trackInputFocus', () => {
@@ -418,6 +449,37 @@ describe('ConstructorIO - Tracker', () => {
         expect(responseParams).to.have.property('method').to.equal('GET');
         expect(responseParams).to.have.property('message').to.equal('ok');
 
+        done();
+      });
+
+      expect(tracker.trackInputFocus()).to.equal(true);
+    });
+
+    it('Should be rejected when network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
+        done();
+      });
+
+      expect(tracker.trackInputFocus({ timeout: 10 })).to.equal(true);
+    });
+
+    it('Should be rejected when global network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        networkParameters: {
+          timeout: 20,
+        },
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
         done();
       });
 
@@ -648,6 +710,37 @@ describe('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackAutocompleteSelect(term, requiredParameters)).to.equal(true);
     });
+
+    it('Should be rejected when network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
+        done();
+      });
+
+      expect(tracker.trackAutocompleteSelect(term, requiredParameters, { timeout: 10 })).to.equal(true);
+    });
+
+    it('Should be rejected when global network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        networkParameters: {
+          timeout: 20,
+        },
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
+        done();
+      });
+
+      expect(tracker.trackAutocompleteSelect(term, requiredParameters)).to.equal(true);
+    });
   });
 
   describe('trackSearchSubmit', () => {
@@ -861,6 +954,37 @@ describe('ConstructorIO - Tracker', () => {
         expect(responseParams).to.have.property('method').to.equal('GET');
         expect(responseParams).to.have.property('message').to.equal('ok');
 
+        done();
+      });
+
+      expect(tracker.trackSearchSubmit(term, requiredParameters)).to.equal(true);
+    });
+
+    it('Should be rejected when network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
+        done();
+      });
+
+      expect(tracker.trackSearchSubmit(term, requiredParameters, { timeout: 10 })).to.equal(true);
+    });
+
+    it('Should be rejected when global network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        networkParameters: {
+          timeout: 20,
+        },
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
         done();
       });
 
@@ -1129,6 +1253,37 @@ describe('ConstructorIO - Tracker', () => {
         expect(responseParams).to.have.property('method').to.equal('GET');
         expect(responseParams).to.have.property('message').to.equal('ok');
 
+        done();
+      });
+
+      expect(tracker.trackSearchResultsLoaded(term, requiredParameters)).to.equal(true);
+    });
+
+    it('Should be rejected when network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
+        done();
+      });
+
+      expect(tracker.trackSearchResultsLoaded(term, requiredParameters, { timeout: 10 })).to.equal(true);
+    });
+
+    it('Should be rejected when global network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        networkParameters: {
+          timeout: 20,
+        },
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
         done();
       });
 
@@ -1409,6 +1564,37 @@ describe('ConstructorIO - Tracker', () => {
         expect(responseParams).to.have.property('method').to.equal('GET');
         expect(responseParams).to.have.property('message').to.equal('ok');
 
+        done();
+      });
+
+      expect(tracker.trackSearchResultClick(term, requiredParameters)).to.equal(true);
+    });
+
+    it('Should be rejected when network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
+        done();
+      });
+
+      expect(tracker.trackSearchResultClick(term, requiredParameters, { timeout: 10 })).to.equal(true);
+    });
+
+    it('Should be rejected when global network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        networkParameters: {
+          timeout: 20,
+        },
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
         done();
       });
 
@@ -1857,6 +2043,37 @@ describe('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackConversion(term, requiredParameters)).to.equal(true);
     });
+
+    it('Should be rejected when network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
+        done();
+      });
+
+      expect(tracker.trackConversion(term, requiredParameters, { timeout: 10 })).to.equal(true);
+    });
+
+    it('Should be rejected when global network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        networkParameters: {
+          timeout: 20,
+        },
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
+        done();
+      });
+
+      expect(tracker.trackConversion(term, requiredParameters)).to.equal(true);
+    });
   });
 
   describe('trackPurchase', () => {
@@ -2263,6 +2480,37 @@ describe('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackPurchase()).to.be.an('error');
     });
+
+    it('Should be rejected when network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
+        done();
+      });
+
+      expect(tracker.trackPurchase(requiredParameters, { timeout: 10 })).to.equal(true);
+    });
+
+    it('Should be rejected when global network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        networkParameters: {
+          timeout: 20,
+        },
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
+        done();
+      });
+
+      expect(tracker.trackPurchase(requiredParameters)).to.equal(true);
+    });
   });
 
   describe('trackRecommendationView', () => {
@@ -2498,6 +2746,37 @@ describe('ConstructorIO - Tracker', () => {
         expect(responseParams).to.have.property('method').to.equal('POST');
         expect(responseParams).to.have.property('message').to.equal('ok');
 
+        done();
+      });
+
+      expect(tracker.trackRecommendationView(requiredParameters)).to.equal(true);
+    });
+
+    it('Should be rejected when network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
+        done();
+      });
+
+      expect(tracker.trackRecommendationView(requiredParameters, { timeout: 10 })).to.equal(true);
+    });
+
+    it('Should be rejected when global network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        networkParameters: {
+          timeout: 20,
+        },
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
         done();
       });
 
@@ -2817,6 +3096,37 @@ describe('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackRecommendationClick(requiredParameters)).to.equal(true);
     });
+
+    it('Should be rejected when network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
+        done();
+      });
+
+      expect(tracker.trackRecommendationClick(requiredParameters, { timeout: 10 })).to.equal(true);
+    });
+
+    it('Should be rejected when global network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        networkParameters: {
+          timeout: 20,
+        },
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
+        done();
+      });
+
+      expect(tracker.trackRecommendationClick(requiredParameters)).to.equal(true);
+    });
   });
 
   describe('trackBrowseResultsLoaded', () => {
@@ -3068,6 +3378,37 @@ describe('ConstructorIO - Tracker', () => {
         expect(responseParams).to.have.property('method').to.equal('POST');
         expect(responseParams).to.have.property('message').to.equal('ok');
 
+        done();
+      });
+
+      expect(tracker.trackBrowseResultsLoaded(requiredParameters)).to.equal(true);
+    });
+
+    it('Should be rejected when network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
+        done();
+      });
+
+      expect(tracker.trackBrowseResultsLoaded(requiredParameters, { timeout: 10 })).to.equal(true);
+    });
+
+    it('Should be rejected when global network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        networkParameters: {
+          timeout: 20,
+        },
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
         done();
       });
 
@@ -3391,6 +3732,37 @@ describe('ConstructorIO - Tracker', () => {
 
       expect(tracker.trackBrowseResultClick(requiredParameters)).to.equal(true);
     });
+
+    it('Should be rejected when network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
+        done();
+      });
+
+      expect(tracker.trackBrowseResultClick(requiredParameters, { timeout: 10 })).to.equal(true);
+    });
+
+    it('Should be rejected when global network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        networkParameters: {
+          timeout: 20,
+        },
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
+        done();
+      });
+
+      expect(tracker.trackBrowseResultClick(requiredParameters)).to.equal(true);
+    });
   });
 
 
@@ -3688,6 +4060,37 @@ describe('ConstructorIO - Tracker', () => {
         expect(responseParams).to.have.property('method').to.equal('POST');
         expect(responseParams).to.have.property('message').to.equal('ok');
 
+        done();
+      });
+
+      expect(tracker.trackGenericResultClick(requiredParameters)).to.equal(true);
+    });
+
+    it('Should be rejected when network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
+        done();
+      });
+
+      expect(tracker.trackGenericResultClick(requiredParameters, { timeout: 10 })).to.equal(true);
+    });
+
+    it('Should be rejected when global network request timeout is provided and reached', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        networkParameters: {
+          timeout: 20,
+        },
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('AbortError: The user aborted a request.');
         done();
       });
 

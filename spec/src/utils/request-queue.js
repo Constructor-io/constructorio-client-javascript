@@ -12,9 +12,11 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 dotenv.config();
 
-describe('ConstructorIO - Utils - Request Queue', () => {
+describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
+  this.timeout(3000);
+
   const storageKey = '_constructorio_requests';
-  const waitInterval = 1000;
+  const waitInterval = 2000;
   const requestQueueOptions = {
     sendTrackingEvents: true,
     trackingSendDelay: 1,

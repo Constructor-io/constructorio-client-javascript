@@ -30,7 +30,7 @@ class RequestQueue {
   }
 
   // Add request to queue to be dispatched
-  queue(url, method = 'GET', body) {
+  queue(url, method = 'GET', body, networkParameters = {}) {
     if (this.sendTrackingEvents && !this.humanity.isBot()) {
       const queue = RequestQueue.get();
 
@@ -38,6 +38,7 @@ class RequestQueue {
         url,
         method,
         body,
+        networkParameters,
       });
       RequestQueue.set(queue);
     }
@@ -60,6 +61,14 @@ class RequestQueue {
         ) {
           let request;
           let nextInQueue = queue.shift();
+          const { networkParameters } = nextInQueue;
+          let signal;
+
+          if (networkParameters) {
+            const controller = new AbortController();
+            ({ signal } = controller);
+            helpers.applyNetworkTimeout(this.options, networkParameters, controller);
+          }
 
           RequestQueue.set(queue);
 
@@ -73,7 +82,7 @@ class RequestQueue {
           }
 
           if (nextInQueue.method === 'GET') {
-            request = fetch(nextInQueue.url);
+            request = fetch(nextInQueue.url, { signal });
           }
 
           if (nextInQueue.method === 'POST') {
@@ -82,6 +91,7 @@ class RequestQueue {
               body: JSON.stringify(nextInQueue.body),
               mode: 'cors',
               headers: { 'Content-Type': 'text/plain' },
+              signal,
             });
           }
 

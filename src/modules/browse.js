@@ -166,6 +166,8 @@ class Browse {
    * @param {string} [parameters.sortOrder='descending'] - The sort order for results
    * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
    * @see https://docs.constructor.io/rest_api/browse/
    * @example
@@ -176,9 +178,11 @@ class Browse {
    *     },
    * });
    */
-  getBrowseResults(filterName, filterValue, parameters) {
+  getBrowseResults(filterName, filterValue, parameters, networkParameters = {}) {
     let requestUrl;
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const controller = new AbortController();
+    const { signal } = controller;
 
     try {
       requestUrl = createBrowseUrlFromFilter(filterName, filterValue, parameters, this.options);
@@ -186,7 +190,10 @@ class Browse {
       return Promise.reject(e);
     }
 
-    return fetch(requestUrl)
+    // Handle network timeout if specified
+    helpers.applyNetworkTimeout(this.options, networkParameters, controller);
+
+    return fetch(requestUrl, { signal })
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -225,6 +232,8 @@ class Browse {
    * @param {string} [parameters.sortBy='relevance'] - The sort method for results
    * @param {string} [parameters.sortOrder='descending'] - The sort order for results
    * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
    * @see https://docs.constructor.io/rest_api/browse/items/
    * @example
@@ -234,9 +243,11 @@ class Browse {
    *     },
    * });
    */
-  getBrowseResultsForItemIds(itemIds, parameters) {
+  getBrowseResultsForItemIds(itemIds, parameters, networkParameters = {}) {
     let requestUrl;
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const controller = new AbortController();
+    const { signal } = controller;
 
     try {
       requestUrl = createBrowseUrlFromIDs(itemIds, parameters, this.options);
@@ -244,7 +255,10 @@ class Browse {
       return Promise.reject(e);
     }
 
-    return fetch(requestUrl)
+    // Handle network timeout if specified
+    helpers.applyNetworkTimeout(this.options, networkParameters, controller);
+
+    return fetch(requestUrl, { signal })
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -277,6 +291,8 @@ class Browse {
    * @function getBrowseGroups
    * @param {object} [parameters.filters] - Filters used to refine results
    * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
    * @see https://docs.constructor.io/rest-api.html#browse-groups
    * @example
@@ -289,17 +305,22 @@ class Browse {
    *     }
    * });
    */
-  getBrowseGroups(parameters) {
+  getBrowseGroups(parameters, networkParameters = {}) {
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
     const { serviceUrl } = this.options;
     const queryParams = createQueryParams(parameters, this.options);
+    const controller = new AbortController();
+    const { signal } = controller;
 
     delete queryParams._dt;
 
     const queryString = qs.stringify(queryParams, { indices: false });
     const requestUrl = `${serviceUrl}/browse/groups?${queryString}`;
 
-    return fetch(requestUrl)
+    // Handle network timeout if specified
+    helpers.applyNetworkTimeout(this.options, networkParameters, controller);
+
+    return fetch(requestUrl, { signal })
       .then((response) => {
         if (response.ok) {
           return response.json();

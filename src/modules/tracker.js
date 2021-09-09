@@ -93,15 +93,17 @@ class Tracker {
    * Send session start event to API
    *
    * @function trackSessionStart
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @example
    * constructorio.tracker.trackSessionStart();
    */
-  trackSessionStart() {
+  trackSessionStart(networkParameters = {}) {
     const url = `${this.options.serviceUrl}/behavior?`;
     const queryParams = { action: 'session_start' };
 
-    this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
+    this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`, undefined, undefined, networkParameters);
     this.requests.send();
 
     return true;
@@ -111,16 +113,18 @@ class Tracker {
    * Send input focus event to API
    *
    * @function trackInputFocus
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description User focused on search input element
    * @example
    * constructorio.tracker.trackInputFocus();
    */
-  trackInputFocus() {
+  trackInputFocus(networkParameters = {}) {
     const url = `${this.options.serviceUrl}/behavior?`;
     const queryParams = { action: 'focus' };
 
-    this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
+    this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`, undefined, undefined, networkParameters);
     this.requests.send();
 
     return true;
@@ -137,6 +141,8 @@ class Tracker {
    * @param {string} [parameters.tr] - Trigger used to select the item (click, etc.)
    * @param {string} [parameters.group_id] - Group identifier of selected item
    * @param {string} [parameters.display_name] - Display name of group of selected item
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description User selected (clicked, or navigated to via keyboard) a result that appeared within autocomplete
    * @example
@@ -148,7 +154,7 @@ class Tracker {
    *   display_name: 'apparel',
    * });
    */
-  trackAutocompleteSelect(term, parameters) {
+  trackAutocompleteSelect(term, parameters, networkParameters = {}) {
     // Ensure term is provided (required)
     if (term && typeof term === 'string') {
       // Ensure parameters are provided (required)
@@ -183,7 +189,7 @@ class Tracker {
           };
         }
 
-        this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
+        this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`, undefined, undefined, networkParameters);
         this.requests.send();
 
         return true;
@@ -208,6 +214,8 @@ class Tracker {
    * @param {string} parameters.original_query - The current autocomplete search query
    * @param {string} [parameters.group_id] - Group identifier of selected item
    * @param {string} [parameters.display_name] - Display name of group of selected item
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description User submitted a search (pressing enter within input element, or clicking submit element)
    * @example
@@ -217,7 +225,7 @@ class Tracker {
    *   display_name: 'apparel',
    * });
    */
-  trackSearchSubmit(term, parameters) {
+  trackSearchSubmit(term, parameters, networkParameters = {}) {
     // Ensure term is provided (required)
     if (term && typeof term === 'string') {
       // Ensure parameters are provided (required)
@@ -237,7 +245,7 @@ class Tracker {
           };
         }
 
-        this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
+        this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`, undefined, undefined, networkParameters);
         this.requests.send();
 
         return true;
@@ -261,6 +269,8 @@ class Tracker {
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {number} parameters.num_results - Number of search results in total
    * @param {array} [parameters.item_ids] - List of product item unique identifiers in search results listing
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description User viewed a search product listing page
    * @example
@@ -269,7 +279,7 @@ class Tracker {
    *   item_ids: ['KMH876', 'KMH140', 'KMH437'],
    * });
    */
-  trackSearchResultsLoaded(term, parameters) {
+  trackSearchResultsLoaded(term, parameters, networkParameters = {}) {
     // Ensure term is provided (required)
     if (term && typeof term === 'string') {
       // Ensure parameters are provided (required)
@@ -289,7 +299,7 @@ class Tracker {
           queryParams.customer_ids = customer_ids.join(',');
         }
 
-        this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
+        this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`, undefined, undefined, networkParameters);
         this.requests.send();
 
         return true;
@@ -315,6 +325,8 @@ class Tracker {
    * @param {string} parameters.item_id - Product item unique identifier
    * @param {string} [parameters.variation_id] - Product item variation unique identifier
    * @param {string} [parameters.result_id] - Search result identifier (returned in response from Constructor)
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description User clicked a result that appeared within a search product listing page
    * @example
@@ -324,7 +336,7 @@ class Tracker {
    *   result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
    * });
    */
-  trackSearchResultClick(term, parameters) {
+  trackSearchResultClick(term, parameters, networkParameters = {}) {
     // Ensure term is provided (required)
     if (term && typeof term === 'string') {
       // Ensure parameters are provided (required)
@@ -355,7 +367,7 @@ class Tracker {
           queryParams.result_id = result_id;
         }
 
-        this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`);
+        this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`, undefined, undefined, networkParameters);
         this.requests.send();
 
         return true;
@@ -386,6 +398,8 @@ class Tracker {
    * @param {string} [parameters.display_name] - Display name for the custom conversion type
    * @param {string} [parameters.result_id] - Result identifier (returned in response from Constructor)
    * @param {string} [parameters.section] - Index section
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description User performed an action indicating interest in an item (add to cart, add to wishlist, etc.)
    * @example
@@ -399,7 +413,7 @@ class Tracker {
    *   section: 'Products',
    * });
    */
-  trackConversion(term, parameters) {
+  trackConversion(term, parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const searchTerm = helpers.ourEncodeURIComponent(term) || 'TERM_UNKNOWN';
@@ -470,6 +484,7 @@ class Tracker {
         requestURL,
         requestMethod,
         requestBody,
+        networkParameters,
       );
       this.requests.send();
 
@@ -490,6 +505,8 @@ class Tracker {
    * @param {number} parameters.revenue - Revenue
    * @param {string} [parameters.order_id] - Unique order identifier
    * @param {string} [parameters.section] - Index section
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description User completed an order (usually fired on order confirmation page)
    * @example
@@ -500,7 +517,7 @@ class Tracker {
    *   section: 'Products',
    * });
    */
-  trackPurchase(parameters) {
+  trackPurchase(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/purchase?`;
@@ -542,6 +559,7 @@ class Tracker {
         requestURL,
         requestMethod,
         requestBody,
+        networkParameters,
       );
       this.requests.send();
 
@@ -565,6 +583,8 @@ class Tracker {
    * @param {number} [parameters.result_page] - Page number of results
    * @param {string} [parameters.result_id] - Recommendation result identifier (returned in response from Constructor)
    * @param {string} [parameters.section="Products"] - Results section
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description User viewed a set of recommendations
    * @example
@@ -577,7 +597,7 @@ class Tracker {
    *   num_results_viewed: 3,
    * });
    */
-  trackRecommendationView(parameters) {
+  trackRecommendationView(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/recommendation_result_view?`;
@@ -630,6 +650,7 @@ class Tracker {
         requestURL,
         requestMethod,
         requestBody,
+        networkParameters,
       );
       this.requests.send();
 
@@ -656,6 +677,8 @@ class Tracker {
    * @param {number} [parameters.result_page] - Page number of results
    * @param {number} [parameters.result_position_on_page] - Position of result on page
    * @param {number} [parameters.num_results_per_page] - Number of results on page
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description User clicked an item that appeared within a list of recommended results
    * @example
@@ -671,7 +694,7 @@ class Tracker {
    *   item_id: 'KMH876',
    * });
    */
-  trackRecommendationClick(parameters) {
+  trackRecommendationClick(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/recommendation_result_click?`;
@@ -739,6 +762,7 @@ class Tracker {
         requestURL,
         requestMethod,
         requestBody,
+        networkParameters,
       );
       this.requests.send();
 
@@ -766,6 +790,8 @@ class Tracker {
    * @param {string} [parameters.sort_order] - Sort order ('ascending' or 'descending')
    * @param {string} [parameters.sort_by] - Sorting method
    * @param {array} [parameters.items] - List of product item objects
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description User viewed a browse product listing page
    * @example
@@ -782,7 +808,7 @@ class Tracker {
    *   filter_value: 'XYZ',
    * });
    */
-  trackBrowseResultsLoaded(parameters) {
+  trackBrowseResultsLoaded(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/browse_result_load?`;
@@ -855,6 +881,7 @@ class Tracker {
         requestURL,
         requestMethod,
         requestBody,
+        networkParameters,
       );
       this.requests.send();
 
@@ -882,6 +909,8 @@ class Tracker {
    * @param {number} [parameters.result_position_on_page] - Position of clicked item
    * @param {number} [parameters.num_results_per_page] - Number of results shown
    * @param {string} [parameters.selected_filters] -  Selected filters
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description User clicked a result that appeared within a browse product listing page
    * @example
@@ -898,7 +927,7 @@ class Tracker {
    *   item_id: 'KMH876',
    * });
    */
-  trackBrowseResultClick(parameters) {
+  trackBrowseResultClick(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/browse_result_click?`;
@@ -971,6 +1000,7 @@ class Tracker {
         requestURL,
         requestMethod,
         requestBody,
+        networkParameters,
       );
       this.requests.send();
 
@@ -991,6 +1021,8 @@ class Tracker {
    * @param {string} [parameters.item_name] - Product item name
    * @param {string} [parameters.variation_id] - Product item variation unique identifier
    * @param {string} [parameters.section="Products"] - Index section
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description User clicked a result that appeared outside of the scope of search / browse / recommendations
    * @example
@@ -1000,7 +1032,7 @@ class Tracker {
    *   variation_id: 'KMH879-7632',
    * });
    */
-  trackGenericResultClick(parameters) {
+  trackGenericResultClick(parameters, networkParameters = {}) {
     // Ensure required parameters are provided
     if (typeof parameters === 'object' && !!parameters.item_id) {
       const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/result_click?`;
@@ -1031,6 +1063,7 @@ class Tracker {
         requestURL,
         requestMethod,
         requestBody,
+        networkParameters,
       );
       this.requests.send();
 
