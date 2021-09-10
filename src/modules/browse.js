@@ -300,7 +300,7 @@ class Browse {
    *     filters: {
    *         group_id: 'drill_collection'
    *     },
-   *     fmt_options: {
+   *     fmtOptions: {
    *         groups_max_depth: 2
    *     }
    * });
