@@ -130,8 +130,8 @@ const utils = {
     if (typeof purchaseEventStorage === 'string') {
       purchaseEventStorage = JSON.parse(purchaseEventStorage);
     }
-    if (purchaseEventStorage) {
 
+    if (purchaseEventStorage) {
       // If the order already exists, do nothing
       if (purchaseEventStorage[orderIdHash]) {
         return;
@@ -139,7 +139,6 @@ const utils = {
 
       purchaseEventStorage[orderIdHash] = true;
     } else {
-
       // Create a new object map for the order ids
       purchaseEventStorage = {
         [orderIdHash]: true,

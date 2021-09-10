@@ -1069,7 +1069,7 @@ class Tracker {
   }
 }
 
-// For Testing Purposes
+// Exposed for testing
 Tracker.RequestQueue = RequestQueue;
 
 module.exports = Tracker;
