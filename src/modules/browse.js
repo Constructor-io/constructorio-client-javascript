@@ -169,7 +169,7 @@ class Browse {
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
-   * @see https://docs.constructor.io/rest_api/browse/
+   * @see https://docs.constructor.io/rest_api/browse/results
    * @example
    * constructorio.browse.getBrowseResults('group_id', 't-shirts', {
    *     resultsPerPage: 40,
@@ -294,13 +294,13 @@ class Browse {
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
-   * @see https://docs.constructor.io/rest-api.html#browse-groups
+   * @see https://docs.constructor.io/rest_api/browse/groups
    * @example
    * constructorio.browse.getBrowseGroups({
    *     filters: {
    *         group_id: 'drill_collection'
    *     },
-   *     fmt_options: {
+   *     fmtOptions: {
    *         groups_max_depth: 2
    *     }
    * });
