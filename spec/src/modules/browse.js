@@ -945,5 +945,20 @@ describe('ConstructorIO - Browse', () => {
 
       return expect(browse.getBrowseFacets()).to.eventually.be.rejected;
     });
+
+    it('Should be rejected when network request timeout is provided and reached', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseFacets({}, { timeout: 10 })).to.eventually.be.rejectedWith('The user aborted a request.');
+    });
+
+    it('Should be rejected when global network request timeout is provided and reached', () => {
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        networkParameters: { timeout: 20 },
+      });
+
+      return expect(browse.getBrowseFacets({})).to.eventually.be.rejectedWith('The user aborted a request.');
+    });
   });
 });
