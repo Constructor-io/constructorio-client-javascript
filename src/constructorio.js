@@ -143,4 +143,7 @@ class ConstructorIO {
   }
 }
 
+// Exposed for testing
+ConstructorIO.Tracker = Tracker;
+
 module.exports = ConstructorIO;

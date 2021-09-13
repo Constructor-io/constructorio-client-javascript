@@ -293,9 +293,9 @@ class Tracker {
         }
 
         // Ensure support for both item_ids and customer_ids as parameters
-        if (item_ids && Array.isArray(item_ids)) {
+        if (item_ids && Array.isArray(item_ids) && item_ids.length) {
           queryParams.customer_ids = item_ids.join(',');
-        } else if (customer_ids && Array.isArray(customer_ids)) {
+        } else if (customer_ids && Array.isArray(customer_ids) && customer_ids.length) {
           queryParams.customer_ids = customer_ids.join(',');
         }
 
@@ -1101,5 +1101,8 @@ class Tracker {
     return true;
   }
 }
+
+// Exposed for testing
+Tracker.RequestQueue = RequestQueue;
 
 module.exports = Tracker;

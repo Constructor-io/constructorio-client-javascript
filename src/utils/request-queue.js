@@ -44,100 +44,107 @@ class RequestQueue {
     }
   }
 
-  // Read from queue and send requests to server
-  send() {
-    if (this.sendTrackingEvents) {
-      // Defer sending of events to give beforeunload time to register (avoids race condition)
-      setTimeout(() => {
-        const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
-        const queue = RequestQueue.get();
+  // Read from queue and send events to server
+  sendEvents() {
+    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const queue = RequestQueue.get();
 
-        if (
-          // Consider user "human" if no DOM context is available
-          (!helpers.canUseDOM() || this.humanity.isHuman())
-          && !this.requestPending
-          && !this.pageUnloading
-          && queue.length
-        ) {
-          let request;
-          let nextInQueue = queue.shift();
-          const { networkParameters } = nextInQueue;
-          let signal;
+    if (
+      // Consider user "human" if no DOM context is available
+      (!helpers.canUseDOM() || this.humanity.isHuman())
+      && !this.requestPending
+      && !this.pageUnloading
+      && queue.length
+    ) {
+      let request;
+      let nextInQueue = queue.shift();
+      const { networkParameters } = nextInQueue;
+      let signal;
 
-          if (networkParameters) {
-            const controller = new AbortController();
-            ({ signal } = controller);
-            helpers.applyNetworkTimeout(this.options, networkParameters, controller);
-          }
+      if (networkParameters) {
+        const controller = new AbortController();
+        ({ signal } = controller);
+        helpers.applyNetworkTimeout(this.options, networkParameters, controller);
+      }
 
-          RequestQueue.set(queue);
+      RequestQueue.set(queue);
 
-          // Backwards compatibility with versions <= 2.0.0, can be removed in future
-          // - Request queue entries used to be strings with 'GET' method assumed
-          if (typeof nextInQueue === 'string') {
-            nextInQueue = {
-              url: nextInQueue,
-              method: 'GET',
-            };
-          }
+      // Backwards compatibility with versions <= 2.0.0, can be removed in future
+      // - Request queue entries used to be strings with 'GET' method assumed
+      if (typeof nextInQueue === 'string') {
+        nextInQueue = {
+          url: nextInQueue,
+          method: 'GET',
+        };
+      }
 
-          if (nextInQueue.method === 'GET') {
-            request = fetch(nextInQueue.url, { signal });
-          }
+      if (nextInQueue.method === 'GET') {
+        request = fetch(nextInQueue.url, { signal });
+      }
 
-          if (nextInQueue.method === 'POST') {
-            request = fetch(nextInQueue.url, {
+      if (nextInQueue.method === 'POST') {
+        request = fetch(nextInQueue.url, {
+          method: nextInQueue.method,
+          body: JSON.stringify(nextInQueue.body),
+          mode: 'cors',
+          headers: { 'Content-Type': 'text/plain' },
+          signal,
+        });
+      }
+
+      if (request) {
+        this.requestPending = true;
+        const instance = this;
+
+        request.then((response) => {
+          // Request was successful, and returned a 2XX status code
+          if (response.ok) {
+            instance.eventemitter.emit('success', {
+              url: nextInQueue.url,
               method: nextInQueue.method,
-              body: JSON.stringify(nextInQueue.body),
-              mode: 'cors',
-              headers: { 'Content-Type': 'text/plain' },
-              signal,
+              message: 'ok',
             });
           }
 
-          if (request) {
-            this.requestPending = true;
-            const instance = this;
-
-            request.then((response) => {
-              // Request was successful, and returned a 2XX status code
-              if (response.ok) {
-                instance.eventemitter.emit('success', {
-                  url: nextInQueue.url,
-                  method: nextInQueue.method,
-                  message: 'ok',
-                });
-              }
-
-              // Request was successful, but returned a non-2XX status code
-              else {
-                response.json().then((json) => {
-                  instance.eventemitter.emit('error', {
-                    url: nextInQueue.url,
-                    method: nextInQueue.method,
-                    message: json && json.message,
-                  });
-                }).catch((error) => {
-                  instance.eventemitter.emit('error', {
-                    url: nextInQueue.url,
-                    method: nextInQueue.method,
-                    message: error.type,
-                  });
-                });
-              }
+          // Request was successful, but returned a non-2XX status code
+          else {
+            response.json().then((json) => {
+              instance.eventemitter.emit('error', {
+                url: nextInQueue.url,
+                method: nextInQueue.method,
+                message: json && json.message,
+              });
             }).catch((error) => {
               instance.eventemitter.emit('error', {
                 url: nextInQueue.url,
                 method: nextInQueue.method,
-                message: error.toString(),
+                message: error.type,
               });
-            }).finally(() => {
-              this.requestPending = false;
-              this.send();
             });
           }
-        }
-      }, (this.options && this.options.trackingSendDelay) || 250);
+        }).catch((error) => {
+          instance.eventemitter.emit('error', {
+            url: nextInQueue.url,
+            method: nextInQueue.method,
+            message: error.toString(),
+          });
+        }).finally(() => {
+          this.requestPending = false;
+          this.send();
+        });
+      }
+    }
+  }
+
+  // Read from queue and send requests to server
+  send() {
+    if (this.sendTrackingEvents) {
+      if (this.options && this.options.trackingSendDelay === 0) {
+        this.sendEvents();
+      } else {
+        // Defer sending of events to give beforeunload time to register (avoids race condition)
+        setTimeout(this.sendEvents.bind(this), (this.options && this.options.trackingSendDelay) || 250);
+      }
     }
   }
 
