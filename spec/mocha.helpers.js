@@ -9,6 +9,7 @@ const setupDOM = () => {
 
   global.window = window;
   global.document = window.document;
+  global.AbortController = window.AbortController;
 };
 
 // Tear down mock DOM environment

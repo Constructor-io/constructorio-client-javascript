@@ -90,6 +90,8 @@ class Recommendations {
    * @param {string} [parameters.section] - The section to return results from
    * @param {string} [parameters.term] - The term to use to refine results (strategy specific)
    * @param {object} [parameters.filters] - Key / value mapping of filters used to refine results (strategy specific)
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
    * @see https://docs.constructor.io/rest_api/recommendations
    * @example
@@ -100,9 +102,11 @@ class Recommendations {
    *     },
    * });
    */
-  getRecommendations(podId, parameters) {
+  getRecommendations(podId, parameters, networkParameters = {}) {
     let requestUrl;
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const controller = new AbortController();
+    const { signal } = controller;
 
     parameters = parameters || {};
 
@@ -112,7 +116,10 @@ class Recommendations {
       return Promise.reject(e);
     }
 
-    return fetch(requestUrl)
+    // Handle network timeout if specified
+    helpers.applyNetworkTimeout(this.options, networkParameters, controller);
+
+    return fetch(requestUrl, { signal })
       .then((response) => {
         if (response.ok) {
           return response.json();

@@ -426,6 +426,30 @@ describe('ConstructorIO - Browse', () => {
 
       return expect(browse.getBrowseResults(filterName, filterValue)).to.eventually.be.rejected;
     });
+
+    it('Should be rejected when network request timeout is provided and reached', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseResults(
+        filterName,
+        filterValue,
+        {},
+        { timeout: 10 },
+      )).to.eventually.be.rejectedWith('The user aborted a request.');
+    });
+
+    it('Should be rejected when global network request timeout is provided and reached', () => {
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        networkParameters: { timeout: 20 },
+      });
+
+      return expect(browse.getBrowseResults(
+        filterName,
+        filterValue,
+        {},
+      )).to.eventually.be.rejectedWith('The user aborted a request.');
+    });
   });
 
   describe('getBrowseResultsForItemIds', () => {
@@ -743,6 +767,21 @@ describe('ConstructorIO - Browse', () => {
 
       return expect(browse.getBrowseResultsForItemIds(ids)).to.eventually.be.rejected;
     });
+
+    it('Should be rejected when network request timeout is provided and reached', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseResultsForItemIds(ids, {}, { timeout: 10 })).to.eventually.be.rejectedWith('The user aborted a request.');
+    });
+
+    it('Should be rejected when global network request timeout is provided and reached', () => {
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        networkParameters: { timeout: 20 },
+      });
+
+      return expect(browse.getBrowseResultsForItemIds(ids, {}, {})).to.eventually.be.rejectedWith('The user aborted a request.');
+    });
   });
 
   describe('getBrowseGroups', () => {
@@ -819,6 +858,21 @@ describe('ConstructorIO - Browse', () => {
       const { browse } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
 
       return expect(browse.getBrowseGroups()).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected when network request timeout is provided and reached', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseGroups({}, { timeout: 10 })).to.eventually.be.rejectedWith('The user aborted a request.');
+    });
+
+    it('Should be rejected when global network request timeout is provided and reached', () => {
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        networkParameters: { timeout: 20 },
+      });
+
+      return expect(browse.getBrowseGroups({})).to.eventually.be.rejectedWith('The user aborted a request.');
     });
   });
 

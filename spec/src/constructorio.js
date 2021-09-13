@@ -41,12 +41,14 @@ describe('ConstructorIO', () => {
     const sessionId = 'session-id';
     const serviceUrl = 'http://constructor.io';
     const version = 'custom-version';
+    const networkParameters = { timeout: 5000 };
     const instance = new ConstructorIO({
       apiKey: validApiKey,
       clientId,
       sessionId,
       serviceUrl,
       version,
+      networkParameters,
     });
 
     expect(instance).to.be.an('object');
@@ -54,6 +56,7 @@ describe('ConstructorIO', () => {
     expect(instance.options).to.have.property('sessionId').to.equal(sessionId);
     expect(instance.options).to.have.property('serviceUrl').to.equal(serviceUrl);
     expect(instance.options).to.have.property('version').to.equal(version);
+    expect(instance.options).to.have.property('networkParameters').to.equal(networkParameters);
   });
 
   it('Should emit an event with options data', (done) => {

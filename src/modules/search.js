@@ -124,6 +124,8 @@ class Search {
    * @param {string} [parameters.sortOrder='descending'] - The sort order for results
    * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
    * @see https://docs.constructor.io/rest_api/search/
    * @example
@@ -134,9 +136,11 @@ class Search {
    *     },
    * });
    */
-  getSearchResults(query, parameters) {
+  getSearchResults(query, parameters, networkParameters = {}) {
     let requestUrl;
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const controller = new AbortController();
+    const { signal } = controller;
 
     try {
       requestUrl = createSearchUrl(query, parameters, this.options);
@@ -144,7 +148,10 @@ class Search {
       return Promise.reject(e);
     }
 
-    return fetch(requestUrl)
+    // Handle network timeout if specified
+    helpers.applyNetworkTimeout(this.options, networkParameters, controller);
+
+    return fetch(requestUrl, { signal })
       .then((response) => {
         if (response.ok) {
           return response.json();
