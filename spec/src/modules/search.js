@@ -7,29 +7,44 @@ const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
-const ConstructorIO = require('../../../test/constructorio');
+const fs = require('fs');
+let ConstructorIO = require('../../../test/constructorio');
 const helpers = require('../../mocha.helpers');
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
 dotenv.config();
 
-const testApiKey = process.env.TEST_API_KEY;
 const { fetch } = fetchPonyfill({ Promise });
+const testApiKey = process.env.TEST_API_KEY;
+const clientVersion = 'cio-mocha';
+const runTestsAgainstBundle = process.env.RUN_TESTS_AGAINST_BUNDLE === 'true';
+const bundledDescriptionSuffix = runTestsAgainstBundle ? ' - Bundled' : '';
+const timeoutRejectionMessage = runTestsAgainstBundle ? 'Aborted' : 'The user aborted a request.'
 
-describe('ConstructorIO - Search', () => {
-  const clientVersion = 'cio-mocha';
+describe.only(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
+  const jsdomOptions = { url: 'http://localhost' };
   let fetchSpy;
 
-  jsdom({ url: 'http://localhost' });
+  if (runTestsAgainstBundle) {
+    jsdomOptions.src = fs.readFileSync(`./dist/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.js`, 'utf-8');
+  }
+
+  jsdom(jsdomOptions);
 
   beforeEach(() => {
     global.CLIENT_VERSION = clientVersion;
+    window.CLIENT_VERSION = clientVersion;
     fetchSpy = sinon.spy(fetch);
+
+    if (runTestsAgainstBundle) {
+      ConstructorIO = window.ConstructorioClient;
+    }
   });
 
   afterEach(() => {
     delete global.CLIENT_VERSION;
+    delete window.CLIENT_VERSION;
 
     fetchSpy = null;
   });
@@ -413,7 +428,7 @@ describe('ConstructorIO - Search', () => {
     it('Should be rejected when network request timeout is provided and reached', () => {
       const { search } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(search.getSearchResults(query, { section }, { timeout: 10 })).to.eventually.be.rejectedWith('The user aborted a request.');
+      return expect(search.getSearchResults(query, { section }, { timeout: 10 })).to.eventually.be.rejectedWith(timeoutRejectionMessage);
     });
 
     it('Should be rejected when global network request timeout is provided and reached', () => {
@@ -422,7 +437,7 @@ describe('ConstructorIO - Search', () => {
         networkParameters: { timeout: 20 },
       });
 
-      return expect(search.getSearchResults(query, { section })).to.eventually.be.rejectedWith('The user aborted a request.');
+      return expect(search.getSearchResults(query, { section })).to.eventually.be.rejectedWith(timeoutRejectionMessage);
     });
   });
 });

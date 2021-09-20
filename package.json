@@ -10,7 +10,7 @@
     "lint": "eslint 'src/**/*.js' 'spec/**/*.js'",
     "test": "npm run compile && mkdir -p test && cp -rf lib/* test && mocha ./spec/* --opts ./mocha.opts --recursive",
     "test:src": "mkdir -p test && cp -rf src/* test && mocha ./spec/* --opts ./mocha.opts --recursive",
-    "test:bundle": "npm run bundle && RUN_TESTS_AGAINST_BUNDLE=true PACKAGE_VERSION=$(echo $npm_package_version) mocha ./spec/* --opts ./mocha.opts --recursive",
+    "test:bundled": "npm run bundle && RUN_TESTS_AGAINST_BUNDLE=true PACKAGE_VERSION=$(echo $npm_package_version) mocha ./spec/* --opts ./mocha.opts --recursive",
     "precoverage": "rm -rf ./coverage && rm -rf ./.nyc_output",
     "coverage": "nyc --all --reporter=html npm run test:src",
     "postcoverage": "serve --listen 8080 --config ./serve.json && rm -rf test",

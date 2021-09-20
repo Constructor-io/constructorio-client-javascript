@@ -10,7 +10,7 @@ const clientVersion = 'cio-mocha';
 const runTestsAgainstBundle = process.env.RUN_TESTS_AGAINST_BUNDLE === 'true';
 const bundledDescriptionSuffix = runTestsAgainstBundle ? ' - Bundled' : '';
 
-describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
+describe.only(`ConstructorIO${bundledDescriptionSuffix}`, () => {
   const jsdomOptions = { url: 'http://localhost' };
 
   if (runTestsAgainstBundle) {
