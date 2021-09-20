@@ -20,9 +20,9 @@ const testApiKey = process.env.TEST_API_KEY;
 const clientVersion = 'cio-mocha';
 const runTestsAgainstBundle = process.env.RUN_TESTS_AGAINST_BUNDLE === 'true';
 const bundledDescriptionSuffix = runTestsAgainstBundle ? ' - Bundled' : '';
-const timeoutRejectionMessage = runTestsAgainstBundle ? 'Aborted' : 'The user aborted a request.'
+const timeoutRejectionMessage = runTestsAgainstBundle ? 'Aborted' : 'The user aborted a request.';
 
-describe.only(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
+describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
   const jsdomOptions = { url: 'http://localhost' };
   let fetchSpy;
 
@@ -428,7 +428,11 @@ describe.only(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     it('Should be rejected when network request timeout is provided and reached', () => {
       const { search } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(search.getSearchResults(query, { section }, { timeout: 10 })).to.eventually.be.rejectedWith(timeoutRejectionMessage);
+      return expect(search.getSearchResults(
+        query,
+        { section },
+        { timeout: 10 },
+      )).to.eventually.be.rejectedWith(timeoutRejectionMessage);
     });
 
     it('Should be rejected when global network request timeout is provided and reached', () => {
