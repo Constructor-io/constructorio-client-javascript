@@ -10,12 +10,13 @@
     "lint": "eslint 'src/**/*.js' 'spec/**/*.js'",
     "test": "npm run compile && mkdir -p test && cp -rf lib/* test && mocha ./spec/* --opts ./mocha.opts --recursive",
     "test:src": "mkdir -p test && cp -rf src/* test && mocha ./spec/* --opts ./mocha.opts --recursive",
+    "test:bundle": "npm run bundle && RUN_TESTS_AGAINST_BUNDLE=true mocha ./spec/* --opts ./mocha.opts --recursive",
     "precoverage": "rm -rf ./coverage && rm -rf ./.nyc_output",
     "coverage": "nyc --all --reporter=html npm run test:src",
     "postcoverage": "serve --listen 8080 --config ./serve.json && rm -rf test",
     "docs": "jsdoc --configure ./.jsdoc.json ./README.md --recurse ./src --destination ./docs",
     "compile": "babel src/ -d lib/",
-    "prepublish": "npm run compile && npm run bundle",
+    "prepublish": "npm run bundle",
     "bundle": "rm -rf ./dist/* && npm run compile && esbuild ./lib/constructorio.js --bundle --minify --outfile=\"./dist/constructorio-client-javascript-$(echo $npm_package_version)\".js"
   },
   "repository": {

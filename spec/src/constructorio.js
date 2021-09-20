@@ -2,17 +2,29 @@
 const { expect } = require('chai');
 const jsdom = require('mocha-jsdom');
 const sinon = require('sinon');
-const ConstructorIO = require('../../test/constructorio');
+const fs = require('fs');
+let ConstructorIO = require('../../test/constructorio');
 
 const validApiKey = 'testing';
+const runTestsAgainstBundle = process.env.RUN_TESTS_AGAINST_BUNDLE === 'true';
 
 describe('ConstructorIO', () => {
   jsdom({
     url: 'http://localhost',
   });
 
-  beforeEach(() => {
+  beforeEach((done) => {
     global.CLIENT_VERSION = 'cio-mocha';
+
+    if (runTestsAgainstBundle) {
+      const script = document.createElement('script');
+
+      script.type = 'text/javascript';
+      script.text = fs.readFileSync('./dist/constructorio-client-javascript-2.22.2.js');
+
+      document.head.appendChild(script);
+      done();
+    }
   });
 
   afterEach(() => {
