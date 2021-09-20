@@ -8,36 +8,48 @@ const sinonChai = require('sinon-chai');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
 const cloneDeep = require('lodash.clonedeep');
+const fs = require('fs');
 const store = require('../../../test/utils/store');
-const ConstructorIO = require('../../../test/constructorio');
 const helpers = require('../../mocha.helpers');
 const { addOrderIdRecord } = require('../../../src/utils/helpers');
+let ConstructorIO = require('../../../test/constructorio');
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
 dotenv.config();
 
-const delayBetweenTests = 25;
-const testApiKey = process.env.TEST_API_KEY;
 const { fetch } = fetchPonyfill({ Promise });
+const testApiKey = process.env.TEST_API_KEY;
+const clientVersion = 'cio-mocha';
+const delayBetweenTests = 25;
+const runTestsAgainstBundle = process.env.RUN_TESTS_AGAINST_BUNDLE === 'true';
+const bundledDescriptionSuffix = runTestsAgainstBundle ? ' - Bundled' : '';
+const timeoutRejectionMessage = runTestsAgainstBundle ? 'Aborted' : 'The user aborted a request.';
 
-describe('ConstructorIO - Tracker', () => {
-  const clientVersion = 'cio-mocha';
+describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   let fetchSpy = null;
+  const jsdomOptions = { url: 'http://localhost.test/path/name?query=term&category=cat' };
   const requestQueueOptions = {
     sendTrackingEvents: true,
     trackingSendDelay: 1,
   };
 
-  jsdom({
-    url: 'http://localhost.test/path/name?query=term&category=cat',
-  });
+  if (runTestsAgainstBundle) {
+    jsdomOptions.src = fs.readFileSync(`./dist/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.js`, 'utf-8');
+  }
+
+  jsdom(jsdomOptions);
 
   beforeEach(() => {
     store.session.set('_constructorio_is_human', true);
 
     fetchSpy = sinon.spy(fetch);
     global.CLIENT_VERSION = clientVersion;
+    window.CLIENT_VERSION = clientVersion;
+
+    if (runTestsAgainstBundle) {
+      ConstructorIO = window.ConstructorioClient;
+    }
   });
 
   afterEach((done) => {
@@ -45,12 +57,14 @@ describe('ConstructorIO - Tracker', () => {
 
     fetchSpy = null;
 
+    delete window.CLIENT_VERSION;
     delete global.CLIENT_VERSION;
+
     setTimeout(done, delayBetweenTests);
   });
 
   describe('trackSessionStart', () => {
-    it('Should respond with a valid response', (done) => {
+    it.only('Should respond with a valid response', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,

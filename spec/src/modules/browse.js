@@ -8,8 +8,8 @@ const sinonChai = require('sinon-chai');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
 const fs = require('fs');
-let ConstructorIO = require('../../../test/constructorio');
 const helpers = require('../../mocha.helpers');
+let ConstructorIO = require('../../../test/constructorio');
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
