@@ -6,29 +6,31 @@ const fs = require('fs');
 let ConstructorIO = require('../../test/constructorio');
 
 const validApiKey = 'testing';
+const clientVersion = 'cio-mocha';
 const runTestsAgainstBundle = process.env.RUN_TESTS_AGAINST_BUNDLE === 'true';
+const bundledDescriptionSuffix = runTestsAgainstBundle ? ' - Bundled' : '';
 
-describe('ConstructorIO', () => {
-  jsdom({
-    url: 'http://localhost',
-  });
+describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
+  const jsdomOptions = { url: 'http://localhost' };
 
-  beforeEach((done) => {
-    global.CLIENT_VERSION = 'cio-mocha';
+  if (runTestsAgainstBundle) {
+    jsdomOptions.src = fs.readFileSync(`./dist/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.js`, 'utf-8');
+  }
+
+  jsdom(jsdomOptions);
+
+  beforeEach(() => {
+    global.CLIENT_VERSION = clientVersion;
+    window.CLIENT_VERSION = clientVersion;
 
     if (runTestsAgainstBundle) {
-      const script = document.createElement('script');
-
-      script.type = 'text/javascript';
-      script.text = fs.readFileSync('./dist/constructorio-client-javascript-2.22.2.js');
-
-      document.head.appendChild(script);
-      done();
+      ConstructorIO = window.ConstructorioClient;
     }
   });
 
   afterEach(() => {
     delete global.CLIENT_VERSION;
+    delete window.CLIENT_VERSION;
   });
 
   it('Should return an instance when valid API key is provided', () => {
@@ -37,7 +39,7 @@ describe('ConstructorIO', () => {
     expect(instance).to.be.an('object');
     expect(instance).to.have.property('options').to.be.an('object');
     expect(instance.options).to.have.property('apiKey').to.equal(validApiKey);
-    expect(instance.options).to.have.property('version').to.equal(global.CLIENT_VERSION);
+    expect(instance.options).to.have.property('version').to.equal(clientVersion);
     expect(instance.options).to.have.property('serviceUrl');
     expect(instance.options).to.have.property('clientId');
     expect(instance.options).to.have.property('sessionId');
@@ -299,76 +301,78 @@ describe('ConstructorIO', () => {
   });
 });
 
-describe('ConstructorIO - without DOM context', () => {
-  const clientId = '6c73138f-a87b-49f0-872d-63b00ed0e395';
-  const sessionId = 2;
+if (!runTestsAgainstBundle) {
+  describe('ConstructorIO - without DOM context', () => {
+    const clientId = '6c73138f-a87b-49f0-872d-63b00ed0e395';
+    const sessionId = 2;
 
-  beforeEach(() => {
-    global.CLIENT_VERSION = 'cio-mocha';
-  });
-
-  afterEach(() => {
-    delete global.CLIENT_VERSION;
-  });
-
-  it('Should return an instance if client and session identifiers are provided', () => {
-    const instance = new ConstructorIO({
-      apiKey: validApiKey,
-      clientId,
-      sessionId,
+    beforeEach(() => {
+      global.CLIENT_VERSION = 'cio-mocha';
     });
 
-    expect(instance).to.be.an('object');
-    expect(instance).to.have.property('options').to.be.an('object');
-    expect(instance.options).to.have.property('apiKey').to.equal(validApiKey);
-    expect(instance.options).to.have.property('version').to.equal(global.CLIENT_VERSION);
-    expect(instance.options).to.have.property('serviceUrl');
-    expect(instance).to.have.property('search');
-    expect(instance).to.have.property('autocomplete');
-    expect(instance).to.have.property('recommendations');
-    expect(instance).to.have.property('tracker');
-  });
-
-  it('Should throw an error if client identifier is not provided', () => {
-    expect(() => new ConstructorIO({
-      apiKey: validApiKey,
-      sessionId,
-    })).to.throw('clientId is a required user parameter of type string');
-  });
-
-  it('Should throw an error if client identifier is invalid', () => {
-    expect(() => new ConstructorIO({
-      apiKey: validApiKey,
-      sessionId,
-      clientId: 123,
-    })).to.throw('clientId is a required user parameter of type string');
-  });
-
-  it('Should throw an error if session identifier is not provided', () => {
-    expect(() => new ConstructorIO({
-      apiKey: validApiKey,
-      clientId,
-    })).to.throw('sessionId is a required user parameter of type number');
-  });
-
-  it('Should throw an error if session identifier is invalid', () => {
-    expect(() => new ConstructorIO({
-      apiKey: validApiKey,
-      clientId,
-      sessionId: 'aaa',
-    })).to.throw('sessionId is a required user parameter of type number');
-  });
-
-  it('Should have client version set to indicate no DOM context', () => {
-    global.CLIENT_VERSION = null;
-
-    const instance = new ConstructorIO({
-      apiKey: validApiKey,
-      clientId,
-      sessionId,
+    afterEach(() => {
+      delete global.CLIENT_VERSION;
     });
 
-    expect(instance).to.be.an('object');
-    expect(instance.options.version).to.include('-domless-');
+    it('Should return an instance if client and session identifiers are provided', () => {
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        clientId,
+        sessionId,
+      });
+
+      expect(instance).to.be.an('object');
+      expect(instance).to.have.property('options').to.be.an('object');
+      expect(instance.options).to.have.property('apiKey').to.equal(validApiKey);
+      expect(instance.options).to.have.property('version').to.equal(global.CLIENT_VERSION);
+      expect(instance.options).to.have.property('serviceUrl');
+      expect(instance).to.have.property('search');
+      expect(instance).to.have.property('autocomplete');
+      expect(instance).to.have.property('recommendations');
+      expect(instance).to.have.property('tracker');
+    });
+
+    it('Should throw an error if client identifier is not provided', () => {
+      expect(() => new ConstructorIO({
+        apiKey: validApiKey,
+        sessionId,
+      })).to.throw('clientId is a required user parameter of type string');
+    });
+
+    it('Should throw an error if client identifier is invalid', () => {
+      expect(() => new ConstructorIO({
+        apiKey: validApiKey,
+        sessionId,
+        clientId: 123,
+      })).to.throw('clientId is a required user parameter of type string');
+    });
+
+    it('Should throw an error if session identifier is not provided', () => {
+      expect(() => new ConstructorIO({
+        apiKey: validApiKey,
+        clientId,
+      })).to.throw('sessionId is a required user parameter of type number');
+    });
+
+    it('Should throw an error if session identifier is invalid', () => {
+      expect(() => new ConstructorIO({
+        apiKey: validApiKey,
+        clientId,
+        sessionId: 'aaa',
+      })).to.throw('sessionId is a required user parameter of type number');
+    });
+
+    it('Should have client version set to indicate no DOM context', () => {
+      global.CLIENT_VERSION = null;
+
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        clientId,
+        sessionId,
+      });
+
+      expect(instance).to.be.an('object');
+      expect(instance.options.version).to.include('-domless-');
+    });
   });
-});
+}

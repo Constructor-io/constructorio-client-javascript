@@ -85,7 +85,7 @@ class ConstructorIO {
 
     this.options = {
       apiKey,
-      version: version || global.CLIENT_VERSION || `ciojs-client-${canUseDOM ? '' : 'domless-'}${packageVersion}`,
+      version: version || (typeof global !== 'undefined' && global.CLIENT_VERSION) || `ciojs-client-${canUseDOM ? '' : 'domless-'}${packageVersion}`,
       serviceUrl: serviceUrl || 'https://ac.cnstrc.com',
       sessionId: sessionId || session_id,
       clientId: clientId || client_id,
