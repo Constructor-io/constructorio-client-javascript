@@ -146,4 +146,9 @@ class ConstructorIO {
 // Exposed for testing
 ConstructorIO.Tracker = Tracker;
 
+// Expose on window object if available
+if (helpers.canUseDOM()) {
+  window.ConstructorioClient = ConstructorIO;
+}
+
 module.exports = ConstructorIO;
