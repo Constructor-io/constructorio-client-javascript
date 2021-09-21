@@ -9,11 +9,11 @@ const helpers = require('../../mocha.helpers');
 chai.use(chaiAsPromised);
 dotenv.config();
 
-const runTestsAgainstBundle = process.env.RUN_TESTS_AGAINST_BUNDLE === 'true';
+const bundled = process.env.BUNDLED === 'true';
 
 describe('ConstructorIO - Utils - Event Dispatcher', () => {
   // Don't run tests in bundle context, as these tests are for library internals
-  if (!runTestsAgainstBundle) {
+  if (!bundled) {
     const beaconEventName = 'cio.beacon.loaded';
     const eventData = {
       name: 'search.getSearchResults.completed',

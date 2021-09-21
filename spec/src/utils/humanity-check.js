@@ -9,11 +9,11 @@ const helpers = require('../../mocha.helpers');
 chai.use(chaiAsPromised);
 dotenv.config();
 
-const runTestsAgainstBundle = process.env.RUN_TESTS_AGAINST_BUNDLE === 'true';
+const bundled = process.env.BUNDLED === 'true';
 
 describe('ConstructorIO - Utils - Humanity Check', () => {
   // Don't run tests in bundle context, as these tests are for library internals
-  if (!runTestsAgainstBundle) {
+  if (!bundled) {
     describe('isHuman', () => {
       const storageKey = '_constructorio_is_human';
 

@@ -22,9 +22,9 @@ const { fetch } = fetchPonyfill({ Promise });
 const testApiKey = process.env.TEST_API_KEY;
 const clientVersion = 'cio-mocha';
 const delayBetweenTests = 25;
-const runTestsAgainstBundle = process.env.RUN_TESTS_AGAINST_BUNDLE === 'true';
-const bundledDescriptionSuffix = runTestsAgainstBundle ? ' - Bundled' : '';
-const timeoutRejectionMessage = runTestsAgainstBundle ? 'AbortError: Aborted' : 'AbortError: The user aborted a request.';
+const bundled = process.env.BUNDLED === 'true';
+const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
+const timeoutRejectionMessage = bundled ? 'AbortError: Aborted' : 'AbortError: The user aborted a request.';
 
 describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   let fetchSpy = null;
@@ -34,7 +34,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     trackingSendDelay: 1,
   };
 
-  if (runTestsAgainstBundle) {
+  if (bundled) {
     jsdomOptions.src = fs.readFileSync(`./dist/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.js`, 'utf-8');
   }
 
@@ -48,7 +48,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     global.CLIENT_VERSION = clientVersion;
     window.CLIENT_VERSION = clientVersion;
 
-    if (runTestsAgainstBundle) {
+    if (bundled) {
       // store2 doesn't seem to maintain the `window` context for bundled version - set manually
       window.sessionStorage.clear();
       window.sessionStorage.setItem('_constructorio_is_human', true);
@@ -2433,7 +2433,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     // store2 doesn't seem to maintain the `window` context for bundled version
-    if (!runTestsAgainstBundle) {
+    if (!bundled) {
       it('Should not send a purchase event if the order has been tracked already', (done) => {
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,

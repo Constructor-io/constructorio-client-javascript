@@ -18,15 +18,15 @@ dotenv.config();
 const { fetch } = fetchPonyfill({ Promise });
 const testApiKey = process.env.TEST_API_KEY;
 const clientVersion = 'cio-mocha';
-const runTestsAgainstBundle = process.env.RUN_TESTS_AGAINST_BUNDLE === 'true';
-const bundledDescriptionSuffix = runTestsAgainstBundle ? ' - Bundled' : '';
-const timeoutRejectionMessage = runTestsAgainstBundle ? 'Aborted' : 'The user aborted a request.';
+const bundled = process.env.BUNDLED === 'true';
+const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
+const timeoutRejectionMessage = bundled ? 'Aborted' : 'The user aborted a request.';
 
 describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
   const jsdomOptions = { url: 'http://localhost' };
   let fetchSpy;
 
-  if (runTestsAgainstBundle) {
+  if (bundled) {
     jsdomOptions.src = fs.readFileSync(`./dist/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.js`, 'utf-8');
   }
 
@@ -37,7 +37,7 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     window.CLIENT_VERSION = clientVersion;
     fetchSpy = sinon.spy(fetch);
 
-    if (runTestsAgainstBundle) {
+    if (bundled) {
       ConstructorIO = window.ConstructorioClient;
     }
   });

@@ -12,11 +12,11 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 dotenv.config();
 
-const runTestsAgainstBundle = process.env.RUN_TESTS_AGAINST_BUNDLE === 'true';
+const bundled = process.env.BUNDLED === 'true';
 
 describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
   // Don't run tests in bundle context, as these tests are for library internals
-  if (!runTestsAgainstBundle) {
+  if (!bundled) {
     this.timeout(3000);
 
     const storageKey = '_constructorio_requests';

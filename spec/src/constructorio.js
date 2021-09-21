@@ -7,13 +7,13 @@ let ConstructorIO = require('../../test/constructorio');
 
 const validApiKey = 'testing';
 const clientVersion = 'cio-mocha';
-const runTestsAgainstBundle = process.env.RUN_TESTS_AGAINST_BUNDLE === 'true';
-const bundledDescriptionSuffix = runTestsAgainstBundle ? ' - Bundled' : '';
+const bundled = process.env.BUNDLED === 'true';
+const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 
 describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
   const jsdomOptions = { url: 'http://localhost' };
 
-  if (runTestsAgainstBundle) {
+  if (bundled) {
     jsdomOptions.src = fs.readFileSync(`./dist/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.js`, 'utf-8');
   }
 
@@ -23,7 +23,7 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
     global.CLIENT_VERSION = clientVersion;
     window.CLIENT_VERSION = clientVersion;
 
-    if (runTestsAgainstBundle) {
+    if (bundled) {
       ConstructorIO = window.ConstructorioClient;
     }
   });
@@ -119,6 +119,26 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
     expect(instance).to.be.an('object');
     expect(instance.options.version).to.not.include('-domless-');
   });
+
+  if (bundled) {
+    it('Should have client version set to indicate bundled context', () => {
+      window.CLIENT_VERSION = null;
+
+      const instance = new ConstructorIO({ apiKey: validApiKey });
+
+      expect(instance).to.be.an('object');
+      expect(instance.options.version).to.include('-bundled-');
+    });
+  } else {
+    it('Should not have client version set to indicate bundled context', () => {
+      global.CLIENT_VERSION = null;
+
+      const instance = new ConstructorIO({ apiKey: validApiKey });
+
+      expect(instance).to.be.an('object');
+      expect(instance.options.version).to.not.include('-bundled-');
+    });
+  }
 
   describe('setClientOptions', () => {
     it('Should update the client options with new API key', () => {
@@ -301,7 +321,7 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
   });
 });
 
-if (!runTestsAgainstBundle) {
+if (!bundled) {
   describe('ConstructorIO - without DOM context', () => {
     const clientId = '6c73138f-a87b-49f0-872d-63b00ed0e395';
     const sessionId = 2;
