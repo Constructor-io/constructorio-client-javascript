@@ -11,6 +11,8 @@ A JavaScript client for [Constructor.io](http://constructor.io/). [Constructor.i
 
 This package can be installed via npm: `npm i @constructor-io/constructorio-client-javascript`. Once installed, simply import or require the package into your repository.
 
+Alternatively, a bundled version consisting of a single JavaScript file is published within the `./dist` folder on Github. This can be utilized within a browser context if hosted locally - _please do not link directly to the Github hosted version_.
+
 ## 2. Retrieve an API key
 
 You can find this in your [Constructor.io dashboard](https://constructor.io/dashboard). Contact sales if you'd like to sign up, or support if you believe your company already has an account.
