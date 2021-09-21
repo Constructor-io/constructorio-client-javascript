@@ -18,7 +18,7 @@
     "docs": "jsdoc --configure ./.jsdoc.json ./README.md --recurse ./src --destination ./docs",
     "compile": "babel src/ -d lib/",
     "prepublish": "npm run compile",
-    "bundle": "rm -rf ./dist/* && npm run compile && BUNDLED=true esbuild ./lib/constructorio.js --bundle --minify --define:global=window --define:process.env={\\'BUNDLED\\':\\'true\\'} --outfile=\"./dist/constructorio-client-javascript-$(echo $npm_package_version)\".js"
+    "bundle": "rm -rf ./dist/* && npm run compile && node bundle.js"
   },
   "repository": {
     "type": "git",
