@@ -9,46 +9,51 @@ const helpers = require('../../mocha.helpers');
 chai.use(chaiAsPromised);
 dotenv.config();
 
+const runTestsAgainstBundle = process.env.RUN_TESTS_AGAINST_BUNDLE === 'true';
+
 describe('ConstructorIO - Utils - Humanity Check', () => {
-  describe('isHuman', () => {
-    const storageKey = '_constructorio_is_human';
+  // Don't run tests in bundle context, as these tests are for library internals
+  if (!runTestsAgainstBundle) {
+    describe('isHuman', () => {
+      const storageKey = '_constructorio_is_human';
 
-    beforeEach(() => {
-      global.CLIENT_VERSION = 'cio-mocha';
+      beforeEach(() => {
+        global.CLIENT_VERSION = 'cio-mocha';
 
-      helpers.setupDOM();
+        helpers.setupDOM();
+      });
+
+      afterEach(() => {
+        delete global.CLIENT_VERSION;
+
+        helpers.teardownDOM();
+        helpers.clearStorage();
+      });
+
+      it('Should not have isHuman flag set on initial instantiation', () => {
+        const humanity = new HumanityCheck();
+
+        expect(humanity.isHuman()).to.equal(false);
+        expect(store.session.get(storageKey)).to.equal(null);
+      });
+
+      it('Should have isHuman flag set if human-like actions are detected', () => {
+        const humanity = new HumanityCheck();
+
+        expect(humanity.isHuman()).to.equal(false);
+        helpers.triggerResize();
+        expect(humanity.isHuman()).to.equal(true);
+        expect(store.session.get(storageKey)).to.equal(true);
+      });
+
+      it('Should have isHuman flag set if session variable is set', () => {
+        const humanity = new HumanityCheck();
+
+        expect(humanity.isHuman()).to.equal(false);
+        store.session.set(storageKey, true);
+        expect(humanity.isHuman()).to.equal(true);
+        expect(store.session.get(storageKey)).to.equal(true);
+      });
     });
-
-    afterEach(() => {
-      delete global.CLIENT_VERSION;
-
-      helpers.teardownDOM();
-      helpers.clearStorage();
-    });
-
-    it('Should not have isHuman flag set on initial instantiation', () => {
-      const humanity = new HumanityCheck();
-
-      expect(humanity.isHuman()).to.equal(false);
-      expect(store.session.get(storageKey)).to.equal(null);
-    });
-
-    it('Should have isHuman flag set if human-like actions are detected', () => {
-      const humanity = new HumanityCheck();
-
-      expect(humanity.isHuman()).to.equal(false);
-      helpers.triggerResize();
-      expect(humanity.isHuman()).to.equal(true);
-      expect(store.session.get(storageKey)).to.equal(true);
-    });
-
-    it('Should have isHuman flag set if session variable is set', () => {
-      const humanity = new HumanityCheck();
-
-      expect(humanity.isHuman()).to.equal(false);
-      store.session.set(storageKey, true);
-      expect(humanity.isHuman()).to.equal(true);
-      expect(store.session.get(storageKey)).to.equal(true);
-    });
-  });
+  }
 });

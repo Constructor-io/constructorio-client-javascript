@@ -24,9 +24,9 @@ const clientVersion = 'cio-mocha';
 const delayBetweenTests = 25;
 const runTestsAgainstBundle = process.env.RUN_TESTS_AGAINST_BUNDLE === 'true';
 const bundledDescriptionSuffix = runTestsAgainstBundle ? ' - Bundled' : '';
-const timeoutRejectionMessage = runTestsAgainstBundle ? 'Aborted' : 'The user aborted a request.';
+const timeoutRejectionMessage = runTestsAgainstBundle ? 'AbortError: Aborted' : 'AbortError: The user aborted a request.';
 
-describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
+describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   let fetchSpy = null;
   const jsdomOptions = { url: 'http://localhost.test/path/name?query=term&category=cat' };
   const requestQueueOptions = {
@@ -41,6 +41,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   jsdom(jsdomOptions);
 
   beforeEach(() => {
+    helpers.clearStorage();
     store.session.set('_constructorio_is_human', true);
 
     fetchSpy = sinon.spy(fetch);
@@ -48,13 +49,15 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     window.CLIENT_VERSION = clientVersion;
 
     if (runTestsAgainstBundle) {
+      // store2 doesn't seem to maintain the `window` context for bundled version - set manually
+      window.sessionStorage.clear();
+      window.sessionStorage.setItem('_constructorio_is_human', true);
+
       ConstructorIO = window.ConstructorioClient;
     }
   });
 
   afterEach((done) => {
-    helpers.clearStorage();
-
     fetchSpy = null;
 
     delete window.CLIENT_VERSION;
@@ -64,7 +67,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   });
 
   describe('trackSessionStart', () => {
-    it.only('Should respond with a valid response', (done) => {
+    it('Should respond with a valid response', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -285,7 +288,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
@@ -302,7 +305,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
@@ -476,7 +479,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
@@ -493,7 +496,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
@@ -732,7 +735,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
@@ -749,7 +752,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
@@ -981,7 +984,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
@@ -998,7 +1001,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
@@ -1280,7 +1283,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
@@ -1297,7 +1300,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
@@ -1591,7 +1594,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
@@ -1608,7 +1611,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
@@ -2065,7 +2068,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
@@ -2082,7 +2085,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
@@ -2429,27 +2432,30 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackPurchase(requiredParameters)).to.equal(true);
     });
 
-    it('Should not send a purchase event if the order has been tracked already', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        fetch: fetchSpy,
-        ...requestQueueOptions,
+    // store2 doesn't seem to maintain the `window` context for bundled version
+    if (!runTestsAgainstBundle) {
+      it('Should not send a purchase event if the order has been tracked already', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          fetch: fetchSpy,
+          ...requestQueueOptions,
+        });
+
+        addOrderIdRecord('848291039');
+
+        expect(tracker.trackPurchase(Object.assign(requiredParameters, {
+          ...optionalParameters,
+          order_id: '848291039',
+        }))).to.equal(false);
+
+        setTimeout(() => {
+          // Request
+          expect(fetchSpy).to.not.have.been.called;
+
+          done();
+        }, 1000);
       });
-
-      addOrderIdRecord('848291039');
-
-      expect(tracker.trackPurchase(Object.assign(requiredParameters, {
-        ...optionalParameters,
-        order_id: '848291039',
-      }))).to.equal(false);
-
-      setTimeout(() => {
-        // Request
-        expect(fetchSpy).to.not.have.been.called;
-
-        done();
-      }, 1000);
-    });
+    }
 
     it('Should send a purchase event if the order has not been tracked yet', (done) => {
       const { tracker } = new ConstructorIO({
@@ -2502,7 +2508,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
@@ -2519,7 +2525,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
@@ -2773,7 +2779,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
@@ -2790,7 +2796,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
@@ -3118,7 +3124,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
@@ -3135,7 +3141,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
@@ -3405,7 +3411,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
@@ -3422,7 +3428,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
@@ -3754,7 +3760,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
@@ -3771,7 +3777,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
@@ -4087,7 +4093,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
@@ -4104,7 +4110,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('error', ({ message }) => {
-        expect(message).to.equal('AbortError: The user aborted a request.');
+        expect(message).to.equal(timeoutRejectionMessage);
         done();
       });
 
