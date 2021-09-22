@@ -3,6 +3,7 @@ const { expect } = require('chai');
 const jsdom = require('mocha-jsdom');
 const sinon = require('sinon');
 const fs = require('fs');
+const helpers = require('../mocha.helpers');
 let ConstructorIO = require('../../test/constructorio');
 
 const validApiKey = 'testing';
@@ -319,6 +320,14 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
       expect(instance.tracker.options).to.have.property('userId').to.equal(newUserId);
     });
   });
+
+  if (bundled) {
+    it('Should not add unexpected properties to global window object', () => {
+      const properties = helpers.getUserDefinedWindowProperties();
+
+      expect(properties).to.deep.equal(['0', 'ConstructorioClient', 'CLIENT_VERSION']);
+    });
+  }
 });
 
 if (!bundled) {
