@@ -78,6 +78,21 @@ const extractBodyParamsFromFetch = (fetch) => {
   return null;
 };
 
+const getUserDefinedWindowProperties = () => {
+  const iframe = document.createElement('iframe');
+
+  iframe.style.display = 'none';
+
+  document.body.appendChild(iframe);
+
+  const currentWindow = Object.getOwnPropertyNames(window);
+  const properties = currentWindow.filter(prop => !Object.prototype.hasOwnProperty.call(iframe.contentWindow, prop));
+
+  document.body.removeChild(iframe);
+
+  return properties;
+};
+
 module.exports = {
   setupDOM,
   teardownDOM,
@@ -86,4 +101,5 @@ module.exports = {
   clearStorage,
   extractUrlParamsFromFetch,
   extractBodyParamsFromFetch,
+  getUserDefinedWindowProperties,
 };

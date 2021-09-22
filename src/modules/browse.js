@@ -113,7 +113,7 @@ function createBrowseUrlFromIDs(ids, parameters, options) {
   const { serviceUrl } = options;
 
   // Validate id's are provided
-  if (!ids || !(ids instanceof Array) || !ids.length) {
+  if (!ids || !(Array.isArray(ids)) || !ids.length) {
     throw new Error('ids is a required parameter of type array');
   }
 

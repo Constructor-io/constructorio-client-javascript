@@ -2,21 +2,36 @@
 const { expect } = require('chai');
 const jsdom = require('mocha-jsdom');
 const sinon = require('sinon');
-const ConstructorIO = require('../../test/constructorio');
+const fs = require('fs');
+const helpers = require('../mocha.helpers');
+let ConstructorIO = require('../../test/constructorio');
 
 const validApiKey = 'testing';
+const clientVersion = 'cio-mocha';
+const bundled = process.env.BUNDLED === 'true';
+const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 
-describe('ConstructorIO', () => {
-  jsdom({
-    url: 'http://localhost',
-  });
+describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
+  const jsdomOptions = { url: 'http://localhost' };
+
+  if (bundled) {
+    jsdomOptions.src = fs.readFileSync(`./dist/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.js`, 'utf-8');
+  }
+
+  jsdom(jsdomOptions);
 
   beforeEach(() => {
-    global.CLIENT_VERSION = 'cio-mocha';
+    global.CLIENT_VERSION = clientVersion;
+    window.CLIENT_VERSION = clientVersion;
+
+    if (bundled) {
+      ConstructorIO = window.ConstructorioClient;
+    }
   });
 
   afterEach(() => {
     delete global.CLIENT_VERSION;
+    delete window.CLIENT_VERSION;
   });
 
   it('Should return an instance when valid API key is provided', () => {
@@ -25,7 +40,7 @@ describe('ConstructorIO', () => {
     expect(instance).to.be.an('object');
     expect(instance).to.have.property('options').to.be.an('object');
     expect(instance.options).to.have.property('apiKey').to.equal(validApiKey);
-    expect(instance.options).to.have.property('version').to.equal(global.CLIENT_VERSION);
+    expect(instance.options).to.have.property('version').to.equal(clientVersion);
     expect(instance.options).to.have.property('serviceUrl');
     expect(instance.options).to.have.property('clientId');
     expect(instance.options).to.have.property('sessionId');
@@ -105,6 +120,26 @@ describe('ConstructorIO', () => {
     expect(instance).to.be.an('object');
     expect(instance.options.version).to.not.include('-domless-');
   });
+
+  if (bundled) {
+    it('Should have client version set to indicate bundled context', () => {
+      window.CLIENT_VERSION = null;
+
+      const instance = new ConstructorIO({ apiKey: validApiKey });
+
+      expect(instance).to.be.an('object');
+      expect(instance.options.version).to.include('-bundled-');
+    });
+  } else {
+    it('Should not have client version set to indicate bundled context', () => {
+      global.CLIENT_VERSION = null;
+
+      const instance = new ConstructorIO({ apiKey: validApiKey });
+
+      expect(instance).to.be.an('object');
+      expect(instance.options.version).to.not.include('-bundled-');
+    });
+  }
 
   describe('setClientOptions', () => {
     it('Should update the client options with new API key', () => {
@@ -285,78 +320,88 @@ describe('ConstructorIO', () => {
       expect(instance.tracker.options).to.have.property('userId').to.equal(newUserId);
     });
   });
+
+  if (bundled) {
+    it('Should not add unexpected properties to global window object', () => {
+      const properties = helpers.getUserDefinedWindowProperties();
+
+      expect(properties).to.deep.equal(['0', 'ConstructorioClient', 'CLIENT_VERSION']);
+    });
+  }
 });
 
-describe('ConstructorIO - without DOM context', () => {
-  const clientId = '6c73138f-a87b-49f0-872d-63b00ed0e395';
-  const sessionId = 2;
+if (!bundled) {
+  describe('ConstructorIO - without DOM context', () => {
+    const clientId = '6c73138f-a87b-49f0-872d-63b00ed0e395';
+    const sessionId = 2;
 
-  beforeEach(() => {
-    global.CLIENT_VERSION = 'cio-mocha';
-  });
-
-  afterEach(() => {
-    delete global.CLIENT_VERSION;
-  });
-
-  it('Should return an instance if client and session identifiers are provided', () => {
-    const instance = new ConstructorIO({
-      apiKey: validApiKey,
-      clientId,
-      sessionId,
+    beforeEach(() => {
+      global.CLIENT_VERSION = 'cio-mocha';
     });
 
-    expect(instance).to.be.an('object');
-    expect(instance).to.have.property('options').to.be.an('object');
-    expect(instance.options).to.have.property('apiKey').to.equal(validApiKey);
-    expect(instance.options).to.have.property('version').to.equal(global.CLIENT_VERSION);
-    expect(instance.options).to.have.property('serviceUrl');
-    expect(instance).to.have.property('search');
-    expect(instance).to.have.property('autocomplete');
-    expect(instance).to.have.property('recommendations');
-    expect(instance).to.have.property('tracker');
-  });
-
-  it('Should throw an error if client identifier is not provided', () => {
-    expect(() => new ConstructorIO({
-      apiKey: validApiKey,
-      sessionId,
-    })).to.throw('clientId is a required user parameter of type string');
-  });
-
-  it('Should throw an error if client identifier is invalid', () => {
-    expect(() => new ConstructorIO({
-      apiKey: validApiKey,
-      sessionId,
-      clientId: 123,
-    })).to.throw('clientId is a required user parameter of type string');
-  });
-
-  it('Should throw an error if session identifier is not provided', () => {
-    expect(() => new ConstructorIO({
-      apiKey: validApiKey,
-      clientId,
-    })).to.throw('sessionId is a required user parameter of type number');
-  });
-
-  it('Should throw an error if session identifier is invalid', () => {
-    expect(() => new ConstructorIO({
-      apiKey: validApiKey,
-      clientId,
-      sessionId: 'aaa',
-    })).to.throw('sessionId is a required user parameter of type number');
-  });
-
-  it('Should have client version set to indicate no DOM context', () => {
-    global.CLIENT_VERSION = null;
-
-    const instance = new ConstructorIO({
-      apiKey: validApiKey,
-      clientId,
-      sessionId,
+    afterEach(() => {
+      delete global.CLIENT_VERSION;
     });
 
-    expect(instance).to.be.an('object');
-    expect(instance.options.version).to.include('-domless-');
+    it('Should return an instance if client and session identifiers are provided', () => {
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        clientId,
+        sessionId,
+      });
+
+      expect(instance).to.be.an('object');
+      expect(instance).to.have.property('options').to.be.an('object');
+      expect(instance.options).to.have.property('apiKey').to.equal(validApiKey);
+      expect(instance.options).to.have.property('version').to.equal(global.CLIENT_VERSION);
+      expect(instance.options).to.have.property('serviceUrl');
+      expect(instance).to.have.property('search');
+      expect(instance).to.have.property('autocomplete');
+      expect(instance).to.have.property('recommendations');
+      expect(instance).to.have.property('tracker');
+    });
+
+    it('Should throw an error if client identifier is not provided', () => {
+      expect(() => new ConstructorIO({
+        apiKey: validApiKey,
+        sessionId,
+      })).to.throw('clientId is a required user parameter of type string');
+    });
+
+    it('Should throw an error if client identifier is invalid', () => {
+      expect(() => new ConstructorIO({
+        apiKey: validApiKey,
+        sessionId,
+        clientId: 123,
+      })).to.throw('clientId is a required user parameter of type string');
+    });
+
+    it('Should throw an error if session identifier is not provided', () => {
+      expect(() => new ConstructorIO({
+        apiKey: validApiKey,
+        clientId,
+      })).to.throw('sessionId is a required user parameter of type number');
+    });
+
+    it('Should throw an error if session identifier is invalid', () => {
+      expect(() => new ConstructorIO({
+        apiKey: validApiKey,
+        clientId,
+        sessionId: 'aaa',
+      })).to.throw('sessionId is a required user parameter of type number');
+    });
+
+    it('Should have client version set to indicate no DOM context', () => {
+      global.CLIENT_VERSION = null;
+
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        clientId,
+        sessionId,
+      });
+
+      expect(instance).to.be.an('object');
+      expect(instance.options.version).to.include('-domless-');
+    });
   });
-});
+}

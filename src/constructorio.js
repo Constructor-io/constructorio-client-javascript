@@ -85,7 +85,7 @@ class ConstructorIO {
 
     this.options = {
       apiKey,
-      version: version || global.CLIENT_VERSION || `ciojs-client-${canUseDOM ? '' : 'domless-'}${packageVersion}`,
+      version: version || (typeof global !== 'undefined' && global.CLIENT_VERSION) || `ciojs-client-${canUseDOM ? '' : 'domless-'}${process.env.BUNDLED ? 'bundled-' : ''}${packageVersion}`,
       serviceUrl: serviceUrl || 'https://ac.cnstrc.com',
       sessionId: sessionId || session_id,
       clientId: clientId || client_id,
@@ -145,5 +145,10 @@ class ConstructorIO {
 
 // Exposed for testing
 ConstructorIO.Tracker = Tracker;
+
+// Expose on window object if available
+if (helpers.canUseDOM()) {
+  window.ConstructorioClient = ConstructorIO;
+}
 
 module.exports = ConstructorIO;
