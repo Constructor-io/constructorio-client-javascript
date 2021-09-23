@@ -268,7 +268,7 @@ class Tracker {
    * @param {string} term - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {number} parameters.num_results - Number of search results in total
-   * @param {array} [parameters.item_ids] - List of product item unique identifiers in search results listing
+   * @param {string[]} [parameters.item_ids] - List of product item unique identifiers in search results listing
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -390,7 +390,7 @@ class Tracker {
    * @param {string} term - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.item_id - Product item unique identifier
-   * @param {string} parameters.revenue - Revenue (price) of product item
+   * @param {number} parameters.revenue - Revenue (price) of product item
    * @param {string} [parameters.item_name] - Product item name
    * @param {string} [parameters.variation_id] - Product item variation unique identifier
    * @param {string} [parameters.type='add_to_cart'] - Conversion type
@@ -402,6 +402,7 @@ class Tracker {
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description User performed an action indicating interest in an item (add to cart, add to wishlist, etc.)
+   * @see https://docs.constructor.io/rest_api/behavioral_logging/conversions
    * @example
    * constructorio.tracker.trackConversion('T-Shirt', {
    *   item_id: 'KMH876',
@@ -501,7 +502,7 @@ class Tracker {
    *
    * @function trackPurchase
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {array} parameters.items - List of product item objects
+   * @param {object[]} parameters.items - List of product item objects
    * @param {number} parameters.revenue - Revenue
    * @param {string} [parameters.order_id] - Unique order identifier
    * @param {string} [parameters.section] - Index section
@@ -786,10 +787,10 @@ class Tracker {
    * @param {number} [parameters.result_count] - Number of results displayed
    * @param {number} [parameters.result_page] - Page number of results
    * @param {string} [parameters.result_id] - Browse result identifier (returned in response from Constructor)
-   * @param {string} [parameters.selected_filters] -  Selected filters
+   * @param {string} [parameters.selected_filters] - Selected filters
    * @param {string} [parameters.sort_order] - Sort order ('ascending' or 'descending')
    * @param {string} [parameters.sort_by] - Sorting method
-   * @param {array} [parameters.items] - List of product item objects
+   * @param {object[]} [parameters.items] - List of product item objects
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -799,7 +800,7 @@ class Tracker {
    *   result_count: 22,
    *   result_page: 2,
    *   result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
-   *   selected_filters: [ 'brand', 'color' ],
+   *   selected_filters: { brand: ['foo'], color: ['black'] },
    *   sort_order: 'ascending',
    *   sort_by: 'price',
    *   items: [{ item_id: 'KMH876' }, { item_id: 'KMH140' }],
@@ -908,7 +909,7 @@ class Tracker {
    * @param {number} [parameters.result_page] - Page number of results
    * @param {number} [parameters.result_position_on_page] - Position of clicked item
    * @param {number} [parameters.num_results_per_page] - Number of results shown
-   * @param {string} [parameters.selected_filters] -  Selected filters
+   * @param {object} [parameters.selected_filters] - Selected filters
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -921,7 +922,7 @@ class Tracker {
    *   result_page: 2,
    *   result_position_on_page: 2,
    *   num_results_per_page: 12,
-   *   selected_filters: [ 'brand', 'color' ],
+   *   selected_filters: { brand: ['foo'], color: ['black'] },
    *   filter_name: 'brand',
    *   filter_value: 'XYZ',
    *   item_id: 'KMH876',
