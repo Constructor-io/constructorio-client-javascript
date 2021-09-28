@@ -5,7 +5,7 @@
   "main": "lib/constructorio.js",
   "scripts": {
     "clean": "sudo rm -rf node_modules package-lock.json",
-    "version": "chmod +x ./scripts/verify-node-version.sh && ./scripts/verify-node-version.sh && npm run docs && git add ./docs/* && npm run bundle && git add ./dist/*",
+    "version": "chmod +x ./scripts/verify-node-version.sh && ./scripts/verify-node-version.sh && npm run docs && git add ./docs/* && npm run bundle && git add -A ./dist",
     "check-lisc": "license-checker --production --onlyAllow 'Apache-2.0;BSD-3-Clause;MIT'",
     "lint": "eslint 'src/**/*.js' 'spec/**/*.js'",
     "test": "npm run compile && mkdir -p test && cp -rf lib/* test && mocha ./spec/* --opts ./mocha.opts --recursive",
