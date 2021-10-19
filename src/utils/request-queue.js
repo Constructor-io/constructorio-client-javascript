@@ -130,7 +130,7 @@ class RequestQueue {
           });
         }).finally(() => {
           this.requestPending = false;
-          this.send();
+          this.sendEvents();
         });
       }
     }
