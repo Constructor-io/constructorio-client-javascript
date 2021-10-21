@@ -399,7 +399,7 @@ class Tracker {
    * Send conversion event to API
    *
    * @function trackConversion
-   * @param {string} term - Search results query term
+   * @param {string} [term] - Search results query term that led to conversion event
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.item_id - Product item unique identifier
    * @param {number} parameters.revenue - Revenue (price) of product item
