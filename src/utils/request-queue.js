@@ -63,7 +63,9 @@ class RequestQueue {
 
       if (networkParameters) {
         const controller = new AbortController();
+
         ({ signal } = controller);
+
         helpers.applyNetworkTimeout(this.options, networkParameters, controller);
       }
 
