@@ -216,7 +216,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_tracker.js.html">modules/tracker.js</a>, <a href="modules_tracker.js.html#line1079">line 1079</a>
+        <a href="modules_tracker.js.html">modules/tracker.js</a>, <a href="modules_tracker.js.html#line1106">line 1106</a>
     </li></ul></dd>
     
 
@@ -355,7 +355,7 @@
 <h5>Example</h5>
 
     <pre class="prettyprint"><code>constructorio.tracker.on('error', (data) => {
-  // Handle tracking error
+    // Handle tracking error
 });</code></pre>
 
 </div>
@@ -868,13 +868,16 @@
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>constructorio.tracker.trackAutocompleteSelect('T-Shirt', {
-  original_query: 'Shirt',
-  section: 'Products',
-  tr: 'click',
-  group_id: '88JU230',
-  display_name: 'apparel',
-});</code></pre>
+    <pre class="prettyprint"><code>constructorio.tracker.trackAutocompleteSelect(
+    'T-Shirt',
+     {
+         original_query: 'Shirt',
+         section: 'Products',
+         tr: 'click',
+         group_id: '88JU230',
+         display_name: 'apparel',
+     },
+);</code></pre>
 
 </div>
 
@@ -928,7 +931,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_tracker.js.html">modules/tracker.js</a>, <a href="modules_tracker.js.html#line897">line 897</a>
+        <a href="modules_tracker.js.html">modules/tracker.js</a>, <a href="modules_tracker.js.html#line920">line 920</a>
     </li></ul></dd>
     
 
@@ -1614,18 +1617,20 @@
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>constructorio.tracker.trackBrowseResultClick({
-  variation_id: 'KMH879-7632',
-  result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
-  result_count: 22,
-  result_page: 2,
-  result_position_on_page: 2,
-  num_results_per_page: 12,
-  selected_filters: { brand: ['foo'], color: ['black'] },
-  filter_name: 'brand',
-  filter_value: 'XYZ',
-  item_id: 'KMH876',
-});</code></pre>
+    <pre class="prettyprint"><code>constructorio.tracker.trackBrowseResultClick(
+    {
+        variation_id: 'KMH879-7632',
+        result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+        result_count: 22,
+        result_page: 2,
+        result_position_on_page: 2,
+        num_results_per_page: 12,
+        selected_filters: { brand: ['foo'], color: ['black'] },
+        filter_name: 'brand',
+        filter_value: 'XYZ',
+        item_id: 'KMH876',
+    },
+);</code></pre>
 
 </div>
 
@@ -1679,7 +1684,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_tracker.js.html">modules/tracker.js</a>, <a href="modules_tracker.js.html#line778">line 778</a>
+        <a href="modules_tracker.js.html">modules/tracker.js</a>, <a href="modules_tracker.js.html#line799">line 799</a>
     </li></ul></dd>
     
 
@@ -2365,18 +2370,20 @@
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>constructorio.tracker.trackBrowseResultsLoaded({
-  result_count: 22,
-  result_page: 2,
-  result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
-  selected_filters: { brand: ['foo'], color: ['black'] },
-  sort_order: 'ascending',
-  sort_by: 'price',
-  items: [{ item_id: 'KMH876' }, { item_id: 'KMH140' }],
-  url: 'https://demo.constructor.io/sandbox/farmstand',
-  filter_name: 'brand',
-  filter_value: 'XYZ',
-});</code></pre>
+    <pre class="prettyprint"><code>constructorio.tracker.trackBrowseResultsLoaded(
+    {
+        result_count: 22,
+        result_page: 2,
+        result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+        selected_filters: { brand: ['foo'], color: ['black'] },
+        sort_order: 'ascending',
+        sort_by: 'price',
+        items: [{ item_id: 'KMH876' }, { item_id: 'KMH140' }],
+        url: 'https://demo.constructor.io/sandbox/farmstand',
+        filter_name: 'brand',
+        filter_value: 'XYZ',
+    },
+);</code></pre>
 
 </div>
 
@@ -2387,7 +2394,7 @@
 
     
 
-    <h4 class="name" id="~trackConversion"><span class="type-signature">(inner) </span>trackConversion<span class="signature">(term, parameters, networkParameters<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {true|Error}</span></h4>
+    <h4 class="name" id="~trackConversion"><span class="type-signature">(inner) </span>trackConversion<span class="signature">(term<span class="signature-attributes">opt</span>, parameters, networkParameters<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {true|Error}</span></h4>
 
     
 
@@ -2430,7 +2437,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_tracker.js.html">modules/tracker.js</a>, <a href="modules_tracker.js.html#line386">line 386</a>
+        <a href="modules_tracker.js.html">modules/tracker.js</a>, <a href="modules_tracker.js.html#line398">line 398</a>
     </li></ul></dd>
     
 
@@ -2498,6 +2505,8 @@
             
                 <td class="attributes">
                 
+                    &lt;optional><br>
+                
 
                 
 
@@ -2508,7 +2517,7 @@
             
 
             <td class="description last">
-                Search results query term
+                Search results query term that led to conversion event
                 
             </td>
         </tr>
@@ -3079,15 +3088,18 @@
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>constructorio.tracker.trackConversion('T-Shirt', {
-  item_id: 'KMH876',
-  revenue: 12.00,
-  item_name: 'Red T-Shirt',
-  variation_id: 'KMH879-7632',
-  type: 'like',
-  result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
-  section: 'Products',
-});</code></pre>
+    <pre class="prettyprint"><code>constructorio.tracker.trackConversion(
+    'T-Shirt',
+    {
+        item_id: 'KMH876',
+        revenue: 12.00,
+        item_name: 'Red T-Shirt',
+        variation_id: 'KMH879-7632',
+        type: 'like',
+        result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+        section: 'Products',
+    },
+);</code></pre>
 
 </div>
 
@@ -3141,7 +3153,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_tracker.js.html">modules/tracker.js</a>, <a href="modules_tracker.js.html#line1016">line 1016</a>
+        <a href="modules_tracker.js.html">modules/tracker.js</a>, <a href="modules_tracker.js.html#line1041">line 1041</a>
     </li></ul></dd>
     
 
@@ -3551,11 +3563,13 @@
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>constructorio.tracker.trackGenericResultClick({
-  item_id: 'KMH876',
-  item_name: 'Red T-Shirt',
-  variation_id: 'KMH879-7632',
-});</code></pre>
+    <pre class="prettyprint"><code>constructorio.tracker.trackGenericResultClick(
+    {
+        item_id: 'KMH876',
+        item_name: 'Red T-Shirt',
+        variation_id: 'KMH879-7632',
+    },
+);</code></pre>
 
 </div>
 
@@ -3850,7 +3864,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_tracker.js.html">modules/tracker.js</a>, <a href="modules_tracker.js.html#line500">line 500</a>
+        <a href="modules_tracker.js.html">modules/tracker.js</a>, <a href="modules_tracker.js.html#line515">line 515</a>
     </li></ul></dd>
     
 
@@ -4238,12 +4252,14 @@
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>constructorio.tracker.trackPurchase({
-  items: [{ item_id: 'KMH876' }, { item_id: 'KMH140' }],
-  revenue: 12.00,
-  order_id: 'OUNXBG2HMA',
-  section: 'Products',
-});</code></pre>
+    <pre class="prettyprint"><code>constructorio.tracker.trackPurchase(
+    {
+        items: [{ item_id: 'KMH876' }, { item_id: 'KMH140' }],
+        revenue: 12.00,
+        order_id: 'OUNXBG2HMA',
+        section: 'Products',
+    },
+);</code></pre>
 
 </div>
 
@@ -4297,7 +4313,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_tracker.js.html">modules/tracker.js</a>, <a href="modules_tracker.js.html#line666">line 666</a>
+        <a href="modules_tracker.js.html">modules/tracker.js</a>, <a href="modules_tracker.js.html#line685">line 685</a>
     </li></ul></dd>
     
 
@@ -4943,17 +4959,19 @@
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>constructorio.tracker.trackRecommendationClick({
-  variation_id: 'KMH879-7632',
-  result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
-  result_count: 22,
-  result_page: 2,
-  result_position_on_page: 2,
-  num_results_per_page: 12,
-  pod_id: '019927c2-f955-4020',
-  strategy_id: 'complimentary',
-  item_id: 'KMH876',
-});</code></pre>
+    <pre class="prettyprint"><code>constructorio.tracker.trackRecommendationClick(
+    {
+        variation_id: 'KMH879-7632',
+        result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+        result_count: 22,
+        result_page: 2,
+        result_position_on_page: 2,
+        num_results_per_page: 12,
+        pod_id: '019927c2-f955-4020',
+        strategy_id: 'complimentary',
+        item_id: 'KMH876',
+    },
+);</code></pre>
 
 </div>
 
@@ -5007,7 +5025,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_tracker.js.html">modules/tracker.js</a>, <a href="modules_tracker.js.html#line575">line 575</a>
+        <a href="modules_tracker.js.html">modules/tracker.js</a>, <a href="modules_tracker.js.html#line592">line 592</a>
     </li></ul></dd>
     
 
@@ -5533,14 +5551,16 @@
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>constructorio.tracker.trackRecommendationView({
-  result_count: 22,
-  result_page: 2,
-  result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
-  url: 'https://demo.constructor.io/sandbox/farmstand',
-  pod_id: '019927c2-f955-4020',
-  num_results_viewed: 3,
-});</code></pre>
+    <pre class="prettyprint"><code>constructorio.tracker.trackRecommendationView(
+    {
+        result_count: 22,
+        result_page: 2,
+        result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+        url: 'https://demo.constructor.io/sandbox/farmstand',
+        pod_id: '019927c2-f955-4020',
+        num_results_viewed: 3,
+    },
+);</code></pre>
 
 </div>
 
@@ -5594,7 +5614,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_tracker.js.html">modules/tracker.js</a>, <a href="modules_tracker.js.html#line318">line 318</a>
+        <a href="modules_tracker.js.html">modules/tracker.js</a>, <a href="modules_tracker.js.html#line327">line 327</a>
     </li></ul></dd>
     
 
@@ -6016,11 +6036,14 @@
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>constructorio.tracker.trackSearchResultClick('T-Shirt', {
-  item_name: 'Red T-Shirt',
-  item_id: 'KMH876',
-  result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
-});</code></pre>
+    <pre class="prettyprint"><code>constructorio.tracker.trackSearchResultClick(
+    'T-Shirt',
+    {
+        item_name: 'Red T-Shirt',
+        item_id: 'KMH876',
+        result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+    },
+);</code></pre>
 
 </div>
 
@@ -6074,7 +6097,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_tracker.js.html">modules/tracker.js</a>, <a href="modules_tracker.js.html#line264">line 264</a>
+        <a href="modules_tracker.js.html">modules/tracker.js</a>, <a href="modules_tracker.js.html#line270">line 270</a>
     </li></ul></dd>
     
 
@@ -6426,10 +6449,13 @@
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>constructorio.tracker.trackSearchResultsLoaded('T-Shirt', {
-  num_results: 167,
-  item_ids: ['KMH876', 'KMH140', 'KMH437'],
-});</code></pre>
+    <pre class="prettyprint"><code>constructorio.tracker.trackSearchResultsLoaded(
+    'T-Shirt',
+    {
+        num_results: 167,
+        item_ids: ['KMH876', 'KMH140', 'KMH437'],
+    },
+);</code></pre>
 
 </div>
 
@@ -6483,7 +6509,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_tracker.js.html">modules/tracker.js</a>, <a href="modules_tracker.js.html#line208">line 208</a>
+        <a href="modules_tracker.js.html">modules/tracker.js</a>, <a href="modules_tracker.js.html#line211">line 211</a>
     </li></ul></dd>
     
 
@@ -6871,11 +6897,14 @@
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>constructorio.tracker.trackSearchSubmit('T-Shirt', {
-  original_query: 'Shirt',
-  group_id: '88JU230',
-  display_name: 'apparel',
-});</code></pre>
+    <pre class="prettyprint"><code>constructorio.tracker.trackSearchSubmit(
+    'T-Shirt',
+    {
+        original_query: 'Shirt',
+        group_id: '88JU230',
+        display_name: 'apparel',
+    },
+);</code></pre>
 
 </div>
 
@@ -7139,7 +7168,7 @@
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Mon Sep 27 2021 18:14:26 GMT-0600 (Mountain Daylight Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Mon Nov 01 2021 16:27:50 GMT-0600 (Mountain Daylight Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
