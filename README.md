@@ -46,6 +46,8 @@ window.addEventListener('cio.client.search.getSearchResults.completed', (event) 
 
 Full API documentation is available on [Github Pages](https://constructor-io.github.io/constructorio-client-javascript/index.html)
 
+Informatation about utilization in a DOM-less environment can be found on the [Wiki](https://github.com/Constructor-io/constructorio-client-javascript/wiki/Utilization-in-a-DOM-less-environment)
+
 ## Development / npm commands
 
 ```bash
