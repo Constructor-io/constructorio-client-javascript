@@ -7,6 +7,8 @@
 
 A JavaScript client for [Constructor.io](http://constructor.io/). [Constructor.io](http://constructor.io/) provides search as a service that optimizes results using artificial intelligence (including natural language processing, re-ranking to optimize for conversions, and user personalization).
 
+> This client is intended for use in a browser environment but can also be used in React Native based mobile applications.  Additional information about utilization in a React Native context can be found on the [Wiki](https://github.com/Constructor-io/constructorio-client-javascript/wiki/Utilization-in-a-DOM-less-environment).  If you want a JavaScript client for server side integrations please use [@constructor-io/constructorio-node](https://github.com/Constructor-io/constructorio-node) 
+
 ## 1. Install
 
 This package can be installed via npm: `npm i @constructor-io/constructorio-client-javascript`. Once installed, simply import or require the package into your repository.
@@ -45,8 +47,6 @@ window.addEventListener('cio.client.search.getSearchResults.completed', (event) 
 ```
 
 Full API documentation is available on [Github Pages](https://constructor-io.github.io/constructorio-client-javascript/index.html)
-
-Information about utilization in a DOM-less environment can be found on the [Wiki](https://github.com/Constructor-io/constructorio-client-javascript/wiki/Utilization-in-a-DOM-less-environment)
 
 ## Development / npm commands
 
