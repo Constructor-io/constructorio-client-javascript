@@ -3,7 +3,6 @@
 [![npm](https://img.shields.io/npm/v/@constructor-io/constructorio-client-javascript)](https://www.npmjs.com/package/@constructor-io/constructorio-client-javascript)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Constructor-io/constructorio-client-javascript/blob/master/LICENSE)
 [![Minzipped Size](https://img.shields.io/bundlephobia/minzip/@constructor-io/constructorio-client-javascript)](https://bundlephobia.com/result?p=@constructor-io/constructorio-client-javascript)
-[![Dependencies](https://img.shields.io/david/Constructor-io/constructorio-client-javascript)](https://david-dm.org/constructor-io/constructorio-client-javascript)
 
 A JavaScript client for [Constructor.io](http://constructor.io/). [Constructor.io](http://constructor.io/) provides search as a service that optimizes results using artificial intelligence (including natural language processing, re-ranking to optimize for conversions, and user personalization).
 
