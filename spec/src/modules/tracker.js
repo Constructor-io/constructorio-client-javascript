@@ -9,10 +9,10 @@ const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
 const cloneDeep = require('lodash.clonedeep');
 const fs = require('fs');
-const store = require('../../../test/utils/store');
+const store = require('../../../test/utils/store'); // eslint-disable-line import/extensions
 const helpers = require('../../mocha.helpers');
 const { addOrderIdRecord } = require('../../../src/utils/helpers');
-let ConstructorIO = require('../../../test/constructorio');
+let ConstructorIO = require('../../../test/constructorio'); // eslint-disable-line import/extensions
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);

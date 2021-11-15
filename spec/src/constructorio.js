@@ -4,7 +4,7 @@ const jsdom = require('mocha-jsdom');
 const sinon = require('sinon');
 const fs = require('fs');
 const helpers = require('../mocha.helpers');
-let ConstructorIO = require('../../test/constructorio');
+let ConstructorIO = require('../../test/constructorio'); // eslint-disable-line import/extensions
 
 const validApiKey = 'testing';
 const clientVersion = 'cio-mocha';

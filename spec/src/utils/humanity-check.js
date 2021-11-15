@@ -2,8 +2,8 @@
 const dotenv = require('dotenv');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
-const store = require('../../../test/utils/store');
-const HumanityCheck = require('../../../test/utils/humanity-check');
+const store = require('../../../test/utils/store'); // eslint-disable-line import/extensions
+const HumanityCheck = require('../../../test/utils/humanity-check'); // eslint-disable-line import/extensions
 const helpers = require('../../mocha.helpers');
 
 chai.use(chaiAsPromised);

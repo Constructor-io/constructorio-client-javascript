@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
-const EventDispatcher = require('../../../test/utils/event-dispatcher');
+const EventDispatcher = require('../../../test/utils/event-dispatcher'); // eslint-disable-line import/extensions
 const helpers = require('../../mocha.helpers');
 
 chai.use(chaiAsPromised);
