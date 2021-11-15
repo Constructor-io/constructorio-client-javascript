@@ -45,10 +45,18 @@ class HumanityCheck {
 
   // Return boolean indicating if useragent matches botlist
   isBot() {
-    const { userAgent, webdriver } = helpers.getNavigator();
-    const botRegex = new RegExp(`(${botList.join('|')})`);
+    let treatAsBot;
+    const isHuman = !!store.session.get(storageKey);
 
-    return Boolean(userAgent.match(botRegex)) || Boolean(webdriver) || !!store.session.get(storageKey);
+    if (isHuman){
+      treatAsBot = false;
+    } else {
+      const { userAgent, webdriver } = helpers.getNavigator();
+      const botRegex = new RegExp(`(${botList.join('|')})`);
+      treatAsBot = Boolean(userAgent.match(botRegex)) || Boolean(webdriver);
+    }
+
+    return treatAsBot;
   }
 }
 
