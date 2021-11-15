@@ -48,7 +48,7 @@ class HumanityCheck {
     const { userAgent, webdriver } = helpers.getNavigator();
     const botRegex = new RegExp(`(${botList.join('|')})`);
 
-    return Boolean(userAgent.match(botRegex)) || Boolean(webdriver);
+    return Boolean(userAgent.match(botRegex)) || Boolean(webdriver) || !!store.session.get(storageKey);
   }
 }
 
