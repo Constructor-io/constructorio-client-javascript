@@ -122,6 +122,7 @@ class Search {
    * @param {object} [parameters.filters] - Key / value mapping (dictionary) of filters used to refine results
    * @param {string} [parameters.sortBy='relevance'] - The sort method for results
    * @param {string} [parameters.sortOrder='descending'] - The sort order for results
+   * @param {string} [parameters.section='Products'] - The section name for results
    * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
    * @param {object} [networkParameters] - Parameters relevant to the network request
