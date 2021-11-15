@@ -34,11 +34,11 @@ class ConstructorIO {
    * @param {boolean} [parameters.eventDispatcher.waitForBeacon=true] - Wait for beacon before dispatching events
    * @param {object} [parameters.networkParameters] - Parameters relevant to network requests
    * @param {number} [parameters.networkParameters.timeout] - Request timeout (in milliseconds) - may be overridden within individual method calls
-   * @property {object} [search] - Interface to {@link module:search}
-   * @property {object} [browse] - Interface to {@link module:browse}
-   * @property {object} [autocomplete] - Interface to {@link module:autocomplete}
-   * @property {object} [recommendations] - Interface to {@link module:recommendations}
-   * @property {object} [tracker] - Interface to {@link module:tracker}
+   * @property {object} search - Interface to {@link module:search}
+   * @property {object} browse - Interface to {@link module:browse}
+   * @property {object} autocomplete - Interface to {@link module:autocomplete}
+   * @property {object} recommendations - Interface to {@link module:recommendations}
+   * @property {object} tracker - Interface to {@link module:tracker}
    * @returns {class}
    */
   constructor(options = {}) {
