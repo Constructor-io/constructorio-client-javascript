@@ -74,6 +74,17 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
     expect(instance.options).to.have.property('networkParameters').to.equal(networkParameters);
   });
 
+  it('Should remove any trailing slashes from the serviceUrl', () => {
+    const serviceUrl = 'https://constructor.io/';
+    const instance = new ConstructorIO({
+      apiKey: validApiKey,
+      serviceUrl,
+    });
+
+    expect(instance).to.be.an('object');
+    expect(instance.options).to.have.property('serviceUrl').to.equal('https://constructor.io');
+  });
+
   it('Should emit an event with options data', (done) => {
     const options = {
       apiKey: validApiKey,
