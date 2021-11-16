@@ -402,7 +402,7 @@ class Tracker {
    * @param {string} [term] - Search results query term that led to conversion event
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.item_id - Product item unique identifier
-   * @param {number} parameters.revenue - Revenue (price) of product item
+   * @param {number} [parameters.revenue] - Revenue (price) of product item
    * @param {string} [parameters.item_name] - Product item name
    * @param {string} [parameters.variation_id] - Product item variation unique identifier
    * @param {string} [parameters.type='add_to_cart'] - Conversion type
