@@ -296,6 +296,7 @@ class Tracker {
         const url = `${this.options.serviceUrl}/behavior?`;
         const queryParams = { action: 'search-results', term };
         const { num_results, customer_ids, item_ids } = parameters;
+        let truncatedCustomerIDs;
 
         if (!helpers.isNil(num_results)) {
           queryParams.num_results = num_results;
@@ -303,9 +304,13 @@ class Tracker {
 
         // Ensure support for both item_ids and customer_ids as parameters
         if (item_ids && Array.isArray(item_ids) && item_ids.length) {
-          queryParams.customer_ids = item_ids.join(',');
+          truncatedCustomerIDs = item_ids;
         } else if (customer_ids && Array.isArray(customer_ids) && customer_ids.length) {
-          queryParams.customer_ids = customer_ids.join(',');
+          truncatedCustomerIDs = customer_ids;
+        }
+
+        if (truncatedCustomerIDs && Array.isArray(truncatedCustomerIDs) && truncatedCustomerIDs.length) {
+          queryParams.customer_ids = truncatedCustomerIDs.slice(0, 100).join(',');
         }
 
         this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`, undefined, undefined, networkParameters);
@@ -894,7 +899,7 @@ class Tracker {
       }
 
       if (items && Array.isArray(items)) {
-        bodyParams.items = items;
+        bodyParams.items = items.slice(0, 100);
       }
 
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;

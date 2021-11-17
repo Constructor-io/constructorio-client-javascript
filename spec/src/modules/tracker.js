@@ -1325,6 +1325,78 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
       expect(tracker.trackSearchResultsLoaded(term, requiredParameters)).to.equal(true);
     });
+
+    it('Should limit number of customer_ids to 100 when using item_ids', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const itemIDs = [...Array(1000).keys()];
+      const parameters = {
+        ...requiredParameters,
+        item_ids: itemIDs,
+      };
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('num_results').to.equal(requiredParameters.num_results.toString());
+        expect(requestParams).to.have.property('customer_ids');
+
+        const customerIds = requestParams.customer_ids;
+
+        expect(customerIds.split(',')).to.have.length(100);
+        expect(customerIds).to.equal(itemIDs.slice(0, 100).join(','));
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackSearchResultsLoaded(term, parameters)).to.equal(true);
+    });
+
+    it('Should limit number of customer_ids to 100 when using customer_ids', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const customerIDs = [...Array(1000).keys()];
+      const parameters = {
+        ...requiredParameters,
+        item_ids: customerIDs,
+      };
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('num_results').to.equal(requiredParameters.num_results.toString());
+        expect(requestParams).to.have.property('customer_ids');
+
+        const customerIds = requestParams.customer_ids;
+
+        expect(customerIds.split(',')).to.have.length(100);
+        expect(customerIds).to.equal(customerIDs.slice(0, 100).join(','));
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackSearchResultsLoaded(term, parameters)).to.equal(true);
+    });
   });
 
   describe('trackSearchResultClick', () => {
@@ -3471,6 +3543,40 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackBrowseResultsLoaded(requiredParameters)).to.equal(true);
+    });
+
+    it('Should limit number of items to 100', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const parameters = {
+        ...optionalParameters,
+        result_count: 1000,
+        items: [...Array(1000).keys()].map(e => ({ item_id: e.toString() })),
+      };
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('section').to.equal(parameters.section);
+        expect(requestParams).to.have.property('result_count').to.equal(parameters.result_count);
+        expect(requestParams).to.have.property('result_page').to.equal(parameters.result_page);
+        expect(requestParams).to.have.property('result_id').to.equal(parameters.result_id);
+        expect(requestParams).to.have.property('selected_filters').to.deep.equal(parameters.selected_filters);
+        expect(requestParams).to.have.property('items').to.deep.equal(parameters.items.slice(0, 100));
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackBrowseResultsLoaded(Object.assign(requiredParameters, parameters))).to.equal(true);
     });
   });
 
