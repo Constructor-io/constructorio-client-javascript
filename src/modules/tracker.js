@@ -518,7 +518,7 @@ class Tracker {
    * @function trackPurchase
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {object[]} parameters.items - List of product item objects
-   * @param {number} parameters.revenue - The subtotal (not including taxes, shipping, discounts, etc.) of the entire order
+   * @param {number} parameters.revenue - The subtotal (not including taxes, shipping, etc.) of the entire order
    * @param {string} [parameters.order_id] - Unique order identifier
    * @param {string} [parameters.section] - Index section
    * @param {object} [networkParameters] - Parameters relevant to the network request
