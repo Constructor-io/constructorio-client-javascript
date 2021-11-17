@@ -1202,6 +1202,25 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackSearchResultsLoaded(term, { num_results: 0 })).to.equal(true);
     });
 
+    it('Should trim term parameter if extra spaces are provided', (done) => {
+      const spaceTerm = `   ${term}   `;
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', () => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(requestParams).to.have.property('term').to.equal(term);
+
+        done();
+      });
+
+      expect(tracker.trackSearchResultsLoaded(spaceTerm, requiredParameters)).to.equal(true);
+    });
+
     it('Should throw an error when invalid term is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
@@ -1997,6 +2016,25 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackConversion(term, parameters)).to.equal(true);
+    });
+
+    it('Should trim term parameter if extra spaces are provided', (done) => {
+      const spaceTerm = `   ${term}   `;
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', () => {
+        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        expect(bodyParams).to.have.property('search_term').to.equal(term);
+
+        done();
+      });
+
+      expect(tracker.trackConversion(spaceTerm, requiredParameters)).to.equal(true);
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
