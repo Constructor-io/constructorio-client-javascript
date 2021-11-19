@@ -19,7 +19,7 @@ dotenv.config();
 
 const bundled = process.env.BUNDLED === 'true';
 
-describe.only('ConstructorIO - Utils - Helpers', () => {
+describe('ConstructorIO - Utils - Helpers', () => {
   if (!bundled) {
     describe('ourEncodeURIComponent', () => {
       it('should encode `+` as spaces (%20)', () => {
@@ -70,42 +70,33 @@ describe.only('ConstructorIO - Utils - Helpers', () => {
     });
 
     describe.only('throwHttpErrorFromResponse', () => {
-      it('should throw an error based on the information from the response', () => {
+      it('should throw an error based on the information from the response', async () => {
+        const errorMessage = 'Error Message';
+        const responseData = {
+          status: 400,
+          statusText: 'Bad Request',
+          url: 'https://constructor.io',
+          headers: {
+            'x-forwarded-for': '192.168.0.1',
+          },
+        };
+
         try {
-          throwHttpErrorFromResponse(new Error(), {
-            json: () => new Promise((resolve2) => {
-              resolve2({
-                message: 'Error Message',
+          await throwHttpErrorFromResponse(new Error(), {
+            json: () => new Promise((resolve) => {
+              resolve({
+                message: errorMessage,
               });
             }),
-            status: 400,
-            statusText: 'Bad Request',
-            url: 'https://constructor.io',
-            headers: {
-              'x-forwarded-for': '192.168.0.1',
-            },
+            ...responseData,
           });
         } catch (e) {
-          console.log(e);
-          expect(e).to.equal();
+          expect(e.message).to.equal(errorMessage);
+          expect(e.status).to.equal(responseData.status);
+          expect(e.statusText).to.equal(responseData.statusText);
+          expect(e.url).to.equal(responseData.url);
+          expect(e.headers).to.deep.equal(responseData.headers);
         }
-        // expect(
-        //   new Promise((resolve, reject) => {
-        //     reject(throwHttpErrorFromResponse(new Error(), {
-        //       json: () => new Promise((resolve2) => {
-        //         resolve2({
-        //           message: 'Error Message',
-        //         });
-        //       }),
-        //       status: 400,
-        //       statusText: 'Bad Request',
-        //       url: 'https://constructor.io',
-        //       headers: {
-        //         'x-forwarded-for': '192.168.0.1',
-        //       },
-        //     }));
-        //   })
-        // ).to.eventually.be.rejectedWith(Error('Error Message'));
       });
     });
 
