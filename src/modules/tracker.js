@@ -309,7 +309,7 @@ class Tracker {
           truncatedCustomerIDs = customer_ids;
         }
 
-        if (truncatedCustomerIDs && Array.isArray(truncatedCustomerIDs) && truncatedCustomerIDs.length) {
+        if (truncatedCustomerIDs && truncatedCustomerIDs.length) {
           queryParams.customer_ids = truncatedCustomerIDs.slice(0, 100).join(',');
         }
 
