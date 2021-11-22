@@ -20,7 +20,7 @@ const {
   hasOrderIdRecord,
   addOrderIdRecord,
   applyNetworkTimeout,
-} = require('../../../src/utils/helpers');
+} = require('../../../test/utils/helpers'); // eslint-disable-line import/extensions
 const { setupDOM, teardownDOM } = require('../../mocha.helpers');
 const store = require('../../../test/utils/store'); // eslint-disable-line import/extensions
 
