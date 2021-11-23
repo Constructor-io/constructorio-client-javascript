@@ -32,7 +32,7 @@ dotenv.config();
 
 const bundled = process.env.BUNDLED === 'true';
 
-describe.only('ConstructorIO - Utils - Helpers', () => {
+describe('ConstructorIO - Utils - Helpers', () => {
   if (!bundled) {
     describe('ourEncodeURIComponent', () => {
       it('should encode `+` as spaces (%20)', () => {
