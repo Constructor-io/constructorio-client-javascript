@@ -5,6 +5,7 @@ const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const CRC32 = require('crc-32');
 const sinonChai = require('sinon-chai');
+const { setupDOM, teardownDOM } = require('../../mocha.helpers');
 const {
   ourEncodeURIComponent,
   cleanParams,
@@ -21,7 +22,6 @@ const {
   addOrderIdRecord,
   applyNetworkTimeout,
 } = require('../../../test/utils/helpers'); // eslint-disable-line import/extensions
-const { setupDOM, teardownDOM } = require('../../mocha.helpers');
 const store = require('../../../test/utils/store'); // eslint-disable-line import/extensions
 
 const purchaseEventStorageKey = '_constructorio_purchase_order_ids';
@@ -32,7 +32,7 @@ dotenv.config();
 
 const bundled = process.env.BUNDLED === 'true';
 
-describe('ConstructorIO - Utils - Helpers', () => {
+describe.only('ConstructorIO - Utils - Helpers', () => {
   if (!bundled) {
     describe('ourEncodeURIComponent', () => {
       it('should encode `+` as spaces (%20)', () => {
@@ -54,6 +54,11 @@ describe('ConstructorIO - Utils - Helpers', () => {
         const encodedString = ourEncodeURIComponent(string);
 
         expect(encodedString).to.equal('boink%20doink%20yoink');
+      });
+
+      it('should return null if it is not a string', () => {
+        const notAString = 123;
+        expect(ourEncodeURIComponent(notAString)).to.equal(null);
       });
     });
 
@@ -287,6 +292,8 @@ describe('ConstructorIO - Utils - Helpers', () => {
 
     describe('addOrderIdRecord', () => {
       const orderId = '67890';
+      const orderId2 = '51231';
+      const orderId3 = '45124';
 
       afterEach(() => {
         store.session.clearAll();
@@ -301,6 +308,34 @@ describe('ConstructorIO - Utils - Helpers', () => {
         const newOrderIdExists = newOrderIds[CRC32.str(orderId)];
 
         expect(newOrderIdExists).to.equal(true);
+      });
+
+      it('should not add duplicate order ids to the purchase event storage', () => {
+        const orderIds = store.session.get(purchaseEventStorageKey);
+        expect(orderIds).to.equal(null);
+
+        addOrderIdRecord(orderId);
+        addOrderIdRecord(orderId);
+        const newOrderIds = JSON.parse(store.session.get(purchaseEventStorageKey));
+        const newOrderIdExists = newOrderIds[CRC32.str(orderId)];
+
+        expect(Object.keys(newOrderIds).length).to.equal(1);
+        expect(newOrderIdExists).to.equal(true);
+      });
+
+      it('should keep a history of order ids', () => {
+        const orderIds = store.session.get(purchaseEventStorageKey);
+        expect(orderIds).to.equal(null);
+
+        addOrderIdRecord(orderId);
+        addOrderIdRecord(orderId2);
+        addOrderIdRecord(orderId3);
+        const newOrderIds = JSON.parse(store.session.get(purchaseEventStorageKey));
+
+        expect(Object.keys(newOrderIds).length).to.equal(3);
+        expect(newOrderIds[CRC32.str(orderId)]).to.equal(true);
+        expect(newOrderIds[CRC32.str(orderId2)]).to.equal(true);
+        expect(newOrderIds[CRC32.str(orderId3)]).to.equal(true);
       });
     });
 
