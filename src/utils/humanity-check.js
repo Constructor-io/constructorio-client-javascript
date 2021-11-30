@@ -18,7 +18,7 @@ const humanEvents = [
 
 class HumanityCheck {
   constructor() {
-    this.isHumanBoolean = !!store.session.get(storageKey) || false;
+    this.isHumanBoolean = this.getIsHumanFromSessionStorage();
 
     // Humanity proved, remove handlers to prove humanity
     const remove = () => {
@@ -38,6 +38,10 @@ class HumanityCheck {
     }
   }
 
+  getIsHumanFromSessionStorage() {
+    return !!store.session.get(storageKey) || false;
+  }
+
   // Return boolean indicating if is human
   isHuman() {
     return this.isHumanBoolean || !!store.session.get(storageKey);
@@ -45,6 +49,10 @@ class HumanityCheck {
 
   // Return boolean indicating if useragent matches botlist
   isBot() {
+    if (this.getIsHumanFromSessionStorage()) {
+      return false;
+    }
+
     const { userAgent, webdriver } = helpers.getNavigator();
     const botRegex = new RegExp(`(${botList.join('|')})`);
 

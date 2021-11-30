@@ -55,5 +55,38 @@ describe('ConstructorIO - Utils - Humanity Check', () => {
         expect(store.session.get(storageKey)).to.equal(true);
       });
     });
+    describe('isBot', () => {
+      const storageKey = '_constructorio_is_human';
+
+      beforeEach(() => {
+        global.CLIENT_VERSION = 'cio-mocha';
+
+        helpers.setupDOM();
+        window.navigator.webdriver = true;
+      });
+
+      afterEach(() => {
+        delete global.CLIENT_VERSION;
+
+        helpers.teardownDOM();
+        helpers.clearStorage();
+      });
+
+      it('Should have isBot flag set on initial instantiation', () => {
+        const humanity = new HumanityCheck();
+
+        expect(humanity.isBot()).to.equal(true);
+        expect(store.session.get(storageKey)).to.equal(null);
+      });
+
+      it('Should have isBot flag set to false if session variable is set', () => {
+        const humanity = new HumanityCheck();
+
+        expect(humanity.isBot()).to.equal(true);
+        store.session.set(storageKey, true);
+        expect(humanity.isBot()).to.equal(false);
+        expect(store.session.get(storageKey)).to.equal(true);
+      });
+    });
   }
 });
