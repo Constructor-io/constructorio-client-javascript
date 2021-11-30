@@ -35,35 +35,35 @@ const bundled = process.env.BUNDLED === 'true';
 describe('ConstructorIO - Utils - Helpers', () => {
   if (!bundled) {
     describe('ourEncodeURIComponent', () => {
-      it('should encode `+` as spaces (%20)', () => {
+      it('Should encode `+` as spaces (%20)', () => {
         const string = 'boink+doink';
         const encodedString = ourEncodeURIComponent(string);
 
         expect(encodedString).to.equal('boink%20doink');
       });
 
-      it('should encode special characters', () => {
+      it('Should encode special characters', () => {
         const string = "jáck's boink/yoink & doinks";
         const encodedString = ourEncodeURIComponent(string);
 
         expect(encodedString).to.equal('j%C3%A1ck%27s%20boink%2Fyoink%20%26%20doinks');
       });
 
-      it('should encode non-breaking space characters as spaces (%20)', () => {
+      it('Should encode non-breaking space characters as spaces (%20)', () => {
         const string = 'boink doink yoink'; // contains non-breaking spaces
         const encodedString = ourEncodeURIComponent(string);
 
         expect(encodedString).to.equal('boink%20doink%20yoink');
       });
 
-      it('should return null if it is not a string', () => {
+      it('Should return null if it is not a string', () => {
         const notAString = 123;
         expect(ourEncodeURIComponent(notAString)).to.equal(null);
       });
     });
 
     describe('cleanParams', () => {
-      it('should clean up parameters', () => {
+      it('Should clean up parameters', () => {
         const params = {
           origin_referrer: 'https://test.com/search/pizza?a=bread&b=pizza+burrito',
           filters: {
@@ -88,7 +88,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
     });
 
     describe('throwHttpErrorFromResponse', () => {
-      it('should throw an error based on the information from the response', async () => {
+      it('Should throw an error based on the information from the response', async () => {
         const errorMessage = 'Error Message';
         const responseData = {
           status: 400,
@@ -119,11 +119,11 @@ describe('ConstructorIO - Utils - Helpers', () => {
     });
 
     describe('canUseDOM', () => {
-      it('should return true if in a DOM context', () => {
+      it('Should return true if in a DOM context', () => {
         expect(canUseDOM()).to.equal(false);
       });
 
-      it('should return false if not in a DOM context', () => {
+      it('Should return false if not in a DOM context', () => {
         setupDOM();
         expect(canUseDOM()).to.equal(true);
         teardownDOM();
@@ -131,7 +131,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
     });
 
     describe('addEventListener', () => {
-      it('should add an event listener to the window if in the DOM context', () => {
+      it('Should add an event listener to the window if in the DOM context', () => {
         setupDOM();
 
         const callback = sinon.stub();
@@ -145,7 +145,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
         teardownDOM();
       });
 
-      it('should not add an event listener to the window if not in a DOM context', () => {
+      it('Should not add an event listener to the window if not in a DOM context', () => {
         const callback = sinon.stub();
         addEventListener('click', callback, false);
 
@@ -160,7 +160,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
     });
 
     describe('removeEventListener', () => {
-      it('should remove an event listener to the window if in a DOM context', () => {
+      it('Should remove an event listener to the window if in a DOM context', () => {
         setupDOM();
 
         const callback = sinon.stub();
@@ -182,7 +182,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
     });
 
     describe('getNavigator', () => {
-      it('should return information about the window navigator property if in a DOM context', () => {
+      it('Should return information about the window navigator property if in a DOM context', () => {
         setupDOM();
 
         const navigatorInfo = {
@@ -198,7 +198,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
         teardownDOM();
       });
 
-      it('should return default information if not in a DOM context', () => {
+      it('Should return default information if not in a DOM context', () => {
         expect(getNavigator()).to.deep.equal({
           userAgent: '',
           webdriver: false,
@@ -207,17 +207,17 @@ describe('ConstructorIO - Utils - Helpers', () => {
     });
 
     describe('isNil', () => {
-      it('should return true if the value is null', () => {
+      it('Should return true if the value is null', () => {
         expect(isNil(null)).to.equal(true);
       });
 
-      it('should return false if the value is not null', () => {
+      it('Should return false if the value is not null', () => {
         expect(isNil({})).to.equal(false);
       });
     });
 
     describe('getWindowLocation', () => {
-      it('should return information about the window location property if in a DOM context', () => {
+      it('Should return information about the window location property if in a DOM context', () => {
         setupDOM();
 
         const locationInfo = {
@@ -234,13 +234,13 @@ describe('ConstructorIO - Utils - Helpers', () => {
         teardownDOM();
       });
 
-      it('should return empty object if not in a DOM context', () => {
+      it('Should return empty object if not in a DOM context', () => {
         expect(getWindowLocation()).to.deep.equal({});
       });
     });
 
     describe('dispatchEvent', () => {
-      it('should dispatch an event if in a DOM context', () => {
+      it('Should dispatch an event if in a DOM context', () => {
         setupDOM();
 
         const windowDispatch = sinon.spy(window, 'dispatchEvent');
@@ -252,7 +252,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
     });
 
     describe('createCustomEvent', () => {
-      it('should create a custom event if in a DOM context', () => {
+      it('Should create a custom event if in a DOM context', () => {
         setupDOM();
 
         const eventName = 'custom.event';
@@ -265,7 +265,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
         teardownDOM();
       });
 
-      it('should not create a custom event if not in a DOM context', () => {
+      it('Should not create a custom event if not in a DOM context', () => {
         expect(createCustomEvent('cio.loaded', { a: 1, b: 2 })).to.equal(null);
       });
     });
@@ -277,7 +277,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
         store.session.clearAll();
       });
 
-      it('should return true if the order id already exists from a previous purchase event', () => {
+      it('Should return true if the order id already exists from a previous purchase event', () => {
         store.session.set(purchaseEventStorageKey, JSON.stringify({
           [CRC32.str(orderId)]: true,
         }));
@@ -285,7 +285,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
         expect(hasOrderIdRecord(orderId)).to.equal(true);
       });
 
-      it('should return null if the order id does not already exist', () => {
+      it('Should return null if the order id does not already exist', () => {
         expect(hasOrderIdRecord(orderId)).to.equal(null);
       });
     });
@@ -299,7 +299,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
         store.session.clearAll();
       });
 
-      it('should add the order id to the purchase event storage', () => {
+      it('Should add the order id to the purchase event storage', () => {
         const orderIds = store.session.get(purchaseEventStorageKey);
         expect(orderIds).to.equal(null);
 
@@ -310,7 +310,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
         expect(newOrderIdExists).to.equal(true);
       });
 
-      it('should not add duplicate order ids to the purchase event storage', () => {
+      it('Should not add duplicate order ids to the purchase event storage', () => {
         const orderIds = store.session.get(purchaseEventStorageKey);
         expect(orderIds).to.equal(null);
 
@@ -323,7 +323,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
         expect(newOrderIdExists).to.equal(true);
       });
 
-      it('should keep a history of order ids', () => {
+      it('Should keep a history of order ids', () => {
         const orderIds = store.session.get(purchaseEventStorageKey);
         expect(orderIds).to.equal(null);
 
@@ -340,7 +340,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
     });
 
     describe('applyNetworkTimeout', () => {
-      it('should send an abort signal to the controller using the networkParameter timeout', (done) => {
+      it('Should send an abort signal to the controller using the networkParameter timeout', (done) => {
         const controller = new AbortController();
 
         expect(controller.signal.aborted).to.equal(false);
@@ -352,7 +352,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
         }, 100);
       });
 
-      it('should send an abort signal to the controller using the options timeout', (done) => {
+      it('Should send an abort signal to the controller using the options timeout', (done) => {
         const controller = new AbortController();
 
         expect(controller.signal.aborted).to.equal(false);
@@ -362,6 +362,18 @@ describe('ConstructorIO - Utils - Helpers', () => {
           expect(controller.signal.aborted).to.equal(true);
           done();
         }, 100);
+      });
+
+      it('Should prefer timeout value from options (first parameter) over global timeout from networkParameters (second parameter)', (done) => {
+        const controller = new AbortController();
+
+        expect(controller.signal.aborted).to.equal(false);
+        applyNetworkTimeout({ networkParameters: { timeout: 50 } }, { timeout: 100 }, controller);
+
+        setTimeout(() => {
+          expect(controller.signal.aborted).to.equal(true);
+          done();
+        }, 75);
       });
     });
   }
