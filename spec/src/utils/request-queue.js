@@ -5,7 +5,7 @@ const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 const store = require('../../../src/utils/store');
-const RequestQueue = require('../../../src/utils/request-queue');
+const RequestQueue = require('../../../test/utils/request-queue'); // eslint-disable-line import/extensions
 const helpers = require('../../mocha.helpers');
 
 chai.use(chaiAsPromised);
