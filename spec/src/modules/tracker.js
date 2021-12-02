@@ -2380,7 +2380,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackPurchase(requiredParameters)).to.equal(true);
     });
 
-    it('Should respond with a valid response when more than 100 items are provided', (done) => {
+    it('Should respond with a valid response and limit items to no more than 100', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
