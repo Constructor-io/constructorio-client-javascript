@@ -2392,7 +2392,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestBodyParams).to.have.property('items').length.to.be.at.most(100);
+        expect(requestBodyParams).to.have.property('items').length.to.be(100);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
