@@ -561,7 +561,7 @@ class Tracker {
       }
 
       if (items && Array.isArray(items)) {
-        bodyParams.items = items;
+        bodyParams.items = items.slice(0, 100);
       }
 
       if (revenue) {
