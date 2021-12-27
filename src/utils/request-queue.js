@@ -1,7 +1,7 @@
 /* eslint-disable brace-style, no-unneeded-ternary */
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
-const store = require('../utils/store');
+const idb = require('idb-keyval/dist/compat');
 const HumanityCheck = require('../utils/humanity-check');
 const helpers = require('../utils/helpers');
 
@@ -30,9 +30,9 @@ class RequestQueue {
   }
 
   // Add request to queue to be dispatched
-  queue(url, method = 'GET', body, networkParameters = {}) {
+  async queue(url, method = 'GET', body, networkParameters = {}) {
     if (this.sendTrackingEvents && !this.humanity.isBot()) {
-      const queue = RequestQueue.get();
+      const queue = await RequestQueue.get();
 
       queue.push({
         url,
@@ -40,14 +40,14 @@ class RequestQueue {
         body,
         networkParameters,
       });
-      RequestQueue.set(queue);
+      await RequestQueue.set(queue);
     }
   }
 
   // Read from queue and send events to server
-  sendEvents() {
+  async sendEvents() {
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
-    const queue = RequestQueue.get();
+    const queue = await RequestQueue.get();
 
     if (
       // Consider user "human" if no DOM context is available
@@ -69,7 +69,7 @@ class RequestQueue {
         helpers.applyNetworkTimeout(this.options, networkParameters, controller);
       }
 
-      RequestQueue.set(queue);
+      await RequestQueue.set(queue);
 
       // Backwards compatibility with versions <= 2.0.0, can be removed in future
       // - Request queue entries used to be strings with 'GET' method assumed
@@ -151,13 +151,13 @@ class RequestQueue {
   }
 
   // Return current request queue
-  static get() {
-    return store.local.get(storageKey) || [];
+  static async get() {
+    return await idb.get(storageKey) || [];
   }
 
   // Update current request queue
-  static set(queue) {
-    store.local.set(storageKey, queue);
+  static async set(queue) {
+    await idb.set(storageKey, queue);
   }
 }
 

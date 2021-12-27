@@ -68,6 +68,7 @@
     "es6-promise": "^4.2.8",
     "events": "^3.0.0",
     "fetch-ponyfill": "^7.1.0",
+    "idb-keyval": "^6.0.3",
     "qs": "6.7.2",
     "store2": "^2.9.0"
   }
