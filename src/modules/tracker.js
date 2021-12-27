@@ -501,13 +501,17 @@ class Tracker {
       const requestMethod = 'POST';
       const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
 
-      this.requests.queue(
-        requestURL,
-        requestMethod,
-        requestBody,
-        networkParameters,
-      );
-      this.requests.send();
+      if (navigator && navigator.sendBeacon) {
+        navigator.sendBeacon(requestURL, JSON.stringify(requestBody));
+      } else {
+        this.requests.queue(
+          requestURL,
+          requestMethod,
+          requestBody,
+          networkParameters,
+        );
+        this.requests.send();
+      }
 
       return true;
     }
@@ -578,13 +582,17 @@ class Tracker {
       const requestMethod = 'POST';
       const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
 
-      this.requests.queue(
-        requestURL,
-        requestMethod,
-        requestBody,
-        networkParameters,
-      );
-      this.requests.send();
+      if (navigator && navigator.sendBeacon) {
+        navigator.sendBeacon(requestURL, JSON.stringify(requestBody));
+      } else {
+        this.requests.queue(
+          requestURL,
+          requestMethod,
+          requestBody,
+          networkParameters,
+        );
+        this.requests.send();
+      }
 
       return true;
     }
