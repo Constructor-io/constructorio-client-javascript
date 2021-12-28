@@ -10,7 +10,7 @@ const Promise = require('es6-promise');
 const cloneDeep = require('lodash.clonedeep');
 const fs = require('fs');
 const helpers = require('../../mocha.helpers');
-const { addOrderIdRecord } = require('../../../src/utils/helpers');
+const { addOrderIdRecord, storage } = require('../../../src/utils/helpers');
 let ConstructorIO = require('../../../test/constructorio'); // eslint-disable-line import/extensions
 
 chai.use(chaiAsPromised);
@@ -39,18 +39,17 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
   jsdom(jsdomOptions);
 
-  beforeEach(() => {
-    helpers.clearStorage();
-    store.session.set('_constructorio_is_human', true);
+  beforeEach(async () => {
+    await storage.clear();
+    await storage.set('_constructorio_is_human', true);
 
     fetchSpy = sinon.spy(fetch);
     global.CLIENT_VERSION = clientVersion;
     window.CLIENT_VERSION = clientVersion;
 
     if (bundled) {
-      // store2 doesn't seem to maintain the `window` context for bundled version - set manually
-      window.sessionStorage.clear();
-      window.sessionStorage.setItem('_constructorio_is_human', true);
+      await storage.clear();
+      await storage.set('_constructorio_is_human', true);
 
       ConstructorIO = window.ConstructorioClient;
     }
@@ -2568,7 +2567,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackPurchase(requiredParameters)).to.equal(true);
     });
 
-    // store2 doesn't seem to maintain the `window` context for bundled version
     if (!bundled) {
       it('Should not send a purchase event if the order has been tracked already', (done) => {
         const { tracker } = new ConstructorIO({

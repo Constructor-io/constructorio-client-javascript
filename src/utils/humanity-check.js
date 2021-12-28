@@ -47,8 +47,8 @@ class HumanityCheck {
   }
 
   // Return boolean indicating if useragent matches botlist
-  isBot() {
-    if (this.getIsHumanFromStorage()) {
+  async isBot() {
+    if (await this.getIsHumanFromStorage()) {
       return false;
     }
 

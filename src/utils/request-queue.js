@@ -30,7 +30,7 @@ class RequestQueue {
 
   // Add request to queue to be dispatched
   async queue(url, method = 'GET', body, networkParameters = {}) {
-    if (this.sendTrackingEvents && !this.humanity.isBot()) {
+    if (this.sendTrackingEvents && !(await this.humanity.isBot())) {
       const queue = await helpers.storage.get(storageKey) || [];
 
       queue.push({
@@ -50,7 +50,7 @@ class RequestQueue {
 
     if (
       // Consider user "human" if no DOM context is available
-      (!helpers.canUseDOM() || this.humanity.isHuman())
+      (!helpers.canUseDOM() || await this.humanity.isHuman())
       && !this.requestPending
       && !this.pageUnloading
       && queue.length
@@ -147,16 +147,6 @@ class RequestQueue {
         setTimeout(this.sendEvents.bind(this), (this.options && this.options.trackingSendDelay) || 250);
       }
     }
-  }
-
-  // Return current request queue
-  static async get() {
-    return (await helpers.storage.get(storageKey)) || [];
-  }
-
-  // Update current request queue
-  static async set(queue) {
-    return await helpers.storage.set(storageKey, queue);
   }
 }
 

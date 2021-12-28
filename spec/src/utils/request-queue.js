@@ -57,9 +57,9 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
         await requests.queue('https://ac.cnstrc.com/behavior?action=focus');
         await requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-        expect(await RequestQueue.get()).to.be.an('array').length(3);
+        expect(await storage.get(storageKey) || []).to.be.an('array').length(3);
         helpers.triggerUnload();
-        expect(await storage.get(storageKey)).to.be.an('array').length(3);
+        expect(await storage.get(storageKey) || []).to.be.an('array').length(3);
       });
 
       it('Should add object requests to the queue - POST with body', async () => {
@@ -69,9 +69,9 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
         await requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'focus' });
         await requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'magic_number_three' });
 
-        expect(await RequestQueue.get()).to.be.an('array').length(3);
+        expect(await storage.get(storageKey) || []).to.be.an('array').length(3);
         helpers.triggerUnload();
-        expect(await storage.get(storageKey)).to.be.an('array').length(3);
+        expect(await storage.get(storageKey) || []).to.be.an('array').length(3);
       });
 
       it('Should not add requests to the queue if the user has a bot-like useragent', async () => {
@@ -83,7 +83,7 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
         await requests.queue('https://ac.cnstrc.com/behavior?action=focus');
         await requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-        expect(await RequestQueue.get()).to.be.an('array').length(0);
+        expect((await storage.get(storageKey)) || []).to.be.an('array').length(0);
         helpers.triggerUnload();
       });
 
@@ -96,7 +96,7 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
         await requests.queue('https://ac.cnstrc.com/behavior?action=focus');
         await requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-        expect(await RequestQueue.get()).to.be.an('array').length(0);
+        expect(await storage.get(storageKey) || []).to.be.an('array').length(0);
         helpers.triggerUnload();
       });
 
@@ -112,7 +112,7 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
         await requests.queue('https://ac.cnstrc.com/behavior?action=focus');
         await requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-        expect(await RequestQueue.get()).to.be.an('array').length(0);
+        expect(await storage.get(storageKey) || []).to.be.an('array').length(0);
         helpers.triggerUnload();
       });
 
@@ -123,7 +123,7 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
         await requests.queue('https://ac.cnstrc.com/behavior?action=focus');
         await requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-        expect(await RequestQueue.get()).to.be.an('array').length(0);
+        expect(await storage.get(storageKey) || []).to.be.an('array').length(0);
         helpers.triggerUnload();
       });
     });
@@ -150,12 +150,12 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
           await requests.queue('https://ac.cnstrc.com/behavior?action=focus');
           await requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-          expect(await RequestQueue.get()).to.be.an('array').length(3);
+          expect(await storage.get(storageKey) || []).to.be.an('array').length(3);
           helpers.triggerResize();
           await requests.send();
 
           setTimeout(async () => {
-            expect(await RequestQueue.get()).to.be.an('array').length(0);
+            expect(await storage.get(storageKey) || []).to.be.an('array').length(0);
           }, waitInterval);
         });
 
@@ -166,12 +166,12 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
           await requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'focus' });
           await requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'magic_number_three' });
 
-          expect(await RequestQueue.get()).to.be.an('array').length(3);
+          expect(await storage.get(storageKey) || []).to.be.an('array').length(3);
           helpers.triggerResize();
           await requests.send();
 
           setTimeout(async () => {
-            expect(await RequestQueue.get()).to.be.an('array').length(0);
+            expect(await storage.get(storageKey) || []).to.be.an('array').length(0);
           }, waitInterval);
         });
 
@@ -182,11 +182,11 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
           await requests.queue('https://ac.cnstrc.com/behavior?action=focus');
           await requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-          expect(await RequestQueue.get()).to.be.an('array').length(3);
+          expect(await storage.get(storageKey) || []).to.be.an('array').length(3);
           await requests.send();
 
           setTimeout(async () => {
-            expect(await RequestQueue.get()).to.be.an('array').length(3);
+            expect(await storage.get(storageKey) || []).to.be.an('array').length(3);
           }, waitInterval);
         });
 
@@ -197,13 +197,13 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
           await requests.queue('https://ac.cnstrc.com/behavior?action=focus');
           await requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-          expect(await RequestQueue.get()).to.be.an('array').length(3);
+          expect(await storage.get(storageKey) || []).to.be.an('array').length(3);
           helpers.triggerResize();
           helpers.triggerUnload();
           await requests.send();
 
           setTimeout(async () => {
-            expect(await RequestQueue.get()).to.be.an('array').length(3);
+            expect(await storage.get(storageKey) || []).to.be.an('array').length(3);
           }, waitInterval);
         });
 
@@ -214,13 +214,13 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
           await requests.queue('https://ac.cnstrc.com/behavior?action=focus');
           await requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-          expect(await RequestQueue.get()).to.be.an('array').length(3);
+          expect(await storage.get(storageKey) || []).to.be.an('array').length(3);
           helpers.triggerResize();
           await requests.send();
           helpers.triggerUnload();
 
           setTimeout(async () => {
-            expect(await RequestQueue.get()).to.be.an('array').length(3);
+            expect(await storage.get(storageKey) || []).to.be.an('array').length(3);
           }, waitInterval);
         });
 
@@ -233,12 +233,12 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
 
           const requests = new RequestQueue(requestQueueOptions);
 
-          expect(await RequestQueue.get()).to.be.an('array').length(3);
+          expect(await storage.get(storageKey) || []).to.be.an('array').length(3);
           helpers.triggerResize();
           await requests.send();
 
           setTimeout(async () => {
-            expect(await RequestQueue.get()).to.be.an('array').length(0);
+            expect(await storage.get(storageKey) || []).to.be.an('array').length(0);
           }, waitInterval);
         });
 
@@ -260,12 +260,12 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
 
           const requests = new RequestQueue(requestQueueOptions);
 
-          expect(await RequestQueue.get()).to.be.an('array').length(3);
+          expect(await storage.get(storageKey) || []).to.be.an('array').length(3);
           helpers.triggerResize();
           await requests.send();
 
           setTimeout(async () => {
-            expect(await RequestQueue.get()).to.be.an('array').length(0);
+            expect(await storage.get(storageKey) || []).to.be.an('array').length(0);
           }, waitInterval);
         });
 
@@ -288,11 +288,11 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
           // eslint-disable-next-line no-unused-vars
           const requests = new RequestQueue(requestQueueOptions);
 
-          expect(await RequestQueue.get()).to.be.an('array').length(3);
+          expect(await storage.get(storageKey) || []).to.be.an('array').length(3);
           helpers.triggerResize();
 
           setTimeout(async () => {
-            expect(await RequestQueue.get()).to.be.an('array').length(0);
+            expect(await storage.get(storageKey) || []).to.be.an('array').length(0);
           }, waitInterval);
         });
 
@@ -314,11 +314,11 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
 
           const requests = new RequestQueue(requestQueueOptions);
 
-          expect(await RequestQueue.get()).to.be.an('array').length(3);
+          expect(await storage.get(storageKey) || []).to.be.an('array').length(3);
           await requests.send();
 
           setTimeout(async () => {
-            expect(await RequestQueue.get()).to.be.an('array').length(3);
+            expect(await storage.get(storageKey) || []).to.be.an('array').length(3);
           }, waitInterval);
         });
 
@@ -340,13 +340,13 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
 
           const requests = new RequestQueue(requestQueueOptions);
 
-          expect(await RequestQueue.get()).to.be.an('array').length(3);
+          expect(await storage.get(storageKey) || []).to.be.an('array').length(3);
           helpers.triggerResize();
           helpers.triggerUnload();
           await requests.send();
 
           setTimeout(async () => {
-            expect(await RequestQueue.get()).to.be.an('array').length(3);
+            expect(await storage.get(storageKey) || []).to.be.an('array').length(3);
           }, waitInterval);
         });
       });
@@ -381,7 +381,7 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
           const sendSpy1 = sinon.spy(requests1, 'send');
           const sendSpy2 = sinon.spy(requests2, 'send');
 
-          expect(await RequestQueue.get()).to.be.an('array').length(5);
+          expect(await storage.get(storageKey) || []).to.be.an('array').length(5);
           helpers.triggerResize();
           requests1.send();
           requests2.send();
@@ -390,7 +390,7 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
             expect(sendSpy1.callCount).to.be.at.least(2 + 1); // 2 min sent + 1 finally
             expect(sendSpy2.callCount).to.be.at.least(2 + 1); // 2 min sent + 1 finally
             expect(sendSpy1.callCount + sendSpy2.callCount).to.equal(5 + 2); // 5 sent + 2 finally
-            expect(await RequestQueue.get()).to.be.an('array').length(0);
+            expect(await storage.get(storageKey) || []).to.be.an('array').length(0);
           }, waitInterval);
         });
 
@@ -414,7 +414,7 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
             expect(sendSpy1.callCount).to.be.at.least(2 + 1); // 2 min sent + 1 finally
             expect(sendSpy2.callCount).to.be.at.least(2 + 1); // 2 min sent + 1 finally
             expect(sendSpy1.callCount + sendSpy2.callCount).to.equal(5 + 2); // 5 sent + 2 finally
-            expect(await RequestQueue.get()).to.be.an('array').length(0);
+            expect(await storage.get(storageKey) || []).to.be.an('array').length(0);
           }, waitInterval);
         });
 
@@ -438,7 +438,7 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
             expect(sendSpy1.callCount).to.be.at.least(2 + 1); // 2 min sent + 1 finally
             expect(sendSpy2.callCount).to.be.at.least(2 + 1); // 2 min sent + 1 finally
             expect(sendSpy1.callCount + sendSpy2.callCount).to.equal(5 + 2); // 5 sent + 2 finally
-            expect(await RequestQueue.get()).to.be.an('array').length(0);
+            expect(await storage.get(storageKey) || []).to.be.an('array').length(0);
           }, waitInterval);
         });
       });

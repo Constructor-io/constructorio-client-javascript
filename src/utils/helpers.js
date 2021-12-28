@@ -166,17 +166,17 @@ const utils = {
   storage: {
     // Set value for key
     async set(key, value) {
-      return await idb.set(key, value);
+      return idb.set(key, value);
     },
 
     // Retrieve value for key
     async get(key) {
-      return await idb.get(key);
+      return idb.get(key);
     },
 
     // Clear all keys and values
     async clear() {
-      return await idb.clear();
+      return idb.clear();
     },
   },
 };
