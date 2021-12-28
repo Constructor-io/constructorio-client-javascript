@@ -157,20 +157,19 @@ class RequestQueue {
 
   // Update current request queue
   static set(queue) {
-    store.local.set(storageKey, queue);
-
-    const localQueueLength = RequestQueue.get().length;
-
     // If queue length is zero, remove entry entirely
-    if (queue.length === 0) {
+    if (queue && queue.length === 0) {
       RequestQueue.remove();
+    } else {
+      store.local.set(storageKey, queue);
     }
 
+    const localStorageQueue = RequestQueue.get();
+
     // Ensure storage queue was set correctly in storage by checking length
-    // - Also ensure queue cannot get larger than 20 pending items
     // - Otherwise remove all pending requests as preventative measure
     // - Firefox seeing identical events being transmitted multiple times
-    if (localQueueLength !== queue.length || localQueueLength > 20) {
+    if (Array.isArray(localStorageQueue) && localStorageQueue.length !== queue.length) {
       RequestQueue.remove();
     }
   }
