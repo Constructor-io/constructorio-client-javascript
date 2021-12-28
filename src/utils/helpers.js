@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 const qs = require('qs');
 const CRC32 = require('crc-32');
-const store = require('./store');
+const idb = require('idb-keyval');
 
 const purchaseEventStorageKey = '_constructorio_purchase_order_ids';
 
@@ -110,9 +110,9 @@ const utils = {
     return null;
   },
 
-  hasOrderIdRecord(orderId) {
+  async hasOrderIdRecord(orderId) {
     const orderIdHash = CRC32.str(orderId.toString());
-    let purchaseEventStorage = store.session.get(purchaseEventStorageKey);
+    let purchaseEventStorage = await utils.storage.get(purchaseEventStorageKey);
 
     if (typeof purchaseEventStorage === 'string') {
       purchaseEventStorage = JSON.parse(purchaseEventStorage);
@@ -124,9 +124,9 @@ const utils = {
     return null;
   },
 
-  addOrderIdRecord(orderId) {
+  async addOrderIdRecord(orderId) {
     const orderIdHash = CRC32.str(orderId.toString());
-    let purchaseEventStorage = store.session.get(purchaseEventStorageKey);
+    let purchaseEventStorage = await utils.storage.get(purchaseEventStorageKey);
 
     if (typeof purchaseEventStorage === 'string') {
       purchaseEventStorage = JSON.parse(purchaseEventStorage);
@@ -147,7 +147,7 @@ const utils = {
     }
 
     // Push the order id map into session storage
-    store.session.set(purchaseEventStorageKey, JSON.stringify(purchaseEventStorage));
+    await utils.storage.set(purchaseEventStorageKey, JSON.stringify(purchaseEventStorage));
   },
 
   // Abort network request based on supplied timeout interval (in milliseconds)
@@ -160,6 +160,24 @@ const utils = {
     if (typeof timeout === 'number') {
       setTimeout(() => controller.abort(), timeout);
     }
+  },
+
+  // Manage keys / values in storage (currently via IndexedDB)
+  storage: {
+    // Set value for key
+    async set(key, value) {
+      await idb.set(key, value);
+    },
+
+    // Retrieve value for key
+    async get(key) {
+      await idb.get(key);
+    },
+
+    // Clear all keys and values
+    async clear() {
+      await idb.clear();
+    },
   },
 };
 

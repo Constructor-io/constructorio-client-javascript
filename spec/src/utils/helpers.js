@@ -21,8 +21,8 @@ const {
   hasOrderIdRecord,
   addOrderIdRecord,
   applyNetworkTimeout,
+  storage,
 } = require('../../../test/utils/helpers'); // eslint-disable-line import/extensions
-const store = require('../../../test/utils/store'); // eslint-disable-line import/extensions
 
 const purchaseEventStorageKey = '_constructorio_purchase_order_ids';
 
@@ -273,12 +273,12 @@ describe('ConstructorIO - Utils - Helpers', () => {
     describe('hasOrderIdRecord', () => {
       const orderId = '12345';
 
-      afterEach(() => {
-        store.session.clearAll();
+      afterEach(async () => {
+        await storage.clear();
       });
 
-      it('Should return true if the order id already exists from a previous purchase event', () => {
-        store.session.set(purchaseEventStorageKey, JSON.stringify({
+      it('Should return true if the order id already exists from a previous purchase event', async () => {
+        await storage.set(purchaseEventStorageKey, JSON.stringify({
           [CRC32.str(orderId)]: true,
         }));
 
@@ -295,42 +295,42 @@ describe('ConstructorIO - Utils - Helpers', () => {
       const orderId2 = '51231';
       const orderId3 = '45124';
 
-      afterEach(() => {
-        store.session.clearAll();
+      afterEach(async () => {
+        await store.session.clearAll();
       });
 
-      it('Should add the order id to the purchase event storage', () => {
-        const orderIds = store.session.get(purchaseEventStorageKey);
+      it('Should add the order id to the purchase event storage', async () => {
+        const orderIds = await storage.get(purchaseEventStorageKey);
         expect(orderIds).to.equal(null);
 
         addOrderIdRecord(orderId);
-        const newOrderIds = JSON.parse(store.session.get(purchaseEventStorageKey));
+        const newOrderIds = JSON.parse(await storage.get(purchaseEventStorageKey));
         const newOrderIdExists = newOrderIds[CRC32.str(orderId)];
 
         expect(newOrderIdExists).to.equal(true);
       });
 
-      it('Should not add duplicate order ids to the purchase event storage', () => {
-        const orderIds = store.session.get(purchaseEventStorageKey);
+      it('Should not add duplicate order ids to the purchase event storage', async () => {
+        const orderIds = await store.session.get(purchaseEventStorageKey);
         expect(orderIds).to.equal(null);
 
         addOrderIdRecord(orderId);
         addOrderIdRecord(orderId);
-        const newOrderIds = JSON.parse(store.session.get(purchaseEventStorageKey));
+        const newOrderIds = JSON.parse(await store.session.get(purchaseEventStorageKey));
         const newOrderIdExists = newOrderIds[CRC32.str(orderId)];
 
         expect(Object.keys(newOrderIds).length).to.equal(1);
         expect(newOrderIdExists).to.equal(true);
       });
 
-      it('Should keep a history of order ids', () => {
-        const orderIds = store.session.get(purchaseEventStorageKey);
+      it('Should keep a history of order ids', async () => {
+        const orderIds = await store.session.get(purchaseEventStorageKey);
         expect(orderIds).to.equal(null);
 
         addOrderIdRecord(orderId);
         addOrderIdRecord(orderId2);
         addOrderIdRecord(orderId3);
-        const newOrderIds = JSON.parse(store.session.get(purchaseEventStorageKey));
+        const newOrderIds = JSON.parse(await store.session.get(purchaseEventStorageKey));
 
         expect(Object.keys(newOrderIds).length).to.equal(3);
         expect(newOrderIds[CRC32.str(orderId)]).to.equal(true);

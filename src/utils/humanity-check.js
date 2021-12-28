@@ -1,5 +1,4 @@
 /* eslint-disable class-methods-use-this */
-const store = require('../utils/store');
 const botList = require('./botlist');
 const helpers = require('./helpers');
 
@@ -21,10 +20,10 @@ class HumanityCheck {
     this.isHumanBoolean = this.getIsHumanFromSessionStorage();
 
     // Humanity proved, remove handlers to prove humanity
-    const remove = () => {
+    const remove = async () => {
       this.isHumanBoolean = true;
 
-      store.session.set(storageKey, true);
+      await helpers.storage.set(storageKey, true);
       humanEvents.forEach((eventType) => {
         helpers.removeEventListener(eventType, remove, true);
       });
@@ -38,13 +37,13 @@ class HumanityCheck {
     }
   }
 
-  getIsHumanFromSessionStorage() {
-    return !!store.session.get(storageKey) || false;
+  async getIsHumanFromSessionStorage() {
+    return !!(await helpers.storage.get(storageKey) || false);
   }
 
   // Return boolean indicating if is human
-  isHuman() {
-    return this.isHumanBoolean || !!store.session.get(storageKey);
+  async isHuman() {
+    return this.isHumanBoolean || !!(await helpers.storage.get(storageKey));
   }
 
   // Return boolean indicating if useragent matches botlist

@@ -1,7 +1,6 @@
 /* eslint-disable brace-style, no-unneeded-ternary */
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
-const idb = require('idb-keyval/dist/compat');
 const HumanityCheck = require('../utils/humanity-check');
 const helpers = require('../utils/helpers');
 
@@ -32,7 +31,7 @@ class RequestQueue {
   // Add request to queue to be dispatched
   async queue(url, method = 'GET', body, networkParameters = {}) {
     if (this.sendTrackingEvents && !this.humanity.isBot()) {
-      const queue = await RequestQueue.get();
+      const queue = await helpers.storage.get(storageKey) || [];
 
       queue.push({
         url,
@@ -40,14 +39,14 @@ class RequestQueue {
         body,
         networkParameters,
       });
-      await RequestQueue.set(queue);
+      await helpers.storage.set(storageKey, queue);
     }
   }
 
   // Read from queue and send events to server
   async sendEvents() {
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
-    const queue = await RequestQueue.get();
+    const queue = await helpers.storage.get(storageKey) || [];
 
     if (
       // Consider user "human" if no DOM context is available
@@ -69,7 +68,7 @@ class RequestQueue {
         helpers.applyNetworkTimeout(this.options, networkParameters, controller);
       }
 
-      await RequestQueue.set(queue);
+      await helpers.storage.set(storageKey, queue);
 
       // Backwards compatibility with versions <= 2.0.0, can be removed in future
       // - Request queue entries used to be strings with 'GET' method assumed
@@ -148,16 +147,6 @@ class RequestQueue {
         setTimeout(this.sendEvents.bind(this), (this.options && this.options.trackingSendDelay) || 250);
       }
     }
-  }
-
-  // Return current request queue
-  static async get() {
-    return await idb.get(storageKey) || [];
-  }
-
-  // Update current request queue
-  static async set(queue) {
-    await idb.set(storageKey, queue);
   }
 }
 
