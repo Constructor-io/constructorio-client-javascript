@@ -61,6 +61,8 @@ class RequestQueue {
       const { networkParameters } = nextInQueue;
       let signal;
 
+      RequestQueue.set(queue);
+
       if (networkParameters) {
         const controller = new AbortController();
 
@@ -68,8 +70,6 @@ class RequestQueue {
 
         helpers.applyNetworkTimeout(this.options, networkParameters, controller);
       }
-
-      RequestQueue.set(queue);
 
       // Backwards compatibility with versions <= 2.0.0, can be removed in future
       // - Request queue entries used to be strings with 'GET' method assumed
@@ -158,6 +158,21 @@ class RequestQueue {
   // Update current request queue
   static set(queue) {
     store.local.set(storageKey, queue);
+
+    const localQueueLength = RequestQueue.get().length;
+
+    // Ensure storage queue was set correctly in storage by checking length
+    // - Also ensure queue cannot get larger than 20 pending items
+    // - Otherwise remove all pending requests as preventative measure
+    // - Firefox seeing identical events being transmitted multiple times
+    if (localQueueLength !== queue.length || localQueueLength > 20) {
+      RequestQueue.remove();
+    }
+  }
+
+  // Remove current request queue key
+  static remove() {
+    store.local.remove(storageKey);
   }
 }
 
