@@ -17,7 +17,7 @@ const humanEvents = [
 
 class HumanityCheck {
   constructor() {
-    this.isHumanBoolean = this.getIsHumanFromSessionStorage();
+    this.isHumanBoolean = this.getIsHumanFromStorage();
 
     // Humanity proved, remove handlers to prove humanity
     const remove = async () => {
@@ -37,7 +37,7 @@ class HumanityCheck {
     }
   }
 
-  async getIsHumanFromSessionStorage() {
+  async getIsHumanFromStorage() {
     return !!(await helpers.storage.get(storageKey) || false);
   }
 
@@ -48,7 +48,7 @@ class HumanityCheck {
 
   // Return boolean indicating if useragent matches botlist
   isBot() {
-    if (this.getIsHumanFromSessionStorage()) {
+    if (this.getIsHumanFromStorage()) {
       return false;
     }
 

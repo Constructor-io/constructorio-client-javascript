@@ -148,6 +148,16 @@ class RequestQueue {
       }
     }
   }
+
+  // Return current request queue
+  static async get() {
+    return (await helpers.storage.get(storageKey)) || [];
+  }
+
+  // Update current request queue
+  static async set(queue) {
+    return await helpers.storage.set(storageKey, queue);
+  }
 }
 
 module.exports = RequestQueue;

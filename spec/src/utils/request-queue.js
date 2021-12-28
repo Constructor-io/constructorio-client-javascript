@@ -4,9 +4,9 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
-const idb = require('idb-keyval');
 const RequestQueue = require('../../../test/utils/request-queue'); // eslint-disable-line import/extensions
 const helpers = require('../../mocha.helpers');
+const { storage } = require('../../../test/utils/helpers'); // eslint-disable-line import/extensions
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
@@ -30,7 +30,7 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
       let defaultAgent;
 
       before(() => {
-        helpers.clearStorage();
+        storage.clear();
       });
 
       beforeEach(() => {
@@ -47,7 +47,7 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
         delete global.CLIENT_VERSION;
 
         helpers.teardownDOM();
-        helpers.clearStorage();
+        storage.clear();
       });
 
       it('Should add url requests to the queue', async () => {
@@ -59,7 +59,7 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
 
         expect(await RequestQueue.get()).to.be.an('array').length(3);
         helpers.triggerUnload();
-        expect(await idb.get(storageKey)).to.be.an('array').length(3);
+        expect(await storage.get(storageKey)).to.be.an('array').length(3);
       });
 
       it('Should add object requests to the queue - POST with body', async () => {
@@ -71,7 +71,7 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
 
         expect(await RequestQueue.get()).to.be.an('array').length(3);
         helpers.triggerUnload();
-        expect(await idb.get(storageKey)).to.be.an('array').length(3);
+        expect(await storage.get(storageKey)).to.be.an('array').length(3);
       });
 
       it('Should not add requests to the queue if the user has a bot-like useragent', async () => {
@@ -139,7 +139,7 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
         delete global.CLIENT_VERSION;
 
         helpers.teardownDOM();
-        helpers.clearStorage();
+        storage.clear();
       });
 
       describe('Single Instance', () => {
@@ -225,7 +225,7 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
         });
 
         it('Should send all tracking requests if requests exist in storage and user is human - backwards compatibility', async () => {
-          await idb.set(storageKey, [
+          await storage.set(storageKey, [
             'https://ac.cnstrc.com/behavior?action=session_start',
             'https://ac.cnstrc.com/behavior?action=focus',
             'https://ac.cnstrc.com/behavior?action=magic_number_three',
@@ -243,7 +243,7 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
         });
 
         it('Should send all tracking requests if requests exist in storage and user is human', async () => {
-          await idb.set(storageKey, [
+          await storage.set(storageKey, [
             {
               url: 'https://ac.cnstrc.com/behavior?action=session_start',
               method: 'GET',
@@ -270,7 +270,7 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
         });
 
         it('Should send all tracking requests on initialization if requests exist in storage and user is human', async () => {
-          await idb.set(storageKey, [
+          await storage.set(storageKey, [
             {
               url: 'https://ac.cnstrc.com/behavior?action=session_start',
               method: 'GET',
@@ -297,7 +297,7 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
         });
 
         it('Should not send tracking requests if requests exist in storage and user is not human', async () => {
-          await idb.set(storageKey, [
+          await storage.set(storageKey, [
             {
               url: 'https://ac.cnstrc.com/behavior?action=session_start',
               method: 'GET',
@@ -323,7 +323,7 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
         });
 
         it('Should not send tracking requests if requests exist in storage and user is human and page is unloading', async () => {
-          await idb.set(storageKey, [
+          await storage.set(storageKey, [
             {
               url: 'https://ac.cnstrc.com/behavior?action=session_start',
               method: 'GET',
@@ -353,7 +353,7 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
 
       describe('Two Instances', () => {
         it('Should send tracking requests using multiple queues if requests exist in storage and user is human', async () => {
-          await idb.set(storageKey, [
+          await storage.set(storageKey, [
             {
               url: 'https://ac.cnstrc.com/behavior?action=session_start',
               method: 'GET',

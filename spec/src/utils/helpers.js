@@ -296,7 +296,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
       const orderId3 = '45124';
 
       afterEach(async () => {
-        await store.session.clearAll();
+        await storage.clear();
       });
 
       it('Should add the order id to the purchase event storage', async () => {
@@ -311,12 +311,12 @@ describe('ConstructorIO - Utils - Helpers', () => {
       });
 
       it('Should not add duplicate order ids to the purchase event storage', async () => {
-        const orderIds = await store.session.get(purchaseEventStorageKey);
+        const orderIds = await storage.get(purchaseEventStorageKey);
         expect(orderIds).to.equal(null);
 
         addOrderIdRecord(orderId);
         addOrderIdRecord(orderId);
-        const newOrderIds = JSON.parse(await store.session.get(purchaseEventStorageKey));
+        const newOrderIds = JSON.parse(await storage.get(purchaseEventStorageKey));
         const newOrderIdExists = newOrderIds[CRC32.str(orderId)];
 
         expect(Object.keys(newOrderIds).length).to.equal(1);
@@ -324,13 +324,13 @@ describe('ConstructorIO - Utils - Helpers', () => {
       });
 
       it('Should keep a history of order ids', async () => {
-        const orderIds = await store.session.get(purchaseEventStorageKey);
+        const orderIds = await storage.get(purchaseEventStorageKey);
         expect(orderIds).to.equal(null);
 
         addOrderIdRecord(orderId);
         addOrderIdRecord(orderId2);
         addOrderIdRecord(orderId3);
-        const newOrderIds = JSON.parse(await store.session.get(purchaseEventStorageKey));
+        const newOrderIds = JSON.parse(await storage.get(purchaseEventStorageKey));
 
         expect(Object.keys(newOrderIds).length).to.equal(3);
         expect(newOrderIds[CRC32.str(orderId)]).to.equal(true);

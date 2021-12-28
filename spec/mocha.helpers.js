@@ -3,14 +3,15 @@ const idb = require('idb-keyval');
 const indexedDB = require('fake-indexeddb');
 const qs = require('qs');
 const { JSDOM } = require('jsdom');
-const store = require('../test/utils/store'); // eslint-disable-line import/extensions
 
 // Setup mock DOM environment
 const setupDOM = () => {
   const { window } = new JSDOM();
 
   global.window = window;
+  global.navigator = window.navigator;
   global.document = window.document;
+  global.indexedDB = window.indexedDB;
   global.AbortController = window.AbortController;
   global.navigator = { indexedDB };
   global.indexedDB = indexedDB;
@@ -49,12 +50,6 @@ const triggerUnload = () => {
   };
 
   window.unload();
-};
-
-// Clear local and session storage
-const clearStorage = () => {
-  store.local.clearAll();
-  store.session.clearAll();
 };
 
 // Extract query parameters as object from url
@@ -103,7 +98,6 @@ module.exports = {
   teardownDOM,
   triggerResize,
   triggerUnload,
-  clearStorage,
   extractUrlParamsFromFetch,
   extractBodyParamsFromFetch,
   getUserDefinedWindowProperties,
