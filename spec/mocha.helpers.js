@@ -1,4 +1,6 @@
 /* eslint-disable import/no-unresolved */
+const idb = require('idb-keyval');
+const indexedDB = require('fake-indexeddb');
 const qs = require('qs');
 const { JSDOM } = require('jsdom');
 const store = require('../test/utils/store'); // eslint-disable-line import/extensions
@@ -10,6 +12,9 @@ const setupDOM = () => {
   global.window = window;
   global.document = window.document;
   global.AbortController = window.AbortController;
+  global.navigator = { indexedDB };
+  global.indexedDB = indexedDB;
+  idb.clear();
 };
 
 // Tear down mock DOM environment

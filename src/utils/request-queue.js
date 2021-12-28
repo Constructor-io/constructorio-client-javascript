@@ -1,7 +1,7 @@
 /* eslint-disable brace-style, no-unneeded-ternary */
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
-const idb = require('idb-keyval/dist/compat');
+const idb = require('idb-keyval');
 const HumanityCheck = require('../utils/humanity-check');
 const helpers = require('../utils/helpers');
 
@@ -139,10 +139,10 @@ class RequestQueue {
   }
 
   // Read from queue and send requests to server
-  send() {
+  async send() {
     if (this.sendTrackingEvents) {
       if (this.options && this.options.trackingSendDelay === 0) {
-        this.sendEvents();
+        await this.sendEvents();
       } else {
         // Defer sending of events to give beforeunload time to register (avoids race condition)
         setTimeout(this.sendEvents.bind(this), (this.options && this.options.trackingSendDelay) || 250);

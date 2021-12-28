@@ -4,7 +4,7 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
-const store = require('../../../src/utils/store');
+const idb = require('idb-keyval');
 const RequestQueue = require('../../../test/utils/request-queue'); // eslint-disable-line import/extensions
 const helpers = require('../../mocha.helpers');
 
@@ -14,7 +14,7 @@ dotenv.config();
 
 const bundled = process.env.BUNDLED === 'true';
 
-describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
+describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
   // Don't run tests in bundle context, as these tests are for library internals
   if (!bundled) {
     this.timeout(3000);
@@ -50,80 +50,80 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         helpers.clearStorage();
       });
 
-      it('Should add url requests to the queue', () => {
+      it('Should add url requests to the queue', async () => {
         const requests = new RequestQueue(requestQueueOptions);
 
-        requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
-        requests.queue('https://ac.cnstrc.com/behavior?action=focus');
-        requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
+        await requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+        await requests.queue('https://ac.cnstrc.com/behavior?action=focus');
+        await requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-        expect(RequestQueue.get()).to.be.an('array').length(3);
+        expect(await RequestQueue.get()).to.be.an('array').length(3);
         helpers.triggerUnload();
-        expect(store.local.get(storageKey)).to.be.an('array').length(3);
+        expect(await idb.get(storageKey)).to.be.an('array').length(3);
       });
 
-      it('Should add object requests to the queue - POST with body', () => {
+      it('Should add object requests to the queue - POST with body', async () => {
         const requests = new RequestQueue(requestQueueOptions);
 
-        requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'session_start' });
-        requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'focus' });
-        requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'magic_number_three' });
+        await requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'session_start' });
+        await requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'focus' });
+        await requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'magic_number_three' });
 
-        expect(RequestQueue.get()).to.be.an('array').length(3);
+        expect(await RequestQueue.get()).to.be.an('array').length(3);
         helpers.triggerUnload();
-        expect(store.local.get(storageKey)).to.be.an('array').length(3);
+        expect(await idb.get(storageKey)).to.be.an('array').length(3);
       });
 
-      it('Should not add requests to the queue if the user has a bot-like useragent', () => {
+      it('Should not add requests to the queue if the user has a bot-like useragent', async () => {
         const requests = new RequestQueue(requestQueueOptions);
 
         window.navigator.__defineGetter__('userAgent', () => 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Googlebot/2.1; +http://www.google.com/bot.html) Safari/537.36');
 
-        requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
-        requests.queue('https://ac.cnstrc.com/behavior?action=focus');
-        requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
+        await requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+        await requests.queue('https://ac.cnstrc.com/behavior?action=focus');
+        await requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-        expect(RequestQueue.get()).to.be.an('array').length(0);
+        expect(await RequestQueue.get()).to.be.an('array').length(0);
         helpers.triggerUnload();
       });
 
-      it('Should not add requests to the queue if the user is webdriver', () => {
+      it('Should not add requests to the queue if the user is webdriver', async () => {
         const requests = new RequestQueue(requestQueueOptions);
 
         window.navigator.__defineGetter__('webdriver', () => true);
 
-        requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
-        requests.queue('https://ac.cnstrc.com/behavior?action=focus');
-        requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
+        await requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+        await requests.queue('https://ac.cnstrc.com/behavior?action=focus');
+        await requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-        expect(RequestQueue.get()).to.be.an('array').length(0);
+        expect(await RequestQueue.get()).to.be.an('array').length(0);
         helpers.triggerUnload();
       });
 
 
-      it('Should not add requests to the queue if the sendTrackingEvents option is false', () => {
+      it('Should not add requests to the queue if the sendTrackingEvents option is false', async () => {
         const requests = new RequestQueue({
           requestQueue: {
             sendTrackingEvents: false,
           },
         });
 
-        requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
-        requests.queue('https://ac.cnstrc.com/behavior?action=focus');
-        requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
+        await requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+        await requests.queue('https://ac.cnstrc.com/behavior?action=focus');
+        await requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-        expect(RequestQueue.get()).to.be.an('array').length(0);
+        expect(await RequestQueue.get()).to.be.an('array').length(0);
         helpers.triggerUnload();
       });
 
-      it('Should not add requests to the queue if the sendTrackingEvents option is not defined', () => {
+      it('Should not add requests to the queue if the sendTrackingEvents option is not defined', async () => {
         const requests = new RequestQueue();
 
-        requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
-        requests.queue('https://ac.cnstrc.com/behavior?action=focus');
-        requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
+        await requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+        await requests.queue('https://ac.cnstrc.com/behavior?action=focus');
+        await requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-        expect(RequestQueue.get()).to.be.an('array').length(0);
+        expect(await RequestQueue.get()).to.be.an('array').length(0);
         helpers.triggerUnload();
       });
     });
@@ -143,94 +143,89 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
       });
 
       describe('Single Instance', () => {
-        it('Should send all url tracking requests if queue is populated and user is human', (done) => {
+        it('Should send all url tracking requests if queue is populated and user is human', async () => {
           const requests = new RequestQueue(requestQueueOptions);
 
-          requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
-          requests.queue('https://ac.cnstrc.com/behavior?action=focus');
-          requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
+          await requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+          await requests.queue('https://ac.cnstrc.com/behavior?action=focus');
+          await requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-          expect(RequestQueue.get()).to.be.an('array').length(3);
+          expect(await RequestQueue.get()).to.be.an('array').length(3);
           helpers.triggerResize();
-          requests.send();
+          await requests.send();
 
-          setTimeout(() => {
-            expect(RequestQueue.get()).to.be.an('array').length(0);
-            done();
+          setTimeout(async () => {
+            expect(await RequestQueue.get()).to.be.an('array').length(0);
           }, waitInterval);
         });
 
-        it('Should send all object tracking requests if queue is populated and user is human - POST with body', (done) => {
+        it('Should send all object tracking requests if queue is populated and user is human - POST with body', async () => {
           const requests = new RequestQueue(requestQueueOptions);
 
-          requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'session_start' });
-          requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'focus' });
-          requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'magic_number_three' });
+          await requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'session_start' });
+          await requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'focus' });
+          await requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'magic_number_three' });
 
-          expect(RequestQueue.get()).to.be.an('array').length(3);
+          expect(await RequestQueue.get()).to.be.an('array').length(3);
           helpers.triggerResize();
-          requests.send();
+          await requests.send();
 
-          setTimeout(() => {
-            expect(RequestQueue.get()).to.be.an('array').length(0);
-            done();
+          setTimeout(async () => {
+            expect(await RequestQueue.get()).to.be.an('array').length(0);
           }, waitInterval);
         });
 
-        it('Should not send tracking requests if queue is populated and user is not human', (done) => {
+        it('Should not send tracking requests if queue is populated and user is not human', async () => {
           const requests = new RequestQueue(requestQueueOptions);
 
-          requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
-          requests.queue('https://ac.cnstrc.com/behavior?action=focus');
-          requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
+          await requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+          await requests.queue('https://ac.cnstrc.com/behavior?action=focus');
+          await requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-          expect(RequestQueue.get()).to.be.an('array').length(3);
-          requests.send();
+          expect(await RequestQueue.get()).to.be.an('array').length(3);
+          await requests.send();
 
-          setTimeout(() => {
-            expect(RequestQueue.get()).to.be.an('array').length(3);
-            done();
+          setTimeout(async () => {
+            expect(await RequestQueue.get()).to.be.an('array').length(3);
           }, waitInterval);
         });
 
-        it('Should not send tracking requests if queue is populated and user is human and page is unloading', (done) => {
+        it('Should not send tracking requests if queue is populated and user is human and page is unloading', async () => {
           const requests = new RequestQueue(requestQueueOptions);
 
-          requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
-          requests.queue('https://ac.cnstrc.com/behavior?action=focus');
-          requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
+          await requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+          await requests.queue('https://ac.cnstrc.com/behavior?action=focus');
+          await requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-          expect(RequestQueue.get()).to.be.an('array').length(3);
+          expect(await RequestQueue.get()).to.be.an('array').length(3);
           helpers.triggerResize();
           helpers.triggerUnload();
-          requests.send();
+          await requests.send();
 
-          setTimeout(() => {
-            expect(RequestQueue.get()).to.be.an('array').length(3);
-            done();
+          setTimeout(async () => {
+            expect(await RequestQueue.get()).to.be.an('array').length(3);
           }, waitInterval);
         });
 
-        it('Should not send tracking requests if queue is populated and user is human and page is unloading and send was called before unload', (done) => {
+        it('Should not send tracking requests if queue is populated and user is human and page is unloading and send was called before unload', async () => {
           const requests = new RequestQueue(requestQueueOptions);
 
-          requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
-          requests.queue('https://ac.cnstrc.com/behavior?action=focus');
-          requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
+          await requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+          await requests.queue('https://ac.cnstrc.com/behavior?action=focus');
+          await requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
-          expect(RequestQueue.get()).to.be.an('array').length(3);
+          expect(await RequestQueue.get()).to.be.an('array').length(3);
           helpers.triggerResize();
-          requests.send();
+          await requests.send();
           helpers.triggerUnload();
 
-          setTimeout(() => {
-            expect(RequestQueue.get()).to.be.an('array').length(3);
-            done();
+          setTimeout(async () => {
+            expect(await RequestQueue.get()).to.be.an('array').length(3);
           }, waitInterval);
         });
 
-        it('Should send all tracking requests if requests exist in storage and user is human - backwards compatibility', (done) => {
-          store.local.set(storageKey, [
+        it('Should send all tracking requests if requests exist in storage and user is human - backwards compatibility', async () => {
+          await idb.set(storageKey, [
             'https://ac.cnstrc.com/behavior?action=session_start',
             'https://ac.cnstrc.com/behavior?action=focus',
             'https://ac.cnstrc.com/behavior?action=magic_number_three',
@@ -238,18 +233,17 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
 
           const requests = new RequestQueue(requestQueueOptions);
 
-          expect(RequestQueue.get()).to.be.an('array').length(3);
+          expect(await RequestQueue.get()).to.be.an('array').length(3);
           helpers.triggerResize();
-          requests.send();
+          await requests.send();
 
-          setTimeout(() => {
-            expect(RequestQueue.get()).to.be.an('array').length(0);
-            done();
+          setTimeout(async () => {
+            expect(await RequestQueue.get()).to.be.an('array').length(0);
           }, waitInterval);
         });
 
-        it('Should send all tracking requests if requests exist in storage and user is human', (done) => {
-          store.local.set(storageKey, [
+        it('Should send all tracking requests if requests exist in storage and user is human', async () => {
+          await idb.set(storageKey, [
             {
               url: 'https://ac.cnstrc.com/behavior?action=session_start',
               method: 'GET',
@@ -266,18 +260,17 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
 
           const requests = new RequestQueue(requestQueueOptions);
 
-          expect(RequestQueue.get()).to.be.an('array').length(3);
+          expect(await RequestQueue.get()).to.be.an('array').length(3);
           helpers.triggerResize();
-          requests.send();
+          await requests.send();
 
-          setTimeout(() => {
-            expect(RequestQueue.get()).to.be.an('array').length(0);
-            done();
+          setTimeout(async () => {
+            expect(await RequestQueue.get()).to.be.an('array').length(0);
           }, waitInterval);
         });
 
-        it('Should send all tracking requests on initialization if requests exist in storage and user is human', (done) => {
-          store.local.set(storageKey, [
+        it('Should send all tracking requests on initialization if requests exist in storage and user is human', async () => {
+          await idb.set(storageKey, [
             {
               url: 'https://ac.cnstrc.com/behavior?action=session_start',
               method: 'GET',
@@ -295,17 +288,16 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
           // eslint-disable-next-line no-unused-vars
           const requests = new RequestQueue(requestQueueOptions);
 
-          expect(RequestQueue.get()).to.be.an('array').length(3);
+          expect(await RequestQueue.get()).to.be.an('array').length(3);
           helpers.triggerResize();
 
-          setTimeout(() => {
-            expect(RequestQueue.get()).to.be.an('array').length(0);
-            done();
+          setTimeout(async () => {
+            expect(await RequestQueue.get()).to.be.an('array').length(0);
           }, waitInterval);
         });
 
-        it('Should not send tracking requests if requests exist in storage and user is not human', (done) => {
-          store.local.set(storageKey, [
+        it('Should not send tracking requests if requests exist in storage and user is not human', async () => {
+          await idb.set(storageKey, [
             {
               url: 'https://ac.cnstrc.com/behavior?action=session_start',
               method: 'GET',
@@ -322,17 +314,16 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
 
           const requests = new RequestQueue(requestQueueOptions);
 
-          expect(RequestQueue.get()).to.be.an('array').length(3);
-          requests.send();
+          expect(await RequestQueue.get()).to.be.an('array').length(3);
+          await requests.send();
 
-          setTimeout(() => {
-            expect(RequestQueue.get()).to.be.an('array').length(3);
-            done();
+          setTimeout(async () => {
+            expect(await RequestQueue.get()).to.be.an('array').length(3);
           }, waitInterval);
         });
 
-        it('Should not send tracking requests if requests exist in storage and user is human and page is unloading', (done) => {
-          store.local.set(storageKey, [
+        it('Should not send tracking requests if requests exist in storage and user is human and page is unloading', async () => {
+          await idb.set(storageKey, [
             {
               url: 'https://ac.cnstrc.com/behavior?action=session_start',
               method: 'GET',
@@ -349,21 +340,20 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
 
           const requests = new RequestQueue(requestQueueOptions);
 
-          expect(RequestQueue.get()).to.be.an('array').length(3);
+          expect(await RequestQueue.get()).to.be.an('array').length(3);
           helpers.triggerResize();
           helpers.triggerUnload();
-          requests.send();
+          await requests.send();
 
-          setTimeout(() => {
-            expect(RequestQueue.get()).to.be.an('array').length(3);
-            done();
+          setTimeout(async () => {
+            expect(await RequestQueue.get()).to.be.an('array').length(3);
           }, waitInterval);
         });
       });
 
       describe('Two Instances', () => {
-        it('Should send tracking requests using multiple queues if requests exist in storage and user is human', (done) => {
-          store.local.set(storageKey, [
+        it('Should send tracking requests using multiple queues if requests exist in storage and user is human', async () => {
+          await idb.set(storageKey, [
             {
               url: 'https://ac.cnstrc.com/behavior?action=session_start',
               method: 'GET',
@@ -391,21 +381,20 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
           const sendSpy1 = sinon.spy(requests1, 'send');
           const sendSpy2 = sinon.spy(requests2, 'send');
 
-          expect(RequestQueue.get()).to.be.an('array').length(5);
+          expect(await RequestQueue.get()).to.be.an('array').length(5);
           helpers.triggerResize();
           requests1.send();
           requests2.send();
 
-          setTimeout(() => {
+          setTimeout(async () => {
             expect(sendSpy1.callCount).to.be.at.least(2 + 1); // 2 min sent + 1 finally
             expect(sendSpy2.callCount).to.be.at.least(2 + 1); // 2 min sent + 1 finally
             expect(sendSpy1.callCount + sendSpy2.callCount).to.equal(5 + 2); // 5 sent + 2 finally
-            expect(RequestQueue.get()).to.be.an('array').length(0);
-            done();
+            expect(await RequestQueue.get()).to.be.an('array').length(0);
           }, waitInterval);
         });
 
-        it('Should send tracking requests using multiple queues when items are queued in one and user is human', (done) => {
+        it('Should send tracking requests using multiple queues when items are queued in one and user is human', async () => {
           const requests1 = new RequestQueue(requestQueueOptions);
           const requests2 = new RequestQueue(requestQueueOptions);
           const sendSpy1 = sinon.spy(requests1, 'send');
@@ -421,16 +410,15 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
           requests1.send();
           requests2.send();
 
-          setTimeout(() => {
+          setTimeout(async () => {
             expect(sendSpy1.callCount).to.be.at.least(2 + 1); // 2 min sent + 1 finally
             expect(sendSpy2.callCount).to.be.at.least(2 + 1); // 2 min sent + 1 finally
             expect(sendSpy1.callCount + sendSpy2.callCount).to.equal(5 + 2); // 5 sent + 2 finally
-            expect(RequestQueue.get()).to.be.an('array').length(0);
-            done();
+            expect(await RequestQueue.get()).to.be.an('array').length(0);
           }, waitInterval);
         });
 
-        it('Should send tracking requests using multiple queues when items are queued in both and user is human', (done) => {
+        it('Should send tracking requests using multiple queues when items are queued in both and user is human', async () => {
           const requests1 = new RequestQueue(requestQueueOptions);
           const requests2 = new RequestQueue(requestQueueOptions);
           const sendSpy1 = sinon.spy(requests1, 'send');
@@ -446,12 +434,11 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
           requests1.send();
           requests2.send();
 
-          setTimeout(() => {
+          setTimeout(async () => {
             expect(sendSpy1.callCount).to.be.at.least(2 + 1); // 2 min sent + 1 finally
             expect(sendSpy2.callCount).to.be.at.least(2 + 1); // 2 min sent + 1 finally
             expect(sendSpy1.callCount + sendSpy2.callCount).to.equal(5 + 2); // 5 sent + 2 finally
-            expect(RequestQueue.get()).to.be.an('array').length(0);
-            done();
+            expect(await RequestQueue.get()).to.be.an('array').length(0);
           }, waitInterval);
         });
       });
