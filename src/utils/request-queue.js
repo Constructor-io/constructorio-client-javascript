@@ -158,7 +158,7 @@ class RequestQueue {
   // Update current request queue
   static set(queue) {
     // If queue length is zero, remove entry entirely
-    if (queue && queue.length === 0) {
+    if (!queue || (Array.isArray(queue) && queue.length === 0)) {
       RequestQueue.remove();
     } else {
       store.local.set(storageKey, queue);
