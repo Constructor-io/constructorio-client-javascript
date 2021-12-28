@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-properties, no-underscore-dangle, import/no-unresolved */
+/* eslint-disable no-restricted-properties, no-underscore-dangle, import/no-unresolved, no-unused-expressions */
 const dotenv = require('dotenv');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
