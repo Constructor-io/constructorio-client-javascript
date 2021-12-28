@@ -17,7 +17,11 @@ const humanEvents = [
 
 class HumanityCheck {
   constructor() {
-    this.isHumanBoolean = this.getIsHumanFromStorage();
+    this.isHumanBoolean = false;
+  }
+
+  async initialize() {
+    this.isHumanBoolean = await this.getIsHumanFromStorage();
 
     // Humanity proved, remove handlers to prove humanity
     const remove = async () => {

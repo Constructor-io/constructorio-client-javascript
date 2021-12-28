@@ -14,7 +14,7 @@ dotenv.config();
 
 const bundled = process.env.BUNDLED === 'true';
 
-describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
+describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
   // Don't run tests in bundle context, as these tests are for library internals
   if (!bundled) {
     this.timeout(3000);

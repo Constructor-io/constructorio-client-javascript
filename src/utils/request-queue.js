@@ -14,6 +14,8 @@ class RequestQueue {
     this.requestPending = false;
     this.pageUnloading = false;
 
+    this.humanity.initialize();
+
     this.sendTrackingEvents = (options && options.sendTrackingEvents === true)
       ? true
       : false; // Defaults to 'false'
