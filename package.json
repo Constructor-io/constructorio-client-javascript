@@ -49,6 +49,7 @@
     "eslint": "^8.0.1",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.25.2",
+    "fake-indexeddb": "^3.1.7",
     "jsdoc": "^3.6.7",
     "jsdom": "^15.1.1",
     "license-checker": "^25.0.1",
