@@ -161,6 +161,11 @@ class RequestQueue {
 
     const localQueueLength = RequestQueue.get().length;
 
+    // If queue length is zero, remove entry entirely
+    if (queue.length === 0) {
+      RequestQueue.remove();
+    }
+
     // Ensure storage queue was set correctly in storage by checking length
     // - Also ensure queue cannot get larger than 20 pending items
     // - Otherwise remove all pending requests as preventative measure

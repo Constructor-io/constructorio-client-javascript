@@ -84,6 +84,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
         expect(RequestQueue.get()).to.be.an('array').length(0);
+        expect(store.local.get(storageKey)).to.be.null;
         helpers.triggerUnload();
       });
 
@@ -97,6 +98,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
         expect(RequestQueue.get()).to.be.an('array').length(0);
+        expect(store.local.get(storageKey)).to.be.null;
         helpers.triggerUnload();
       });
 
@@ -113,6 +115,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
         expect(RequestQueue.get()).to.be.an('array').length(0);
+        expect(store.local.get(storageKey)).to.be.null;
         helpers.triggerUnload();
       });
 
@@ -124,6 +127,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
         expect(RequestQueue.get()).to.be.an('array').length(0);
+        expect(store.local.get(storageKey)).to.be.null;
         helpers.triggerUnload();
       });
     });
@@ -156,6 +160,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
 
           setTimeout(() => {
             expect(RequestQueue.get()).to.be.an('array').length(0);
+            expect(store.local.get(storageKey)).to.be.null;
             done();
           }, waitInterval);
         });
@@ -173,6 +178,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
 
           setTimeout(() => {
             expect(RequestQueue.get()).to.be.an('array').length(0);
+            expect(store.local.get(storageKey)).to.be.null;
             done();
           }, waitInterval);
         });
@@ -244,6 +250,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
 
           setTimeout(() => {
             expect(RequestQueue.get()).to.be.an('array').length(0);
+            expect(store.local.get(storageKey)).to.be.null;
             done();
           }, waitInterval);
         });
@@ -272,6 +279,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
 
           setTimeout(() => {
             expect(RequestQueue.get()).to.be.an('array').length(0);
+            expect(store.local.get(storageKey)).to.be.null;
             done();
           }, waitInterval);
         });
@@ -300,6 +308,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
 
           setTimeout(() => {
             expect(RequestQueue.get()).to.be.an('array').length(0);
+            expect(store.local.get(storageKey)).to.be.null;
             done();
           }, waitInterval);
         });
@@ -401,6 +410,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
             expect(sendSpy2.callCount).to.be.at.least(2 + 1); // 2 min sent + 1 finally
             expect(sendSpy1.callCount + sendSpy2.callCount).to.equal(5 + 2); // 5 sent + 2 finally
             expect(RequestQueue.get()).to.be.an('array').length(0);
+            expect(store.local.get(storageKey)).to.be.null;
             done();
           }, waitInterval);
         });
@@ -426,6 +436,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
             expect(sendSpy2.callCount).to.be.at.least(2 + 1); // 2 min sent + 1 finally
             expect(sendSpy1.callCount + sendSpy2.callCount).to.equal(5 + 2); // 5 sent + 2 finally
             expect(RequestQueue.get()).to.be.an('array').length(0);
+            expect(store.local.get(storageKey)).to.be.null;
             done();
           }, waitInterval);
         });
@@ -451,6 +462,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
             expect(sendSpy2.callCount).to.be.at.least(2 + 1); // 2 min sent + 1 finally
             expect(sendSpy1.callCount + sendSpy2.callCount).to.equal(5 + 2); // 5 sent + 2 finally
             expect(RequestQueue.get()).to.be.an('array').length(0);
+            expect(store.local.get(storageKey)).to.be.null;
             done();
           }, waitInterval);
         });
