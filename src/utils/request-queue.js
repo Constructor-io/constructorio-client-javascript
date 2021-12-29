@@ -6,6 +6,7 @@ const HumanityCheck = require('../utils/humanity-check');
 const helpers = require('../utils/helpers');
 
 const storageKey = '_constructorio_requests';
+const requestTTL = 1800000; // 30 minutes in milliseconds
 
 class RequestQueue {
   constructor(options, eventemitter) {
@@ -60,6 +61,7 @@ class RequestQueue {
       let nextInQueue = queue.shift();
       const { networkParameters } = nextInQueue;
       let signal;
+      const instance = this;
 
       RequestQueue.set(queue);
 
@@ -80,6 +82,27 @@ class RequestQueue {
         };
       }
 
+      // If events older than `requestTTL` exist in queue, clear request queue
+      // - Prevents issue where stale items are sent in perputity
+      // - No request should go unsent for longer than `requestTTL`
+      if (nextInQueue.url) {
+        // Pull `dt` parameter from URL, indicating origin time of request
+        const dtMatch = nextInQueue.url.match(/\?.*_dt=([^&]+)/);
+        const requestOriginTime = dtMatch && dtMatch[1];
+        const now = +new Date();
+
+        if (requestOriginTime && (now - requestOriginTime > requestTTL)) {
+          RequestQueue.remove();
+          instance.eventemitter.emit('error', {
+            url: nextInQueue.url,
+            method: nextInQueue.method,
+            message: `Request queue cleared - an item in the queue existed for longer than TTL value of ${requestTTL}ms`,
+          });
+
+          return;
+        }
+      }
+
       if (nextInQueue.method === 'GET') {
         request = fetch(nextInQueue.url, { signal });
       }
@@ -96,40 +119,47 @@ class RequestQueue {
 
       if (request) {
         this.requestPending = true;
-        const instance = this;
 
         request.then((response) => {
           // Request was successful, and returned a 2XX status code
           if (response.ok) {
-            instance.eventemitter.emit('success', {
-              url: nextInQueue.url,
-              method: nextInQueue.method,
-              message: 'ok',
-            });
+            if (instance.eventemitter) {
+              instance.eventemitter.emit('success', {
+                url: nextInQueue.url,
+                method: nextInQueue.method,
+                message: 'ok',
+              });
+            }
           }
 
           // Request was successful, but returned a non-2XX status code
           else {
             response.json().then((json) => {
-              instance.eventemitter.emit('error', {
-                url: nextInQueue.url,
-                method: nextInQueue.method,
-                message: json && json.message,
-              });
+              if (instance.eventemitter) {
+                instance.eventemitter.emit('error', {
+                  url: nextInQueue.url,
+                  method: nextInQueue.method,
+                  message: json && json.message,
+                });
+              }
             }).catch((error) => {
-              instance.eventemitter.emit('error', {
-                url: nextInQueue.url,
-                method: nextInQueue.method,
-                message: error.type,
-              });
+              if (instance.eventemitter) {
+                instance.eventemitter.emit('error', {
+                  url: nextInQueue.url,
+                  method: nextInQueue.method,
+                  message: error.type,
+                });
+              }
             });
           }
         }).catch((error) => {
-          instance.eventemitter.emit('error', {
-            url: nextInQueue.url,
-            method: nextInQueue.method,
-            message: error.toString(),
-          });
+          if (instance.eventemitter) {
+            instance.eventemitter.emit('error', {
+              url: nextInQueue.url,
+              method: nextInQueue.method,
+              message: error.toString(),
+            });
+          }
         }).finally(() => {
           this.requestPending = false;
           this.send();
