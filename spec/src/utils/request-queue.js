@@ -419,6 +419,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
 
           setTimeout(() => {
             expect(fetchSpy).not.to.have.been.called;
+            expect(requests.sendTrackingEvents).to.be.false;
             expect(RequestQueue.get()).to.be.an('array').length(0);
             expect(store.local.get(storageKey)).to.be.null;
             done();
@@ -444,6 +445,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
 
           setTimeout(() => {
             expect(fetchSpy).to.have.been.called;
+            expect(requests.sendTrackingEvents).to.be.true;
             expect(RequestQueue.get()).to.be.an('array').length(0);
             expect(store.local.get(storageKey)).to.be.null;
             done();
@@ -466,6 +468,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
 
           setTimeout(() => {
             expect(fetchSpy).to.have.been.called;
+            expect(requests.sendTrackingEvents).to.be.true;
             expect(RequestQueue.get()).to.be.an('array').length(0);
             expect(store.local.get(storageKey)).to.be.null;
             done();
