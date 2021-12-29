@@ -93,11 +93,6 @@ class RequestQueue {
 
         if (requestOriginTime && (now - requestOriginTime > requestTTL)) {
           RequestQueue.remove();
-          instance.eventemitter.emit('error', {
-            url: nextInQueue.url,
-            method: nextInQueue.method,
-            message: `Request queue cleared - an item in the queue existed for longer than TTL value of ${requestTTL}ms`,
-          });
 
           return;
         }

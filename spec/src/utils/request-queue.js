@@ -9,8 +9,8 @@ const dotenv = require('dotenv');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
-const EventEmitter = require('events');
 const sinonChai = require('sinon-chai');
+const fetchPonyfill = require('fetch-ponyfill');
 const store = require('../../../src/utils/store');
 const RequestQueue = require('../../../test/utils/request-queue'); // eslint-disable-line import/extensions
 const helpers = require('../../mocha.helpers');
@@ -19,6 +19,7 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 dotenv.config();
 
+const { fetch } = fetchPonyfill({ Promise });
 const bundled = process.env.BUNDLED === 'true';
 const testApiKey = process.env.TEST_API_KEY;
 
@@ -29,10 +30,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
 
     const storageKey = '_constructorio_requests';
     const waitInterval = 2000;
-    const requestQueueOptions = {
-      sendTrackingEvents: true,
-      trackingSendDelay: 1,
-    };
+    let requestQueueOptions = {};
 
     describe('queue', () => {
       let defaultAgent;
@@ -45,10 +43,17 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         global.CLIENT_VERSION = 'cio-mocha';
         helpers.setupDOM();
 
+        requestQueueOptions = {
+          sendTrackingEvents: true,
+          trackingSendDelay: 1,
+        };
+
         defaultAgent = window.navigator.userAgent;
       });
 
       afterEach(() => {
+        requestQueueOptions = {};
+
         window.navigator.__defineGetter__('userAgent', () => defaultAgent);
         window.navigator.__defineGetter__('webdriver', () => undefined);
 
@@ -140,14 +145,25 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
     });
 
     describe('send', () => {
+      let fetchSpy = null;
+
       beforeEach(() => {
         global.CLIENT_VERSION = 'cio-mocha';
+        fetchSpy = sinon.spy(fetch);
+
+        requestQueueOptions = {
+          fetch: fetchSpy,
+          sendTrackingEvents: true,
+          trackingSendDelay: 1,
+        };
 
         helpers.setupDOM();
       });
 
       afterEach(() => {
         delete global.CLIENT_VERSION;
+
+        fetchSpy = null;
 
         helpers.teardownDOM();
         helpers.clearStorage();
@@ -379,8 +395,6 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         it('Should clear all tracking requests if requests exist in storage and request is older than TTL value', (done) => {
           const requestTTL = 1800000; // 30 minutes in milliseconds
           const oneMinuteInMS = 3600;
-          const eventemitter = new EventEmitter();
-          const rejectionMessage = `Request queue cleared - an item in the queue existed for longer than TTL value of ${requestTTL}ms`;
 
           store.local.set(storageKey, [
             {
@@ -397,27 +411,23 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
             },
           ]);
 
-          const requests = new RequestQueue(requestQueueOptions, eventemitter);
+          const requests = new RequestQueue(requestQueueOptions);
 
           expect(RequestQueue.get()).to.be.an('array').length(3);
           helpers.triggerResize();
           requests.send();
 
-          eventemitter.on('error', ({ message }) => {
-            expect(message).to.equal(rejectionMessage);
-
-            setTimeout(() => {
-              expect(RequestQueue.get()).to.be.an('array').length(0);
-              expect(store.local.get(storageKey)).to.be.null;
-              done();
-            }, waitInterval);
-          });
+          setTimeout(() => {
+            expect(fetchSpy).not.to.have.been.called;
+            expect(RequestQueue.get()).to.be.an('array').length(0);
+            expect(store.local.get(storageKey)).to.be.null;
+            done();
+          }, waitInterval);
         });
 
         it('Should not clear all tracking requests if requests exist in storage and request is younger than TTL value', (done) => {
           const requestTTL = 1800000; // 30 minutes in milliseconds
           const oneMinuteInMS = 3600;
-          const eventemitter = new EventEmitter();
 
           store.local.set(storageKey, [
             {
@@ -426,24 +436,21 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
             },
           ]);
 
-          const requests = new RequestQueue(requestQueueOptions, eventemitter);
+          const requests = new RequestQueue(requestQueueOptions);
 
           expect(RequestQueue.get()).to.be.an('array').length(1);
           helpers.triggerResize();
           requests.send();
 
-          eventemitter.on('success', () => {
-            setTimeout(() => {
-              expect(RequestQueue.get()).to.be.an('array').length(0);
-              expect(store.local.get(storageKey)).to.be.null;
-              done();
-            }, waitInterval);
-          });
+          setTimeout(() => {
+            expect(fetchSpy).to.have.been.called;
+            expect(RequestQueue.get()).to.be.an('array').length(0);
+            expect(store.local.get(storageKey)).to.be.null;
+            done();
+          }, waitInterval);
         });
 
         it('Should not clear all tracking requests if requests exist in storage and no _dt parameter is set', (done) => {
-          const eventemitter = new EventEmitter();
-
           store.local.set(storageKey, [
             {
               url: `https://ac.cnstrc.com/behavior?key=${testApiKey}&action=session_start`,
@@ -451,19 +458,18 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
             },
           ]);
 
-          const requests = new RequestQueue(requestQueueOptions, eventemitter);
+          const requests = new RequestQueue(requestQueueOptions);
 
           expect(RequestQueue.get()).to.be.an('array').length(1);
           helpers.triggerResize();
           requests.send();
 
-          eventemitter.on('success', () => {
-            setTimeout(() => {
-              expect(RequestQueue.get()).to.be.an('array').length(0);
-              expect(store.local.get(storageKey)).to.be.null;
-              done();
-            }, waitInterval);
-          });
+          setTimeout(() => {
+            expect(fetchSpy).to.have.been.called;
+            expect(RequestQueue.get()).to.be.an('array').length(0);
+            expect(store.local.get(storageKey)).to.be.null;
+            done();
+          }, waitInterval);
         });
       });
 
