@@ -1,8 +1,15 @@
-/* eslint-disable no-restricted-properties, no-underscore-dangle, import/no-unresolved, no-unused-expressions */
+/* eslint-disable
+  no-restricted-properties,
+  no-underscore-dangle,
+  import/no-unresolved,
+  no-unused-expressions,
+  max-nested-callbacks,
+*/
 const dotenv = require('dotenv');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
+const EventEmitter = require('events');
 const sinonChai = require('sinon-chai');
 const store = require('../../../src/utils/store');
 const RequestQueue = require('../../../test/utils/request-queue'); // eslint-disable-line import/extensions
@@ -13,6 +20,7 @@ chai.use(sinonChai);
 dotenv.config();
 
 const bundled = process.env.BUNDLED === 'true';
+const testApiKey = process.env.TEST_API_KEY;
 
 describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
   // Don't run tests in bundle context, as these tests are for library internals
@@ -101,7 +109,6 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         expect(store.local.get(storageKey)).to.be.null;
         helpers.triggerUnload();
       });
-
 
       it('Should not add requests to the queue if the sendTrackingEvents option is false', () => {
         const requests = new RequestQueue({
@@ -367,6 +374,96 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
             expect(RequestQueue.get()).to.be.an('array').length(3);
             done();
           }, waitInterval);
+        });
+
+        it('Should clear all tracking requests if requests exist in storage and request is older than TTL value', (done) => {
+          const requestTTL = 1800000; // 30 minutes in milliseconds
+          const oneMinuteInMS = 3600;
+          const eventemitter = new EventEmitter();
+          const rejectionMessage = `Request queue cleared - an item in the queue existed for longer than TTL value of ${requestTTL}ms`;
+
+          store.local.set(storageKey, [
+            {
+              url: `https://ac.cnstrc.com/behavior?action=session_start&_dt=${+new Date() - (requestTTL + oneMinuteInMS)}`,
+              method: 'GET',
+            },
+            {
+              url: 'https://ac.cnstrc.com/behavior?action=focus',
+              method: 'GET',
+            },
+            {
+              url: 'https://ac.cnstrc.com/behavior?action=magic_number_three',
+              method: 'GET',
+            },
+          ]);
+
+          const requests = new RequestQueue(requestQueueOptions, eventemitter);
+
+          expect(RequestQueue.get()).to.be.an('array').length(3);
+          helpers.triggerResize();
+          requests.send();
+
+          eventemitter.on('error', ({ message }) => {
+            expect(message).to.equal(rejectionMessage);
+
+            setTimeout(() => {
+              expect(RequestQueue.get()).to.be.an('array').length(0);
+              expect(store.local.get(storageKey)).to.be.null;
+              done();
+            }, waitInterval);
+          });
+        });
+
+        it('Should not clear all tracking requests if requests exist in storage and request is younger than TTL value', (done) => {
+          const requestTTL = 1800000; // 30 minutes in milliseconds
+          const oneMinuteInMS = 3600;
+          const eventemitter = new EventEmitter();
+
+          store.local.set(storageKey, [
+            {
+              url: `https://ac.cnstrc.com/behavior?key=${testApiKey}&action=session_start&_dt=${+new Date() - (requestTTL - oneMinuteInMS)}`,
+              method: 'GET',
+            },
+          ]);
+
+          const requests = new RequestQueue(requestQueueOptions, eventemitter);
+
+          expect(RequestQueue.get()).to.be.an('array').length(1);
+          helpers.triggerResize();
+          requests.send();
+
+          eventemitter.on('success', () => {
+            setTimeout(() => {
+              expect(RequestQueue.get()).to.be.an('array').length(0);
+              expect(store.local.get(storageKey)).to.be.null;
+              done();
+            }, waitInterval);
+          });
+        });
+
+        it('Should not clear all tracking requests if requests exist in storage and no _dt parameter is set', (done) => {
+          const eventemitter = new EventEmitter();
+
+          store.local.set(storageKey, [
+            {
+              url: `https://ac.cnstrc.com/behavior?key=${testApiKey}&action=session_start`,
+              method: 'GET',
+            },
+          ]);
+
+          const requests = new RequestQueue(requestQueueOptions, eventemitter);
+
+          expect(RequestQueue.get()).to.be.an('array').length(1);
+          helpers.triggerResize();
+          requests.send();
+
+          eventemitter.on('success', () => {
+            setTimeout(() => {
+              expect(RequestQueue.get()).to.be.an('array').length(0);
+              expect(store.local.get(storageKey)).to.be.null;
+              done();
+            }, waitInterval);
+          });
         });
       });
 
