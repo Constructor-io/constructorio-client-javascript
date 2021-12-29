@@ -92,6 +92,8 @@ class RequestQueue {
         const now = +new Date();
 
         if (requestOriginTime && (now - requestOriginTime > requestTTL)) {
+          this.sendTrackingEvents = false;
+
           RequestQueue.remove();
 
           return;
@@ -195,6 +197,8 @@ class RequestQueue {
     // - Otherwise remove all pending requests as preventative measure
     // - Firefox seeing identical events being transmitted multiple times
     if (Array.isArray(localStorageQueue) && localStorageQueue.length !== queue.length) {
+      this.sendTrackingEvents = false;
+
       RequestQueue.remove();
     }
   }
