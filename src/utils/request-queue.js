@@ -88,10 +88,10 @@ class RequestQueue {
       if (nextInQueue.url) {
         // Pull `dt` parameter from URL, indicating origin time of request
         const dtMatch = nextInQueue.url.match(/\?.*_dt=([^&]+)/);
-        const requestOriginTime = dtMatch && dtMatch[1];
+        const requestOriginTime = parseInt(dtMatch && dtMatch[1], 10);
         const now = +new Date();
 
-        if (requestOriginTime && (now - requestOriginTime > requestTTL)) {
+        if (requestOriginTime && Number.isInteger(requestOriginTime) && (now - requestOriginTime > requestTTL)) {
           this.sendTrackingEvents = false;
 
           RequestQueue.remove();
