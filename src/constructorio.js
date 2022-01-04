@@ -10,6 +10,7 @@ const Tracker = require('./modules/tracker');
 const EventDispatcher = require('./utils/event-dispatcher');
 const helpers = require('./utils/helpers');
 const { version: packageVersion } = require('../package.json');
+const Quizzes = require('./modules/quizzes');
 
 /**
  * Class to instantiate the ConstructorIO client.
@@ -108,6 +109,7 @@ class ConstructorIO {
     this.autocomplete = new Autocomplete(this.options);
     this.recommendations = new Recommendations(this.options);
     this.tracker = new Tracker(this.options);
+    this.quizzes = new Quizzes(this.options);
 
     // Dispatch initialization event
     new EventDispatcher(options.eventDispatcher).queue('instantiated', this.options);
