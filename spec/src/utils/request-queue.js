@@ -426,6 +426,37 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
           }, waitInterval);
         });
 
+        it('Should not clear all tracking requests if request exists in storage and request _dt parameter is not an integer', (done) => {
+          store.local.set(storageKey, [
+            {
+              url: 'https://ac.cnstrc.com/behavior?action=session_start&_dt=abc',
+              method: 'GET',
+            },
+            {
+              url: 'https://ac.cnstrc.com/behavior?action=focus',
+              method: 'GET',
+            },
+            {
+              url: 'https://ac.cnstrc.com/behavior?action=magic_number_three',
+              method: 'GET',
+            },
+          ]);
+
+          const requests = new RequestQueue(requestQueueOptions);
+
+          expect(RequestQueue.get()).to.be.an('array').length(3);
+          helpers.triggerResize();
+          requests.send();
+
+          setTimeout(() => {
+            expect(fetchSpy).to.have.been.called;
+            expect(requests.sendTrackingEvents).to.be.true;
+            expect(RequestQueue.get()).to.be.an('array').length(0);
+            expect(store.local.get(storageKey)).to.be.null;
+            done();
+          }, waitInterval);
+        });
+
         it('Should not clear all tracking requests if requests exist in storage and request is younger than TTL value', (done) => {
           const requestTTL = 1800000; // 30 minutes in milliseconds
           const oneMinuteInMS = 3600;
