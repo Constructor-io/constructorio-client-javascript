@@ -84,7 +84,6 @@ class Quizzes {
    * });
    */
   getNextQuiz(quizId, parameters, networkParameters = {}) {
-    console.log('called');
     let requestUrl;
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
     const controller = new AbortController();
@@ -92,18 +91,14 @@ class Quizzes {
 
     try {
       requestUrl = createQuizUrl(quizId, parameters, this.options, 'next');
-      console.log(requestUrl);
     } catch (e) {
-      console.log(e);
       return Promise.reject(e);
     }
 
     // Handle network timeout if specified
     helpers.applyNetworkTimeout(this.options, networkParameters, controller);
-    console.log('here');
     return fetch(requestUrl, { signal })
       .then((response) => {
-        console.log(response);
         if (response.ok) {
           return response.json();
         }
