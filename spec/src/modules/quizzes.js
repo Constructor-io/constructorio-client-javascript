@@ -51,8 +51,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
 
   describe.only('getNextQuiz', () => {
     const quizId = '';
-    it('Should be rejected if an Invalid quizId is provided', (done) => {
-      console.log('here in test');
+    it('Should be rejected if an Invalid quizId is provided', () => {
       const { quizzes } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
