@@ -10,8 +10,9 @@ function createQuizUrl(quizId, parameters, options, path) {
   const {
     apiKey,
   } = options;
-  const serviceUrl = 'https://quizzes.cnstrc.com/api';
+  const serviceUrl = 'https://quizzes.cnstrc.com';
   let queryParams = { };
+  let answersParamString = '';
 
   queryParams.index_key = apiKey;
 
@@ -28,14 +29,16 @@ function createQuizUrl(quizId, parameters, options, path) {
       queryParams.section = section;
     }
 
-    // Pull a (answers) from parameters
-    if (a) {
-      queryParams.a = a;
-    }
-
     // Pull version_id from parameters
     if (versionId) {
       queryParams.version_id = versionId;
+    }
+
+    // Pull a from parameters and transform
+    if (a) {
+      a.forEach((ans) => {
+        answersParamString += `&${qs.stringify({ a: ans }, { arrayFormat: 'comma' })}`;
+      });
     }
   }
 
@@ -44,7 +47,7 @@ function createQuizUrl(quizId, parameters, options, path) {
 
   const queryString = qs.stringify(queryParams, { indices: false });
 
-  return `${serviceUrl}/v1/quizzes/${encodeURIComponent(quizId)}/${encodeURIComponent(path)}/?${queryString}`;
+  return `${serviceUrl}/v1/quizzes/${encodeURIComponent(quizId)}/${encodeURIComponent(path)}/?${queryString}${answersParamString}`;
 }
 
 /**
@@ -97,6 +100,7 @@ class Quizzes {
 
     // Handle network timeout if specified
     helpers.applyNetworkTimeout(this.options, networkParameters, controller);
+
     return fetch(requestUrl, { signal })
       .then((response) => {
         if (response.ok) {
@@ -105,12 +109,10 @@ class Quizzes {
         return helpers.throwHttpErrorFromResponse(new Error(), response);
       })
       .then((json) => {
-        // Search results
-        if (json.response && json.response.results) {
+        if (json.version_id) {
           this.eventDispatcher.queue('quizzes.getNextQuiz.completed', json);
           return json;
         }
-
         throw new Error('getNextQuiz response data is malformed');
       });
   }
