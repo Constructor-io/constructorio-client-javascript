@@ -5,7 +5,7 @@ const Promise = require('es6-promise');
 const EventDispatcher = require('../utils/event-dispatcher');
 const helpers = require('../utils/helpers');
 
-// Create URL from supplied query (term) and parameters
+// Create URL from supplied quizId and parameters
 function createQuizUrl(quizId, parameters, options, path) {
   const {
     apiKey,
@@ -71,23 +71,21 @@ class Quizzes {
    * Retrieve next quiz from api
    *
    * @function getNextQuiz
-   * @description Retrieve search results from Constructor.io API
+   * @description Retrieve next quiz from Constructor.io API
    * @param {string} id - The id of the quiz
    * @param {string} [parameters] - Additional parameters to refine result set
-   * @param {string} [parameters.index_key] - Index key for the customer's product catalog
    * @param {string} [parameters.section] - Section for customer's product catalog (optional)
-   * @param {string} [parameters.a] - A list of answers in the format ?a=<option_id>,<option_id>&a=<option_id>
-   * @param {string} [version_id] - Specific version id for the quiz.
+   * @param {array} [parameters.a] - An array for answers in the format [[1,2],[1]]
+   * @param {string} [parameters.version_id] - Specific version id for the quiz.
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
-   * @see https://quizzes.cnstrc.com/api/#/quizzes/QuizzesController_getQuizResult
+   * @see https://quizzes.cnstrc.com/api/#/quizzes/QuizzesController_getNextQuestion
    * @example
-   * constructorio.search.getSearchResults('t-shirt', {
-   *     resultsPerPage: 40,
-   *     filters: {
-   *         size: 'medium'
-   *     },
+   * constructorio.search.getNextQuiz('quizid', {
+   *    a: [[1,2],[1]],
+   *    section: "123",
+   *    version_id: "123"
    * });
    */
   getNextQuiz(quizId, parameters, networkParameters = {}) {
@@ -125,23 +123,21 @@ class Quizzes {
    * Retrieves filter expression and recommendation URL from given answers.
    *
    * @function getFinalizeQuiz
-   * @description Retrieve search results from Constructor.io API
+   * @description Retrieve quiz recommendation and filter expression from Constructor.io API
    * @param {string} id - The id of the quiz
    * @param {string} [parameters] - Additional parameters to refine result set
-   * @param {string} [parameters.index_key] - Index key for the customer's product catalog
    * @param {string} [parameters.section] - Section for customer's product catalog (optional)
-   * @param {string} [parameters.a] - A list of answers in the format ?a=<option_id>,<option_id>&a=<option_id>
-   * @param {string} [version_id] - Specific version id for the quiz.
+   * @param {array} [parameters.a] - An array for answers in the format [[1,2],[1]]
+   * @param {string} [parameters.version_id] - Specific version id for the quiz.
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
    * @see https://quizzes.cnstrc.com/api/#/quizzes/QuizzesController_getQuizResult
    * @example
-   * constructorio.search.getSearchResults('t-shirt', {
-   *     resultsPerPage: 40,
-   *     filters: {
-   *         size: 'medium'
-   *     },
+   * constructorio.search.getFinalizeQuiz('quizid', {
+   *    a: [[1,2],[1]],
+   *    section: "123",
+   *    version_id: "123"
    * });
    */
   getFinalizeQuiz(quizId, parameters, networkParameters = {}) {
@@ -169,7 +165,7 @@ class Quizzes {
       })
       .then((json) => {
         if (json.version_id) {
-          this.eventDispatcher.queue('quizzes.getNextQuiz.completed', json);
+          this.eventDispatcher.queue('quizzes.getFinalizeQuiz.completed', json);
           return json;
         }
 
