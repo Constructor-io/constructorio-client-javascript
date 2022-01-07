@@ -21,6 +21,10 @@ function createQuizUrl(quizId, parameters, options, path) {
     throw new Error('quizId is a required parameter of type string');
   }
 
+  if (path === 'finalize' && (typeof parameters.a !== 'object' || !Array.isArray(parameters.a) || parameters.a.length === 0)) {
+    throw new Error('a is a required parameter of type array');
+  }
+
   if (parameters) {
     const { section, a, versionId } = parameters;
 
@@ -164,9 +168,8 @@ class Quizzes {
         return helpers.throwHttpErrorFromResponse(new Error(), response);
       })
       .then((json) => {
-        // Search results
-        if (json.response && json.response.results) {
-          this.eventDispatcher.queue('quizzes.getFinalizeQuiz.completed', json);
+        if (json.version_id) {
+          this.eventDispatcher.queue('quizzes.getNextQuiz.completed', json);
           return json;
         }
 
