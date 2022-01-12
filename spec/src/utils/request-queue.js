@@ -393,7 +393,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         });
 
         it('Should clear all tracking requests if requests exist in storage and request is older than TTL value', (done) => {
-          const requestTTL = 1800000; // 30 minutes in milliseconds
+          const requestTTL = 180000; // 3 minutes in milliseconds
           const oneMinuteInMS = 3600;
 
           store.local.set(storageKey, [
@@ -458,7 +458,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         });
 
         it('Should not clear all tracking requests if requests exist in storage and request is younger than TTL value', (done) => {
-          const requestTTL = 1800000; // 30 minutes in milliseconds
+          const requestTTL = 180000; // 3 minutes in milliseconds
           const oneMinuteInMS = 3600;
 
           store.local.set(storageKey, [

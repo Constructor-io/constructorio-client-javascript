@@ -6,7 +6,7 @@ const HumanityCheck = require('../utils/humanity-check');
 const helpers = require('../utils/helpers');
 
 const storageKey = '_constructorio_requests';
-const requestTTL = 1800000; // 30 minutes in milliseconds
+const requestTTL = 180000; // 3 minutes in milliseconds
 
 class RequestQueue {
   constructor(options, eventemitter) {
