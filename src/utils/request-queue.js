@@ -15,6 +15,7 @@ class RequestQueue {
     this.humanity = new HumanityCheck();
     this.requestPending = false;
     this.pageUnloading = false;
+    this.lastQueuedEvent = null;
 
     this.sendTrackingEvents = (options && options.sendTrackingEvents === true)
       ? true
@@ -34,14 +35,16 @@ class RequestQueue {
   queue(url, method = 'GET', body, networkParameters = {}) {
     if (this.sendTrackingEvents && !this.humanity.isBot()) {
       const queue = RequestQueue.get();
-
-      queue.push({
+      const eventToBeQueued = {
         url,
         method,
         body,
         networkParameters,
-      });
-      RequestQueue.set(queue);
+        timestamp: Date.now(),
+      };
+
+      queue.push(eventToBeQueued);
+      this.lastQueuedEvent = eventToBeQueued;
     }
   }
 
