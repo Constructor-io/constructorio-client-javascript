@@ -361,7 +361,7 @@ class Browse {
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
     const controller = new AbortController();
     const { signal } = controller;
-
+    console.log('this');
     try {
       requestUrl = createBrowseUrlForFacets(parameters, this.options);
     } catch (e) {
