@@ -16,7 +16,7 @@ require('esbuild').build({
   minify: true,
   define: {
     global: 'window',
-    'process.env': "{'BUNDLED':'true'}"
+    'process': '{"env":{"BUNDLED":"true"}}',
   },
   banner: { js: banner },
   outfile: `./dist/constructorio-client-javascript-${packageJSON.version}.js`,

@@ -4,6 +4,7 @@ const jsdom = require('mocha-jsdom');
 const sinon = require('sinon');
 const fs = require('fs');
 const helpers = require('../mocha.helpers');
+const { version: packageVersion } = require('../../package.json');
 let ConstructorIO = require('../../test/constructorio'); // eslint-disable-line import/extensions
 
 const validApiKey = 'testing';
@@ -123,32 +124,23 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
     expect(() => new ConstructorIO()).to.throw('API key is a required parameter of type string');
   });
 
-  it('Should not have client version set to indicate no DOM context', () => {
-    global.CLIENT_VERSION = null;
-
-    const instance = new ConstructorIO({ apiKey: validApiKey });
-
-    expect(instance).to.be.an('object');
-    expect(instance.options.version).to.not.include('-domless-');
-  });
-
   if (bundled) {
-    it('Should have client version set to indicate bundled context', () => {
+    it('Should have client version set appropriately without global set', () => {
       window.CLIENT_VERSION = null;
 
       const instance = new ConstructorIO({ apiKey: validApiKey });
 
       expect(instance).to.be.an('object');
-      expect(instance.options.version).to.include('-bundled-');
+      expect(instance.options.version).to.equal(`ciojs-client-bundled-${packageVersion}`);
     });
   } else {
-    it('Should not have client version set to indicate bundled context', () => {
+    it('Should have client version set appropriately without global set', () => {
       global.CLIENT_VERSION = null;
 
       const instance = new ConstructorIO({ apiKey: validApiKey });
 
       expect(instance).to.be.an('object');
-      expect(instance.options.version).to.not.include('-bundled-');
+      expect(instance.options.version).to.equal(`ciojs-client-${packageVersion}`);
     });
   }
 
@@ -402,7 +394,7 @@ if (!bundled) {
       })).to.throw('sessionId is a required user parameter of type number');
     });
 
-    it('Should have client version set to indicate no DOM context', () => {
+    it('Should have client version set appropriately without global set indicating no DOM context', () => {
       global.CLIENT_VERSION = null;
 
       const instance = new ConstructorIO({
@@ -412,7 +404,7 @@ if (!bundled) {
       });
 
       expect(instance).to.be.an('object');
-      expect(instance.options.version).to.include('-domless-');
+      expect(instance.options.version).to.equal(`ciojs-client-domless-${packageVersion}`);
     });
   });
 }
