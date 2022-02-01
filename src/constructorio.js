@@ -86,7 +86,7 @@ class ConstructorIO {
 
     this.options = {
       apiKey,
-      version: version || (typeof global !== 'undefined' && global.CLIENT_VERSION) || `ciojs-client-${canUseDOM ? '' : 'domless-'}${process.env.BUNDLED ? 'bundled-' : ''}${packageVersion}`,
+      version: version || (typeof global !== 'undefined' && global.CLIENT_VERSION) || `ciojs-client-${canUseDOM ? '' : 'domless-'}${typeof process !== 'undefined' && process.env.BUNDLED ? 'bundled-' : ''}${packageVersion}`,
       serviceUrl: (serviceUrl && serviceUrl.replace(/\/$/, '')) || 'https://ac.cnstrc.com',
       sessionId: sessionId || session_id,
       clientId: clientId || client_id,
