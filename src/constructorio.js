@@ -11,6 +11,22 @@ const EventDispatcher = require('./utils/event-dispatcher');
 const helpers = require('./utils/helpers');
 const { version: packageVersion } = require('../package.json');
 
+// Compute package version string
+const computePackageVersion = () => {
+  const versionPrefix = 'ciojs-client-';
+  const versionModifiers = [];
+
+  if (!helpers.canUseDOM()) {
+    versionModifiers.push('domless');
+  }
+
+  if (typeof process.env !== 'undefined' && process.env.BUNDLED) {
+    versionModifiers.push('bundled');
+  }
+
+  return `${versionPrefix}${versionModifiers.join('-')}${versionModifiers.length ? '-' : ''}${packageVersion}`;
+};
+
 /**
  * Class to instantiate the ConstructorIO client.
  */
@@ -41,11 +57,10 @@ class ConstructorIO {
    * @property {object} tracker - Interface to {@link module:tracker}
    * @returns {class}
    */
-  constructor(options = {}) { // eslint-disable-line complexity
-    const canUseDOM = helpers.canUseDOM();
+  constructor(options = {}) {
     const {
       apiKey,
-      version,
+      version: versionFromOptions,
       serviceUrl,
       segments,
       testCells,
@@ -68,9 +83,10 @@ class ConstructorIO {
 
     let session_id;
     let client_id;
+    const versionFromGlobal = typeof global !== 'undefined' && global.CLIENT_VERSION;
 
     // Initialize ID session if DOM context is available
-    if (canUseDOM) {
+    if (helpers.canUseDOM()) {
       ({ session_id, client_id } = new ConstructorioID(idOptions || {}));
     } else {
       // Validate session ID is provided
@@ -86,7 +102,7 @@ class ConstructorIO {
 
     this.options = {
       apiKey,
-      version: version || (typeof global !== 'undefined' && global.CLIENT_VERSION) || `ciojs-client-${canUseDOM ? '' : 'domless-'}${typeof process !== 'undefined' && process.env.BUNDLED ? 'bundled-' : ''}${packageVersion}`,
+      version: versionFromOptions || versionFromGlobal || computePackageVersion(),
       serviceUrl: (serviceUrl && serviceUrl.replace(/\/$/, '')) || 'https://ac.cnstrc.com',
       sessionId: sessionId || session_id,
       clientId: clientId || client_id,
