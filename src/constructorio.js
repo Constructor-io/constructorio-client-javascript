@@ -41,7 +41,7 @@ class ConstructorIO {
    * @property {object} tracker - Interface to {@link module:tracker}
    * @returns {class}
    */
-  constructor(options = {}) {
+  constructor(options = {}) { // eslint-disable-line complexity
     const canUseDOM = helpers.canUseDOM();
     const {
       apiKey,
