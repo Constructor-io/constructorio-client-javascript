@@ -181,17 +181,22 @@ class Browse {
   getBrowseResults(filterName, filterValue, parameters, networkParameters = {}) {
     let requestUrl;
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
-    const controller = new AbortController();
-    const { signal } = controller;
+    let signal;
+
+    if (typeof AbortController === 'function') {
+      const controller = new AbortController();
+      signal = controller && controller.signal;
+
+      // Handle network timeout if specified
+      helpers.applyNetworkTimeout(this.options, networkParameters, controller);
+
+    }
 
     try {
       requestUrl = createBrowseUrlFromFilter(filterName, filterValue, parameters, this.options);
     } catch (e) {
       return Promise.reject(e);
     }
-
-    // Handle network timeout if specified
-    helpers.applyNetworkTimeout(this.options, networkParameters, controller);
 
     return fetch(requestUrl, { signal })
       .then((response) => {
@@ -246,17 +251,22 @@ class Browse {
   getBrowseResultsForItemIds(itemIds, parameters, networkParameters = {}) {
     let requestUrl;
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
-    const controller = new AbortController();
-    const { signal } = controller;
+    let signal;
+
+    if (typeof AbortController === 'function') {
+      const controller = new AbortController();
+      signal = controller && controller.signal;
+
+      // Handle network timeout if specified
+      helpers.applyNetworkTimeout(this.options, networkParameters, controller);
+
+    }
 
     try {
       requestUrl = createBrowseUrlFromIDs(itemIds, parameters, this.options);
     } catch (e) {
       return Promise.reject(e);
     }
-
-    // Handle network timeout if specified
-    helpers.applyNetworkTimeout(this.options, networkParameters, controller);
 
     return fetch(requestUrl, { signal })
       .then((response) => {
@@ -309,16 +319,21 @@ class Browse {
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
     const { serviceUrl } = this.options;
     const queryParams = createQueryParams(parameters, this.options);
-    const controller = new AbortController();
-    const { signal } = controller;
+    let signal;
+
+    if (typeof AbortController === 'function') {
+      const controller = new AbortController();
+      signal = controller && controller.signal;
+
+      // Handle network timeout if specified
+      helpers.applyNetworkTimeout(this.options, networkParameters, controller);
+
+    }
 
     delete queryParams._dt;
 
     const queryString = qs.stringify(queryParams, { indices: false });
     const requestUrl = `${serviceUrl}/browse/groups?${queryString}`;
-
-    // Handle network timeout if specified
-    helpers.applyNetworkTimeout(this.options, networkParameters, controller);
 
     return fetch(requestUrl, { signal })
       .then((response) => {
@@ -359,17 +374,22 @@ class Browse {
   getBrowseFacets(parameters, networkParameters) {
     let requestUrl;
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
-    const controller = new AbortController();
-    const { signal } = controller;
+    let signal;
+
+    if (typeof AbortController === 'function') {
+      const controller = new AbortController();
+      signal = controller && controller.signal;
+
+      // Handle network timeout if specified
+      helpers.applyNetworkTimeout(this.options, networkParameters, controller);
+
+    }
 
     try {
       requestUrl = createBrowseUrlForFacets(parameters, this.options);
     } catch (e) {
       return Promise.reject(e);
     }
-
-    // Handle network timeout if specified
-    helpers.applyNetworkTimeout(this.options, networkParameters, controller);
 
     return fetch(requestUrl, { signal })
       .then((response) => {

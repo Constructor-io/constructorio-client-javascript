@@ -121,8 +121,15 @@ class Autocomplete {
   getAutocompleteResults(query, parameters, networkParameters = {}) {
     let requestUrl;
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
-    const controller = new AbortController();
-    const { signal } = controller;
+    let signal;
+
+    if (typeof AbortController === 'function') {
+      const controller = new AbortController();
+      signal = controller && controller.signal;
+
+      // Handle network timeout if specified
+      applyNetworkTimeout(this.options, networkParameters, controller);
+    }
 
     try {
       requestUrl = createAutocompleteUrl(query, parameters, this.options);
@@ -130,8 +137,6 @@ class Autocomplete {
       return Promise.reject(e);
     }
 
-    // Handle network timeout if specified
-    applyNetworkTimeout(this.options, networkParameters, controller);
 
     return fetch(requestUrl, { signal })
       .then((response) => {

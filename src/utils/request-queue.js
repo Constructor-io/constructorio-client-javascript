@@ -65,7 +65,7 @@ class RequestQueue {
 
       RequestQueue.set(queue);
 
-      if (networkParameters) {
+      if (networkParameters && typeof AbortController === 'function') {
         const controller = new AbortController();
 
         ({ signal } = controller);
