@@ -105,8 +105,17 @@ class Recommendations {
   getRecommendations(podId, parameters, networkParameters = {}) {
     let requestUrl;
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
-    const controller = new AbortController();
-    const { signal } = controller;
+    let signal;
+
+    if (typeof AbortController === 'function') {
+      const controller = new AbortController();
+
+      signal = controller && controller.signal;
+
+      // Handle network timeout if specified
+      helpers.applyNetworkTimeout(this.options, networkParameters, controller);
+
+    }
 
     parameters = parameters || {};
 
@@ -115,9 +124,6 @@ class Recommendations {
     } catch (e) {
       return Promise.reject(e);
     }
-
-    // Handle network timeout if specified
-    helpers.applyNetworkTimeout(this.options, networkParameters, controller);
 
     return fetch(requestUrl, { signal })
       .then((response) => {
