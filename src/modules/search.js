@@ -144,6 +144,7 @@ class Search {
 
     if (typeof AbortController === 'function') {
       const controller = new AbortController();
+
       signal = controller && controller.signal;
 
       // Handle network timeout if specified
