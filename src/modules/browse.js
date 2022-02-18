@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable object-curly-newline, no-underscore-dangle */
 const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
@@ -40,7 +41,7 @@ function createQueryParams(parameters, options) {
   }
 
   if (parameters) {
-    const { page, resultsPerPage, filters, sortBy, sortOrder, section, fmtOptions, hiddenFields } = parameters;
+    const { page, resultsPerPage, filters, sortBy, sortOrder, section, fmtOptions, hiddenFields, hiddenFacets } = parameters;
 
     // Pull page from parameters
     if (!helpers.isNil(page)) {
@@ -78,7 +79,20 @@ function createQueryParams(parameters, options) {
 
     // Pull hidden fields from parameters
     if (hiddenFields) {
-      queryParams.hidden_fields = hiddenFields;
+      if (queryParams.fmt_options) {
+        queryParams.fmt_options.hidden_fields = hiddenFields;
+      } else {
+        queryParams.fmt_options = { hidden_fields: hiddenFields };
+      }
+    }
+
+    // Pull hidden facets from parameters
+    if (hiddenFacets) {
+      if (queryParams.fmt_options) {
+        queryParams.fmt_options.hidden_facets = hiddenFacets;
+      } else {
+        queryParams.fmt_options = { hidden_facets: hiddenFacets };
+      }
     }
   }
 
@@ -166,6 +180,7 @@ class Browse {
    * @param {string} [parameters.sortOrder='descending'] - The sort order for results
    * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
+   * @param {string[]} [parameters.hiddenFacets] - Hidden facets to return
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
@@ -238,6 +253,8 @@ class Browse {
    * @param {string} [parameters.sortBy='relevance'] - The sort method for results
    * @param {string} [parameters.sortOrder='descending'] - The sort order for results
    * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
+   * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
+   * @param {string[]} [parameters.hiddenFacets] - Hidden facets to return
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}

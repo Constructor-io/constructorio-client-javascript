@@ -313,20 +313,41 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid filterName, filterValue and hiddenFields', (done) => {
-      const hiddenFields = ['hiddenField1', 'hiddenField2'];
+      const hiddenFields = ['testField', 'testField2'];
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
       });
 
-      browse.getBrowseResults(filterName, filterValue, { hiddenFields }).then((res) => {
+      browse.getBrowseResults('Color', 'yellow', { hiddenFields }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.hidden_fields).to.eql(hiddenFields);
-        expect(requestedUrlParams).to.have.property('hidden_fields').to.eql(hiddenFields);
+        expect(res.request.fmt_options.hidden_fields).to.eql(hiddenFields);
+        expect(requestedUrlParams.fmt_options).to.have.property('hidden_fields').to.eql(hiddenFields);
+        expect(res.response.results[0].data).to.have.property('testField').to.eql('testFieldValue');
+        done();
+      });
+    });
+
+    it('Should return a response with a valid filterName, filterValue and hiddenFacets', (done) => {
+      const hiddenFacets = ['Brand', 'testFacet'];
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResults('Brand', 'XYZ', { hiddenFacets }, {}).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.fmt_options.hidden_facets).to.eql(hiddenFacets);
+        expect(requestedUrlParams.fmt_options).to.have.property('hidden_facets').to.eql(hiddenFacets);
+        expect(res.response.facets[0]).to.have.property('name').to.eql('Brand');
         done();
       });
     });
@@ -468,7 +489,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
   });
 
   describe('getBrowseResultsForItemIds', () => {
-    const ids = ['fc00a355-1e91-49a1-b6c6-c8c74c50259d', '1f32b500-f397-4faa-90e0-4c4625b3e3b5'];
+    const ids = ['10002', '10001'];
 
     it('Should return a response with valid ids', (done) => {
       const { browse } = new ConstructorIO({
@@ -666,20 +687,41 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid ids and hiddenFields', (done) => {
-      const hiddenFields = ['hiddenField1', 'hiddenField2'];
+      const hiddenFields = ['testField', 'testField2'];
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
       });
 
-      browse.getBrowseResultsForItemIds(ids, { hiddenFields }).then((res) => {
+      browse.getBrowseResultsForItemIds(ids, { hiddenFields }, {}).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.hidden_fields).to.eql(hiddenFields);
-        expect(requestedUrlParams).to.have.property('hidden_fields').to.eql(hiddenFields);
+        expect(res.request.fmt_options.hidden_fields).to.eql(hiddenFields);
+        expect(requestedUrlParams.fmt_options).to.have.property('hidden_fields').to.eql(hiddenFields);
+        expect(res.response.results[0].data).to.have.property('testField').to.eql('testFieldValue');
+        done();
+      });
+    });
+
+    it('Should return a response with valid ids and hiddenFacets', (done) => {
+      const hiddenFacets = ['Brand', 'testFacet'];
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResultsForItemIds(ids, { hiddenFacets }, {}).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.fmt_options.hidden_facets).to.eql(hiddenFacets);
+        expect(requestedUrlParams.fmt_options).to.have.property('hidden_facets').to.eql(hiddenFacets);
+        expect(res.response.facets[0]).to.have.property('name').to.eql('Brand');
         done();
       });
     });
