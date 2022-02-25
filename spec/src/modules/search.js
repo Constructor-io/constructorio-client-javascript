@@ -291,7 +291,7 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section and hiddenFields', (done) => {
-      const hiddenFields = ['hiddenField1', 'hiddenField2'];
+      const hiddenFields = ['testField', 'hiddenField2'];
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -303,8 +303,29 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.hidden_fields).to.eql(hiddenFields);
-        expect(requestedUrlParams).to.have.property('hidden_fields').to.eql(hiddenFields);
+        expect(res.request.fmt_options.hidden_fields).to.eql(hiddenFields);
+        expect(requestedUrlParams.fmt_options).to.have.property('hidden_fields').to.eql(hiddenFields);
+        expect(res.response.results[0].data).to.have.property('testField').to.eql('hiddenFieldValue');
+        done();
+      });
+    });
+
+    it('Should return a response with a valid query, section and hiddenFacets', (done) => {
+      const hiddenFacets = ['Brand', 'testFacet'];
+      const { search } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      search.getSearchResults(query, { section, hiddenFacets }, {}).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.fmt_options.hidden_facets).to.eql(hiddenFacets);
+        expect(requestedUrlParams.fmt_options).to.have.property('hidden_facets').to.eql(hiddenFacets);
+        expect(res.response.facets[0]).to.have.property('name').to.eql('Brand');
         done();
       });
     });
