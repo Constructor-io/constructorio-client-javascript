@@ -31,7 +31,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
   if (bundled) {
     jsdomOptions.src = fs.readFileSync(
       `./dist/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.js`,
-      'utf-8'
+      'utf-8',
     );
   }
 
@@ -184,8 +184,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       browse
         .getBrowseResults(filterName, filterValue, { resultsPerPage })
         .then((res) => {
-          const requestedUrlParams =
-            helpers.extractUrlParamsFromFetch(fetchSpy);
+          const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
           expect(res).to.have.property('request').to.be.an('object');
           expect(res).to.have.property('response').to.be.an('object');
@@ -209,8 +208,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       browse
         .getBrowseResults(filterName, filterValue, { filters })
         .then((res) => {
-          const requestedUrlParams =
-            helpers.extractUrlParamsFromFetch(fetchSpy);
+          const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
           expect(res).to.have.property('request').to.be.an('object');
           expect(res).to.have.property('response').to.be.an('object');
@@ -234,8 +232,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       browse
         .getBrowseResults(filterName, filterValue, { fmtOptions })
         .then((res) => {
-          const requestedUrlParams =
-            helpers.extractUrlParamsFromFetch(fetchSpy);
+          const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
           expect(res).to.have.property('request').to.be.an('object');
           expect(res).to.have.property('response').to.be.an('object');
@@ -262,8 +259,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       browse
         .getBrowseResults(filterName, filterValue, { sortBy })
         .then((res) => {
-          const requestedUrlParams =
-            helpers.extractUrlParamsFromFetch(fetchSpy);
+          const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
           expect(res).to.have.property('request').to.be.an('object');
           expect(res).to.have.property('response').to.be.an('object');
@@ -286,8 +282,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       browse
         .getBrowseResults(filterName, filterValue, { sortOrder })
         .then((res) => {
-          const requestedUrlParams =
-            helpers.extractUrlParamsFromFetch(fetchSpy);
+          const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
           expect(res).to.have.property('request').to.be.an('object');
           expect(res).to.have.property('response').to.be.an('object');
@@ -310,8 +305,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       browse
         .getBrowseResults(filterName, filterValue, { section })
         .then((res) => {
-          const requestedUrlParams =
-            helpers.extractUrlParamsFromFetch(fetchSpy);
+          const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
           expect(res).to.have.property('request').to.be.an('object');
           expect(res).to.have.property('response').to.be.an('object');
@@ -336,8 +330,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
           section,
         })
         .then((res) => {
-          const requestedUrlParams =
-            helpers.extractUrlParamsFromFetch(fetchSpy);
+          const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
           expect(res).to.have.property('request').to.be.an('object');
           expect(res).to.have.property('response').to.be.an('object');
@@ -378,8 +371,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       browse
         .getBrowseResults('Color', 'yellow', { hiddenFields })
         .then((res) => {
-          const requestedUrlParams =
-            helpers.extractUrlParamsFromFetch(fetchSpy);
+          const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
           expect(res).to.have.property('request').to.be.an('object');
           expect(res).to.have.property('response').to.be.an('object');
@@ -405,8 +397,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       browse
         .getBrowseResults('Brand', 'XYZ', { hiddenFacets }, {})
         .then((res) => {
-          const requestedUrlParams =
-            helpers.extractUrlParamsFromFetch(fetchSpy);
+          const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
           expect(res).to.have.property('request').to.be.an('object');
           expect(res).to.have.property('response').to.be.an('object');
@@ -453,7 +444,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
           customEventSpy.restore();
           done();
         },
-        false
+        false,
       );
 
       browse.getBrowseResults(filterName, filterValue);
@@ -493,7 +484,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       return expect(
         browse.getBrowseResults(filterName, filterValue, {
           page: 'abc',
-        })
+        }),
       ).to.eventually.be.rejected;
     });
 
@@ -503,7 +494,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       return expect(
         browse.getBrowseResults(filterName, filterValue, {
           resultsPerPage: 'abc',
-        })
+        }),
       ).to.eventually.be.rejected;
     });
 
@@ -513,7 +504,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       return expect(
         browse.getBrowseResults(filterName, filterValue, {
           filters: 123,
-        })
+        }),
       ).to.eventually.be.rejected;
     });
 
@@ -523,7 +514,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       return expect(
         browse.getBrowseResults(filterName, filterValue, {
           sortBy: { foo: 'bar' },
-        })
+        }),
       ).to.eventually.be.rejected;
     });
 
@@ -533,7 +524,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       return expect(
         browse.getBrowseResults(filterName, filterValue, {
           sortOrder: 'abc',
-        })
+        }),
       ).to.eventually.be.rejected;
     });
 
@@ -543,7 +534,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       return expect(
         browse.getBrowseResults(filterName, filterValue, {
           section: 123,
-        })
+        }),
       ).to.eventually.be.rejected;
     });
 
@@ -565,7 +556,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(
-        browse.getBrowseResults(filterName, filterValue, {}, { timeout: 10 })
+        browse.getBrowseResults(filterName, filterValue, {}, { timeout: 10 }),
       ).to.eventually.be.rejectedWith(timeoutRejectionMessage);
     });
 
@@ -576,7 +567,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       });
 
       return expect(
-        browse.getBrowseResults(filterName, filterValue, {})
+        browse.getBrowseResults(filterName, filterValue, {}),
       ).to.eventually.be.rejectedWith(timeoutRejectionMessage);
     });
   });
@@ -812,8 +803,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       browse
         .getBrowseResultsForItemIds(ids, { hiddenFields }, {})
         .then((res) => {
-          const requestedUrlParams =
-            helpers.extractUrlParamsFromFetch(fetchSpy);
+          const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
           expect(res).to.have.property('request').to.be.an('object');
           expect(res).to.have.property('response').to.be.an('object');
@@ -839,8 +829,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       browse
         .getBrowseResultsForItemIds(ids, { hiddenFacets }, {})
         .then((res) => {
-          const requestedUrlParams =
-            helpers.extractUrlParamsFromFetch(fetchSpy);
+          const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
           expect(res).to.have.property('request').to.be.an('object');
           expect(res).to.have.property('response').to.be.an('object');
@@ -864,8 +853,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
         },
       });
       const customEventSpy = sinon.spy(window, 'CustomEvent');
-      const eventName =
-        'cio.client.browse.getBrowseResultsForItemIds.completed';
+      const eventName = 'cio.client.browse.getBrowseResultsForItemIds.completed';
 
       // Note: `CustomEvent` in Node context not containing `detail`, so checking arguments instead
       window.addEventListener(
@@ -888,7 +876,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
           customEventSpy.restore();
           done();
         },
-        false
+        false,
       );
 
       browse.getBrowseResultsForItemIds(ids);
@@ -921,7 +909,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       return expect(
         browse.getBrowseResultsForItemIds(ids, {
           page: 'abc',
-        })
+        }),
       ).to.eventually.be.rejected;
     });
 
@@ -931,7 +919,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       return expect(
         browse.getBrowseResultsForItemIds(ids, {
           resultsPerPage: 'abc',
-        })
+        }),
       ).to.eventually.be.rejected;
     });
 
@@ -941,7 +929,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       return expect(
         browse.getBrowseResultsForItemIds(ids, {
           filters: 123,
-        })
+        }),
       ).to.eventually.be.rejected;
     });
 
@@ -951,7 +939,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       return expect(
         browse.getBrowseResultsForItemIds(ids, {
           sortBy: { foo: 'bar' },
-        })
+        }),
       ).to.eventually.be.rejected;
     });
 
@@ -961,7 +949,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       return expect(
         browse.getBrowseResultsForItemIds(ids, {
           sortOrder: 'abc',
-        })
+        }),
       ).to.eventually.be.rejected;
     });
 
@@ -971,7 +959,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       return expect(
         browse.getBrowseResultsForItemIds(ids, {
           section: 123,
-        })
+        }),
       ).to.eventually.be.rejected;
     });
 
@@ -986,7 +974,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(
-        browse.getBrowseResultsForItemIds(ids, {}, { timeout: 10 })
+        browse.getBrowseResultsForItemIds(ids, {}, { timeout: 10 }),
       ).to.eventually.be.rejectedWith(timeoutRejectionMessage);
     });
 
@@ -997,7 +985,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       });
 
       return expect(
-        browse.getBrowseResultsForItemIds(ids, {}, {})
+        browse.getBrowseResultsForItemIds(ids, {}, {}),
       ).to.eventually.be.rejectedWith(timeoutRejectionMessage);
     });
   });
@@ -1074,7 +1062,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       return expect(
         browse.getBrowseGroups({
           filters: 123,
-        })
+        }),
       ).to.eventually.be.rejected;
     });
 
@@ -1088,7 +1076,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(
-        browse.getBrowseGroups({}, { timeout: 10 })
+        browse.getBrowseGroups({}, { timeout: 10 }),
       ).to.eventually.be.rejectedWith(timeoutRejectionMessage);
     });
 
@@ -1099,7 +1087,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       });
 
       return expect(browse.getBrowseGroups({})).to.eventually.be.rejectedWith(
-        timeoutRejectionMessage
+        timeoutRejectionMessage,
       );
     });
   });
@@ -1141,8 +1129,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
           resultsPerPage: 10,
         })
         .then((res) => {
-          const requestedUrlParams =
-            helpers.extractUrlParamsFromFetch(fetchSpy);
+          const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
           expect(res).to.have.property('request').to.be.an('object');
           expect(res).to.have.property('response').to.be.an('object');
@@ -1165,7 +1152,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       return expect(
         browse.getBrowseFacets({
           page: 'abc',
-        })
+        }),
       ).to.eventually.be.rejected;
     });
 
@@ -1175,7 +1162,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       return expect(
         browse.getBrowseFacets({
           resultsPerPage: 'abc',
-        })
+        }),
       ).to.eventually.be.rejected;
     });
 
@@ -1189,7 +1176,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
       return expect(
-        browse.getBrowseFacets({}, { timeout: 10 })
+        browse.getBrowseFacets({}, { timeout: 10 }),
       ).to.eventually.be.rejectedWith(timeoutRejectionMessage);
     });
 
@@ -1200,7 +1187,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       });
 
       return expect(browse.getBrowseFacets({})).to.eventually.be.rejectedWith(
-        timeoutRejectionMessage
+        timeoutRejectionMessage,
       );
     });
   });
@@ -1267,7 +1254,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       });
 
       return expect(
-        browse.getBrowseFacetOptions(facetName, {}, { timeout: 10 })
+        browse.getBrowseFacetOptions(facetName, {}, { timeout: 10 }),
       ).to.eventually.be.rejectedWith('The user aborted a request.');
     });
 
@@ -1280,7 +1267,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       });
 
       return expect(
-        browse.getBrowseFacetOptions(facetName, {}, {})
+        browse.getBrowseFacetOptions(facetName, {}, {}),
       ).to.eventually.be.rejectedWith('The user aborted a request.');
     });
   });

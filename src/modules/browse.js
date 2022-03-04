@@ -8,8 +8,7 @@ const helpers = require('../utils/helpers');
 
 // Create query params from parameters and options
 function createQueryParams(parameters, options) {
-  const { apiKey, version, sessionId, clientId, userId, segments, testCells } =
-    options;
+  const { apiKey, version, sessionId, clientId, userId, segments, testCells } = options;
   let queryParams = { c: version };
 
   queryParams.key = apiKey;
@@ -110,7 +109,7 @@ function createBrowseUrlFromFilter(
   filterName,
   filterValue,
   parameters,
-  options
+  options,
 ) {
   const { serviceUrl } = options;
 
@@ -128,7 +127,7 @@ function createBrowseUrlFromFilter(
   const queryString = qs.stringify(queryParams, { indices: false });
 
   return `${serviceUrl}/browse/${encodeURIComponent(
-    filterName
+    filterName,
   )}/${encodeURIComponent(filterValue)}?${queryString}`;
 }
 
@@ -224,11 +223,10 @@ class Browse {
     filterName,
     filterValue,
     parameters,
-    networkParameters = {}
+    networkParameters = {},
   ) {
     let requestUrl;
-    const fetch =
-      (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
     let signal;
 
     if (typeof AbortController === 'function') {
@@ -245,7 +243,7 @@ class Browse {
         filterName,
         filterValue,
         parameters,
-        this.options
+        this.options,
       );
     } catch (e) {
       return Promise.reject(e);
@@ -305,8 +303,7 @@ class Browse {
    */
   getBrowseResultsForItemIds(itemIds, parameters, networkParameters = {}) {
     let requestUrl;
-    const fetch =
-      (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
     let signal;
 
     if (typeof AbortController === 'function') {
@@ -344,14 +341,14 @@ class Browse {
 
           this.eventDispatcher.queue(
             'browse.getBrowseResultsForItemIds.completed',
-            json
+            json,
           );
 
           return json;
         }
 
         throw new Error(
-          'getBrowseResultsForItemIds response data is malformed'
+          'getBrowseResultsForItemIds response data is malformed',
         );
       });
   }
@@ -377,8 +374,7 @@ class Browse {
    * });
    */
   getBrowseGroups(parameters, networkParameters = {}) {
-    const fetch =
-      (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
     const { serviceUrl } = this.options;
     const queryParams = createQueryParams(parameters, this.options);
     let signal;
@@ -435,8 +431,7 @@ class Browse {
    */
   getBrowseFacets(parameters, networkParameters) {
     let requestUrl;
-    const fetch =
-      (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
     let signal;
 
     if (typeof AbortController === 'function') {
@@ -493,8 +488,7 @@ class Browse {
    */
   getBrowseFacetOptions(facetName, parameters = {}, networkParameters = {}) {
     let requestUrl;
-    const fetch =
-      (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
     const controller = new AbortController();
     const { signal } = controller;
 
@@ -502,7 +496,7 @@ class Browse {
       requestUrl = createBrowseUrlForFacetOptions(
         facetName,
         parameters,
-        this.options
+        this.options,
       );
     } catch (e) {
       return Promise.reject(e);
