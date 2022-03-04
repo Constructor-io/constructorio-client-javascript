@@ -8,15 +8,8 @@ const helpers = require('../utils/helpers');
 
 // Create query params from parameters and options
 function createQueryParams(parameters, options) {
-  const {
-    apiKey,
-    version,
-    sessionId,
-    clientId,
-    userId,
-    segments,
-    testCells,
-  } = options;
+  const { apiKey, version, sessionId, clientId, userId, segments, testCells } =
+    options;
   let queryParams = { c: version };
 
   queryParams.key = apiKey;
@@ -41,7 +34,17 @@ function createQueryParams(parameters, options) {
   }
 
   if (parameters) {
-    const { page, resultsPerPage, filters, sortBy, sortOrder, section, fmtOptions, hiddenFields, hiddenFacets } = parameters;
+    const {
+      page,
+      resultsPerPage,
+      filters,
+      sortBy,
+      sortOrder,
+      section,
+      fmtOptions,
+      hiddenFields,
+      hiddenFacets,
+    } = parameters;
 
     // Pull page from parameters
     if (!helpers.isNil(page)) {
@@ -103,7 +106,12 @@ function createQueryParams(parameters, options) {
 }
 
 // Create URL from supplied filter name, value and parameters
-function createBrowseUrlFromFilter(filterName, filterValue, parameters, options) {
+function createBrowseUrlFromFilter(
+  filterName,
+  filterValue,
+  parameters,
+  options
+) {
   const { serviceUrl } = options;
 
   // Validate filter name is provided
@@ -119,7 +127,9 @@ function createBrowseUrlFromFilter(filterName, filterValue, parameters, options)
   const queryParams = createQueryParams(parameters, options);
   const queryString = qs.stringify(queryParams, { indices: false });
 
-  return `${serviceUrl}/browse/${encodeURIComponent(filterName)}/${encodeURIComponent(filterValue)}?${queryString}`;
+  return `${serviceUrl}/browse/${encodeURIComponent(
+    filterName
+  )}/${encodeURIComponent(filterValue)}?${queryString}`;
 }
 
 // Create URL from supplied id's
@@ -127,7 +137,7 @@ function createBrowseUrlFromIDs(ids, parameters, options) {
   const { serviceUrl } = options;
 
   // Validate id's are provided
-  if (!ids || !(Array.isArray(ids)) || !ids.length) {
+  if (!ids || !Array.isArray(ids) || !ids.length) {
     throw new Error('ids is a required parameter of type array');
   }
 
@@ -150,6 +160,23 @@ function createBrowseUrlForFacets(parameters, options) {
   const queryString = qs.stringify(queryParams, { indices: false });
 
   return `${serviceUrl}/browse/facets?${queryString}`;
+}
+// Create URL from supplied facet name and parameters
+function createBrowseUrlForFacetOptions(facetName, parameters, options) {
+  const { serviceUrl } = options;
+
+  // Validate facet name is provided
+  if (!facetName || typeof facetName !== 'string') {
+    throw new Error('facetName is a required parameter of type string');
+  }
+
+  const queryParams = { ...createQueryParams(parameters, options) };
+
+  delete queryParams._dt;
+
+  const queryString = qs.stringify(queryParams, { indices: false });
+
+  return `${serviceUrl}/browse/facet_options?facet_name=${facetName}&${queryString}`;
 }
 
 /**
@@ -193,9 +220,15 @@ class Browse {
    *     },
    * });
    */
-  getBrowseResults(filterName, filterValue, parameters, networkParameters = {}) {
+  getBrowseResults(
+    filterName,
+    filterValue,
+    parameters,
+    networkParameters = {}
+  ) {
     let requestUrl;
-    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const fetch =
+      (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
     let signal;
 
     if (typeof AbortController === 'function') {
@@ -205,11 +238,15 @@ class Browse {
 
       // Handle network timeout if specified
       helpers.applyNetworkTimeout(this.options, networkParameters, controller);
-
     }
 
     try {
-      requestUrl = createBrowseUrlFromFilter(filterName, filterValue, parameters, this.options);
+      requestUrl = createBrowseUrlFromFilter(
+        filterName,
+        filterValue,
+        parameters,
+        this.options
+      );
     } catch (e) {
       return Promise.reject(e);
     }
@@ -268,7 +305,8 @@ class Browse {
    */
   getBrowseResultsForItemIds(itemIds, parameters, networkParameters = {}) {
     let requestUrl;
-    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const fetch =
+      (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
     let signal;
 
     if (typeof AbortController === 'function') {
@@ -278,7 +316,6 @@ class Browse {
 
       // Handle network timeout if specified
       helpers.applyNetworkTimeout(this.options, networkParameters, controller);
-
     }
 
     try {
@@ -305,12 +342,17 @@ class Browse {
             });
           }
 
-          this.eventDispatcher.queue('browse.getBrowseResultsForItemIds.completed', json);
+          this.eventDispatcher.queue(
+            'browse.getBrowseResultsForItemIds.completed',
+            json
+          );
 
           return json;
         }
 
-        throw new Error('getBrowseResultsForItemIds response data is malformed');
+        throw new Error(
+          'getBrowseResultsForItemIds response data is malformed'
+        );
       });
   }
 
@@ -335,7 +377,8 @@ class Browse {
    * });
    */
   getBrowseGroups(parameters, networkParameters = {}) {
-    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const fetch =
+      (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
     const { serviceUrl } = this.options;
     const queryParams = createQueryParams(parameters, this.options);
     let signal;
@@ -347,7 +390,6 @@ class Browse {
 
       // Handle network timeout if specified
       helpers.applyNetworkTimeout(this.options, networkParameters, controller);
-
     }
 
     delete queryParams._dt;
@@ -393,7 +435,8 @@ class Browse {
    */
   getBrowseFacets(parameters, networkParameters) {
     let requestUrl;
-    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const fetch =
+      (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
     let signal;
 
     if (typeof AbortController === 'function') {
@@ -403,7 +446,6 @@ class Browse {
 
       // Handle network timeout if specified
       helpers.applyNetworkTimeout(this.options, networkParameters, controller);
-
     }
 
     try {
@@ -429,6 +471,53 @@ class Browse {
 
         throw new Error('getBrowseFacets response data is malformed');
       });
+  }
+
+  /**
+   * Retrieve facet options from API
+   *
+   * @function getBrowseFacetOptions
+   * @param {string} facetName - Name of the facet whose options to return
+   * @param {object} [parameters] - Additional parameters to refine result set
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
+   * @param {boolean} [parameters.fmtOptions.show_hidden_facets] - Include facets configured as hidden
+   * @param {boolean} [parameters.fmtOptions.show_protected_facets] - Include facets configured as protected
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {Promise}
+   * @see https://docs.constructor.io/rest_api/browse/facet_options/
+   * @example
+   * constructorio.browse.getBrowseFacetOptions('price', {
+   *     fmtOptions: { ... },
+   * });
+   */
+  getBrowseFacetOptions(facetName, parameters = {}, networkParameters = {}) {
+    let requestUrl;
+    const fetch =
+      (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const controller = new AbortController();
+    const { signal } = controller;
+
+    try {
+      requestUrl = createBrowseUrlForFacetOptions(
+        facetName,
+        parameters,
+        this.options
+      );
+    } catch (e) {
+      return Promise.reject(e);
+    }
+
+    // Handle network timeout if specified
+    helpers.applyNetworkTimeout(this.options, networkParameters, controller);
+
+    return fetch(requestUrl, { signal }).then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+
+      return helpers.throwHttpErrorFromResponse(new Error(), response);
+    });
   }
 }
 
