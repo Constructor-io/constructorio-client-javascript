@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-unused-expressions, import/no-unresolved */
 const jsdom = require('mocha-jsdom');
 const dotenv = require('dotenv');
@@ -1043,17 +1044,11 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
         expect(res.response).to.have.property('facets').to.be.an('array');
-        expect(res.response.facets[0])
-          .to.have.property('name')
-          .to.equal(facetName);
-        expect(res.response.facets[0])
-          .to.have.property('options')
-          .to.be.an('array');
+        expect(res.response.facets[0]).to.have.property('name').to.equal(facetName);
+        expect(res.response.facets[0]).to.have.property('options').to.be.an('array');
         expect(fetchSpy).to.have.been.called;
         expect(requestedUrlParams).to.have.property('key');
-        expect(requestedUrlParams)
-          .to.have.property('c')
-          .to.equal(clientVersion);
+        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
         done();
       });
     });
@@ -1063,8 +1058,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
         apiKey: testApiKey,
       });
 
-      return expect(browse.getBrowseFacetOptions(null)).to.eventually.be
-        .rejected;
+      return expect(browse.getBrowseFacetOptions(null)).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid facetName is provided', () => {
@@ -1072,15 +1066,13 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
         apiKey: testApiKey,
       });
 
-      return expect(browse.getBrowseFacetOptions(['foo'])).to.eventually.be
-        .rejected;
+      return expect(browse.getBrowseFacetOptions(['foo'])).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid apiKey is provided', () => {
       const { browse } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
 
-      return expect(browse.getBrowseFacetOptions(facetName)).to.eventually.be
-        .rejected;
+      return expect(browse.getBrowseFacetOptions(facetName)).to.eventually.be.rejected;
     });
 
     it('Should be rejected when network request timeout is provided and reached', () => {
@@ -1088,22 +1080,16 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
         apiKey: testApiKey,
       });
 
-      return expect(
-        browse.getBrowseFacetOptions(facetName, {}, { timeout: 10 }),
-      ).to.eventually.be.rejectedWith('The user aborted a request.');
+      return expect(browse.getBrowseFacetOptions(facetName, { timeout: 10 })).to.eventually.be.rejectedWith(timeoutRejectionMessage);
     });
 
     it('Should be rejected when global network request timeout is provided and reached', () => {
       const { browse } = new ConstructorIO({
-        ...{
-          apiKey: testApiKey,
-        },
+        apiKey: testApiKey,
         networkParameters: { timeout: 20 },
       });
 
-      return expect(
-        browse.getBrowseFacetOptions(facetName, {}, {}),
-      ).to.eventually.be.rejectedWith('The user aborted a request.');
+      return expect(browse.getBrowseFacetOptions(facetName)).to.eventually.be.rejectedWith(timeoutRejectionMessage);
     });
   });
 });
