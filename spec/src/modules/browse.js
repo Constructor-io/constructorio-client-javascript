@@ -990,6 +990,25 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should return a response with valid fmtOptions', (done) => {
+      const fmtOptions = { show_hidden_facets: true };
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseFacets({ fmtOptions }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.fmt_options.show_hidden_facets).to.equal(true);
+        expect(requestedUrlParams).to.have.property('fmt_options');
+        done();
+      });
+    });
+
     it('Should be rejected when invalid page parameter is provided', () => {
       const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
@@ -1049,6 +1068,25 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
         expect(fetchSpy).to.have.been.called;
         expect(requestedUrlParams).to.have.property('key');
         expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
+        done();
+      });
+    });
+
+    it('Should return a response with valid fmtOptions', (done) => {
+      const fmtOptions = { show_hidden_facets: true };
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseFacetOptions(facetName, { fmtOptions }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.fmt_options.show_hidden_facets).to.equal(true);
+        expect(requestedUrlParams).to.have.property('fmt_options');
         done();
       });
     });

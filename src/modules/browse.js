@@ -154,8 +154,6 @@ function createBrowseUrlForFacets(parameters, options) {
 
   // Endpoint does not accept _dt
   delete queryParams._dt;
-  // fmt_options would require a token to be passed along
-  delete queryParams.fmt_options;
 
   const queryString = qs.stringify(queryParams, { indices: false });
 
@@ -163,7 +161,7 @@ function createBrowseUrlForFacets(parameters, options) {
 }
 
 // Create URL from supplied facet name and parameters
-function createBrowseUrlForFacetOptions(facetName, options) {
+function createBrowseUrlForFacetOptions(facetName, parameters, options) {
   const { serviceUrl } = options;
 
   // Validate facet name is provided
@@ -171,12 +169,10 @@ function createBrowseUrlForFacetOptions(facetName, options) {
     throw new Error('facetName is a required parameter of type string');
   }
 
-  const queryParams = { ...createQueryParams(null, options) };
+  const queryParams = { ...createQueryParams(parameters, options) };
 
   // Endpoint does not accept _dt
   delete queryParams._dt;
-  // fmt_options would require a token to be passed along
-  delete queryParams.fmt_options;
 
   const queryString = qs.stringify(queryParams, { indices: false });
 
@@ -408,6 +404,7 @@ class Browse {
    * @function getBrowseFacets
    * @param {object} [parameters] - Additional parameters to refine result set
    * @param {number} [parameters.page] - The page number of the results
+   * @param {boolean} [parameters.fmtOptions.show_hidden_facets] - Include facets configured as hidden
    * @param {number} [parameters.resultsPerPage] - The number of results per page to return
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -465,13 +462,17 @@ class Browse {
    * @param {string} facetName - Name of the facet whose options to return
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @param {object} [parameters] - Additional parameters to refine result set
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
+   * @param {boolean} [parameters.fmtOptions.show_hidden_facets] - Include facets configured as hidden
+   * @param {}
    * @returns {Promise}
    * @see https://docs.constructor.io/rest_api/browse/facet_options/
    * @example
    * constructorio.browse.getBrowseFacetOptions('price', {
    * });
    */
-  getBrowseFacetOptions(facetName, networkParameters = {}) {
+  getBrowseFacetOptions(facetName, parameters = {}, networkParameters = {}) {
     let requestUrl;
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
     let signal;
@@ -486,7 +487,7 @@ class Browse {
     }
 
     try {
-      requestUrl = createBrowseUrlForFacetOptions(facetName, this.options);
+      requestUrl = createBrowseUrlForFacetOptions(facetName, parameters, this.options);
     } catch (e) {
       return Promise.reject(e);
     }
