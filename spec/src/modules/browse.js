@@ -1118,7 +1118,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
         apiKey: testApiKey,
       });
 
-      return expect(browse.getBrowseFacetOptions(facetName, { timeout: 10 })).to.eventually.be.rejectedWith(timeoutRejectionMessage);
+      return expect(browse.getBrowseFacetOptions(facetName, {}, { timeout: 10 })).to.eventually.be.rejectedWith(timeoutRejectionMessage);
     });
 
     it('Should be rejected when global network request timeout is provided and reached', () => {
