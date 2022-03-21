@@ -41,7 +41,17 @@ function createQueryParams(parameters, options) {
   }
 
   if (parameters) {
-    const { page, resultsPerPage, filters, sortBy, sortOrder, section, fmtOptions, hiddenFields, hiddenFacets } = parameters;
+    const {
+      page,
+      resultsPerPage,
+      filters,
+      sortBy,
+      sortOrder,
+      section,
+      fmtOptions,
+      hiddenFields,
+      hiddenFacets,
+    } = parameters;
 
     // Pull page from parameters
     if (!helpers.isNil(page)) {
@@ -144,12 +154,29 @@ function createBrowseUrlForFacets(parameters, options) {
 
   // Endpoint does not accept _dt
   delete queryParams._dt;
-  // fmt_options would require a token to be passed along
-  delete queryParams.fmt_options;
 
   const queryString = qs.stringify(queryParams, { indices: false });
 
   return `${serviceUrl}/browse/facets?${queryString}`;
+}
+
+// Create URL from supplied facet name and parameters
+function createBrowseUrlForFacetOptions(facetName, parameters, options) {
+  const { serviceUrl } = options;
+
+  // Validate facet name is provided
+  if (!facetName || typeof facetName !== 'string') {
+    throw new Error('facetName is a required parameter of type string');
+  }
+
+  const queryParams = { ...createQueryParams(parameters, options) };
+
+  // Endpoint does not accept _dt
+  delete queryParams._dt;
+
+  const queryString = qs.stringify(queryParams, { indices: false });
+
+  return `${serviceUrl}/browse/facet_options?facet_name=${facetName}&${queryString}`;
 }
 
 /**
@@ -205,7 +232,6 @@ class Browse {
 
       // Handle network timeout if specified
       helpers.applyNetworkTimeout(this.options, networkParameters, controller);
-
     }
 
     try {
@@ -278,7 +304,6 @@ class Browse {
 
       // Handle network timeout if specified
       helpers.applyNetworkTimeout(this.options, networkParameters, controller);
-
     }
 
     try {
@@ -347,7 +372,6 @@ class Browse {
 
       // Handle network timeout if specified
       helpers.applyNetworkTimeout(this.options, networkParameters, controller);
-
     }
 
     delete queryParams._dt;
@@ -380,6 +404,7 @@ class Browse {
    * @function getBrowseFacets
    * @param {object} [parameters] - Additional parameters to refine result set
    * @param {number} [parameters.page] - The page number of the results
+   * @param {boolean} [parameters.fmtOptions.show_hidden_facets] - Include facets configured as hidden
    * @param {number} [parameters.resultsPerPage] - The number of results per page to return
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -403,7 +428,6 @@ class Browse {
 
       // Handle network timeout if specified
       helpers.applyNetworkTimeout(this.options, networkParameters, controller);
-
     }
 
     try {
@@ -428,6 +452,62 @@ class Browse {
         }
 
         throw new Error('getBrowseFacets response data is malformed');
+      });
+  }
+
+  /**
+   * Retrieve facet options from API
+   *
+   * @function getBrowseFacetOptions
+   * @param {string} facetName - Name of the facet whose options to return
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @param {object} [parameters] - Additional parameters to refine result set
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
+   * @param {boolean} [parameters.fmtOptions.show_hidden_facets] - Include facets configured as hidden
+   * @param {}
+   * @returns {Promise}
+   * @see https://docs.constructor.io/rest_api/browse/facet_options/
+   * @example
+   * constructorio.browse.getBrowseFacetOptions('price', {
+   * });
+   */
+  getBrowseFacetOptions(facetName, parameters = {}, networkParameters = {}) {
+    let requestUrl;
+    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    let signal;
+
+    if (typeof AbortController === 'function') {
+      const controller = new AbortController();
+
+      signal = controller && controller.signal;
+
+      // Handle network timeout if specified
+      helpers.applyNetworkTimeout(this.options, networkParameters, controller);
+    }
+
+    try {
+      requestUrl = createBrowseUrlForFacetOptions(facetName, parameters, this.options);
+    } catch (e) {
+      return Promise.reject(e);
+    }
+
+    return fetch(requestUrl, { signal })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+
+        return helpers.throwHttpErrorFromResponse(new Error(), response);
+      })
+      .then((json) => {
+        if (json.response && json.response.facets) {
+          this.eventDispatcher.queue('browse.getBrowseFacetOptions.completed', json);
+
+          return json;
+        }
+
+        throw new Error('getBrowseFacetOptions response data is malformed');
       });
   }
 }
