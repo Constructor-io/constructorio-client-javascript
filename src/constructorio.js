@@ -20,7 +20,7 @@ const computePackageVersion = () => {
     versionModifiers.push('domless');
   }
 
-  if (typeof process.env !== 'undefined' && process.env.BUNDLED) {
+  if (typeof process !== 'undefined' && typeof process.env !== 'undefined' && process.env.BUNDLED) {
     versionModifiers.push('bundled');
   }
 
