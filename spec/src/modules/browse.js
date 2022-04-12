@@ -353,6 +353,47 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it.only('Should properly encode query parameters', (done) => {
+      const specialCharacters = '+[]&';
+      const sortBy = `relevance ${specialCharacters}`;
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResults('Brand', 'XYZ', { sortBy }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.sort_by).to.equal(sortBy);
+        expect(requestedUrlParams).to.have.property('sort_by').to.equal(sortBy);
+        done();
+      });
+    });
+
+    it.only('Should properly transform non-breaking spaces in parameters', (done) => {
+      const breakingSpaces = '   ';
+      const sortBy = `relevance ${breakingSpaces}`;
+      const sortByExpected = 'relevance    ';
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResults('Brand', 'XYZ', { sortBy }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.sort_by).to.equal(sortByExpected);
+        expect(requestedUrlParams).to.have.property('sort_by').to.equal(sortByExpected);
+        done();
+      });
+    });
+
     it('Should emit an event with response data', (done) => {
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,

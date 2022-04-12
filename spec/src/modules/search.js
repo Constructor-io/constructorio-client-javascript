@@ -354,10 +354,7 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
         fetch: fetchSpy,
       });
 
-      search.getSearchResults(query, {
-        section,
-        sortBy,
-      }).then((res) => {
+      search.getSearchResults(query, { sortBy }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -378,10 +375,7 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
         fetch: fetchSpy,
       });
 
-      search.getSearchResults(query, {
-        section,
-        sortBy,
-      }).then((res) => {
+      search.getSearchResults(query, { sortBy }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
