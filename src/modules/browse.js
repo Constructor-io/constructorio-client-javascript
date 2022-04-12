@@ -176,7 +176,7 @@ function createBrowseUrlForFacetOptions(facetName, parameters, options) {
 
   const queryString = qs.stringify(queryParams, { indices: false });
 
-  return `${serviceUrl}/browse/facet_options?facet_name=${facetName}&${queryString}`;
+  return `${serviceUrl}/browse/facet_options?facet_name=${encodeURIComponent(facetName)}&${queryString}`;
 }
 
 /**
