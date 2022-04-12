@@ -23,7 +23,7 @@ const utils = {
     return null;
   },
 
-  cleanParams: (paramsObj) => {
+  cleanParamsOld: (paramsObj) => {
     const cleanedParams = {};
 
     Object.keys(paramsObj).forEach((paramKey) => {
@@ -33,6 +33,24 @@ const utils = {
         // Replace non-breaking spaces (or any other type of spaces caught by the regex)
         // - with a regular white space
         cleanedParams[paramKey] = decodeURIComponent(utils.ourEncodeURIComponent(paramValue));
+      } else {
+        cleanedParams[paramKey] = paramValue;
+      }
+    });
+
+    return cleanedParams;
+  },
+
+  cleanParams: (paramsObj) => {
+    const cleanedParams = {};
+
+    Object.keys(paramsObj).forEach((paramKey) => {
+      const paramValue = paramsObj[paramKey];
+
+      if (typeof paramValue === 'string') {
+        // Replace non-breaking spaces (or any other type of spaces caught by the regex)
+        // - with a regular white space
+        cleanedParams[paramKey] = paramValue.replace(/\s/g, ' ');
       } else {
         cleanedParams[paramKey] = paramValue;
       }
