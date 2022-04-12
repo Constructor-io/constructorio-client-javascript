@@ -128,53 +128,6 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
       });
     });
 
-    it('Should properly encode query parameters (term)', (done) => {
-      const term = 'apple+';
-      const { recommendations } = new ConstructorIO({
-        apiKey: testApiKey,
-        fetch: fetchSpy,
-      });
-
-      recommendations.getRecommendations(queryRecommendationsPodId, { term }).then((res) => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-
-        expect(res).to.have.property('request').to.be.an('object');
-        expect(res).to.have.property('response').to.be.an('object');
-        expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.term).to.deep.equal(term);
-        expect(res.response).to.have.property('results').to.be.an('array');
-        expect(res.response).to.have.property('pod');
-        expect(res.response.pod).to.have.property('id').to.equal(queryRecommendationsPodId);
-        expect(res.response.pod).to.have.property('display_name');
-        expect(requestedUrlParams).to.have.property('term').to.deep.equal(term);
-        done();
-      });
-    });
-
-    it('Should properly transform non-breaking query parameters (term)', (done) => {
-      const term = 'a p p l e';
-      const termExpected = 'a p p l e';
-      const { recommendations } = new ConstructorIO({
-        apiKey: testApiKey,
-        fetch: fetchSpy,
-      });
-
-      recommendations.getRecommendations(queryRecommendationsPodId, { term }).then((res) => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-
-        expect(res).to.have.property('request').to.be.an('object');
-        expect(res).to.have.property('response').to.be.an('object');
-        expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.term).to.deep.equal(termExpected);
-        expect(res.response).to.have.property('results').to.be.an('array');
-        expect(res.response).to.have.property('pod');
-        expect(res.response.pod).to.have.property('id').to.equal(queryRecommendationsPodId);
-        expect(res.response.pod).to.have.property('display_name');
-        expect(requestedUrlParams).to.have.property('term').to.deep.equal(termExpected);
-        done();
-      });
-    });
-
     it('Should return a response with valid filters for filtered items strategy pod', (done) => {
       const filters = { keywords: 'battery-powered' };
       const { recommendations } = new ConstructorIO({
@@ -319,6 +272,56 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
         res.response.results.forEach((item) => {
           expect(item).to.have.property('result_id').to.be.a('string').to.equal(res.result_id);
         });
+        done();
+      });
+    });
+
+
+    it.only('Should properly encode query parameters', (done) => {
+      const specialCharacters = '+[]&';
+      const term = `apple ${specialCharacters}`;
+      const { recommendations } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      recommendations.getRecommendations(queryRecommendationsPodId, { term }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.term).to.deep.equal(term);
+        expect(res.response).to.have.property('results').to.be.an('array');
+        expect(res.response).to.have.property('pod');
+        expect(res.response.pod).to.have.property('id').to.equal(queryRecommendationsPodId);
+        expect(res.response.pod).to.have.property('display_name');
+        expect(requestedUrlParams).to.have.property('term').to.deep.equal(term);
+        done();
+      });
+    });
+
+    it.only('Should properly transform non-breaking spaces in parameters', (done) => {
+      const breakingSpaces = '   ';
+      const term = `apple ${breakingSpaces}`;
+      const termExpected = 'apple    ';
+      const { recommendations } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      recommendations.getRecommendations(queryRecommendationsPodId, { term }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.term).to.deep.equal(termExpected);
+        expect(res.response).to.have.property('results').to.be.an('array');
+        expect(res.response).to.have.property('pod');
+        expect(res.response.pod).to.have.property('id').to.equal(queryRecommendationsPodId);
+        expect(res.response.pod).to.have.property('display_name');
+        expect(requestedUrlParams).to.have.property('term').to.deep.equal(termExpected);
         done();
       });
     });
