@@ -162,7 +162,7 @@ class Tracker {
     if (term && typeof term === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-        const url = `${this.options.serviceUrl}/autocomplete/${helpers.ourEncodeURIComponent(term)}/select?`;
+        const url = `${this.options.serviceUrl}/autocomplete/${encodeURIComponent(term)}/select?`;
         const queryParams = {};
         const {
           original_query,
@@ -236,7 +236,7 @@ class Tracker {
     if (term && typeof term === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-        const url = `${this.options.serviceUrl}/autocomplete/${helpers.ourEncodeURIComponent(term)}/search?`;
+        const url = `${this.options.serviceUrl}/autocomplete/${encodeURIComponent(term)}/search?`;
         const queryParams = {};
         const { original_query, group_id, display_name } = parameters;
 
@@ -358,7 +358,7 @@ class Tracker {
     if (term && typeof term === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-        const url = `${this.options.serviceUrl}/autocomplete/${helpers.ourEncodeURIComponent(term)}/click_through?`;
+        const url = `${this.options.serviceUrl}/autocomplete/${encodeURIComponent(term)}/click_through?`;
         const queryParams = {};
         const { item_name, name, item_id, customer_id, variation_id, result_id } = parameters;
 
@@ -437,7 +437,7 @@ class Tracker {
   trackConversion(term, parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const searchTerm = helpers.ourEncodeURIComponent(term) || 'TERM_UNKNOWN';
+      const searchTerm = term || 'TERM_UNKNOWN';
       const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/conversion?`;
       const queryParams = {};
       const bodyParams = {};

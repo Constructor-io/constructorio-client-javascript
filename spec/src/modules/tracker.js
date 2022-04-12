@@ -26,7 +26,7 @@ const bundled = process.env.BUNDLED === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 const timeoutRejectionMessage = bundled ? 'AbortError: Aborted' : 'AbortError: The user aborted a request.';
 
-describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
+describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   let fetchSpy = null;
   const jsdomOptions = { url: 'http://localhost.test/path/name?query=term&category=cat' };
   const requestQueueOptions = {

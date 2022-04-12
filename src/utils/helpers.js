@@ -50,7 +50,7 @@ const utils = {
       if (typeof paramValue === 'string') {
         // Replace non-breaking spaces (or any other type of spaces caught by the regex)
         // - with a regular white space
-        cleanedParams[paramKey] = paramValue.replace(/\s/g, ' ');
+        cleanedParams[paramKey] = paramValue.replace(/\s/g, ' ').trim();
       } else {
         cleanedParams[paramKey] = paramValue;
       }

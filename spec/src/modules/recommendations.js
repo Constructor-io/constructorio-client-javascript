@@ -303,8 +303,8 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
 
     it.only('Should properly transform non-breaking spaces in parameters', (done) => {
       const breakingSpaces = '   ';
-      const term = `apple ${breakingSpaces}`;
-      const termExpected = 'apple    ';
+      const term = `apple ${breakingSpaces} apple`;
+      const termExpected = 'apple     apple';
       const { recommendations } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,

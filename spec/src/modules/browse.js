@@ -375,8 +375,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
 
     it.only('Should properly transform non-breaking spaces in parameters', (done) => {
       const breakingSpaces = '   ';
-      const sortBy = `relevance ${breakingSpaces}`;
-      const sortByExpected = 'relevance    ';
+      const sortBy = `relevance ${breakingSpaces} relevance`;
+      const sortByExpected = 'relevance     relevance';
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
