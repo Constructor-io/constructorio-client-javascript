@@ -346,7 +346,7 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
       });
     });
 
-    it.only('Should properly encode path parameter', (done) => {
+    it('Should properly encode path parameter', (done) => {
       const specialCharacters = '+[]&';
       const querySpecialCharacters = `apple ${specialCharacters}`;
       const { search } = new ConstructorIO({
@@ -355,15 +355,18 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
       });
 
       search.getSearchResults(querySpecialCharacters).then((res) => {
+        const requestUrl = fetchSpy.args[0][0];
+
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
         expect(res.request.term).to.equal(querySpecialCharacters);
+        expect(requestUrl).to.include(encodeURIComponent(querySpecialCharacters));
         done();
       });
     });
 
-    it.only('Should properly encode query parameters', (done) => {
+    it('Should properly encode query parameters', (done) => {
       const specialCharacters = '+[]&';
       const sortBy = `relevance ${specialCharacters}`;
       const { search } = new ConstructorIO({
@@ -383,7 +386,7 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
       });
     });
 
-    it.only('Should properly transform non-breaking spaces in parameters', (done) => {
+    it('Should properly transform non-breaking spaces in parameters', (done) => {
       const breakingSpaces = '   ';
       const sortBy = `relevance ${breakingSpaces} relevance`;
       const sortByExpected = 'relevance     relevance';

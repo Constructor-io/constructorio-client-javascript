@@ -353,7 +353,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       });
     });
 
-    it.only('Should properly encode path parameters', (done) => {
+    it('Should properly encode path parameters', (done) => {
       const specialCharacters = '+[]&';
       const filterNameSpecialCharacters = `name ${specialCharacters}`;
       const filterValueSpecialCharacters = `value ${specialCharacters}`;
@@ -366,16 +366,20 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
         filterNameSpecialCharacters,
         filterValueSpecialCharacters,
       ).then((res) => {
+        const requestUrl = fetchSpy.args[0][0];
+
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
         expect(res.request.browse_filter_name).to.equal(filterNameSpecialCharacters);
         expect(res.request.browse_filter_value).to.equal(filterValueSpecialCharacters);
+        expect(requestUrl).to.include(encodeURIComponent(filterNameSpecialCharacters));
+        expect(requestUrl).to.include(encodeURIComponent(filterValueSpecialCharacters));
         done();
       });
     });
 
-    it.only('Should properly encode query parameters', (done) => {
+    it('Should properly encode query parameters', (done) => {
       const specialCharacters = '+[]&';
       const sortBy = `relevance ${specialCharacters}`;
       const { browse } = new ConstructorIO({
@@ -395,7 +399,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       });
     });
 
-    it.only('Should properly transform non-breaking spaces in parameters', (done) => {
+    it('Should properly transform non-breaking spaces in parameters', (done) => {
       const breakingSpaces = '   ';
       const sortBy = `relevance ${breakingSpaces} relevance`;
       const sortByExpected = 'relevance     relevance';

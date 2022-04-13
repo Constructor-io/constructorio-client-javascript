@@ -26,7 +26,7 @@ const bundled = process.env.BUNDLED === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 const timeoutRejectionMessage = bundled ? 'AbortError: Aborted' : 'AbortError: The user aborted a request.';
 
-describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
+describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   let fetchSpy = null;
   const jsdomOptions = { url: 'http://localhost.test/path/name?query=term&category=cat' };
   const requestQueueOptions = {
@@ -312,7 +312,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackSessionStart()).to.equal(true);
     });
 
-    it.only('Should properly encode query parameters', (done) => {
+    it('Should properly encode query parameters', (done) => {
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -339,7 +339,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackSessionStart()).to.equal(true);
     });
 
-    it.only('Should properly transform non-breaking spaces in parameters', (done) => {
+    it('Should properly transform non-breaking spaces in parameters', (done) => {
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -558,7 +558,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackInputFocus()).to.equal(true);
     });
 
-    it.only('Should properly encode query parameters', (done) => {
+    it('Should properly encode query parameters', (done) => {
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -585,7 +585,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackInputFocus()).to.equal(true);
     });
 
-    it.only('Should properly transform non-breaking spaces in parameters', (done) => {
+    it('Should properly transform non-breaking spaces in parameters', (done) => {
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -869,7 +869,33 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackAutocompleteSelect(term, requiredParameters)).to.equal(true);
     });
 
-    it.only('Should properly encode query parameters', (done) => {
+    it('Should properly encode path parameter', (done) => {
+      const specialCharacters = '+[]&';
+      const termSpecialCharacters = `apple ${specialCharacters}`;
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestUrl = fetchSpy.args[0][0];
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestUrl).to.include(encodeURIComponent(termSpecialCharacters));
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackAutocompleteSelect(termSpecialCharacters, requiredParameters)).to.equal(true);
+    });
+
+    it('Should properly encode query parameters', (done) => {
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -896,7 +922,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackAutocompleteSelect(term, requiredParameters)).to.equal(true);
     });
 
-    it.only('Should properly transform non-breaking spaces in parameters', (done) => {
+    it('Should properly transform non-breaking spaces in parameters', (done) => {
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -1173,7 +1199,33 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackSearchSubmit(term, requiredParameters)).to.equal(true);
     });
 
-    it.only('Should properly encode query parameters', (done) => {
+    it('Should properly encode path parameter', (done) => {
+      const specialCharacters = '+[]&';
+      const termSpecialCharacters = `apple ${specialCharacters}`;
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestUrl = fetchSpy.args[0][0];
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestUrl).to.include(encodeURIComponent(termSpecialCharacters));
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackSearchSubmit(termSpecialCharacters, requiredParameters)).to.equal(true);
+    });
+
+    it('Should properly encode query parameters', (done) => {
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -1200,7 +1252,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackSearchSubmit(term, requiredParameters)).to.equal(true);
     });
 
-    it.only('Should properly transform non-breaking spaces in parameters', (done) => {
+    it('Should properly transform non-breaking spaces in parameters', (done) => {
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -1618,7 +1670,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackSearchResultsLoaded(term, parameters)).to.equal(true);
     });
 
-    it.only('Should properly encode query parameters', (done) => {
+    it('Should properly encode query parameters', (done) => {
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -1645,7 +1697,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackSearchResultsLoaded(term, requiredParameters)).to.equal(true);
     });
 
-    it.only('Should properly transform non-breaking spaces in parameters', (done) => {
+    it('Should properly transform non-breaking spaces in parameters', (done) => {
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -1984,7 +2036,33 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackSearchResultClick(term, requiredParameters)).to.equal(true);
     });
 
-    it.only('Should properly encode query parameters', (done) => {
+    it('Should properly encode path parameter', (done) => {
+      const specialCharacters = '+[]&';
+      const termSpecialCharacters = `apple ${specialCharacters}`;
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestUrl = fetchSpy.args[0][0];
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestUrl).to.include(encodeURIComponent(termSpecialCharacters));
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackSearchResultClick(termSpecialCharacters, requiredParameters)).to.equal(true);
+    });
+
+    it('Should properly encode query parameters', (done) => {
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -2011,7 +2089,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackSearchResultClick(term, requiredParameters)).to.equal(true);
     });
 
-    it.only('Should properly transform non-breaking spaces in parameters', (done) => {
+    it('Should properly transform non-breaking spaces in parameters', (done) => {
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -2532,7 +2610,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackConversion(term, requiredParameters)).to.equal(true);
     });
 
-    it.only('Should not encode body parameters', (done) => {
+    it('Should not encode body parameters', (done) => {
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -2559,7 +2637,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackConversion(term, requiredParameters)).to.equal(true);
     });
 
-    it.only('Should properly transform non-breaking spaces in parameters', (done) => {
+    it('Should properly transform non-breaking spaces in parameters', (done) => {
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -3054,7 +3132,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackPurchase(requiredParameters)).to.equal(true);
     });
 
-    it.only('Should not encode body parameters', (done) => {
+    it('Should not encode body parameters', (done) => {
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -3081,7 +3159,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackPurchase(requiredParameters)).to.equal(true);
     });
 
-    it.only('Should properly transform non-breaking spaces in parameters', (done) => {
+    it('Should properly transform non-breaking spaces in parameters', (done) => {
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -3380,7 +3458,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackRecommendationView(requiredParameters)).to.equal(true);
     });
 
-    it.only('Should not encode body parameters', (done) => {
+    it('Should not encode body parameters', (done) => {
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -3407,7 +3485,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackRecommendationView(requiredParameters)).to.equal(true);
     });
 
-    it.only('Should properly transform non-breaking spaces in parameters', (done) => {
+    it('Should properly transform non-breaking spaces in parameters', (done) => {
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -3780,7 +3858,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackRecommendationClick(requiredParameters)).to.equal(true);
     });
 
-    it.only('Should not encode body parameters', (done) => {
+    it('Should not encode body parameters', (done) => {
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -3807,7 +3885,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackRecommendationClick(requiredParameters)).to.equal(true);
     });
 
-    it.only('Should properly transform non-breaking spaces in parameters', (done) => {
+    it('Should properly transform non-breaking spaces in parameters', (done) => {
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -4156,7 +4234,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackBrowseResultsLoaded(Object.assign(requiredParameters, parameters))).to.equal(true);
     });
 
-    it.only('Should not encode body parameters', (done) => {
+    it('Should not encode body parameters', (done) => {
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -4183,7 +4261,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackBrowseResultsLoaded(requiredParameters)).to.equal(true);
     });
 
-    it.only('Should properly transform non-breaking spaces in parameters', (done) => {
+    it('Should properly transform non-breaking spaces in parameters', (done) => {
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -4560,7 +4638,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackBrowseResultClick(requiredParameters)).to.equal(true);
     });
 
-    it.only('Should not encode body parameters', (done) => {
+    it('Should not encode body parameters', (done) => {
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -4587,7 +4665,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackBrowseResultClick(requiredParameters)).to.equal(true);
     });
 
-    it.only('Should properly transform non-breaking spaces in parameters', (done) => {
+    it('Should properly transform non-breaking spaces in parameters', (done) => {
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -4948,7 +5026,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackGenericResultClick(requiredParameters)).to.equal(true);
     });
 
-    it.only('Should not encode body parameters', (done) => {
+    it('Should not encode body parameters', (done) => {
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -4975,7 +5053,7 @@ describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackGenericResultClick(requiredParameters)).to.equal(true);
     });
 
-    it.only('Should properly transform non-breaking spaces in parameters', (done) => {
+    it('Should properly transform non-breaking spaces in parameters', (done) => {
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';

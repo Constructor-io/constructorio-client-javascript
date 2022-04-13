@@ -276,8 +276,7 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
       });
     });
 
-
-    it.only('Should properly encode query parameters', (done) => {
+    it('Should properly encode query parameters', (done) => {
       const specialCharacters = '+[]&';
       const term = `apple ${specialCharacters}`;
       const { recommendations } = new ConstructorIO({
@@ -301,7 +300,7 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
       });
     });
 
-    it.only('Should properly transform non-breaking spaces in parameters', (done) => {
+    it('Should properly transform non-breaking spaces in parameters', (done) => {
       const breakingSpaces = '   ';
       const term = `apple ${breakingSpaces} apple`;
       const termExpected = 'apple     apple';
