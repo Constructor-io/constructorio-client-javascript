@@ -346,6 +346,23 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it.only('Should properly encode path parameter (term)', (done) => {
+      const specialCharacters = '+[]&';
+      const querySpecialCharacters = `apple ${specialCharacters}`;
+      const { search } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      search.getSearchResults(query).then((res) => {
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.term).to.equal(querySpecialCharacters);
+        done();
+      });
+    });
+
     it.only('Should properly encode query parameters', (done) => {
       const specialCharacters = '+[]&';
       const sortBy = `relevance ${specialCharacters}`;
