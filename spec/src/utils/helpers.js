@@ -7,7 +7,6 @@ const CRC32 = require('crc-32');
 const sinonChai = require('sinon-chai');
 const { setupDOM, teardownDOM } = require('../../mocha.helpers');
 const {
-  ourEncodeURIComponent,
   cleanParams,
   throwHttpErrorFromResponse,
   canUseDOM,
@@ -34,34 +33,6 @@ const bundled = process.env.BUNDLED === 'true';
 
 describe('ConstructorIO - Utils - Helpers', () => {
   if (!bundled) {
-    describe('ourEncodeURIComponent', () => {
-      it('Should encode `+` as spaces (%20)', () => {
-        const string = 'boink+doink';
-        const encodedString = ourEncodeURIComponent(string);
-
-        expect(encodedString).to.equal('boink%20doink');
-      });
-
-      it('Should encode special characters', () => {
-        const string = "jáck's boink/yoink & doinks";
-        const encodedString = ourEncodeURIComponent(string);
-
-        expect(encodedString).to.equal('j%C3%A1ck%27s%20boink%2Fyoink%20%26%20doinks');
-      });
-
-      it('Should encode non-breaking space characters as spaces (%20)', () => {
-        const string = 'boink doink yoink'; // contains non-breaking spaces
-        const encodedString = ourEncodeURIComponent(string);
-
-        expect(encodedString).to.equal('boink%20doink%20yoink');
-      });
-
-      it('Should return null if it is not a string', () => {
-        const notAString = 123;
-        expect(ourEncodeURIComponent(notAString)).to.equal(null);
-      });
-    });
-
     describe('cleanParams', () => {
       it('Should clean up parameters', () => {
         const params = {

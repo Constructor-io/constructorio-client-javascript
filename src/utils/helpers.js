@@ -1,46 +1,10 @@
 /* eslint-disable no-param-reassign */
-const qs = require('qs');
 const CRC32 = require('crc-32');
 const store = require('./store');
 
 const purchaseEventStorageKey = '_constructorio_purchase_order_ids';
 
 const utils = {
-  ourEncodeURIComponent: (str) => {
-    if (str && typeof str === 'string') {
-      const cleanedString = str
-        .replace(/\[/g, '%5B') // Replace [
-        .replace(/\]/g, '%5D') // Replace ]
-        .replace(/&/g, '%26'); // Replace &
-      const trimmedCleanedString = cleanedString.trim();
-      const parsedStrObj = qs.parse(`s=${trimmedCleanedString}`);
-
-      parsedStrObj.s = parsedStrObj.s.replace(/\s/g, ' ');
-
-      return qs.stringify(parsedStrObj).split('=')[1];
-    }
-
-    return null;
-  },
-
-  cleanParamsOld: (paramsObj) => {
-    const cleanedParams = {};
-
-    Object.keys(paramsObj).forEach((paramKey) => {
-      const paramValue = paramsObj[paramKey];
-
-      if (typeof paramValue === 'string') {
-        // Replace non-breaking spaces (or any other type of spaces caught by the regex)
-        // - with a regular white space
-        cleanedParams[paramKey] = decodeURIComponent(utils.ourEncodeURIComponent(paramValue));
-      } else {
-        cleanedParams[paramKey] = paramValue;
-      }
-    });
-
-    return cleanedParams;
-  },
-
   cleanParams: (paramsObj) => {
     const cleanedParams = {};
 
