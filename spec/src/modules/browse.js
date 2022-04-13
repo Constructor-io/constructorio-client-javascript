@@ -353,6 +353,28 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it.only('Should properly encode path parameters', (done) => {
+      const specialCharacters = '+[]&';
+      const filterNameSpecialCharacters = `name ${specialCharacters}`;
+      const filterValueSpecialCharacters = `value ${specialCharacters}`;
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResults(
+        filterNameSpecialCharacters,
+        filterValueSpecialCharacters,
+      ).then((res) => {
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.browse_filter_name).to.equal(filterNameSpecialCharacters);
+        expect(res.request.browse_filter_value).to.equal(filterValueSpecialCharacters);
+        done();
+      });
+    });
+
     it.only('Should properly encode query parameters', (done) => {
       const specialCharacters = '+[]&';
       const sortBy = `relevance ${specialCharacters}`;

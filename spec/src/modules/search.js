@@ -346,7 +346,7 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
       });
     });
 
-    it.only('Should properly encode path parameter (term)', (done) => {
+    it.only('Should properly encode path parameter', (done) => {
       const specialCharacters = '+[]&';
       const querySpecialCharacters = `apple ${specialCharacters}`;
       const { search } = new ConstructorIO({
@@ -354,7 +354,7 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
         fetch: fetchSpy,
       });
 
-      search.getSearchResults(query).then((res) => {
+      search.getSearchResults(querySpecialCharacters).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
