@@ -414,7 +414,7 @@ class Tracker {
    * @param {boolean} [parameters.is_custom_type] - Specify if type is custom conversion type
    * @param {string} [parameters.display_name] - Display name for the custom conversion type
    * @param {string} [parameters.result_id] - Result identifier (returned in response from Constructor)
-   * @param {string} [parameters.section] - Index section
+   * @param {string} [parameters.section="Products"] - Index section
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -525,7 +525,7 @@ class Tracker {
    * @param {object[]} parameters.items - List of product item objects
    * @param {number} parameters.revenue - The subtotal (not including taxes, shipping, etc.) of the entire order
    * @param {string} [parameters.order_id] - Unique order identifier
-   * @param {string} [parameters.section] - Index section
+   * @param {string} [parameters.section="Products"] - Index section
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -813,7 +813,7 @@ class Tracker {
    * @param {number} [parameters.result_count] - Total number of results
    * @param {number} [parameters.result_page] - Page number of results
    * @param {string} [parameters.result_id] - Browse result identifier (returned in response from Constructor)
-   * @param {string} [parameters.selected_filters] - Selected filters
+   * @param {object} [parameters.selected_filters] - Selected filters
    * @param {string} [parameters.sort_order] - Sort order ('ascending' or 'descending')
    * @param {string} [parameters.sort_by] - Sorting method
    * @param {object[]} [parameters.items] - List of product item objects
