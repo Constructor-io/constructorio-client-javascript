@@ -14,7 +14,7 @@ function createQuizUrl(quizId, parameters, options, path) {
   let queryParams = { };
   let answersParamString = '';
 
-  queryParams.index_key = apiKey;
+  queryParams.key = apiKey;
 
   // Validate quiz id is provided
   if (!quizId || typeof quizId !== 'string') {
