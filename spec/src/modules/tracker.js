@@ -340,8 +340,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
-      const breakingSpaces = '   ';
-      const userId = `user-id ${breakingSpaces} user-id`;
+      const nonBreakingSpaces = '   ';
+      const userId = `user-id ${nonBreakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,

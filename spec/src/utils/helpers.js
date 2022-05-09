@@ -47,7 +47,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
         const cleanedParams = cleanParams(params);
 
         expect(cleanedParams).to.deep.equal({
-          origin_referrer: 'https://test.com/search/pizza?a=bread&b=pizza burrito',
+          origin_referrer: 'https://test.com/search/pizza?a=bread&b=pizza+burrito',
           filters: {
             size: 'large',
             color: 'green',
