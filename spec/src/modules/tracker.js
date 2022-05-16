@@ -760,7 +760,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
   });
 
-  describe.only('trackItemDetailLoad', () => {
+  describe('trackItemDetailLoad', () => {
     const requiredParameters = {
       item_id: 'test1',
       item_name: 'test name',
