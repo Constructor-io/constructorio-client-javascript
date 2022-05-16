@@ -131,6 +131,62 @@ class Tracker {
   }
 
   /**
+   * Send item detail load event to API
+   *
+   * @function trackItemDetailLoad
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.item_name - Product item name
+   * @param {string} parameters.item_id - Product item unique identifier
+   * @param {string} [parameters.variation_id] - Product item variation unique identifier
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User loaded an item detail page
+   * @example
+   * constructorio.tracker.trackItemDetailLoad(
+   *     {
+   *         item_name: 'Red T-Shirt',
+   *         item_id: 'KMH876',
+   *     },
+   * );
+   */
+  trackItemDetailLoad(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const url = `${this.options.serviceUrl}/behavior?`;
+      const queryParams = { action: 'item_detail_load' };
+      const { item_name, name, item_id, customer_id, variation_id } = parameters;
+
+      // Ensure support for both item_name and name as parameters
+      if (item_name) {
+        queryParams.name = item_name;
+      } else if (name) {
+        queryParams.name = name;
+      }
+
+      // Ensure support for both item_id and customer_id as parameters
+      if (item_id) {
+        queryParams.customer_id = item_id;
+      } else if (customer_id) {
+        queryParams.customer_id = customer_id;
+      }
+
+      if (variation_id) {
+        queryParams.variation_id = variation_id;
+      }
+
+      this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`, undefined, undefined, networkParameters);
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
    * Send autocomplete select event to API
    *
    * @function trackAutocompleteSelect
