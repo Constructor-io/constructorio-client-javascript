@@ -2977,7 +2977,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackRecommendationView(clonedParameters)).to.equal(true);
     });
 
-    it.only('Should respond with a valid response when required parameters and items are provided', (done) => {
+    it('Should respond with a valid response when required parameters and items are provided', (done) => {
       const items = [{ item_id: '123' }, { item_id: 'abc' }];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
