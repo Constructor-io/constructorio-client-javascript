@@ -658,6 +658,7 @@ class Tracker {
    * @param {string} parameters.url - Current page URL
    * @param {string} parameters.pod_id - Pod identifier
    * @param {number} parameters.num_results_viewed - Number of results viewed
+   * @param {object[]} [parameters.items] - List of Product Item Objects
    * @param {number} [parameters.result_count] - Total number of results
    * @param {number} [parameters.result_page] - Page number of results
    * @param {string} [parameters.result_id] - Recommendation result identifier (returned in response from Constructor)
@@ -669,6 +670,7 @@ class Tracker {
    * @example
    * constructorio.tracker.trackRecommendationView(
    *     {
+   *         items: [{ item_id: 'KMH876' }, { item_id: 'KMH140' }],
    *         result_count: 22,
    *         result_page: 2,
    *         result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
@@ -691,6 +693,7 @@ class Tracker {
         url,
         pod_id,
         num_results_viewed,
+        items,
       } = parameters;
 
       if (!helpers.isNil(result_count)) {
@@ -721,6 +724,10 @@ class Tracker {
 
       if (!helpers.isNil(num_results_viewed)) {
         bodyParams.num_results_viewed = num_results_viewed;
+      }
+
+      if (items && Array.isArray(items)) {
+        bodyParams.items = items.slice(0, 100);
       }
 
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
