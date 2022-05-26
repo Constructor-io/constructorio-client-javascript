@@ -2978,7 +2978,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and items are provided', (done) => {
-      const items = [{ item_id: '123' }, { item_id: 'abc' }];
+      const items = [{ item_id: '123', variation_id: '234' }, { item_id: 'abc' }];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
