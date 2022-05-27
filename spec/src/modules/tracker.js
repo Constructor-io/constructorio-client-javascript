@@ -2977,6 +2977,30 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackRecommendationView(clonedParameters)).to.equal(true);
     });
 
+    it('Should respond with a valid response when required parameters and items are provided', (done) => {
+      const items = [{ item_id: '123', variation_id: '234' }, { item_id: 'abc' }];
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('items').to.deep.equal(items);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackRecommendationView({ items, ...requiredParameters })).to.equal(true);
+    });
+
     it('Should respond with a valid response when required parameters and segments are provided', (done) => {
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
