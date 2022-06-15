@@ -149,7 +149,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       return expect(quizzes.getFinalizeQuiz(validQuizId, { a: [] })).to.eventually.be.rejected;
     });
 
-    it('Should return result given answers parameter', () => {
+    it.only('Should return result given answers parameter', () => {
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
@@ -157,7 +157,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
 
       return quizzes.getFinalizeQuiz(validQuizId, { a: validAnswers }).then((res) => {
         expect(res).to.have.property('result').to.be.an('object');
-        expect(res.result).to.have.property('browse_url').to.be.an('string');
+        expect(res.result).to.have.property('results_url').to.be.an('string');
         expect(res).to.have.property('version_id').to.be.an('string');
       });
     });
