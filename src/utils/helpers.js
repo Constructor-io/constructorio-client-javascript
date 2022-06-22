@@ -5,6 +5,11 @@ const store = require('./store');
 const purchaseEventStorageKey = '_constructorio_purchase_order_ids';
 
 const utils = {
+  trimNonBreakingSpaces: string => string.replace(/\s/g, ' ').trim(),
+
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
+  encodeURIComponentRFC3986: string => encodeURIComponent(string).replace(/[!'()*]/g, c => `%${c.charCodeAt(0).toString(16).toUpperCase()}`),
+
   cleanParams: (paramsObj) => {
     const cleanedParams = {};
 
@@ -14,7 +19,7 @@ const utils = {
       if (typeof paramValue === 'string') {
         // Replace non-breaking spaces (or any other type of spaces caught by the regex)
         // - with a regular white space
-        cleanedParams[paramKey] = paramValue.replace(/\s/g, ' ').trim();
+        cleanedParams[paramKey] = utils.trimNonBreakingSpaces(paramValue);
       } else {
         cleanedParams[paramKey] = paramValue;
       }

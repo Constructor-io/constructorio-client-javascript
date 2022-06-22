@@ -129,7 +129,7 @@ function createBrowseUrlFromFilter(filterName, filterValue, parameters, options)
   const queryParams = createQueryParams(parameters, options);
   const queryString = qs.stringify(queryParams, { indices: false });
 
-  return `${serviceUrl}/browse/${encodeURIComponent(filterName)}/${encodeURIComponent(filterValue)}?${queryString}`;
+  return `${serviceUrl}/browse/${helpers.encodeURIComponentRFC3986(helpers.trimNonBreakingSpaces(filterName))}/${helpers.encodeURIComponentRFC3986(helpers.trimNonBreakingSpaces(filterValue))}?${queryString}`;
 }
 
 // Create URL from supplied id's
