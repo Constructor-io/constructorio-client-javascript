@@ -9,12 +9,29 @@ const helpers = require('../utils/helpers');
 function createQuizUrl(quizId, parameters, options, path) {
   const {
     apiKey,
+    clientId,
+    sessionId,
+    segments,
+    userId,
+    version,
   } = options;
   const serviceUrl = 'https://quizzes.cnstrc.com';
-  let queryParams = { };
+  let queryParams = { c: version };
   let answersParamString = '';
 
   queryParams.key = apiKey;
+  queryParams.i = clientId;
+  queryParams.s = sessionId;
+
+  // Pull user segments from options
+  if (segments && segments.length) {
+    queryParams.us = segments;
+  }
+
+  // Pull user id from options
+  if (userId) {
+    queryParams.ui = userId;
+  }
 
   // Validate quiz id is provided
   if (!quizId || typeof quizId !== 'string') {
