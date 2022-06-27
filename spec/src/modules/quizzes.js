@@ -149,7 +149,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       return expect(quizzes.getFinalizeQuiz(validQuizId, { a: [] })).to.eventually.be.rejected;
     });
 
-    it.only('Should return result given answers parameter', () => {
+    it('Should return result given answers parameter', () => {
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
