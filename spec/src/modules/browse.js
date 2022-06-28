@@ -353,6 +353,73 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should properly encode path parameters', (done) => {
+      const specialCharacters = '+[]&';
+      const filterNameSpecialCharacters = `name ${specialCharacters}`;
+      const filterValueSpecialCharacters = `value ${specialCharacters}`;
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResults(
+        filterNameSpecialCharacters,
+        filterValueSpecialCharacters,
+      ).then((res) => {
+        const requestUrl = fetchSpy.args[0][0];
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.browse_filter_name).to.equal(filterNameSpecialCharacters);
+        expect(res.request.browse_filter_value).to.equal(filterValueSpecialCharacters);
+        expect(requestUrl).to.include(encodeURIComponent(filterNameSpecialCharacters));
+        expect(requestUrl).to.include(encodeURIComponent(filterValueSpecialCharacters));
+        done();
+      });
+    });
+
+    it('Should properly encode query parameters', (done) => {
+      const specialCharacters = '+[]&';
+      const sortBy = `relevance ${specialCharacters}`;
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResults('Brand', 'XYZ', { sortBy }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.sort_by).to.equal(sortBy);
+        expect(requestedUrlParams).to.have.property('sort_by').to.equal(sortBy);
+        done();
+      });
+    });
+
+    it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const breakingSpaces = '   ';
+      const sortBy = `relevance ${breakingSpaces} relevance`;
+      const sortByExpected = 'relevance     relevance';
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResults('Brand', 'XYZ', { sortBy }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.sort_by).to.equal(sortByExpected);
+        expect(requestedUrlParams).to.have.property('sort_by').to.equal(sortByExpected);
+        done();
+      });
+    });
+
     it('Should return a response with a valid filterName, filterValue, and section', (done) => {
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
