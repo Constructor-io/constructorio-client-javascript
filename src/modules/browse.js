@@ -207,6 +207,7 @@ class Browse {
    * @param {object} [parameters.filters] - Key / value mapping (dictionary) of filters used to refine results
    * @param {string} [parameters.sortBy='relevance'] - The sort method for results
    * @param {string} [parameters.sortOrder='descending'] - The sort order for results
+   * @param {string} [parameters.section='Products'] - The section name for results
    * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
    * @param {string[]} [parameters.hiddenFacets] - Hidden facets to return
@@ -280,6 +281,7 @@ class Browse {
    * @param {object} [parameters.filters] - Filters used to refine results
    * @param {string} [parameters.sortBy='relevance'] - The sort method for results
    * @param {string} [parameters.sortOrder='descending'] - The sort order for results
+   * @param {string} [parameters.section='Products'] - The section name for results
    * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
    * @param {string[]} [parameters.hiddenFacets] - Hidden facets to return
@@ -346,6 +348,7 @@ class Browse {
    *
    * @function getBrowseGroups
    * @param {object} [parameters.filters] - Filters used to refine results
+   * @param {string} [parameters.section='Products'] - The section name for results
    * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -406,6 +409,7 @@ class Browse {
    * @function getBrowseFacets
    * @param {object} [parameters] - Additional parameters to refine result set
    * @param {number} [parameters.page] - The page number of the results
+   * @param {string} [parameters.section='Products'] - The section name for results
    * @param {boolean} [parameters.fmtOptions.show_hidden_facets] - Include facets configured as hidden
    * @param {number} [parameters.resultsPerPage] - The number of results per page to return
    * @param {object} [networkParameters] - Parameters relevant to the network request
@@ -465,6 +469,7 @@ class Browse {
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @param {object} [parameters] - Additional parameters to refine result set
+   * @param {string} [parameters.section='Products'] - The section name for results
    * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
    * @param {boolean} [parameters.fmtOptions.show_hidden_facets] - Include facets configured as hidden
    * @param {}

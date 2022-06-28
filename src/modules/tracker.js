@@ -131,6 +131,62 @@ class Tracker {
   }
 
   /**
+   * Send item detail load event to API
+   *
+   * @function trackItemDetailLoad
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.item_name - Product item name
+   * @param {string} parameters.item_id - Product item unique identifier
+   * @param {string} [parameters.variation_id] - Product item variation unique identifier
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User loaded an item detail page
+   * @example
+   * constructorio.tracker.trackItemDetailLoad(
+   *     {
+   *         item_name: 'Red T-Shirt',
+   *         item_id: 'KMH876',
+   *     },
+   * );
+   */
+  trackItemDetailLoad(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const url = `${this.options.serviceUrl}/behavior?`;
+      const queryParams = { action: 'item_detail_load' };
+      const { item_name, name, item_id, customer_id, variation_id } = parameters;
+
+      // Ensure support for both item_name and name as parameters
+      if (item_name) {
+        queryParams.name = item_name;
+      } else if (name) {
+        queryParams.name = name;
+      }
+
+      // Ensure support for both item_id and customer_id as parameters
+      if (item_id) {
+        queryParams.customer_id = item_id;
+      } else if (customer_id) {
+        queryParams.customer_id = customer_id;
+      }
+
+      if (variation_id) {
+        queryParams.variation_id = variation_id;
+      }
+
+      this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`, undefined, undefined, networkParameters);
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
    * Send autocomplete select event to API
    *
    * @function trackAutocompleteSelect
@@ -414,7 +470,7 @@ class Tracker {
    * @param {boolean} [parameters.is_custom_type] - Specify if type is custom conversion type
    * @param {string} [parameters.display_name] - Display name for the custom conversion type
    * @param {string} [parameters.result_id] - Result identifier (returned in response from Constructor)
-   * @param {string} [parameters.section] - Index section
+   * @param {string} [parameters.section="Products"] - Index section
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -525,7 +581,7 @@ class Tracker {
    * @param {object[]} parameters.items - List of product item objects
    * @param {number} parameters.revenue - The subtotal (not including taxes, shipping, etc.) of the entire order
    * @param {string} [parameters.order_id] - Unique order identifier
-   * @param {string} [parameters.section] - Index section
+   * @param {string} [parameters.section="Products"] - Index section
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -602,6 +658,7 @@ class Tracker {
    * @param {string} parameters.url - Current page URL
    * @param {string} parameters.pod_id - Pod identifier
    * @param {number} parameters.num_results_viewed - Number of results viewed
+   * @param {object[]} [parameters.items] - List of Product Item Objects
    * @param {number} [parameters.result_count] - Total number of results
    * @param {number} [parameters.result_page] - Page number of results
    * @param {string} [parameters.result_id] - Recommendation result identifier (returned in response from Constructor)
@@ -613,6 +670,7 @@ class Tracker {
    * @example
    * constructorio.tracker.trackRecommendationView(
    *     {
+   *         items: [{ item_id: 'KMH876' }, { item_id: 'KMH140' }],
    *         result_count: 22,
    *         result_page: 2,
    *         result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
@@ -635,6 +693,7 @@ class Tracker {
         url,
         pod_id,
         num_results_viewed,
+        items,
       } = parameters;
 
       if (!helpers.isNil(result_count)) {
@@ -665,6 +724,10 @@ class Tracker {
 
       if (!helpers.isNil(num_results_viewed)) {
         bodyParams.num_results_viewed = num_results_viewed;
+      }
+
+      if (items && Array.isArray(items)) {
+        bodyParams.items = items.slice(0, 100);
       }
 
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
@@ -813,7 +876,7 @@ class Tracker {
    * @param {number} [parameters.result_count] - Total number of results
    * @param {number} [parameters.result_page] - Page number of results
    * @param {string} [parameters.result_id] - Browse result identifier (returned in response from Constructor)
-   * @param {string} [parameters.selected_filters] - Selected filters
+   * @param {object} [parameters.selected_filters] - Selected filters
    * @param {string} [parameters.sort_order] - Sort order ('ascending' or 'descending')
    * @param {string} [parameters.sort_by] - Sorting method
    * @param {object[]} [parameters.items] - List of product item objects

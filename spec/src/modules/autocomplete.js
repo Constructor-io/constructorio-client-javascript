@@ -75,6 +75,29 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should return a response with a / query', (done) => {
+      const { autocomplete } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      autocomplete.getAutocompleteResults('/').then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('sections').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.term).to.equal('/');
+        expect(fetchSpy).to.have.been.called;
+        expect(requestedUrlParams).to.have.property('key');
+        expect(requestedUrlParams).to.have.property('i');
+        expect(requestedUrlParams).to.have.property('s');
+        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestedUrlParams).to.have.property('_dt');
+        done();
+      });
+    });
+
     it('Should return a response with a valid query, and testCells', (done) => {
       const testCells = { foo: 'bar' };
       const { autocomplete } = new ConstructorIO({
