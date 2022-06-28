@@ -276,6 +276,55 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should properly encode query parameters', (done) => {
+      const specialCharacters = '+[]&';
+      const term = `apple ${specialCharacters}`;
+      const { recommendations } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      recommendations.getRecommendations(queryRecommendationsPodId, { term }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.term).to.deep.equal(term);
+        expect(res.response).to.have.property('results').to.be.an('array');
+        expect(res.response).to.have.property('pod');
+        expect(res.response.pod).to.have.property('id').to.equal(queryRecommendationsPodId);
+        expect(res.response.pod).to.have.property('display_name');
+        expect(requestedUrlParams).to.have.property('term').to.deep.equal(term);
+        done();
+      });
+    });
+
+    it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const breakingSpaces = '   ';
+      const term = `apple ${breakingSpaces} apple`;
+      const termExpected = 'apple     apple';
+      const { recommendations } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      recommendations.getRecommendations(queryRecommendationsPodId, { term }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.term).to.deep.equal(termExpected);
+        expect(res.response).to.have.property('results').to.be.an('array');
+        expect(res.response).to.have.property('pod');
+        expect(res.response.pod).to.have.property('id').to.equal(queryRecommendationsPodId);
+        expect(res.response.pod).to.have.property('display_name');
+        expect(requestedUrlParams).to.have.property('term').to.deep.equal(termExpected);
+        done();
+      });
+    });
+
     it('Should emit an event with response data', (done) => {
       const { recommendations } = new ConstructorIO({
         apiKey: testApiKey,
