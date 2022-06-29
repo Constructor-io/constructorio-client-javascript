@@ -395,6 +395,7 @@ class Tracker {
    * @param {string} parameters.item_id - Product item unique identifier
    * @param {string} [parameters.variation_id] - Product item variation unique identifier
    * @param {string} [parameters.result_id] - Search result identifier (returned in response from Constructor)
+   * @param {string} [parameters.item_is_convertible] - Whether or not an item is available for a conversion
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -416,7 +417,7 @@ class Tracker {
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
         const url = `${this.options.serviceUrl}/autocomplete/${helpers.encodeURIComponentRFC3986(helpers.trimNonBreakingSpaces(term))}/click_through?`;
         const queryParams = {};
-        const { item_name, name, item_id, customer_id, variation_id, result_id } = parameters;
+        const { item_name, name, item_id, customer_id, variation_id, result_id, item_is_convertible } = parameters;
 
         // Ensure support for both item_name and name as parameters
         if (item_name) {
@@ -438,6 +439,10 @@ class Tracker {
 
         if (result_id) {
           queryParams.result_id = result_id;
+        }
+
+        if (typeof item_is_convertible === 'boolean') {
+          queryParams.item_is_convertible = item_is_convertible;
         }
 
         this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`, undefined, undefined, networkParameters);
