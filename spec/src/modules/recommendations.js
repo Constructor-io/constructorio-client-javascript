@@ -276,6 +276,37 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should return a variations_map object in the response', (done) => {
+      const variationsMap = {
+        group_by: [
+          {
+            name: 'variation',
+            field: 'data.variation_id',
+          },
+        ],
+        values: {
+          size: {
+            aggregation: 'all',
+            field: 'data.facets.size',
+          },
+        },
+        dtype: 'array',
+      };
+      const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
+
+      recommendations.getRecommendations(podId, { itemIds, variationsMap }).then((res) => {
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.response).to.have.property('results').to.be.an('array');
+        expect(JSON.stringify(res.request.variations_map)).to.eql(JSON.stringify(variationsMap));
+        res.response.results.forEach((item) => {
+          expect(item).to.have.property('result_id').to.be.a('string').to.equal(res.result_id);
+        });
+        done();
+      });
+    });
+
     it('Should emit an event with response data', (done) => {
       const { recommendations } = new ConstructorIO({
         apiKey: testApiKey,

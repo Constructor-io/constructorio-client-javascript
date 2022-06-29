@@ -46,7 +46,7 @@ function createAutocompleteUrl(query, parameters, options) {
   }
 
   if (parameters) {
-    const { numResults, resultsPerSection, filters, hiddenFields } = parameters;
+    const { numResults, resultsPerSection, filters, hiddenFields, variationsMap } = parameters;
 
     // Pull results number from parameters
     if (numResults) {
@@ -72,6 +72,11 @@ function createAutocompleteUrl(query, parameters, options) {
       } else {
         queryParams.fmt_options = { hidden_fields: hiddenFields };
       }
+    }
+
+    // Pull variations map from parameters
+    if (variationsMap) {
+      queryParams.variations_map = JSON.stringify(variationsMap);
     }
   }
 
@@ -108,6 +113,7 @@ class Autocomplete {
    * @param {object} [parameters.filters] - Key / value mapping (dictionary) of filters used to refine results
    * @param {object} [parameters.resultsPerSection] - Number of results to return (value) per section (key)
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
+   * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.io/rest_api/variations_mapping for details
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}

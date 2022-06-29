@@ -30,7 +30,7 @@ function createRecommendationsUrl(podId, parameters, options) {
   }
 
   if (parameters) {
-    const { numResults, itemIds, section, term, filters } = parameters;
+    const { numResults, itemIds, section, term, filters, variationsMap } = parameters;
 
     // Pull num results number from parameters
     if (!helpers.isNil(numResults)) {
@@ -55,6 +55,11 @@ function createRecommendationsUrl(podId, parameters, options) {
     // Pull filters from parameters
     if (filters) {
       queryParams.filters = filters;
+    }
+
+    // Pull variations map from parameters
+    if (variationsMap) {
+      queryParams.variations_map = JSON.stringify(variationsMap);
     }
   }
 
@@ -90,6 +95,7 @@ class Recommendations {
    * @param {string} [parameters.section] - The section to return results from
    * @param {string} [parameters.term] - The term to use to refine results (strategy specific)
    * @param {object} [parameters.filters] - Key / value mapping of filters used to refine results (strategy specific)
+   * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.io/rest_api/variations_mapping for details
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}

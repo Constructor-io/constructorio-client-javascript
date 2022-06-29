@@ -51,6 +51,7 @@ function createQueryParams(parameters, options) {
       fmtOptions,
       hiddenFields,
       hiddenFacets,
+      variationsMap,
     } = parameters;
 
     // Pull page from parameters
@@ -103,6 +104,11 @@ function createQueryParams(parameters, options) {
       } else {
         queryParams.fmt_options = { hidden_facets: hiddenFacets };
       }
+    }
+
+    // Pull variations map from parameters
+    if (variationsMap) {
+      queryParams.variations_map = JSON.stringify(variationsMap);
     }
   }
 
@@ -209,6 +215,7 @@ class Browse {
    * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
    * @param {string[]} [parameters.hiddenFacets] - Hidden facets to return
+   * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.io/rest_api/variations_mapping for details
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
@@ -283,6 +290,7 @@ class Browse {
    * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
    * @param {string[]} [parameters.hiddenFacets] - Hidden facets to return
+   * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.io/rest_api/variations_mapping for details
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
