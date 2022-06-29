@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-expressions, import/no-unresolved, no-new */
 const { expect } = require('chai');
-const jsdom = require('mocha-jsdom');
+const jsdom = require('jsdom-global');
+const cleanup = require('jsdom-global')();
+// const jsdom = require('mocha-jsdom');
 const sinon = require('sinon');
 const fs = require('fs');
 const helpers = require('../mocha.helpers');
@@ -12,14 +14,17 @@ const clientVersion = 'cio-mocha';
 const bundled = process.env.BUNDLED === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 
-describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
-  const jsdomOptions = { url: 'http://localhost' };
+describe.only(`ConstructorIO${bundledDescriptionSuffix}`, () => {
+  const jsdomOptions = { url: 'http://localhost', runScripts: 'dangerously' };
 
+  let scriptString = '';
   if (bundled) {
     jsdomOptions.src = fs.readFileSync(`./dist/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.js`, 'utf-8');
+
+    scriptString = `<body><script>${jsdomOptions.src}</script></body>`;
   }
 
-  jsdom(jsdomOptions);
+  jsdom(scriptString, jsdomOptions);
 
   beforeEach(() => {
     global.CLIENT_VERSION = clientVersion;
@@ -331,10 +336,12 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
       expect(properties).to.deep.equal(['0', 'ConstructorioClient', 'CLIENT_VERSION']);
     });
   }
+
+  cleanup();
 });
 
 if (!bundled) {
-  describe('ConstructorIO - without DOM context', () => {
+  describe.only('ConstructorIO - without DOM context', () => {
     const clientId = '6c73138f-a87b-49f0-872d-63b00ed0e395';
     const sessionId = 2;
 

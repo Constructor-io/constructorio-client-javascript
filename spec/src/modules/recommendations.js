@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions, import/no-unresolved */
-const jsdom = require('mocha-jsdom');
+const jsdom = require('jsdom-global');
 const dotenv = require('dotenv');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
@@ -23,14 +23,17 @@ const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 const timeoutRejectionMessage = bundled ? 'Aborted' : 'The user aborted a request.';
 
 describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
-  const jsdomOptions = { url: 'http://localhost' };
+  const jsdomOptions = { url: 'http://localhost', runScripts: 'dangerously' };
   let fetchSpy;
 
+  let scriptString = '';
   if (bundled) {
     jsdomOptions.src = fs.readFileSync(`./dist/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.js`, 'utf-8');
+
+    scriptString = `<body><script>${jsdomOptions.src}</script></body>`;
   }
 
-  jsdom(jsdomOptions);
+  jsdom(scriptString, jsdomOptions);
 
   beforeEach(() => {
     global.CLIENT_VERSION = clientVersion;

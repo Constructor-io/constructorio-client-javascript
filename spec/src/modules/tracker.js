@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions, import/no-unresolved */
-const jsdom = require('mocha-jsdom');
+const jsdom = require('jsdom-global');
 const dotenv = require('dotenv');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
@@ -28,17 +28,21 @@ const timeoutRejectionMessage = bundled ? 'AbortError: Aborted' : 'AbortError: T
 
 describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   let fetchSpy = null;
-  const jsdomOptions = { url: 'http://localhost.test/path/name?query=term&category=cat' };
+  const jsdomOptions = { url: 'http://localhost.test/path/name?query=term&category=cat', runScripts: 'dangerously' };
   const requestQueueOptions = {
     sendTrackingEvents: true,
     trackingSendDelay: 1,
   };
 
+  let scriptString = '';
   if (bundled) {
     jsdomOptions.src = fs.readFileSync(`./dist/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.js`, 'utf-8');
+
+    scriptString = `<body><script>${jsdomOptions.src}</script></body>`;
+
   }
 
-  jsdom(jsdomOptions);
+  jsdom(scriptString, jsdomOptions);
 
   beforeEach(() => {
     helpers.clearStorage();
