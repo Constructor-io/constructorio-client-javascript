@@ -448,6 +448,52 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should return a variations_map object in the response', (done) => {
+      const variationsMap = {
+        group_by: [
+          {
+            name: 'variation',
+            field: 'data.variation_id',
+          },
+        ],
+        values: {
+          size: {
+            aggregation: 'all',
+            field: 'data.facets.size',
+          },
+        },
+        dtype: 'array',
+      };
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResults('Brand', 'XYZ', { variationsMap }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request).to.have.property('browse_filter_name');
+        expect(res.request).to.have.property('browse_filter_value');
+        expect(res.request.browse_filter_name).to.equal('Brand');
+        expect(res.request.browse_filter_value).to.equal('XYZ');
+        expect(res.response).to.have.property('results').to.be.an('array');
+        expect(fetchSpy).to.have.been.called;
+        expect(requestedUrlParams).to.have.property('key');
+        expect(requestedUrlParams).to.have.property('i');
+        expect(requestedUrlParams).to.have.property('s');
+        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestedUrlParams).to.have.property('_dt');
+        expect(JSON.stringify(res.request.variations_map)).to.eql(JSON.stringify(variationsMap));
+        expect(res.response.results[0]).to.have.property('variations_map');
+        expect(res.response.results[0].variations_map[0]).to.have.property('size');
+        expect(res.response.results[0].variations_map[0]).to.have.property('variation');
+        done();
+      });
+    });
+
     it('Should emit an event with response data', (done) => {
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -842,6 +888,48 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
         expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
         expect(requestedUrlParams).to.have.property('_dt');
         expect(requestedUrlParams).to.have.property('section').to.equal('Search Suggestions');
+        done();
+      });
+    });
+
+    it('Should return a variations_map object in the response', (done) => {
+      const variationsMap = {
+        group_by: [
+          {
+            name: 'variation',
+            field: 'data.variation_id',
+          },
+        ],
+        values: {
+          size: {
+            aggregation: 'all',
+            field: 'data.facets.size',
+          },
+        },
+        dtype: 'array',
+      };
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResultsForItemIds(['luistrenker-jacket-K245511299-cream'], { variationsMap }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.response).to.have.property('results').to.be.an('array');
+        expect(fetchSpy).to.have.been.called;
+        expect(requestedUrlParams).to.have.property('key');
+        expect(requestedUrlParams).to.have.property('i');
+        expect(requestedUrlParams).to.have.property('s');
+        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestedUrlParams).to.have.property('_dt');
+        expect(JSON.stringify(res.request.variations_map)).to.eql(JSON.stringify(variationsMap));
+        expect(res.response.results[0]).to.have.property('variations_map');
+        expect(res.response.results[0].variations_map[0]).to.have.property('size');
+        expect(res.response.results[0].variations_map[0]).to.have.property('variation');
         done();
       });
     });

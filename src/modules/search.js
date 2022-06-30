@@ -47,7 +47,7 @@ function createSearchUrl(query, parameters, options) {
   }
 
   if (parameters) {
-    const { page, resultsPerPage, filters, sortBy, sortOrder, section, fmtOptions, hiddenFields, hiddenFacets } = parameters;
+    const { page, resultsPerPage, filters, sortBy, sortOrder, section, fmtOptions, hiddenFields, hiddenFacets, variationsMap } = parameters;
 
     // Pull page from parameters
     if (!helpers.isNil(page)) {
@@ -101,6 +101,11 @@ function createSearchUrl(query, parameters, options) {
         queryParams.fmt_options = { hidden_facets: hiddenFacets };
       }
     }
+
+    // Pull variations map from parameters
+    if (variationsMap) {
+      queryParams.variations_map = JSON.stringify(variationsMap);
+    }
   }
 
   queryParams._dt = Date.now();
@@ -140,6 +145,7 @@ class Search {
    * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
    * @param {string[]} [parameters.hiddenFacets] - Hidden facets to return
+   * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.io/rest_api/variations_mapping for details
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
