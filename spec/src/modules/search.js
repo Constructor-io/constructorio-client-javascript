@@ -10,6 +10,7 @@ const Promise = require('es6-promise');
 const fs = require('fs');
 const helpers = require('../../mocha.helpers');
 let ConstructorIO = require('../../../test/constructorio'); // eslint-disable-line import/extensions
+const { expect } = require('chai');
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
@@ -298,14 +299,17 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
       });
 
       search.getSearchResults(query, { section, hiddenFields }, {}).then((res) => {
+
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        const resultWithTestField = res.response.results.find(result => result.data.testField);
 
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
         expect(res.request.fmt_options.hidden_fields).to.eql(hiddenFields);
         expect(requestedUrlParams.fmt_options).to.have.property('hidden_fields').to.eql(hiddenFields);
-        expect(res.response.results[0].data).to.have.property('testField').to.eql('hiddenFieldValue');
+        expect(resultWithTestField).to.be.not.null.to.eql('hiddenFieldValue');
         done();
       });
     });
@@ -317,15 +321,17 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
         fetch: fetchSpy,
       });
 
-      search.getSearchResults(query, { section, hiddenFacets }, {}).then((res) => {
+      search.getSearchResults('item1', { section, hiddenFacets }, {}).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        const facetWithNameBrand = res.response.facets.find(facet => facet.name === 'Brand');
 
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
         expect(res.request.fmt_options.hidden_facets).to.eql(hiddenFacets);
         expect(requestedUrlParams.fmt_options).to.have.property('hidden_facets').to.eql(hiddenFacets);
-        expect(res.response.facets[0]).to.have.property('name').to.eql('Brand');
+        expect(facetWithNameBrand).to.be.not.null;
         done();
       });
     });
