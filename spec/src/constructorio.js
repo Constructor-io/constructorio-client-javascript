@@ -1,8 +1,6 @@
 /* eslint-disable no-unused-expressions, import/no-unresolved, no-new */
 const { expect } = require('chai');
 const jsdom = require('jsdom-global');
-const cleanup = require('jsdom-global')();
-// const jsdom = require('mocha-jsdom');
 const sinon = require('sinon');
 const fs = require('fs');
 const helpers = require('../mocha.helpers');
@@ -14,7 +12,7 @@ const clientVersion = 'cio-mocha';
 const bundled = process.env.BUNDLED === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 
-describe.only(`ConstructorIO${bundledDescriptionSuffix}`, () => {
+describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
   const jsdomOptions = { url: 'http://localhost', runScripts: 'dangerously' };
 
   let scriptString = '';
@@ -24,7 +22,10 @@ describe.only(`ConstructorIO${bundledDescriptionSuffix}`, () => {
     scriptString = `<body><script>${jsdomOptions.src}</script></body>`;
   }
 
-  jsdom(scriptString, jsdomOptions);
+  let cleanup;
+  before(() => {
+    cleanup = jsdom(scriptString, jsdomOptions);
+  });
 
   beforeEach(() => {
     global.CLIENT_VERSION = clientVersion;
@@ -38,6 +39,10 @@ describe.only(`ConstructorIO${bundledDescriptionSuffix}`, () => {
   afterEach(() => {
     delete global.CLIENT_VERSION;
     delete window.CLIENT_VERSION;
+  });
+
+  after(() => {
+    cleanup();
   });
 
   it('Should return an instance when valid API key is provided', () => {
@@ -336,12 +341,10 @@ describe.only(`ConstructorIO${bundledDescriptionSuffix}`, () => {
       expect(properties).to.deep.equal(['0', 'ConstructorioClient', 'CLIENT_VERSION']);
     });
   }
-
-  cleanup();
 });
 
 if (!bundled) {
-  describe.only('ConstructorIO - without DOM context', () => {
+  describe('ConstructorIO - without DOM context', () => {
     const clientId = '6c73138f-a87b-49f0-872d-63b00ed0e395';
     const sessionId = 2;
 

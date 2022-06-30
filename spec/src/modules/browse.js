@@ -34,7 +34,10 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     scriptString = `<body><script>${jsdomOptions.src}</script></body>`;
   }
 
-  jsdom(scriptString, jsdomOptions);
+  let cleanup;
+  before(() => {
+    cleanup = jsdom(scriptString, jsdomOptions);
+  });
 
   beforeEach(() => {
     global.CLIENT_VERSION = clientVersion;
@@ -51,6 +54,10 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     delete window.CLIENT_VERSION;
 
     fetchSpy = null;
+  });
+
+  after(() => {
+    cleanup();
   });
 
   describe('getBrowseResults', () => {

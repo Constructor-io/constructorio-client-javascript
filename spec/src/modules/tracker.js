@@ -42,7 +42,10 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
   }
 
-  jsdom(scriptString, jsdomOptions);
+  let cleanup;
+  before(() => {
+    cleanup = jsdom(scriptString, jsdomOptions);
+  });
 
   beforeEach(() => {
     helpers.clearStorage();
@@ -68,6 +71,10 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     delete global.CLIENT_VERSION;
 
     setTimeout(done, delayBetweenTests);
+  });
+
+  after(() => {
+    cleanup();
   });
 
   describe('trackSessionStart', () => {

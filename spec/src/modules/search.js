@@ -34,7 +34,10 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
 
   }
 
-  jsdom(scriptString, jsdomOptions);
+  let cleanup;
+  before(() => {
+    cleanup = jsdom(scriptString, jsdomOptions);
+  });
 
   beforeEach(() => {
     global.CLIENT_VERSION = clientVersion;
@@ -51,6 +54,10 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     delete window.CLIENT_VERSION;
 
     fetchSpy = null;
+  });
+
+  after(() => {
+    cleanup();
   });
 
   describe('getSearchResults', () => {
