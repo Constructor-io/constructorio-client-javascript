@@ -10,7 +10,6 @@ const Promise = require('es6-promise');
 const fs = require('fs');
 const helpers = require('../../mocha.helpers');
 let ConstructorIO = require('../../../test/constructorio'); // eslint-disable-line import/extensions
-const { expect } = require('chai');
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
