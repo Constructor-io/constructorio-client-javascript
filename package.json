@@ -1,6 +1,6 @@
 {
   "name": "@constructor-io/constructorio-client-javascript",
-  "version": "2.27.13",
+  "version": "2.28.0",
   "description": "Constructor.io JavaScript client",
   "main": "lib/constructorio.js",
   "scripts": {

@@ -62,7 +62,7 @@ function createRecommendationsUrl(podId, parameters, options) {
 
   const queryString = qs.stringify(queryParams, { indices: false });
 
-  return `${serviceUrl}/recommendations/v1/pods/${encodeURIComponent(podId)}?${queryString}`;
+  return `${serviceUrl}/recommendations/v1/pods/${helpers.encodeURIComponentRFC3986(helpers.trimNonBreakingSpaces(podId))}?${queryString}`;
 }
 
 /**
