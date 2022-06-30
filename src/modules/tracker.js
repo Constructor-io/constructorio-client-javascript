@@ -153,10 +153,17 @@ class Tracker {
   trackItemDetailLoad(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const url = `${this.options.serviceUrl}/v2/behavioral_action/item_detail_load?`;
+      const requestUrlPath = `${this.options.serviceUrl}/v2/behavioral_action/item_detail_load?`;
       const queryParams = {};
       const bodyParams = {};
-      const { item_name, name, item_id, customer_id, variation_id } = parameters;
+      const {
+        item_name,
+        name,
+        item_id,
+        customer_id,
+        variation_id,
+        url,
+      } = parameters;
 
       // Ensure support for both item_name and name as parameters
       if (item_name) {
@@ -176,7 +183,11 @@ class Tracker {
         bodyParams.variation_id = variation_id;
       }
 
-      const requestURL = `${url}${applyParamsAsString(queryParams, this.options)}`;
+      if (url) {
+        bodyParams.url = url;
+      }
+
+      const requestURL = `${requestUrlPath}${applyParamsAsString(queryParams, this.options)}`;
       const requestMethod = 'POST';
       const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
 

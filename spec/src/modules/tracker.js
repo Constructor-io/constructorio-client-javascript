@@ -955,6 +955,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const requiredParameters = {
       item_id: 'test1',
       item_name: 'test name',
+      url: 'http://constructor.io',
     };
     const optionalParameters = {
       variation_id: 'test1-small',
