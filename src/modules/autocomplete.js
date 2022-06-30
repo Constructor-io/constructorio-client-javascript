@@ -3,7 +3,7 @@ const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
 const EventDispatcher = require('../utils/event-dispatcher');
-const { throwHttpErrorFromResponse, cleanParams, applyNetworkTimeout } = require('../utils/helpers');
+const { throwHttpErrorFromResponse, cleanParams, applyNetworkTimeout, trimNonBreakingSpaces, encodeURIComponentRFC3986 } = require('../utils/helpers');
 
 // Create URL from supplied query (term) and parameters
 function createAutocompleteUrl(query, parameters, options) {
@@ -86,7 +86,7 @@ function createAutocompleteUrl(query, parameters, options) {
   const queryString = qs.stringify(queryParams, { indices: false });
   const cleanedQuery = query.replace(/^\//, '|'); // For compatibility with backend API
 
-  return `${serviceUrl}/autocomplete/${encodeURIComponent(cleanedQuery)}?${queryString}`;
+  return `${serviceUrl}/autocomplete/${encodeURIComponentRFC3986(trimNonBreakingSpaces(cleanedQuery))}?${queryString}`;
 }
 
 /**

@@ -113,7 +113,7 @@ function createSearchUrl(query, parameters, options) {
 
   const queryString = qs.stringify(queryParams, { indices: false });
 
-  return `${serviceUrl}/search/${encodeURIComponent(query)}?${queryString}`;
+  return `${serviceUrl}/search/${helpers.encodeURIComponentRFC3986(helpers.trimNonBreakingSpaces(query))}?${queryString}`;
 }
 
 /**

@@ -135,7 +135,7 @@ function createBrowseUrlFromFilter(filterName, filterValue, parameters, options)
   const queryParams = createQueryParams(parameters, options);
   const queryString = qs.stringify(queryParams, { indices: false });
 
-  return `${serviceUrl}/browse/${encodeURIComponent(filterName)}/${encodeURIComponent(filterValue)}?${queryString}`;
+  return `${serviceUrl}/browse/${helpers.encodeURIComponentRFC3986(helpers.trimNonBreakingSpaces(filterName))}/${helpers.encodeURIComponentRFC3986(helpers.trimNonBreakingSpaces(filterValue))}?${queryString}`;
 }
 
 // Create URL from supplied id's
@@ -177,12 +177,14 @@ function createBrowseUrlForFacetOptions(facetName, parameters, options) {
 
   const queryParams = { ...createQueryParams(parameters, options) };
 
+  queryParams.facet_name = facetName;
+
   // Endpoint does not accept _dt
   delete queryParams._dt;
 
   const queryString = qs.stringify(queryParams, { indices: false });
 
-  return `${serviceUrl}/browse/facet_options?facet_name=${facetName}&${queryString}`;
+  return `${serviceUrl}/browse/facet_options?${queryString}`;
 }
 
 /**
