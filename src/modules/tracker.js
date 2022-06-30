@@ -153,29 +153,45 @@ class Tracker {
   trackItemDetailLoad(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const url = `${this.options.serviceUrl}/behavior?`;
-      const queryParams = { action: 'item_detail_load' };
-      const { item_name, name, item_id, customer_id, variation_id } = parameters;
+      const requestUrlPath = `${this.options.serviceUrl}/v2/behavioral_action/item_detail_load?`;
+      const queryParams = {};
+      const bodyParams = {};
+      const {
+        item_name,
+        name,
+        item_id,
+        customer_id,
+        variation_id,
+        url,
+      } = parameters;
 
       // Ensure support for both item_name and name as parameters
       if (item_name) {
-        queryParams.name = item_name;
+        bodyParams.item_name = item_name;
       } else if (name) {
-        queryParams.name = name;
+        bodyParams.item_name = name;
       }
 
       // Ensure support for both item_id and customer_id as parameters
       if (item_id) {
-        queryParams.customer_id = item_id;
+        bodyParams.item_id = item_id;
       } else if (customer_id) {
-        queryParams.customer_id = customer_id;
+        bodyParams.item_id = customer_id;
       }
 
       if (variation_id) {
-        queryParams.variation_id = variation_id;
+        bodyParams.variation_id = variation_id;
       }
 
-      this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`, undefined, undefined, networkParameters);
+      if (url) {
+        bodyParams.url = url;
+      }
+
+      const requestURL = `${requestUrlPath}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
+
+      this.requests.queue(requestURL, requestMethod, requestBody, networkParameters);
       this.requests.send();
 
       return true;
