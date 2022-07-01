@@ -297,8 +297,7 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
         fetch: fetchSpy,
       });
 
-      search.getSearchResults(query, { section, hiddenFields }, {}).then((res) => {
-
+      search.getSearchResults('item1', { section, hiddenFields }, {}).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         const resultWithTestField = res.response.results.find(result => result.data.testField);
@@ -308,7 +307,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
         expect(res).to.have.property('result_id').to.be.an('string');
         expect(res.request.fmt_options.hidden_fields).to.eql(hiddenFields);
         expect(requestedUrlParams.fmt_options).to.have.property('hidden_fields').to.eql(hiddenFields);
-        expect(resultWithTestField).to.be.not.null.to.eql('hiddenFieldValue');
+        expect(resultWithTestField).to.be.an('object');
+        expect(resultWithTestField.data.testField).to.eql('hiddenFieldValue');
         done();
       });
     });
@@ -323,14 +323,15 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
       search.getSearchResults('item1', { section, hiddenFacets }, {}).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        const facetWithNameBrand = res.response.facets.find(facet => facet.name === 'Brand');
+        const facetWithNameBrand = res.response.facets.find(facet => facet.name === hiddenFacets[0]);
 
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
         expect(res.request.fmt_options.hidden_facets).to.eql(hiddenFacets);
         expect(requestedUrlParams.fmt_options).to.have.property('hidden_facets').to.eql(hiddenFacets);
-        expect(facetWithNameBrand).to.be.not.null;
+        expect(facetWithNameBrand).to.be.an('object');
+        expect(facetWithNameBrand.name).to.eql(hiddenFacets[0]);
         done();
       });
     });
