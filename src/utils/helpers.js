@@ -5,10 +5,10 @@ const store = require('./store');
 const purchaseEventStorageKey = '_constructorio_purchase_order_ids';
 
 const utils = {
-  trimNonBreakingSpaces: string => string.replace(/\s/g, ' ').trim(),
+  trimNonBreakingSpaces: (string) => string.replace(/\s/g, ' ').trim(),
 
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
-  encodeURIComponentRFC3986: string => encodeURIComponent(string).replace(/[!'()*]/g, c => `%${c.charCodeAt(0).toString(16).toUpperCase()}`),
+  encodeURIComponentRFC3986: (string) => encodeURIComponent(string).replace(/[!'()*]/g, (c) => `%${c.charCodeAt(0).toString(16).toUpperCase()}`),
 
   cleanParams: (paramsObj) => {
     const cleanedParams = {};
@@ -65,7 +65,7 @@ const utils = {
     };
   },
 
-  isNil: value => value == null,
+  isNil: (value) => value == null,
 
   getWindowLocation: () => {
     if (utils.canUseDOM()) {
@@ -139,12 +139,12 @@ const utils = {
 
   // Abort network request based on supplied timeout interval (in milliseconds)
   // - method call parameter takes precedence over global options parameter
-  applyNetworkTimeout: (options = {}, networkParameters = {}, controller) => {
+  applyNetworkTimeout: (options = {}, networkParameters = {}, controller = null) => {
     const optionsTimeout = options && options.networkParameters && options.networkParameters.timeout;
     const networkParametersTimeout = networkParameters && networkParameters.timeout;
     const timeout = optionsTimeout || networkParametersTimeout;
 
-    if (typeof timeout === 'number') {
+    if (typeof timeout === 'number' && controller) {
       setTimeout(() => controller.abort(), timeout);
     }
   },

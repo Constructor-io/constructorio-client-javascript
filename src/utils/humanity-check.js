@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-const store = require('../utils/store');
+const store = require('./store');
 const botList = require('./botlist');
 const helpers = require('./helpers');
 

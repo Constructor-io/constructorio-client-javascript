@@ -1,9 +1,9 @@
 /* eslint-disable brace-style, no-unneeded-ternary */
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
-const store = require('../utils/store');
-const HumanityCheck = require('../utils/humanity-check');
-const helpers = require('../utils/helpers');
+const store = require('./store');
+const HumanityCheck = require('./humanity-check');
+const helpers = require('./helpers');
 
 const storageKey = '_constructorio_requests';
 const requestTTL = 180000; // 3 minutes in milliseconds
@@ -31,7 +31,7 @@ class RequestQueue {
   }
 
   // Add request to queue to be dispatched
-  queue(url, method = 'GET', body, networkParameters = {}) {
+  queue(url, method = 'GET', body = {}, networkParameters = {}) {
     if (this.sendTrackingEvents && !this.humanity.isBot()) {
       const queue = RequestQueue.get();
 

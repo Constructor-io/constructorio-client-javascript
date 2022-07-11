@@ -149,7 +149,6 @@ class Autocomplete {
       return Promise.reject(e);
     }
 
-
     return fetch(requestUrl, { signal })
       .then((response) => {
         if (response.ok) {
