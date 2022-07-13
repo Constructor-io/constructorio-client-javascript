@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-expressions, import/no-unresolved, no-new */
+// eslint-disable-line import/extensions
 const { expect } = require('chai');
-const jsdom = require('mocha-jsdom');
 const sinon = require('sinon');
 const fs = require('fs');
 const helpers = require('../mocha.helpers');
 const { version: packageVersion } = require('../../package.json');
-let ConstructorIO = require('../../test/constructorio'); // eslint-disable-line import/extensions
+let ConstructorIO = require('../../test/constructorio');
 
 const validApiKey = 'testing';
 const clientVersion = 'cio-mocha';
@@ -19,9 +19,9 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
     jsdomOptions.src = fs.readFileSync(`./dist/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.js`, 'utf-8');
   }
 
-  jsdom(jsdomOptions);
 
   beforeEach(() => {
+    global.$jsdom.reconfigure(jsdomOptions);
     global.CLIENT_VERSION = clientVersion;
     window.CLIENT_VERSION = clientVersion;
 
@@ -106,6 +106,8 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
       expect(customEventDetails).to.be.an('object');
       expect(customEventDetails).to.have.property('apiKey').to.equal(options.apiKey);
       expect(customEventDetails).to.have.property('eventDispatcher').to.deep.equal(options.eventDispatcher);
+      helpers.teardownDOM();
+      helpers.setupDOM();
       done();
     }, false);
 
@@ -339,10 +341,12 @@ if (!bundled) {
     const sessionId = 2;
 
     beforeEach(() => {
+      helpers.teardownDOM();
       global.CLIENT_VERSION = 'cio-mocha';
     });
 
     afterEach(() => {
+      helpers.setupDOM();
       delete global.CLIENT_VERSION;
     });
 

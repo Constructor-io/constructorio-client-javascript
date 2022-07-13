@@ -1,15 +1,13 @@
 /* eslint-disable import/no-unresolved */
+// eslint-disable-line import/extensions
+import jsdom from './src/utils/jsdom-global';
+
 const qs = require('qs');
-const { JSDOM } = require('jsdom');
-const store = require('../test/utils/store'); // eslint-disable-line import/extensions
+const store = require('../test/utils/store');
 
 // Setup mock DOM environment
 const setupDOM = () => {
-  const { window } = new JSDOM();
-
-  global.window = window;
-  global.document = window.document;
-  global.AbortController = window.AbortController;
+  jsdom();
 };
 
 // Tear down mock DOM environment

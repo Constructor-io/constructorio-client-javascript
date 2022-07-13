@@ -1,6 +1,5 @@
 /* eslint-disable max-len */
 /* eslint-disable no-unused-expressions, import/no-unresolved */
-const jsdom = require('mocha-jsdom');
 const dotenv = require('dotenv');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
@@ -31,9 +30,9 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     jsdomOptions.src = fs.readFileSync(`./dist/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.js`, 'utf-8');
   }
 
-  jsdom(jsdomOptions);
 
   beforeEach(() => {
+    global.$jsdom.reconfigure(jsdomOptions);
     global.CLIENT_VERSION = clientVersion;
     window.CLIENT_VERSION = clientVersion;
     fetchSpy = sinon.spy(fetch);
@@ -514,7 +513,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
         expect(customEventDetails).to.have.property('request').to.be.an('object');
         expect(customEventDetails).to.have.property('response').to.be.an('object');
         expect(customEventDetails).to.have.property('result_id').to.be.an('string');
-        customEventSpy.restore();
+        helpers.teardownDOM();
+        helpers.setupDOM();
         done();
       }, false);
 
@@ -954,7 +954,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
         expect(customEventDetails).to.have.property('request').to.be.an('object');
         expect(customEventDetails).to.have.property('response').to.be.an('object');
         expect(customEventDetails).to.have.property('result_id').to.be.an('string');
-        customEventSpy.restore();
+        helpers.teardownDOM();
+        helpers.setupDOM();
         done();
       }, false);
 

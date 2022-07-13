@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-expressions, import/no-unresolved */
-const jsdom = require('mocha-jsdom');
 const dotenv = require('dotenv');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
@@ -38,9 +37,9 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     jsdomOptions.src = fs.readFileSync(`./dist/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.js`, 'utf-8');
   }
 
-  jsdom(jsdomOptions);
 
   beforeEach(() => {
+    global.$jsdom.reconfigure(jsdomOptions);
     helpers.clearStorage();
     store.session.set('_constructorio_is_human', true);
 

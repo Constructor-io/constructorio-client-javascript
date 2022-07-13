@@ -1,5 +1,7 @@
 const { expect } = require('chai');
-const jsdom = require('mocha-jsdom');
+const helpers = require('./mocha.helpers');
+
+
+helpers.setupDOM();
 
 global.expect = expect;
-global.jsdom = jsdom;
