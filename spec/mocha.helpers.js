@@ -1,5 +1,4 @@
 /* eslint-disable import/no-unresolved */
-// eslint-disable-line import/extensions
 import jsdom from './src/utils/jsdom-global';
 
 const qs = require('qs');

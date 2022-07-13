@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-expressions, import/no-unresolved, no-new */
-// eslint-disable-line import/extensions
 const { expect } = require('chai');
 const sinon = require('sinon');
 const fs = require('fs');
