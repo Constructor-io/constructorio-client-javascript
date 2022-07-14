@@ -1,5 +1,5 @@
 /* eslint-disable no-unneeded-ternary */
-const helpers = require('../utils/helpers');
+const helpers = require('./helpers');
 
 class EventDispatcher {
   constructor(options) {

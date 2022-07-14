@@ -86,7 +86,7 @@ const getUserDefinedWindowProperties = () => {
   document.body.appendChild(iframe);
 
   const currentWindow = Object.getOwnPropertyNames(window);
-  const properties = currentWindow.filter(prop => !Object.prototype.hasOwnProperty.call(iframe.contentWindow, prop));
+  const properties = currentWindow.filter((prop) => !Object.prototype.hasOwnProperty.call(iframe.contentWindow, prop));
 
   document.body.removeChild(iframe);
 

@@ -1654,7 +1654,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(responseParams).to.have.property('method').to.equal('GET');
         expect(responseParams).to.have.property('message').to.equal('ok');
 
-
         done();
       });
 
@@ -1680,7 +1679,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(responseParams).to.have.property('method').to.equal('GET');
         expect(responseParams).to.have.property('message').to.equal('ok');
 
-
         done();
       });
 
@@ -1704,7 +1702,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         // Response
         expect(responseParams).to.have.property('method').to.equal('GET');
         expect(responseParams).to.have.property('message').to.equal('ok');
-
 
         done();
       });
@@ -2472,7 +2469,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackConversion(term, Object.assign({}, requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackConversion(term, { ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should respond with a valid response and section should be defaulted when term and required parameters are provided', (done) => {
@@ -2586,9 +2583,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         fetch: fetchSpy,
         ...requestQueueOptions,
       });
-      const fullParameters = Object.assign({}, requiredParameters, {
-        type: 'add_to_wishlist',
-      });
+      const fullParameters = { ...requiredParameters, type: 'add_to_wishlist' };
 
       tracker.on('success', (responseParams) => {
         const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
@@ -2613,11 +2608,10 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         fetch: fetchSpy,
         ...requestQueueOptions,
       });
-      const fullParameters = Object.assign({}, requiredParameters, {
+      const fullParameters = { ...requiredParameters,
         type: 'add_to_loves',
         display_name: 'Add To Loves List',
-        is_custom_type: true,
-      });
+        is_custom_type: true };
 
       tracker.on('success', (responseParams) => {
         const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
@@ -2675,10 +2669,9 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         fetch: fetchSpy,
         ...requestQueueOptions,
       });
-      const fullParameters = Object.assign({}, requiredParameters, {
+      const fullParameters = { ...requiredParameters,
         display_name: 'Add To Loves List',
-        is_custom_type: true,
-      });
+        is_custom_type: true };
 
       tracker.on('success', (responseParams) => {
         const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
@@ -2705,10 +2698,9 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         fetch: fetchSpy,
         ...requestQueueOptions,
       });
-      const fullParameters = Object.assign({}, requiredParameters, {
+      const fullParameters = { ...requiredParameters,
         type: 'add_to_loves',
-        is_custom_type: true,
-      });
+        is_custom_type: true };
 
       tracker.on('error', (responseParams) => {
         const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
@@ -4506,7 +4498,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       const parameters = {
         ...optionalParameters,
         result_count: 1000,
-        items: [...Array(1000).keys()].map(e => ({ item_id: e.toString() })),
+        items: [...Array(1000).keys()].map((e) => ({ item_id: e.toString() })),
       };
 
       tracker.on('success', (responseParams) => {
@@ -4990,7 +4982,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackBrowseResultClick(requiredParameters)).to.equal(true);
     });
   });
-
 
   describe('trackGenericResultClick', () => {
     // Note: `variation_id` parameter not being passed as none are defined for this item_id in catalog
