@@ -5,7 +5,6 @@ const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const CRC32 = require('crc-32');
 const sinonChai = require('sinon-chai');
-const { setupDOM, teardownDOM } = require('../../mocha.helpers');
 const {
   cleanParams,
   throwHttpErrorFromResponse,
@@ -21,6 +20,7 @@ const {
   addOrderIdRecord,
   applyNetworkTimeout,
 } = require('../../../test/utils/helpers'); // eslint-disable-line import/extensions
+const jsdom = require('./jsdom-global');
 const store = require('../../../test/utils/store'); // eslint-disable-line import/extensions
 
 const purchaseEventStorageKey = '_constructorio_purchase_order_ids';
@@ -90,20 +90,20 @@ describe('ConstructorIO - Utils - Helpers', () => {
     });
 
     describe('canUseDOM', () => {
-      it('Should return true if in a DOM context', () => {
+      it('Should return false if not in a DOM context', () => {
         expect(canUseDOM()).to.equal(false);
       });
 
-      it('Should return false if not in a DOM context', () => {
-        setupDOM();
+      it('Should return true if in a DOM context', () => {
+        const cleanup = jsdom();
         expect(canUseDOM()).to.equal(true);
-        teardownDOM();
+        cleanup();
       });
     });
 
     describe('addEventListener', () => {
       it('Should add an event listener to the window if in the DOM context', () => {
-        setupDOM();
+        const cleanup = jsdom();
 
         const callback = sinon.stub();
         const clickEvent = new window.Event('click', { bubbles: true });
@@ -113,7 +113,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
 
         expect(callback).to.have.been.called;
 
-        teardownDOM();
+        cleanup();
       });
 
       it('Should not add an event listener to the window if not in a DOM context', () => {
@@ -132,7 +132,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
 
     describe('removeEventListener', () => {
       it('Should remove an event listener to the window if in a DOM context', () => {
-        setupDOM();
+        const cleanup = jsdom();
 
         const callback = sinon.stub();
         const clickEvent = new window.Event('click', { bubbles: true });
@@ -148,13 +148,13 @@ describe('ConstructorIO - Utils - Helpers', () => {
         // Make sure that the handler was still called only once
         expect(callback).to.have.been.calledOnce;
 
-        teardownDOM();
+        cleanup();
       });
     });
 
     describe('getNavigator', () => {
       it('Should return information about the window navigator property if in a DOM context', () => {
-        setupDOM();
+        const cleanup = jsdom();
 
         const navigatorInfo = {
           userAgent: '',
@@ -166,7 +166,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
 
         expect(getNavigator()).to.deep.equal(navigatorInfo);
 
-        teardownDOM();
+        cleanup();
       });
 
       it('Should return default information if not in a DOM context', () => {
@@ -189,7 +189,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
 
     describe('getWindowLocation', () => {
       it('Should return information about the window location property if in a DOM context', () => {
-        setupDOM();
+        const cleanup = jsdom();
 
         const locationInfo = {
           hostname: 'constructor.io',
@@ -202,7 +202,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
 
         expect(getWindowLocation()).to.deep.equal(locationInfo);
 
-        teardownDOM();
+        cleanup();
       });
 
       it('Should return empty object if not in a DOM context', () => {
@@ -212,19 +212,19 @@ describe('ConstructorIO - Utils - Helpers', () => {
 
     describe('dispatchEvent', () => {
       it('Should dispatch an event if in a DOM context', () => {
-        setupDOM();
+        const cleanup = jsdom();
 
         const windowDispatch = sinon.spy(window, 'dispatchEvent');
         dispatchEvent(new window.Event('click'));
         expect(windowDispatch).to.have.been.called;
 
-        teardownDOM();
+        cleanup();
       });
     });
 
     describe('createCustomEvent', () => {
       it('Should create a custom event if in a DOM context', () => {
-        setupDOM();
+        const cleanup = jsdom();
 
         const eventName = 'custom.event';
         const eventDetails = { a: 1, b: 2 };
@@ -233,7 +233,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
         expect(customEvent.type).to.equal(eventName);
         expect(customEvent.detail).to.deep.equal(eventDetails);
 
-        teardownDOM();
+        cleanup();
       });
 
       it('Should not create a custom event if not in a DOM context', () => {

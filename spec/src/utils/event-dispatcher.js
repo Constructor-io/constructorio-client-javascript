@@ -5,6 +5,7 @@ const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const EventDispatcher = require('../../../test/utils/event-dispatcher'); // eslint-disable-line import/extensions
 const helpers = require('../../mocha.helpers');
+const jsdom = require('./jsdom-global');
 
 chai.use(chaiAsPromised);
 dotenv.config();
@@ -21,17 +22,18 @@ describe('ConstructorIO - Utils - Event Dispatcher', () => {
         foo: 'bar',
       },
     };
+    let cleanup;
 
     beforeEach(() => {
       global.CLIENT_VERSION = 'cio-mocha';
 
-      helpers.setupDOM();
+      cleanup = jsdom();
     });
 
     afterEach(() => {
       delete global.CLIENT_VERSION;
+      cleanup();
 
-      helpers.teardownDOM();
       helpers.clearStorage();
     });
 

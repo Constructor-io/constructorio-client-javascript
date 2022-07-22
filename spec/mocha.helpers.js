@@ -1,22 +1,5 @@
-/* eslint-disable import/no-unresolved */
 const qs = require('qs');
-const { JSDOM } = require('jsdom');
-const store = require('../test/utils/store'); // eslint-disable-line import/extensions
-
-// Setup mock DOM environment
-const setupDOM = () => {
-  const { window } = new JSDOM();
-
-  global.window = window;
-  global.document = window.document;
-  global.AbortController = window.AbortController;
-};
-
-// Tear down mock DOM environment
-const teardownDOM = () => {
-  delete global.window;
-  delete global.document;
-};
+const store = require('../test/utils/store');
 
 // Trigger browser resize event
 const triggerResize = () => {
@@ -94,8 +77,6 @@ const getUserDefinedWindowProperties = () => {
 };
 
 module.exports = {
-  setupDOM,
-  teardownDOM,
   triggerResize,
   triggerUnload,
   clearStorage,

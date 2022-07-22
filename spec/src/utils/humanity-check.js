@@ -5,6 +5,7 @@ const chaiAsPromised = require('chai-as-promised');
 const store = require('../../../test/utils/store'); // eslint-disable-line import/extensions
 const HumanityCheck = require('../../../test/utils/humanity-check'); // eslint-disable-line import/extensions
 const helpers = require('../../mocha.helpers');
+const jsdom = require('./jsdom-global');
 
 chai.use(chaiAsPromised);
 dotenv.config();
@@ -16,17 +17,18 @@ describe('ConstructorIO - Utils - Humanity Check', () => {
   if (!bundled) {
     describe('isHuman', () => {
       const storageKey = '_constructorio_is_human';
+      let cleanup;
 
       beforeEach(() => {
         global.CLIENT_VERSION = 'cio-mocha';
 
-        helpers.setupDOM();
+        cleanup = jsdom();
       });
 
       afterEach(() => {
         delete global.CLIENT_VERSION;
+        cleanup();
 
-        helpers.teardownDOM();
         helpers.clearStorage();
       });
 
@@ -57,18 +59,19 @@ describe('ConstructorIO - Utils - Humanity Check', () => {
     });
     describe('isBot', () => {
       const storageKey = '_constructorio_is_human';
+      let cleanup;
 
       beforeEach(() => {
         global.CLIENT_VERSION = 'cio-mocha';
 
-        helpers.setupDOM();
+        cleanup = jsdom();
         window.navigator.webdriver = true;
       });
 
       afterEach(() => {
         delete global.CLIENT_VERSION;
+        cleanup();
 
-        helpers.teardownDOM();
         helpers.clearStorage();
       });
 

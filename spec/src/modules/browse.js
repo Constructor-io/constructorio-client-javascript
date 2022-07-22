@@ -1,6 +1,5 @@
 /* eslint-disable max-len */
 /* eslint-disable no-unused-expressions, import/no-unresolved */
-const jsdom = require('mocha-jsdom');
 const dotenv = require('dotenv');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
@@ -10,6 +9,7 @@ const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
 const fs = require('fs');
 const helpers = require('../../mocha.helpers');
+const jsdom = require('../utils/jsdom-global');
 let ConstructorIO = require('../../../test/constructorio'); // eslint-disable-line import/extensions
 
 chai.use(chaiAsPromised);
@@ -26,14 +26,14 @@ const timeoutRejectionMessage = bundled ? 'Aborted' : 'The user aborted a reques
 describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
   const jsdomOptions = { url: 'http://localhost' };
   let fetchSpy;
+  let cleanup;
 
   if (bundled) {
     jsdomOptions.src = fs.readFileSync(`./dist/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.js`, 'utf-8');
   }
 
-  jsdom(jsdomOptions);
-
   beforeEach(() => {
+    cleanup = jsdom(jsdomOptions);
     global.CLIENT_VERSION = clientVersion;
     window.CLIENT_VERSION = clientVersion;
     fetchSpy = sinon.spy(fetch);
@@ -46,6 +46,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
   afterEach(() => {
     delete global.CLIENT_VERSION;
     delete window.CLIENT_VERSION;
+    cleanup();
 
     fetchSpy = null;
   });
@@ -513,7 +514,6 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
         expect(customEventDetails).to.have.property('request').to.be.an('object');
         expect(customEventDetails).to.have.property('response').to.be.an('object');
         expect(customEventDetails).to.have.property('result_id').to.be.an('string');
-        customEventSpy.restore();
         done();
       }, false);
 
@@ -953,7 +953,6 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
         expect(customEventDetails).to.have.property('request').to.be.an('object');
         expect(customEventDetails).to.have.property('response').to.be.an('object');
         expect(customEventDetails).to.have.property('result_id').to.be.an('string');
-        customEventSpy.restore();
         done();
       }, false);
 
