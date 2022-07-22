@@ -299,7 +299,7 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
       search.getSearchResults('item1', { section, hiddenFields }, {}).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        const resultWithTestField = res.response.results.find(result => result.data.testField);
+        const resultWithTestField = res.response.results.find((result) => result.data.testField);
 
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
@@ -322,7 +322,7 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
       search.getSearchResults('item1', { section, hiddenFacets }, {}).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        const facetWithNameBrand = res.response.facets.find(facet => facet.name === hiddenFacets[0]);
+        const facetWithNameBrand = res.response.facets.find((facet) => facet.name === hiddenFacets[0]);
 
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');

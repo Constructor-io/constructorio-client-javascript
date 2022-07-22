@@ -1,6 +1,6 @@
 {
   "name": "@constructor-io/constructorio-client-javascript",
-  "version": "2.29.3",
+  "version": "2.29.4",
   "description": "Constructor.io JavaScript client",
   "main": "lib/constructorio.js",
   "scripts": {
@@ -44,8 +44,8 @@
     "chai-as-promised": "^7.1.1",
     "dotenv": "^8.6.0",
     "esbuild": "^0.12.28",
-    "eslint": "^8.0.1",
-    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint": "^8.17.0",
+    "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.2",
     "husky": "^7.0.4",
     "jsdoc": "^3.6.7",
