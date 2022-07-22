@@ -4,6 +4,7 @@ const sinon = require('sinon');
 const fs = require('fs');
 const helpers = require('../mocha.helpers');
 const { version: packageVersion } = require('../../package.json');
+const jsdom = require('./utils/jsdom-global');
 let ConstructorIO = require('../../test/constructorio');
 
 const validApiKey = 'testing';
@@ -13,14 +14,14 @@ const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 
 describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
   const jsdomOptions = { url: 'http://localhost' };
+  let cleanup;
 
   if (bundled) {
     jsdomOptions.src = fs.readFileSync(`./dist/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.js`, 'utf-8');
   }
 
-
   beforeEach(() => {
-    global.$jsdom.reconfigure(jsdomOptions);
+    cleanup = jsdom(jsdomOptions);
     global.CLIENT_VERSION = clientVersion;
     window.CLIENT_VERSION = clientVersion;
 
@@ -32,6 +33,7 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
   afterEach(() => {
     delete global.CLIENT_VERSION;
     delete window.CLIENT_VERSION;
+    cleanup();
   });
 
   it('Should return an instance when valid API key is provided', () => {
@@ -105,8 +107,6 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
       expect(customEventDetails).to.be.an('object');
       expect(customEventDetails).to.have.property('apiKey').to.equal(options.apiKey);
       expect(customEventDetails).to.have.property('eventDispatcher').to.deep.equal(options.eventDispatcher);
-      helpers.teardownDOM();
-      helpers.setupDOM();
       done();
     }, false);
 
@@ -340,12 +340,10 @@ if (!bundled) {
     const sessionId = 2;
 
     beforeEach(() => {
-      helpers.teardownDOM();
       global.CLIENT_VERSION = 'cio-mocha';
     });
 
     afterEach(() => {
-      helpers.setupDOM();
       delete global.CLIENT_VERSION;
     });
 

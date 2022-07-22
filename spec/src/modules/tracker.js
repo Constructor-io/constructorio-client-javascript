@@ -10,6 +10,7 @@ const cloneDeep = require('lodash.clonedeep');
 const fs = require('fs');
 const store = require('../../../test/utils/store'); // eslint-disable-line import/extensions
 const helpers = require('../../mocha.helpers');
+const jsdom = require('../utils/jsdom-global');
 const { addOrderIdRecord } = require('../../../src/utils/helpers');
 let ConstructorIO = require('../../../test/constructorio'); // eslint-disable-line import/extensions
 
@@ -27,6 +28,7 @@ const timeoutRejectionMessage = bundled ? 'AbortError: Aborted' : 'AbortError: T
 
 describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   let fetchSpy = null;
+  let cleanup;
   const jsdomOptions = { url: 'http://localhost.test/path/name?query=term&category=cat' };
   const requestQueueOptions = {
     sendTrackingEvents: true,
@@ -37,9 +39,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     jsdomOptions.src = fs.readFileSync(`./dist/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.js`, 'utf-8');
   }
 
-
   beforeEach(() => {
-    global.$jsdom.reconfigure(jsdomOptions);
+    cleanup = jsdom(jsdomOptions);
     helpers.clearStorage();
     store.session.set('_constructorio_is_human', true);
 
@@ -61,6 +62,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     delete window.CLIENT_VERSION;
     delete global.CLIENT_VERSION;
+    cleanup();
 
     setTimeout(done, delayBetweenTests);
   });

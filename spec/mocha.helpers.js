@@ -1,19 +1,5 @@
-/* eslint-disable import/no-unresolved */
-import jsdom from './src/utils/jsdom-global';
-
 const qs = require('qs');
 const store = require('../test/utils/store');
-
-// Setup mock DOM environment
-const setupDOM = () => {
-  jsdom();
-};
-
-// Tear down mock DOM environment
-const teardownDOM = () => {
-  delete global.window;
-  delete global.document;
-};
 
 // Trigger browser resize event
 const triggerResize = () => {
@@ -91,8 +77,6 @@ const getUserDefinedWindowProperties = () => {
 };
 
 module.exports = {
-  setupDOM,
-  teardownDOM,
   triggerResize,
   triggerUnload,
   clearStorage,

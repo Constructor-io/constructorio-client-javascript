@@ -14,6 +14,7 @@ const fetchPonyfill = require('fetch-ponyfill');
 const store = require('../../../src/utils/store');
 const RequestQueue = require('../../../test/utils/request-queue'); // eslint-disable-line import/extensions
 const helpers = require('../../mocha.helpers');
+const jsdom = require('./jsdom-global');
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
@@ -34,6 +35,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
 
     describe('queue', () => {
       let defaultAgent;
+      let cleanup;
 
       before(() => {
         helpers.clearStorage();
@@ -41,7 +43,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
 
       beforeEach(() => {
         global.CLIENT_VERSION = 'cio-mocha';
-        helpers.setupDOM();
+        cleanup = jsdom();
 
         requestQueueOptions = {
           sendTrackingEvents: true,
@@ -58,8 +60,8 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         window.navigator.__defineGetter__('webdriver', () => undefined);
 
         delete global.CLIENT_VERSION;
+        cleanup();
 
-        helpers.teardownDOM();
         helpers.clearStorage();
       });
 
@@ -146,6 +148,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
 
     describe('send', () => {
       let fetchSpy = null;
+      let cleanup;
 
       beforeEach(() => {
         global.CLIENT_VERSION = 'cio-mocha';
@@ -157,15 +160,15 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
           trackingSendDelay: 1,
         };
 
-        helpers.setupDOM();
+        cleanup = jsdom();
       });
 
       afterEach(() => {
         delete global.CLIENT_VERSION;
+        cleanup();
 
         fetchSpy = null;
 
-        helpers.teardownDOM();
         helpers.clearStorage();
       });
 
