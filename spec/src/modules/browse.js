@@ -500,7 +500,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
         fetch: fetchSpy,
       });
 
-      browse.getBrowseResults(filterName, filterValue, { offset: 20 }).then((res) => {
+      browse.getBrowseResults(filterName, filterValue, { offset: 1 }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(res).to.have.property('request').to.be.an('object');
@@ -511,7 +511,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
         expect(res.request).to.have.property('offset');
         expect(res.request.browse_filter_name).to.equal(filterName);
         expect(res.request.browse_filter_value).to.equal(filterValue);
-        expect(res.request.offset).to.equal(20);
+        expect(res.request.offset).to.equal(1);
         expect(res.response).to.have.property('results').to.be.an('array');
         expect(fetchSpy).to.have.been.called;
         expect(requestedUrlParams).to.have.property('key');
@@ -1322,6 +1322,36 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
         expect(requestedUrlParams).to.have.property('section').to.equal('Search Suggestions');
         done();
       });
+    });
+
+    it('Should return a response an offset', (done) => {
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseFacets({ offset: 1 }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request).to.have.property('offset');
+        expect(res.request.offset).to.equal(1);
+        expect(res.response).to.have.property('facets').to.be.an('array');
+        expect(fetchSpy).to.have.been.called;
+        expect(requestedUrlParams).to.have.property('key');
+        expect(requestedUrlParams).to.have.property('i');
+        expect(requestedUrlParams).to.have.property('s');
+        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
+        done();
+      });
+    });
+
+    it('Should be rejected when both page and offset are provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseFacets({ page: 1, offset: 20 })).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid page parameter is provided', () => {

@@ -369,7 +369,7 @@ class Browse {
    * @function getBrowseGroups
    * @param {object} [parameters.filters] - Filters used to refine results
    * @param {string} [parameters.section='Products'] - The section name for results
-   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.io/rest_api/browse/groups/ for details
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
@@ -428,9 +428,10 @@ class Browse {
    *
    * @function getBrowseFacets
    * @param {object} [parameters] - Additional parameters to refine result set
-   * @param {number} [parameters.page] - The page number of the results
+   * @param {number} [parameters.page] - The page number of the results (Can't be used togethet with offset)
+   * @param {number} [parameters.offset] - The number of results to skip from the beginning (Can't be used together with page)
    * @param {string} [parameters.section='Products'] - The section name for results
-   * @param {boolean} [parameters.fmtOptions.show_hidden_facets] - Include facets configured as hidden
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.io/rest_api/browse/facets/ for details
    * @param {number} [parameters.resultsPerPage] - The number of results per page to return
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -490,8 +491,7 @@ class Browse {
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @param {object} [parameters] - Additional parameters to refine result set
    * @param {string} [parameters.section='Products'] - The section name for results
-   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
-   * @param {boolean} [parameters.fmtOptions.show_hidden_facets] - Include facets configured as hidden
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.io/rest_api/browse/facet_options/ for details
    * @param {}
    * @returns {Promise}
    * @see https://docs.constructor.io/rest_api/browse/facet_options/
