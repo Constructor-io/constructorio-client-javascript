@@ -54,11 +54,6 @@ function createQueryParams(parameters, options) {
       variationsMap,
     } = parameters;
 
-    // Throw error if both page and offset are present
-    if (!helpers.isNil(page) && !helpers.isNil(offset)) {
-      throw new Error('page and offset parameters cannot be used together');
-    }
-
     // Pull page from parameters
     if (!helpers.isNil(page)) {
       queryParams.page = page;
