@@ -494,6 +494,35 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should return a response with a valid filterName, filterValue, and offset', (done) => {
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResults(filterName, filterValue, { offset: 20 }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request).to.have.property('browse_filter_name');
+        expect(res.request).to.have.property('browse_filter_value');
+        expect(res.request).to.have.property('offset');
+        expect(res.request.browse_filter_name).to.equal(filterName);
+        expect(res.request.browse_filter_value).to.equal(filterValue);
+        expect(res.request.offset).to.equal(20);
+        expect(res.response).to.have.property('results').to.be.an('array');
+        expect(fetchSpy).to.have.been.called;
+        expect(requestedUrlParams).to.have.property('key');
+        expect(requestedUrlParams).to.have.property('i');
+        expect(requestedUrlParams).to.have.property('s');
+        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestedUrlParams).to.have.property('_dt');
+        done();
+      });
+    });
+
     it('Should emit an event with response data', (done) => {
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -626,6 +655,12 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
         filterValue,
         {},
       )).to.eventually.be.rejectedWith(timeoutRejectionMessage);
+    });
+
+    it('Should be rejected when both page and offset are provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseResults(filterName, filterValue, { page: 1, offset: 20 })).to.eventually.be.rejected;
     });
   });
 

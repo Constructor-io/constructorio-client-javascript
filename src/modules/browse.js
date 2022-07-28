@@ -1,5 +1,4 @@
-/* eslint-disable max-len */
-/* eslint-disable object-curly-newline, no-underscore-dangle */
+/* eslint-disable object-curly-newline, no-underscore-dangle, max-len, complexity */
 const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
@@ -43,6 +42,7 @@ function createQueryParams(parameters, options) {
   if (parameters) {
     const {
       page,
+      offset,
       resultsPerPage,
       filters,
       sortBy,
@@ -54,9 +54,19 @@ function createQueryParams(parameters, options) {
       variationsMap,
     } = parameters;
 
+    // Throw error if both page and offset are present
+    if (!helpers.isNil(page) && !helpers.isNil(offset)) {
+      throw new Error('page and offset parameters cannot be used together');
+    }
+
     // Pull page from parameters
     if (!helpers.isNil(page)) {
       queryParams.page = page;
+    }
+
+    // Pull offset from parameters
+    if (!helpers.isNil(offset)) {
+      queryParams.offset = offset;
     }
 
     // Pull results per page from parameters
@@ -208,13 +218,14 @@ class Browse {
    * @param {string} filterName - Filter name to display results from
    * @param {string} filterValue - Filter value to display results from
    * @param {object} [parameters] - Additional parameters to refine result set
-   * @param {number} [parameters.page] - The page number of the results
+   * @param {number} [parameters.page] - The page number of the results (Can't be used togethet with offset)
+   * @param {number} [parameters.offset] - The number of results to skip from the beginning (Can't be used together with page)
    * @param {number} [parameters.resultsPerPage] - The number of results per page to return
    * @param {object} [parameters.filters] - Key / value mapping (dictionary) of filters used to refine results
    * @param {string} [parameters.sortBy='relevance'] - The sort method for results
    * @param {string} [parameters.sortOrder='descending'] - The sort order for results
    * @param {string} [parameters.section='Products'] - The section name for results
-   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.io/rest_api/browse/queries/ for details
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
    * @param {string[]} [parameters.hiddenFacets] - Hidden facets to return
    * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.io/rest_api/variations_mapping for details
