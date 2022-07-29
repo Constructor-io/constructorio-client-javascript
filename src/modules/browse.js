@@ -52,6 +52,8 @@ function createQueryParams(parameters, options) {
       hiddenFields,
       hiddenFacets,
       variationsMap,
+      qsParam,
+      preFilterExpression,
     } = parameters;
 
     // Pull page from parameters
@@ -114,6 +116,16 @@ function createQueryParams(parameters, options) {
     // Pull variations map from parameters
     if (variationsMap) {
       queryParams.variations_map = JSON.stringify(variationsMap);
+    }
+
+    // Pull pre_filter_expression from parameters
+    if (preFilterExpression) {
+      queryParams.pre_filter_expression = JSON.stringify(preFilterExpression);
+    }
+
+    // pull qs param from parameters
+    if (qsParam) {
+      queryParams.qs = JSON.stringify(qsParam);
     }
   }
 
@@ -221,9 +233,11 @@ class Browse {
    * @param {string} [parameters.sortOrder='descending'] - The sort order for results
    * @param {string} [parameters.section='Products'] - The section name for results
    * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.io/rest_api/browse/queries/ for details
+   * @param {object} [parameters.preFilterExpression] - Faceting expression to scope browse results. Please refer to https://docs.constructor.io/rest_api/collections#add-items-dynamically
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
    * @param {string[]} [parameters.hiddenFacets] - Hidden facets to return
    * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.io/rest_api/variations_mapping for details
+   * @param {object} [parameters.qs] - Parameters listed above can be serialized into a JSON object and parsed through this parameter. Please refer to https://docs.constructor.io/rest_api/browse/queries/
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}

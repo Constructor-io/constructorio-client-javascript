@@ -353,6 +353,73 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should return a return a response with pre filter expression properly parsed', (done) => {
+      const preFilterExpression = {
+        or: [
+          {
+            and: [
+              {
+                name: 'group_id',
+                value: 'electronics-group-id',
+              },
+              {
+                name: 'Price',
+                range: ['-inf', 200],
+              },
+            ],
+          },
+          {
+            and: [
+              {
+                name: 'Type',
+                value: 'Laptop',
+              },
+              {
+                not: {
+                  name: 'Price',
+                  range: [800, 'inf'],
+                },
+              },
+            ],
+          },
+        ],
+      };
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResults(filterName, filterValue, { preFilterExpression }).then((res) => {
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(JSON.stringify(res.request.pre_filter_expression)).to.equal(JSON.stringify(preFilterExpression));
+        done();
+      });
+    });
+
+    it('Should return a return a response with qs param properly parsed', (done) => {
+      const qsParam = {
+        num_results_per_page: '10',
+        filters: {
+          keywords: ['battery-powered'],
+        },
+      };
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResults(filterName, filterValue, { qsParam }).then((res) => {
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.num_results_per_page).to.equal(parseInt(qsParam.num_results_per_page, 10));
+        expect(res.request.filters.keywords[0]).to.equal(qsParam.filters.keywords[0]);
+        done();
+      });
+    });
+
     it('Should properly encode path parameters', (done) => {
       const specialCharacters = '+[]&';
       const filterNameSpecialCharacters = `name ${specialCharacters}`;
