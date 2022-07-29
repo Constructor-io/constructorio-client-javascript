@@ -4536,7 +4536,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       const parameters = {
         ...optionalParameters,
         result_count: 1000,
-        items: [...Array(1000).keys()].map(e => ({ item_id: e.toString() })),
+        items: [...Array(1000).keys()].map((e) => ({ item_id: e.toString() })),
       };
 
       tracker.on('success', (responseParams) => {
