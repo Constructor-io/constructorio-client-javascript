@@ -32,11 +32,11 @@ function globalJsdom(options = {}) {
   // that node already defines
 
   if (KEYS.length === 0) {
-    KEYS.push(...Object.getOwnPropertyNames(window).filter(k => !k.startsWith('_')).filter(k => !(k in global)));
+    KEYS.push(...Object.getOwnPropertyNames(window).filter((k) => !k.startsWith('_')).filter((k) => !(k in global)));
     KEYS.push('$jsdom');
   }
   // eslint-disable-next-line no-return-assign
-  KEYS.forEach(key => global[key] = window[key]);
+  KEYS.forEach((key) => global[key] = window[key]);
 
   // setup document / window / window.console
   global.document = document;
@@ -47,7 +47,7 @@ function globalJsdom(options = {}) {
   global.$jsdom = jsdom;
 
   const cleanup = () => {
-    KEYS.forEach(key => delete global[key]);
+    KEYS.forEach((key) => delete global[key]);
     delete global.document;
     delete global.window;
   };
