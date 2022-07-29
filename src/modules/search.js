@@ -158,7 +158,7 @@ class Search {
    * @param {string} [parameters.sortBy='relevance'] - The sort method for results
    * @param {string} [parameters.sortOrder='descending'] - The sort order for results
    * @param {string} [parameters.section='Products'] - The section name for results
-   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.io/rest_api/search/queries for details
    * @param {object} [parameters.preFilterExpression] - Faceting expression to scope search results. Please refer to https://docs.constructor.io/rest_api/collections#add-items-dynamically
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
    * @param {string[]} [parameters.hiddenFacets] - Hidden facets to return
