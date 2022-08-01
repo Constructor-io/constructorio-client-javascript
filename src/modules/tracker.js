@@ -779,6 +779,7 @@ class Tracker {
    * @param {string} parameters.pod_id - Pod identifier
    * @param {string} parameters.strategy_id - Strategy identifier
    * @param {string} parameters.item_id - Product item unique identifier
+   * @param {string} parameters.item_name - Product name
    * @param {string} [parameters.variation_id] - Product item variation unique identifier
    * @param {string} [parameters.section="Products"] - Index section
    * @param {string} [parameters.result_id] - Recommendation result identifier (returned in response from Constructor)
@@ -801,6 +802,7 @@ class Tracker {
    *         num_results_per_page: 12,
    *         pod_id: '019927c2-f955-4020',
    *         strategy_id: 'complimentary',
+   *         item_name: 'Socks',
    *         item_id: 'KMH876',
    *     },
    * );
@@ -821,6 +823,7 @@ class Tracker {
         pod_id,
         strategy_id,
         item_id,
+        item_name,
       } = parameters;
 
       if (variation_id) {
@@ -863,6 +866,10 @@ class Tracker {
 
       if (item_id) {
         bodyParams.item_id = item_id;
+      }
+
+      if (item_name) {
+        bodyParams.item_name = item_name;
       }
 
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
