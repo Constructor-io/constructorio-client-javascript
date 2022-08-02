@@ -93,7 +93,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_browse.js.html">modules/browse.js</a>, <a href="modules_browse.js.html#line190">line 190</a>
+        <a href="modules_browse.js.html">modules/browse.js</a>, <a href="modules_browse.js.html#line207">line 207</a>
     </li></ul></dd>
     
 
@@ -216,7 +216,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_browse.js.html">modules/browse.js</a>, <a href="modules_browse.js.html#line472">line 472</a>
+        <a href="modules_browse.js.html">modules/browse.js</a>, <a href="modules_browse.js.html#line494">line 494</a>
     </li></ul></dd>
     
 
@@ -532,70 +532,7 @@
             
 
             <td class="description last">
-                The format options used to refine result groups
-                
-                    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>show_hidden_facets</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>boolean</code></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">
-                Include facets configured as hidden
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
+                The format options used to refine result groups. Please refer to https://docs.constructor.io/rest_api/browse/facet_options/ for details
                 
             </td>
         </tr>
@@ -735,7 +672,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_browse.js.html">modules/browse.js</a>, <a href="modules_browse.js.html#line414">line 414</a>
+        <a href="modules_browse.js.html">modules/browse.js</a>, <a href="modules_browse.js.html#line435">line 435</a>
     </li></ul></dd>
     
 
@@ -876,7 +813,47 @@
             
 
             <td class="description last">
-                The page number of the results
+                The page number of the results (Can't be used together with offset)
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>offset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>number</code></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">
+                The number of results to skip from the beginning (Can't be used together with page)
                 
             </td>
         </tr>
@@ -927,13 +904,13 @@
 
         <tr>
             
-                <td class="name"><code>fmtOptions.show_hidden_facets</code></td>
+                <td class="name"><code>fmtOptions</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><code>boolean</code></span>
+<span class="param-type"><code>object</code></span>
 
 
             
@@ -958,7 +935,7 @@
             
 
             <td class="description last">
-                Include facets configured as hidden
+                The format options used to refine result groups. Please refer to https://docs.constructor.io/rest_api/browse/facets/ for details
                 
             </td>
         </tr>
@@ -1210,7 +1187,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_browse.js.html">modules/browse.js</a>, <a href="modules_browse.js.html#line354">line 354</a>
+        <a href="modules_browse.js.html">modules/browse.js</a>, <a href="modules_browse.js.html#line375">line 375</a>
     </li></ul></dd>
     
 
@@ -1378,7 +1355,7 @@
             
 
             <td class="description last">
-                The format options used to refine result groups
+                The format options used to refine result groups. Please refer to https://docs.constructor.io/rest_api/browse/groups/ for details
                 
             </td>
         </tr>
@@ -1590,7 +1567,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_browse.js.html">modules/browse.js</a>, <a href="modules_browse.js.html#line203">line 203</a>
+        <a href="modules_browse.js.html">modules/browse.js</a>, <a href="modules_browse.js.html#line220">line 220</a>
     </li></ul></dd>
     
 
@@ -1799,7 +1776,47 @@
             
 
             <td class="description last">
-                The page number of the results
+                The page number of the results (Can't be used together with offset)
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>offset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>number</code></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">
+                The number of results to skip from the beginning (Can't be used together with page)
                 
             </td>
         </tr>
@@ -2045,7 +2062,47 @@
             
 
             <td class="description last">
-                The format options used to refine result groups
+                The format options used to refine result groups. Please refer to https://docs.constructor.io/rest_api/browse/queries/ for details
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>preFilterExpression</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>object</code></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">
+                Faceting expression to scope browse results. Please refer to https://docs.constructor.io/rest_api/collections#add-items-dynamically
                 
             </td>
         </tr>
@@ -2166,6 +2223,46 @@
 
             <td class="description last">
                 The variations map object to aggregate variations. Please refer to https://docs.constructor.io/rest_api/variations_mapping for details
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>qs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>object</code></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">
+                Parameters listed above can be serialized into a JSON object and parsed through this parameter. Please refer to https://docs.constructor.io/rest_api/browse/queries/
                 
             </td>
         </tr>
@@ -2379,7 +2476,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_browse.js.html">modules/browse.js</a>, <a href="modules_browse.js.html#line280">line 280</a>
+        <a href="modules_browse.js.html">modules/browse.js</a>, <a href="modules_browse.js.html#line300">line 300</a>
     </li></ul></dd>
     
 
@@ -2554,7 +2651,47 @@
             
 
             <td class="description last">
-                The page number of the results
+                The page number of the results (Can't be used together with offset)
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>offset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>number</code></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">
+                The number of results to skip from the beginning (Can't be used together with page)
                 
             </td>
         </tr>
@@ -2800,7 +2937,7 @@
             
 
             <td class="description last">
-                The format options used to refine result groups
+                The format options used to refine result groups. Please refer to https://docs.constructor.io/rest_api/browse/queries/ for details
                 
             </td>
         </tr>
@@ -3102,7 +3239,7 @@
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.10</a> on Mon Aug 01 2022 10:26:06 GMT-0700 (Pacific Daylight Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.10</a> on Tue Aug 02 2022 14:15:37 GMT-0700 (Pacific Daylight Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
