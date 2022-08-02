@@ -353,6 +353,73 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should return a return a response with pre filter expression properly parsed', (done) => {
+      const preFilterExpression = {
+        or: [
+          {
+            and: [
+              {
+                name: 'group_id',
+                value: 'electronics-group-id',
+              },
+              {
+                name: 'Price',
+                range: ['-inf', 200],
+              },
+            ],
+          },
+          {
+            and: [
+              {
+                name: 'Type',
+                value: 'Laptop',
+              },
+              {
+                not: {
+                  name: 'Price',
+                  range: [800, 'inf'],
+                },
+              },
+            ],
+          },
+        ],
+      };
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResults(filterName, filterValue, { preFilterExpression }).then((res) => {
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(JSON.stringify(res.request.pre_filter_expression)).to.equal(JSON.stringify(preFilterExpression));
+        done();
+      });
+    });
+
+    it('Should return a return a response with qs param properly parsed', (done) => {
+      const qsParam = {
+        num_results_per_page: '10',
+        filters: {
+          keywords: ['battery-powered'],
+        },
+      };
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResults(filterName, filterValue, { qsParam }).then((res) => {
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.num_results_per_page).to.equal(parseInt(qsParam.num_results_per_page, 10));
+        expect(res.request.filters.keywords[0]).to.equal(qsParam.filters.keywords[0]);
+        done();
+      });
+    });
+
     it('Should properly encode path parameters', (done) => {
       const specialCharacters = '+[]&';
       const filterNameSpecialCharacters = `name ${specialCharacters}`;
@@ -494,6 +561,35 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should return a response with a valid filterName, filterValue, and offset', (done) => {
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResults(filterName, filterValue, { offset: 1 }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request).to.have.property('browse_filter_name');
+        expect(res.request).to.have.property('browse_filter_value');
+        expect(res.request).to.have.property('offset');
+        expect(res.request.browse_filter_name).to.equal(filterName);
+        expect(res.request.browse_filter_value).to.equal(filterValue);
+        expect(res.request.offset).to.equal(1);
+        expect(res.response).to.have.property('results').to.be.an('array');
+        expect(fetchSpy).to.have.been.called;
+        expect(requestedUrlParams).to.have.property('key');
+        expect(requestedUrlParams).to.have.property('i');
+        expect(requestedUrlParams).to.have.property('s');
+        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestedUrlParams).to.have.property('_dt');
+        done();
+      });
+    });
+
     it('Should emit an event with response data', (done) => {
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -626,6 +722,12 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
         filterValue,
         {},
       )).to.eventually.be.rejectedWith(timeoutRejectionMessage);
+    });
+
+    it('Should be rejected when both page and offset are provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseResults(filterName, filterValue, { page: 1, offset: 20 })).to.eventually.be.rejected;
     });
   });
 
@@ -933,6 +1035,31 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should return a response with valid ids and offset parameter', (done) => {
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResultsForItemIds(ids, { offset: 1 }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request).to.have.property('offset');
+        expect(res.request.offset).to.equal(1);
+        expect(res.response).to.have.property('results').to.be.an('array');
+        expect(fetchSpy).to.have.been.called;
+        expect(requestedUrlParams).to.have.property('key');
+        expect(requestedUrlParams).to.have.property('i');
+        expect(requestedUrlParams).to.have.property('s');
+        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestedUrlParams).to.have.property('_dt');
+        done();
+      });
+    });
+
     it('Should emit an event with response data', (done) => {
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -957,6 +1084,12 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       }, false);
 
       browse.getBrowseResultsForItemIds(ids);
+    });
+
+    it('Should be rejected when both page and offset are provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseResultsForItemIds(ids, { page: 1, offset: 1 })).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid ids are provided', () => {
@@ -1256,6 +1389,36 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
         expect(requestedUrlParams).to.have.property('section').to.equal('Search Suggestions');
         done();
       });
+    });
+
+    it('Should return a response an offset', (done) => {
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseFacets({ offset: 1 }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request).to.have.property('offset');
+        expect(res.request.offset).to.equal(1);
+        expect(res.response).to.have.property('facets').to.be.an('array');
+        expect(fetchSpy).to.have.been.called;
+        expect(requestedUrlParams).to.have.property('key');
+        expect(requestedUrlParams).to.have.property('i');
+        expect(requestedUrlParams).to.have.property('s');
+        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
+        done();
+      });
+    });
+
+    it('Should be rejected when both page and offset are provided', () => {
+      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(browse.getBrowseFacets({ page: 1, offset: 20 })).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid page parameter is provided', () => {

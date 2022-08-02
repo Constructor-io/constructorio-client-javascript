@@ -1,5 +1,4 @@
-/* eslint-disable max-len */
-/* eslint-disable object-curly-newline, no-underscore-dangle */
+/* eslint-disable object-curly-newline, no-underscore-dangle, max-len, complexity */
 const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
@@ -43,6 +42,7 @@ function createQueryParams(parameters, options) {
   if (parameters) {
     const {
       page,
+      offset,
       resultsPerPage,
       filters,
       sortBy,
@@ -52,11 +52,18 @@ function createQueryParams(parameters, options) {
       hiddenFields,
       hiddenFacets,
       variationsMap,
+      qsParam,
+      preFilterExpression,
     } = parameters;
 
     // Pull page from parameters
     if (!helpers.isNil(page)) {
       queryParams.page = page;
+    }
+
+    // Pull offset from parameters
+    if (!helpers.isNil(offset)) {
+      queryParams.offset = offset;
     }
 
     // Pull results per page from parameters
@@ -109,6 +116,16 @@ function createQueryParams(parameters, options) {
     // Pull variations map from parameters
     if (variationsMap) {
       queryParams.variations_map = JSON.stringify(variationsMap);
+    }
+
+    // Pull pre_filter_expression from parameters
+    if (preFilterExpression) {
+      queryParams.pre_filter_expression = JSON.stringify(preFilterExpression);
+    }
+
+    // pull qs param from parameters
+    if (qsParam) {
+      queryParams.qs = JSON.stringify(qsParam);
     }
   }
 
@@ -208,16 +225,19 @@ class Browse {
    * @param {string} filterName - Filter name to display results from
    * @param {string} filterValue - Filter value to display results from
    * @param {object} [parameters] - Additional parameters to refine result set
-   * @param {number} [parameters.page] - The page number of the results
+   * @param {number} [parameters.page] - The page number of the results (Can't be used together with offset)
+   * @param {number} [parameters.offset] - The number of results to skip from the beginning (Can't be used together with page)
    * @param {number} [parameters.resultsPerPage] - The number of results per page to return
    * @param {object} [parameters.filters] - Key / value mapping (dictionary) of filters used to refine results
    * @param {string} [parameters.sortBy='relevance'] - The sort method for results
    * @param {string} [parameters.sortOrder='descending'] - The sort order for results
    * @param {string} [parameters.section='Products'] - The section name for results
-   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.io/rest_api/browse/queries/ for details
+   * @param {object} [parameters.preFilterExpression] - Faceting expression to scope browse results. Please refer to https://docs.constructor.io/rest_api/collections#add-items-dynamically
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
    * @param {string[]} [parameters.hiddenFacets] - Hidden facets to return
    * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.io/rest_api/variations_mapping for details
+   * @param {object} [parameters.qs] - Parameters listed above can be serialized into a JSON object and parsed through this parameter. Please refer to https://docs.constructor.io/rest_api/browse/queries/
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
@@ -283,13 +303,14 @@ class Browse {
    * @function getBrowseResultsForItemIds
    * @param {string[]} itemIds - Item id's of results to fetch
    * @param {object} [parameters] - Additional parameters to refine result set
-   * @param {number} [parameters.page] - The page number of the results
+   * @param {number} [parameters.page] - The page number of the results (Can't be used together with offset)
+   * @param {number} [parameters.offset] - The number of results to skip from the beginning (Can't be used together with page)
    * @param {number} [parameters.resultsPerPage] - The number of results per page to return
    * @param {object} [parameters.filters] - Filters used to refine results
    * @param {string} [parameters.sortBy='relevance'] - The sort method for results
    * @param {string} [parameters.sortOrder='descending'] - The sort order for results
    * @param {string} [parameters.section='Products'] - The section name for results
-   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.io/rest_api/browse/queries/ for details
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
    * @param {string[]} [parameters.hiddenFacets] - Hidden facets to return
    * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.io/rest_api/variations_mapping for details
@@ -357,7 +378,7 @@ class Browse {
    * @function getBrowseGroups
    * @param {object} [parameters.filters] - Filters used to refine results
    * @param {string} [parameters.section='Products'] - The section name for results
-   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.io/rest_api/browse/groups/ for details
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
@@ -416,9 +437,10 @@ class Browse {
    *
    * @function getBrowseFacets
    * @param {object} [parameters] - Additional parameters to refine result set
-   * @param {number} [parameters.page] - The page number of the results
+   * @param {number} [parameters.page] - The page number of the results (Can't be used together with offset)
+   * @param {number} [parameters.offset] - The number of results to skip from the beginning (Can't be used together with page)
    * @param {string} [parameters.section='Products'] - The section name for results
-   * @param {boolean} [parameters.fmtOptions.show_hidden_facets] - Include facets configured as hidden
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.io/rest_api/browse/facets/ for details
    * @param {number} [parameters.resultsPerPage] - The number of results per page to return
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -478,8 +500,7 @@ class Browse {
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @param {object} [parameters] - Additional parameters to refine result set
    * @param {string} [parameters.section='Products'] - The section name for results
-   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups
-   * @param {boolean} [parameters.fmtOptions.show_hidden_facets] - Include facets configured as hidden
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.io/rest_api/browse/facet_options/ for details
    * @param {}
    * @returns {Promise}
    * @see https://docs.constructor.io/rest_api/browse/facet_options/
