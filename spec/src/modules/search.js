@@ -139,6 +139,29 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should return a response with a valid query, section, and offset', (done) => {
+      const offset = 1;
+      const { search } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      search.getSearchResults(query, {
+        section,
+        offset,
+      }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.response).to.have.property('results').to.be.an('array');
+        expect(res.request.offset).to.equal(offset);
+        expect(requestedUrlParams).to.have.property('offset').to.equal(offset.toString());
+        done();
+      });
+    });
+
     it('Should return a response with a valid query, section, and page', (done) => {
       const page = 1;
       const { search } = new ConstructorIO({
@@ -291,6 +314,51 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should return a return a response with pre filter expression properly parsed', (done) => {
+      const preFilterExpression = {
+        or: [
+          {
+            and: [
+              {
+                name: 'group_id',
+                value: 'electronics-group-id',
+              },
+              {
+                name: 'Price',
+                range: ['-inf', 200],
+              },
+            ],
+          },
+          {
+            and: [
+              {
+                name: 'Type',
+                value: 'Laptop',
+              },
+              {
+                not: {
+                  name: 'Price',
+                  range: [800, 'inf'],
+                },
+              },
+            ],
+          },
+        ],
+      };
+      const { search } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      search.getSearchResults('Jacket', { preFilterExpression }, {}).then((res) => {
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(JSON.stringify(res.request.pre_filter_expression)).to.equal(JSON.stringify(preFilterExpression));
+        done();
+      });
+    });
+
     it('Should return a response with a valid query, section and hiddenFields', (done) => {
       const hiddenFields = ['testField', 'hiddenField2'];
       const { search } = new ConstructorIO({
@@ -410,6 +478,28 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
         expect(res).to.have.property('result_id').to.be.an('string');
         expect(res.request.sort_by).to.equal(sortByExpected);
         expect(requestedUrlParams).to.have.property('sort_by').to.equal(sortByExpected);
+        done();
+      });
+    });
+
+    it('Should return a return a response with qs param properly parsed', (done) => {
+      const qsParam = {
+        num_results_per_page: '10',
+        filters: {
+          keywords: ['battery-powered'],
+        },
+      };
+      const { search } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      search.getSearchResults('Jacket', { qsParam }, {}).then((res) => {
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.num_results_per_page).to.equal(parseInt(qsParam.num_results_per_page, 10));
+        expect(res.request.filters.keywords[0]).to.equal(qsParam.filters.keywords[0]);
         done();
       });
     });
