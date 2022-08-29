@@ -245,11 +245,11 @@ describe('ConstructorIO - Utils - Helpers', () => {
       const orderId = '12345';
 
       afterEach(() => {
-        store.session.clearAll();
+        store.local.clearAll();
       });
 
       it('Should return true if the order id already exists from a previous purchase event', () => {
-        store.session.set(purchaseEventStorageKey, JSON.stringify({
+        store.local.set(purchaseEventStorageKey, JSON.stringify({
           [CRC32.str(orderId)]: true,
         }));
 
@@ -267,27 +267,27 @@ describe('ConstructorIO - Utils - Helpers', () => {
       const orderId3 = '45124';
 
       afterEach(() => {
-        store.session.clearAll();
+        store.local.clearAll();
       });
 
       it('Should add the order id to the purchase event storage', () => {
-        const orderIds = store.session.get(purchaseEventStorageKey);
+        const orderIds = store.local.get(purchaseEventStorageKey);
         expect(orderIds).to.equal(null);
 
         addOrderIdRecord(orderId);
-        const newOrderIds = JSON.parse(store.session.get(purchaseEventStorageKey));
+        const newOrderIds = JSON.parse(store.local.get(purchaseEventStorageKey));
         const newOrderIdExists = newOrderIds[CRC32.str(orderId)];
 
         expect(newOrderIdExists).to.equal(true);
       });
 
       it('Should not add duplicate order ids to the purchase event storage', () => {
-        const orderIds = store.session.get(purchaseEventStorageKey);
+        const orderIds = store.local.get(purchaseEventStorageKey);
         expect(orderIds).to.equal(null);
 
         addOrderIdRecord(orderId);
         addOrderIdRecord(orderId);
-        const newOrderIds = JSON.parse(store.session.get(purchaseEventStorageKey));
+        const newOrderIds = JSON.parse(store.local.get(purchaseEventStorageKey));
         const newOrderIdExists = newOrderIds[CRC32.str(orderId)];
 
         expect(Object.keys(newOrderIds).length).to.equal(1);
@@ -295,13 +295,13 @@ describe('ConstructorIO - Utils - Helpers', () => {
       });
 
       it('Should keep a history of order ids', () => {
-        const orderIds = store.session.get(purchaseEventStorageKey);
+        const orderIds = store.local.get(purchaseEventStorageKey);
         expect(orderIds).to.equal(null);
 
         addOrderIdRecord(orderId);
         addOrderIdRecord(orderId2);
         addOrderIdRecord(orderId3);
-        const newOrderIds = JSON.parse(store.session.get(purchaseEventStorageKey));
+        const newOrderIds = JSON.parse(store.local.get(purchaseEventStorageKey));
 
         expect(Object.keys(newOrderIds).length).to.equal(3);
         expect(newOrderIds[CRC32.str(orderId)]).to.equal(true);

@@ -99,7 +99,7 @@ const utils = {
 
   hasOrderIdRecord(orderId) {
     const orderIdHash = CRC32.str(orderId.toString());
-    let purchaseEventStorage = store.session.get(purchaseEventStorageKey);
+    let purchaseEventStorage = store.local.get(purchaseEventStorageKey);
 
     if (typeof purchaseEventStorage === 'string') {
       purchaseEventStorage = JSON.parse(purchaseEventStorage);
@@ -113,7 +113,7 @@ const utils = {
 
   addOrderIdRecord(orderId) {
     const orderIdHash = CRC32.str(orderId.toString());
-    let purchaseEventStorage = store.session.get(purchaseEventStorageKey);
+    let purchaseEventStorage = store.local.get(purchaseEventStorageKey);
 
     if (typeof purchaseEventStorage === 'string') {
       purchaseEventStorage = JSON.parse(purchaseEventStorage);
@@ -133,8 +133,8 @@ const utils = {
       };
     }
 
-    // Push the order id map into session storage
-    store.session.set(purchaseEventStorageKey, JSON.stringify(purchaseEventStorage));
+    // Push the order id map into local storage
+    store.local.set(purchaseEventStorageKey, JSON.stringify(purchaseEventStorage));
   },
 
   // Abort network request based on supplied timeout interval (in milliseconds)
