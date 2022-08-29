@@ -1297,7 +1297,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
   });
 
   describe('getBrowseFacetOptions', () => {
-    const facetName = 'color';
+    const facetName = 'Color';
 
     it('Should return a response with a facet name without any parameters', (done) => {
       const { browse } = new ConstructorIO({

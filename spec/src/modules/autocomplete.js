@@ -282,11 +282,13 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
 
       autocomplete.getAutocompleteResults(query, { hiddenFields }, {}).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const item = res.sections.Products.find((product) => product.data.testField);
+        const itemData = item && item.data;
 
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('sections').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.sections.Products[0].data).to.have.property('testField').to.eql('hiddenFieldValue');
+        expect(itemData).to.have.property('testField').to.eql('hiddenFieldValue');
         expect(res.request.fmt_options.hidden_fields).to.eql(hiddenFields);
         expect(requestedUrlParams.fmt_options).to.have.property('hidden_fields').to.eql(hiddenFields);
         done();
