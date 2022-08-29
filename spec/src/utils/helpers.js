@@ -279,7 +279,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
         expect(newOrderIdExists).to.equal(true);
       });
 
-      it.only('Should limit order ids to 10', () => {
+      it('Should limit order ids to 10', () => {
         let orderIds = store.local.get(purchaseEventStorageKey);
         expect(orderIds).to.equal(null);
 
