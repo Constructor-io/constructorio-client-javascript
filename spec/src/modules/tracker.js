@@ -4799,7 +4799,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackBrowseResultClick(parameters)).to.equal(true);
     });
 
-    it.only('Should respond with a valid response when required parameters and non-existent item id are provided', (done) => {
+    it('Should respond with a valid response when required parameters and non-existent item id are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
