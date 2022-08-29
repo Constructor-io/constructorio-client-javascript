@@ -4585,7 +4585,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const requiredParameters = {
       item_id: 'product0dbae320-3950-11ea-9251-8dee6d0eb3cd-new',
       filter_name: 'group_id',
-      filter_value: 'Clothing',
+      filter_value: 'BrandXY',
     };
     const optionalParameters = {
       section: 'Products',
@@ -4799,7 +4799,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackBrowseResultClick(parameters)).to.equal(true);
     });
 
-    it('Should respond with a valid response when required parameters and non-existent item id are provided', (done) => {
+    it.only('Should respond with a valid response when required parameters and non-existent item id are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
