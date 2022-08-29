@@ -249,7 +249,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
       });
 
       it('Should return true if the order id already exists from a previous purchase event', () => {
-        store.local.set(purchaseEventStorageKey, JSON.stringify([CRC32.str(orderId)]));
+        store.local.set(purchaseEventStorageKey, [CRC32.str(orderId)]);
 
         expect(hasOrderIdRecord(orderId)).to.equal(true);
       });
@@ -273,7 +273,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
         expect(orderIds).to.equal(null);
 
         addOrderIdRecord(orderId);
-        const newOrderIds = JSON.parse(store.local.get(purchaseEventStorageKey));
+        const newOrderIds = store.local.get(purchaseEventStorageKey);
         const newOrderIdExists = newOrderIds.includes(CRC32.str(orderId));
 
         expect(newOrderIdExists).to.equal(true);
@@ -283,12 +283,12 @@ describe('ConstructorIO - Utils - Helpers', () => {
         let orderIds = store.local.get(purchaseEventStorageKey);
         expect(orderIds).to.equal(null);
 
-        store.local.set(purchaseEventStorageKey, JSON.stringify([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]));
-        orderIds = JSON.parse(store.local.get(purchaseEventStorageKey));
+        store.local.set(purchaseEventStorageKey, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+        orderIds = store.local.get(purchaseEventStorageKey);
         expect(orderIds).to.eql([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
 
         addOrderIdRecord(orderId);
-        const newOrderIds = JSON.parse(store.local.get(purchaseEventStorageKey));
+        const newOrderIds = store.local.get(purchaseEventStorageKey);
 
         expect(newOrderIds).to.eql([3, 4, 5, 6, 7, 8, 9, 10, 11, CRC32.str(orderId)]);
       });
@@ -299,7 +299,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
 
         addOrderIdRecord(orderId);
         addOrderIdRecord(orderId);
-        const newOrderIds = JSON.parse(store.local.get(purchaseEventStorageKey));
+        const newOrderIds = store.local.get(purchaseEventStorageKey);
         const newOrderIdExists = newOrderIds.includes(CRC32.str(orderId));
 
         expect(newOrderIds.length).to.equal(1);
@@ -313,7 +313,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
         addOrderIdRecord(orderId);
         addOrderIdRecord(orderId2);
         addOrderIdRecord(orderId3);
-        const newOrderIds = JSON.parse(store.local.get(purchaseEventStorageKey));
+        const newOrderIds = store.local.get(purchaseEventStorageKey);
 
         expect(Object.keys(newOrderIds).length).to.equal(3);
         expect(newOrderIds.includes(CRC32.str(orderId))).to.equal(true);
