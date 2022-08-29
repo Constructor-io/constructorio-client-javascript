@@ -126,7 +126,7 @@ const utils = {
       }
 
       if (purchaseEventStorage.length >= 10) {
-        purchaseEventStorage.slice(-9);
+        purchaseEventStorage = purchaseEventStorage.slice(-9);
       }
       purchaseEventStorage.push(orderIdHash);
     } else {

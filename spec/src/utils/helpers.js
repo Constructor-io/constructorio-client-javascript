@@ -279,6 +279,20 @@ describe('ConstructorIO - Utils - Helpers', () => {
         expect(newOrderIdExists).to.equal(true);
       });
 
+      it.only('Should limit order ids to 10', () => {
+        let orderIds = store.local.get(purchaseEventStorageKey);
+        expect(orderIds).to.equal(null);
+
+        store.local.set(purchaseEventStorageKey, JSON.stringify([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]));
+        orderIds = JSON.parse(store.local.get(purchaseEventStorageKey));
+        expect(orderIds).to.eql([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+
+        addOrderIdRecord(orderId);
+        const newOrderIds = JSON.parse(store.local.get(purchaseEventStorageKey));
+
+        expect(newOrderIds).to.eql([3, 4, 5, 6, 7, 8, 9, 10, 11, CRC32.str(orderId)]);
+      });
+
       it('Should not add duplicate order ids to the purchase event storage', () => {
         const orderIds = store.local.get(purchaseEventStorageKey);
         expect(orderIds).to.equal(null);
