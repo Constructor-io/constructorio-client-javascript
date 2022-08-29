@@ -245,13 +245,11 @@ describe('ConstructorIO - Utils - Helpers', () => {
       const orderId = '12345';
 
       afterEach(() => {
-        store.session.clearAll();
+        store.local.clearAll();
       });
 
       it('Should return true if the order id already exists from a previous purchase event', () => {
-        store.session.set(purchaseEventStorageKey, JSON.stringify({
-          [CRC32.str(orderId)]: true,
-        }));
+        store.local.set(purchaseEventStorageKey, JSON.stringify([CRC32.str(orderId)]));
 
         expect(hasOrderIdRecord(orderId)).to.equal(true);
       });
@@ -267,46 +265,60 @@ describe('ConstructorIO - Utils - Helpers', () => {
       const orderId3 = '45124';
 
       afterEach(() => {
-        store.session.clearAll();
+        store.local.clearAll();
       });
 
       it('Should add the order id to the purchase event storage', () => {
-        const orderIds = store.session.get(purchaseEventStorageKey);
+        const orderIds = store.local.get(purchaseEventStorageKey);
         expect(orderIds).to.equal(null);
 
         addOrderIdRecord(orderId);
-        const newOrderIds = JSON.parse(store.session.get(purchaseEventStorageKey));
-        const newOrderIdExists = newOrderIds[CRC32.str(orderId)];
+        const newOrderIds = JSON.parse(store.local.get(purchaseEventStorageKey));
+        const newOrderIdExists = newOrderIds.includes(CRC32.str(orderId));
 
         expect(newOrderIdExists).to.equal(true);
       });
 
+      it('Should limit order ids to 10', () => {
+        let orderIds = store.local.get(purchaseEventStorageKey);
+        expect(orderIds).to.equal(null);
+
+        store.local.set(purchaseEventStorageKey, JSON.stringify([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]));
+        orderIds = JSON.parse(store.local.get(purchaseEventStorageKey));
+        expect(orderIds).to.eql([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+
+        addOrderIdRecord(orderId);
+        const newOrderIds = JSON.parse(store.local.get(purchaseEventStorageKey));
+
+        expect(newOrderIds).to.eql([3, 4, 5, 6, 7, 8, 9, 10, 11, CRC32.str(orderId)]);
+      });
+
       it('Should not add duplicate order ids to the purchase event storage', () => {
-        const orderIds = store.session.get(purchaseEventStorageKey);
+        const orderIds = store.local.get(purchaseEventStorageKey);
         expect(orderIds).to.equal(null);
 
         addOrderIdRecord(orderId);
         addOrderIdRecord(orderId);
-        const newOrderIds = JSON.parse(store.session.get(purchaseEventStorageKey));
-        const newOrderIdExists = newOrderIds[CRC32.str(orderId)];
+        const newOrderIds = JSON.parse(store.local.get(purchaseEventStorageKey));
+        const newOrderIdExists = newOrderIds.includes(CRC32.str(orderId));
 
-        expect(Object.keys(newOrderIds).length).to.equal(1);
+        expect(newOrderIds.length).to.equal(1);
         expect(newOrderIdExists).to.equal(true);
       });
 
       it('Should keep a history of order ids', () => {
-        const orderIds = store.session.get(purchaseEventStorageKey);
+        const orderIds = store.local.get(purchaseEventStorageKey);
         expect(orderIds).to.equal(null);
 
         addOrderIdRecord(orderId);
         addOrderIdRecord(orderId2);
         addOrderIdRecord(orderId3);
-        const newOrderIds = JSON.parse(store.session.get(purchaseEventStorageKey));
+        const newOrderIds = JSON.parse(store.local.get(purchaseEventStorageKey));
 
         expect(Object.keys(newOrderIds).length).to.equal(3);
-        expect(newOrderIds[CRC32.str(orderId)]).to.equal(true);
-        expect(newOrderIds[CRC32.str(orderId2)]).to.equal(true);
-        expect(newOrderIds[CRC32.str(orderId3)]).to.equal(true);
+        expect(newOrderIds.includes(CRC32.str(orderId))).to.equal(true);
+        expect(newOrderIds.includes(CRC32.str(orderId2))).to.equal(true);
+        expect(newOrderIds.includes(CRC32.str(orderId3))).to.equal(true);
       });
     });
 
