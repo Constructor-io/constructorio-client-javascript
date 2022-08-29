@@ -121,16 +121,17 @@ const utils = {
 
     if (purchaseEventStorage) {
       // If the order already exists, do nothing
-      if (purchaseEventStorage[orderIdHash]) {
+      if (purchaseEventStorage.includes(orderIdHash)) {
         return;
       }
 
-      purchaseEventStorage[orderIdHash] = true;
+      if (purchaseEventStorage.length >= 10) {
+        purchaseEventStorage.slice(-9);
+      }
+      purchaseEventStorage.push(orderIdHash);
     } else {
       // Create a new object map for the order ids
-      purchaseEventStorage = {
-        [orderIdHash]: true,
-      };
+      purchaseEventStorage = [orderIdHash];
     }
 
     // Push the order id map into local storage
