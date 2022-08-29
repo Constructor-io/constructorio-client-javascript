@@ -104,7 +104,7 @@ const utils = {
     if (typeof purchaseEventStorage === 'string') {
       purchaseEventStorage = JSON.parse(purchaseEventStorage);
     }
-    if (purchaseEventStorage && purchaseEventStorage[orderIdHash]) {
+    if (purchaseEventStorage && purchaseEventStorage.includes(orderIdHash)) {
       return true;
     }
 

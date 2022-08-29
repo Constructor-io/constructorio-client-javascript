@@ -249,9 +249,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
       });
 
       it('Should return true if the order id already exists from a previous purchase event', () => {
-        store.local.set(purchaseEventStorageKey, JSON.stringify({
-          [CRC32.str(orderId)]: true,
-        }));
+        store.local.set(purchaseEventStorageKey, JSON.stringify([CRC32.str(orderId)]));
 
         expect(hasOrderIdRecord(orderId)).to.equal(true);
       });
@@ -276,7 +274,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
 
         addOrderIdRecord(orderId);
         const newOrderIds = JSON.parse(store.local.get(purchaseEventStorageKey));
-        const newOrderIdExists = newOrderIds[CRC32.str(orderId)];
+        const newOrderIdExists = newOrderIds.includes(CRC32.str(orderId));
 
         expect(newOrderIdExists).to.equal(true);
       });
@@ -288,9 +286,9 @@ describe('ConstructorIO - Utils - Helpers', () => {
         addOrderIdRecord(orderId);
         addOrderIdRecord(orderId);
         const newOrderIds = JSON.parse(store.local.get(purchaseEventStorageKey));
-        const newOrderIdExists = newOrderIds[CRC32.str(orderId)];
+        const newOrderIdExists = newOrderIds.includes(CRC32.str(orderId));
 
-        expect(Object.keys(newOrderIds).length).to.equal(1);
+        expect(newOrderIds.length).to.equal(1);
         expect(newOrderIdExists).to.equal(true);
       });
 
@@ -304,9 +302,9 @@ describe('ConstructorIO - Utils - Helpers', () => {
         const newOrderIds = JSON.parse(store.local.get(purchaseEventStorageKey));
 
         expect(Object.keys(newOrderIds).length).to.equal(3);
-        expect(newOrderIds[CRC32.str(orderId)]).to.equal(true);
-        expect(newOrderIds[CRC32.str(orderId2)]).to.equal(true);
-        expect(newOrderIds[CRC32.str(orderId3)]).to.equal(true);
+        expect(newOrderIds.includes(CRC32.str(orderId))).to.equal(true);
+        expect(newOrderIds.includes(CRC32.str(orderId2))).to.equal(true);
+        expect(newOrderIds.includes(CRC32.str(orderId3))).to.equal(true);
       });
     });
 
