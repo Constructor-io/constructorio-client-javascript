@@ -135,7 +135,7 @@ const utils = {
     }
 
     // Push the order id map into local storage
-    store.local.set(purchaseEventStorageKey, JSON.stringify(purchaseEventStorage));
+    store.local.set(purchaseEventStorageKey, purchaseEventStorage);
   },
 
   // Abort network request based on supplied timeout interval (in milliseconds)
