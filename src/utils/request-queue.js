@@ -83,7 +83,7 @@ class RequestQueue {
       }
 
       // If events older than `requestTTL` exist in queue, clear request queue
-      // - Prevents issue where stale items are sent in perputity
+      // - Prevents issue where stale items are sent in perpetuity
       // - No request should go unsent for longer than `requestTTL`
       if (nextInQueue.url) {
         // Pull `dt` parameter from URL, indicating origin time of request
