@@ -1,4 +1,4 @@
-name: Lint
+name: Spell check
 
 on:
   pull_request:
@@ -6,12 +6,12 @@ on:
       - "**"
 
 concurrency:
-  group: lint-${{ github.head_ref }}
+  group: spell-check-${{ github.head_ref }}
   cancel-in-progress: true
 
 jobs:
   check:
-    name: Run lint checks
+    name: Run spell check
     runs-on: ubuntu-latest
 
     strategy:
@@ -26,8 +26,5 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Lint check
-        run: npm run lint
+      - name: Spell check
+        run: npx cspell "**/*.js"
