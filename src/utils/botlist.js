@@ -1,4 +1,5 @@
 /* eslint-disable no-useless-escape */
+/* cspell:disable */
 
 module.exports = [
   'Googlebot\/',
