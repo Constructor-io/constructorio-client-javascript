@@ -8,12 +8,35 @@
     "css"
   ],
   "ignorePaths": [
-    "docs"
+    "docs",
+    "dist",
+    "*/**/botlist.js"
   ],
   // flagWords - list of words to be always considered incorrect
   // This is useful for offensive words and common spelling errors.
   // For example "hte" should be "the"
   "flagWords": [],
   // List of ignored words to avoid checking.
-  "words": []
+  "words": [
+    "constructorio",
+    "domless",
+    "ciojs",
+    "camelcase",
+    "ESHA",
+    "OUNXBG",
+    "dbae",
+    "fyzs",
+    "outfile",
+    "esbuild",
+    "Idempotency",
+    "Googlebot",
+    "ponyfill",
+    "luistrenker",
+    "clonedeep",
+    "botlist",
+    "dtype",
+    "boink",
+    "doink",
+    "yoink"
+  ]
 }

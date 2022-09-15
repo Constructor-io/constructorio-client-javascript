@@ -2936,6 +2936,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const requiredParameters = {
       items: [
         {
+          // cspell:disable-next-line
           item_id: 'productc60366c42b5d4194ad39962fd88d7266',
           variation_id: '456',
         },
