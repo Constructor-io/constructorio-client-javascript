@@ -8,6 +8,7 @@
     "css"
   ],
   "ignorePaths": [
+    "lib",
     "docs",
     "dist",
     "*/**/botlist.js"
