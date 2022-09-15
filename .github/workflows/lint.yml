@@ -1,0 +1,33 @@
+name: Lint
+
+on:
+  pull_request:
+    branches:
+      - "**"
+
+concurrency:
+  group: lint-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Run lint checks
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node: ["16.17.0"]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint check
+        run: npm run lint
