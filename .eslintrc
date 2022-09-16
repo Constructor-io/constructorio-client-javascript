@@ -3,7 +3,10 @@
     "browser": true,
     "mocha": true
   },
-  "extends": "airbnb-base",
+  "extends": [
+    "airbnb-base",
+    "plugin:@cspell/recommended"
+  ],
   "globals": {
     "CLIENT_VERSION": true,
     "expect": true
@@ -46,6 +49,7 @@
     "complexity": [
       "error",
       20
-    ]
+    ],
+    "@cspell/spellchecker": ["error"]
   }
 }
