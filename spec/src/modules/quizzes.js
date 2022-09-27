@@ -59,7 +59,7 @@ describe.only(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       return expect(quizzes.getNextQuiz('notaquizid', {})).to.eventually.be.rejected;
     });
 
-    it('Should be rejected if an invalid index_key/apiKey is provided', () => {
+    it('Should be rejected if an invalid apiKey is provided', () => {
       const { quizzes } = new ConstructorIO({
         apiKey: 'invalidKey',
         fetch: fetchSpy,
@@ -67,7 +67,7 @@ describe.only(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       return expect(quizzes.getNextQuiz(validQuizId, {})).to.eventually.be.rejected;
     });
 
-    it('Should return a result provided a valid index_key and quizId', () => {
+    it('Should return a result provided a valid apiKey and quizId', () => {
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
@@ -121,7 +121,7 @@ describe.only(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       return expect(quizzes.getFinalizeQuiz('notaquizid', { a: validAnswers })).to.eventually.be.rejected;
     });
 
-    it('Should be rejected if an invalid index_key/apiKey is provided', () => {
+    it('Should be rejected if an invalid apiKey is provided', () => {
       const { quizzes } = new ConstructorIO({
         apiKey: 'invalidKey',
         fetch: fetchSpy,
