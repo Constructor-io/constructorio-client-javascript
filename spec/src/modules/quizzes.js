@@ -8,7 +8,6 @@ const sinonChai = require('sinon-chai');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
 const fs = require('fs');
-const helpers = require('../../mocha.helpers');
 let ConstructorIO = require('../../../test/constructorio'); // eslint-disable-line import/extensions
 
 chai.use(chaiAsPromised);
@@ -16,16 +15,14 @@ chai.use(sinonChai);
 dotenv.config();
 
 const { fetch } = fetchPonyfill({ Promise });
-const testApiKey = process.env.TEST_API_KEY;
-const quizApiKey = process.env.QUIZ_API_KEY;
+const quizApiKey = process.env.TEST_API_KEY;
 const clientVersion = 'cio-mocha';
 const bundled = process.env.BUNDLED === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
-const timeoutRejectionMessage = bundled ? 'Aborted' : 'The user aborted a request.';
 
-describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
-  const validQuizId = 'etchells-emporium-quiz';
-  const validAnswers = [[1, 2], [1]];
+describe.only(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
+  const validQuizId = 'test-quiz';
+  const validAnswers = [[1], [1, 2], ['seen']];
   const jsdomOptions = { url: 'http://localhost' };
   let fetchSpy;
 
@@ -90,8 +87,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
 
       return quizzes.getNextQuiz(validQuizId, { a: validAnswers }).then((res) => {
         expect(res).to.have.property('version_id').to.be.an('string');
-        expect(res.next_question.id).to.equal(3);
-        expect(res.next_question.options[0].id).to.equal(1);
+        expect(res.next_question.id).to.equal(4);
       });
     });
 
