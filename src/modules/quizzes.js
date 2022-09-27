@@ -99,7 +99,7 @@ class Quizzes {
    * @returns {Promise}
    * @see https://quizzes.cnstrc.com/api/#/quizzes/QuizzesController_getNextQuestion
    * @example
-   * constructorio.search.getNextQuiz('quizid', {
+   * constructorio.search.getNextQuiz('quizId', {
    *    a: [[1,2],[1]],
    *    section: "123",
    *    version_id: "123"
@@ -151,7 +151,7 @@ class Quizzes {
    * @returns {Promise}
    * @see https://quizzes.cnstrc.com/api/#/quizzes/QuizzesController_getQuizResult
    * @example
-   * constructorio.search.getFinalizeQuiz('quizid', {
+   * constructorio.search.getFinalizeQuiz('quizId', {
    *    a: [[1,2],[1]],
    *    section: "123",
    *    version_id: "123"
