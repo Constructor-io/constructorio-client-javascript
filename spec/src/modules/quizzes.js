@@ -56,7 +56,7 @@ describe.only(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
         apiKey: quizApiKey,
         fetch: fetchSpy,
       });
-      return expect(quizzes.getNextQuiz('invalidquizId', {})).to.eventually.be.rejected;
+      return expect(quizzes.getNextQuiz('invalidQuizId', {})).to.eventually.be.rejected;
     });
 
     it('Should be rejected if an invalid apiKey is provided', () => {
