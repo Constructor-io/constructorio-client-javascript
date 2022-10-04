@@ -68,5 +68,8 @@
     "fetch-ponyfill": "^7.1.0",
     "qs": "6.7.2",
     "store2": "^2.9.0"
+  },
+  "peerDependencies": {
+    "@babel/runtime": "^7.19.0"
   }
 }
