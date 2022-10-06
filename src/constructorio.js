@@ -11,6 +11,7 @@ const EventDispatcher = require('./utils/event-dispatcher');
 const helpers = require('./utils/helpers');
 const { version: packageVersion } = require('../package.json');
 const Quizzes = require('./modules/quizzes');
+<<<<<<< HEAD
 
 // Compute package version string
 const computePackageVersion = () => {
@@ -27,6 +28,8 @@ const computePackageVersion = () => {
 
   return `${versionPrefix}${versionModifiers.join('-')}${versionModifiers.length ? '-' : ''}${packageVersion}`;
 };
+=======
+>>>>>>> 1fee8f4b32b27eff0582874e78e465ca087b468a
 
 /**
  * Class to instantiate the ConstructorIO client.
