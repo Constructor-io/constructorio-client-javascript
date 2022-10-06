@@ -99,7 +99,7 @@ class Quizzes {
    * @returns {Promise}
    * @see https://docs.constructor.io/rest_api/quiz/using_quizzes/#answering-a-quiz
    * @example
-   * constructorio.quiz.getNextQuestion('quizId', {
+   * constructorio.quizzes.getNextQuestion('quizId', {
    *    a: [[1,2],[1]],
    *    section: "123",
    *    version_id: "123"
@@ -151,7 +151,7 @@ class Quizzes {
    * @returns {Promise}
    * @see https://docs.constructor.io/rest_api/quiz/using_quizzes/#completing-the-quiz
    * @example
-   * constructorio.quiz.getQuizResults('quizId', {
+   * constructorio.quizzes.getQuizResults('quizId', {
    *    a: [[1,2],[1]],
    *    section: "123",
    *    version_id: "123"
