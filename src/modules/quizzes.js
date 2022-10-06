@@ -87,7 +87,7 @@ class Quizzes {
   /**
    * Retrieve next quiz from api
    *
-   * @function getNextQuiz
+   * @function getNextQuestion
    * @description Retrieve next quiz from Constructor.io API
    * @param {string} id - The id of the quiz
    * @param {string} [parameters] - Additional parameters to refine result set
@@ -97,15 +97,15 @@ class Quizzes {
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
-   * @see https://quizzes.cnstrc.com/api/#/quizzes/QuizzesController_getNextQuestion
+   * @see https://docs.constructor.io/rest_api/quiz/using_quizzes/#answering-a-quiz
    * @example
-   * constructorio.search.getNextQuiz('quizId', {
+   * constructorio.quiz.getNextQuestion('quizId', {
    *    a: [[1,2],[1]],
    *    section: "123",
    *    version_id: "123"
    * });
    */
-  getNextQuiz(quizId, parameters, networkParameters = {}) {
+  getNextQuestion(quizId, parameters, networkParameters = {}) {
     let requestUrl;
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
     const controller = new AbortController();
@@ -139,7 +139,7 @@ class Quizzes {
   /**
    * Retrieves filter expression and recommendation URL from given answers.
    *
-   * @function getFinalizeQuiz
+   * @function getQuizResults
    * @description Retrieve quiz recommendation and filter expression from Constructor.io API
    * @param {string} id - The id of the quiz
    * @param {string} [parameters] - Additional parameters to refine result set
@@ -149,15 +149,15 @@ class Quizzes {
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
-   * @see https://quizzes.cnstrc.com/api/#/quizzes/QuizzesController_getQuizResult
+   * @see https://docs.constructor.io/rest_api/quiz/using_quizzes/#completing-the-quiz
    * @example
-   * constructorio.search.getFinalizeQuiz('quizId', {
+   * constructorio.quiz.getQuizResults('quizId', {
    *    a: [[1,2],[1]],
    *    section: "123",
    *    version_id: "123"
    * });
    */
-  getFinalizeQuiz(quizId, parameters, networkParameters = {}) {
+  getQuizResults(quizId, parameters, networkParameters = {}) {
     let requestUrl;
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
     const controller = new AbortController();
@@ -182,11 +182,11 @@ class Quizzes {
       })
       .then((json) => {
         if (json.version_id) {
-          this.eventDispatcher.queue('quizzes.getFinalizeQuiz.completed', json);
+          this.eventDispatcher.queue('quizzes.getQuizResults.completed', json);
           return json;
         }
 
-        throw new Error('getFinalizeQuiz response data is malformed');
+        throw new Error('getQuizResults response data is malformed');
       });
   }
 }
