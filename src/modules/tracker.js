@@ -15,12 +15,17 @@ function applyParams(parameters, options) {
     testCells,
     requestMethod,
     beaconMode,
+    constructorABCell,
   } = options;
   const { host, pathname } = helpers.getWindowLocation();
   const sendReferrerWithTrackingEvents = (options.sendReferrerWithTrackingEvents === false)
     ? false
     : true; // Defaults to 'true'
   let aggregateParams = Object.assign(parameters);
+
+  if (constructorABCell) {
+    aggregateParams.is_constructor_ab_cell = constructorABCell;
+  }
 
   if (version) {
     aggregateParams.c = version;

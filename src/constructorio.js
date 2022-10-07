@@ -75,6 +75,7 @@ class ConstructorIO {
       idOptions,
       beaconMode,
       networkParameters,
+      constructorABCell,
     } = options;
 
     if (!apiKey || typeof apiKey !== 'string') {
@@ -114,6 +115,7 @@ class ConstructorIO {
       sendTrackingEvents,
       sendReferrerWithTrackingEvents,
       eventDispatcher,
+      constructorABCell,
       beaconMode: (beaconMode === false) ? false : true, // Defaults to 'true',
       networkParameters: networkParameters || {},
     };

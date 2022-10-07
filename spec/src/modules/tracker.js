@@ -68,20 +68,22 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   });
 
   describe('trackSessionStart', () => {
-    it('Should respond with a valid response', (done) => {
+    it.only('Should respond with a valid response', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
+        constructorABCell: true,
         ...requestQueueOptions,
       });
 
+
       tracker.on('success', (responseParams) => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-
         // Request
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('key');
         expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('is_constructor_ab_cell');
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('action').to.equal('session_start');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
@@ -91,7 +93,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         // Response
         expect(responseParams).to.have.property('method').to.equal('GET');
         expect(responseParams).to.have.property('message').to.equal('ok');
-
         done();
       });
 
