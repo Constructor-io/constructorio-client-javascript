@@ -23,7 +23,7 @@ function applyParams(parameters, options) {
     : true; // Defaults to 'true'
   let aggregateParams = Object.assign(parameters);
 
-  if (constructorABCell) {
+  if (typeof constructorABCell === 'boolean') {
     aggregateParams.is_constructor_ab_cell = constructorABCell;
   }
 
