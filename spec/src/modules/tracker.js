@@ -76,7 +76,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         ...requestQueueOptions,
       });
 
-
       tracker.on('success', (responseParams) => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
         // Request
