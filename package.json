@@ -3,6 +3,7 @@
   "version": "2.29.9",
   "description": "Constructor.io JavaScript client",
   "main": "lib/constructorio.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "clean": "sudo rm -rf node_modules package-lock.json",
     "version": "chmod +x ./scripts/verify-node-version.sh && ./scripts/verify-node-version.sh && npm run docs && git add ./docs/* && npm run bundle && git add -A ./dist",
@@ -16,7 +17,7 @@
     "coverage": "nyc --all --reporter=html npm run test:src",
     "postcoverage": "serve --listen 8080 --config ./serve.json && rm -rf test",
     "docs": "jsdoc --configure ./.jsdoc.json ./README.md --recurse ./src --destination ./docs",
-    "compile": "babel src/ -d lib/",
+    "compile": "babel src/ -d lib/ --copy-files",
     "prepublish": "npm run compile",
     "bundle": "rm -rf ./dist/* && npm run compile && node bundle.js",
     "prepare": "husky install"
