@@ -7,7 +7,6 @@ const sinonChai = require('sinon-chai');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
 const cloneDeep = require('lodash.clonedeep');
-const fs = require('fs');
 const store = require('../../../test/utils/store'); // eslint-disable-line import/extensions
 const helpers = require('../../mocha.helpers');
 const jsdom = require('../utils/jsdom-global');
@@ -34,10 +33,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     sendTrackingEvents: true,
     trackingSendDelay: 1,
   };
-
-  if (bundled) {
-    jsdomOptions.src = fs.readFileSync(`./dist/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.js`, 'utf-8');
-  }
 
   beforeEach(() => {
     cleanup = jsdom(jsdomOptions);
