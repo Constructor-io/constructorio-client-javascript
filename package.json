@@ -58,7 +58,8 @@
     "nyc": "^15.1.0",
     "serve": "^13.0.2",
     "sinon": "^7.5.0",
-    "sinon-chai": "^3.7.0"
+    "sinon-chai": "^3.7.0",
+    "tsd": "^0.24.1"
   },
   "dependencies": {
     "@constructor-io/constructorio-id": "^2.4.10",

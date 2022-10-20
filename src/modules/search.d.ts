@@ -1,13 +1,11 @@
 import { IConstructorClientOptions } from "..";
-import { EventDispatcher } from "../utils/event-dispatcher";
+import EventDispatcher  from "../utils/event-dispatcher";
 
 /***********
  *
  * 	SEARCH
  *
  ***********/
-
-export = Search;
 
 type Nullable<T> = T | null;
 
@@ -26,7 +24,7 @@ interface ISearchParameters {
 
 declare class Search {
 	constructor(options: IConstructorClientOptions);
-	options: anIConstructorClientOptionsy;
+	options: IConstructorClientOptions;
 	eventDispatcher: EventDispatcher;
 	getSearchResults(
 		query: string,
@@ -42,9 +40,9 @@ declare class Search {
  * 	search results returned from server
  *
  ***********/
-interface ISearchResponse {
+export interface ISearchResponse {
 	request: IRequest;
-	response: IResponse | IRedirect;
+	response: IResponse;
 	result_id: string;
 }
 
@@ -74,8 +72,8 @@ interface IRequest extends Record<string, any> {
 }
 
 interface IResultSources extends Record<string, any> {
-	token_match: { count: number };
-	embeddings_match: { count: number };
+	token_match: { count: number; [key: string]: any };
+	embeddings_match: { count: number; [key: string]: any };
 }
 
 interface ISortOption extends Record<string, any> {
@@ -92,6 +90,7 @@ interface IFeature extends Record<string, any> {
 	variant: {
 		name: string;
 		display_name: string;
+		[key: string]: any;
 	};
 }
 
@@ -158,10 +157,11 @@ interface IBaseGroup extends Record<string, any> {
 	group_id: string;
 }
 
-interface IResult {
+interface IResult extends Record<string, any> {
 	matched_terms: string[];
 	data: {
 		id: string;
+		[key: string]: any;
 	};
 	value: string;
 	is_slotted: false;
@@ -169,19 +169,23 @@ interface IResult {
 	variations: Record<string, any>[];
 }
 
-
-interface IRedirect extends Record<string, any> {
-	redirect: {
-		data: {
-			match_id: number;
-			rule_id: number;
-			url: string;
-		};
-		matched_terms: string[];
-		matched_user_segments: string[];
-	}
-};
+// interface IRedirect extends Record<string, any> {
+// 	redirect: {
+// 		data: {
+// 			match_id: number;
+// 			rule_id: number;
+// 			url: string;
+// 			[key: string]: any;
+// 		};
+// 		matched_terms: string[];
+// 		matched_user_segments: string[];
+// 	}
+// };
 
 export type ErrorData = {
 	message: string;
+	[key: string]: any;
 };
+
+export default Search;
+
