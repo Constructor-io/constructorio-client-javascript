@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>constructorio.js - Documentation</title>
+    <title>modules/quizzes.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">constructorio.js</h1>
+    <h1 class="page-title">modules/quizzes.js</h1>
     
 
     
@@ -39,180 +39,204 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/* eslint-disable camelcase, no-unneeded-ternary, max-len */
-const ConstructorioID = require('@constructor-io/constructorio-id');
+            <pre class="prettyprint source linenums"><code>/* eslint-disable object-curly-newline, no-underscore-dangle */
+const qs = require('qs');
+const fetchPonyfill = require('fetch-ponyfill');
+const Promise = require('es6-promise');
+const EventDispatcher = require('../utils/event-dispatcher');
+const helpers = require('../utils/helpers');
 
-// Modules
-const Search = require('./modules/search');
-const Browse = require('./modules/browse');
-const Autocomplete = require('./modules/autocomplete');
-const Recommendations = require('./modules/recommendations');
-const Tracker = require('./modules/tracker');
-const EventDispatcher = require('./utils/event-dispatcher');
-const helpers = require('./utils/helpers');
-const { version: packageVersion } = require('../package.json');
-const Quizzes = require('./modules/quizzes');
+// Create URL from supplied quizId and parameters
+function createQuizUrl(quizId, parameters, options, path) {
+  const {
+    apiKey,
+    clientId,
+    sessionId,
+    segments,
+    userId,
+    version,
+  } = options;
+  const serviceUrl = 'https://quizzes.cnstrc.com';
+  let queryParams = { c: version };
+  let answersParamString = '';
 
-// Compute package version string
-const computePackageVersion = () => {
-  const versionPrefix = 'ciojs-client-';
-  const versionModifiers = [];
+  queryParams.key = apiKey;
+  queryParams.i = clientId;
+  queryParams.s = sessionId;
 
-  if (!helpers.canUseDOM()) {
-    versionModifiers.push('domless');
+  // Pull user segments from options
+  if (segments &amp;&amp; segments.length) {
+    queryParams.us = segments;
   }
 
-  if (typeof process !== 'undefined' &amp;&amp; typeof process.env !== 'undefined' &amp;&amp; process.env.BUNDLED) {
-    versionModifiers.push('bundled');
+  // Pull user id from options
+  if (userId) {
+    queryParams.ui = userId;
   }
 
-  return `${versionPrefix}${versionModifiers.join('-')}${versionModifiers.length ? '-' : ''}${packageVersion}`;
-};
+  // Validate quiz id is provided
+  if (!quizId || typeof quizId !== 'string') {
+    throw new Error('quizId is a required parameter of type string');
+  }
+
+  if (path === 'finalize' &amp;&amp; (typeof parameters.a !== 'object' || !Array.isArray(parameters.a) || parameters.a.length === 0)) {
+    throw new Error('a is a required parameter of type array');
+  }
+
+  if (parameters) {
+    const { section, a, versionId } = parameters;
+
+    // Pull section from parameters
+    if (section) {
+      queryParams.section = section;
+    }
+
+    // Pull version_id from parameters
+    if (versionId) {
+      queryParams.version_id = versionId;
+    }
+
+    // Pull a (answers) from parameters and transform
+    if (a) {
+      a.forEach((ans) => {
+        answersParamString += `&amp;${qs.stringify({ a: ans }, { arrayFormat: 'comma' })}`;
+      });
+    }
+  }
+
+  queryParams._dt = Date.now();
+  queryParams = helpers.cleanParams(queryParams);
+
+  const queryString = qs.stringify(queryParams, { indices: false });
+
+  return `${serviceUrl}/v1/quizzes/${encodeURIComponent(quizId)}/${encodeURIComponent(path)}/?${queryString}${answersParamString}`;
+}
 
 /**
- * Class to instantiate the ConstructorIO client.
+ * Interface to quiz related API calls
+ *
+ * @module quizzes
+ * @inner
+ * @returns {object}
  */
-class ConstructorIO {
-  /**
-   * @param {object} parameters - Parameters for client instantiation
-   * @param {string} parameters.apiKey - Constructor.io API key
-   * @param {string} [parameters.serviceUrl='https://ac.cnstrc.com'] - API URL endpoint
-   * @param {array} [parameters.segments] - User segments
-   * @param {object} [parameters.testCells] - User test cells
-   * @param {string} [parameters.clientId] - Client ID, defaults to value supplied by 'constructorio-id' module
-   * @param {string} [parameters.sessionId] - Session ID, defaults to value supplied by 'constructorio-id' module
-   * @param {string} [parameters.userId] - User ID
-   * @param {function} [parameters.fetch] - If supplied, will be utilized for requests rather than default Fetch API
-   * @param {number} [parameters.trackingSendDelay=250] - Amount of time to wait before sending tracking events (in ms)
-   * @param {boolean} [parameters.sendReferrerWithTrackingEvents=true] - Indicates if the referrer is sent with tracking events
-   * @param {boolean} [parameters.sendTrackingEvents=false] - Indicates if tracking events should be dispatched
-   * @param {object} [parameters.idOptions] - Options object to be supplied to 'constructorio-id' module
-   * @param {object} [parameters.eventDispatcher] - Options related to 'EventDispatcher' class
-   * @param {boolean} [parameters.eventDispatcher.enabled=true] - Determine if events should be dispatched
-   * @param {boolean} [parameters.eventDispatcher.waitForBeacon=true] - Wait for beacon before dispatching events
-   * @param {object} [parameters.networkParameters] - Parameters relevant to network requests
-   * @param {number} [parameters.networkParameters.timeout] - Request timeout (in milliseconds) - may be overridden within individual method calls
-   * @property {object} search - Interface to {@link module:search}
-   * @property {object} browse - Interface to {@link module:browse}
-   * @property {object} autocomplete - Interface to {@link module:autocomplete}
-   * @property {object} recommendations - Interface to {@link module:recommendations}
-   * @property {object} tracker - Interface to {@link module:tracker}
-   * @property {object} quizzes - Interface to {@link module:quizzes}
-   * @returns {class}
-   */
-  constructor(options = {}) {
-    const {
-      apiKey,
-      version: versionFromOptions,
-      serviceUrl,
-      segments,
-      testCells,
-      clientId,
-      sessionId,
-      userId,
-      fetch,
-      trackingSendDelay,
-      sendReferrerWithTrackingEvents,
-      sendTrackingEvents,
-      eventDispatcher,
-      idOptions,
-      beaconMode,
-      networkParameters,
-    } = options;
-
-    if (!apiKey || typeof apiKey !== 'string') {
-      throw new Error('API key is a required parameter of type string');
-    }
-
-    let session_id;
-    let client_id;
-    const versionFromGlobal = typeof global !== 'undefined' &amp;&amp; global.CLIENT_VERSION;
-
-    // Initialize ID session if DOM context is available
-    if (helpers.canUseDOM()) {
-      ({ session_id, client_id } = new ConstructorioID(idOptions || {}));
-    } else {
-      // Validate session ID is provided
-      if (!sessionId || typeof sessionId !== 'number') {
-        throw new Error('sessionId is a required user parameter of type number');
-      }
-
-      // Validate client ID is provided
-      if (!clientId || typeof clientId !== 'string') {
-        throw new Error('clientId is a required user parameter of type string');
-      }
-    }
-
-    this.options = {
-      apiKey,
-      version: versionFromOptions || versionFromGlobal || computePackageVersion(),
-      serviceUrl: (serviceUrl &amp;&amp; serviceUrl.replace(/\/$/, '')) || 'https://ac.cnstrc.com',
-      sessionId: sessionId || session_id,
-      clientId: clientId || client_id,
-      userId,
-      segments,
-      testCells,
-      fetch,
-      trackingSendDelay,
-      sendTrackingEvents,
-      sendReferrerWithTrackingEvents,
-      eventDispatcher,
-      beaconMode: (beaconMode === false) ? false : true, // Defaults to 'true',
-      networkParameters: networkParameters || {},
-    };
-
-    // Expose global modules
-    this.search = new Search(this.options);
-    this.browse = new Browse(this.options);
-    this.autocomplete = new Autocomplete(this.options);
-    this.recommendations = new Recommendations(this.options);
-    this.tracker = new Tracker(this.options);
-    this.quizzes = new Quizzes(this.options);
-
-    // Dispatch initialization event
-    new EventDispatcher(options.eventDispatcher).queue('instantiated', this.options);
+class Quizzes {
+  constructor(options) {
+    this.options = options || {};
+    this.eventDispatcher = new EventDispatcher(options.eventDispatcher);
   }
 
   /**
-   * Sets the client options
+   * Retrieve next question from API
    *
-   * @param {string} apiKey - Constructor.io API key
-   * @param {array} [segments] - User segments
-   * @param {object} [testCells] - User test cells
-   * @param {string} [userId] - User ID
+   * @function getNextQuestion
+   * @description Retrieve next question from Constructor.io API
+   * @param {string} id - The identifier of the quiz
+   * @param {string} [parameters] - Additional parameters to refine result set
+   * @param {string} [parameters.section] - Product catalog section
+   * @param {array} [parameters.a] - An array of answers in the format [[1,2],[1]]
+   * @param {string} [parameters.versionId] - Version identifier for the quiz
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {Promise}
+   * @see https://docs.constructor.io/rest_api/quiz/using_quizzes/#answering-a-quiz
+   * @example
+   * constructorio.quizzes.getNextQuestion('quizId', {
+   *    a: [[1,2],[1]],
+   *    section: '123',
+   *    versionId: '123'
+   * });
    */
-  setClientOptions(options) {
-    if (Object.keys(options).length) {
-      const { apiKey, segments, testCells, userId } = options;
+  getNextQuestion(quizId, parameters, networkParameters = {}) {
+    let requestUrl;
+    const fetch = (this.options &amp;&amp; this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const controller = new AbortController();
+    const { signal } = controller;
 
-      if (apiKey) {
-        this.options.apiKey = apiKey;
-      }
-
-      if (segments) {
-        this.options.segments = segments;
-      }
-
-      if (testCells) {
-        this.options.testCells = testCells;
-      }
-
-      if (userId) {
-        this.options.userId = userId;
-      }
+    try {
+      requestUrl = createQuizUrl(quizId, parameters, this.options, 'next');
+    } catch (e) {
+      return Promise.reject(e);
     }
+
+    // Handle network timeout if specified
+    helpers.applyNetworkTimeout(this.options, networkParameters, controller);
+
+    return fetch(requestUrl, { signal })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+
+        return helpers.throwHttpErrorFromResponse(new Error(), response);
+      })
+      .then((json) => {
+        if (json.version_id) {
+          this.eventDispatcher.queue('quizzes.getNextQuiz.completed', json);
+
+          return json;
+        }
+
+        throw new Error('getNextQuiz response data is malformed');
+      });
+  }
+
+  /**
+   * Retrieves filter expression and recommendation URL from given answers
+   *
+   * @function getQuizResults
+   * @description Retrieve quiz recommendation and filter expression from Constructor.io API
+   * @param {string} id - The identifier of the quiz
+   * @param {string} [parameters] - Additional parameters to refine result set
+   * @param {string} [parameters.section] - Product catalog section
+   * @param {array} [parameters.a] - An array of answers in the format [[1,2],[1]]
+   * @param {string} [parameters.versionId] - Specific version identifier for the quiz
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {Promise}
+   * @see https://docs.constructor.io/rest_api/quiz/using_quizzes/#completing-the-quiz
+   * @example
+   * constructorio.quizzes.getQuizResults('quizId', {
+   *    a: [[1,2],[1]],
+   *    section: '123',
+   *    versionId: '123'
+   * });
+   */
+  getQuizResults(quizId, parameters, networkParameters = {}) {
+    let requestUrl;
+    const fetch = (this.options &amp;&amp; this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const controller = new AbortController();
+    const { signal } = controller;
+
+    try {
+      requestUrl = createQuizUrl(quizId, parameters, this.options, 'finalize');
+    } catch (e) {
+      return Promise.reject(e);
+    }
+
+    // Handle network timeout if specified
+    helpers.applyNetworkTimeout(this.options, networkParameters, controller);
+
+    return fetch(requestUrl, { signal })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+
+        return helpers.throwHttpErrorFromResponse(new Error(), response);
+      })
+      .then((json) => {
+        if (json.version_id) {
+          this.eventDispatcher.queue('quizzes.getQuizResults.completed', json);
+
+          return json;
+        }
+
+        throw new Error('getQuizResults response data is malformed');
+      });
   }
 }
 
-// Exposed for testing
-ConstructorIO.Tracker = Tracker;
-
-// Expose on window object if available
-if (helpers.canUseDOM()) {
-  window.ConstructorioClient = ConstructorIO;
-}
-
-module.exports = ConstructorIO;
+module.exports = Quizzes;
 </code></pre>
         </article>
     </section>
