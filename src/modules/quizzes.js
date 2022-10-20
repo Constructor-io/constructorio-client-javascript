@@ -89,11 +89,11 @@ class Quizzes {
    *
    * @function getNextQuestion
    * @description Retrieve next question from Constructor.io API
-   * @param {string} id - The ID of the quiz
+   * @param {string} id - The identifier of the quiz
    * @param {string} [parameters] - Additional parameters to refine result set
    * @param {string} [parameters.section] - Product catalog section
    * @param {array} [parameters.a] - An array of answers in the format [[1,2],[1]]
-   * @param {string} [parameters.versionId] - Version ID for the quiz
+   * @param {string} [parameters.versionId] - Version identifier for the quiz
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
@@ -144,11 +144,11 @@ class Quizzes {
    *
    * @function getQuizResults
    * @description Retrieve quiz recommendation and filter expression from Constructor.io API
-   * @param {string} id - The ID of the quiz
+   * @param {string} id - The identifier of the quiz
    * @param {string} [parameters] - Additional parameters to refine result set
    * @param {string} [parameters.section] - Product catalog section
    * @param {array} [parameters.a] - An array of answers in the format [[1,2],[1]]
-   * @param {string} [parameters.versionId] - Specific version ID for the quiz
+   * @param {string} [parameters.versionId] - Specific version identifier for the quiz
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}

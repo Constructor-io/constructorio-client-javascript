@@ -110,6 +110,44 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should return a result provided a valid apiKey, quizId and user id', () => {
+      const userId = 'user-id';
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+        userId,
+      });
+
+      return quizzes.getNextQuestion(validQuizId, {}).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('version_id').to.be.an('string');
+        expect(res).to.have.property('next_question').to.be.an('object');
+        expect(res.next_question.id).to.equal(1);
+        expect(res.next_question.options[0].id).to.equal(1);
+        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+      });
+    });
+
+    it('Should return a result provided a valid apiKey, quizId and segments', () => {
+      const segments = ['foo', 'bar'];
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+        segments,
+      });
+
+      return quizzes.getNextQuestion(validQuizId, {}).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('version_id').to.be.an('string');
+        expect(res).to.have.property('next_question').to.be.an('object');
+        expect(res.next_question.id).to.equal(1);
+        expect(res.next_question.options[0].id).to.equal(1);
+        expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+      });
+    });
+
     it('Should return result given answers parameter', () => {
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
@@ -130,6 +168,15 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       });
 
       return expect(quizzes.getNextQuestion('invalidQuizId', {})).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected if no quizId is provided', () => {
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+      });
+
+      return expect(quizzes.getNextQuestion(null, {})).to.eventually.be.rejected;
     });
 
     it('Should be rejected if an invalid versionId is provided', () => {
@@ -224,6 +271,51 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
         expect(res).to.have.property('version_id').to.be.an('string');
         expect(requestedUrlParams).to.have.property('version_id').to.equal(versionId);
       });
+    });
+
+    it('Should return a result provided a valid apiKey, quizId and user id', () => {
+      const userId = 'user-id';
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+        userId,
+      });
+
+      return quizzes.getQuizResults(validQuizId, { a: validAnswers }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('result').to.be.an('object');
+        expect(res.result).to.have.property('results_url').to.be.an('string');
+        expect(res).to.have.property('version_id').to.be.an('string');
+        expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+      });
+    });
+
+    it('Should return a result provided a valid apiKey, quizId and segments', () => {
+      const segments = ['foo', 'bar'];
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+        segments,
+      });
+
+      return quizzes.getQuizResults(validQuizId, { a: validAnswers }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('result').to.be.an('object');
+        expect(res.result).to.have.property('results_url').to.be.an('string');
+        expect(res).to.have.property('version_id').to.be.an('string');
+        expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
+      });
+    });
+
+    it('Should be rejected if no quizId is provided', () => {
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+      });
+
+      return expect(quizzes.getQuizResults(null, { a: validAnswers })).to.eventually.be.rejected;
     });
 
     it('Should be rejected if an invalid quizId is provided', () => {
