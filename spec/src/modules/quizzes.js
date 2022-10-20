@@ -20,7 +20,7 @@ const clientVersion = 'cio-mocha';
 const bundled = process.env.BUNDLED === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 
-describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
+describe.only(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
   const validQuizId = 'test-quiz';
   const validAnswers = [[1], [1, 2], ['seen']];
   const jsdomOptions = { url: 'http://localhost' };
@@ -51,28 +51,12 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
   });
 
   describe('getNextQuestion', () => {
-
-    it('Should be rejected if an invalid quizId is provided', () => {
-      const { quizzes } = new ConstructorIO({
-        apiKey: quizApiKey,
-        fetch: fetchSpy,
-      });
-      return expect(quizzes.getNextQuestion('invalidQuizId', {})).to.eventually.be.rejected;
-    });
-
-    it('Should be rejected if an invalid apiKey is provided', () => {
-      const { quizzes } = new ConstructorIO({
-        apiKey: 'invalidKey',
-        fetch: fetchSpy,
-      });
-      return expect(quizzes.getNextQuestion(validQuizId, {})).to.eventually.be.rejected;
-    });
-
     it('Should return a result provided a valid apiKey and quizId', () => {
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
       });
+
       return quizzes.getNextQuestion(validQuizId, {}).then((res) => {
         expect(res).to.have.property('version_id').to.be.an('string');
         expect(res.next_question.id).to.equal(1);
@@ -90,6 +74,15 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
         expect(res).to.have.property('version_id').to.be.an('string');
         expect(res.next_question.id).to.equal(4);
       });
+    });
+
+    it('Should be rejected if an invalid quizId is provided', () => {
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+      });
+
+      return expect(quizzes.getNextQuestion('invalidQuizId', {})).to.eventually.be.rejected;
     });
 
     it('Should be rejected when network request timeout is provided and reached', () => {
@@ -110,42 +103,18 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
 
       return expect(quizzes.getNextQuestion(validQuizId, {})).to.eventually.be.rejectedWith('The user aborted a request.');
     });
-  });
-
-  describe('getQuizResults', () => {
-
-    it('Should be rejected if an invalid quizId is provided', () => {
-      const { quizzes } = new ConstructorIO({
-        apiKey: quizApiKey,
-        fetch: fetchSpy,
-      });
-      return expect(quizzes.getQuizResults('invalidQuizId', { a: validAnswers })).to.eventually.be.rejected;
-    });
 
     it('Should be rejected if an invalid apiKey is provided', () => {
       const { quizzes } = new ConstructorIO({
         apiKey: 'invalidKey',
         fetch: fetchSpy,
       });
-      return expect(quizzes.getQuizResults(validQuizId, { a: validAnswers })).to.eventually.be.rejected;
-    });
 
-    it('Should be rejected if answers are not provided', () => {
-      const { quizzes } = new ConstructorIO({
-        apiKey: quizApiKey,
-        fetch: fetchSpy,
-      });
-      return expect(quizzes.getQuizResults(validQuizId, { })).to.eventually.be.rejected;
+      return expect(quizzes.getNextQuestion(validQuizId, {})).to.eventually.be.rejected;
     });
+  });
 
-    it('Should be rejected if empty answers are provided', () => {
-      const { quizzes } = new ConstructorIO({
-        apiKey: quizApiKey,
-        fetch: fetchSpy,
-      });
-      return expect(quizzes.getQuizResults(validQuizId, { a: [] })).to.eventually.be.rejected;
-    });
-
+  describe('getQuizResults', () => {
     it('Should return result given answers parameter', () => {
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
@@ -157,6 +126,42 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
         expect(res.result).to.have.property('results_url').to.be.an('string');
         expect(res).to.have.property('version_id').to.be.an('string');
       });
+    });
+
+    it('Should be rejected if an invalid quizId is provided', () => {
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+      });
+
+      return expect(quizzes.getQuizResults('invalidQuizId', { a: validAnswers })).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected if an invalid apiKey is provided', () => {
+      const { quizzes } = new ConstructorIO({
+        apiKey: 'invalidKey',
+        fetch: fetchSpy,
+      });
+
+      return expect(quizzes.getQuizResults(validQuizId, { a: validAnswers })).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected if answers are not provided', () => {
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+      });
+
+      return expect(quizzes.getQuizResults(validQuizId, { })).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected if empty answers are provided', () => {
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+      });
+
+      return expect(quizzes.getQuizResults(validQuizId, { a: [] })).to.eventually.be.rejected;
     });
 
     it('Should be rejected when network request timeout is provided and reached', () => {

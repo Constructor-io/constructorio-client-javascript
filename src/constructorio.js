@@ -56,6 +56,7 @@ class ConstructorIO {
    * @property {object} autocomplete - Interface to {@link module:autocomplete}
    * @property {object} recommendations - Interface to {@link module:recommendations}
    * @property {object} tracker - Interface to {@link module:tracker}
+   * @property {object} quizzes - Interface to {@link module:quizzes}
    * @returns {class}
    */
   constructor(options = {}) {
