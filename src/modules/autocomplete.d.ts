@@ -16,7 +16,7 @@ interface IAutocompleteParameters {
 	variationsMap: Record<string, any>;
 }
 
-interface IAutocompleteResponse {
+interface IAutocompleteResponse extends Record<string, any> {
 	request: {
 		num_results: number;
 		term: string;

@@ -9,17 +9,19 @@ import { EventDispatcher } from "../utils/event-dispatcher";
 
 export = Search;
 
+type Nullable<T> = T | null;
+
 interface ISearchParameters {
 	page?: number;
 	resultsPerPage?: number;
-	filters?: object;
+	filters?: Record<string, any>;
 	sortBy?: string;
 	sortOrder?: string;
 	section?: string;
-	fmtOptions?: object;
+	fmtOptions?: Record<string, any>;
 	hiddenFields?: string[];
 	hiddenFacets?: string[];
-	variationsMap?: object;
+	variationsMap?: Record<string, any>;
 }
 
 declare class Search {
@@ -32,272 +34,154 @@ declare class Search {
 		networkParameters?: {
 			timeout?: number;
 		}
-	): Promise<any>;
+	): Promise<ISearchResponse | ErrorData>;
 }
 
-export type ValidResponse = Results | Redirect;
-export type Response = ValidResponse | Error;
+/***********
+ *
+ * 	search results returned from server
+ *
+ ***********/
+interface ISearchResponse {
+	request: IRequest;
+	response: IResponse | IRedirect;
+	result_id: string;
+}
 
-export type Results = RequestContainer & {
-	response: {
-		results: Result[];
-		facets: Facet[];
-		groups: Group[];
-		totalNumResults: number;
-		refinedContents: ContentRuleData[];
-	};
-};
-
-export type Redirect = RequestContainer & {
-	response: {
-		redirect: {
-			data: {
-				matchId: number;
-				ruleId: number;
-				url: string;
-			};
-			matchedTerms: string[];
-			matchedUserSegments: string[];
-		};
-	};
-};
-
-type RequestContainer = {
-	request: Request;
-};
-
-export type Request = {
-	page: number;
-	numResultsPerPage: number;
-	section: string;
-};
-
-export type Facet = RangeFacet | OptionFacet;
-
-export type BaseFacet = {
-	displayName: string;
-	name: string;
-	hidden: boolean;
-};
-
-export type RangeFacet = BaseFacet & {
-	max: number;
-	min: number;
-	type: "range";
-};
-
-export type OptionFacet = BaseFacet & {
-	options: FacetOption[];
-	type: "multiple" | "single" | "hierarchical";
-};
-
-export type FacetOption = {
-	count: number;
-	displayName: string;
-	value: string;
-	options?: FacetOption[];
-	range?: ["-inf" | number, "inf" | number];
-};
-
-export type BaseGroup = {
-	displayName: string;
-	groupId: string;
-};
-
-export type Group = BaseGroup & {
-	count: number;
-	parents: BaseGroup[];
-	children: Group[];
-};
-
-export type SearchClientRenderGroupProps = {
-	group: GroupData;
-	selector: boolean;
-};
-
-export type Result = {
-	data: {
-		id: string;
-	};
-	value: string;
-	isSlotted: boolean;
-	labels: {
-		isSponsored: boolean;
-		[key: string]: any;
-	};
-	explanation?: RankingExplanation;
-	rerankerExplanation?: RerankerExplanation[];
-};
-
-export type RankingExplanation = {
-	finalScore?: number;
-	computedScore?: number;
-	source?: ResultSource;
-	conversionRulesBoost?: number;
-	personalizationBoost?: number;
-	queryRefinementBoost?: number;
-	tagRefinementBoost?: number;
-	filterRefinementBoost?: number;
-	skuBoost?: number;
-	rerankerBoost?: number;
-	rerankerPrediction?: number;
-};
-
-export type RerankerExplanation = {
-	direction: number;
-	featureGroup: string;
-	impactValue: number;
-};
-
-export type Error = {
-	message: string;
-};
-
-// search results returned from server
-export type ResponseData = ResultsData | RedirectData | ErrorData;
-
-export type ResultsData = {
-	request: RequestData;
-	response: ResultsResponseData;
-};
-
-export type ResultsResponseData = {
-	refined_content: ContentRuleData[];
-	results: ResultData[];
-	facets: FacetData[];
-	groups: GroupData[];
+interface IResponse extends Record<string, any> {
+	result_sources: Partial<IResultSources>;
+	facets: Partial<IFacet>[];
+	groups: Partial<IGroup>[];
+	results: Partial<IResult>[];
+	sort_options: Partial<ISortOption>[];
+	refined_content: Record<string, any>[];
 	total_num_results: number;
-	features?: FeatureData[];
-};
+	features: Partial<IFeature>[];
+}
 
-export type RedirectData = {
-	request: RequestData;
-	response: RedirectResponseData;
-};
-
-export type RedirectResponseData = {
-	redirect: RedirectValueData;
-};
-
-export type RedirectValueData = {
-	data: {
-		match_id: number;
-		rule_id: number;
-		url: string;
-	};
-	matched_terms: string[];
-	matched_user_segments: string[];
-};
-
-export type RequestData = {
+interface IRequest extends Record<string, any> {
 	page: number;
 	num_results_per_page: number;
 	section: string;
-};
+	blacklist_rules: boolean;
+	term: string;
+	fmt_options: Partial<IFmtOption>;
+	sort_by: string;
+	sort_order: string;
+	features: Partial<IRequestFeature>;
+	feature_variants: Partial<IRequestFeatureVariant>;
+	searchandized_items: Record<string, any>;
+}
 
-export type FacetData = RangeFacetData | OptionFacetData;
+interface IResultSources extends Record<string, any> {
+	token_match: { count: number };
+	embeddings_match: { count: number };
+}
 
-type BaseFacetData = {
+interface ISortOption extends Record<string, any> {
+	sort_by: string;
 	display_name: string;
-	name: string;
-	hidden: boolean;
-};
+	sort_order: string;
+	status: string;
+}
 
-export type ContentRuleData = {
-	data: Record<string, string>;
-};
-
-export type RangeFacetData = BaseFacetData & {
-	max: number;
-	min: number;
-	type: "range";
-};
-
-export type OptionFacetData = BaseFacetData & {
-	options: FacetOptionData[];
-	type: "multiple" | "single";
-};
-
-export type FacetOptionData = {
-	count: number;
-	display_name: string | null;
-	value: string;
-	range?: ["-inf" | number, "inf" | number];
-	options?: FacetOptionData[];
-};
-
-export type BaseGroupData = {
-	display_name: string;
-	group_id: string;
-};
-
-export type GroupData = BaseGroupData & {
-	count: number;
-	parents: BaseGroupData[];
-	children: GroupData[];
-};
-
-export type ResultData = {
-	explanation?: RankingExplanationData;
-	reranker_explanation?: RerankerExplanationData[];
-	data: {
-		id: string;
-		groups?: ResultGroupData[];
-		image_url?: string;
-	};
-	value: string;
-	is_slotted: boolean;
-	labels?: {
-		is_sponsored?: boolean;
-		[key: string]: any;
-	};
-};
-
-export type ResultSource =
-	| "COGNITIVE_EMBEDDINGS"
-	| "INVERTED_INDEX"
-	| "SLOTTED";
-
-export type RankingExplanationData = {
-	final_score?: number;
-	computed_score?: number;
-	source?: ResultSource;
-	conversion_rules_boost?: number;
-	personalization_boost?: number;
-	query_refinement_boost?: number;
-	tag_refinement_boost?: number;
-	filter_refinement_boost?: number;
-	sku_boost?: number;
-	reranker_boost?: number;
-	reranker_prediction?: number;
-};
-
-export type RerankerExplanationData = {
-	direction: number;
-	feature_group: string;
-	impact_value: number;
-};
-
-export type ResultGroupData = {
-	display_name: string;
-	group_id: string;
-	path: string;
-	path_list: {
-		display_name: string;
-		id: string;
-	}[];
-};
-
-export type ErrorData = {
-	message: string;
-};
-
-export type FeatureData = {
+interface IFeature extends Record<string, any> {
+	feature_name: string;
 	display_name: string;
 	enabled: boolean;
-	feature_name: string;
 	variant: {
 		name: string;
 		display_name: string;
 	};
+}
+
+interface IFmtOption extends Record<string, any> {
+	groups_start: string;
+	groups_max_depth: number;
+}
+
+interface IRequestFeature extends Record<string, any> {
+	query_items: boolean;
+	auto_generated_refined_query_rules: boolean;
+	manual_searchandizing: boolean;
+	personalization: boolean;
+	filter_items: boolean;
+}
+
+interface IRequestFeatureVariant extends Record<string, any> {
+	query_items: string;
+	auto_generated_refined_query_rules: string;
+	manual_searchandizing: string | null;
+	personalization: string;
+	filter_items: string;
+}
+
+type IFacet = RangeFacet | OptionFacet;
+
+interface BaseFacet extends Record<string, any> {
+	data: Record<string, any>;
+	status: Record<string, any>;
+	display_name: string;
+	name: string;
+	hidden: boolean;
+}
+
+interface RangeFacet extends BaseFacet, Record<string, any> {
+	max: number;
+	min: number;
+	type: "range";
+}
+
+interface OptionFacet extends BaseFacet, Record<string, any> {
+	options: IFacetOption[];
+	type: "multiple" | "single" | "hierarchical";
+}
+
+interface IFacetOption extends Record<string, any> {
+	count: number;
+	display_name: string;
+	value: string;
+	options?: IFacetOption[];
+	range?: ["-inf" | number, "inf" | number];
+	status: string;
+}
+
+interface IGroup extends IBaseGroup, Record<string, any> {
+	count: number;
+	data: Record<string, any>;
+	parents: IBaseGroup[];
+	children: IGroup[];
+}
+
+interface IBaseGroup extends Record<string, any> {
+	display_name: string;
+	group_id: string;
+}
+
+interface IResult {
+	matched_terms: string[];
+	data: {
+		id: string;
+	};
+	value: string;
+	is_slotted: false;
+	labels: Record<string, any>;
+	variations: Record<string, any>[];
+}
+
+
+interface IRedirect extends Record<string, any> {
+	redirect: {
+		data: {
+			match_id: number;
+			rule_id: number;
+			url: string;
+		};
+		matched_terms: string[];
+		matched_user_segments: string[];
+	}
+};
+
+export type ErrorData = {
+	message: string;
 };
