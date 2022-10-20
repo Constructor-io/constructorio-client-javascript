@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-expressions, import/no-unresolved, no-new */
 const { expect } = require('chai');
 const sinon = require('sinon');
-const fs = require('fs');
 const helpers = require('../mocha.helpers');
 const { version: packageVersion } = require('../../package.json');
 const jsdom = require('./utils/jsdom-global');
@@ -15,10 +14,6 @@ const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
   const jsdomOptions = { url: 'http://localhost' };
   let cleanup;
-
-  if (bundled) {
-    jsdomOptions.src = fs.readFileSync(`./dist/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.js`, 'utf-8');
-  }
 
   beforeEach(() => {
     cleanup = jsdom(jsdomOptions);
