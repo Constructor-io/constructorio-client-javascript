@@ -28,7 +28,7 @@ declare class Recommendations {
 		networkParameters?: {
 			timeout?: number;
 		}
-	): Promise<Recommendations.RecommendationsResponse | ErrorData>;
+	): Promise<Recommendations.RecommendationsResponse>;
 }
 
 /***********
