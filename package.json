@@ -43,6 +43,7 @@
     "@babel/register": "^7.15.3",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
+    "del-cli": "^5.0.0",
     "dotenv": "^8.6.0",
     "esbuild": "^0.12.28",
     "eslint": "^8.17.0",
