@@ -1,8 +1,17 @@
+import { ConstructorClientOptions } from "./types";
+import EventEmitter = require("events");
+import RequestQueue = require("../utils/request-queue");
+
 export = Tracker;
 
+/******************
+ *
+ * 	Tracker
+ *
+ *****************/
 declare class Tracker {
-    constructor(options: IConstructorClientOptions);
-    private options: IConstructorClientOptions;
+    constructor(options: ConstructorClientOptions);
+    private options: ConstructorClientOptions;
     private eventemitter: EventEmitter;
     private requests: RequestQueue;
   
@@ -151,7 +160,3 @@ declare class Tracker {
     
     on(messageType: string, callback: Function): (true | Error);
 }
-
-import EventEmitter = require("events");
-import { IConstructorClientOptions } from "..";
-import RequestQueue = require("../utils/request-queue");

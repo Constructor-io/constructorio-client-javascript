@@ -1,7 +1,9 @@
+import { ConstructorClientOptions } from "./types";
+
 export = EventDispatcher;
 
 declare class EventDispatcher {
-	constructor(options: IConstructorClientOptions);
+	constructor(options: ConstructorClientOptions);
 	events: { name: string; data: Record<string, any> }[];
 	enabled: boolean;
 	waitForBeacon: boolean;

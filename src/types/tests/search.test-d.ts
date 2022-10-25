@@ -1,8 +1,8 @@
-import { ISearchResponse } from "./search.d";
+import { SearchResponse } from "../search";
 import { expectType } from "tsd";
 
 // Example response from https://www.princessauto.com/en/searchresults?Nr=product.active%3A1&Ntt=red*&Nty=1&No=0&Nrpp=50&Rdm=93&searchType=simple&type=search
-expectType<ISearchResponse>({
+expectType<SearchResponse>({
 	response: {
 		result_sources: {
 			token_match: {
@@ -141,7 +141,7 @@ expectType<ISearchResponse>({
 });
 
 // Example response from https://bonobos.com/search?term=red
-expectType<ISearchResponse>({
+expectType<SearchResponse>({
 	response: {
 		result_sources: {
 			token_match: {
@@ -361,5 +361,26 @@ expectType<ISearchResponse>({
 			filter_items: "filter_items_w_atcs_and_purchases",
 		},
 		searchandized_items: {},
+	},
+});
+
+expectType<SearchResponse>({
+	response: {
+		redirect: {
+			data: {
+        url: "<url>"
+      },
+      matched_terms: [
+        "<a term>",
+        "<another term>",
+      ],
+      matched_user_segments: [
+        "<a segment>",
+        "<another segment>",
+      ]
+		},
+	},
+	result_id: "e0cd67c5-fbd0-4550-a1b7-fdbca97d03b8",
+	request: {
 	},
 });
