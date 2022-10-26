@@ -62,12 +62,12 @@
   },
   "dependencies": {
     "@constructor-io/constructorio-id": "^2.4.10",
-    "crc-32": "^1.2.0",
+    "crc-32": "^1.2.2",
     "es6-promise": "^4.2.8",
     "events": "^3.0.0",
     "fetch-ponyfill": "^7.1.0",
-    "qs": "6.7.2",
-    "store2": "^2.9.0"
+    "qs": "6.11.0",
+    "store2": "^2.14.2"
   },
   "peerDependencies": {
     "@babel/runtime": "^7.19.0"
