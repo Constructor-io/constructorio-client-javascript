@@ -135,7 +135,7 @@ class Quizzes {
           return json;
         }
 
-        throw new Error('getNextQuiz response data is malformed');
+        throw new Error('getNextQuestion response data is malformed');
       });
   }
 
