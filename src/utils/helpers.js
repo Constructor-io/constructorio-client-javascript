@@ -158,20 +158,20 @@ const utils = {
       }
 
       const value = object[key];
-      const enkey = utils.encodeURIComponent(key);
+      const encodedKey = utils.encodeURIComponentRFC3986(key);
 
       let stringifiedValue;
 
       // Check for both null and undefined
       if (value != null) {
         if (Array.isArray(value)) {
-          stringifiedValue = utils.stringify(value, prefix ? `${prefix}[${enkey}]` : enkey, 'array');
+          stringifiedValue = utils.stringify(value, prefix ? `${prefix}[${encodedKey}]` : encodedKey, 'array');
         } else if (typeof value === 'object') {
-          stringifiedValue = utils.stringify(value, prefix ? `${prefix}[${enkey}]` : enkey, 'object');
+          stringifiedValue = utils.stringify(value, prefix ? `${prefix}[${encodedKey}]` : encodedKey, 'object');
         } else if (objectType === 'object') {
-          stringifiedValue = `${prefix ? `${prefix}[${enkey}]` : enkey}=${utils.encodeURIComponent(value)}`;
+          stringifiedValue = `${prefix ? `${prefix}[${encodedKey}]` : encodedKey}=${utils.encodeURIComponentRFC3986(value)}`;
         } else {
-          stringifiedValue = `${prefix || enkey}=${utils.encodeURIComponent(value)}`;
+          stringifiedValue = `${prefix || encodedKey}=${utils.encodeURIComponentRFC3986(value)}`;
         }
 
         allValues.push(stringifiedValue);
