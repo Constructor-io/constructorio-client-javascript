@@ -1,5 +1,4 @@
 /* eslint-disable object-curly-newline, no-param-reassign */
-const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
 const EventDispatcher = require('../utils/event-dispatcher');
@@ -65,7 +64,7 @@ function createRecommendationsUrl(podId, parameters, options) {
 
   queryParams = helpers.cleanParams(queryParams);
 
-  const queryString = qs.stringify(queryParams, { indices: false });
+  const queryString = helpers.stringify(queryParams);
 
   return `${serviceUrl}/recommendations/v1/pods/${helpers.encodeURIComponentRFC3986(helpers.trimNonBreakingSpaces(podId))}?${queryString}`;
 }

@@ -1,5 +1,4 @@
 /* eslint-disable object-curly-newline, no-underscore-dangle, max-len, complexity */
-const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
 const EventDispatcher = require('../utils/event-dispatcher');
@@ -150,7 +149,7 @@ function createBrowseUrlFromFilter(filterName, filterValue, parameters, options)
   }
 
   const queryParams = createQueryParams(parameters, options);
-  const queryString = qs.stringify(queryParams, { indices: false });
+  const queryString = helpers.stringify(queryParams);
 
   return `${serviceUrl}/browse/${helpers.encodeURIComponentRFC3986(helpers.trimNonBreakingSpaces(filterName))}/${helpers.encodeURIComponentRFC3986(helpers.trimNonBreakingSpaces(filterValue))}?${queryString}`;
 }
@@ -165,7 +164,7 @@ function createBrowseUrlFromIDs(ids, parameters, options) {
   }
 
   const queryParams = { ...createQueryParams(parameters, options), ids };
-  const queryString = qs.stringify(queryParams, { indices: false });
+  const queryString = helpers.stringify(queryParams);
 
   return `${serviceUrl}/browse/items?${queryString}`;
 }
@@ -178,7 +177,7 @@ function createBrowseUrlForFacets(parameters, options) {
   // Endpoint does not accept _dt
   delete queryParams._dt;
 
-  const queryString = qs.stringify(queryParams, { indices: false });
+  const queryString = helpers.stringify(queryParams);
 
   return `${serviceUrl}/browse/facets?${queryString}`;
 }
@@ -199,7 +198,7 @@ function createBrowseUrlForFacetOptions(facetName, parameters, options) {
   // Endpoint does not accept _dt
   delete queryParams._dt;
 
-  const queryString = qs.stringify(queryParams, { indices: false });
+  const queryString = helpers.stringify(queryParams);
 
   return `${serviceUrl}/browse/facet_options?${queryString}`;
 }
@@ -410,7 +409,7 @@ class Browse {
 
     delete queryParams._dt;
 
-    const queryString = qs.stringify(queryParams, { indices: false });
+    const queryString = helpers.stringify(queryParams);
     const requestUrl = `${serviceUrl}/browse/groups?${queryString}`;
 
     return fetch(requestUrl, { signal })

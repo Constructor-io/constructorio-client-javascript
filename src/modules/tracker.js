@@ -1,5 +1,4 @@
 /* eslint-disable object-curly-newline, no-underscore-dangle, camelcase, no-unneeded-ternary */
-const qs = require('qs');
 const EventEmitter = require('events');
 const helpers = require('../utils/helpers');
 const RequestQueue = require('../utils/request-queue');
@@ -72,7 +71,7 @@ function applyParams(parameters, options) {
 
 // Append common parameters to supplied parameters object and return as string
 function applyParamsAsString(parameters, options) {
-  return qs.stringify(applyParams(parameters, options), { indices: false });
+  return helpers.stringify(applyParams(parameters, options));
 }
 
 /**

@@ -1,7 +1,6 @@
 /* eslint-disable complexity */
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline, no-underscore-dangle */
-const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
 const EventDispatcher = require('../utils/event-dispatcher');
@@ -127,7 +126,7 @@ function createSearchUrl(query, parameters, options) {
   queryParams._dt = Date.now();
   queryParams = helpers.cleanParams(queryParams);
 
-  const queryString = qs.stringify(queryParams, { indices: false });
+  const queryString = helpers.stringify(queryParams);
 
   return `${serviceUrl}/search/${helpers.encodeURIComponentRFC3986(helpers.trimNonBreakingSpaces(query))}?${queryString}`;
 }

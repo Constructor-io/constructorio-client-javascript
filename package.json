@@ -66,7 +66,8 @@
     "es6-promise": "^4.2.8",
     "events": "^3.0.0",
     "fetch-ponyfill": "^7.1.0",
-    "qs": "6.11.0",
+    "qs": "^6.11.0",
+    "qs-stringify": "^1.2.1",
     "store2": "^2.14.2"
   },
   "peerDependencies": {
