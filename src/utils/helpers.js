@@ -4,37 +4,6 @@ const store = require('./store');
 
 const purchaseEventStorageKey = '_constructorio_purchase_order_ids';
 
-const stringify = (object, prefix, objectType) => {
-  const allValues = [];
-
-  for (const key in object) {
-    if (!Object.prototype.hasOwnProperty.call(object, key)) {
-      continue;
-    }
-
-    const value = object[key];
-    const enkey = encodeURIComponent(key);
-
-    let stringifiedValue;
-
-    // Check for both null and undefined
-    if (value != null) {
-      if (Array.isArray(value)) {
-        stringifiedValue = stringify(value, prefix ? `${prefix}[${enkey}]` : enkey, 'array');
-      } else if (typeof value === 'object') {
-        stringifiedValue = stringify(value, prefix ? `${prefix}[${enkey}]` : enkey, 'object');
-      } else if (objectType === 'object') {
-        stringifiedValue = `${prefix ? `${prefix}[${enkey}]` : enkey}=${encodeURIComponent(value)}`;
-      } else {
-        stringifiedValue = `${prefix || enkey}=${encodeURIComponent(value)}`;
-      }
-
-      allValues.push(stringifiedValue);
-    }
-  }
-  return allValues.join('&');
-};
-
 const utils = {
   trimNonBreakingSpaces: (string) => string.replace(/\s/g, ' ').trim(),
 
@@ -180,7 +149,36 @@ const utils = {
       setTimeout(() => controller.abort(), timeout);
     }
   },
-  stringify,
+  stringify: (object, prefix, objectType) => {
+    const allValues = [];
+
+    for (const key in object) {
+      if (!Object.prototype.hasOwnProperty.call(object, key)) {
+        continue;
+      }
+
+      const value = object[key];
+      const enkey = utils.encodeURIComponent(key);
+
+      let stringifiedValue;
+
+      // Check for both null and undefined
+      if (value != null) {
+        if (Array.isArray(value)) {
+          stringifiedValue = utils.stringify(value, prefix ? `${prefix}[${enkey}]` : enkey, 'array');
+        } else if (typeof value === 'object') {
+          stringifiedValue = utils.stringify(value, prefix ? `${prefix}[${enkey}]` : enkey, 'object');
+        } else if (objectType === 'object') {
+          stringifiedValue = `${prefix ? `${prefix}[${enkey}]` : enkey}=${utils.encodeURIComponent(value)}`;
+        } else {
+          stringifiedValue = `${prefix || enkey}=${utils.encodeURIComponent(value)}`;
+        }
+
+        allValues.push(stringifiedValue);
+      }
+    }
+    return allValues.join('&');
+  },
 };
 
 module.exports = utils;
