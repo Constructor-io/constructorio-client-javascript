@@ -5,7 +5,6 @@ const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 const fetchPonyfill = require('fetch-ponyfill');
-const Promise = require('es6-promise');
 const fs = require('fs');
 const helpers = require('../../mocha.helpers');
 const jsdom = require('../utils/jsdom-global');

@@ -1,7 +1,6 @@
 /* eslint-disable object-curly-newline, no-underscore-dangle, max-len, complexity */
 const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
-const Promise = require('es6-promise');
 const EventDispatcher = require('../utils/event-dispatcher');
 const helpers = require('../utils/helpers');
 
