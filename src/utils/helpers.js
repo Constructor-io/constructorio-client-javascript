@@ -152,11 +152,7 @@ const utils = {
   stringify: (object, prefix, objectType) => {
     const allValues = [];
 
-    for (const key in object) {
-      if (!Object.prototype.hasOwnProperty.call(object, key)) {
-        continue;
-      }
-
+    Object.keys(object).forEach((key) => {
       const value = object[key];
       const encodedKey = utils.encodeURIComponentRFC3986(key);
 
@@ -176,7 +172,8 @@ const utils = {
 
         allValues.push(stringifiedValue);
       }
-    }
+    });
+
     return allValues.join('&');
   },
 };
