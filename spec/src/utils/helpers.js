@@ -19,6 +19,7 @@ const {
   hasOrderIdRecord,
   addOrderIdRecord,
   applyNetworkTimeout,
+  stringify,
 } = require('../../../test/utils/helpers'); // eslint-disable-line import/extensions
 const jsdom = require('./jsdom-global');
 const store = require('../../../test/utils/store'); // eslint-disable-line import/extensions
@@ -357,6 +358,23 @@ describe('ConstructorIO - Utils - Helpers', () => {
           expect(controller.signal.aborted).to.equal(true);
           done();
         }, 75);
+      });
+    });
+
+    describe('stringify', () => {
+      it('Should stringify the object into correct format', () => {
+        const obj = {
+          a: '1',
+          b: ['1,2'],
+          c: ['2', '3'],
+          d: [true, false],
+          e: { f: ['g', 'h'] },
+          i: undefined,
+          j: null,
+        };
+        const stringified = stringify(obj);
+
+        expect(stringified).to.deep.equal('a=1&b=1%2C2&c=2&c=3&d=true&d=false&e[f]=g&e[f]=h');
       });
     });
   }
