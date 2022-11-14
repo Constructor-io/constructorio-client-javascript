@@ -14,7 +14,7 @@
     "test:all": "npm run test && npm run test:bundled",
     "precoverage": "rm -rf ./coverage && rm -rf ./.nyc_output",
     "coverage": "nyc --all --reporter=html npm run test:src",
-    "postcoverage": "serve --listen 8080 --config ./serve.json && rm -rf test",
+    "postcoverage": "open coverage/index.html && rm -rf test",
     "docs": "jsdoc --configure ./.jsdoc.json ./README.md --recurse ./src --destination ./docs",
     "compile": "babel src/ -d lib/",
     "prepublish": "npm run compile",
@@ -56,7 +56,6 @@
     "minami": "^1.2.3",
     "mocha": "^9.1.3",
     "nyc": "^15.1.0",
-    "serve": "^13.0.2",
     "sinon": "^7.5.0",
     "sinon-chai": "^3.7.0"
   },
@@ -66,7 +65,7 @@
     "es6-promise": "^4.2.8",
     "events": "^3.0.0",
     "fetch-ponyfill": "^7.1.0",
-    "qs": "6.11.0",
+    "qs": "6.9.7",
     "store2": "^2.14.2"
   },
   "peerDependencies": {
