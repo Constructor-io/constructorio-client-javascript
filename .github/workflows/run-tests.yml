@@ -1,7 +1,11 @@
 name: Run tests
 on:
   pull_request:
-    branches: [ master ]
+    branches:
+      - "**"
+concurrency:
+  group: run-tests-${{ github.head_ref }}
+  cancel-in-progress: true
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -11,15 +15,12 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
-        
       - name: Set up node
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
-        
       - name: Install dependencies
         run: npm install
-        
       - name: Run tests 
         run: npm run test
         env:
