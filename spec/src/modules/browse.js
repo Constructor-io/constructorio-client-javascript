@@ -18,7 +18,7 @@ const { fetch } = fetchPonyfill({ Promise });
 const testApiKey = process.env.TEST_API_KEY;
 const clientVersion = 'cio-mocha';
 const bundled = process.env.BUNDLED === 'true';
-const runNetworkTimeoutTests = (process.env.RUN_NETWORK_TIMEOUT_TESTS === 'true') || true;
+const runNetworkTimeoutTests = process.env.RUN_NETWORK_TIMEOUT_TESTS === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 const timeoutRejectionMessage = bundled ? 'Aborted' : 'The user aborted a request.';
 

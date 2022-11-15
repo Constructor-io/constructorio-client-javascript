@@ -21,7 +21,7 @@ const testApiKey = process.env.TEST_API_KEY;
 const clientVersion = 'cio-mocha';
 const delayBetweenTests = 25;
 const bundled = process.env.BUNDLED === 'true';
-const runNetworkTimeoutTests = (process.env.RUN_NETWORK_TIMEOUT_TESTS === 'true') || true;
+const runNetworkTimeoutTests = process.env.RUN_NETWORK_TIMEOUT_TESTS === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 const timeoutRejectionMessage = bundled ? 'AbortError: Aborted' : 'AbortError: The user aborted a request.';
 

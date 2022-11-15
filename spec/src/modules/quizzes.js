@@ -18,7 +18,7 @@ const { fetch } = fetchPonyfill({ Promise });
 const quizApiKey = process.env.TEST_API_KEY;
 const clientVersion = 'cio-mocha';
 const bundled = process.env.BUNDLED === 'true';
-const runNetworkTimeoutTests = (process.env.RUN_NETWORK_TIMEOUT_TESTS === 'true') || true;
+const runNetworkTimeoutTests = process.env.RUN_NETWORK_TIMEOUT_TESTS === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 
 describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
