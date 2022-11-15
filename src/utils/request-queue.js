@@ -1,6 +1,5 @@
 /* eslint-disable brace-style, no-unneeded-ternary */
 const fetchPonyfill = require('fetch-ponyfill');
-const Promise = require('es6-promise');
 const store = require('./store');
 const HumanityCheck = require('./humanity-check');
 const helpers = require('./helpers');

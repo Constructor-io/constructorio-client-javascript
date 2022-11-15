@@ -1,6 +1,5 @@
 /* eslint-disable object-curly-newline, no-underscore-dangle */
 const fetchPonyfill = require('fetch-ponyfill');
-const Promise = require('es6-promise');
 const EventDispatcher = require('../utils/event-dispatcher');
 const helpers = require('../utils/helpers');
 
@@ -127,12 +126,12 @@ class Quizzes {
       })
       .then((json) => {
         if (json.version_id) {
-          this.eventDispatcher.queue('quizzes.getNextQuiz.completed', json);
+          this.eventDispatcher.queue('quizzes.getNextQuestion.completed', json);
 
           return json;
         }
 
-        throw new Error('getNextQuiz response data is malformed');
+        throw new Error('getNextQuestion response data is malformed');
       });
   }
 
