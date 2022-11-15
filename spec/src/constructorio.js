@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-expressions, import/no-unresolved, no-new */
+/* eslint-disable no-unused-expressions, import/no-unresolved, no-new, import/extensions */
 const dotenv = require('dotenv');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
