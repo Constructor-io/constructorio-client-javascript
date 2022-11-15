@@ -38,8 +38,7 @@ expectType<GetBrowseResultsResponse>({
 					brand: "Bravecto",
 					price: 21.99,
 					item_name: "Name",
-					image_url:
-						"https://example",
+					image_url: "https://example",
 					published: true,
 					variation_id: "123",
 				},

@@ -17,13 +17,9 @@ expectType<RecommendationsResponse>({
 				data: {
 					id: "123",
 					url: "https://example",
-					group_ids: [
-						"123",
-						"1234",
-					],
+					group_ids: ["123", "1234"],
 					ListPrice: 30,
-					image_url:
-						"https://example",
+					image_url: "https://example",
 					facets: [
 						{
 							name: "IsBestSeller",
