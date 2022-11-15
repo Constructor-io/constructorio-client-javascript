@@ -21,8 +21,8 @@ jobs:
           node-version: ${{ matrix.node }}
       - name: Install dependencies
         run: npm install
-      - name: Run tests 
-        run: npm run test
+      - name: Run tests
+        run: npm run test:all:parallel
         env:
           TEST_API_KEY: ${{ secrets.TEST_API_KEY }}
           RUN_NETWORK_TIMEOUT_TESTS: false
