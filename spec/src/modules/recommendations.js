@@ -425,14 +425,14 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
       return expect(recommendations.getRecommendations(
         podId,
         { itemIds },
-        { timeout: 10 },
+        { timeout: 150 },
       )).to.eventually.be.rejectedWith(timeoutRejectionMessage);
     });
 
     it('Should be rejected when global network request timeout is provided and reached', () => {
       const { recommendations } = new ConstructorIO({
         apiKey: testApiKey,
-        networkParameters: { timeout: 20 },
+        networkParameters: { timeout: 250 },
       });
 
       return expect(recommendations.getRecommendations(
