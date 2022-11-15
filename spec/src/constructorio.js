@@ -1,10 +1,17 @@
 /* eslint-disable no-unused-expressions, import/no-unresolved, no-new */
-const { expect } = require('chai');
+const dotenv = require('dotenv');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
+const sinonChai = require('sinon-chai');
 const helpers = require('../mocha.helpers');
-const { version: packageVersion } = require('../../package.json');
 const jsdom = require('./utils/jsdom-global');
+const { version: packageVersion } = require('../../package.json');
 let ConstructorIO = require('../../test/constructorio');
+
+chai.use(chaiAsPromised);
+chai.use(sinonChai);
+dotenv.config();
 
 const validApiKey = 'testing';
 const clientVersion = 'cio-mocha';
