@@ -22,3 +22,5 @@ jobs:
         
       - name: Run tests 
         run: npm run test
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
