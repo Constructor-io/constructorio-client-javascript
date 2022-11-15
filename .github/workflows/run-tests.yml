@@ -24,4 +24,4 @@ jobs:
         run: npm run test
         env:
           TEST_API_KEY: ${{ secrets.TEST_API_KEY }}
-          RUN_NETWORK_TIMEOUT_TESTS: ${{ secrets.RUN_NETWORK_TIMEOUT_TESTS }}
+          RUN_NETWORK_TIMEOUT_TESTS: false
