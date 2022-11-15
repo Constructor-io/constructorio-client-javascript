@@ -21,6 +21,7 @@ const testApiKey = process.env.TEST_API_KEY;
 const clientVersion = 'cio-mocha';
 const delayBetweenTests = 25;
 const bundled = process.env.BUNDLED === 'true';
+const runNetworkTimeoutTests = (process.env.RUN_NETWORK_TIMEOUT_TESTS === 'true') || true;
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 const timeoutRejectionMessage = bundled ? 'AbortError: Aborted' : 'AbortError: The user aborted a request.';
 
@@ -276,36 +277,38 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackSessionStart()).to.equal(true);
     });
 
-    it('Should be rejected when network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        ...requestQueueOptions,
+    if (runNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackSessionStart({ timeout: 10 })).to.equal(true);
       });
 
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
+      it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          networkParameters: {
+            timeout: 20,
+          },
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackSessionStart()).to.equal(true);
       });
-
-      expect(tracker.trackSessionStart({ timeout: 10 })).to.equal(true);
-    });
-
-    it('Should be rejected when global network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        networkParameters: {
-          timeout: 20,
-        },
-        ...requestQueueOptions,
-      });
-
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
-      });
-
-      expect(tracker.trackSessionStart()).to.equal(true);
-    });
+    }
 
     it('Should properly encode query parameters', (done) => {
       const specialCharacters = '+[]&';
@@ -522,36 +525,38 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackInputFocus()).to.equal(true);
     });
 
-    it('Should be rejected when network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        ...requestQueueOptions,
+    if (runNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackInputFocus({ timeout: 10 })).to.equal(true);
       });
 
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
+      it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          networkParameters: {
+            timeout: 20,
+          },
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackInputFocus()).to.equal(true);
       });
-
-      expect(tracker.trackInputFocus({ timeout: 10 })).to.equal(true);
-    });
-
-    it('Should be rejected when global network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        networkParameters: {
-          timeout: 20,
-        },
-        ...requestQueueOptions,
-      });
-
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
-      });
-
-      expect(tracker.trackInputFocus()).to.equal(true);
-    });
+    }
 
     it('Should properly encode query parameters', (done) => {
       const specialCharacters = '+[]&';
@@ -833,36 +838,38 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackAutocompleteSelect(term, requiredParameters)).to.equal(true);
     });
 
-    it('Should be rejected when network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        ...requestQueueOptions,
+    if (runNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackAutocompleteSelect(term, requiredParameters, { timeout: 10 })).to.equal(true);
       });
 
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
+      it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          networkParameters: {
+            timeout: 20,
+          },
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackAutocompleteSelect(term, requiredParameters)).to.equal(true);
       });
-
-      expect(tracker.trackAutocompleteSelect(term, requiredParameters, { timeout: 10 })).to.equal(true);
-    });
-
-    it('Should be rejected when global network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        networkParameters: {
-          timeout: 20,
-        },
-        ...requestQueueOptions,
-      });
-
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
-      });
-
-      expect(tracker.trackAutocompleteSelect(term, requiredParameters)).to.equal(true);
-    });
+    }
 
     it('Should properly encode path parameter', (done) => {
       const specialCharacters = '+[]&';
@@ -1152,36 +1159,38 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackItemDetailLoad(requiredParameters)).to.equal(true);
     });
 
-    it('Should be rejected when network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        ...requestQueueOptions,
+    if (runNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackItemDetailLoad(requiredParameters, { timeout: 10 })).to.equal(true);
       });
 
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
+      it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          networkParameters: {
+            timeout: 20,
+          },
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackItemDetailLoad(requiredParameters)).to.equal(true);
       });
-
-      expect(tracker.trackItemDetailLoad(requiredParameters, { timeout: 10 })).to.equal(true);
-    });
-
-    it('Should be rejected when global network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        networkParameters: {
-          timeout: 20,
-        },
-        ...requestQueueOptions,
-      });
-
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
-      });
-
-      expect(tracker.trackItemDetailLoad(requiredParameters)).to.equal(true);
-    });
+    }
   });
 
   describe('trackSearchSubmit', () => {
@@ -1401,36 +1410,38 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackSearchSubmit(term, requiredParameters)).to.equal(true);
     });
 
-    it('Should be rejected when network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        ...requestQueueOptions,
+    if (runNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackSearchSubmit(term, requiredParameters, { timeout: 10 })).to.equal(true);
       });
 
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
+      it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          networkParameters: {
+            timeout: 20,
+          },
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackSearchSubmit(term, requiredParameters)).to.equal(true);
       });
-
-      expect(tracker.trackSearchSubmit(term, requiredParameters, { timeout: 10 })).to.equal(true);
-    });
-
-    it('Should be rejected when global network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        networkParameters: {
-          timeout: 20,
-        },
-        ...requestQueueOptions,
-      });
-
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
-      });
-
-      expect(tracker.trackSearchSubmit(term, requiredParameters)).to.equal(true);
-    });
+    }
 
     it('Should properly encode path parameter', (done) => {
       const specialCharacters = '+[]&';
@@ -1797,36 +1808,38 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackSearchResultsLoaded(term, requiredParameters)).to.equal(true);
     });
 
-    it('Should be rejected when network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        ...requestQueueOptions,
+    if (runNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackSearchResultsLoaded(term, requiredParameters, { timeout: 10 })).to.equal(true);
       });
 
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
+      it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          networkParameters: {
+            timeout: 20,
+          },
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackSearchResultsLoaded(term, requiredParameters)).to.equal(true);
       });
-
-      expect(tracker.trackSearchResultsLoaded(term, requiredParameters, { timeout: 10 })).to.equal(true);
-    });
-
-    it('Should be rejected when global network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        networkParameters: {
-          timeout: 20,
-        },
-        ...requestQueueOptions,
-      });
-
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
-      });
-
-      expect(tracker.trackSearchResultsLoaded(term, requiredParameters)).to.equal(true);
-    });
+    }
 
     it('Should limit number of customer_ids to 100 when using item_ids', (done) => {
       const { tracker } = new ConstructorIO({
@@ -2270,36 +2283,38 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackSearchResultClick(term, requiredParameters)).to.equal(true);
     });
 
-    it('Should be rejected when network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        ...requestQueueOptions,
+    if (runNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackSearchResultClick(term, requiredParameters, { timeout: 10 })).to.equal(true);
       });
 
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
+      it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          networkParameters: {
+            timeout: 20,
+          },
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackSearchResultClick(term, requiredParameters)).to.equal(true);
       });
-
-      expect(tracker.trackSearchResultClick(term, requiredParameters, { timeout: 10 })).to.equal(true);
-    });
-
-    it('Should be rejected when global network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        networkParameters: {
-          timeout: 20,
-        },
-        ...requestQueueOptions,
-      });
-
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
-      });
-
-      expect(tracker.trackSearchResultClick(term, requiredParameters)).to.equal(true);
-    });
+    }
 
     it('Should properly encode path parameter', (done) => {
       const specialCharacters = '+[]&';
@@ -2839,36 +2854,38 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackConversion(term, requiredParameters)).to.equal(true);
     });
 
-    it('Should be rejected when network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        ...requestQueueOptions,
+    if (runNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackConversion(term, requiredParameters, { timeout: 10 })).to.equal(true);
       });
 
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
+      it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          networkParameters: {
+            timeout: 20,
+          },
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackConversion(term, requiredParameters)).to.equal(true);
       });
-
-      expect(tracker.trackConversion(term, requiredParameters, { timeout: 10 })).to.equal(true);
-    });
-
-    it('Should be rejected when global network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        networkParameters: {
-          timeout: 20,
-        },
-        ...requestQueueOptions,
-      });
-
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
-      });
-
-      expect(tracker.trackConversion(term, requiredParameters)).to.equal(true);
-    });
+    }
 
     it('Should not encode body parameters', (done) => {
       const specialCharacters = '+[]&';
@@ -3362,36 +3379,38 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackPurchase()).to.be.an('error');
     });
 
-    it('Should be rejected when network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        ...requestQueueOptions,
+    if (runNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackPurchase(requiredParameters, { timeout: 10 })).to.equal(true);
       });
 
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
+      it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          networkParameters: {
+            timeout: 20,
+          },
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackPurchase(requiredParameters)).to.equal(true);
       });
-
-      expect(tracker.trackPurchase(requiredParameters, { timeout: 10 })).to.equal(true);
-    });
-
-    it('Should be rejected when global network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        networkParameters: {
-          timeout: 20,
-        },
-        ...requestQueueOptions,
-      });
-
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
-      });
-
-      expect(tracker.trackPurchase(requiredParameters)).to.equal(true);
-    });
+    }
 
     it('Should not encode body parameters', (done) => {
       const specialCharacters = '+[]&';
@@ -3712,36 +3731,38 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackRecommendationView(requiredParameters)).to.equal(true);
     });
 
-    it('Should be rejected when network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        ...requestQueueOptions,
+    if (runNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackRecommendationView(requiredParameters, { timeout: 10 })).to.equal(true);
       });
 
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
+      it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          networkParameters: {
+            timeout: 20,
+          },
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackRecommendationView(requiredParameters)).to.equal(true);
       });
-
-      expect(tracker.trackRecommendationView(requiredParameters, { timeout: 10 })).to.equal(true);
-    });
-
-    it('Should be rejected when global network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        networkParameters: {
-          timeout: 20,
-        },
-        ...requestQueueOptions,
-      });
-
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
-      });
-
-      expect(tracker.trackRecommendationView(requiredParameters)).to.equal(true);
-    });
+    }
 
     it('Should not encode body parameters', (done) => {
       const specialCharacters = '+[]&';
@@ -4149,36 +4170,38 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackRecommendationClick(requiredParameters)).to.equal(true);
     });
 
-    it('Should be rejected when network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        ...requestQueueOptions,
+    if (runNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackRecommendationClick(requiredParameters, { timeout: 10 })).to.equal(true);
       });
 
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
+      it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          networkParameters: {
+            timeout: 20,
+          },
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackRecommendationClick(requiredParameters)).to.equal(true);
       });
-
-      expect(tracker.trackRecommendationClick(requiredParameters, { timeout: 10 })).to.equal(true);
-    });
-
-    it('Should be rejected when global network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        networkParameters: {
-          timeout: 20,
-        },
-        ...requestQueueOptions,
-      });
-
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
-      });
-
-      expect(tracker.trackRecommendationClick(requiredParameters)).to.equal(true);
-    });
+    }
 
     it('Should not encode body parameters', (done) => {
       const specialCharacters = '+[]&';
@@ -4491,36 +4514,38 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackBrowseResultsLoaded(requiredParameters)).to.equal(true);
     });
 
-    it('Should be rejected when network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        ...requestQueueOptions,
+    if (runNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackBrowseResultsLoaded(requiredParameters, { timeout: 10 })).to.equal(true);
       });
 
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
+      it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          networkParameters: {
+            timeout: 20,
+          },
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackBrowseResultsLoaded(requiredParameters)).to.equal(true);
       });
-
-      expect(tracker.trackBrowseResultsLoaded(requiredParameters, { timeout: 10 })).to.equal(true);
-    });
-
-    it('Should be rejected when global network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        networkParameters: {
-          timeout: 20,
-        },
-        ...requestQueueOptions,
-      });
-
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
-      });
-
-      expect(tracker.trackBrowseResultsLoaded(requiredParameters)).to.equal(true);
-    });
+    }
 
     it('Should limit number of items to 100', (done) => {
       const { tracker } = new ConstructorIO({
@@ -4929,36 +4954,38 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackBrowseResultClick(requiredParameters)).to.equal(true);
     });
 
-    it('Should be rejected when network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        ...requestQueueOptions,
+    if (runNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackBrowseResultClick(requiredParameters, { timeout: 10 })).to.equal(true);
       });
 
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
+      it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          networkParameters: {
+            timeout: 20,
+          },
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackBrowseResultClick(requiredParameters)).to.equal(true);
       });
-
-      expect(tracker.trackBrowseResultClick(requiredParameters, { timeout: 10 })).to.equal(true);
-    });
-
-    it('Should be rejected when global network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        networkParameters: {
-          timeout: 20,
-        },
-        ...requestQueueOptions,
-      });
-
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
-      });
-
-      expect(tracker.trackBrowseResultClick(requiredParameters)).to.equal(true);
-    });
+    }
 
     it('Should not encode body parameters', (done) => {
       const specialCharacters = '+[]&';
@@ -5316,36 +5343,38 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackGenericResultClick(requiredParameters)).to.equal(true);
     });
 
-    it('Should be rejected when network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        ...requestQueueOptions,
+    if (runNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackGenericResultClick(requiredParameters, { timeout: 10 })).to.equal(true);
       });
 
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
+      it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          networkParameters: {
+            timeout: 20,
+          },
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackGenericResultClick(requiredParameters)).to.equal(true);
       });
-
-      expect(tracker.trackGenericResultClick(requiredParameters, { timeout: 10 })).to.equal(true);
-    });
-
-    it('Should be rejected when global network request timeout is provided and reached', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        networkParameters: {
-          timeout: 20,
-        },
-        ...requestQueueOptions,
-      });
-
-      tracker.on('error', ({ message }) => {
-        expect(message).to.equal(timeoutRejectionMessage);
-        done();
-      });
-
-      expect(tracker.trackGenericResultClick(requiredParameters)).to.equal(true);
-    });
+    }
 
     it('Should not encode body parameters', (done) => {
       const specialCharacters = '+[]&';
