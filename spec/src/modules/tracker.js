@@ -7,7 +7,6 @@ const sinonChai = require('sinon-chai');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
 const cloneDeep = require('lodash.clonedeep');
-const fs = require('fs');
 const store = require('../../../test/utils/store'); // eslint-disable-line import/extensions
 const helpers = require('../../mocha.helpers');
 const jsdom = require('../utils/jsdom-global');
@@ -34,10 +33,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     sendTrackingEvents: true,
     trackingSendDelay: 1,
   };
-
-  if (bundled) {
-    jsdomOptions.src = fs.readFileSync(`./dist/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.js`, 'utf-8');
-  }
 
   beforeEach(() => {
     cleanup = jsdom(jsdomOptions);
@@ -2936,6 +2931,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const requiredParameters = {
       items: [
         {
+          // cspell:disable-next-line
           item_id: 'productc60366c42b5d4194ad39962fd88d7266',
           variation_id: '456',
         },
@@ -4622,7 +4618,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const requiredParameters = {
       item_id: 'product0dbae320-3950-11ea-9251-8dee6d0eb3cd-new',
       filter_name: 'group_id',
-      filter_value: 'Clothing',
+      filter_value: 'BrandXY',
     };
     const optionalParameters = {
       section: 'Products',

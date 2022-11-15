@@ -99,12 +99,12 @@ const utils = {
 
   hasOrderIdRecord(orderId) {
     const orderIdHash = CRC32.str(orderId.toString());
-    let purchaseEventStorage = store.session.get(purchaseEventStorageKey);
+    let purchaseEventStorage = store.local.get(purchaseEventStorageKey);
 
     if (typeof purchaseEventStorage === 'string') {
       purchaseEventStorage = JSON.parse(purchaseEventStorage);
     }
-    if (purchaseEventStorage && purchaseEventStorage[orderIdHash]) {
+    if (purchaseEventStorage && purchaseEventStorage.includes(orderIdHash)) {
       return true;
     }
 
@@ -113,7 +113,7 @@ const utils = {
 
   addOrderIdRecord(orderId) {
     const orderIdHash = CRC32.str(orderId.toString());
-    let purchaseEventStorage = store.session.get(purchaseEventStorageKey);
+    let purchaseEventStorage = store.local.get(purchaseEventStorageKey);
 
     if (typeof purchaseEventStorage === 'string') {
       purchaseEventStorage = JSON.parse(purchaseEventStorage);
@@ -121,20 +121,21 @@ const utils = {
 
     if (purchaseEventStorage) {
       // If the order already exists, do nothing
-      if (purchaseEventStorage[orderIdHash]) {
+      if (purchaseEventStorage.includes(orderIdHash)) {
         return;
       }
 
-      purchaseEventStorage[orderIdHash] = true;
+      if (purchaseEventStorage.length >= 10) {
+        purchaseEventStorage = purchaseEventStorage.slice(-9);
+      }
+      purchaseEventStorage.push(orderIdHash);
     } else {
       // Create a new object map for the order ids
-      purchaseEventStorage = {
-        [orderIdHash]: true,
-      };
+      purchaseEventStorage = [orderIdHash];
     }
 
-    // Push the order id map into session storage
-    store.session.set(purchaseEventStorageKey, JSON.stringify(purchaseEventStorage));
+    // Push the order id map into local storage
+    store.local.set(purchaseEventStorageKey, purchaseEventStorage);
   },
 
   // Abort network request based on supplied timeout interval (in milliseconds)

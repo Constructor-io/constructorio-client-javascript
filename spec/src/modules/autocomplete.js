@@ -6,7 +6,6 @@ const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 const fetchPonyfill = require('fetch-ponyfill');
 const Promise = require('es6-promise');
-const fs = require('fs');
 const helpers = require('../../mocha.helpers');
 const jsdom = require('../utils/jsdom-global');
 let ConstructorIO = require('../../../test/constructorio'); // eslint-disable-line import/extensions
@@ -26,10 +25,6 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
   const jsdomOptions = { url: 'http://localhost' };
   let fetchSpy;
   let cleanup;
-
-  if (bundled) {
-    jsdomOptions.src = fs.readFileSync(`./dist/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.js`, 'utf-8');
-  }
 
   beforeEach(() => {
     cleanup = jsdom(jsdomOptions);
@@ -282,11 +277,13 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
 
       autocomplete.getAutocompleteResults(query, { hiddenFields }, {}).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const item = res.sections.Products.find((product) => product.data.testField);
+        const itemData = item && item.data;
 
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('sections').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.sections.Products[0].data).to.have.property('testField').to.eql('hiddenFieldValue');
+        expect(itemData).to.have.property('testField').to.eql('hiddenFieldValue');
         expect(res.request.fmt_options.hidden_fields).to.eql(hiddenFields);
         expect(requestedUrlParams.fmt_options).to.have.property('hidden_fields').to.eql(hiddenFields);
         done();
