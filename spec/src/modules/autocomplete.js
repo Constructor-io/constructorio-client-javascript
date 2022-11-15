@@ -427,14 +427,14 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
       return expect(autocomplete.getAutocompleteResults(
         query,
         {},
-        { timeout: 150 },
+        { timeout: 10 },
       )).to.eventually.be.rejectedWith(timeoutRejectionMessage);
     });
 
     it('Should be rejected when global network request timeout is provided and reached', () => {
       const { autocomplete } = new ConstructorIO({
         apiKey: testApiKey,
-        networkParameters: { timeout: 250 },
+        networkParameters: { timeout: 20 },
       });
 
       return expect(autocomplete.getAutocompleteResults(
