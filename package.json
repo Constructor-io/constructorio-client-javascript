@@ -10,6 +10,7 @@
     "check-lisc": "license-checker --production --onlyAllow 'Apache-2.0;BSD-3-Clause;MIT'",
     "lint": "eslint 'src/**/*.js' 'spec/**/*.js'",
     "test": "npm run compile && mkdir -p test && cp -rf lib/* test && mocha ./spec/*",
+    "test:types": "tsd .",
     "test:src": "mkdir -p test && cp -rf src/* test && mocha ./spec/*",
     "test:bundled": "npm run bundle && BUNDLED=true PACKAGE_VERSION=$(echo $npm_package_version) mocha ./spec/*",
     "test:all": "npm run test && npm run test:bundled",
@@ -71,5 +72,8 @@
   },
   "peerDependencies": {
     "@babel/runtime": "^7.19.0"
-  }
+  },
+  "tsd": {
+		"directory": "src/types/tests"
+	}
 }
