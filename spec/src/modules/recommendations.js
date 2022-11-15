@@ -5,7 +5,6 @@ const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 const fetchPonyfill = require('fetch-ponyfill');
-const Promise = require('es6-promise');
 const helpers = require('../../mocha.helpers');
 const jsdom = require('../utils/jsdom-global');
 let ConstructorIO = require('../../../test/constructorio'); // eslint-disable-line import/extensions
