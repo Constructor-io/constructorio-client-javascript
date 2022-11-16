@@ -18,6 +18,7 @@ const { fetch } = fetchPonyfill({ Promise });
 const testApiKey = process.env.TEST_API_KEY;
 const clientVersion = 'cio-mocha';
 const bundled = process.env.BUNDLED === 'true';
+const skipNetworkTimeoutTests = process.env.SKIP_NETWORK_TIMEOUT_TESTS === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 const timeoutRejectionMessage = bundled ? 'Aborted' : 'The user aborted a request.';
 
@@ -694,29 +695,31 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       return expect(browse.getBrowseResults(filterName, filterValue)).to.eventually.be.rejected;
     });
 
-    it('Should be rejected when network request timeout is provided and reached', () => {
-      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+    if (skipNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', () => {
+        const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(browse.getBrowseResults(
-        filterName,
-        filterValue,
-        {},
-        { timeout: 10 },
-      )).to.eventually.be.rejectedWith(timeoutRejectionMessage);
-    });
-
-    it('Should be rejected when global network request timeout is provided and reached', () => {
-      const { browse } = new ConstructorIO({
-        apiKey: testApiKey,
-        networkParameters: { timeout: 20 },
+        return expect(browse.getBrowseResults(
+          filterName,
+          filterValue,
+          {},
+          { timeout: 10 },
+        )).to.eventually.be.rejectedWith(timeoutRejectionMessage);
       });
 
-      return expect(browse.getBrowseResults(
-        filterName,
-        filterValue,
-        {},
-      )).to.eventually.be.rejectedWith(timeoutRejectionMessage);
-    });
+      it('Should be rejected when global network request timeout is provided and reached', () => {
+        const { browse } = new ConstructorIO({
+          apiKey: testApiKey,
+          networkParameters: { timeout: 20 },
+        });
+
+        return expect(browse.getBrowseResults(
+          filterName,
+          filterValue,
+          {},
+        )).to.eventually.be.rejectedWith(timeoutRejectionMessage);
+      });
+    }
 
     it('Should be rejected when both page and offset are provided', () => {
       const { browse } = new ConstructorIO({ apiKey: testApiKey });
@@ -1158,28 +1161,30 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       return expect(browse.getBrowseResultsForItemIds(ids)).to.eventually.be.rejected;
     });
 
-    it('Should be rejected when network request timeout is provided and reached', () => {
-      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+    if (skipNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', () => {
+        const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(browse.getBrowseResultsForItemIds(
-        ids,
-        {},
-        { timeout: 10 },
-      )).to.eventually.be.rejectedWith(timeoutRejectionMessage);
-    });
-
-    it('Should be rejected when global network request timeout is provided and reached', () => {
-      const { browse } = new ConstructorIO({
-        apiKey: testApiKey,
-        networkParameters: { timeout: 20 },
+        return expect(browse.getBrowseResultsForItemIds(
+          ids,
+          {},
+          { timeout: 10 },
+        )).to.eventually.be.rejectedWith(timeoutRejectionMessage);
       });
 
-      return expect(browse.getBrowseResultsForItemIds(
-        ids,
-        {},
-        {},
-      )).to.eventually.be.rejectedWith(timeoutRejectionMessage);
-    });
+      it('Should be rejected when global network request timeout is provided and reached', () => {
+        const { browse } = new ConstructorIO({
+          apiKey: testApiKey,
+          networkParameters: { timeout: 20 },
+        });
+
+        return expect(browse.getBrowseResultsForItemIds(
+          ids,
+          {},
+          {},
+        )).to.eventually.be.rejectedWith(timeoutRejectionMessage);
+      });
+    }
   });
 
   describe('getBrowseGroups', () => {
@@ -1279,20 +1284,22 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       return expect(browse.getBrowseGroups()).to.eventually.be.rejected;
     });
 
-    it('Should be rejected when network request timeout is provided and reached', () => {
-      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+    if (skipNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', () => {
+        const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(browse.getBrowseGroups({}, { timeout: 10 })).to.eventually.be.rejectedWith(timeoutRejectionMessage);
-    });
-
-    it('Should be rejected when global network request timeout is provided and reached', () => {
-      const { browse } = new ConstructorIO({
-        apiKey: testApiKey,
-        networkParameters: { timeout: 20 },
+        return expect(browse.getBrowseGroups({}, { timeout: 10 })).to.eventually.be.rejectedWith(timeoutRejectionMessage);
       });
 
-      return expect(browse.getBrowseGroups({})).to.eventually.be.rejectedWith(timeoutRejectionMessage);
-    });
+      it('Should be rejected when global network request timeout is provided and reached', () => {
+        const { browse } = new ConstructorIO({
+          apiKey: testApiKey,
+          networkParameters: { timeout: 20 },
+        });
+
+        return expect(browse.getBrowseGroups({})).to.eventually.be.rejectedWith(timeoutRejectionMessage);
+      });
+    }
   });
 
   describe('getBrowseFacets', () => {
@@ -1437,20 +1444,22 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       return expect(browse.getBrowseFacets()).to.eventually.be.rejected;
     });
 
-    it('Should be rejected when network request timeout is provided and reached', () => {
-      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+    if (skipNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', () => {
+        const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(browse.getBrowseFacets({}, { timeout: 10 })).to.eventually.be.rejectedWith(timeoutRejectionMessage);
-    });
-
-    it('Should be rejected when global network request timeout is provided and reached', () => {
-      const { browse } = new ConstructorIO({
-        apiKey: testApiKey,
-        networkParameters: { timeout: 20 },
+        return expect(browse.getBrowseFacets({}, { timeout: 10 })).to.eventually.be.rejectedWith(timeoutRejectionMessage);
       });
 
-      return expect(browse.getBrowseFacets({})).to.eventually.be.rejectedWith(timeoutRejectionMessage);
-    });
+      it('Should be rejected when global network request timeout is provided and reached', () => {
+        const { browse } = new ConstructorIO({
+          apiKey: testApiKey,
+          networkParameters: { timeout: 20 },
+        });
+
+        return expect(browse.getBrowseFacets({})).to.eventually.be.rejectedWith(timeoutRejectionMessage);
+      });
+    }
   });
 
   describe('getBrowseFacetOptions', () => {
@@ -1542,21 +1551,23 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       return expect(browse.getBrowseFacetOptions(facetName)).to.eventually.be.rejected;
     });
 
-    it('Should be rejected when network request timeout is provided and reached', () => {
-      const { browse } = new ConstructorIO({
-        apiKey: testApiKey,
+    if (skipNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', () => {
+        const { browse } = new ConstructorIO({
+          apiKey: testApiKey,
+        });
+
+        return expect(browse.getBrowseFacetOptions(facetName, {}, { timeout: 10 })).to.eventually.be.rejectedWith(timeoutRejectionMessage);
       });
 
-      return expect(browse.getBrowseFacetOptions(facetName, {}, { timeout: 10 })).to.eventually.be.rejectedWith(timeoutRejectionMessage);
-    });
+      it('Should be rejected when global network request timeout is provided and reached', () => {
+        const { browse } = new ConstructorIO({
+          apiKey: testApiKey,
+          networkParameters: { timeout: 20 },
+        });
 
-    it('Should be rejected when global network request timeout is provided and reached', () => {
-      const { browse } = new ConstructorIO({
-        apiKey: testApiKey,
-        networkParameters: { timeout: 20 },
+        return expect(browse.getBrowseFacetOptions(facetName)).to.eventually.be.rejectedWith(timeoutRejectionMessage);
       });
-
-      return expect(browse.getBrowseFacetOptions(facetName)).to.eventually.be.rejectedWith(timeoutRejectionMessage);
-    });
+    }
   });
 });
