@@ -347,11 +347,11 @@ describe('ConstructorIO - Utils - Helpers', () => {
         }, 100);
       });
 
-      it('Should prefer timeout value from options (first parameter) over global timeout from networkParameters (second parameter)', (done) => {
+      it('Should prefer timeout value from networkParameters (second parameter) over global options (first parameter)', (done) => {
         const controller = new AbortController();
 
         expect(controller.signal.aborted).to.equal(false);
-        applyNetworkTimeout({ networkParameters: { timeout: 50 } }, { timeout: 100 }, controller);
+        applyNetworkTimeout({ networkParameters: { timeout: 100 } }, { timeout: 50 }, controller);
 
         setTimeout(() => {
           expect(controller.signal.aborted).to.equal(true);
