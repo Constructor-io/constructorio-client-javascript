@@ -143,7 +143,7 @@ const utils = {
   applyNetworkTimeout: (options = {}, networkParameters = {}, controller = null) => {
     const optionsTimeout = options && options.networkParameters && options.networkParameters.timeout;
     const networkParametersTimeout = networkParameters && networkParameters.timeout;
-    const timeout = optionsTimeout || networkParametersTimeout;
+    const timeout = networkParametersTimeout || optionsTimeout;
 
     if (typeof timeout === 'number' && controller) {
       setTimeout(() => controller.abort(), timeout);

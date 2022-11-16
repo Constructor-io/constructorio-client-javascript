@@ -1,6 +1,6 @@
 {
   "name": "@constructor-io/constructorio-client-javascript",
-  "version": "2.31.0",
+  "version": "2.32.0",
   "description": "Constructor.io JavaScript client",
   "main": "lib/constructorio.js",
   "scripts": {
@@ -9,9 +9,13 @@
     "check-lisc": "license-checker --production --onlyAllow 'Apache-2.0;BSD-3-Clause;MIT'",
     "lint": "eslint 'src/**/*.js' 'spec/**/*.js'",
     "test": "npm run compile && mkdir -p test && cp -rf lib/* test && mocha ./spec/*",
+    "test:parallel": "npm run compile && mkdir -p test && cp -rf lib/* test && mocha --parallel ./spec/*",
     "test:src": "mkdir -p test && cp -rf src/* test && mocha ./spec/*",
+    "test:src:parallel": "mkdir -p test && cp -rf src/* test && mocha --parallel ./spec/*",
     "test:bundled": "npm run bundle && BUNDLED=true PACKAGE_VERSION=$(echo $npm_package_version) mocha ./spec/*",
+    "test:bundled:parallel": "npm run bundle && BUNDLED=true PACKAGE_VERSION=$(echo $npm_package_version) mocha --parallel ./spec/*",
     "test:all": "npm run test && npm run test:bundled",
+    "test:all:parallel": "npm run test:parallel && npm run test:bundled:parallel",
     "precoverage": "rm -rf ./coverage && rm -rf ./.nyc_output",
     "coverage": "nyc --all --reporter=html npm run test:src",
     "postcoverage": "open coverage/index.html && rm -rf test",

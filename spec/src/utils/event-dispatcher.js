@@ -3,11 +3,13 @@ const dotenv = require('dotenv');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
+const sinonChai = require('sinon-chai');
 const EventDispatcher = require('../../../test/utils/event-dispatcher'); // eslint-disable-line import/extensions
 const helpers = require('../../mocha.helpers');
 const jsdom = require('./jsdom-global');
 
 chai.use(chaiAsPromised);
+chai.use(sinonChai);
 dotenv.config();
 
 const bundled = process.env.BUNDLED === 'true';

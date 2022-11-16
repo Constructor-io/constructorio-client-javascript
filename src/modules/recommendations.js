@@ -118,10 +118,7 @@ class Recommendations {
 
       // Handle network timeout if specified
       helpers.applyNetworkTimeout(this.options, networkParameters, controller);
-
     }
-
-    parameters = parameters || {};
 
     try {
       requestUrl = createRecommendationsUrl(podId, parameters, this.options);
@@ -142,6 +139,7 @@ class Recommendations {
           if (json.result_id) {
             // Append `result_id` to each result item
             json.response.results.forEach((result) => {
+              // eslint-disable-next-line no-param-reassign
               result.result_id = json.result_id;
             });
           }

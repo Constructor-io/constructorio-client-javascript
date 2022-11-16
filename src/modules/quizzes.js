@@ -36,12 +36,12 @@ function createQuizUrl(quizId, parameters, options, path) {
     throw new Error('quizId is a required parameter of type string');
   }
 
-  if (path === 'finalize' && (typeof parameters.a !== 'object' || !Array.isArray(parameters.a) || parameters.a.length === 0)) {
-    throw new Error('a is a required parameter of type array');
+  if (path === 'finalize' && (typeof parameters.answers !== 'object' || !Array.isArray(parameters.answers) || parameters.answers.length === 0)) {
+    throw new Error('answers is a required parameter of type array');
   }
 
   if (parameters) {
-    const { section, a, versionId } = parameters;
+    const { section, answers, versionId } = parameters;
 
     // Pull section from parameters
     if (section) {
@@ -54,8 +54,8 @@ function createQuizUrl(quizId, parameters, options, path) {
     }
 
     // Pull a (answers) from parameters and transform
-    if (a) {
-      answersParamString = `&${helpers.stringify({ a: a.map((ans) => [...ans].join(',')) })}`;
+    if (answers) {
+      answersParamString = `&${helpers.stringify({ a: answers.map((ans) => [...ans].join(',')) })}`;
     }
   }
 
@@ -83,25 +83,25 @@ class Quizzes {
   /**
    * Retrieve next question from API
    *
-   * @function getNextQuestion
+   * @function getQuizNextQuestion
    * @description Retrieve next question from Constructor.io API
    * @param {string} id - The identifier of the quiz
    * @param {string} [parameters] - Additional parameters to refine result set
    * @param {string} [parameters.section] - Product catalog section
-   * @param {array} [parameters.a] - An array of answers in the format [[1,2],[1]]
+   * @param {array} [parameters.answers] - An array of answers in the format [[1,2],[1]]
    * @param {string} [parameters.versionId] - Version identifier for the quiz
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
    * @see https://docs.constructor.io/rest_api/quiz/using_quizzes/#answering-a-quiz
    * @example
-   * constructorio.quizzes.getNextQuestion('quizId', {
-   *    a: [[1,2],[1]],
+   * constructorio.quizzes.getQuizNextQuestion('quizId', {
+   *    answers: [[1,2],[1]],
    *    section: '123',
    *    versionId: '123'
    * });
    */
-  getNextQuestion(quizId, parameters, networkParameters = {}) {
+  getQuizNextQuestion(quizId, parameters, networkParameters = {}) {
     let requestUrl;
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
     const controller = new AbortController();
@@ -126,12 +126,12 @@ class Quizzes {
       })
       .then((json) => {
         if (json.version_id) {
-          this.eventDispatcher.queue('quizzes.getNextQuestion.completed', json);
+          this.eventDispatcher.queue('quizzes.getQuizNextQuestion.completed', json);
 
           return json;
         }
 
-        throw new Error('getNextQuestion response data is malformed');
+        throw new Error('getQuizNextQuestion response data is malformed');
       });
   }
 
@@ -143,7 +143,7 @@ class Quizzes {
    * @param {string} id - The identifier of the quiz
    * @param {string} [parameters] - Additional parameters to refine result set
    * @param {string} [parameters.section] - Product catalog section
-   * @param {array} [parameters.a] - An array of answers in the format [[1,2],[1]]
+   * @param {array} [parameters.answers] - An array of answers in the format [[1,2],[1]]
    * @param {string} [parameters.versionId] - Specific version identifier for the quiz
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -151,7 +151,7 @@ class Quizzes {
    * @see https://docs.constructor.io/rest_api/quiz/using_quizzes/#completing-the-quiz
    * @example
    * constructorio.quizzes.getQuizResults('quizId', {
-   *    a: [[1,2],[1]],
+   *    answers: [[1,2],[1]],
    *    section: '123',
    *    versionId: '123'
    * });
