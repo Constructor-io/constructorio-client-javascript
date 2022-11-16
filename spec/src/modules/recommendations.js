@@ -17,6 +17,7 @@ const { fetch } = fetchPonyfill({ Promise });
 const testApiKey = process.env.TEST_API_KEY;
 const clientVersion = 'cio-mocha';
 const bundled = process.env.BUNDLED === 'true';
+const skipNetworkTimeoutTests = process.env.SKIP_NETWORK_TIMEOUT_TESTS === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 const timeoutRejectionMessage = bundled ? 'Aborted' : 'The user aborted a request.';
 
@@ -419,26 +420,28 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
       })).to.eventually.be.rejected;
     });
 
-    it('Should be rejected when network request timeout is provided and reached', () => {
-      const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
+    if (skipNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', () => {
+        const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 
-      return expect(recommendations.getRecommendations(
-        podId,
-        { itemIds },
-        { timeout: 10 },
-      )).to.eventually.be.rejectedWith(timeoutRejectionMessage);
-    });
-
-    it('Should be rejected when global network request timeout is provided and reached', () => {
-      const { recommendations } = new ConstructorIO({
-        apiKey: testApiKey,
-        networkParameters: { timeout: 20 },
+        return expect(recommendations.getRecommendations(
+          podId,
+          { itemIds },
+          { timeout: 10 },
+        )).to.eventually.be.rejectedWith(timeoutRejectionMessage);
       });
 
-      return expect(recommendations.getRecommendations(
-        podId,
-        { itemIds },
-      )).to.eventually.be.rejectedWith(timeoutRejectionMessage);
-    });
+      it('Should be rejected when global network request timeout is provided and reached', () => {
+        const { recommendations } = new ConstructorIO({
+          apiKey: testApiKey,
+          networkParameters: { timeout: 20 },
+        });
+
+        return expect(recommendations.getRecommendations(
+          podId,
+          { itemIds },
+        )).to.eventually.be.rejectedWith(timeoutRejectionMessage);
+      });
+    }
   });
 });

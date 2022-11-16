@@ -18,6 +18,7 @@ const { fetch } = fetchPonyfill({ Promise });
 const quizApiKey = process.env.TEST_API_KEY;
 const clientVersion = 'cio-mocha';
 const bundled = process.env.BUNDLED === 'true';
+const skipNetworkTimeoutTests = process.env.SKIP_NETWORK_TIMEOUT_TESTS === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 
 describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
@@ -187,24 +188,26 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       return expect(quizzes.getNextQuestion(validQuizId, { versionId: 'foo' })).to.eventually.be.rejected;
     });
 
-    it('Should be rejected when network request timeout is provided and reached', () => {
-      const { quizzes } = new ConstructorIO({
-        apiKey: quizApiKey,
-        fetch: fetchSpy,
+    if (skipNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', () => {
+        const { quizzes } = new ConstructorIO({
+          apiKey: quizApiKey,
+          fetch: fetchSpy,
+        });
+
+        return expect(quizzes.getNextQuestion(validQuizId, {}, { timeout: 20 })).to.eventually.be.rejectedWith('The user aborted a request.');
       });
 
-      return expect(quizzes.getNextQuestion(validQuizId, {}, { timeout: 20 })).to.eventually.be.rejectedWith('The user aborted a request.');
-    });
+      it('Should be rejected when global network request timeout is provided and reached', () => {
+        const { quizzes } = new ConstructorIO({
+          apiKey: quizApiKey,
+          fetch: fetchSpy,
+          networkParameters: { timeout: 20 },
+        });
 
-    it('Should be rejected when global network request timeout is provided and reached', () => {
-      const { quizzes } = new ConstructorIO({
-        apiKey: quizApiKey,
-        fetch: fetchSpy,
-        networkParameters: { timeout: 20 },
+        return expect(quizzes.getNextQuestion(validQuizId, {})).to.eventually.be.rejectedWith('The user aborted a request.');
       });
-
-      return expect(quizzes.getNextQuestion(validQuizId, {})).to.eventually.be.rejectedWith('The user aborted a request.');
-    });
+    }
 
     it('Should be rejected if an invalid apiKey is provided', () => {
       const { quizzes } = new ConstructorIO({

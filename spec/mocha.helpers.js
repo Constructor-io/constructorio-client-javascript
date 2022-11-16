@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved, import/extensions */
 const qs = require('qs');
 const store = require('../test/utils/store');
 
