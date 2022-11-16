@@ -139,7 +139,8 @@ class Recommendations {
           if (json.result_id) {
             // Append `result_id` to each result item
             json.response.results.forEach((result) => {
-              result.result_id = json.result_id; // eslint-disable-line no-param-reassign
+              // eslint-disable-next-line no-param-reassign
+              result.result_id = json.result_id;
             });
           }
 
