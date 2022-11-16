@@ -362,19 +362,23 @@ describe('ConstructorIO - Utils - Helpers', () => {
     });
 
     describe('stringify', () => {
-      it('Should stringify complex and falsy values', () => {
+      it('Should stringify falsy values', () => {
+        expect(stringify(undefined)).to.equal('');
+        expect(stringify(null)).to.equal('');
+        expect(stringify(false)).to.equal('');
+        expect(stringify({ a: false })).to.equal('a=false');
+        expect(stringify({ a: { b: { c: false } } })).to.equal('a%5Bb%5D%5Bc%5D=false');
+      });
+
+      it('Should stringify complex values', () => {
         expect(stringify({ a: 1, b: 2 })).to.equal('a=1&b=2');
         expect(stringify({ a: 'A_Z' })).to.equal('a=A_Z');
         expect(stringify({ a: '€' })).to.equal('a=%E2%82%AC');
         expect(stringify({ a: '' })).to.equal('a=%EE%80%80');
         expect(stringify({ a: 'א' })).to.equal('a=%D7%90');
         expect(stringify({ a: '𐐷' })).to.equal('a=%F0%90%90%B7');
-        expect(stringify(undefined)).to.equal('');
-        expect(stringify(null)).to.equal('');
-        expect(stringify(false)).to.equal('');
-        expect(stringify({ a: false })).to.equal('a=false');
         expect(stringify({ a: { b: ['g'] } })).to.equal('a%5Bb%5D=g');
-        expect(stringify({ a: { b: { c: false } } })).to.equal('a%5Bb%5D%5Bc%5D=false');
+        expect(stringify({ a: { b: 'c', d: 'e' } })).to.equal('a%5Bb%5D=c&a%5Bd%5D=e');
       });
 
       it('Should stringify the object into correct format', () => {
