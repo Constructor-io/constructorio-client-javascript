@@ -1,5 +1,4 @@
 {
   "presets": ["@babel/preset-env"],
-  "plugins": ["@babel/plugin-transform-runtime"],
-  "ignore": ["./src/types/tests/*.test-d.ts"]
+  "plugins": ["@babel/plugin-transform-runtime"]
 }
