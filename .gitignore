@@ -4,6 +4,9 @@ lib
 # Test temporary directory
 test
 
+# OS X specific files
+.DS_Store
+
 # Logs
 logs
 *.log
