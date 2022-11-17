@@ -106,7 +106,7 @@ class Recommendations {
    *     },
    * });
    */
-  getRecommendations(podId, parameters = {}, networkParameters = {}) {
+  getRecommendations(podId, parameters, networkParameters = {}) {
     let requestUrl;
     const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
     let signal;

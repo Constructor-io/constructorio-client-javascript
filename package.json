@@ -78,6 +78,6 @@
     "@babel/runtime": "^7.19.0"
   },
   "tsd": {
-		"directory": "src/types/tests"
-	}
+    "directory": "src/types/tests"
+  }
 }
