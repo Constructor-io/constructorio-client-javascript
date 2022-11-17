@@ -118,7 +118,6 @@ class Recommendations {
 
       // Handle network timeout if specified
       helpers.applyNetworkTimeout(this.options, networkParameters, controller);
-
     }
 
     try {
