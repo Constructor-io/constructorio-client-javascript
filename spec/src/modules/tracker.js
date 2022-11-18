@@ -1983,6 +1983,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const optionalParameters = {
       variation_id: 'foobar',
       result_id: 'result-id',
+      section: 'Products',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -2395,6 +2396,20 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackSearchResultClick(term, requiredParameters)).to.equal(true);
+    });
+
+    it('Should be rejected when an invalid section is used', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', ({ message }) => {
+        expect(message).to.equal('Unknown section: non-existent');
+        done();
+      });
+
+      expect(tracker.trackSearchResultClick(term, { ...requiredParameters, section: 'non-existent' })).to.equal(true);
     });
   });
 
