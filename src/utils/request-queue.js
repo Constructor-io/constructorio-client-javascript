@@ -153,7 +153,7 @@ class RequestQueue {
             instance.eventemitter.emit('error', {
               url: nextInQueue.url,
               method: nextInQueue.method,
-              message: error.toString(),
+              message: error && error.toString && error.toString(),
             });
           }
         }).finally(() => {
