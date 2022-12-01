@@ -1,5 +1,4 @@
 /* eslint-disable brace-style, no-unneeded-ternary */
-const fetchPonyfill = require('fetch-ponyfill');
 const store = require('./store');
 const HumanityCheck = require('./humanity-check');
 const helpers = require('./helpers');
@@ -46,7 +45,7 @@ class RequestQueue {
 
   // Read from queue and send events to server
   sendEvents() {
-    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const { fetch } = this.options;
     const queue = RequestQueue.get();
 
     if (

@@ -1,6 +1,5 @@
 /* eslint-disable object-curly-newline, no-underscore-dangle, max-len, complexity */
 const qs = require('qs');
-const fetchPonyfill = require('fetch-ponyfill');
 const EventDispatcher = require('../utils/event-dispatcher');
 const helpers = require('../utils/helpers');
 
@@ -251,7 +250,7 @@ class Browse {
    */
   getBrowseResults(filterName, filterValue, parameters, networkParameters = {}) {
     let requestUrl;
-    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const { fetch } = this.options;
     let signal;
 
     if (typeof AbortController === 'function') {
@@ -326,7 +325,7 @@ class Browse {
    */
   getBrowseResultsForItemIds(itemIds, parameters, networkParameters = {}) {
     let requestUrl;
-    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const { fetch } = this.options;
     let signal;
 
     if (typeof AbortController === 'function') {
@@ -393,7 +392,7 @@ class Browse {
    * });
    */
   getBrowseGroups(parameters, networkParameters = {}) {
-    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const { fetch } = this.options;
     const { serviceUrl } = this.options;
     const queryParams = createQueryParams(parameters, this.options);
     let signal;
@@ -453,7 +452,7 @@ class Browse {
    */
   getBrowseFacets(parameters, networkParameters) {
     let requestUrl;
-    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const { fetch } = this.options;
     let signal;
 
     if (typeof AbortController === 'function') {
@@ -509,7 +508,7 @@ class Browse {
    */
   getBrowseFacetOptions(facetName, parameters = {}, networkParameters = {}) {
     let requestUrl;
-    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const { fetch } = this.options;
     let signal;
 
     if (typeof AbortController === 'function') {

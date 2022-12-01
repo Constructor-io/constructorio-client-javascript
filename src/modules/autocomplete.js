@@ -1,6 +1,5 @@
 /* eslint-disable object-curly-newline, no-underscore-dangle */
 const qs = require('qs');
-const fetchPonyfill = require('fetch-ponyfill');
 const EventDispatcher = require('../utils/event-dispatcher');
 const { throwHttpErrorFromResponse, cleanParams, applyNetworkTimeout, trimNonBreakingSpaces, encodeURIComponentRFC3986 } = require('../utils/helpers');
 
@@ -130,7 +129,7 @@ class Autocomplete {
    */
   getAutocompleteResults(query, parameters, networkParameters = {}) {
     let requestUrl;
-    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const { fetch } = this.options;
     let signal;
 
     if (typeof AbortController === 'function') {

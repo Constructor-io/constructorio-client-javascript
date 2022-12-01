@@ -1,5 +1,4 @@
 const qs = require('qs');
-const fetchPonyfill = require('fetch-ponyfill');
 const EventDispatcher = require('../utils/event-dispatcher');
 const helpers = require('../utils/helpers');
 
@@ -108,7 +107,7 @@ class Recommendations {
    */
   getRecommendations(podId, parameters, networkParameters = {}) {
     let requestUrl;
-    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const { fetch } = this.options;
     let signal;
 
     if (typeof AbortController === 'function') {

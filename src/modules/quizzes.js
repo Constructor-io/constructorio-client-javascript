@@ -1,6 +1,5 @@
 /* eslint-disable object-curly-newline, no-underscore-dangle */
 const qs = require('qs');
-const fetchPonyfill = require('fetch-ponyfill');
 const EventDispatcher = require('../utils/event-dispatcher');
 const helpers = require('../utils/helpers');
 
@@ -106,7 +105,7 @@ class Quizzes {
    */
   getQuizNextQuestion(quizId, parameters, networkParameters = {}) {
     let requestUrl;
-    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const { fetch } = this.options;
     const controller = new AbortController();
     const { signal } = controller;
 
@@ -161,7 +160,7 @@ class Quizzes {
    */
   getQuizResults(quizId, parameters, networkParameters = {}) {
     let requestUrl;
-    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const { fetch } = this.options;
     const controller = new AbortController();
     const { signal } = controller;
 
