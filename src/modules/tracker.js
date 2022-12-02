@@ -1082,6 +1082,7 @@ class Tracker {
         filter_value,
         item_id,
         item_name,
+        name,
       } = parameters;
 
       if (section) {
@@ -1132,6 +1133,8 @@ class Tracker {
 
       if (item_name) {
         bodyParams.item_name = item_name;
+      } else if (name) {
+        bodyParams.item_name = name;
       }
 
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
