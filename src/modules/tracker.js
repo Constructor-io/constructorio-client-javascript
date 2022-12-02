@@ -1035,6 +1035,7 @@ class Tracker {
    * @param {string} parameters.filter_name - Filter name
    * @param {string} parameters.filter_value - Filter value
    * @param {string} parameters.item_id - Product item unique identifier
+   * @param {string} parameters.item_name - Product item name
    * @param {string} [parameters.section="Products"] - Index section
    * @param {string} [parameters.variation_id] - Product item variation unique identifier
    * @param {string} [parameters.result_id] - Browse result identifier (returned in response from Constructor)
@@ -1080,6 +1081,7 @@ class Tracker {
         filter_name,
         filter_value,
         item_id,
+        item_name,
       } = parameters;
 
       if (section) {
@@ -1126,6 +1128,10 @@ class Tracker {
 
       if (item_id) {
         bodyParams.item_id = item_id;
+      }
+
+      if (item_name) {
+        bodyParams.item_name = item_name;
       }
 
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;

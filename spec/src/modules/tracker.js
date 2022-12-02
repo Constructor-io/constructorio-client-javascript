@@ -4658,6 +4658,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       item_id: 'product0dbae320-3950-11ea-9251-8dee6d0eb3cd-new',
       filter_name: 'group_id',
       filter_value: 'BrandXY',
+      item_name: 'Pencil',
     };
     const optionalParameters = {
       section: 'Products',
@@ -4687,6 +4688,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.item_id);
+        expect(requestParams).to.have.property('item_name').to.equal(requiredParameters.item_name);
         expect(requestParams).to.have.property('filter_name').to.equal(requiredParameters.filter_name);
         expect(requestParams).to.have.property('filter_value').to.equal(requiredParameters.filter_value);
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
