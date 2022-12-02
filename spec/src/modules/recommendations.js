@@ -420,7 +420,7 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
       })).to.eventually.be.rejected;
     });
 
-    if (skipNetworkTimeoutTests) {
+    if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', () => {
         const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
 

@@ -25,4 +25,4 @@ jobs:
         run: npm run test:all:parallel
         env:
           TEST_API_KEY: ${{ secrets.TEST_API_KEY }}
-          SKIP_NETWORK_TIMEOUT_TESTS: false
+          SKIP_NETWORK_TIMEOUT_TESTS: true

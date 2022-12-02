@@ -277,7 +277,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackSessionStart()).to.equal(true);
     });
 
-    if (skipNetworkTimeoutTests) {
+    if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
@@ -525,7 +525,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackInputFocus()).to.equal(true);
     });
 
-    if (skipNetworkTimeoutTests) {
+    if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
@@ -838,7 +838,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackAutocompleteSelect(term, requiredParameters)).to.equal(true);
     });
 
-    if (skipNetworkTimeoutTests) {
+    if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
@@ -1159,7 +1159,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackItemDetailLoad(requiredParameters)).to.equal(true);
     });
 
-    if (skipNetworkTimeoutTests) {
+    if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
@@ -1410,7 +1410,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackSearchSubmit(term, requiredParameters)).to.equal(true);
     });
 
-    if (skipNetworkTimeoutTests) {
+    if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
@@ -1808,7 +1808,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackSearchResultsLoaded(term, requiredParameters)).to.equal(true);
     });
 
-    if (skipNetworkTimeoutTests) {
+    if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
@@ -2284,7 +2284,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackSearchResultClick(term, requiredParameters)).to.equal(true);
     });
 
-    if (skipNetworkTimeoutTests) {
+    if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
@@ -2869,7 +2869,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackConversion(term, requiredParameters)).to.equal(true);
     });
 
-    if (skipNetworkTimeoutTests) {
+    if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
@@ -3394,7 +3394,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackPurchase()).to.be.an('error');
     });
 
-    if (skipNetworkTimeoutTests) {
+    if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
@@ -3746,7 +3746,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackRecommendationView(requiredParameters)).to.equal(true);
     });
 
-    if (skipNetworkTimeoutTests) {
+    if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
@@ -4185,7 +4185,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackRecommendationClick(requiredParameters)).to.equal(true);
     });
 
-    if (skipNetworkTimeoutTests) {
+    if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
@@ -4529,7 +4529,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackBrowseResultsLoaded(requiredParameters)).to.equal(true);
     });
 
-    if (skipNetworkTimeoutTests) {
+    if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
@@ -4969,7 +4969,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackBrowseResultClick(requiredParameters)).to.equal(true);
     });
 
-    if (skipNetworkTimeoutTests) {
+    if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
@@ -5358,7 +5358,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackGenericResultClick(requiredParameters)).to.equal(true);
     });
 
-    if (skipNetworkTimeoutTests) {
+    if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
