@@ -1127,10 +1127,14 @@ class Tracker {
         bodyParams.filter_value = filter_value;
       }
 
+      // Ensure support for both item_id and customer_id as parameters
       if (item_id) {
-        bodyParams.item_id = item_id;
+        bodyParams.customer_id = item_id;
+      } else if (customer_id) {
+        bodyParams.customer_id = customer_id;
       }
 
+      // Ensure support for both item_name and name as parameters
       if (item_name) {
         bodyParams.item_name = item_name;
       } else if (name) {

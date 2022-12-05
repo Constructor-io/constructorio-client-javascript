@@ -4660,6 +4660,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       filter_value: 'BrandXY',
       item_name: 'Pencil',
     };
+    const legacyParameters = {
+      ...requiredParameters,
+      name: 'name',
+      customer_id: 'customer-id',
+    };
     const optionalParameters = {
       section: 'Products',
       result_count: 5,
