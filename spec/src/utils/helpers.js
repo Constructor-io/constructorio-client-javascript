@@ -370,6 +370,12 @@ describe('ConstructorIO - Utils - Helpers', () => {
         expect(stringify({ a: { b: { c: false } } })).to.equal('a%5Bb%5D%5Bc%5D=false');
       });
 
+      it('Should stringify emojis', () => {
+        expect(stringify({ a: '👍' })).to.equal('a=%F0%9F%91%8D');
+        expect(stringify({ '😀': 'b' })).to.equal('%F0%9F%98%80=b');
+        expect(stringify({ 'facet😀': '👍' })).to.equal('facet%F0%9F%98%80=%F0%9F%91%8D');
+      });
+
       it('Should stringify complex values', () => {
         expect(stringify({ a: 1, b: 2 })).to.equal('a=1&b=2');
         expect(stringify({ a: 'A_Z' })).to.equal('a=A_Z');
