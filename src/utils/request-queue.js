@@ -125,6 +125,9 @@ class RequestQueue {
                 message: 'ok',
               });
             }
+
+            this.requestPending = false;
+            this.send();
           }
 
           // Request was successful, but returned a non-2XX status code
@@ -137,6 +140,9 @@ class RequestQueue {
                   message: json && json.message,
                 });
               }
+
+              this.requestPending = false;
+              this.send();
             }).catch((error) => {
               if (instance.eventemitter) {
                 instance.eventemitter.emit('error', {
@@ -145,6 +151,9 @@ class RequestQueue {
                   message: error.type,
                 });
               }
+
+              this.requestPending = false;
+              this.send();
             });
           }
         }).catch((error) => {
@@ -155,7 +164,7 @@ class RequestQueue {
               message: error && error.toString && error.toString(),
             });
           }
-        }).finally(() => {
+
           this.requestPending = false;
           this.send();
         });

@@ -1976,7 +1976,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       item_id: 'customer-id',
     };
     const legacyParameters = {
-      ...requiredParameters,
       name: 'name',
       customer_id: 'customer-id',
     };
@@ -4658,6 +4657,13 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       item_id: 'product0dbae320-3950-11ea-9251-8dee6d0eb3cd-new',
       filter_name: 'group_id',
       filter_value: 'BrandXY',
+      item_name: 'Pencil',
+    };
+    const legacyParameters = {
+      filter_name: 'group_id',
+      filter_value: 'BrandXY',
+      name: 'Pencil',
+      customer_id: 'customer-id',
     };
     const optionalParameters = {
       section: 'Products',
@@ -4687,6 +4693,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.item_id);
+        expect(requestParams).to.have.property('item_name').to.equal(requiredParameters.item_name);
         expect(requestParams).to.have.property('filter_name').to.equal(requiredParameters.filter_name);
         expect(requestParams).to.have.property('filter_value').to.equal(requiredParameters.filter_value);
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
@@ -5055,6 +5062,31 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackBrowseResultClick(requiredParameters)).to.equal(true);
+    });
+
+    it('Should respond with a valid response when legacy parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('item_id').to.equal(legacyParameters.customer_id);
+        expect(requestParams).to.have.property('item_name').to.equal(legacyParameters.name);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackBrowseResultClick(legacyParameters)).to.equal(true);
     });
   });
 

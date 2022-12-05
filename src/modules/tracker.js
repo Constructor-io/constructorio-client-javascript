@@ -1,5 +1,4 @@
 /* eslint-disable object-curly-newline, no-underscore-dangle, camelcase, no-unneeded-ternary */
-const qs = require('qs');
 const EventEmitter = require('events');
 const helpers = require('../utils/helpers');
 const RequestQueue = require('../utils/request-queue');
@@ -72,7 +71,7 @@ function applyParams(parameters, options) {
 
 // Append common parameters to supplied parameters object and return as string
 function applyParamsAsString(parameters, options) {
-  return qs.stringify(applyParams(parameters, options), { indices: false });
+  return helpers.stringify(applyParams(parameters, options));
 }
 
 /**
@@ -1035,6 +1034,7 @@ class Tracker {
    * @param {string} parameters.filter_name - Filter name
    * @param {string} parameters.filter_value - Filter value
    * @param {string} parameters.item_id - Product item unique identifier
+   * @param {string} parameters.item_name - Product item name
    * @param {string} [parameters.section="Products"] - Index section
    * @param {string} [parameters.variation_id] - Product item variation unique identifier
    * @param {string} [parameters.result_id] - Browse result identifier (returned in response from Constructor)
@@ -1080,6 +1080,9 @@ class Tracker {
         filter_name,
         filter_value,
         item_id,
+        customer_id,
+        item_name,
+        name,
       } = parameters;
 
       if (section) {
@@ -1124,8 +1127,18 @@ class Tracker {
         bodyParams.filter_value = filter_value;
       }
 
+      // Ensure support for both item_id and customer_id as parameters
       if (item_id) {
         bodyParams.item_id = item_id;
+      } else if (customer_id) {
+        bodyParams.item_id = customer_id;
+      }
+
+      // Ensure support for both item_name and name as parameters
+      if (item_name) {
+        bodyParams.item_name = item_name;
+      } else if (name) {
+        bodyParams.item_name = name;
       }
 
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
