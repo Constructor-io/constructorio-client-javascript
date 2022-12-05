@@ -1,8 +1,7 @@
 /* eslint-disable object-curly-newline, no-underscore-dangle */
-const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const EventDispatcher = require('../utils/event-dispatcher');
-const { throwHttpErrorFromResponse, cleanParams, applyNetworkTimeout, trimNonBreakingSpaces, encodeURIComponentRFC3986 } = require('../utils/helpers');
+const { throwHttpErrorFromResponse, cleanParams, applyNetworkTimeout, trimNonBreakingSpaces, encodeURIComponentRFC3986, stringify } = require('../utils/helpers');
 
 // Create URL from supplied query (term) and parameters
 function createAutocompleteUrl(query, parameters, options) {
@@ -82,7 +81,7 @@ function createAutocompleteUrl(query, parameters, options) {
   queryParams._dt = Date.now();
   queryParams = cleanParams(queryParams);
 
-  const queryString = qs.stringify(queryParams, { indices: false });
+  const queryString = stringify(queryParams);
   const cleanedQuery = query.replace(/^\//, '|'); // For compatibility with backend API
 
   return `${serviceUrl}/autocomplete/${encodeURIComponentRFC3986(trimNonBreakingSpaces(cleanedQuery))}?${queryString}`;

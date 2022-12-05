@@ -1,5 +1,4 @@
 /* eslint-disable object-curly-newline, no-underscore-dangle */
-const qs = require('qs');
 const fetchPonyfill = require('fetch-ponyfill');
 const EventDispatcher = require('../utils/event-dispatcher');
 const helpers = require('../utils/helpers');
@@ -54,18 +53,16 @@ function createQuizUrl(quizId, parameters, options, path) {
       queryParams.version_id = versionId;
     }
 
-    // Pull answers from parameters.answers and  transform
+    // Pull a (answers) from parameters and transform
     if (answers) {
-      answers.forEach((ans) => {
-        answersParamString += `&${qs.stringify({ a: ans }, { arrayFormat: 'comma' })}`;
-      });
+      answersParamString = `&${helpers.stringify({ a: answers.map((ans) => [...ans].join(',')) })}`;
     }
   }
 
   queryParams._dt = Date.now();
   queryParams = helpers.cleanParams(queryParams);
 
-  const queryString = qs.stringify(queryParams, { indices: false });
+  const queryString = helpers.stringify(queryParams);
 
   return `${serviceUrl}/v1/quizzes/${encodeURIComponent(quizId)}/${encodeURIComponent(path)}/?${queryString}${answersParamString}`;
 }

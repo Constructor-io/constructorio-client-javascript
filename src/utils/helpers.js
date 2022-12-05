@@ -149,6 +149,39 @@ const utils = {
       setTimeout(() => controller.abort(), timeout);
     }
   },
+  stringify: (object, prefix, objectType) => {
+    if (!object) {
+      return '';
+    }
+
+    const allValues = [];
+
+    Object.keys(object).forEach((key) => {
+      const value = object[key];
+      const encodedKey = utils.encodeURIComponentRFC3986(key);
+
+      let stringifiedValue;
+
+      // Check for both null and undefined
+      if (value != null) {
+        const nextPrefix = prefix ? `${prefix}%5B${encodedKey}%5D` : encodedKey;
+
+        if (Array.isArray(value)) {
+          stringifiedValue = utils.stringify(value, nextPrefix, 'array');
+        } else if (typeof value === 'object') {
+          stringifiedValue = utils.stringify(value, nextPrefix, 'object');
+        } else if (objectType === 'object') {
+          stringifiedValue = `${nextPrefix}=${utils.encodeURIComponentRFC3986(value)}`;
+        } else {
+          stringifiedValue = `${prefix || encodedKey}=${utils.encodeURIComponentRFC3986(value)}`;
+        }
+
+        allValues.push(stringifiedValue);
+      }
+    });
+
+    return allValues.join('&');
+  },
 };
 
 module.exports = utils;

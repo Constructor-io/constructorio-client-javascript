@@ -19,6 +19,7 @@ const {
   hasOrderIdRecord,
   addOrderIdRecord,
   applyNetworkTimeout,
+  stringify,
 } = require('../../../test/utils/helpers'); // eslint-disable-line import/extensions
 const jsdom = require('./jsdom-global');
 const store = require('../../../test/utils/store'); // eslint-disable-line import/extensions
@@ -357,6 +358,48 @@ describe('ConstructorIO - Utils - Helpers', () => {
           expect(controller.signal.aborted).to.equal(true);
           done();
         }, 75);
+      });
+    });
+
+    describe('stringify', () => {
+      it('Should stringify falsy values', () => {
+        expect(stringify(undefined)).to.equal('');
+        expect(stringify(null)).to.equal('');
+        expect(stringify(false)).to.equal('');
+        expect(stringify({ a: false })).to.equal('a=false');
+        expect(stringify({ a: { b: { c: false } } })).to.equal('a%5Bb%5D%5Bc%5D=false');
+      });
+
+      it('Should stringify emojis', () => {
+        expect(stringify({ a: '👍' })).to.equal('a=%F0%9F%91%8D');
+        expect(stringify({ '😀': 'b' })).to.equal('%F0%9F%98%80=b');
+        expect(stringify({ 'facet😀': '👍' })).to.equal('facet%F0%9F%98%80=%F0%9F%91%8D');
+      });
+
+      it('Should stringify complex values', () => {
+        expect(stringify({ a: 1, b: 2 })).to.equal('a=1&b=2');
+        expect(stringify({ a: 'A_Z' })).to.equal('a=A_Z');
+        expect(stringify({ a: '€' })).to.equal('a=%E2%82%AC');
+        expect(stringify({ a: '' })).to.equal('a=%EE%80%80');
+        expect(stringify({ a: 'א' })).to.equal('a=%D7%90');
+        expect(stringify({ a: '𐐷' })).to.equal('a=%F0%90%90%B7');
+        expect(stringify({ a: { b: ['g'] } })).to.equal('a%5Bb%5D=g');
+        expect(stringify({ a: { b: 'c', d: 'e' } })).to.equal('a%5Bb%5D=c&a%5Bd%5D=e');
+      });
+
+      it('Should stringify the object into correct format', () => {
+        const obj = {
+          a: '1',
+          b: ['1,2'],
+          c: ['2', '3'],
+          d: [true, false],
+          e: { f: ['g', 'h'] },
+          i: undefined,
+          j: null,
+        };
+        const stringified = stringify(obj);
+
+        expect(stringified).to.equal('a=1&b=1%2C2&c=2&c=3&d=true&d=false&e%5Bf%5D=g&e%5Bf%5D=h');
       });
     });
   }
