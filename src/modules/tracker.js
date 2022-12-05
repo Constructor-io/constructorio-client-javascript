@@ -1081,6 +1081,7 @@ class Tracker {
         filter_name,
         filter_value,
         item_id,
+        customer_id,
         item_name,
         name,
       } = parameters;
