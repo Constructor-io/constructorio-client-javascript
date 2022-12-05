@@ -1,7 +1,6 @@
 /* eslint-disable complexity */
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline, no-underscore-dangle */
-const fetchPonyfill = require('fetch-ponyfill');
 const EventDispatcher = require('../utils/event-dispatcher');
 const helpers = require('../utils/helpers');
 

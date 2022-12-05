@@ -1,5 +1,4 @@
 /* eslint-disable object-curly-newline, no-param-reassign */
-const fetchPonyfill = require('fetch-ponyfill');
 const EventDispatcher = require('../utils/event-dispatcher');
 const helpers = require('../utils/helpers');
 
