@@ -148,6 +148,7 @@ class Tracker {
    *     {
    *         item_name: 'Red T-Shirt',
    *         item_id: 'KMH876',
+   *         url: 'https://constructor.io/product/KMH876',
    *     },
    * );
    */
