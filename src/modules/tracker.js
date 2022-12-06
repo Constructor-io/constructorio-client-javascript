@@ -136,6 +136,7 @@ class Tracker {
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.item_name - Product item name
    * @param {string} parameters.item_id - Product item unique identifier
+   * @param {string} parameters.url - Current page URL
    * @param {string} [parameters.variation_id] - Product item variation unique identifier
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -146,6 +147,7 @@ class Tracker {
    *     {
    *         item_name: 'Red T-Shirt',
    *         item_id: 'KMH876',
+   *         url: 'https://constructor.io/product/KMH876',
    *     },
    * );
    */
