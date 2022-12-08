@@ -188,7 +188,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       return expect(quizzes.getQuizNextQuestion(validQuizId, { versionId: 'foo' })).to.eventually.be.rejected;
     });
 
-    if (skipNetworkTimeoutTests) {
+    if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', () => {
         const { quizzes } = new ConstructorIO({
           apiKey: quizApiKey,
@@ -365,7 +365,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       return expect(quizzes.getQuizResults(validQuizId, { answers: [] })).to.eventually.be.rejected;
     });
 
-    if (skipNetworkTimeoutTests) {
+    if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', () => {
         const { quizzes } = new ConstructorIO({
           apiKey: quizApiKey,

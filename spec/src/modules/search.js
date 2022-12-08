@@ -632,7 +632,7 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
       return expect(search.getSearchResults(query, { section })).to.eventually.be.rejected;
     });
 
-    if (skipNetworkTimeoutTests) {
+    if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', () => {
         const { search } = new ConstructorIO({ apiKey: testApiKey });
 

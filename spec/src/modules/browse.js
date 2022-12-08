@@ -695,7 +695,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       return expect(browse.getBrowseResults(filterName, filterValue)).to.eventually.be.rejected;
     });
 
-    if (skipNetworkTimeoutTests) {
+    if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', () => {
         const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
@@ -1161,7 +1161,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       return expect(browse.getBrowseResultsForItemIds(ids)).to.eventually.be.rejected;
     });
 
-    if (skipNetworkTimeoutTests) {
+    if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', () => {
         const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
@@ -1284,7 +1284,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       return expect(browse.getBrowseGroups()).to.eventually.be.rejected;
     });
 
-    if (skipNetworkTimeoutTests) {
+    if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', () => {
         const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
@@ -1444,7 +1444,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       return expect(browse.getBrowseFacets()).to.eventually.be.rejected;
     });
 
-    if (skipNetworkTimeoutTests) {
+    if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', () => {
         const { browse } = new ConstructorIO({ apiKey: testApiKey });
 
@@ -1551,7 +1551,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       return expect(browse.getBrowseFacetOptions(facetName)).to.eventually.be.rejected;
     });
 
-    if (skipNetworkTimeoutTests) {
+    if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', () => {
         const { browse } = new ConstructorIO({
           apiKey: testApiKey,
