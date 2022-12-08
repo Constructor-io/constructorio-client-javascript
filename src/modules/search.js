@@ -1,7 +1,6 @@
 /* eslint-disable complexity */
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline, no-underscore-dangle */
-const fetchPonyfill = require('fetch-ponyfill');
 const EventDispatcher = require('../utils/event-dispatcher');
 const helpers = require('../utils/helpers');
 
@@ -177,7 +176,7 @@ class Search {
    */
   getSearchResults(query, parameters, networkParameters = {}) {
     let requestUrl;
-    const fetch = (this.options && this.options.fetch) || fetchPonyfill({ Promise }).fetch;
+    const { fetch } = this.options;
     let signal;
 
     if (typeof AbortController === 'function') {
