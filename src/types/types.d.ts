@@ -1,5 +1,9 @@
 import EventDispatcher from './event-dispatcher';
 
+export interface NetworkParameters extends Record<string, any> {
+	timeout?: number;
+}
+
 export interface ConstructorClientOptions {
 	apiKey: string;
 	version?: string;
@@ -16,9 +20,7 @@ export interface ConstructorClientOptions {
 	sendReferrerWithTrackingEvents?: boolean;
 	eventDispatcher?: EventDispatcher;
 	beaconMode?: boolean;
-	networkParameters?: {
-		timeout: number;
-	};
+	networkParameters?: NetworkParameters;
 }
 
 export interface RequestFeature extends Record<string, any> {

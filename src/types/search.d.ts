@@ -1,10 +1,10 @@
 import {
 	ConstructorClientOptions,
-	ErrorData,
 	Facet,
 	Feature,
 	FmtOption,
 	Group,
+	NetworkParameters,
 	RequestFeature,
 	RequestFeatureVariant,
 	ResultSources,
@@ -22,6 +22,7 @@ export = Search;
 
 interface SearchParameters {
 	page?: number;
+	offset?: number;
 	resultsPerPage?: number;
 	filters?: Record<string, any>;
 	sortBy?: string;
@@ -39,9 +40,7 @@ declare class Search {
 	getSearchResults(
 		query: string,
 		parameters?: SearchParameters,
-		networkParameters?: {
-			timeout?: number;
-		}
+		networkParameters?: NetworkParameters
 	): Promise<Search.SearchResponse>;
 }
 

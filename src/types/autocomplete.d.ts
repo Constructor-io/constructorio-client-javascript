@@ -1,5 +1,6 @@
 import {
 	ConstructorClientOptions,
+	NetworkParameters,
 	RequestFeature,
 	RequestFeatureVariant,
 } from "./types";
@@ -13,11 +14,11 @@ import EventDispatcher from "./event-dispatcher";
 export = Autocomplete;
 
 interface IAutocompleteParameters {
-	numResults: number;
-	filters: Record<string, any>;
-	resultsPerSection: Record<string, number>;
-	hiddenFields: string[];
-	variationsMap: Record<string, any>;
+	numResults?: number;
+	filters?: Record<string, any>;
+	resultsPerSection?: Record<string, number>;
+	hiddenFields?: string[];
+	variationsMap?: Record<string, any>;
 }
 
 declare class Autocomplete {
@@ -28,9 +29,7 @@ declare class Autocomplete {
 	getAutocompleteResults(
 		query: string,
 		parameters?: IAutocompleteParameters,
-		networkParameters?: {
-			timeout?: number;
-		}
+		networkParameters?: NetworkParameters
 	): Promise<Autocomplete.AutocompleteResponse>;
 }
 
@@ -56,7 +55,7 @@ interface Request extends Record<string, any> {
 	searchandized_items: Record<string, any>;
 }
 
-type Section = Partial<SectionItem>[]
+type Section = Partial<SectionItem>[];
 
 interface SectionItem extends Record<string, any> {
 	data: Record<string, any>;

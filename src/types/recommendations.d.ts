@@ -1,4 +1,4 @@
-import { ConstructorClientOptions, ErrorData } from "./types";
+import { ConstructorClientOptions, NetworkParameters } from "./types";
 import EventDispatcher from "./event-dispatcher";
 
 /******************
@@ -25,9 +25,7 @@ declare class Recommendations {
 	getRecommendations(
 		podId: string,
 		parameters?: RecommendationsParameters,
-		networkParameters?: {
-			timeout?: number;
-		}
+		networkParameters?: NetworkParameters
 	): Promise<Recommendations.RecommendationsResponse>;
 }
 
