@@ -1,4 +1,4 @@
-import { ConstructorClientOptions } from "./types";
+import { ConstructorClientOptions } from ".";
 
 export = EventDispatcher;
 
