@@ -1,7 +1,7 @@
-import { expectType } from "tsd";
+import { expectAssignable } from "tsd";
 import { QuizResultsResponse, NextQuestionResponse } from "..";
 
-expectType<NextQuestionResponse>(
+expectAssignable<NextQuestionResponse>(
   {
     next_question: {
       id: 2,
@@ -39,7 +39,7 @@ expectType<NextQuestionResponse>(
   }
 )
 
-expectType<NextQuestionResponse>({
+expectAssignable<NextQuestionResponse>({
   next_question: {
     id: 1,
     title: "Sample open text question",
@@ -58,7 +58,7 @@ expectType<NextQuestionResponse>({
   is_last_question: false
 })
 
-expectType<QuizResultsResponse>({
+expectAssignable<QuizResultsResponse>({
   result: {
     filter_expression: {
       and: [

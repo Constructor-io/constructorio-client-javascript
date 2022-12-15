@@ -71,7 +71,7 @@ declare class Browse {
 /***********
  * 	Browse results returned from server
  ***********/
- export interface BrowseResponse<ResponseType> extends Record<string, any> {
+export interface BrowseResponse<ResponseType> extends Record<string, any> {
   request?: Partial<BrowseRequestType>;
   response?: Partial<ResponseType>;
   result_id?: string;

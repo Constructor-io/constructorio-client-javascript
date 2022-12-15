@@ -1,7 +1,7 @@
-import { expectType } from "tsd";
+import { expectAssignable } from "tsd";
 import { AutocompleteResponse } from "../autocomplete";
 
-expectType<AutocompleteResponse>({
+expectAssignable<AutocompleteResponse>({
 	sections: {
 		Products: [
 			{

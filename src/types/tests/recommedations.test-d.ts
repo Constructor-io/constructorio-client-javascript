@@ -1,7 +1,7 @@
 import { RecommendationsResponse } from "./../recommendations.d";
-import { expectType } from "tsd";
+import { expectAssignable } from "tsd";
 
-expectType<RecommendationsResponse>({
+expectAssignable<RecommendationsResponse>({
 	request: {
 		num_results: 4,
 		item_id: "",

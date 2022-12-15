@@ -1,7 +1,7 @@
-import { expectType } from "tsd";
+import { expectAssignable } from "tsd";
 import { GetBrowseResultsResponse } from "../browse";
 
-expectType<GetBrowseResultsResponse>({
+expectAssignable<GetBrowseResultsResponse>({
 	response: {
 		result_sources: {
 			token_match: {

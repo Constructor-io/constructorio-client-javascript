@@ -1,7 +1,7 @@
 import { SearchResponse } from "../search";
-import { expectType } from "tsd";
+import { expectAssignable } from "tsd";
 
-expectType<SearchResponse>({
+expectAssignable<SearchResponse>({
 	response: {
 		result_sources: {
 			token_match: {

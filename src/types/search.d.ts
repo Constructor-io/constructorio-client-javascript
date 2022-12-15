@@ -41,7 +41,7 @@ declare class Search {
 /***********
  * 	search results returned from server
  ***********/
- export interface SearchResponse {
+export interface SearchResponse {
   request: Partial<SearchRequestType>;
   response: Partial<SearchResponseType | Redirect>;
   result_id: string;
