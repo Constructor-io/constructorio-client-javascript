@@ -9,8 +9,8 @@ import {
   RequestFeatureVariant,
   ResultSources,
   SortOption,
-} from ".";
-import EventDispatcher from "./event-dispatcher";
+} from '.';
+import EventDispatcher from './event-dispatcher';
 
 export default Browse;
 
@@ -32,7 +32,9 @@ export interface IBrowseParameters {
 
 declare class Browse {
   constructor(options: ConstructorClientOptions);
+
   options: ConstructorClientOptions;
+
   eventDispatcher: EventDispatcher;
 
   getBrowseResults(
@@ -44,33 +46,33 @@ declare class Browse {
 
   getBrowseResultsForItemIds(
     itemIds: string[],
-    parameters?: Omit<IBrowseParameters, "preFilterExpression" | "qs">,
+    parameters?: Omit<IBrowseParameters, 'preFilterExpression' | 'qs'>,
     networkParameters?: NetworkParameters
   ): Promise<GetBrowseResultsForItemIdsResponse>;
 
   getBrowseGroups(
-    parameters?: Pick<IBrowseParameters, "filters" | "section" | "fmtOptions">,
+    parameters?: Pick<IBrowseParameters, 'filters' | 'section' | 'fmtOptions'>,
     networkParameters?: NetworkParameters
   ): Promise<GetBrowseGroupsResponse>;
 
   getBrowseFacets(
     parameters?: Pick<
       IBrowseParameters,
-      "page" | "offset" | "section" | "fmtOptions" | "resultsPerPage"
+      'page' | 'offset' | 'section' | 'fmtOptions' | 'resultsPerPage'
     >,
     networkParameters?: NetworkParameters
   ): Promise<GetBrowseFacetsResponse>;
 
   getBrowseFacetOptions(
     facetName: string,
-    parameters?: Pick<IBrowseParameters, "section" | "fmtOptions">,
+    parameters?: Pick<IBrowseParameters, 'section' | 'fmtOptions'>,
     networkParameters?: NetworkParameters
   ): Promise<GetBrowseFacetOptionsResponse>;
 }
 
-/***********
- * 	Browse results returned from server
- ***********/
+/** *********
+ * Browse results returned from server
+ ********** */
 export interface BrowseResponse<ResponseType> extends Record<string, any> {
   request?: Partial<BrowseRequestType>;
   response?: Partial<ResponseType>;
@@ -85,14 +87,14 @@ export type GetBrowseResultsForItemIdsResponse =
 export type GetBrowseGroupsResponse = BrowseResponse<
   Pick<
     GetBrowseResultsResponseData,
-    "result_sources" | "groups" | "refined_content"
+    'result_sources' | 'groups' | 'refined_content'
   >
 >;
 export type GetBrowseFacetsResponse = BrowseResponse<
-  Pick<GetBrowseResultsResponseData, "facets" | "total_num_results">
+  Pick<GetBrowseResultsResponseData, 'facets' | 'total_num_results'>
 >;
 export type GetBrowseFacetOptionsResponse = BrowseResponse<
-  Pick<GetBrowseResultsResponseData, "facets">
+  Pick<GetBrowseResultsResponseData, 'facets'>
 >;
 
 export interface GetBrowseResultsResponseData extends Record<string, any> {

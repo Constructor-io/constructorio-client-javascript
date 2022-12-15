@@ -9,8 +9,8 @@ import {
   RequestFeatureVariant,
   ResultSources,
   SortOption,
-} from ".";
-import EventDispatcher from "./event-dispatcher";
+} from '.';
+import EventDispatcher from './event-dispatcher';
 
 export default Search;
 
@@ -29,8 +29,11 @@ export interface SearchParameters {
 }
 declare class Search {
   constructor(options: ConstructorClientOptions);
+
   options: ConstructorClientOptions;
+
   eventDispatcher: EventDispatcher;
+
   getSearchResults(
     query: string,
     parameters?: SearchParameters,
@@ -38,9 +41,9 @@ declare class Search {
   ): Promise<SearchResponse>;
 }
 
-/***********
- * 	search results returned from server
- ***********/
+/** *********
+ * search results returned from server
+ ********** */
 export interface SearchResponse {
   request: Partial<SearchRequestType>;
   response: Partial<SearchResponseType | Redirect>;

@@ -1,5 +1,5 @@
-import { ConstructorClientOptions, NetworkParameters } from ".";
-import EventDispatcher from "./event-dispatcher";
+import { ConstructorClientOptions, NetworkParameters } from '.';
+import EventDispatcher from './event-dispatcher';
 
 export default Recommendations;
 
@@ -14,7 +14,9 @@ export interface RecommendationsParameters {
 
 declare class Recommendations {
   constructor(options: ConstructorClientOptions);
+
   options: ConstructorClientOptions;
+
   eventDispatcher: EventDispatcher;
 
   getRecommendations(
@@ -24,9 +26,9 @@ declare class Recommendations {
   ): Promise<RecommendationsResponse>;
 }
 
-/***********
- * 	Recommendations results returned from server
- ***********/
+/** *********
+ * Recommendations results returned from server
+ ********** */
 export interface RecommendationsResponse extends Record<string, any> {
   request: Partial<RecommendationsRequestType>;
   response: Partial<RecommendationsResponseType>;

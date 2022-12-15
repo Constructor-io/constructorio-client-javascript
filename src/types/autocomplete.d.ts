@@ -3,8 +3,8 @@ import {
   NetworkParameters,
   RequestFeature,
   RequestFeatureVariant,
-} from ".";
-import EventDispatcher from "./event-dispatcher";
+} from '.';
+import EventDispatcher from './event-dispatcher';
 
 export default Autocomplete;
 
@@ -18,7 +18,9 @@ export interface IAutocompleteParameters {
 
 declare class Autocomplete {
   constructor(options: ConstructorClientOptions);
+
   options: ConstructorClientOptions;
+
   eventDispatcher: EventDispatcher;
 
   getAutocompleteResults(
@@ -28,9 +30,9 @@ declare class Autocomplete {
   ): Promise<AutocompleteResponse>;
 }
 
-/***********
- * 	Autocomplete results returned from server
- ***********/
+/** *********
+ * Autocomplete results returned from server
+ ********** */
 export interface AutocompleteResponse extends Record<string, any> {
   request: Partial<AutocompleteRequestType>;
   sections: Record<string, Section>;

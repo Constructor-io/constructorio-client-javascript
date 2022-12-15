@@ -1,13 +1,16 @@
-import { ConstructorClientOptions, NetworkParameters } from ".";
-import EventEmitter = require("events");
-import RequestQueue = require("../utils/request-queue");
+import EventEmitter = require('events');
+import { ConstructorClientOptions, NetworkParameters } from '.';
+import RequestQueue = require('../utils/request-queue');
 
 export default Tracker;
 
 declare class Tracker {
   constructor(options: ConstructorClientOptions);
+
   private options: ConstructorClientOptions;
+
   private eventemitter: EventEmitter;
+
   private requests: RequestQueue;
 
   trackSessionStart(networkParameters?: NetworkParameters): true | Error;

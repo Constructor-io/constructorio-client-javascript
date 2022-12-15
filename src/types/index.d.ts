@@ -1,12 +1,12 @@
-export * from "./search";
-export * from "./autocomplete";
-export * from "./quizzes";
-export * from "./recommendations";
-export * from "./browse";
-export * from "./tracker";
-export * from "./event-dispatcher";
+import EventDispatcher from './event-dispatcher';
 
-import EventDispatcher from "./event-dispatcher";
+export * from './search';
+export * from './autocomplete';
+export * from './quizzes';
+export * from './recommendations';
+export * from './browse';
+export * from './tracker';
+export * from './event-dispatcher';
 
 export interface NetworkParameters extends Record<string, any> {
   timeout?: number;
@@ -92,12 +92,12 @@ export interface BaseFacet extends Record<string, any> {
 export interface RangeFacet extends BaseFacet, Record<string, any> {
   max: number;
   min: number;
-  type: "range";
+  type: 'range';
 }
 
 export interface OptionFacet extends BaseFacet, Record<string, any> {
   options: FacetOption[];
-  type: "multiple" | "single" | "hierarchical";
+  type: 'multiple' | 'single' | 'hierarchical';
 }
 
 export interface FacetOption extends Record<string, any> {
@@ -105,7 +105,7 @@ export interface FacetOption extends Record<string, any> {
   display_name: string;
   value: string;
   options?: FacetOption[];
-  range?: ["-inf" | number, "inf" | number];
+  range?: ['-inf' | number, 'inf' | number];
   status: string;
 }
 

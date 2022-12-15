@@ -5,8 +5,10 @@
   },
   "extends": [
     "airbnb-base",
-    "plugin:@cspell/recommended"
+    "plugin:@cspell/recommended",
+    "plugin:@typescript-eslint/eslint-recommended"
   ],
+  "parser": "@typescript-eslint/parser",
   "globals": {
     "CLIENT_VERSION": true,
     "expect": true
@@ -51,5 +53,16 @@
       20
     ],
     "@cspell/spellchecker": ["error"]
-  }
+  },
+  "overrides": [
+    {
+     "files": ["src/**/*.d.ts"],
+        "rules": {
+          "no-unused-vars": "off",
+          "no-use-before-define": "off",
+          "import/no-unresolved": "off",
+          "import/extensions": "off"
+        }
+    }
+   ]
 }
