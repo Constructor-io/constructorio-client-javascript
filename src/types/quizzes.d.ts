@@ -22,7 +22,7 @@ declare class Quizzes {
     id: string,
     parameters?: QuizzesParameters,
     networkParameters?: NetworkParameters
-  ): Promise<ResultsResponse>;
+  ): Promise<QuizResultsResponse>;
 }
 
 /* quizzes results returned from server */
@@ -31,7 +31,7 @@ export interface NextQuestionResponse extends Record<string, any> {
   is_last_question?: boolean;
   version_id?: string;
 }
-export interface ResultsResponse extends Record<string, any> {
+export interface QuizResultsResponse extends Record<string, any> {
   result: Partial<QuizResult>;
   version_id?: string;
 }
