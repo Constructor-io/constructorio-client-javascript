@@ -12,6 +12,22 @@ export interface NetworkParameters extends Record<string, any> {
   timeout?: number;
 }
 
+export interface IdOptions extends Record<string, any> {
+  base_url?: string;
+  ip_address?: string;
+  user_agent?: string;
+  timeout?: number;
+  persist?: boolean;
+  cookie_name_client_id?: string;
+  cookie_name_session_data?: string;
+  local_name_client_id?: string;
+  local_name_session_data?: string;
+  cookie_prefix_for_experiment?: string;
+  cookie_domain?: string;
+  client_id_storage_location?: string;
+  session_id_storage_location?: string;
+}
+
 export interface ConstructorClientOptions {
   apiKey: string;
   version?: string;
@@ -21,6 +37,7 @@ export interface ConstructorClientOptions {
   userId?: string;
   segments?: string[];
   testCells?: Record<string, string>;
+  idOptions?: IdOptions;
   fetch?: any;
   trackingSendDelay?: number;
   sendTrackingEvents?: boolean;
