@@ -1,14 +1,9 @@
-import { ConstructorClientOptions, NetworkParameters } from "./types";
+import { ConstructorClientOptions, NetworkParameters } from ".";
 import EventEmitter = require("events");
 import RequestQueue = require("../utils/request-queue");
 
-export = Tracker;
+export default Tracker;
 
-/******************
- *
- * 	Tracker
- *
- *****************/
 declare class Tracker {
 	constructor(options: ConstructorClientOptions);
 	private options: ConstructorClientOptions;

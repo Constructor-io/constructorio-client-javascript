@@ -3,15 +3,10 @@ import Browse from "./browse";
 import Autocomplete from "./autocomplete";
 import Recommendations from "./recommendations";
 import Tracker from "./tracker";
-import { ConstructorClientOptions } from "./types";
+import { ConstructorClientOptions } from ".";
 
 export = ConstructorIO;
 
-/*********************
- *
- * 	Constructor client
- *
- *********************/
 declare class ConstructorIO {
 	constructor(options: ConstructorClientOptions);
 	private options: ConstructorClientOptions;
@@ -25,5 +20,5 @@ declare class ConstructorIO {
 }
 
 declare namespace ConstructorIO {
-	export { Tracker }
+	export { Search, Browse, Autocomplete, Recommendations, Tracker }
 }

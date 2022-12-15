@@ -1,3 +1,11 @@
+export * from "./search";
+export * from "./autocomplete";
+export * from "./quizzes";
+export * from "./recommendations";
+export * from "./browse";
+export * from "./tracker";
+export * from "./event-dispatcher";
+
 import EventDispatcher from './event-dispatcher';
 
 export interface NetworkParameters extends Record<string, any> {
@@ -8,7 +16,6 @@ export interface ConstructorClientOptions {
 	apiKey: string;
 	version?: string;
 	serviceUrl?: string;
-	// session id is of type string in jsdocs but of type number in code usage
 	sessionId?: string;
 	clientId?: string;
 	userId?: string;
@@ -72,7 +79,7 @@ export interface FmtOption extends Record<string, any> {
 	groups_max_depth: number;
 }
 
-type Facet = RangeFacet | OptionFacet;
+export type Facet = RangeFacet | OptionFacet;
 
 export interface BaseFacet extends Record<string, any> {
 	data: Record<string, any>;
