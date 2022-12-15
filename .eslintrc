@@ -56,7 +56,7 @@
   },
   "overrides": [
     {
-     "files": ["src/**/*.d.ts"],
+     "files": ["src/**/*.ts"],
         "rules": {
           "no-unused-vars": "off",
           "no-use-before-define": "off",
