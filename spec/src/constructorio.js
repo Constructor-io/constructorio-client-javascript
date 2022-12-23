@@ -89,6 +89,17 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
     expect(instance.options).to.have.property('serviceUrl').to.equal('https://constructor.io');
   });
 
+  it('Should remove any trailing slashes from the quizServiceUrl', () => {
+    const quizServiceUrl = 'https://quizzes.cnstrc.com/';
+    const instance = new ConstructorIO({
+      apiKey: validApiKey,
+      quizServiceUrl,
+    });
+
+    expect(instance).to.be.an('object');
+    expect(instance.options).to.have.property('quizServiceUrl').to.equal('https://quizzes.cnstrc.com');
+  });
+
   it('Should emit an event with options data', (done) => {
     const options = {
       apiKey: validApiKey,
