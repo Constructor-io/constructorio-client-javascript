@@ -59,7 +59,7 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
     const clientId = 'client-id';
     const sessionId = 'session-id';
     const serviceUrl = 'http://constructor.io';
-    const quizzesServiceUrl = 'https://quizzes.cnstrc.com';
+    const quizzesServiceUrl = 'http://quizzes.constructor.io';
     const version = 'custom-version';
     const networkParameters = { timeout: 5000 };
     const instance = new ConstructorIO({
@@ -76,6 +76,7 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
     expect(instance.options).to.have.property('clientId').to.equal(clientId);
     expect(instance.options).to.have.property('sessionId').to.equal(sessionId);
     expect(instance.options).to.have.property('serviceUrl').to.equal(serviceUrl);
+    expect(instance.options).to.have.property('quizzesServiceUrl').to.equal(quizzesServiceUrl);
     expect(instance.options).to.have.property('version').to.equal(version);
     expect(instance.options).to.have.property('networkParameters').to.equal(networkParameters);
   });
