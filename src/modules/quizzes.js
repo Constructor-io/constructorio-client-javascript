@@ -11,7 +11,7 @@ function createQuizUrl(quizId, parameters, options, path) {
     segments,
     userId,
     version,
-    quizServiceUrl,
+    quizzesServiceUrl,
   } = options;
   let queryParams = { c: version };
   let answersParamString = '';
@@ -63,7 +63,7 @@ function createQuizUrl(quizId, parameters, options, path) {
 
   const queryString = helpers.stringify(queryParams);
 
-  return `${quizServiceUrl}/v1/quizzes/${encodeURIComponent(quizId)}/${encodeURIComponent(path)}/?${queryString}${answersParamString}`;
+  return `${quizzesServiceUrl}/v1/quizzes/${encodeURIComponent(quizId)}/${encodeURIComponent(path)}/?${queryString}${answersParamString}`;
 }
 
 /**

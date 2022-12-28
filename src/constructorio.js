@@ -37,7 +37,7 @@ class ConstructorIO {
    * @param {object} parameters - Parameters for client instantiation
    * @param {string} parameters.apiKey - Constructor.io API key
    * @param {string} [parameters.serviceUrl='https://ac.cnstrc.com'] - API URL endpoint
-   * @param {string} [parameters.quizServiceUrl='https://quizzes.cnstrc.com'] - Quiz API URL endpoint
+   * @param {string} [parameters.quizzesServiceUrl='https://quizzes.cnstrc.com'] - Quiz API URL endpoint
    * @param {array} [parameters.segments] - User segments
    * @param {object} [parameters.testCells] - User test cells
    * @param {string} [parameters.clientId] - Client ID, defaults to value supplied by 'constructorio-id' module
@@ -66,7 +66,7 @@ class ConstructorIO {
       apiKey,
       version: versionFromOptions,
       serviceUrl,
-      quizServiceUrl,
+      quizzesServiceUrl,
       segments,
       testCells,
       clientId,
@@ -109,7 +109,7 @@ class ConstructorIO {
       apiKey,
       version: versionFromOptions || versionFromGlobal || computePackageVersion(),
       serviceUrl: (serviceUrl && serviceUrl.replace(/\/$/, '')) || 'https://ac.cnstrc.com',
-      quizServiceUrl: (quizServiceUrl && quizServiceUrl.replace(/\/$/, '')) || 'https://quizzes.cnstrc.com',
+      quizzesServiceUrl: (quizzesServiceUrl && quizzesServiceUrl.replace(/\/$/, '')) || 'https://quizzes.cnstrc.com',
       sessionId: sessionId || session_id,
       clientId: clientId || client_id,
       userId,

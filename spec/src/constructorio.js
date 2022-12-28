@@ -59,6 +59,7 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
     const clientId = 'client-id';
     const sessionId = 'session-id';
     const serviceUrl = 'http://constructor.io';
+    const quizzesServiceUrl = 'https://quizzes.cnstrc.com';
     const version = 'custom-version';
     const networkParameters = { timeout: 5000 };
     const instance = new ConstructorIO({
@@ -66,6 +67,7 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
       clientId,
       sessionId,
       serviceUrl,
+      quizzesServiceUrl,
       version,
       networkParameters,
     });
@@ -89,15 +91,15 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
     expect(instance.options).to.have.property('serviceUrl').to.equal('https://constructor.io');
   });
 
-  it('Should remove any trailing slashes from the quizServiceUrl', () => {
-    const quizServiceUrl = 'https://quizzes.cnstrc.com/';
+  it('Should remove any trailing slashes from the quizzesServiceUrl', () => {
+    const quizzesServiceUrl = 'https://quizzes.cnstrc.com/';
     const instance = new ConstructorIO({
       apiKey: validApiKey,
-      quizServiceUrl,
+      quizzesServiceUrl,
     });
 
     expect(instance).to.be.an('object');
-    expect(instance.options).to.have.property('quizServiceUrl').to.equal('https://quizzes.cnstrc.com');
+    expect(instance.options).to.have.property('quizzesServiceUrl').to.equal('https://quizzes.cnstrc.com');
   });
 
   it('Should emit an event with options data', (done) => {
