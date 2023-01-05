@@ -19,11 +19,16 @@ export interface IdOptions extends Record<string, any> {
   timeout?: number;
   persist?: boolean;
   cookie_name_client_id?: string;
+  cookie_name_session_id?: string;
   cookie_name_session_data?: string;
   local_name_client_id?: string;
+  local_name_session_id?: string;
   local_name_session_data?: string;
   cookie_prefix_for_experiment?: string;
   cookie_domain?: string;
+  cookie_days_to_live?: number;
+  on_node?: boolean;
+  session_is_new?: boolean;
   client_id_storage_location?: string;
   session_id_storage_location?: string;
 }
