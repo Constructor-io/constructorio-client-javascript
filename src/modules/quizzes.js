@@ -100,14 +100,14 @@ class Quizzes {
    *    versionId: '123'
    * });
    */
-  getQuizNextQuestion(quizId, parameters, networkParameters = {}) {
+  getQuizNextQuestion(id, parameters, networkParameters = {}) {
     let requestUrl;
     const { fetch } = this.options;
     const controller = new AbortController();
     const { signal } = controller;
 
     try {
-      requestUrl = createQuizUrl(quizId, parameters, this.options, 'next');
+      requestUrl = createQuizUrl(id, parameters, this.options, 'next');
     } catch (e) {
       return Promise.reject(e);
     }
@@ -155,14 +155,14 @@ class Quizzes {
    *    versionId: '123'
    * });
    */
-  getQuizResults(quizId, parameters, networkParameters = {}) {
+  getQuizResults(id, parameters, networkParameters = {}) {
     let requestUrl;
     const { fetch } = this.options;
     const controller = new AbortController();
     const { signal } = controller;
 
     try {
-      requestUrl = createQuizUrl(quizId, parameters, this.options, 'finalize');
+      requestUrl = createQuizUrl(id, parameters, this.options, 'finalize');
     } catch (e) {
       return Promise.reject(e);
     }

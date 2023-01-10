@@ -1,67 +1,59 @@
 import {
-	ConstructorClientOptions,
-	RequestFeature,
-	RequestFeatureVariant,
-} from "./types";
-import EventDispatcher from "./event-dispatcher";
+  ConstructorClientOptions,
+  NetworkParameters,
+  RequestFeature,
+  RequestFeatureVariant,
+} from '.';
+import EventDispatcher from './event-dispatcher';
 
-/***************
- *
- * 	Autocomplete
- *
- ***************/
-export = Autocomplete;
+export default Autocomplete;
 
-interface IAutocompleteParameters {
-	numResults: number;
-	filters: Record<string, any>;
-	resultsPerSection: Record<string, number>;
-	hiddenFields: string[];
-	variationsMap: Record<string, any>;
+export interface IAutocompleteParameters {
+  numResults?: number;
+  filters?: Record<string, any>;
+  resultsPerSection?: Record<string, number>;
+  hiddenFields?: string[];
+  variationsMap?: Record<string, any>;
 }
 
 declare class Autocomplete {
-	constructor(options: ConstructorClientOptions);
-	options: ConstructorClientOptions;
-	eventDispatcher: EventDispatcher;
+  constructor(options: ConstructorClientOptions);
 
-	getAutocompleteResults(
-		query: string,
-		parameters?: IAutocompleteParameters,
-		networkParameters?: {
-			timeout?: number;
-		}
-	): Promise<Autocomplete.AutocompleteResponse>;
+  options: ConstructorClientOptions;
+
+  eventDispatcher: EventDispatcher;
+
+  getAutocompleteResults(
+    query: string,
+    parameters?: IAutocompleteParameters,
+    networkParameters?: NetworkParameters
+  ): Promise<AutocompleteResponse>;
 }
 
-/***********
- *
- * 	Autocomplete results returned from server
- *
- ***********/
-declare namespace Autocomplete {
-	export interface AutocompleteResponse extends Record<string, any> {
-		request: Partial<Request>;
-		sections: Record<string, Section>;
-		result_id: string;
-	}
+/** *********
+ * Autocomplete results returned from server
+ ********** */
+export interface AutocompleteResponse extends Record<string, any> {
+  request: Partial<AutocompleteRequestType>;
+  sections: Record<string, Section>;
+  result_id: string;
 }
 
-interface Request extends Record<string, any> {
-	num_results: number;
-	term: string;
-	query: string;
-	features: Partial<RequestFeature>;
-	feature_variants: Partial<RequestFeatureVariant>;
-	searchandized_items: Record<string, any>;
+export interface AutocompleteRequestType extends Record<string, any> {
+  num_results: number;
+  term: string;
+  query: string;
+  features: Partial<RequestFeature>;
+  feature_variants: Partial<RequestFeatureVariant>;
+  searchandized_items: Record<string, any>;
 }
 
-type Section = Partial<SectionItem>[]
+export type Section = Partial<SectionItem>[];
 
-interface SectionItem extends Record<string, any> {
-	data: Record<string, any>;
-	is_slotted: boolean;
-	labels: Record<string, any>;
-	matched_terms: string[];
-	value: string;
+export interface SectionItem extends Record<string, any> {
+  data: Record<string, any>;
+  is_slotted: boolean;
+  labels: Record<string, any>;
+  matched_terms: string[];
+  value: string;
 }

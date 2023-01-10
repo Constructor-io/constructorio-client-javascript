@@ -1,13 +1,19 @@
-import { ConstructorClientOptions } from "./types";
+import { ConstructorClientOptions } from '.';
 
-export = EventDispatcher;
+export default EventDispatcher;
 
 declare class EventDispatcher {
-	constructor(options: ConstructorClientOptions);
-	events: { name: string; data: Record<string, any> }[];
-	enabled: boolean;
-	waitForBeacon: boolean;
-	active: boolean;
-	queue(name: string, data: Record<string, any>): void;
-	dispatchEvents(): void;
+  constructor(options: ConstructorClientOptions);
+
+  events: { name: string; data: Record<string, any> }[];
+
+  enabled: boolean;
+
+  waitForBeacon: boolean;
+
+  active: boolean;
+
+  queue(name: string, data: Record<string, any>): void;
+
+  dispatchEvents(): void;
 }
