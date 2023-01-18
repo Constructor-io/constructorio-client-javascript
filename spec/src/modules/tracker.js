@@ -5479,6 +5479,360 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
   });
 
+  describe('trackQuizResultsLoaded', () => {
+    const requiredParameters = { quizId: 'coffee-quiz', quizVersionId: '1231243', url: 'www.example.com' };
+    const optionalParameters = { section: 'Products', resultCount: 1, resultId: '12312', resultPage: 1 };
+
+    it('Should respond with a valid response when required parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        expect(requestParams).to.have.property('quiz_id').to.equal(requiredParameters.quizId);
+        expect(requestParams).to.have.property('quiz_version_id').to.equal(requiredParameters.quizVersionId);
+        expect(requestParams).to.have.property('url').to.equal(requiredParameters.url);
+        expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
+        expect(requestParams).to.have.property('result_count').to.equal(optionalParameters.resultCount);
+        expect(requestParams).to.have.property('result_id').to.equal(optionalParameters.resultId);
+        expect(requestParams).to.have.property('result_page').to.equal(optionalParameters.resultPage);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackQuizResultsLoaded({...requiredParameters, ...optionalParameters})).to.equal(true);
+    });
+
+    it('Should respond with a valid response when required parameters and segments are provided', (done) => {
+      const segments = ['foo', 'bar'];
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        segments,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('us').to.deep.equal(segments);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackQuizResultsLoaded(requiredParameters)).to.equal(true);
+    });
+
+    it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const userId = 'user-id';
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        userId,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('ui').to.equal(userId);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackQuizResultsLoaded(requiredParameters)).to.equal(true);
+    });
+
+    it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const testCells = { foo: 'bar' };
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        testCells,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property(`ef-${Object.keys(testCells)[0]}`).to.equal(Object.values(testCells)[0]);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackQuizResultsLoaded(requiredParameters)).to.equal(true);
+    });
+
+    it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackQuizResultsLoaded(Object.assign(requiredParameters, optionalParameters)))
+        .to.equal(true);
+    });
+
+    it('Should throw an error when invalid quizId is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackQuizResultsLoaded({ ...requiredParameters, quizId: 1 })).to.be.an('error');
+    });
+
+    it('Should throw an error when invalid quizVersionId is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackQuizResultsLoaded({ ...requiredParameters, quizVersionId: 1 })).to.be.an('error');
+    });
+
+    it('Should throw an error when invalid url is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackQuizResultsLoaded({ ...requiredParameters, url: 1 })).to.be.an('error');
+    });
+
+    it('Should throw an error when invalid section is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackQuizResultsLoaded({ ...requiredParameters, section: 1})).to.be.an('error');
+    });
+
+    it('Should throw an error when invalid resultCount is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackQuizResultsLoaded({ ...requiredParameters, resultCount: '1'})).to.be.an('error');
+    });
+
+    it('Should throw an error when invalid resultPage is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackQuizResultsLoaded({ ...requiredParameters, resultPage: '1'})).to.be.an('error');
+    });
+
+    it('Should throw an error when invalid resultId is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackQuizResultsLoaded({ ...requiredParameters, resultId: 1})).to.be.an('error');
+    });
+
+    it('Should throw an error when no quizId is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+      const { quizId: _, ...rest } = requiredParameters;
+      expect(tracker.trackQuizResultsLoaded(rest)).to.be.an('error');
+    });
+
+    it('Should throw an error when no quizVersionId is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+      const { quizVersionId: _, ...rest } = requiredParameters;
+      expect(tracker.trackQuizResultsLoaded(rest)).to.be.an('error');
+    });
+
+    it('Should throw an error when no url is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+      const { url: _, ...rest } = requiredParameters;
+      expect(tracker.trackQuizResultsLoaded(rest)).to.be.an('error');
+    });
+
+    it('Should throw an error when invalid parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackQuizResultsLoaded([])).to.be.an('error');
+    });
+
+    it('Should throw an error when no parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackQuizResultsLoaded()).to.be.an('error');
+    });
+
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackQuizResultsLoaded(requiredParameters)).to.equal(true);
+    });
+
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('origin_referrer');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackQuizResultsLoaded(requiredParameters)).to.equal(true);
+    });
+
+    if (!skipNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackQuizResultsLoaded(requiredParameters, { timeout: 10 })).to.equal(true);
+      });
+
+      it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          networkParameters: {
+            timeout: 20,
+          },
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackQuizResultsLoaded(requiredParameters)).to.equal(true);
+      });
+    }
+
+    it('Should properly encode query parameters', (done) => {
+      const specialCharacters = '+[]&';
+      const userId = `user-id ${specialCharacters}`;
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        userId,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('ui').to.equal(userId);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackQuizResultsLoaded(requiredParameters)).to.equal(true);
+    });
+
+    it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const breakingSpaces = '   ';
+      const userId = `user-id ${breakingSpaces} user-id`;
+      const userIdExpected = 'user-id     user-id';
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        userId,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('ui').to.equal(userIdExpected);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackQuizResultsLoaded(requiredParameters)).to.equal(true);
+    });
+  });
+
   describe('on', () => {
     it('Should throw an error when providing an invalid messageType parameter', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });

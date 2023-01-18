@@ -1,5 +1,6 @@
 /* eslint-disable object-curly-newline, no-underscore-dangle, camelcase, no-unneeded-ternary */
 const EventEmitter = require('events');
+const { toSnakeCaseKeys } = require('../utils/helpers');
 const helpers = require('../utils/helpers');
 const RequestQueue = require('../utils/request-queue');
 
@@ -1226,6 +1227,121 @@ class Tracker {
     this.requests.send();
 
     return new Error('A parameters object with an "item_id" property is required.');
+  }
+
+  /**
+   * Send quiz results loaded event to API
+   *
+   * @function trackQuizResultsLoaded
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.quizId - Quiz Id
+   * @param {string} parameters.quizVersionId - Quiz version Id
+   * @param {string} parameters.url - Current page url
+   * @param {string} [parameters.section] - Index section
+   * @param {number} [parameters.resultCount] - Total number of results
+   * @param {number} [parameters.resultPage] - The page of the results
+   * @param {string} [parameters.resultId] - Quiz result identifier (returned in response from Constructor)
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User viewed a quiz results page
+   * @example
+   * constructorio.tracker.trackQuizResultsLoaded(
+   *     {
+   *         quizId: 'coffee-quiz',
+   *         quizVersionId: '1231244'
+   *         url: www.example.com
+   *         resultCount: 167,
+   *     },
+   * );
+   */
+  trackQuizResultsLoaded(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/quiz_result_load?`;
+      const { quizId, quizVersionId, url, section, resultCount, resultId, resultPage } = parameters;
+      const queryParams = {};
+      const bodyParams = {};
+
+      if (typeof quizId !== 'string') {
+        return new Error('"quizId" is a required parameter of type string');
+      }
+
+      if (typeof quizVersionId !== 'string') {
+        return new Error('"quizVersionId" is a required parameter of type string');
+      }
+
+      if (typeof url !== 'string') {
+        return new Error('"url" is a required parameter of type string');
+      }
+
+      // Ensure required parameters provided
+      if (!helpers.isNil(quizId)) {
+        bodyParams.quizId = quizId;
+      } else {
+        return new Error('A parameters object with a "quizId" property is required.');
+      }
+
+      if (!helpers.isNil(quizVersionId)) {
+        bodyParams.quizVersionId = quizVersionId;
+      } else {
+        return new Error('A parameters object with a "quizVersionId" property is required.');
+      }
+
+      if (!helpers.isNil(url)) {
+        bodyParams.url = url;
+      } else {
+        return new Error('A parameters object with a "url" property is required.');
+      }
+
+      if (section) {
+        if (typeof section !== 'string') {
+          return new Error('"section" must be a string');
+        }
+        queryParams.section = section;
+        bodyParams.section = section;
+      }
+
+      if (resultCount) {
+        if (typeof resultCount !== 'number') {
+          return new Error('"resultCount" must be a number');
+        }
+        bodyParams.resultCount = resultCount;
+      }
+
+      if (resultId) {
+        if (typeof resultId !== 'string') {
+          return new Error('"resultId" must be a string');
+        }
+        bodyParams.resultId = resultId;
+      }
+
+      if (resultPage) {
+        if (typeof resultPage !== 'number') {
+          return new Error('"resultPage" must be a number');
+        }
+        bodyParams.resultPage = resultPage;
+      }
+
+      const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const bodyParamsSnakeCase = toSnakeCaseKeys(parameters);
+      const requestBody = applyParams(bodyParamsSnakeCase, { ...this.options, requestMethod });
+
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
   }
 
   /**
