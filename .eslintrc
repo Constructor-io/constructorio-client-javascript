@@ -33,7 +33,7 @@
     "no-unused-vars": [
       "error",
       {
-        "varsIgnorePattern": ["style", "_"]
+        "varsIgnorePattern": "style|_"
       }
     ],
     "max-depth": [
