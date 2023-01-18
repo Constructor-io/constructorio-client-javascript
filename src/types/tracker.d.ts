@@ -171,5 +171,50 @@ declare class Tracker {
     networkParameters?: NetworkParameters
   ): true | Error;
 
+  trackQuizResultsLoaded(
+    parameters: {
+      quizId: string;
+      quizVersionId: string;
+      url: string;
+      section?: string;
+      resultCount?: number;
+      resultPage?: number;
+      resultId?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
+  trackQuizResultClick(
+    parameters: {
+      quizId: string;
+      quizVersionId: string;
+      itemId?: string;
+      itemName?: string;
+      section?: string;
+      resultCount?: number;
+      resultPage?: number;
+      resultId?: string;
+      resultPositionOnPage?: number;
+      numResultsPerPage?: number;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
+  trackQuizConversion(
+    parameters: {
+      quizId: string;
+      quizVersionId: string;
+      itemId?: string;
+      itemName?: string;
+      section?: string;
+      variationId?: string;
+      revenue?: string;
+      type?: string;
+      isCustomType?: boolean;
+      displayName?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
   on(messageType: string, callback: Function): true | Error;
 }
