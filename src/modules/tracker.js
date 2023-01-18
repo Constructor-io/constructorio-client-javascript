@@ -1275,24 +1275,9 @@ class Tracker {
         return new Error('"url" is a required parameter of type string');
       }
 
-      // Ensure required parameters provided
-      if (!helpers.isNil(quizId)) {
-        bodyParams.quizId = quizId;
-      } else {
-        return new Error('A parameters object with a "quizId" property is required.');
-      }
-
-      if (!helpers.isNil(quizVersionId)) {
-        bodyParams.quizVersionId = quizVersionId;
-      } else {
-        return new Error('A parameters object with a "quizVersionId" property is required.');
-      }
-
-      if (!helpers.isNil(url)) {
-        bodyParams.url = url;
-      } else {
-        return new Error('A parameters object with a "url" property is required.');
-      }
+      bodyParams.quizId = quizId;
+      bodyParams.quizVersionId = quizVersionId;
+      bodyParams.url = url;
 
       if (section) {
         if (typeof section !== 'string') {
@@ -1323,9 +1308,146 @@ class Tracker {
         bodyParams.resultPage = resultPage;
       }
 
+      bodyParams.actionClass = 'result_load'
+
       const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
       const requestMethod = 'POST';
-      const bodyParamsSnakeCase = toSnakeCaseKeys(parameters);
+      const bodyParamsSnakeCase = toSnakeCaseKeys(bodyParams);
+      const requestBody = applyParams(bodyParamsSnakeCase, { ...this.options, requestMethod });
+
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send quiz result click event to API
+   *
+   * @function trackQuizResultClick
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.quizId - Quiz Id
+   * @param {string} parameters.quizVersionId - Quiz version Id
+   * @param {string} [parameters.itemId] - Product item unique identifier
+   * @param {string} [parameters.itemName] - Product item name
+   * @param {number} [parameters.resultCount] - Total number of results
+   * @param {number} [parameters.resultPage] - The page of the results
+   * @param {string} [parameters.resultId] - Quiz result identifier (returned in response from Constructor)
+   * @param {string} [parameters.resultPositionOnPage] - Position of clicked item
+   * @param {string} [parameters.numResultsPerPage] - Position of clicked item
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User viewed a quiz results page
+   * @example
+   * constructorio.tracker.trackQuizResultClick(
+   *     {
+   *         quizId: 'coffee-quiz',
+   *         quizVersionId: '1231244'
+   *         url: www.example.com
+   *         resultCount: 167,
+   *     },
+   * );
+   */
+   trackQuizResultClick(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/quiz_result_click?`;
+      const {
+        quizId,
+        quizVersionId,
+        itemId,
+        itemName,
+        resultCount,
+        resultId,
+        resultPage,
+        numResultsPerPage, 
+        resultPositionOnPage
+      } = parameters;
+      
+      const queryParams = {};
+      const bodyParams = {};
+
+      // Ensure required parameters provided
+      if (typeof quizId !== 'string') {
+        return new Error('"quizId" is a required parameter of type string');
+      } 
+
+      if (typeof quizVersionId !== 'string') {
+        return new Error('"quizVersionId" is a required parameter of type string');
+      }
+
+      if (typeof itemId !== 'string' && typeof itemName !== 'string') {
+        return new Error('"itemId" or "itemName" is a required parameter of type string');
+      }
+
+      bodyParams.quizId = quizId;
+      bodyParams.quizVersionId = quizVersionId;
+
+      if(itemId) {
+        if (typeof itemId !== 'string') {
+          return new Error('"itemId" must be a string');
+        }
+        bodyParams.itemId = itemId;
+      }
+
+      if(itemName) {
+        if (typeof itemName !== 'string') {
+          return new Error('"itemName" must be a string');
+        }
+        bodyParams.itemName = itemName;
+      }
+
+      if (resultCount) {
+        if (typeof resultCount !== 'number') {
+          return new Error('"resultCount" must be a number');
+        }
+        bodyParams.resultCount = resultCount;
+      }
+
+      if (resultId) {
+        if (typeof resultId !== 'string') {
+          return new Error('"resultId" must be a string');
+        }
+        bodyParams.resultId = resultId;
+      }
+
+      if (resultPage) {
+        if (typeof resultPage !== 'number') {
+          return new Error('"resultPage" must be a number');
+        }
+        bodyParams.resultPage = resultPage;
+      }
+
+      if (numResultsPerPage) {
+        if (typeof numResultsPerPage !== 'number') {
+          return new Error('"numResultsPerPage" must be a number');
+        }
+        bodyParams.numResultsPerPage = numResultsPerPage;
+      }
+
+      if (resultPositionOnPage) {
+        if (typeof resultPositionOnPage !== 'number') {
+          return new Error('"resultPositionOnPage" must be a number');
+        }
+        bodyParams.resultPositionOnPage = resultPositionOnPage;
+      }
+
+      bodyParams.actionClass = 'result_click'
+
+      const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const bodyParamsSnakeCase = toSnakeCaseKeys(bodyParams);
       const requestBody = applyParams(bodyParamsSnakeCase, { ...this.options, requestMethod });
 
       this.requests.queue(
