@@ -152,3 +152,31 @@ export interface BaseGroup extends Record<string, any> {
 export interface FmtOptions extends Record<string, any> {}
 
 export type Nullable<T> = T | null;
+
+export type FilterExpression =
+  | FilterExpressionGroup
+  | FilterExpressionNot
+  | FilterExpressionValue
+  | FilterExpressionRange;
+
+export type FilterExpressionGroup =
+  | FilterExpressionGroupOr
+  | FilterExpressionGroupAnd;
+
+export type FilterExpressionGroupOr = { or: FilterExpression[] };
+export type FilterExpressionGroupAnd = { and: FilterExpression[] };
+export type FilterExpressionCondition = 'or' | 'and';
+
+export type FilterExpressionNot = { not: FilterExpression };
+
+export type FilterExpressionValue = {
+  name: string;
+  value: string;
+};
+
+export type FilterExpressionRange = {
+  name: string;
+  range: FilterExpressionRangeValue;
+};
+
+export type FilterExpressionRangeValue = ['-inf' | number, 'inf' | number];
