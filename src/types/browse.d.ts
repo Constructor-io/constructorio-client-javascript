@@ -3,6 +3,7 @@ import {
   ConstructorClientOptions,
   Facet,
   Feature,
+  FilterExpression,
   Group,
   NetworkParameters,
   RequestFeature,
@@ -23,7 +24,7 @@ export interface IBrowseParameters {
   sortOrder?: string;
   section?: string;
   fmtOptions?: Record<string, any>;
-  preFilterExpression: Record<string, any>;
+  preFilterExpression: FilterExpression;
   hiddenFields?: string[];
   hiddenFacets?: string[];
   variationsMap?: Record<string, any>;
