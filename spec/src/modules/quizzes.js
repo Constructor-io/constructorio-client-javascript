@@ -93,7 +93,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result provided a valid apiKey, quizId and versionId', () => {
-      const versionId = '1237da89-bfef-4b15-80e4-27f306bd7c32';
+      const versionId = 'e03210db-0cc6-459c-8f17-bf014c4f554d';
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
@@ -259,7 +259,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result provided a valid apiKey, quizId and versionId', () => {
-      const versionId = '1237da89-bfef-4b15-80e4-27f306bd7c32';
+      const versionId = 'e03210db-0cc6-459c-8f17-bf014c4f554d';
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
