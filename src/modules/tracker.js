@@ -1259,7 +1259,7 @@ class Tracker {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/quiz_result_load?`;
-      const { quizId, quizVersionId, url, section, resultCount, resultId, resultPage } = parameters;
+      const { quizId, quizVersionId, url, section = 'Products', resultCount, resultId, resultPage } = parameters;
       const queryParams = {};
       const bodyParams = {};
 
@@ -1375,7 +1375,7 @@ class Tracker {
         resultPage,
         numResultsPerPage,
         resultPositionOnPage,
-        section,
+        section = 'Products',
       } = parameters;
 
       const queryParams = {};
@@ -1520,7 +1520,7 @@ class Tracker {
         itemName,
         variationId,
         revenue,
-        section,
+        section = 'Products',
         type,
         isCustomType,
         displayName,

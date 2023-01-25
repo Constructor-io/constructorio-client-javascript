@@ -405,7 +405,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
       });
     });
     describe('toSnakeCase', () => {
-      it('Should convert to camel case', () => {
+      it('Should convert to snake case', () => {
         const camelCasedStr = 'helloThisIsMyWorld';
         const snakeCasedStr = toSnakeCase(camelCasedStr);
 
