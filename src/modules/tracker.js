@@ -1338,7 +1338,7 @@ class Tracker {
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.quizId - Quiz Id
    * @param {string} parameters.quizVersionId - Quiz version Id
-   * @param {string} [parameters.itemId] - Product item unique identifier
+   * @param {string} [parameters.itemId] - Product item unique identifier (Either itemId or itemName is required)
    * @param {string} [parameters.itemName] - Product item name
    * @param {string} [parameters.section='Products'] - Index section
    * @param {number} [parameters.resultCount] - Total number of results
@@ -1483,7 +1483,7 @@ class Tracker {
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.quizId - Quiz Id
    * @param {string} parameters.quizVersionId - Quiz version Id
-   * @param {string} [parameters.itemId] - Product item unique identifier
+   * @param {string} [parameters.itemId] - Product item unique identifier (Either itemId or itemName is required)
    * @param {string} [parameters.itemName] - Product item name
    * @param {string} [parameters.variationId] - Product item variation unique identifier
    * @param {string} [parameters.revenue] - The subtotal (not including taxes, shipping, etc.) of the entire order

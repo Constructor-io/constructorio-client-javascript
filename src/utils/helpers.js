@@ -187,6 +187,7 @@ const utils = {
 
   toSnakeCaseKeys: (camelCasedObj, toRecurse = false) => {
     const snakeCasedObj = {};
+
     Object.keys(camelCasedObj).forEach((key) => {
       const newKey = utils.toSnakeCase(key);
       snakeCasedObj[newKey] = toRecurse && typeof camelCasedObj[key] === 'object'
