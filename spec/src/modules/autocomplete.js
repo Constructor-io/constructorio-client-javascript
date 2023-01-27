@@ -14,7 +14,7 @@ chai.use(sinonChai);
 dotenv.config();
 
 const { fetch } = fetchPonyfill({ Promise });
-const testApiKey = process.env.TEST_API_KEY;
+const testApiKey = process.env.TEST_REQUEST_API_KEY;
 const clientVersion = 'cio-mocha';
 const bundled = process.env.BUNDLED === 'true';
 const skipNetworkTimeoutTests = process.env.SKIP_NETWORK_TIMEOUT_TESTS === 'true';
