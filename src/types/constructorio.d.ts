@@ -2,6 +2,7 @@ import Search from './search';
 import Browse from './browse';
 import Autocomplete from './autocomplete';
 import Recommendations from './recommendations';
+import Quizzes from './quizzes';
 import Tracker from './tracker';
 import { ConstructorClientOptions } from '.';
 
@@ -19,6 +20,8 @@ declare class ConstructorIO {
   autocomplete: Autocomplete;
 
   recommendations: Recommendations;
+
+  quizzes: Quizzes;
 
   tracker: Tracker;
 
