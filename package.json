@@ -7,7 +7,7 @@
   "scripts": {
     "clean": "sudo rm -rf node_modules package-lock.json",
     "version": "chmod +x ./scripts/verify-node-version.sh && ./scripts/verify-node-version.sh && npm run docs && git add ./docs/* && npm run bundle && git add -A ./dist",
-    "check-lisc": "license-checker --production --onlyAllow 'Apache-2.0;BSD-3-Clause;MIT'",
+    "check-license": "license-checker --production --onlyAllow 'Apache-2.0;BSD-3-Clause;MIT;0BSD;BSD-2-Clause'",
     "lint": "eslint 'src/**/*.js' 'spec/**/*.js' 'src/**/*.d.ts'",
     "test": "npm run compile && mkdir -p test && cp -rf lib/* test && mocha ./spec/*",
     "test:types": "tsd .",
