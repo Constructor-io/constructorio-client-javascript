@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node: ["16.17.0"]
+        node: ["18.13.0"]
 
     steps:
       - uses: actions/checkout@v3

@@ -1,5 +1,5 @@
 version=$(node -pe process.release.lts)
-activeLTSCodename="Gallium"
+activeLTSCodename="Hydrogen"
 
 if [ $version != $activeLTSCodename ]
 then
