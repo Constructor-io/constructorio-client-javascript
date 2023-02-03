@@ -29,5 +29,5 @@ declare class ConstructorIO {
 }
 
 declare namespace ConstructorIO {
-  export { Search, Browse, Autocomplete, Recommendations, Tracker };
+  export { Search, Browse, Autocomplete, Recommendations, Quizzes, Tracker };
 }
