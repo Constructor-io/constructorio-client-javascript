@@ -5,7 +5,7 @@ const EventDispatcher = require('../utils/event-dispatcher');
 const helpers = require('../utils/helpers');
 
 // Create URL from supplied query (term) and parameters
-function createSearchUrl(query, parameters, options) {
+function createSearchUrl(query, parameters, options, isVoiceSearch = false) {
   const {
     apiKey,
     version,
@@ -126,7 +126,9 @@ function createSearchUrl(query, parameters, options) {
 
   const queryString = helpers.stringify(queryParams);
 
-  return `${serviceUrl}/search/${helpers.encodeURIComponentRFC3986(helpers.trimNonBreakingSpaces(query))}?${queryString}`;
+  const searchUrl = isVoiceSearch ? 'search/natural_language' : 'search';
+
+  return `${serviceUrl}/${searchUrl}/${helpers.encodeURIComponentRFC3986(helpers.trimNonBreakingSpaces(query))}?${queryString}`;
 }
 
 /**
@@ -227,6 +229,87 @@ class Search {
         }
 
         throw new Error('getSearchResults response data is malformed');
+      });
+  }
+
+  /**
+   * Retrieve voice search results from API
+   *
+   * @function getVoiceSearchResults
+   * @description Retrieve voice search results from Constructor.io API
+   * @param {string} query - Term to use to perform a voice search
+   * @param {object} [parameters] - Additional parameters to refine result set
+   * @param {number} [parameters.page] - The page number of the results(Can't be used together with offset)
+   * @param {number} [parameters.offset] - The number of results to skip from the beginning (Can't be used together with page)
+   * @param {number} [parameters.resultsPerPage] - The number of results per page to return
+   * @param {string} [parameters.section='Products'] - The section name for results
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.io/rest_api/search/queries for details
+   * @param {object} [parameters.preFilterExpression] - Faceting expression to scope search results. Please refer to https://docs.constructor.io/rest_api/collections#add-items-dynamically
+   * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.io/rest_api/variations_mapping for details
+   * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
+   * @param {string[]} [parameters.hiddenFacets] - Hidden facets to return
+   * @param {object} [parameters.qs] - Parameters listed above can be serialized into a JSON object and parsed through this parameter. Please refer to https://docs.constructor.io/rest_api/search/queries/
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {Promise}
+   * @see https://docs.constructor.io/rest_api/search/natural_language_search/
+   * @example
+   * constructorio.search.getVoiceSearchResults('show me lipstick');
+   */
+  getVoiceSearchResults(query, parameters, networkParameters = {}) {
+    let requestUrl;
+    const { fetch } = this.options;
+    let signal;
+
+    if (typeof AbortController === 'function') {
+      const controller = new AbortController();
+
+      signal = controller && controller.signal;
+
+      // Handle network timeout if specified
+      helpers.applyNetworkTimeout(this.options, networkParameters, controller);
+
+    }
+
+    try {
+      const isVoiceSearch = true;
+      requestUrl = createSearchUrl(query, parameters, this.options, isVoiceSearch);
+    } catch (e) {
+      return Promise.reject(e);
+    }
+
+    return fetch(requestUrl, { signal })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+
+        return helpers.throwHttpErrorFromResponse(new Error(), response);
+      })
+      .then((json) => {
+        // Search results
+        if (json.response && json.response.results) {
+          if (json.result_id) {
+            // Append `result_id` to each result item
+            json.response.results.forEach((result) => {
+              // eslint-disable-next-line no-param-reassign
+              result.result_id = json.result_id;
+            });
+          }
+
+          this.eventDispatcher.queue('search.getVoiceSearchResults.completed', json);
+
+          return json;
+        }
+
+        // Redirect rules
+        if (json.response && json.response.redirect) {
+          this.eventDispatcher.queue('search.getVoiceSearchResults.completed', json);
+
+          return json;
+        }
+
+        throw new Error('getVoiceSearchResults response data is malformed');
       });
   }
 }

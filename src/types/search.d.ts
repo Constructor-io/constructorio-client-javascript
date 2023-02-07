@@ -41,6 +41,12 @@ declare class Search {
     parameters?: SearchParameters,
     networkParameters?: NetworkParameters
   ): Promise<SearchResponse>;
+
+  getVoiceSearchResults(
+    query: string,
+    parameters?: Omit<SearchParameters, 'filters' | 'sortBy' | 'sortOrder'>,
+    networkParameters?: NetworkParameters
+  ): Promise<SearchResponse>;
 }
 
 /** *********
@@ -75,6 +81,7 @@ export interface SearchRequestType extends Record<string, any> {
   features: Partial<RequestFeature>;
   feature_variants: Partial<RequestFeatureVariant>;
   searchandized_items: Record<string, any>;
+  original_query?: string;
 }
 
 export interface Result extends Record<string, any> {
