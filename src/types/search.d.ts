@@ -3,7 +3,7 @@ import {
   Facet,
   Feature,
   FilterExpression,
-  FmtOption,
+  FmtOptions,
   Group,
   NetworkParameters,
   RequestFeature,
@@ -23,7 +23,7 @@ export interface SearchParameters {
   sortBy?: string;
   sortOrder?: string;
   section?: string;
-  fmtOptions?: Record<string, any>;
+  fmtOptions?: FmtOptions;
   preFilterExpression: FilterExpression;
   hiddenFields?: string[];
   hiddenFacets?: string[];
@@ -69,7 +69,7 @@ export interface SearchRequestType extends Record<string, any> {
   section: string;
   blacklist_rules: boolean;
   term: string;
-  fmt_options: Partial<FmtOption>;
+  fmt_options: Partial<FmtOptions>;
   sort_by: string;
   sort_order: string;
   features: Partial<RequestFeature>;
