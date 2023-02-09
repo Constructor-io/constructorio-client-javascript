@@ -20,7 +20,6 @@ const {
   addOrderIdRecord,
   applyNetworkTimeout,
   stringify,
-  toSnakeCase,
   toSnakeCaseKeys,
 } = require('../../../test/utils/helpers'); // eslint-disable-line import/extensions
 const jsdom = require('./jsdom-global');
@@ -402,21 +401,6 @@ describe('ConstructorIO - Utils - Helpers', () => {
         const stringified = stringify(obj);
 
         expect(stringified).to.equal('a=1&b=1%2C2&c=2&c=3&d=true&d=false&e%5Bf%5D=g&e%5Bf%5D=h');
-      });
-    });
-    describe('toSnakeCase', () => {
-      it('Should convert to snake case', () => {
-        const camelCasedStr = 'helloThisIsMyWorld';
-        const snakeCasedStr = toSnakeCase(camelCasedStr);
-
-        expect(snakeCasedStr).to.equal('hello_this_is_my_world');
-      });
-
-      it('Should not modify snake case', () => {
-        const camelCasedStr = 'a_lovely_day';
-        const snakeCasedStr = toSnakeCase(camelCasedStr);
-
-        expect(snakeCasedStr).to.equal('a_lovely_day');
       });
     });
 

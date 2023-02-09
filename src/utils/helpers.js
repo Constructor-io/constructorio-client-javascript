@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 const CRC32 = require('crc-32');
+const snakeCase = require('lodash.snakecase');
 const store = require('./store');
 
 const purchaseEventStorageKey = '_constructorio_purchase_order_ids';
@@ -183,13 +184,11 @@ const utils = {
     return allValues.join('&');
   },
 
-  toSnakeCase: (camelCasedStr) => camelCasedStr.replace(/[A-Z]/g, (prefix) => `_${prefix.toLowerCase()}`),
-
   toSnakeCaseKeys: (camelCasedObj, toRecurse = false) => {
     const snakeCasedObj = {};
 
     Object.keys(camelCasedObj).forEach((key) => {
-      const newKey = utils.toSnakeCase(key);
+      const newKey = snakeCase(key);
       snakeCasedObj[newKey] = toRecurse && typeof camelCasedObj[key] === 'object'
         ? utils.toSnakeCaseKeys(camelCasedObj[key], toRecurse)
         : camelCasedObj[key];
