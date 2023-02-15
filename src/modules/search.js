@@ -239,7 +239,7 @@ class Search {
    * @description Retrieve voice search results from Constructor.io API
    * @param {string} query - Term to use to perform a voice search
    * @param {object} [parameters] - Additional parameters to refine result set
-   * @param {number} [parameters.page] - The page number of the results(Can't be used together with offset)
+   * @param {number} [parameters.page] - The page number of the results (Can't be used together with offset)
    * @param {number} [parameters.offset] - The number of results to skip from the beginning (Can't be used together with page)
    * @param {number} [parameters.resultsPerPage] - The number of results per page to return
    * @param {string} [parameters.section='Products'] - The section name for results
@@ -268,7 +268,6 @@ class Search {
 
       // Handle network timeout if specified
       helpers.applyNetworkTimeout(this.options, networkParameters, controller);
-
     }
 
     try {
