@@ -981,8 +981,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.term).to.equal('peanut [ ]');
-        expect(requestUrl).to.include(encodeURIComponent(`peanut ${specialCharacters}`));
+        expect(res.request.term).to.equal(`${term} [ ]`);
+        expect(requestUrl).to.include(encodeURIComponent(`${term} ${specialCharacters}`));
         done();
       });
     });
