@@ -4,14 +4,14 @@ on:
     branches:
       - "**"
 concurrency:
-  group: run-lint-${{ github.head_ref }}
+  group: run-license-${{ github.head_ref }}
   cancel-in-progress: true
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ["16.17.0"]
+        node: ["18.13.0"]
     steps:
       - name: Check out code
         uses: actions/checkout@v2
