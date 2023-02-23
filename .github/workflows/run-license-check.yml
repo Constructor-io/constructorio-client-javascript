@@ -1,0 +1,25 @@
+name: Run license check
+on:
+  pull_request:
+    branches:
+      - "**"
+concurrency:
+  group: run-license-${{ github.head_ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ["18.13.0"]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Set up node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Install dependencies
+        run: npm install
+      - name: Run license check
+        run: npm run check-license
