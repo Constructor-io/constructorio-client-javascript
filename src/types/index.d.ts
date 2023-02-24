@@ -147,8 +147,6 @@ export interface BaseGroup extends Record<string, any> {
 export interface FmtOptions extends Record<string, any> {
   groups_max_depth?: number;
   groups_start?: 'current' | 'top';
-  show_hidden_facets?: boolean;
-  show_protected_facets?: boolean;
 }
 
 export type Nullable<T> = T | null;

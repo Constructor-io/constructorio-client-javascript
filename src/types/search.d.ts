@@ -69,7 +69,7 @@ export interface SearchRequestType extends Record<string, any> {
   section: string;
   blacklist_rules: boolean;
   term: string;
-  fmt_options: Partial<FmtOptions>;
+  fmt_options: FmtOptions;
   sort_by: string;
   sort_order: string;
   features: Partial<RequestFeature>;
