@@ -20,7 +20,6 @@ const {
   addOrderIdRecord,
   applyNetworkTimeout,
   stringify,
-  toSnakeCaseKeys,
 } = require('../../../test/utils/helpers'); // eslint-disable-line import/extensions
 const jsdom = require('./jsdom-global');
 const store = require('../../../test/utils/store'); // eslint-disable-line import/extensions
@@ -401,48 +400,6 @@ describe('ConstructorIO - Utils - Helpers', () => {
         const stringified = stringify(obj);
 
         expect(stringified).to.equal('a=1&b=1%2C2&c=2&c=3&d=true&d=false&e%5Bf%5D=g&e%5Bf%5D=h');
-      });
-    });
-
-    describe('toSnakeCaseKeys', () => {
-      it('Should convert shallow keys', () => {
-        const camelCasedObj = {
-          originReferrer: 'https://test.com/search/pizza?a=bread&b=pizza burrito',
-          userId: 'boink doink yoink',
-          section: 'Products',
-        };
-        const snakeCasedObj = toSnakeCaseKeys(camelCasedObj);
-
-        expect(snakeCasedObj).to.deep.equal({
-          origin_referrer: 'https://test.com/search/pizza?a=bread&b=pizza burrito',
-          user_id: 'boink doink yoink',
-          section: 'Products',
-        });
-      });
-
-      it('Should convert deeply nested keys', () => {
-        const camelCasedObj = {
-          originReferrer: 'https://test.com/search/pizza?a=bread&b=pizza burrito',
-          userId: 'boink doink yoink',
-          filters: {
-            colorScheme: {
-              redGreenBlue: 'abc_gef_hij',
-            },
-          },
-          section: 'Products',
-        };
-        const snakeCasedObj = toSnakeCaseKeys(camelCasedObj, true);
-
-        expect(snakeCasedObj).to.deep.equal({
-          origin_referrer: 'https://test.com/search/pizza?a=bread&b=pizza burrito',
-          user_id: 'boink doink yoink',
-          filters: {
-            color_scheme: {
-              red_green_blue: 'abc_gef_hij',
-            },
-          },
-          section: 'Products',
-        });
       });
     });
   }

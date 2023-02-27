@@ -1,6 +1,5 @@
 /* eslint-disable object-curly-newline, no-underscore-dangle, camelcase, no-unneeded-ternary */
 const EventEmitter = require('events');
-const { toSnakeCaseKeys } = require('../utils/helpers');
 const helpers = require('../utils/helpers');
 const RequestQueue = require('../utils/request-queue');
 
@@ -1234,13 +1233,13 @@ class Tracker {
    *
    * @function trackQuizResultsLoaded
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.quizId - Quiz Id
-   * @param {string} parameters.quizVersionId - Quiz version Id
+   * @param {string} parameters.quiz_id - Quiz Id
+   * @param {string} parameters.quiz_version_id - Quiz version Id
    * @param {string} parameters.url - Current page url
    * @param {string} [parameters.section='Products'] - Index section
-   * @param {number} [parameters.resultCount] - Total number of results
-   * @param {number} [parameters.resultPage] - The page of the results
-   * @param {string} [parameters.resultId] - Quiz result identifier (returned in response from Constructor)
+   * @param {number} [parameters.result_count] - Total number of results
+   * @param {number} [parameters.result_page] - The page of the results
+   * @param {string} [parameters.result_id] - Quiz result identifier (returned in response from Constructor)
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -1248,10 +1247,10 @@ class Tracker {
    * @example
    * constructorio.tracker.trackQuizResultsLoaded(
    *     {
-   *         quizId: 'coffee-quiz',
-   *         quizVersionId: '1231244'
+   *         quiz_id: 'coffee-quiz',
+   *         quiz_version_id: '1231244'
    *         url: www.example.com
-   *         resultCount: 167,
+   *         result_count: 167,
    *     },
    * );
    */
@@ -1259,24 +1258,24 @@ class Tracker {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/quiz_result_load?`;
-      const { quizId, quizVersionId, url, section = 'Products', resultCount, resultId, resultPage } = parameters;
+      const { quiz_id, quiz_version_id, url, section = 'Products', result_count, result_id, result_page } = parameters;
       const queryParams = {};
       const bodyParams = {};
 
-      if (typeof quizId !== 'string') {
-        return new Error('"quizId" is a required parameter of type string');
+      if (typeof quiz_id !== 'string') {
+        return new Error('"quiz_id" is a required parameter of type string');
       }
 
-      if (typeof quizVersionId !== 'string') {
-        return new Error('"quizVersionId" is a required parameter of type string');
+      if (typeof quiz_version_id !== 'string') {
+        return new Error('"quiz_version_id" is a required parameter of type string');
       }
 
       if (typeof url !== 'string') {
         return new Error('"url" is a required parameter of type string');
       }
 
-      bodyParams.quizId = quizId;
-      bodyParams.quizVersionId = quizVersionId;
+      bodyParams.quiz_id = quiz_id;
+      bodyParams.quiz_version_id = quiz_version_id;
       bodyParams.url = url;
 
       if (!helpers.isNil(section)) {
@@ -1287,33 +1286,32 @@ class Tracker {
         bodyParams.section = section;
       }
 
-      if (!helpers.isNil(resultCount)) {
-        if (typeof resultCount !== 'number') {
-          return new Error('"resultCount" must be a number');
+      if (!helpers.isNil(result_count)) {
+        if (typeof result_count !== 'number') {
+          return new Error('"result_count" must be a number');
         }
-        bodyParams.resultCount = resultCount;
+        bodyParams.result_count = result_count;
       }
 
-      if (!helpers.isNil(resultId)) {
-        if (typeof resultId !== 'string') {
-          return new Error('"resultId" must be a string');
+      if (!helpers.isNil(result_id)) {
+        if (typeof result_id !== 'string') {
+          return new Error('"result_id" must be a string');
         }
-        bodyParams.resultId = resultId;
+        bodyParams.result_id = result_id;
       }
 
-      if (!helpers.isNil(resultPage)) {
-        if (typeof resultPage !== 'number') {
-          return new Error('"resultPage" must be a number');
+      if (!helpers.isNil(result_page)) {
+        if (typeof result_page !== 'number') {
+          return new Error('"result_page" must be a number');
         }
-        bodyParams.resultPage = resultPage;
+        bodyParams.result_page = result_page;
       }
 
-      bodyParams.actionClass = 'result_load';
+      bodyParams.action_class = 'result_load';
 
       const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
       const requestMethod = 'POST';
-      const bodyParamsSnakeCase = toSnakeCaseKeys(bodyParams);
-      const requestBody = applyParams(bodyParamsSnakeCase, { ...this.options, requestMethod });
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
 
       this.requests.queue(
         requestURL,
@@ -1336,16 +1334,16 @@ class Tracker {
    *
    * @function trackQuizResultClick
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.quizId - Quiz Id
-   * @param {string} parameters.quizVersionId - Quiz version Id
-   * @param {string} [parameters.itemId] - Product item unique identifier (Either itemId or itemName is required)
-   * @param {string} [parameters.itemName] - Product item name
+   * @param {string} parameters.quiz_id - Quiz Id
+   * @param {string} parameters.quiz_version_id - Quiz version Id
+   * @param {string} [parameters.item_id] - Product item unique identifier (Either item_id or item_name is required)
+   * @param {string} [parameters.item_name] - Product item name
    * @param {string} [parameters.section='Products'] - Index section
-   * @param {number} [parameters.resultCount] - Total number of results
-   * @param {number} [parameters.resultPage] - The page of the results
-   * @param {string} [parameters.resultId] - Quiz result identifier (returned in response from Constructor)
-   * @param {number} [parameters.resultPositionOnPage] - Position of clicked item
-   * @param {number} [parameters.numResultsPerPage] - Position of clicked item
+   * @param {number} [parameters.result_count] - Total number of results
+   * @param {number} [parameters.result_page] - The page of the results
+   * @param {string} [parameters.result_id] - Quiz result identifier (returned in response from Constructor)
+   * @param {number} [parameters.result_position_on_page] - Position of clicked item
+   * @param {number} [parameters.num_results_per_page] - Position of clicked item
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -1353,10 +1351,10 @@ class Tracker {
    * @example
    * constructorio.tracker.trackQuizResultClick(
    *     {
-   *         quizId: 'coffee-quiz',
-   *         quizVersionId: '1231244'
-   *         itemId: '123',
-   *         itemName: 'espresso'
+   *         quiz_id: 'coffee-quiz',
+   *         quiz_version_id: '1231244'
+   *         item_id: '123',
+   *         item_name: 'espresso'
    *     },
    * );
    */
@@ -1366,15 +1364,15 @@ class Tracker {
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/quiz_result_click?`;
       const {
-        quizId,
-        quizVersionId,
-        itemId,
-        itemName,
-        resultCount,
-        resultId,
-        resultPage,
-        numResultsPerPage,
-        resultPositionOnPage,
+        quiz_id,
+        quiz_version_id,
+        item_id,
+        item_name,
+        result_count,
+        result_id,
+        result_page,
+        num_results_per_page,
+        result_position_on_page,
         section = 'Products',
       } = parameters;
 
@@ -1382,33 +1380,33 @@ class Tracker {
       const bodyParams = {};
 
       // Ensure required parameters provided
-      if (typeof quizId !== 'string') {
-        return new Error('"quizId" is a required parameter of type string');
+      if (typeof quiz_id !== 'string') {
+        return new Error('"quiz_id" is a required parameter of type string');
       }
 
-      if (typeof quizVersionId !== 'string') {
-        return new Error('"quizVersionId" is a required parameter of type string');
+      if (typeof quiz_version_id !== 'string') {
+        return new Error('"quiz_version_id" is a required parameter of type string');
       }
 
-      if (typeof itemId !== 'string' && typeof itemName !== 'string') {
-        return new Error('"itemId" or "itemName" is a required parameter of type string');
+      if (typeof item_id !== 'string' && typeof item_name !== 'string') {
+        return new Error('"item_id" or "item_name" is a required parameter of type string');
       }
 
-      bodyParams.quizId = quizId;
-      bodyParams.quizVersionId = quizVersionId;
+      bodyParams.quiz_id = quiz_id;
+      bodyParams.quiz_version_id = quiz_version_id;
 
-      if (!helpers.isNil(itemId)) {
-        if (typeof itemId !== 'string') {
-          return new Error('"itemId" must be a string');
+      if (!helpers.isNil(item_id)) {
+        if (typeof item_id !== 'string') {
+          return new Error('"item_id" must be a string');
         }
-        bodyParams.itemId = itemId;
+        bodyParams.item_id = item_id;
       }
 
-      if (!helpers.isNil(itemName)) {
-        if (typeof itemName !== 'string') {
-          return new Error('"itemName" must be a string');
+      if (!helpers.isNil(item_name)) {
+        if (typeof item_name !== 'string') {
+          return new Error('"item_name" must be a string');
         }
-        bodyParams.itemName = itemName;
+        bodyParams.item_name = item_name;
       }
 
       if (!helpers.isNil(section)) {
@@ -1418,47 +1416,46 @@ class Tracker {
         queryParams.section = section;
       }
 
-      if (!helpers.isNil(resultCount)) {
-        if (typeof resultCount !== 'number') {
-          return new Error('"resultCount" must be a number');
+      if (!helpers.isNil(result_count)) {
+        if (typeof result_count !== 'number') {
+          return new Error('"result_count" must be a number');
         }
-        bodyParams.resultCount = resultCount;
+        bodyParams.result_count = result_count;
       }
 
-      if (!helpers.isNil(resultId)) {
-        if (typeof resultId !== 'string') {
-          return new Error('"resultId" must be a string');
+      if (!helpers.isNil(result_id)) {
+        if (typeof result_id !== 'string') {
+          return new Error('"result_id" must be a string');
         }
-        bodyParams.resultId = resultId;
+        bodyParams.result_id = result_id;
       }
 
-      if (!helpers.isNil(resultPage)) {
-        if (typeof resultPage !== 'number') {
-          return new Error('"resultPage" must be a number');
+      if (!helpers.isNil(result_page)) {
+        if (typeof result_page !== 'number') {
+          return new Error('"result_page" must be a number');
         }
-        bodyParams.resultPage = resultPage;
+        bodyParams.result_page = result_page;
       }
 
-      if (!helpers.isNil(numResultsPerPage)) {
-        if (typeof numResultsPerPage !== 'number') {
-          return new Error('"numResultsPerPage" must be a number');
+      if (!helpers.isNil(num_results_per_page)) {
+        if (typeof num_results_per_page !== 'number') {
+          return new Error('"num_results_per_page" must be a number');
         }
-        bodyParams.numResultsPerPage = numResultsPerPage;
+        bodyParams.num_results_per_page = num_results_per_page;
       }
 
-      if (!helpers.isNil(resultPositionOnPage)) {
-        if (typeof resultPositionOnPage !== 'number') {
-          return new Error('"resultPositionOnPage" must be a number');
+      if (!helpers.isNil(result_position_on_page)) {
+        if (typeof result_position_on_page !== 'number') {
+          return new Error('"result_position_on_page" must be a number');
         }
-        bodyParams.resultPositionOnPage = resultPositionOnPage;
+        bodyParams.result_position_on_page = result_position_on_page;
       }
 
-      bodyParams.actionClass = 'result_click';
+      bodyParams.action_class = 'result_click';
 
       const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
       const requestMethod = 'POST';
-      const bodyParamsSnakeCase = toSnakeCaseKeys(bodyParams);
-      const requestBody = applyParams(bodyParamsSnakeCase, { ...this.options, requestMethod });
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
 
       this.requests.queue(
         requestURL,
@@ -1481,16 +1478,16 @@ class Tracker {
    *
    * @function trackQuizConversion
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.quizId - Quiz Id
-   * @param {string} parameters.quizVersionId - Quiz version Id
-   * @param {string} [parameters.itemId] - Product item unique identifier (Either itemId or itemName is required)
-   * @param {string} [parameters.itemName] - Product item name
-   * @param {string} [parameters.variationId] - Product item variation unique identifier
+   * @param {string} parameters.quiz_id - Quiz Id
+   * @param {string} parameters.quiz_version_id - Quiz version Id
+   * @param {string} [parameters.item_id] - Product item unique identifier (Either item_id or item_name is required)
+   * @param {string} [parameters.item_name] - Product item name
+   * @param {string} [parameters.variation_id] - Product item variation unique identifier
    * @param {string} [parameters.revenue] - The subtotal (not including taxes, shipping, etc.) of the entire order
    * @param {string} [parameters.section='Products'] - Index section
    * @param {string} [parameters.type='add_to_cart'] - Conversion type
-   * @param {boolean} [parameters.isCustomType] - Specify if type is custom conversion type
-   * @param {string} [parameters.displayName] - Display name for the custom conversion type
+   * @param {boolean} [parameters.is_custom_type] - Specify if type is custom conversion type
+   * @param {string} [parameters.display_name] - Display name for the custom conversion type
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -1498,10 +1495,10 @@ class Tracker {
    * @example
    * constructorio.tracker.trackQuizConversion(
    *     {
-   *         quizId: 'coffee-quiz',
-   *         quizVersionId: '1231244'
-   *         itemName: 'espresso'
-   *         variationId: '167',
+   *         quiz_id: 'coffee-quiz',
+   *         quiz_version_id: '1231244'
+   *         item_name: 'espresso'
+   *         variation_id: '167',
    *         type: 'add_to_cart",
    *         revenue: '1.0"
    *
@@ -1514,56 +1511,56 @@ class Tracker {
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/quiz_conversion?`;
       const {
-        quizId,
-        quizVersionId,
-        itemId,
-        itemName,
-        variationId,
+        quiz_id,
+        quiz_version_id,
+        item_id,
+        item_name,
+        variation_id,
         revenue,
         section = 'Products',
         type,
-        isCustomType,
-        displayName,
+        is_custom_type,
+        display_name,
       } = parameters;
 
       const queryParams = {};
       const bodyParams = {};
 
       // Ensure required parameters provided
-      if (typeof quizId !== 'string') {
-        return new Error('"quizId" is a required parameter of type string');
+      if (typeof quiz_id !== 'string') {
+        return new Error('"quiz_id" is a required parameter of type string');
       }
 
-      if (typeof quizVersionId !== 'string') {
-        return new Error('"quizVersionId" is a required parameter of type string');
+      if (typeof quiz_version_id !== 'string') {
+        return new Error('"quiz_version_id" is a required parameter of type string');
       }
 
-      if (typeof itemId !== 'string' && typeof itemName !== 'string') {
-        return new Error('"itemId" or "itemName" is a required parameter of type string');
+      if (typeof item_id !== 'string' && typeof item_name !== 'string') {
+        return new Error('"item_id" or "item_name" is a required parameter of type string');
       }
 
-      bodyParams.quizId = quizId;
-      bodyParams.quizVersionId = quizVersionId;
+      bodyParams.quiz_id = quiz_id;
+      bodyParams.quiz_version_id = quiz_version_id;
 
-      if (!helpers.isNil(itemId)) {
-        if (typeof itemId !== 'string') {
-          return new Error('"itemId" must be a string');
+      if (!helpers.isNil(item_id)) {
+        if (typeof item_id !== 'string') {
+          return new Error('"item_id" must be a string');
         }
-        bodyParams.itemId = itemId;
+        bodyParams.item_id = item_id;
       }
 
-      if (!helpers.isNil(itemName)) {
-        if (typeof itemName !== 'string') {
-          return new Error('"itemName" must be a string');
+      if (!helpers.isNil(item_name)) {
+        if (typeof item_name !== 'string') {
+          return new Error('"item_name" must be a string');
         }
-        bodyParams.itemName = itemName;
+        bodyParams.item_name = item_name;
       }
 
-      if (!helpers.isNil(variationId)) {
-        if (typeof variationId !== 'string') {
-          return new Error('"variationId" must be a string');
+      if (!helpers.isNil(variation_id)) {
+        if (typeof variation_id !== 'string') {
+          return new Error('"variation_id" must be a string');
         }
-        bodyParams.variationId = variationId;
+        bodyParams.variation_id = variation_id;
       }
 
       if (!helpers.isNil(revenue)) {
@@ -1587,26 +1584,25 @@ class Tracker {
         bodyParams.type = type;
       }
 
-      if (!helpers.isNil(isCustomType)) {
-        if (typeof isCustomType !== 'boolean') {
-          return new Error('"isCustomType" must be a boolean');
+      if (!helpers.isNil(is_custom_type)) {
+        if (typeof is_custom_type !== 'boolean') {
+          return new Error('"is_custom_type" must be a boolean');
         }
-        bodyParams.isCustomType = isCustomType;
+        bodyParams.is_custom_type = is_custom_type;
       }
 
-      if (!helpers.isNil(displayName)) {
-        if (typeof displayName !== 'string') {
-          return new Error('"displayName" must be a string');
+      if (!helpers.isNil(display_name)) {
+        if (typeof display_name !== 'string') {
+          return new Error('"display_name" must be a string');
         }
-        bodyParams.displayName = displayName;
+        bodyParams.display_name = display_name;
       }
 
-      bodyParams.actionClass = 'conversion';
+      bodyParams.action_class = 'conversion';
 
       const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
       const requestMethod = 'POST';
-      const bodyParamsSnakeCase = toSnakeCaseKeys(bodyParams);
-      const requestBody = applyParams(bodyParamsSnakeCase, { ...this.options, requestMethod });
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
 
       this.requests.queue(
         requestURL,

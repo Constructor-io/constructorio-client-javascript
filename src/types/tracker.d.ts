@@ -173,45 +173,45 @@ declare class Tracker {
 
   trackQuizResultsLoaded(
     parameters: {
-      quizId: string;
-      quizVersionId: string;
+      quiz_id: string;
+      quiz_version_id: string;
       url: string;
       section?: string;
-      resultCount?: number;
-      resultPage?: number;
-      resultId?: string;
+      result_count?: number;
+      result_page?: number;
+      result_id?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
 
   trackQuizResultClick(
     parameters: {
-      quizId: string;
-      quizVersionId: string;
-      itemId?: string;
-      itemName?: string;
+      quiz_id: string;
+      quiz_version_id: string;
+      item_id?: string;
+      item_name?: string;
       section?: string;
-      resultCount?: number;
-      resultPage?: number;
-      resultId?: string;
-      resultPositionOnPage?: number;
-      numResultsPerPage?: number;
+      result_count?: number;
+      result_page?: number;
+      result_id?: string;
+      result_position_on_page?: number;
+      num_results_per_page?: number;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
 
   trackQuizConversion(
     parameters: {
-      quizId: string;
-      quizVersionId: string;
-      itemId?: string;
-      itemName?: string;
+      quiz_id: string;
+      quiz_version_id: string;
+      item_id?: string;
+      item_name?: string;
       section?: string;
-      variationId?: string;
+      variation_id?: string;
       revenue?: string;
       type?: string;
-      isCustomType?: boolean;
-      displayName?: string;
+      is_custom_type?: boolean;
+      display_name?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
