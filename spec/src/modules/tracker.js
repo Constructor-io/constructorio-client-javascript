@@ -63,6 +63,35 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   });
 
   describe('trackSessionStart', () => {
+    it('V2 Should respond with a valid response', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackSessionStartV2()).to.equal(true);
+    });
+
     it('Should respond with a valid response', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -367,6 +396,44 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   });
 
   describe('trackInputFocus', () => {
+    it('V2 Should respond with a valid response', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const input = 'test';
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Body
+        expect(bodyParams).to.have.property('user_input').to.equal(input);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      tracker.on('error', (error) => {
+        done(error);
+      });
+
+      expect(tracker.trackInputFocusV2(input)).to.equal(true);
+    });
+
     it('Should respond with a valid response', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -622,9 +689,57 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
     const optionalParameters = {
       tr: 'click',
-      group_id: 'group-id',
+      group_id: 'All',
       display_name: 'display-name',
     };
+    const v2Parameters = {
+      variation_id: '12345-A',
+      item_id: '12345',
+    };
+
+    it('V2 Should respond with a valid response when term and required parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Body
+        expect(bodyParams).to.have.property('user_input').to.equal(requiredParameters.original_query);
+        expect(bodyParams).to.have.property('tr').to.equal(optionalParameters.tr);
+        expect(bodyParams).to.have.property('item_id').to.equal(v2Parameters.item_id);
+        expect(bodyParams).to.have.property('variation_id').to.equal(v2Parameters.variation_id);
+        expect(bodyParams).to.have.property('item_name').to.equal(term);
+        expect(bodyParams).to.have.property('group_id').to.equal(optionalParameters.group_id);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      tracker.on('error', (error) => {
+        done(error);
+      });
+
+      // eslint-disable-next-line max-len
+      expect(tracker.trackAutocompleteSelectV2(term, { ...requiredParameters, ...optionalParameters, ...v2Parameters })).to.equal(true);
+    });
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
@@ -1201,6 +1316,45 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       display_name: 'display-name',
     };
 
+    it('V2 Should respond with a valid response when term and required parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Body
+        expect(bodyParams).to.have.property('user_input').to.equal(requiredParameters.original_query);
+        expect(bodyParams).to.have.property('search_term').to.equal(term);
+        expect(bodyParams.filters).to.have.property('group_id').to.equal(optionalParameters.group_id);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      tracker.on('error', (error) => {
+        done(error);
+      });
+
+      expect(tracker.trackSearchSubmitV2(term, { ...requiredParameters, ...optionalParameters })).to.equal(true);
+    });
+
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1533,6 +1687,58 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       ...requiredParameters,
       customer_ids: [1, 2, 3],
     };
+    const v2Parameters = {
+      url: 'test',
+      result_page: 3,
+      result_id: 'test',
+      sort_order: 'descending',
+      sort_by: 'test',
+      selected_filters: { test: ['test'] },
+    };
+
+    it('V2 Should respond with a valid response when term and required parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Body
+        expect(bodyParams).to.have.property('result_count').to.equal(requiredParameters.num_results);
+        expect(bodyParams).to.have.property('url').to.equal(v2Parameters.url);
+        expect(bodyParams).to.have.property('result_page').to.equal(v2Parameters.result_page);
+        expect(bodyParams).to.have.property('result_id').to.equal(v2Parameters.result_id);
+        expect(bodyParams).to.have.property('sort_order').to.equal(v2Parameters.sort_order);
+        expect(bodyParams).to.have.property('sort_by').to.equal(v2Parameters.sort_by);
+        expect(bodyParams).to.have.property('selected_filters').to.deep.equal(v2Parameters.selected_filters);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      tracker.on('error', (error) => {
+        done(error);
+      });
+
+      // eslint-disable-next-line max-len
+      expect(tracker.trackSearchResultsLoadedV2(term, { ...requiredParameters, ...optionalParameters, ...v2Parameters })).to.equal(true);
+    });
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
@@ -1984,6 +2190,59 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       result_id: 'result-id',
       section: 'Products',
     };
+    const v2Parameters = {
+      result_count: 1337,
+      result_page: 3,
+      result_position_on_page: 3,
+      num_results_per_page: 20,
+      selected_filters: {
+        test: ['test'],
+      },
+    };
+
+    it('V2 Should respond with a valid response when term and required parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Body
+        expect(bodyParams).to.have.property('item_name').to.equal(requiredParameters.item_name);
+        expect(bodyParams).to.have.property('item_id').to.equal(requiredParameters.item_id);
+        expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variation_id);
+        expect(bodyParams).to.have.property('result_page').to.equal(v2Parameters.result_page);
+        expect(bodyParams).to.have.property('result_position_on_page').to.equal(v2Parameters.result_position_on_page);
+        expect(bodyParams).to.have.property('result_count').to.equal(v2Parameters.result_count);
+        expect(bodyParams).to.have.property('num_results_per_page').to.equal(v2Parameters.num_results_per_page);
+        expect(bodyParams).to.have.property('selected_filters').to.deep.equal(v2Parameters.selected_filters);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      tracker.on('error', (error) => {
+        done(error);
+      });
+
+      // eslint-disable-next-line max-len
+      expect(tracker.trackSearchResultClickV2(term, { ...requiredParameters, ...optionalParameters, ...v2Parameters })).to.equal(true);
+    });
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
