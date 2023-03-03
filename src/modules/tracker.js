@@ -90,7 +90,7 @@ class Tracker {
 
   /**
    * Send session start event to API
-   *
+   * @private
    * @function trackSessionStartV2
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -129,7 +129,7 @@ class Tracker {
 
   /**
    * Send input focus event to API
-   *
+   * @private
    * @function trackInputFocusV2
    * @param {string} user_input - Input at the time user focused on the search bar
    * @param {object} [networkParameters] - Parameters relevant to the network request
@@ -251,7 +251,7 @@ class Tracker {
 
   /**
    * Send autocomplete select event to API
-   *
+   * @private
    * @function trackAutocompleteSelectV2
    * @param {string} term - Term of selected autocomplete item
    * @param {object} parameters - Additional parameters to be sent with request
@@ -416,7 +416,7 @@ class Tracker {
 
   /**
    * Send autocomplete search event to API
-   *
+   * @private
    * @function trackSearchSubmitV2
    * @param {string} term - Term of submitted autocomplete event
    * @param {object} parameters - Additional parameters to be sent with request
@@ -540,7 +540,7 @@ class Tracker {
 
   /**
    * Send search results loaded v2 event to API
-   *
+   * @private
    * @function trackSearchResultsLoadedV2
    * @param {string} term - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
@@ -704,7 +704,7 @@ class Tracker {
 
   /**
    * Send click through event to API
-   *
+   * @private
    * @function trackSearchResultClickV2
    * @param {string} term - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
