@@ -1258,7 +1258,15 @@ class Tracker {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/quiz_result_load?`;
-      const { quiz_id, quiz_version_id, url, section = 'Products', result_count, result_id, result_page } = parameters;
+      const {
+        quiz_id,
+        quiz_version_id,
+        url,
+        section = 'Products',
+        result_count,
+        result_id,
+        result_page,
+      } = parameters;
       const queryParams = {};
       const bodyParams = {};
 
@@ -1483,7 +1491,7 @@ class Tracker {
    * @param {string} [parameters.item_id] - Product item unique identifier (Either item_id or item_name is required)
    * @param {string} [parameters.item_name] - Product item name
    * @param {string} [parameters.variation_id] - Product item variation unique identifier
-   * @param {string} [parameters.revenue] - The subtotal (not including taxes, shipping, etc.) of the entire order
+   * @param {string} [parameters.revenue] - Sale price if available, otherwise the regular (retail) price of item
    * @param {string} [parameters.section='Products'] - Index section
    * @param {string} [parameters.type='add_to_cart'] - Conversion type
    * @param {boolean} [parameters.is_custom_type] - Specify if type is custom conversion type
