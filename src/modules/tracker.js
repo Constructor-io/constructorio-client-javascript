@@ -86,6 +86,7 @@ class Tracker {
     this.options = options || {};
     this.eventemitter = new EventEmitter();
     this.requests = new RequestQueue(options, this.eventemitter);
+    this.behavioralV2Url = 'https://ac.cnstrc.com/v2/behavioral_action/';
   }
 
   /**
@@ -99,7 +100,7 @@ class Tracker {
    * constructorio.tracker.trackSessionStartV2();
    */
   trackSessionStartV2(networkParameters = {}) {
-    const url = 'https://ac.cnstrc.com/v2/behavioral_action/session_start?';
+    const url = `${this.behavioralV2Url}session_start?`;
 
     this.requests.queue(`${url}${applyParamsAsString({}, this.options)}`, 'POST', undefined, networkParameters);
     this.requests.send();
@@ -140,8 +141,13 @@ class Tracker {
    * constructorio.tracker.trackInputFocusV2("text");
    */
   trackInputFocusV2(user_input = '', networkParameters = {}) {
-    const baseUrl = 'https://ac.cnstrc.com/v2/behavioral_action/focus?';
-    const bodyParams = { user_input };
+    const baseUrl = `${this.behavioralV2Url}focus?`;
+    const bodyParams = {};
+
+    if (typeof user_input === 'object') {
+      networkParameters = user_input;
+      user_input = '';
+    }
 
     const requestMethod = 'POST';
     const requestBody = applyParams(bodyParams, {
@@ -253,20 +259,20 @@ class Tracker {
    * Send autocomplete select event to API
    * @private
    * @function trackAutocompleteSelectV2
-   * @param {string} term - Term of selected autocomplete item
+   * @param {string} item_name - Name of selected autocomplet item
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.user_input - The current autocomplete search query
    * @param {string} [parameters.section] - Section the selected item resides within
    * @param {string} [parameters.tr] - Trigger used to select the item (click, etc.)
    * @param {string} [parameters.item_id] - Item id of the selected item
-   * @param {string} [parameters.variation_id] - Variation Id of the selected item
+   * @param {string} [parameters.variation_id] - Variation id of the selected item
    * @param {string} [parameters.group_id] - Group identifier of selected item
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description User selected (clicked, or navigated to via keyboard) a result that appeared within autocomplete
    * @example
-   * constructorio.tracker.trackAutocompleteSelect(
+   * constructorio.tracker.trackAutocompleteSelectV2(
    *     'T-Shirt',
    *      {
    *          user_input: 'Shirt',
@@ -278,12 +284,12 @@ class Tracker {
    *      },
    * );
    */
-  trackAutocompleteSelectV2(term, parameters, networkParameters = {}) {
+  trackAutocompleteSelectV2(item_name, parameters, networkParameters = {}) {
     // Ensure term is provided (required)
-    if (term && typeof term === 'string') {
+    if (item_name && typeof item_name === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-        const baseUrl = 'https://ac.cnstrc.com/v2/behavioral_action/autocomplete_select?';
+        const baseUrl = `${this.behavioralV2Url}autocomplete_select?`;
         const {
           original_query,
           user_input = original_query,
@@ -293,7 +299,6 @@ class Tracker {
           group_id,
           item_id,
           variation_id,
-          item_name = term,
         } = parameters;
         const queryParams = {};
         const bodyParams = {
@@ -440,7 +445,7 @@ class Tracker {
     if (term && typeof term === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-        const baseUrl = 'https://ac.cnstrc.com/v2/behavioral_action/search_submit?';
+        const baseUrl = `${this.behavioralV2Url}search_submit?`;
         const { original_query, user_input = original_query, group_id, section } = parameters;
         const queryParams = {};
         const bodyParams = { user_input, search_term: term };
@@ -544,14 +549,14 @@ class Tracker {
    * @function trackSearchResultsLoadedV2
    * @param {string} term - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {number} parameters.url - URL of the search results page
+   * @param {string} parameters.url - URL of the search results page
    * @param {number} [parameters.result_count] - Total number of results
    * @param {number} [parameters.result_page] - Current page of search results
    * @param {string} [parameters.result_id] - Browse result identifier (returned in response from Constructor)
    * @param {object} [parameters.selected_filters] - Selected filters
    * @param {string} [parameters.sort_order] - Sort order ('ascending' or 'descending')
    * @param {string} [parameters.sort_by] - Sorting method
-   * @param {string[]} [parameters.items] - List of product item unique identifiers in search results listing
+   * @param {object[]} [parameters.items] - List of product item unique identifiers in search results listing
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -574,7 +579,7 @@ class Tracker {
     if (term && typeof term === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-        const baseUrl = 'https://ac.cnstrc.com/v2/behavioral_action/search_result_load?';
+        const baseUrl = `${this.behavioralV2Url}search_result_load?`;
         const {
           num_results,
           result_count = num_results,
@@ -593,6 +598,7 @@ class Tracker {
         let transformedItems;
 
         if (items && Array.isArray(items) && items.length !== 0) {
+          transformedItems = items;
           if (typeof items[0] === 'string' || typeof items[0] === 'number') {
             transformedItems = items.map((itemId) => ({ item_id: String(itemId) }));
           }
@@ -708,16 +714,16 @@ class Tracker {
    * @function trackSearchResultClickV2
    * @param {string} term - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.item_name - Product item name
+   * @param {string} parameters.item_name - Product item name (Either item_name or item_id is required)
    * @param {string} parameters.item_id - Product item unique identifier
    * @param {string} [parameters.variation_id] - Product item variation unique identifier
    * @param {string} [parameters.result_id] - Search result identifier (returned in response from Constructor)
-   * @param {string} [parameters.result_count] - Number of results in total
-   * @param {string} [parameters.result_page] - Current page of results
+   * @param {number} [parameters.result_count] - Number of results in total
+   * @param {number} [parameters.result_page] - Current page of results
    * @param {string} [parameters.result_position_on_page] - Position of selected items on page
    * @param {string} [parameters.num_results_per_page] - Number of results per page
    * @param {object} [parameters.selected_filters] - Key - Value map of selected filters
-   * @param {string} [parameters.item_is_convertible] - Whether or not an item is available for a conversion
+   * @param {boolean} [parameters.item_is_convertible] - Whether or not an item is available for a conversion
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -738,12 +744,12 @@ class Tracker {
     if (term && typeof term === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-        const baseUrl = 'https://ac.cnstrc.com/v2/behavioral_action/search_result_click?';
+        const baseUrl = `${this.behavioralV2Url}search_result_click?`;
         const {
-          item_name,
-          name,
-          item_id,
           customer_id,
+          item_id = customer_id,
+          name,
+          item_name = name,
           variation_id,
           result_id,
           result_count,
@@ -755,9 +761,7 @@ class Tracker {
         } = parameters;
         const bodyParams = {
           item_name,
-          name,
           item_id,
-          customer_id,
           variation_id,
           result_id,
           result_count,
@@ -765,6 +769,8 @@ class Tracker {
           result_position_on_page,
           num_results_per_page,
           selected_filters,
+          section,
+          search_term: term,
         };
         const queryParams = {};
 
