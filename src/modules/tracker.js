@@ -143,18 +143,22 @@ class Tracker {
   trackInputFocusV2(user_input = '', networkParameters = {}) {
     const baseUrl = `${this.behavioralV2Url}focus?`;
     const bodyParams = {};
+    let networkParametersNew = networkParameters;
+    let userInputNew = user_input;
 
     if (typeof user_input === 'object') {
-      networkParameters = user_input;
-      user_input = '';
+      networkParametersNew = user_input;
+      userInputNew = '';
     }
+
+    bodyParams.user_input = userInputNew;
 
     const requestMethod = 'POST';
     const requestBody = applyParams(bodyParams, {
       ...this.options,
       requestMethod,
     });
-    this.requests.queue(`${baseUrl}${applyParamsAsString({}, this.options)}`, requestMethod, requestBody, networkParameters);
+    this.requests.queue(`${baseUrl}${applyParamsAsString({}, this.options)}`, requestMethod, requestBody, networkParametersNew);
     this.requests.send();
 
     return true;
@@ -259,7 +263,7 @@ class Tracker {
    * Send autocomplete select event to API
    * @private
    * @function trackAutocompleteSelectV2
-   * @param {string} item_name - Name of selected autocomplet item
+   * @param {string} item_name - Name of selected autocomplete item
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.user_input - The current autocomplete search query
    * @param {string} [parameters.section] - Section the selected item resides within
