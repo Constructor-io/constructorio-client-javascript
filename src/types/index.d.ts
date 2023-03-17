@@ -180,3 +180,44 @@ export type FilterExpressionRange = {
 };
 
 export type FilterExpressionRangeValue = ['-inf' | number, 'inf' | number];
+
+export type Item = Product | SearchSuggestion | ItemBase;
+
+export interface ItemBase extends Record<string, any> {
+  id?: string;
+  url?: string;
+  value?: string;
+  section: string;
+  data?: Record<string, any>;
+}
+
+export type Product = {
+  is_slotted: boolean;
+  labels: Record<string, unknown>;
+  matched_terms: string[];
+  value: string;
+  data: {
+    facets: { name: string; values: string[] }[];
+    group_ids: string[];
+    id: string;
+    image_url: string;
+    price: number;
+    swatchColor: string;
+    url: string;
+    variation_id: string;
+  };
+  section: 'Products';
+};
+
+export type SearchSuggestion = {
+  is_slotted: boolean;
+  labels: Record<string, unknown>;
+  matched_terms: string[];
+  value: string;
+  data: {
+    id: string;
+    url?: string;
+  };
+  section: 'Search Suggestions';
+  id: string;
+};
