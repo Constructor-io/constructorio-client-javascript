@@ -181,43 +181,19 @@ export type FilterExpressionRange = {
 
 export type FilterExpressionRangeValue = ['-inf' | number, 'inf' | number];
 
-export type Item = Product | SearchSuggestion | ItemBase;
-
-export interface ItemBase extends Record<string, any> {
-  id?: string;
-  url?: string;
-  value?: string;
-  section: string;
+export interface Item extends Record<string, any> {
+  value: string;
+  is_slotted: boolean;
+  labels: Record<string, unknown>;
+  matched_terms: string[];
   data?: Record<string, any>;
+  section?: string;
 }
 
-export type Product = {
-  is_slotted: boolean;
-  labels: Record<string, unknown>;
-  matched_terms: string[];
-  value: string;
-  data: {
-    facets: { name: string; values: string[] }[];
-    group_ids: string[];
-    id: string;
-    image_url: string;
-    price: number;
-    swatchColor: string;
-    url: string;
-    variation_id: string;
-  };
+export interface Product extends Item {
   section: 'Products';
-};
+}
 
-export type SearchSuggestion = {
-  is_slotted: boolean;
-  labels: Record<string, unknown>;
-  matched_terms: string[];
-  value: string;
-  data: {
-    id: string;
-    url?: string;
-  };
+export interface SearchSuggestion extends Item {
   section: 'Search Suggestions';
-  id: string;
-};
+}
