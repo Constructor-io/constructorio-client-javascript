@@ -204,6 +204,7 @@ declare class Tracker {
     parameters: {
       quiz_id: string;
       quiz_version_id: string;
+      quiz_session_id: string;
       item_id?: string;
       item_name?: string;
       section?: string;

@@ -1235,6 +1235,7 @@ class Tracker {
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.quiz_id - Quiz Id
    * @param {string} parameters.quiz_version_id - Quiz version Id
+   * @param {string} parameters.quiz_session_id - Quiz session id associated with this conversion event
    * @param {string} parameters.url - Current page url
    * @param {string} [parameters.section='Products'] - Index section
    * @param {number} [parameters.result_count] - Total number of results
@@ -1248,8 +1249,9 @@ class Tracker {
    * constructorio.tracker.trackQuizResultsLoaded(
    *     {
    *         quiz_id: 'coffee-quiz',
-   *         quiz_version_id: '1231244'
-   *         url: www.example.com
+   *         quiz_version_id: '1231244',
+   *         quiz_session_id,
+   *         url: 'www.example.com',
    *         result_count: 167,
    *     },
    * );
@@ -1261,6 +1263,7 @@ class Tracker {
       const {
         quiz_id,
         quiz_version_id,
+        quiz_session_id,
         url,
         section = 'Products',
         result_count,
@@ -1278,12 +1281,17 @@ class Tracker {
         return new Error('"quiz_version_id" is a required parameter of type string');
       }
 
+      if (typeof quiz_session_id !== 'string') {
+        return new Error('"quiz_session_id" is a required parameter of type string');
+      }
+
       if (typeof url !== 'string') {
         return new Error('"url" is a required parameter of type string');
       }
 
       bodyParams.quiz_id = quiz_id;
       bodyParams.quiz_version_id = quiz_version_id;
+      bodyParams.quiz_session_id = quiz_session_id;
       bodyParams.url = url;
 
       if (!helpers.isNil(section)) {
@@ -1344,6 +1352,7 @@ class Tracker {
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.quiz_id - Quiz Id
    * @param {string} parameters.quiz_version_id - Quiz version Id
+   * @param {string} parameters.quiz_session_id - Quiz session id associated with this conversion event
    * @param {string} [parameters.item_id] - Product item unique identifier (Either item_id or item_name is required)
    * @param {string} [parameters.item_name] - Product item name
    * @param {string} [parameters.section='Products'] - Index section
@@ -1360,7 +1369,8 @@ class Tracker {
    * constructorio.tracker.trackQuizResultClick(
    *     {
    *         quiz_id: 'coffee-quiz',
-   *         quiz_version_id: '1231244'
+   *         quiz_version_id: '1231244',
+   *         quiz_session_id: '123',
    *         item_id: '123',
    *         item_name: 'espresso'
    *     },
@@ -1374,6 +1384,7 @@ class Tracker {
       const {
         quiz_id,
         quiz_version_id,
+        quiz_session_id,
         item_id,
         item_name,
         result_count,
@@ -1396,12 +1407,17 @@ class Tracker {
         return new Error('"quiz_version_id" is a required parameter of type string');
       }
 
+      if (typeof quiz_session_id !== 'string') {
+        return new Error('"quiz_session_id" is a required parameter of type string');
+      }
+
       if (typeof item_id !== 'string' && typeof item_name !== 'string') {
         return new Error('"item_id" or "item_name" is a required parameter of type string');
       }
 
       bodyParams.quiz_id = quiz_id;
       bodyParams.quiz_version_id = quiz_version_id;
+      bodyParams.quiz_session_id = quiz_session_id;
 
       if (!helpers.isNil(item_id)) {
         if (typeof item_id !== 'string') {
@@ -1488,6 +1504,7 @@ class Tracker {
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.quiz_id - Quiz Id
    * @param {string} parameters.quiz_version_id - Quiz version Id
+   * @param {string} parameters.quiz_session_id - Quiz session id associated with this conversion event
    * @param {string} [parameters.item_id] - Product item unique identifier (Either item_id or item_name is required)
    * @param {string} [parameters.item_name] - Product item name
    * @param {string} [parameters.variation_id] - Product item variation unique identifier
@@ -1504,8 +1521,9 @@ class Tracker {
    * constructorio.tracker.trackQuizConversion(
    *     {
    *         quiz_id: 'coffee-quiz',
-   *         quiz_version_id: '1231244'
-   *         item_name: 'espresso'
+   *         quiz_version_id: '1231244',
+   *         quiz_session_id: '3123',
+   *         item_name: 'espresso',
    *         variation_id: '167',
    *         type: 'add_to_cart",
    *         revenue: '1.0"
@@ -1521,6 +1539,7 @@ class Tracker {
       const {
         quiz_id,
         quiz_version_id,
+        quiz_session_id,
         item_id,
         item_name,
         variation_id,
@@ -1543,12 +1562,17 @@ class Tracker {
         return new Error('"quiz_version_id" is a required parameter of type string');
       }
 
+      if (typeof quiz_session_id !== 'string') {
+        return new Error('"quiz_session_id" is a required parameter of type string');
+      }
+
       if (typeof item_id !== 'string' && typeof item_name !== 'string') {
         return new Error('"item_id" or "item_name" is a required parameter of type string');
       }
 
       bodyParams.quiz_id = quiz_id;
       bodyParams.quiz_version_id = quiz_version_id;
+      bodyParams.quiz_session_id = quiz_session_id;
 
       if (!helpers.isNil(item_id)) {
         if (typeof item_id !== 'string') {

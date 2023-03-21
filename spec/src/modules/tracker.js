@@ -5479,9 +5479,19 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
   });
 
-  describe('trackQuizResultsLoaded', () => {
-    const requiredParameters = { quiz_id: 'coffee-quiz', quiz_version_id: '1231243', url: 'www.example.com' };
-    const optionalParameters = { section: 'Products', result_count: 1, result_id: '12312', result_page: 1 };
+  describe.only('trackQuizResultsLoaded', () => {
+    const requiredParameters = {
+      quiz_id: 'coffee-quiz',
+      quiz_version_id: '1231243',
+      quiz_session_id: '13443',
+      url: 'www.example.com',
+    };
+    const optionalParameters = {
+      section: 'Products',
+      result_count: 1,
+      result_id: '12312',
+      result_page: 1,
+    };
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
@@ -5668,6 +5678,12 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackQuizResultsLoaded({ ...requiredParameters, quiz_version_id: 1 })).to.be.an('error');
     });
 
+    it('Should throw an error when invalid quiz_session_id is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackQuizResultsLoaded({ ...requiredParameters, quiz_session_id: 1 })).to.be.an('error');
+    });
+
     it('Should throw an error when invalid url is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
@@ -5707,6 +5723,12 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     it('Should throw an error when no quiz_version_id is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
       const { quiz_version_id: _, ...rest } = requiredParameters;
+      expect(tracker.trackQuizResultsLoaded(rest)).to.be.an('error');
+    });
+
+    it('Should throw an error when no quiz_session_id is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+      const { quiz_session_id: _, ...rest } = requiredParameters;
       expect(tracker.trackQuizResultsLoaded(rest)).to.be.an('error');
     });
 
@@ -5867,10 +5889,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
   });
 
-  describe('trackQuizResultClick', () => {
+  describe.only('trackQuizResultClick', () => {
     const requiredParameters = {
       quiz_id: 'coffee-quiz',
       quiz_version_id: '1231243',
+      quiz_session_id: '13443',
       item_name: 'espresso',
       item_id: '1123',
     };
@@ -6036,6 +6059,12 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackQuizResultClick({ ...requiredParameters, quiz_version_id: 1 })).to.be.an('error');
     });
 
+    it('Should throw an error when invalid quiz_session_id is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackQuizResultClick({ ...requiredParameters, quiz_session_id: 1 })).to.be.an('error');
+    });
+
     it('Should throw an error when invalid item_id is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
@@ -6093,6 +6122,12 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     it('Should throw an error when no quiz_version_id is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
       const { quiz_version_id: _, ...rest } = requiredParameters;
+      expect(tracker.trackQuizResultClick(rest)).to.be.an('error');
+    });
+
+    it('Should throw an error when no quiz_session_id is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+      const { quiz_session_id: _, ...rest } = requiredParameters;
       expect(tracker.trackQuizResultClick(rest)).to.be.an('error');
     });
 
@@ -6253,10 +6288,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
   });
 
-  describe('trackQuizConversion', () => {
+  describe.only('trackQuizConversion', () => {
     const requiredParameters = {
       quiz_id: 'coffee-quiz',
       quiz_version_id: '1231243',
+      quiz_session_id: '13443',
       item_name: 'espresso',
       item_id: '1123',
     };
@@ -6423,6 +6459,12 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackQuizConversion({ ...requiredParameters, quiz_version_id: 1 })).to.be.an('error');
     });
 
+    it('Should throw an error when invalid quiz_session_id is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackQuizConversion({ ...requiredParameters, quiz_session_id: 1 })).to.be.an('error');
+    });
+
     it('Should throw an error when invalid item_id is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
@@ -6480,6 +6522,12 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     it('Should throw an error when no quiz_version_id is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
       const { quiz_version_id: _, ...rest } = requiredParameters;
+      expect(tracker.trackQuizConversion(rest)).to.be.an('error');
+    });
+
+    it('Should throw an error when no quiz_session_id is provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+      const { quiz_session_id: _, ...rest } = requiredParameters;
       expect(tracker.trackQuizConversion(rest)).to.be.an('error');
     });
 
