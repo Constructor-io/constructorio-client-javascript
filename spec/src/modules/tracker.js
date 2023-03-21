@@ -5479,7 +5479,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
   });
 
-  describe.only('trackQuizResultsLoaded', () => {
+  describe('trackQuizResultsLoaded', () => {
     const requiredParameters = {
       quiz_id: 'coffee-quiz',
       quiz_version_id: '1231243',
@@ -5889,7 +5889,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
   });
 
-  describe.only('trackQuizResultClick', () => {
+  describe('trackQuizResultClick', () => {
     const requiredParameters = {
       quiz_id: 'coffee-quiz',
       quiz_version_id: '1231243',
@@ -6288,7 +6288,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
   });
 
-  describe.only('trackQuizConversion', () => {
+  describe('trackQuizConversion', () => {
     const requiredParameters = {
       quiz_id: 'coffee-quiz',
       quiz_version_id: '1231243',
