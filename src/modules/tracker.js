@@ -1350,7 +1350,7 @@ class Tracker {
    *
    * @function trackQuizResultClick
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.quiz_id - Quiz identifierId
+   * @param {string} parameters.quiz_id - Quiz identifier
    * @param {string} parameters.quiz_version_id - Quiz version identifier
    * @param {string} parameters.quiz_session_id - Quiz session identifier associated with this conversion event
    * @param {string} [parameters.item_id] - Product item unique identifier (Either item_id or item_name is required)
