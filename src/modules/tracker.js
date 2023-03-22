@@ -828,6 +828,7 @@ class Tracker {
    * @param {string} parameters.item_id - Product item unique identifier
    * @param {string} [parameters.variation_id] - Product item variation unique identifier
    * @param {string} [parameters.result_id] - Search result identifier (returned in response from Constructor)
+   * @param {string} [parameters.item_is_convertible] - Whether or not an item is available for a conversion
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -858,6 +859,7 @@ class Tracker {
           variation_id,
           result_id,
           section,
+          item_is_convertible,
         } = parameters;
 
         // Ensure support for both item_name and name as parameters
@@ -880,6 +882,10 @@ class Tracker {
 
         if (result_id) {
           queryParams.result_id = result_id;
+        }
+
+        if (typeof item_is_convertible === 'boolean') {
+          queryParams.item_is_convertible = item_is_convertible;
         }
 
         if (section) {
