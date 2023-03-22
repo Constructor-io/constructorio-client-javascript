@@ -723,6 +723,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(bodyParams).to.have.property('tr').to.equal(optionalParameters.tr);
         expect(bodyParams).to.have.property('item_id').to.equal(v2Parameters.item_id);
         expect(bodyParams).to.have.property('variation_id').to.equal(v2Parameters.variation_id);
+        expect(bodyParams).to.have.property('section').to.deep.equal(requiredParameters.section);
         expect(bodyParams).to.have.property('item_name').to.equal(term);
         expect(bodyParams).to.have.property('group_id').to.equal(optionalParameters.group_id);
 
@@ -1694,6 +1695,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       sort_order: 'descending',
       sort_by: 'test',
       selected_filters: { test: ['test'] },
+      section: 'Products',
     };
 
     it('V2 Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -1724,6 +1726,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(bodyParams).to.have.property('sort_order').to.equal(v2Parameters.sort_order);
         expect(bodyParams).to.have.property('sort_by').to.equal(v2Parameters.sort_by);
         expect(bodyParams).to.have.property('selected_filters').to.deep.equal(v2Parameters.selected_filters);
+        expect(bodyParams).to.have.property('section').to.deep.equal(v2Parameters.section);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -2223,6 +2226,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(bodyParams).to.have.property('item_name').to.equal(requiredParameters.item_name);
         expect(bodyParams).to.have.property('item_id').to.equal(requiredParameters.item_id);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variation_id);
+        expect(bodyParams).to.have.property('section').to.deep.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('result_page').to.equal(v2Parameters.result_page);
         expect(bodyParams).to.have.property('result_position_on_page').to.equal(v2Parameters.result_position_on_page);
         expect(bodyParams).to.have.property('result_count').to.equal(v2Parameters.result_count);

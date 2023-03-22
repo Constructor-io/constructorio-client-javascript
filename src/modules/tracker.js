@@ -312,6 +312,7 @@ class Tracker {
           item_id,
           variation_id,
           item_name,
+          section,
         };
 
         if (section) {
@@ -427,7 +428,7 @@ class Tracker {
    * Send autocomplete search event to API
    * @private
    * @function trackSearchSubmitV2
-   * @param {string} term - Term of submitted autocomplete event
+   * @param {string} search_term - Term of submitted autocomplete event
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.user_input - The current autocomplete search query
    * @param {string} [parameters.group_id] - Group identifier of selected item
@@ -444,15 +445,24 @@ class Tracker {
    *     },
    * );
    */
-  trackSearchSubmitV2(term, parameters, networkParameters = {}) {
+  trackSearchSubmitV2(search_term, parameters, networkParameters = {}) {
     // Ensure term is provided (required)
-    if (term && typeof term === 'string') {
+    if (search_term && typeof search_term === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
         const baseUrl = `${this.behavioralV2Url}search_submit?`;
-        const { original_query, user_input = original_query, group_id, section } = parameters;
+        const {
+          original_query,
+          user_input = original_query,
+          group_id,
+          section,
+        } = parameters;
         const queryParams = {};
-        const bodyParams = { user_input, search_term: term };
+        const bodyParams = {
+          user_input,
+          search_term,
+          section,
+        };
 
         if (group_id) {
           bodyParams.filters = { group_id };
@@ -551,7 +561,7 @@ class Tracker {
    * Send search results loaded v2 event to API
    * @private
    * @function trackSearchResultsLoadedV2
-   * @param {string} term - Search results query term
+   * @param {string} search_term - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.url - URL of the search results page
    * @param {number} [parameters.result_count] - Total number of results
@@ -578,9 +588,9 @@ class Tracker {
    *     },
    * );
    */
-  trackSearchResultsLoadedV2(term, parameters, networkParameters = {}) {
+  trackSearchResultsLoadedV2(search_term, parameters, networkParameters = {}) {
     // Ensure term is provided (required)
-    if (term && typeof term === 'string') {
+    if (search_term && typeof search_term === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
         const baseUrl = `${this.behavioralV2Url}search_result_load?`;
@@ -613,7 +623,7 @@ class Tracker {
         }
 
         const bodyParams = {
-          search_term: term,
+          search_term,
           result_count,
           items: transformedItems,
           result_page,
@@ -622,6 +632,7 @@ class Tracker {
           sort_by,
           selected_filters,
           url,
+          section,
         };
 
         const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
@@ -727,7 +738,6 @@ class Tracker {
    * @param {string} [parameters.result_position_on_page] - Position of selected items on page
    * @param {string} [parameters.num_results_per_page] - Number of results per page
    * @param {object} [parameters.selected_filters] - Key - Value map of selected filters
-   * @param {boolean} [parameters.item_is_convertible] - Whether or not an item is available for a conversion
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -818,7 +828,6 @@ class Tracker {
    * @param {string} parameters.item_id - Product item unique identifier
    * @param {string} [parameters.variation_id] - Product item variation unique identifier
    * @param {string} [parameters.result_id] - Search result identifier (returned in response from Constructor)
-   * @param {string} [parameters.item_is_convertible] - Whether or not an item is available for a conversion
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -848,7 +857,6 @@ class Tracker {
           customer_id,
           variation_id,
           result_id,
-          item_is_convertible,
           section,
         } = parameters;
 
@@ -872,10 +880,6 @@ class Tracker {
 
         if (result_id) {
           queryParams.result_id = result_id;
-        }
-
-        if (typeof item_is_convertible === 'boolean') {
-          queryParams.item_is_convertible = item_is_convertible;
         }
 
         if (section) {
