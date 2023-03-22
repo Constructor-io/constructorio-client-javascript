@@ -1233,9 +1233,9 @@ class Tracker {
    *
    * @function trackQuizResultsLoaded
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.quiz_id - Quiz Id
-   * @param {string} parameters.quiz_version_id - Quiz version Id
-   * @param {string} parameters.quiz_session_id - Quiz session id associated with this conversion event
+   * @param {string} parameters.quiz_id - Quiz identifier
+   * @param {string} parameters.quiz_version_id - Quiz version identifier
+   * @param {string} parameters.quiz_session_id - Quiz session identifier associated with this conversion event
    * @param {string} parameters.url - Current page url
    * @param {string} [parameters.section='Products'] - Index section
    * @param {number} [parameters.result_count] - Total number of results
@@ -1350,9 +1350,9 @@ class Tracker {
    *
    * @function trackQuizResultClick
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.quiz_id - Quiz Id
-   * @param {string} parameters.quiz_version_id - Quiz version Id
-   * @param {string} parameters.quiz_session_id - Quiz session id associated with this conversion event
+   * @param {string} parameters.quiz_id - Quiz identifierId
+   * @param {string} parameters.quiz_version_id - Quiz version identifier
+   * @param {string} parameters.quiz_session_id - Quiz session identifier associated with this conversion event
    * @param {string} [parameters.item_id] - Product item unique identifier (Either item_id or item_name is required)
    * @param {string} [parameters.item_name] - Product item name
    * @param {string} [parameters.section='Products'] - Index section
@@ -1502,9 +1502,9 @@ class Tracker {
    *
    * @function trackQuizConversion
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.quiz_id - Quiz Id
-   * @param {string} parameters.quiz_version_id - Quiz version Id
-   * @param {string} parameters.quiz_session_id - Quiz session id associated with this conversion event
+   * @param {string} parameters.quiz_id - Quiz identifier
+   * @param {string} parameters.quiz_version_id - Quiz version identifier
+   * @param {string} parameters.quiz_session_id - Quiz session identifier associated with this conversion event
    * @param {string} [parameters.item_id] - Product item unique identifier (Either item_id or item_name is required)
    * @param {string} [parameters.item_name] - Product item name
    * @param {string} [parameters.variation_id] - Product item variation unique identifier
