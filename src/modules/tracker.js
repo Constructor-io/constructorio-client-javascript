@@ -86,6 +86,26 @@ class Tracker {
     this.options = options || {};
     this.eventemitter = new EventEmitter();
     this.requests = new RequestQueue(options, this.eventemitter);
+    this.behavioralV2Url = 'https://ac.cnstrc.com/v2/behavioral_action/';
+  }
+
+  /**
+   * Send session start event to API
+   * @private
+   * @function trackSessionStartV2
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @example
+   * constructorio.tracker.trackSessionStartV2();
+   */
+  trackSessionStartV2(networkParameters = {}) {
+    const url = `${this.behavioralV2Url}session_start?`;
+
+    this.requests.queue(`${url}${applyParamsAsString({}, this.options)}`, 'POST', undefined, networkParameters);
+    this.requests.send();
+
+    return true;
   }
 
   /**
@@ -103,6 +123,42 @@ class Tracker {
     const queryParams = { action: 'session_start' };
 
     this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`, undefined, undefined, networkParameters);
+    this.requests.send();
+
+    return true;
+  }
+
+  /**
+   * Send input focus event to API
+   * @private
+   * @function trackInputFocusV2
+   * @param {string} user_input - Input at the time user focused on the search bar
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User focused on search input element
+   * @example
+   * constructorio.tracker.trackInputFocusV2("text");
+   */
+  trackInputFocusV2(user_input = '', networkParameters = {}) {
+    const baseUrl = `${this.behavioralV2Url}focus?`;
+    const bodyParams = {};
+    let networkParametersNew = networkParameters;
+    let userInputNew = user_input;
+
+    if (typeof user_input === 'object') {
+      networkParametersNew = user_input;
+      userInputNew = '';
+    }
+
+    bodyParams.user_input = userInputNew;
+
+    const requestMethod = 'POST';
+    const requestBody = applyParams(bodyParams, {
+      ...this.options,
+      requestMethod,
+    });
+    this.requests.queue(`${baseUrl}${applyParamsAsString({}, this.options)}`, requestMethod, requestBody, networkParametersNew);
     this.requests.send();
 
     return true;
@@ -205,6 +261,93 @@ class Tracker {
 
   /**
    * Send autocomplete select event to API
+   * @private
+   * @function trackAutocompleteSelectV2
+   * @param {string} item_name - Name of selected autocomplete item
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.user_input - The current autocomplete search query
+   * @param {string} [parameters.section] - Section the selected item resides within
+   * @param {string} [parameters.tr] - Trigger used to select the item (click, etc.)
+   * @param {string} [parameters.item_id] - Item id of the selected item
+   * @param {string} [parameters.variation_id] - Variation id of the selected item
+   * @param {string} [parameters.group_id] - Group identifier of selected item
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User selected (clicked, or navigated to via keyboard) a result that appeared within autocomplete
+   * @example
+   * constructorio.tracker.trackAutocompleteSelectV2(
+   *     'T-Shirt',
+   *      {
+   *          user_input: 'Shirt',
+   *          section: 'Products',
+   *          tr: 'click',
+   *          group_id: '88JU230',
+   *          item_id: '12345',
+   *          variation_id: '12345-A',
+   *      },
+   * );
+   */
+  trackAutocompleteSelectV2(item_name, parameters, networkParameters = {}) {
+    // Ensure term is provided (required)
+    if (item_name && typeof item_name === 'string') {
+      // Ensure parameters are provided (required)
+      if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+        const baseUrl = `${this.behavioralV2Url}autocomplete_select?`;
+        const {
+          original_query,
+          user_input = original_query,
+          original_section,
+          section = original_section,
+          tr,
+          group_id,
+          item_id,
+          variation_id,
+        } = parameters;
+        const queryParams = {};
+        const bodyParams = {
+          user_input,
+          tr,
+          group_id,
+          item_id,
+          variation_id,
+          item_name,
+          section,
+        };
+
+        if (section) {
+          queryParams.section = section;
+        }
+
+        const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+        const requestMethod = 'POST';
+        const requestBody = applyParams(bodyParams, {
+          ...this.options,
+          requestMethod,
+        });
+        this.requests.queue(
+          requestURL,
+          requestMethod,
+          requestBody,
+          networkParameters,
+        );
+        this.requests.send();
+
+        return true;
+      }
+
+      this.requests.send();
+
+      return new Error('parameters are required of type object');
+    }
+
+    this.requests.send();
+
+    return new Error('term is a required parameter of type string');
+  }
+
+  /**
+   * Send autocomplete select event to API
    *
    * @function trackAutocompleteSelect
    * @param {string} term - Term of selected autocomplete item
@@ -283,6 +426,80 @@ class Tracker {
 
   /**
    * Send autocomplete search event to API
+   * @private
+   * @function trackSearchSubmitV2
+   * @param {string} search_term - Term of submitted autocomplete event
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.user_input - The current autocomplete search query
+   * @param {string} [parameters.group_id] - Group identifier of selected item
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User submitted a search (pressing enter within input element, or clicking submit element)
+   * @example
+   * constructorio.tracker.trackSearchSubmitV2(
+   *     'T-Shirt',
+   *     {
+   *         user_input: 'Shirt',
+   *         group_id: '88JU230',
+   *     },
+   * );
+   */
+  trackSearchSubmitV2(search_term, parameters, networkParameters = {}) {
+    // Ensure term is provided (required)
+    if (search_term && typeof search_term === 'string') {
+      // Ensure parameters are provided (required)
+      if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+        const baseUrl = `${this.behavioralV2Url}search_submit?`;
+        const {
+          original_query,
+          user_input = original_query,
+          group_id,
+          section,
+        } = parameters;
+        const queryParams = {};
+        const bodyParams = {
+          user_input,
+          search_term,
+          section,
+        };
+
+        if (group_id) {
+          bodyParams.filters = { group_id };
+        }
+
+        if (section) {
+          queryParams.section = section;
+        }
+
+        const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+        const requestMethod = 'POST';
+        const requestBody = applyParams(bodyParams, {
+          ...this.options,
+          requestMethod,
+        });
+        this.requests.queue(
+          requestURL,
+          requestMethod,
+          requestBody,
+          networkParameters,
+        );
+        this.requests.send();
+        return true;
+      }
+
+      this.requests.send();
+
+      return new Error('parameters are required of type object');
+    }
+
+    this.requests.send();
+
+    return new Error('term is a required parameter of type string');
+  }
+
+  /**
+   * Send autocomplete search event to API
    *
    * @function trackSearchSubmit
    * @param {string} term - Term of submitted autocomplete event
@@ -327,6 +544,110 @@ class Tracker {
         this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`, undefined, undefined, networkParameters);
         this.requests.send();
 
+        return true;
+      }
+
+      this.requests.send();
+
+      return new Error('parameters are required of type object');
+    }
+
+    this.requests.send();
+
+    return new Error('term is a required parameter of type string');
+  }
+
+  /**
+   * Send search results loaded v2 event to API
+   * @private
+   * @function trackSearchResultsLoadedV2
+   * @param {string} search_term - Search results query term
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.url - URL of the search results page
+   * @param {number} [parameters.result_count] - Total number of results
+   * @param {number} [parameters.result_page] - Current page of search results
+   * @param {string} [parameters.result_id] - Browse result identifier (returned in response from Constructor)
+   * @param {object} [parameters.selected_filters] - Selected filters
+   * @param {string} [parameters.sort_order] - Sort order ('ascending' or 'descending')
+   * @param {string} [parameters.sort_by] - Sorting method
+   * @param {object[]} [parameters.items] - List of product item unique identifiers in search results listing
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User viewed a search product listing page
+   * @example
+   * constructorio.tracker.trackSearchResultsLoadedV2(
+   *     'T-Shirt',
+   *     {
+   *         result_count: 167,
+   *         items: [{item_id: 'KMH876'}, {item_id: 'KMH140'}, {item_id: 'KMH437'}],
+   *         sort_order: 'ascending'
+   *         sort_by: 'price',
+   *         result_page: 3,
+   *         result_count: 20
+   *     },
+   * );
+   */
+  trackSearchResultsLoadedV2(search_term, parameters, networkParameters = {}) {
+    // Ensure term is provided (required)
+    if (search_term && typeof search_term === 'string') {
+      // Ensure parameters are provided (required)
+      if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+        const baseUrl = `${this.behavioralV2Url}search_result_load?`;
+        const {
+          num_results,
+          result_count = num_results,
+          customer_ids,
+          item_ids,
+          items = customer_ids || item_ids,
+          result_page,
+          result_id,
+          sort_order,
+          sort_by,
+          selected_filters,
+          url,
+          section,
+        } = parameters;
+        const queryParams = {};
+        let transformedItems;
+
+        if (items && Array.isArray(items) && items.length !== 0) {
+          transformedItems = items;
+          if (typeof items[0] === 'string' || typeof items[0] === 'number') {
+            transformedItems = items.map((itemId) => ({ item_id: String(itemId) }));
+          }
+        }
+
+        if (section) {
+          queryParams.section = section;
+        }
+
+        const bodyParams = {
+          search_term,
+          result_count,
+          items: transformedItems,
+          result_page,
+          result_id,
+          sort_order,
+          sort_by,
+          selected_filters,
+          url,
+          section,
+        };
+
+        const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+        const requestMethod = 'POST';
+        const requestBody = applyParams(bodyParams, {
+          ...this.options,
+          requestMethod,
+        });
+        this.requests.queue(
+          requestURL,
+          requestMethod,
+          requestBody,
+          networkParameters,
+        );
+        this.requests.send();
         return true;
       }
 
@@ -404,6 +725,101 @@ class Tracker {
 
   /**
    * Send click through event to API
+   * @private
+   * @function trackSearchResultClickV2
+   * @param {string} term - Search results query term
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.item_name - Product item name (Either item_name or item_id is required)
+   * @param {string} parameters.item_id - Product item unique identifier
+   * @param {string} [parameters.variation_id] - Product item variation unique identifier
+   * @param {string} [parameters.result_id] - Search result identifier (returned in response from Constructor)
+   * @param {number} [parameters.result_count] - Number of results in total
+   * @param {number} [parameters.result_page] - Current page of results
+   * @param {string} [parameters.result_position_on_page] - Position of selected items on page
+   * @param {string} [parameters.num_results_per_page] - Number of results per page
+   * @param {object} [parameters.selected_filters] - Key - Value map of selected filters
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User clicked a result that appeared within a search product listing page
+   * @example
+   * constructorio.tracker.trackSearchResultClickV2(
+   *     'T-Shirt',
+   *     {
+   *         item_name: 'Red T-Shirt',
+   *         item_id: 'KMH876',
+   *         result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *     },
+   * );
+   */
+  trackSearchResultClickV2(term, parameters, networkParameters = {}) {
+    // Ensure term is provided (required)
+    if (term && typeof term === 'string') {
+      // Ensure parameters are provided (required)
+      if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+        const baseUrl = `${this.behavioralV2Url}search_result_click?`;
+        const {
+          customer_id,
+          item_id = customer_id,
+          name,
+          item_name = name,
+          variation_id,
+          result_id,
+          result_count,
+          result_page,
+          result_position_on_page,
+          num_results_per_page,
+          selected_filters,
+          section,
+        } = parameters;
+        const bodyParams = {
+          item_name,
+          item_id,
+          variation_id,
+          result_id,
+          result_count,
+          result_page,
+          result_position_on_page,
+          num_results_per_page,
+          selected_filters,
+          section,
+          search_term: term,
+        };
+        const queryParams = {};
+
+        if (section) {
+          queryParams.section = section;
+        }
+
+        const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+        const requestMethod = 'POST';
+        const requestBody = applyParams(bodyParams, {
+          ...this.options,
+          requestMethod,
+        });
+        this.requests.queue(
+          requestURL,
+          requestMethod,
+          requestBody,
+          networkParameters,
+        );
+        this.requests.send();
+        return true;
+      }
+
+      this.requests.send();
+
+      return new Error('parameters are required of type object');
+    }
+
+    this.requests.send();
+
+    return new Error('term is a required parameter of type string');
+  }
+
+  /**
+   * Send click through event to API
    *
    * @function trackSearchResultClick
    * @param {string} term - Search results query term
@@ -442,8 +858,8 @@ class Tracker {
           customer_id,
           variation_id,
           result_id,
-          item_is_convertible,
           section,
+          item_is_convertible,
         } = parameters;
 
         // Ensure support for both item_name and name as parameters
