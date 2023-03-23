@@ -1229,6 +1229,429 @@ class Tracker {
   }
 
   /**
+   * Send quiz results loaded event to API
+   *
+   * @function trackQuizResultsLoaded
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.quiz_id - Quiz identifier
+   * @param {string} parameters.quiz_version_id - Quiz version identifier
+   * @param {string} parameters.quiz_session_id - Quiz session identifier associated with this conversion event
+   * @param {string} parameters.url - Current page url
+   * @param {string} [parameters.section='Products'] - Index section
+   * @param {number} [parameters.result_count] - Total number of results
+   * @param {number} [parameters.result_page] - The page of the results
+   * @param {string} [parameters.result_id] - Quiz result identifier (returned in response from Constructor)
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User viewed a quiz results page
+   * @example
+   * constructorio.tracker.trackQuizResultsLoaded(
+   *     {
+   *         quiz_id: 'coffee-quiz',
+   *         quiz_version_id: '1231244',
+   *         quiz_session_id: '3123',
+   *         url: 'www.example.com',
+   *         result_count: 167,
+   *     },
+   * );
+   */
+  trackQuizResultsLoaded(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/quiz_result_load?`;
+      const {
+        quiz_id,
+        quiz_version_id,
+        quiz_session_id,
+        url,
+        section = 'Products',
+        result_count,
+        result_id,
+        result_page,
+      } = parameters;
+      const queryParams = {};
+      const bodyParams = {};
+
+      if (typeof quiz_id !== 'string') {
+        return new Error('"quiz_id" is a required parameter of type string');
+      }
+
+      if (typeof quiz_version_id !== 'string') {
+        return new Error('"quiz_version_id" is a required parameter of type string');
+      }
+
+      if (typeof quiz_session_id !== 'string') {
+        return new Error('"quiz_session_id" is a required parameter of type string');
+      }
+
+      if (typeof url !== 'string') {
+        return new Error('"url" is a required parameter of type string');
+      }
+
+      bodyParams.quiz_id = quiz_id;
+      bodyParams.quiz_version_id = quiz_version_id;
+      bodyParams.quiz_session_id = quiz_session_id;
+      bodyParams.url = url;
+
+      if (!helpers.isNil(section)) {
+        if (typeof section !== 'string') {
+          return new Error('"section" must be a string');
+        }
+        queryParams.section = section;
+        bodyParams.section = section;
+      }
+
+      if (!helpers.isNil(result_count)) {
+        if (typeof result_count !== 'number') {
+          return new Error('"result_count" must be a number');
+        }
+        bodyParams.result_count = result_count;
+      }
+
+      if (!helpers.isNil(result_id)) {
+        if (typeof result_id !== 'string') {
+          return new Error('"result_id" must be a string');
+        }
+        bodyParams.result_id = result_id;
+      }
+
+      if (!helpers.isNil(result_page)) {
+        if (typeof result_page !== 'number') {
+          return new Error('"result_page" must be a number');
+        }
+        bodyParams.result_page = result_page;
+      }
+
+      bodyParams.action_class = 'result_load';
+
+      const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
+
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send quiz result click event to API
+   *
+   * @function trackQuizResultClick
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.quiz_id - Quiz identifier
+   * @param {string} parameters.quiz_version_id - Quiz version identifier
+   * @param {string} parameters.quiz_session_id - Quiz session identifier associated with this conversion event
+   * @param {string} [parameters.item_id] - Product item unique identifier (Either item_id or item_name is required)
+   * @param {string} [parameters.item_name] - Product item name
+   * @param {string} [parameters.section='Products'] - Index section
+   * @param {number} [parameters.result_count] - Total number of results
+   * @param {number} [parameters.result_page] - The page of the results
+   * @param {string} [parameters.result_id] - Quiz result identifier (returned in response from Constructor)
+   * @param {number} [parameters.result_position_on_page] - Position of clicked item
+   * @param {number} [parameters.num_results_per_page] - Number of results shown
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User viewed a quiz results page
+   * @example
+   * constructorio.tracker.trackQuizResultClick(
+   *     {
+   *         quiz_id: 'coffee-quiz',
+   *         quiz_version_id: '1231244',
+   *         quiz_session_id: '123',
+   *         item_id: '123',
+   *         item_name: 'espresso'
+   *     },
+   * );
+   */
+  // eslint-disable-next-line complexity
+  trackQuizResultClick(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/quiz_result_click?`;
+      const {
+        quiz_id,
+        quiz_version_id,
+        quiz_session_id,
+        item_id,
+        item_name,
+        result_count,
+        result_id,
+        result_page,
+        num_results_per_page,
+        result_position_on_page,
+        section = 'Products',
+      } = parameters;
+
+      const queryParams = {};
+      const bodyParams = {};
+
+      // Ensure required parameters provided
+      if (typeof quiz_id !== 'string') {
+        return new Error('"quiz_id" is a required parameter of type string');
+      }
+
+      if (typeof quiz_version_id !== 'string') {
+        return new Error('"quiz_version_id" is a required parameter of type string');
+      }
+
+      if (typeof quiz_session_id !== 'string') {
+        return new Error('"quiz_session_id" is a required parameter of type string');
+      }
+
+      if (typeof item_id !== 'string' && typeof item_name !== 'string') {
+        return new Error('"item_id" or "item_name" is a required parameter of type string');
+      }
+
+      bodyParams.quiz_id = quiz_id;
+      bodyParams.quiz_version_id = quiz_version_id;
+      bodyParams.quiz_session_id = quiz_session_id;
+
+      if (!helpers.isNil(item_id)) {
+        if (typeof item_id !== 'string') {
+          return new Error('"item_id" must be a string');
+        }
+        bodyParams.item_id = item_id;
+      }
+
+      if (!helpers.isNil(item_name)) {
+        if (typeof item_name !== 'string') {
+          return new Error('"item_name" must be a string');
+        }
+        bodyParams.item_name = item_name;
+      }
+
+      if (!helpers.isNil(section)) {
+        if (typeof section !== 'string') {
+          return new Error('"section" must be a string');
+        }
+        queryParams.section = section;
+      }
+
+      if (!helpers.isNil(result_count)) {
+        if (typeof result_count !== 'number') {
+          return new Error('"result_count" must be a number');
+        }
+        bodyParams.result_count = result_count;
+      }
+
+      if (!helpers.isNil(result_id)) {
+        if (typeof result_id !== 'string') {
+          return new Error('"result_id" must be a string');
+        }
+        bodyParams.result_id = result_id;
+      }
+
+      if (!helpers.isNil(result_page)) {
+        if (typeof result_page !== 'number') {
+          return new Error('"result_page" must be a number');
+        }
+        bodyParams.result_page = result_page;
+      }
+
+      if (!helpers.isNil(num_results_per_page)) {
+        if (typeof num_results_per_page !== 'number') {
+          return new Error('"num_results_per_page" must be a number');
+        }
+        bodyParams.num_results_per_page = num_results_per_page;
+      }
+
+      if (!helpers.isNil(result_position_on_page)) {
+        if (typeof result_position_on_page !== 'number') {
+          return new Error('"result_position_on_page" must be a number');
+        }
+        bodyParams.result_position_on_page = result_position_on_page;
+      }
+
+      bodyParams.action_class = 'result_click';
+
+      const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
+
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send quiz conversion event to API
+   *
+   * @function trackQuizConversion
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.quiz_id - Quiz identifier
+   * @param {string} parameters.quiz_version_id - Quiz version identifier
+   * @param {string} parameters.quiz_session_id - Quiz session identifier associated with this conversion event
+   * @param {string} [parameters.item_id] - Product item unique identifier (Either item_id or item_name is required)
+   * @param {string} [parameters.item_name] - Product item name
+   * @param {string} [parameters.variation_id] - Product item variation unique identifier
+   * @param {string} [parameters.revenue] - Sale price if available, otherwise the regular (retail) price of item
+   * @param {string} [parameters.section='Products'] - Index section
+   * @param {string} [parameters.type='add_to_cart'] - Conversion type
+   * @param {boolean} [parameters.is_custom_type] - Specify if type is custom conversion type
+   * @param {string} [parameters.display_name] - Display name for the custom conversion type
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User viewed a quiz results page
+   * @example
+   * constructorio.tracker.trackQuizConversion(
+   *     {
+   *         quiz_id: 'coffee-quiz',
+   *         quiz_version_id: '1231244',
+   *         quiz_session_id: '3123',
+   *         item_name: 'espresso',
+   *         variation_id: '167',
+   *         type: 'add_to_cart",
+   *         revenue: '1.0"
+   *     },
+   * );
+   */
+  // eslint-disable-next-line complexity
+  trackQuizConversion(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/quiz_conversion?`;
+      const {
+        quiz_id,
+        quiz_version_id,
+        quiz_session_id,
+        item_id,
+        item_name,
+        variation_id,
+        revenue,
+        section = 'Products',
+        type,
+        is_custom_type,
+        display_name,
+      } = parameters;
+
+      const queryParams = {};
+      const bodyParams = {};
+
+      // Ensure required parameters provided
+      if (typeof quiz_id !== 'string') {
+        return new Error('"quiz_id" is a required parameter of type string');
+      }
+
+      if (typeof quiz_version_id !== 'string') {
+        return new Error('"quiz_version_id" is a required parameter of type string');
+      }
+
+      if (typeof quiz_session_id !== 'string') {
+        return new Error('"quiz_session_id" is a required parameter of type string');
+      }
+
+      if (typeof item_id !== 'string' && typeof item_name !== 'string') {
+        return new Error('"item_id" or "item_name" is a required parameter of type string');
+      }
+
+      bodyParams.quiz_id = quiz_id;
+      bodyParams.quiz_version_id = quiz_version_id;
+      bodyParams.quiz_session_id = quiz_session_id;
+
+      if (!helpers.isNil(item_id)) {
+        if (typeof item_id !== 'string') {
+          return new Error('"item_id" must be a string');
+        }
+        bodyParams.item_id = item_id;
+      }
+
+      if (!helpers.isNil(item_name)) {
+        if (typeof item_name !== 'string') {
+          return new Error('"item_name" must be a string');
+        }
+        bodyParams.item_name = item_name;
+      }
+
+      if (!helpers.isNil(variation_id)) {
+        if (typeof variation_id !== 'string') {
+          return new Error('"variation_id" must be a string');
+        }
+        bodyParams.variation_id = variation_id;
+      }
+
+      if (!helpers.isNil(revenue)) {
+        if (typeof revenue !== 'string') {
+          return new Error('"revenue" must be a string');
+        }
+        bodyParams.revenue = revenue;
+      }
+
+      if (!helpers.isNil(section)) {
+        if (typeof section !== 'string') {
+          return new Error('"section" must be a string');
+        }
+        bodyParams.section = section;
+      }
+
+      if (!helpers.isNil(type)) {
+        if (typeof type !== 'string') {
+          return new Error('"type" must be a string');
+        }
+        bodyParams.type = type;
+      }
+
+      if (!helpers.isNil(is_custom_type)) {
+        if (typeof is_custom_type !== 'boolean') {
+          return new Error('"is_custom_type" must be a boolean');
+        }
+        bodyParams.is_custom_type = is_custom_type;
+      }
+
+      if (!helpers.isNil(display_name)) {
+        if (typeof display_name !== 'string') {
+          return new Error('"display_name" must be a string');
+        }
+        bodyParams.display_name = display_name;
+      }
+
+      bodyParams.action_class = 'conversion';
+
+      const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
+
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
    * Subscribe to success or error messages emitted by tracking requests
    *
    * @function on
