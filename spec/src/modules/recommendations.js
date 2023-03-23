@@ -21,7 +21,7 @@ const skipNetworkTimeoutTests = process.env.SKIP_NETWORK_TIMEOUT_TESTS === 'true
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 const timeoutRejectionMessage = bundled ? 'Aborted' : 'The user aborted a request.';
 
-describe.only(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
+describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
   const jsdomOptions = { url: 'http://localhost' };
   let fetchSpy;
   let cleanup;
