@@ -1250,7 +1250,7 @@ class Tracker {
    *     {
    *         quiz_id: 'coffee-quiz',
    *         quiz_version_id: '1231244',
-   *         quiz_session_id,
+   *         quiz_session_id: '3123',
    *         url: 'www.example.com',
    *         result_count: 167,
    *     },
@@ -1360,7 +1360,7 @@ class Tracker {
    * @param {number} [parameters.result_page] - The page of the results
    * @param {string} [parameters.result_id] - Quiz result identifier (returned in response from Constructor)
    * @param {number} [parameters.result_position_on_page] - Position of clicked item
-   * @param {number} [parameters.num_results_per_page] - Position of clicked item
+   * @param {number} [parameters.num_results_per_page] - Number of results shown
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -1527,7 +1527,6 @@ class Tracker {
    *         variation_id: '167',
    *         type: 'add_to_cart",
    *         revenue: '1.0"
-   *
    *     },
    * );
    */
