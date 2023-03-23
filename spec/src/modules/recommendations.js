@@ -21,7 +21,7 @@ const skipNetworkTimeoutTests = process.env.SKIP_NETWORK_TIMEOUT_TESTS === 'true
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 const timeoutRejectionMessage = bundled ? 'Aborted' : 'The user aborted a request.';
 
-describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
+describe.only(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
   const jsdomOptions = { url: 'http://localhost' };
   let fetchSpy;
   let cleanup;
@@ -125,7 +125,8 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid filters for filtered items strategy pod', (done) => {
-      const filters = { keywords: 'battery-powered' };
+      const filters = { keywords: ['battery-powered'] };
+      const urlParamFilters = { keywords: 'battery-powered' };
       const { recommendations } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -142,13 +143,14 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
         expect(res.response).to.have.property('pod');
         expect(res.response.pod).to.have.property('id').to.equal(filteredItemsRecommendationsPodId);
         expect(res.response.pod).to.have.property('display_name');
-        expect(requestedUrlParams).to.have.property('filters').to.deep.equal(filters);
+        expect(requestedUrlParams).to.have.property('filters').to.deep.equal(urlParamFilters);
         done();
       });
     });
 
     it('Should return a response with valid filters and item id for filtered items strategy pod', (done) => {
-      const filters = { keywords: 'battery-powered' };
+      const filters = { keywords: ['battery-powered'] };
+      const urlParamFilters = { keywords: 'battery-powered' };
       const { recommendations } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -169,7 +171,7 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
         expect(res.response).to.have.property('pod');
         expect(res.response.pod).to.have.property('id').to.equal(filteredItemsRecommendationsPodId);
         expect(res.response.pod).to.have.property('display_name');
-        expect(requestedUrlParams).to.have.property('filters').to.deep.equal(filters);
+        expect(requestedUrlParams).to.have.property('filters').to.deep.equal(urlParamFilters);
         expect(requestedUrlParams).to.have.property('item_id').to.equal(itemId);
         done();
       });
