@@ -1,5 +1,16 @@
 import { Nullable } from './index.d';
-import { ConstructorClientOptions, NetworkParameters } from '.';
+import {
+  ConstructorClientOptions,
+  Facet,
+  Feature,
+  Group,
+  NetworkParameters,
+  RequestFeature,
+  RequestFeatureVariant,
+  SortOption,
+  FilterExpression,
+  ResultSources,
+} from '.';
 
 export default Quizzes;
 
@@ -7,6 +18,13 @@ export interface QuizzesParameters {
   section?: string;
   answers?: any[];
   versionId?: string;
+}
+
+export interface QuizzesResultsParameters extends QuizzesParameters {
+  answers: any[];
+  page?: number;
+  resultsPerPage?: number;
+  filters?: Record<string, any>;
 }
 
 declare class Quizzes {
@@ -22,7 +40,7 @@ declare class Quizzes {
 
   getQuizResults(
     id: string,
-    parameters?: QuizzesParameters,
+    parameters?: QuizzesResultsParameters,
     networkParameters?: NetworkParameters
   ): Promise<QuizResultsResponse>;
 }
@@ -33,9 +51,47 @@ export interface NextQuestionResponse extends Record<string, any> {
   is_last_question?: boolean;
   version_id?: string;
 }
+
 export interface QuizResultsResponse extends Record<string, any> {
-  result: Partial<QuizResult>;
-  version_id?: string;
+  request?: {
+    filters?: Record<string, any>;
+    fmt_options: Record<string, any>;
+    num_results_per_page: number;
+    page: number;
+    section: string;
+    sort_by: string;
+    sort_order: string;
+    features: Partial<RequestFeature>;
+    feature_variants: Partial<RequestFeatureVariant>;
+    collection_filter_expression: FilterExpression;
+    term: string;
+  };
+  response?: {
+    result_sources: Partial<ResultSources>;
+    facets: Partial<Facet>[];
+    groups: Partial<Group>[];
+    results: Partial<QuizResultData>[];
+    sort_options: Partial<SortOption>[];
+    refined_content: Record<string, any>[];
+    total_num_results: number;
+    features: Partial<Feature>[];
+  };
+  result_id?: string;
+  version_id: string;
+  quiz_session_id: string;
+  quiz_id: string;
+}
+
+export interface QuizResultData extends Record<string, any> {
+  matched_terms: string[];
+  data: {
+    id: string;
+    [key: string]: any;
+  };
+  value: string;
+  is_slotted: false;
+  labels: Record<string, any>;
+  variations: Record<string, any>[];
 }
 
 export type Question = SelectQuestion | OpenQuestion | CoverQuestion
