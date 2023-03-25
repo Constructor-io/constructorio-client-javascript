@@ -229,10 +229,13 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       return quizzes.getQuizResults(validQuizId, { answers: validAnswers }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        expect(res).to.have.property('result').to.be.an('object');
-        expect(res.result).to.have.property('results_url').to.be.an('string');
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
         expect(res).to.have.property('version_id').to.be.an('string');
+        expect(res).to.have.property('quiz_id').to.be.an('string');
         expect(fetchSpy).to.have.been.called;
+        expect(res.response).to.have.property('results').to.be.an('array');
         expect(requestedUrlParams).to.have.property('key');
         expect(requestedUrlParams).to.have.property('i');
         expect(requestedUrlParams).to.have.property('s');
@@ -251,9 +254,12 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       return quizzes.getQuizResults(validQuizId, { answers: validAnswers, section }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        expect(res).to.have.property('result').to.be.an('object');
-        expect(res.result).to.have.property('results_url').to.be.an('string');
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
         expect(res).to.have.property('version_id').to.be.an('string');
+        expect(res).to.have.property('quiz_id').to.be.an('string');
+        expect(fetchSpy).to.have.been.called;
         expect(requestedUrlParams).to.have.property('section').to.equal(section);
       });
     });
@@ -268,9 +274,12 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       return quizzes.getQuizResults(validQuizId, { answers: validAnswers, versionId }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        expect(res).to.have.property('result').to.be.an('object');
-        expect(res.result).to.have.property('results_url').to.be.an('string');
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
         expect(res).to.have.property('version_id').to.be.an('string');
+        expect(res).to.have.property('quiz_id').to.be.an('string');
+        expect(fetchSpy).to.have.been.called;
         expect(requestedUrlParams).to.have.property('version_id').to.equal(versionId);
       });
     });
@@ -286,9 +295,12 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       return quizzes.getQuizResults(validQuizId, { answers: validAnswers }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        expect(res).to.have.property('result').to.be.an('object');
-        expect(res.result).to.have.property('results_url').to.be.an('string');
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
         expect(res).to.have.property('version_id').to.be.an('string');
+        expect(res).to.have.property('quiz_id').to.be.an('string');
+        expect(fetchSpy).to.have.been.called;
         expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
       });
     });
@@ -304,9 +316,12 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       return quizzes.getQuizResults(validQuizId, { answers: validAnswers }).then((res) => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        expect(res).to.have.property('result').to.be.an('object');
-        expect(res.result).to.have.property('results_url').to.be.an('string');
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
         expect(res).to.have.property('version_id').to.be.an('string');
+        expect(res).to.have.property('quiz_id').to.be.an('string');
+        expect(fetchSpy).to.have.been.called;
         expect(requestedUrlParams).to.have.property('us').to.deep.equal(segments);
       });
     });

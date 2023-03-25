@@ -35,7 +35,7 @@ function createQuizUrl(quizId, parameters, options, path) {
     throw new Error('quizId is a required parameter of type string');
   }
 
-  if (path === 'finalize' && (typeof parameters.answers !== 'object' || !Array.isArray(parameters.answers) || parameters.answers.length === 0)) {
+  if (path === 'results' && (typeof parameters.answers !== 'object' || !Array.isArray(parameters.answers) || parameters.answers.length === 0)) {
     throw new Error('answers is a required parameter of type array');
   }
 
