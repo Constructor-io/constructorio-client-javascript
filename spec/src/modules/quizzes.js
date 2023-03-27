@@ -326,7 +326,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       });
     });
 
-    it('Should return a result given valid API key, answers and page parameters', () => {
+    it('Should return a result given valid API key, answers, and page parameters', () => {
       const page = 1;
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
@@ -346,7 +346,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       });
     });
 
-    it('Should return a result given valid API key, answers and resultsPerPage parameters', () => {
+    it('Should return a result given valid API key, answers, and resultsPerPage parameters', () => {
       const resultsPerPage = 2;
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
@@ -366,7 +366,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       });
     });
 
-    it('Should return a result given valid API key, answers and resultsPerPage parameters', () => {
+    it('Should return a result given valid API key, answers, and resultsPerPage parameters', () => {
       const filters = { Color: ['Blue'] };
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
