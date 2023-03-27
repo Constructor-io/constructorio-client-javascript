@@ -219,7 +219,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
   });
 
-  describe.only('getQuizResults', () => {
+  describe('getQuizResults', () => {
     it('Should return result given valid API key and answers parameter', () => {
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
