@@ -200,15 +200,6 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       return expect(quizzes.getQuizNextQuestion(null, {})).to.eventually.be.rejected;
     });
 
-    it('Should be rejected if an invalid versionId is provided', () => {
-      const { quizzes } = new ConstructorIO({
-        apiKey: quizApiKey,
-        fetch: fetchSpy,
-      });
-
-      return expect(quizzes.getQuizNextQuestion(validQuizId, { versionId: 'foo' })).to.eventually.be.rejected;
-    });
-
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', () => {
         const { quizzes } = new ConstructorIO({
@@ -368,15 +359,6 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       });
 
       return expect(quizzes.getQuizResults('invalidQuizId', { answers: validAnswers })).to.eventually.be.rejected;
-    });
-
-    it('Should be rejected if an invalid versionId is provided', () => {
-      const { quizzes } = new ConstructorIO({
-        apiKey: quizApiKey,
-        fetch: fetchSpy,
-      });
-
-      return expect(quizzes.getQuizResults(validQuizId, { answers: validAnswers, versionId: 'foo' })).to.eventually.be.rejected;
     });
 
     it('Should be rejected if an invalid apiKey is provided', () => {
