@@ -6,7 +6,8 @@ export default Quizzes;
 export interface QuizzesParameters {
   section?: string;
   answers?: any[];
-  versionId?: string;
+  quizVersionId?: string;
+  quizSessionId?: string;
 }
 
 declare class Quizzes {
@@ -32,10 +33,14 @@ export interface NextQuestionResponse extends Record<string, any> {
   next_question: Question;
   is_last_question?: boolean;
   version_id?: string;
+  quiz_id?: string;
+  quiz_session_id?: string;
 }
 export interface QuizResultsResponse extends Record<string, any> {
   result: Partial<QuizResult>;
   version_id?: string;
+  quiz_id?: string;
+  quiz_session_id?: string;
 }
 
 export type Question = SelectQuestion | OpenQuestion | CoverQuestion

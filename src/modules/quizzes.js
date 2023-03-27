@@ -40,16 +40,21 @@ function createQuizUrl(quizId, parameters, options, path) {
   }
 
   if (parameters) {
-    const { section, answers, versionId } = parameters;
+    const { section, answers, versionId, quizSessionId, quizVersionId = versionId } = parameters;
 
     // Pull section from parameters
     if (section) {
       queryParams.section = section;
     }
 
-    // Pull version_id from parameters
-    if (versionId) {
-      queryParams.version_id = versionId;
+    // Pull quiz_version_id from parameters
+    if (quizVersionId) {
+      queryParams.quiz_version_id = quizVersionId;
+    }
+
+    // Pull quiz_session_id from parameters
+    if (quizSessionId) {
+      queryParams.quiz_session_id = quizSessionId;
     }
 
     // Pull a (answers) from parameters and transform
@@ -88,7 +93,8 @@ class Quizzes {
    * @param {string} [parameters] - Additional parameters to refine result set
    * @param {string} [parameters.section] - Product catalog section
    * @param {array} [parameters.answers] - An array of answers in the format [[1,2],[1]]
-   * @param {string} [parameters.versionId] - Version identifier for the quiz
+   * @param {string} [parameters.quizVersionId] - Version identifier for the quiz
+   * @param {string} [parameters.quizSessionId] - Session identifier for the quiz
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
@@ -97,7 +103,8 @@ class Quizzes {
    * constructorio.quizzes.getQuizNextQuestion('quizId', {
    *    answers: [[1,2],[1]],
    *    section: '123',
-   *    versionId: '123'
+   *    quizVersionId: '123',
+   *    quizSessionId: '1234',
    * });
    */
   getQuizNextQuestion(id, parameters, networkParameters = {}) {
@@ -143,7 +150,8 @@ class Quizzes {
    * @param {string} [parameters] - Additional parameters to refine result set
    * @param {string} [parameters.section] - Product catalog section
    * @param {array} [parameters.answers] - An array of answers in the format [[1,2],[1]]
-   * @param {string} [parameters.versionId] - Specific version identifier for the quiz
+   * @param {string} [parameters.quizVersionId] - Specific version identifier for the quiz
+   * @param {string} [parameters.quizSessionId] - Session identifier for the quiz
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
@@ -152,7 +160,8 @@ class Quizzes {
    * constructorio.quizzes.getQuizResults('quizId', {
    *    answers: [[1,2],[1]],
    *    section: '123',
-   *    versionId: '123'
+   *    quizVersionId: '123',
+   *    quizSessionId: '234'
    * });
    */
   getQuizResults(id, parameters, networkParameters = {}) {
