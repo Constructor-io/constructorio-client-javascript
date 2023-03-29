@@ -50,7 +50,7 @@ function createQuizUrl(quizId, parameters, options, path) {
     // Pull quiz_version_id from parameters
     if (quizVersionId) {
       queryParams.quiz_version_id = quizVersionId;
-    } 
+    }
 
     // Pull quiz_session_id from parameters
     if (quizSessionId) {
