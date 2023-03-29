@@ -186,8 +186,16 @@ export interface Item extends Record<string, any> {
   is_slotted: boolean;
   labels: Record<string, unknown>;
   matched_terms: string[];
-  data?: Record<string, any>;
+  data?: ItemData;
   section?: string;
+}
+
+export interface ItemData extends Record<string, any> {
+  url?: string;
+  id?: string;
+  image_url?: string;
+  group_ids?: string[];
+  facets?: Facet[];
 }
 
 export interface Product extends Item {
@@ -195,5 +203,8 @@ export interface Product extends Item {
 }
 
 export interface SearchSuggestion extends Item {
+  data?: {
+    total_num_results?: number
+  } & ItemData;
   section: 'Search Suggestions';
 }
