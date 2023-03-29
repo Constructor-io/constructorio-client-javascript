@@ -21,7 +21,7 @@ const bundled = process.env.BUNDLED === 'true';
 const skipNetworkTimeoutTests = process.env.SKIP_NETWORK_TIMEOUT_TESTS === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 
-describe.only(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
+describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
   const validQuizId = 'test-quiz';
   const validAnswers = [[1], [1, 2], ['seen']];
   const jsdomOptions = { url: 'http://localhost' };
