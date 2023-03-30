@@ -366,7 +366,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       });
     });
 
-    it('Should return a result given valid API key, answers, and resultsPerPage parameters', () => {
+    it('Should return a result given valid API key, answers, and filters parameters', () => {
       const filters = { Color: ['Blue'] };
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
