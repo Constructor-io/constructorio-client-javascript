@@ -41,6 +41,9 @@
     "yoink",
     "searchandized",
     "searchandizing",
-    "Skippable"
+    "Skippable",
+    "reranker",
+    "rerank",
+    "atcs",
   ]
 }

@@ -35,12 +35,12 @@ function createQuizUrl(quizId, parameters, options, path) {
     throw new Error('quizId is a required parameter of type string');
   }
 
-  if (path === 'finalize' && (typeof parameters.answers !== 'object' || !Array.isArray(parameters.answers) || parameters.answers.length === 0)) {
+  if (path === 'results' && (typeof parameters.answers !== 'object' || !Array.isArray(parameters.answers) || parameters.answers.length === 0)) {
     throw new Error('answers is a required parameter of type array');
   }
 
   if (parameters) {
-    const { section, answers, versionId } = parameters;
+    const { section, answers, versionId, page, resultsPerPage, filters } = parameters;
 
     // Pull section from parameters
     if (section) {
@@ -55,6 +55,20 @@ function createQuizUrl(quizId, parameters, options, path) {
     // Pull a (answers) from parameters and transform
     if (answers) {
       answersParamString = `&${helpers.stringify({ a: answers.map((ans) => [...ans].join(',')) })}`;
+    }
+
+    // Pull page from parameters
+    if (!helpers.isNil(page)) {
+      queryParams.page = page;
+    }
+
+    // Pull results per page from parameters
+    if (!helpers.isNil(resultsPerPage)) {
+      queryParams.num_results_per_page = resultsPerPage;
+    }
+
+    if (filters) {
+      queryParams.filters = filters;
     }
   }
 
@@ -140,10 +154,13 @@ class Quizzes {
    * @function getQuizResults
    * @description Retrieve quiz recommendation and filter expression from Constructor.io API
    * @param {string} id - The identifier of the quiz
-   * @param {string} [parameters] - Additional parameters to refine result set
+   * @param {string} parameters - Additional parameters to refine result set
+   * @param {array} parameters.answers - An array of answers in the format [[1,2],[1]]
    * @param {string} [parameters.section] - Product catalog section
-   * @param {array} [parameters.answers] - An array of answers in the format [[1,2],[1]]
    * @param {string} [parameters.versionId] - Specific version identifier for the quiz
+   * @param {number} [parameters.page] - The page number of the results
+   * @param {number} [parameters.resultsPerPage] - The number of results per page to return
+   * @param {object} [parameters.filters] - Key / value mapping (dictionary) of filters used to refine results
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
@@ -162,7 +179,7 @@ class Quizzes {
     const { signal } = controller;
 
     try {
-      requestUrl = createQuizUrl(id, parameters, this.options, 'finalize');
+      requestUrl = createQuizUrl(id, parameters, this.options, 'results');
     } catch (e) {
       return Promise.reject(e);
     }
