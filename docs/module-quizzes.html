@@ -93,7 +93,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_quizzes.js.html">modules/quizzes.js</a>, <a href="modules_quizzes.js.html#line69">line 69</a>
+        <a href="modules_quizzes.js.html">modules/quizzes.js</a>, <a href="modules_quizzes.js.html#line83">line 83</a>
     </li></ul></dd>
     
 
@@ -216,7 +216,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_quizzes.js.html">modules/quizzes.js</a>, <a href="modules_quizzes.js.html#line82">line 82</a>
+        <a href="modules_quizzes.js.html">modules/quizzes.js</a>, <a href="modules_quizzes.js.html#line96">line 96</a>
     </li></ul></dd>
     
 
@@ -627,7 +627,7 @@
 
     
 
-    <h4 class="name" id="~getQuizResults"><span class="type-signature">(inner) </span>getQuizResults<span class="signature">(id, parameters<span class="signature-attributes">opt</span>, networkParameters<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id="~getQuizResults"><span class="type-signature">(inner) </span>getQuizResults<span class="signature">(id, parameters, networkParameters<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
 
     
 
@@ -670,7 +670,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_quizzes.js.html">modules/quizzes.js</a>, <a href="modules_quizzes.js.html#line137">line 137</a>
+        <a href="modules_quizzes.js.html">modules/quizzes.js</a>, <a href="modules_quizzes.js.html#line151">line 151</a>
     </li></ul></dd>
     
 
@@ -772,8 +772,6 @@
             
                 <td class="attributes">
                 
-                    &lt;optional><br>
-                
 
                 
 
@@ -808,6 +806,40 @@
     </thead>
 
     <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>answers</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>array</code></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                An array of answers in the format [[1,2],[1]]
+                
+            </td>
+        </tr>
+
     
 
         <tr>
@@ -848,42 +880,6 @@
 
         <tr>
             
-                <td class="name"><code>answers</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>array</code></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">
-                An array of answers in the format [[1,2],[1]]
-                
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
                 <td class="name"><code>versionId</code></td>
             
 
@@ -912,6 +908,114 @@
 
             <td class="description last">
                 Specific version identifier for the quiz
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>page</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>number</code></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                The page number of the results
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>resultsPerPage</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>number</code></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                The number of results per page to return
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>filters</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>object</code></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                Key / value mapping (dictionary) of filters used to refine results
                 
             </td>
         </tr>
@@ -1093,7 +1197,7 @@
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.10</a> on Thu Mar 23 2023 16:00:41 GMT-0700 (Pacific Daylight Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.10</a> on Mon Apr 03 2023 16:39:57 GMT-0400 (Eastern Daylight Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
