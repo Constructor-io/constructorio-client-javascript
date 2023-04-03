@@ -145,7 +145,7 @@ class Quizzes {
         return helpers.throwHttpErrorFromResponse(new Error(), response);
       })
       .then((json) => {
-        if (json.version_id) {
+        if (json.quiz_version_id) {
           this.eventDispatcher.queue('quizzes.getQuizNextQuestion.completed', json);
 
           return json;
@@ -205,7 +205,7 @@ class Quizzes {
         return helpers.throwHttpErrorFromResponse(new Error(), response);
       })
       .then((json) => {
-        if (json.version_id) {
+        if (json.quiz_version_id) {
           this.eventDispatcher.queue('quizzes.getQuizResults.completed', json);
 
           return json;
