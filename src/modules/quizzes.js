@@ -40,16 +40,21 @@ function createQuizUrl(quizId, parameters, options, path) {
   }
 
   if (parameters) {
-    const { section, answers, versionId, page, resultsPerPage, filters } = parameters;
+    const { section, answers, quizSessionId, quizVersionId, page, resultsPerPage, filters } = parameters;
 
     // Pull section from parameters
     if (section) {
       queryParams.section = section;
     }
 
-    // Pull version_id from parameters
-    if (versionId) {
-      queryParams.version_id = versionId;
+    // Pull quiz_version_id from parameters
+    if (quizVersionId) {
+      queryParams.quiz_version_id = quizVersionId;
+    }
+
+    // Pull quiz_session_id from parameters
+    if (quizSessionId) {
+      queryParams.quiz_session_id = quizSessionId;
     }
 
     // Pull a (answers) from parameters and transform
@@ -102,7 +107,8 @@ class Quizzes {
    * @param {string} [parameters] - Additional parameters to refine result set
    * @param {string} [parameters.section] - Product catalog section
    * @param {array} [parameters.answers] - An array of answers in the format [[1,2],[1]]
-   * @param {string} [parameters.versionId] - Version identifier for the quiz
+   * @param {string} [parameters.quizVersionId] - Version identifier for the quiz. Version ID will be returned with the first request and it should be passed with subsequent requests. More information can be found: https://docs.constructor.io/rest_api/quiz/using_quizzes/#quiz-versioning
+   * @param {string} [parameters.quizSessionId] - Session identifier for the quiz. Session ID will be returned with the first request and it should be passed with subsequent requests. More information can be found: https://docs.constructor.io/rest_api/quiz/using_quizzes/#quiz-sessions
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
@@ -111,7 +117,8 @@ class Quizzes {
    * constructorio.quizzes.getQuizNextQuestion('quizId', {
    *    answers: [[1,2],[1]],
    *    section: '123',
-   *    versionId: '123'
+   *    quizVersionId: '123',
+   *    quizSessionId: '1234',
    * });
    */
   getQuizNextQuestion(id, parameters, networkParameters = {}) {
@@ -138,7 +145,7 @@ class Quizzes {
         return helpers.throwHttpErrorFromResponse(new Error(), response);
       })
       .then((json) => {
-        if (json.version_id) {
+        if (json.quiz_version_id) {
           this.eventDispatcher.queue('quizzes.getQuizNextQuestion.completed', json);
 
           return json;
@@ -157,7 +164,8 @@ class Quizzes {
    * @param {string} parameters - Additional parameters to refine result set
    * @param {array} parameters.answers - An array of answers in the format [[1,2],[1]]
    * @param {string} [parameters.section] - Product catalog section
-   * @param {string} [parameters.versionId] - Specific version identifier for the quiz
+   * @param {string} [parameters.quizVersionId] - Version identifier for the quiz. Version ID will be returned with the first request and it should be passed with subsequent requests. More information can be found: https://docs.constructor.io/rest_api/quiz/using_quizzes/#quiz-versioning
+   * @param {string} [parameters.quizSessionId] - Session identifier for the quiz. Session ID will be returned with the first request and it should be passed with subsequent requests. More information can be found: https://docs.constructor.io/rest_api/quiz/using_quizzes/#quiz-sessions
    * @param {number} [parameters.page] - The page number of the results
    * @param {number} [parameters.resultsPerPage] - The number of results per page to return
    * @param {object} [parameters.filters] - Key / value mapping (dictionary) of filters used to refine results
@@ -169,7 +177,8 @@ class Quizzes {
    * constructorio.quizzes.getQuizResults('quizId', {
    *    answers: [[1,2],[1]],
    *    section: '123',
-   *    versionId: '123'
+   *    quizVersionId: '123',
+   *    quizSessionId: '234'
    * });
    */
   getQuizResults(id, parameters, networkParameters = {}) {
@@ -196,7 +205,7 @@ class Quizzes {
         return helpers.throwHttpErrorFromResponse(new Error(), response);
       })
       .then((json) => {
-        if (json.version_id) {
+        if (json.quiz_version_id) {
           this.eventDispatcher.queue('quizzes.getQuizResults.completed', json);
 
           return json;

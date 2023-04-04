@@ -17,7 +17,8 @@ export default Quizzes;
 export interface QuizzesParameters {
   section?: string;
   answers?: any[];
-  versionId?: string;
+  quizVersionId?: string;
+  quizSessionId?: string;
 }
 
 export interface QuizzesResultsParameters extends QuizzesParameters {
@@ -50,6 +51,8 @@ export interface NextQuestionResponse extends Record<string, any> {
   next_question: Question;
   is_last_question?: boolean;
   version_id?: string;
+  quiz_id?: string;
+  quiz_session_id?: string;
 }
 
 export interface QuizResultsResponse extends Record<string, any> {
@@ -77,7 +80,7 @@ export interface QuizResultsResponse extends Record<string, any> {
     features: Partial<Feature>[];
   };
   result_id?: string;
-  version_id: string;
+  quiz_version_id: string;
   quiz_session_id: string;
   quiz_id: string;
 }
