@@ -4,6 +4,7 @@ import {
   Facet,
   Feature,
   FilterExpression,
+  FmtOptions,
   Group,
   NetworkParameters,
   RequestFeature,
@@ -23,7 +24,7 @@ export interface IBrowseParameters {
   sortBy?: string;
   sortOrder?: string;
   section?: string;
-  fmtOptions?: Record<string, any>;
+  fmtOptions?: FmtOptions;
   preFilterExpression: FilterExpression;
   hiddenFields?: string[];
   hiddenFacets?: string[];
