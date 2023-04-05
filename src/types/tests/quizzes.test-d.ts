@@ -34,7 +34,9 @@ expectAssignable<NextQuestionResponse>(
         },
       ],
     },
-    version_id: '11db5ac7-67e1-4000-9000-414d8425cab3',
+    quiz_version_id: '6bfaa6d5-7272-466b-acd9-4bcf322a2f1e',
+    quiz_id: 'test-quiz',
+    quiz_session_id: '132feaa5-9968-4c5d-8605-d128747188d6',
     is_last_question: false,
   },
 );
@@ -54,7 +56,9 @@ expectAssignable<NextQuestionResponse>({
     },
     input_placeholder: 'Sample input placeholder',
   },
-  version_id: '11db5ac7-67e1-4000-9000-414d8425cab3',
+  quiz_version_id: '6bfaa6d5-7272-466b-acd9-4bcf322a2f1e',
+  quiz_id: 'test-quiz',
+  quiz_session_id: '132feaa5-9968-4c5d-8605-d128747188d6',
   is_last_question: false,
 });
 
@@ -264,6 +268,6 @@ expectAssignable<QuizResultsResponse>({
   },
   result_id: '4aeb42f7-d104-44bf-8f60-e674a633bf28',
   quiz_id: 'test-quiz',
-  version_id: 'e03210db-0cc6-459c-8f17-bf014c4f554d',
-  quiz_session_id: '5b7aedca-1ba0-497a-b05b-979548f00fca',
+  quiz_version_id: '6bfcb6d3-7272-466b-acd9-4bcf322f2f1e',
+  quiz_session_id: '163fefe3-2968-4c5d-8605-d128747188d6',
 });
