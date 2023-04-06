@@ -187,7 +187,6 @@ export interface Item extends Record<string, any> {
   labels: Record<string, unknown>;
   matched_terms: string[];
   data?: ItemData;
-  section?: string;
 }
 
 export interface ItemData extends Record<string, any> {
@@ -199,12 +198,10 @@ export interface ItemData extends Record<string, any> {
 }
 
 export interface Product extends Item {
-  section: 'Products';
 }
 
 export interface SearchSuggestion extends Item {
   data?: {
     total_num_results?: number
   } & ItemData;
-  section: 'Search Suggestions';
 }
