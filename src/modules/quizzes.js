@@ -58,7 +58,7 @@ function createQuizUrl(quizId, parameters, options, path) {
     }
 
     // Pull a (answers) from parameters and transform
-    if (answers) {
+    if (answers && answers.length) {
       answersParamString = `&${helpers.stringify({ a: answers.map((ans) => [...ans].join(',')) })}`;
     }
 
