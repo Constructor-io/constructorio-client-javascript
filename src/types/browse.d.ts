@@ -29,7 +29,7 @@ export interface IBrowseParameters {
   hiddenFields?: string[];
   hiddenFacets?: string[];
   variationsMap?: Record<string, any>;
-  qs?: Record<string, any>;
+  qsParam?: Record<string, any>;
 }
 
 declare class Browse {
