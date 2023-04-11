@@ -28,6 +28,7 @@ export interface SearchParameters {
   hiddenFields?: string[];
   hiddenFacets?: string[];
   variationsMap?: Record<string, any>;
+  qsParam?: Record<string, any>;
 }
 declare class Search {
   constructor(options: ConstructorClientOptions);
