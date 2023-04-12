@@ -48,7 +48,7 @@ declare class Browse {
 
   getBrowseResultsForItemIds(
     itemIds: string[],
-    parameters?: Omit<IBrowseParameters, 'preFilterExpression' | 'qs'>,
+    parameters?: Omit<IBrowseParameters, 'preFilterExpression' | 'qsParam'>,
     networkParameters?: NetworkParameters
   ): Promise<GetBrowseResultsForItemIdsResponse>;
 
