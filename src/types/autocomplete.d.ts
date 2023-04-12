@@ -1,5 +1,6 @@
 import {
   ConstructorClientOptions,
+  Item,
   NetworkParameters,
   RequestFeature,
   RequestFeatureVariant,
@@ -35,7 +36,7 @@ declare class Autocomplete {
  ********** */
 export interface AutocompleteResponse extends Record<string, any> {
   request: Partial<AutocompleteRequestType>;
-  sections: Record<string, Section>;
+  sections: Record<string, Item[]>;
   result_id: string;
 }
 
@@ -46,14 +47,4 @@ export interface AutocompleteRequestType extends Record<string, any> {
   features: Partial<RequestFeature>;
   feature_variants: Partial<RequestFeatureVariant>;
   searchandized_items: Record<string, any>;
-}
-
-export type Section = Partial<SectionItem>[];
-
-export interface SectionItem extends Record<string, any> {
-  data: Record<string, any>;
-  is_slotted: boolean;
-  labels: Record<string, any>;
-  matched_terms: string[];
-  value: string;
 }

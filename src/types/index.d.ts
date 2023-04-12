@@ -127,10 +127,10 @@ export interface FacetOption extends Record<string, any> {
 }
 
 export interface Group extends BaseGroup, Record<string, any> {
-  count: number;
-  data: Record<string, any>;
-  parents: BaseGroup[];
-  children: Group[];
+  count?: number;
+  data?: Record<string, any>;
+  parents?: BaseGroup[];
+  children?: Group[];
 }
 
 export interface Collection extends Record<string, any> {
@@ -178,3 +178,29 @@ export type FilterExpressionRange = {
 };
 
 export type FilterExpressionRangeValue = ['-inf' | number, 'inf' | number];
+
+export interface Item extends Record<string, any> {
+  value: string;
+  is_slotted: boolean;
+  labels: Record<string, unknown>;
+  matched_terms: string[];
+  data?: ItemData;
+}
+
+export interface ItemData extends Record<string, any> {
+  url?: string;
+  id?: string;
+  image_url?: string;
+  group_ids?: string[];
+  groups?: Group[]
+  facets?: Facet[];
+}
+
+export interface Product extends Item {
+}
+
+export interface SearchSuggestion extends Item {
+  data?: {
+    total_num_results?: number
+  } & ItemData;
+}
