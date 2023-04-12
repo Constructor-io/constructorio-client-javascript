@@ -60,7 +60,7 @@
     "eslint-plugin-import": "^2.25.2",
     "husky": "^7.0.4",
     "jsdoc": "^3.6.7",
-    "jsdom": "^16.5.0",
+    "jsdom": "^16.7.0",
     "license-checker": "^25.0.1",
     "lodash.clonedeep": "^4.5.0",
     "minami": "^1.2.3",
