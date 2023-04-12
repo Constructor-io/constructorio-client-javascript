@@ -132,10 +132,10 @@ export interface FacetOption extends Record<string, any> {
 }
 
 export interface Group extends BaseGroup, Record<string, any> {
-  count: number;
-  data: Record<string, any>;
-  parents: BaseGroup[];
-  children: Group[];
+  count?: number;
+  data?: Record<string, any>;
+  parents?: BaseGroup[];
+  children?: Group[];
 }
 
 export interface Collection extends Record<string, any> {
@@ -194,6 +194,7 @@ export interface ItemData extends Record<string, any> {
   id?: string;
   image_url?: string;
   group_ids?: string[];
+  groups?: Group[]
   facets?: Facet[];
 }
 
