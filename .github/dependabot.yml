@@ -1,0 +1,14 @@
+version: 2
+
+updates:
+  # Maintain dependencies for npm packages
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    # Disable version updates for npm dependencies
+    # This option has no impact on security updates, which have a separate, internal limit of ten open pull requests.
+    open-pull-requests-limit: 0
+    reviewers:
+      - "esezen" # Enes
+      - "jjl014" # Jimmy
