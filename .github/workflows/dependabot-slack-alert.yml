@@ -1,0 +1,28 @@
+name: Slack Notification on Dependabot Alerts
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '* * * * *'
+jobs:
+  check-dependabot-alerts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Dependabot alerts
+        uses: github/codeql-action/analyze@v1
+        with:
+          languages: all
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2.1.0
+        env:
+          SLACK_COLOR: '#36a64f'
+          SLACK_ICON: 'https://avatars.githubusercontent.com/u/46056186?s=200&v=4'
+          SLACK_USERNAME: 'Dependabot'
+          SLACK_TITLE: 'Dependabot alert found in {{github.repository}}'
+          SLACK_FIELDS: 'title,version,description'
+          SLACK_TITLE_LINK: 'https://github.com/{{github.repository}}/network/alerts'
+
+        with:
+          slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
