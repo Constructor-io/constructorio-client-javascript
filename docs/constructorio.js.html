@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>constructorio.js - Documentation</title>
-
+    
+    
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
@@ -23,8 +26,13 @@
 
 <label for="nav-trigger" class="overlay"></label>
 
-<nav>
-    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="ConstructorIO.html">ConstructorIO</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ConstructorIO.html#setClientOptions">setClientOptions</a></span></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-autocomplete.html">autocomplete</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-autocomplete.html#~getAutocompleteResults">getAutocompleteResults</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-browse.html">browse</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-browse.html#~getBrowseFacetOptions">getBrowseFacetOptions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-browse.html#~getBrowseFacets">getBrowseFacets</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-browse.html#~getBrowseGroups">getBrowseGroups</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-browse.html#~getBrowseResults">getBrowseResults</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-browse.html#~getBrowseResultsForItemIds">getBrowseResultsForItemIds</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-quizzes.html">quizzes</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-quizzes.html#~getQuizNextQuestion">getQuizNextQuestion</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-quizzes.html#~getQuizResults">getQuizResults</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-recommendations.html">recommendations</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-recommendations.html#~getRecommendations">getRecommendations</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-search.html">search</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-search.html#~getSearchResults">getSearchResults</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-search.html#~getVoiceSearchResults">getVoiceSearchResults</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-tracker.html">tracker</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~on">on</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackAutocompleteSelect">trackAutocompleteSelect</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackBrowseResultClick">trackBrowseResultClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackBrowseResultsLoaded">trackBrowseResultsLoaded</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackConversion">trackConversion</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackGenericResultClick">trackGenericResultClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackInputFocus">trackInputFocus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackItemDetailLoad">trackItemDetailLoad</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackPurchase">trackPurchase</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackQuizConversion">trackQuizConversion</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackQuizResultClick">trackQuizResultClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackQuizResultsLoaded">trackQuizResultsLoaded</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackRecommendationClick">trackRecommendationClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackRecommendationView">trackRecommendationView</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackSearchResultClick">trackSearchResultClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackSearchResultsLoaded">trackSearchResultsLoaded</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackSearchSubmit">trackSearchSubmit</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackSessionStart">trackSessionStart</a></span></li>
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ConstructorIO.html">ConstructorIO</a><ul class='methods'><li data-type='method'><a href="ConstructorIO.html#setClientOptions">setClientOptions</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-autocomplete.html">autocomplete</a><ul class='methods'><li data-type='method'><a href="module-autocomplete.html#~getAutocompleteResults">getAutocompleteResults</a></li></ul></li><li><a href="module-browse.html">browse</a><ul class='methods'><li data-type='method'><a href="module-browse.html#~getBrowseFacetOptions">getBrowseFacetOptions</a></li><li data-type='method'><a href="module-browse.html#~getBrowseFacets">getBrowseFacets</a></li><li data-type='method'><a href="module-browse.html#~getBrowseGroups">getBrowseGroups</a></li><li data-type='method'><a href="module-browse.html#~getBrowseResults">getBrowseResults</a></li><li data-type='method'><a href="module-browse.html#~getBrowseResultsForItemIds">getBrowseResultsForItemIds</a></li></ul></li><li><a href="module-quizzes.html">quizzes</a><ul class='methods'><li data-type='method'><a href="module-quizzes.html#~getQuizNextQuestion">getQuizNextQuestion</a></li><li data-type='method'><a href="module-quizzes.html#~getQuizResults">getQuizResults</a></li></ul></li><li><a href="module-recommendations.html">recommendations</a><ul class='methods'><li data-type='method'><a href="module-recommendations.html#~getRecommendations">getRecommendations</a></li></ul></li><li><a href="module-search.html">search</a><ul class='methods'><li data-type='method'><a href="module-search.html#~getSearchResults">getSearchResults</a></li><li data-type='method'><a href="module-search.html#~getVoiceSearchResults">getVoiceSearchResults</a></li></ul></li><li><a href="module-tracker.html">tracker</a><ul class='methods'><li data-type='method'><a href="module-tracker.html#~on">on</a></li><li data-type='method'><a href="module-tracker.html#~trackAutocompleteSelect">trackAutocompleteSelect</a></li><li data-type='method'><a href="module-tracker.html#~trackBrowseResultClick">trackBrowseResultClick</a></li><li data-type='method'><a href="module-tracker.html#~trackBrowseResultsLoaded">trackBrowseResultsLoaded</a></li><li data-type='method'><a href="module-tracker.html#~trackConversion">trackConversion</a></li><li data-type='method'><a href="module-tracker.html#~trackGenericResultClick">trackGenericResultClick</a></li><li data-type='method'><a href="module-tracker.html#~trackInputFocus">trackInputFocus</a></li><li data-type='method'><a href="module-tracker.html#~trackItemDetailLoad">trackItemDetailLoad</a></li><li data-type='method'><a href="module-tracker.html#~trackPurchase">trackPurchase</a></li><li data-type='method'><a href="module-tracker.html#~trackQuizConversion">trackQuizConversion</a></li><li data-type='method'><a href="module-tracker.html#~trackQuizResultClick">trackQuizResultClick</a></li><li data-type='method'><a href="module-tracker.html#~trackQuizResultsLoaded">trackQuizResultsLoaded</a></li><li data-type='method'><a href="module-tracker.html#~trackRecommendationClick">trackRecommendationClick</a></li><li data-type='method'><a href="module-tracker.html#~trackRecommendationView">trackRecommendationView</a></li><li data-type='method'><a href="module-tracker.html#~trackSearchResultClick">trackSearchResultClick</a></li><li data-type='method'><a href="module-tracker.html#~trackSearchResultsLoaded">trackSearchResultsLoaded</a></li><li data-type='method'><a href="module-tracker.html#~trackSearchSubmit">trackSearchSubmit</a></li><li data-type='method'><a href="module-tracker.html#~trackSessionStart">trackSessionStart</a></li></ul></li></ul>
+    
 </nav>
 
 <div id="main">
@@ -224,15 +232,23 @@ module.exports = ConstructorIO;
 
 
 
+    
+    
 </div>
 
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Wed Apr 12 2023 15:53:34 GMT-0400 (Eastern Daylight Time) using the Minami theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Tue Apr 25 2023 11:18:06 GMT-0700 (Pacific Daylight Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
 <script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+
 </body>
 </html>

@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>ConstructorIO - Documentation</title>
-
+    
+    
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
@@ -23,8 +26,13 @@
 
 <label for="nav-trigger" class="overlay"></label>
 
-<nav>
-    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="ConstructorIO.html">ConstructorIO</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ConstructorIO.html#setClientOptions">setClientOptions</a></span></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-autocomplete.html">autocomplete</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-autocomplete.html#~getAutocompleteResults">getAutocompleteResults</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-browse.html">browse</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-browse.html#~getBrowseFacetOptions">getBrowseFacetOptions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-browse.html#~getBrowseFacets">getBrowseFacets</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-browse.html#~getBrowseGroups">getBrowseGroups</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-browse.html#~getBrowseResults">getBrowseResults</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-browse.html#~getBrowseResultsForItemIds">getBrowseResultsForItemIds</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-quizzes.html">quizzes</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-quizzes.html#~getQuizNextQuestion">getQuizNextQuestion</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-quizzes.html#~getQuizResults">getQuizResults</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-recommendations.html">recommendations</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-recommendations.html#~getRecommendations">getRecommendations</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-search.html">search</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-search.html#~getSearchResults">getSearchResults</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-search.html#~getVoiceSearchResults">getVoiceSearchResults</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-tracker.html">tracker</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~on">on</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackAutocompleteSelect">trackAutocompleteSelect</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackBrowseResultClick">trackBrowseResultClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackBrowseResultsLoaded">trackBrowseResultsLoaded</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackConversion">trackConversion</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackGenericResultClick">trackGenericResultClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackInputFocus">trackInputFocus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackItemDetailLoad">trackItemDetailLoad</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackPurchase">trackPurchase</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackQuizConversion">trackQuizConversion</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackQuizResultClick">trackQuizResultClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackQuizResultsLoaded">trackQuizResultsLoaded</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackRecommendationClick">trackRecommendationClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackRecommendationView">trackRecommendationView</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackSearchResultClick">trackSearchResultClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackSearchResultsLoaded">trackSearchResultsLoaded</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackSearchSubmit">trackSearchSubmit</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-tracker.html#~trackSessionStart">trackSessionStart</a></span></li>
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ConstructorIO.html">ConstructorIO</a><ul class='methods'><li data-type='method'><a href="ConstructorIO.html#setClientOptions">setClientOptions</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-autocomplete.html">autocomplete</a><ul class='methods'><li data-type='method'><a href="module-autocomplete.html#~getAutocompleteResults">getAutocompleteResults</a></li></ul></li><li><a href="module-browse.html">browse</a><ul class='methods'><li data-type='method'><a href="module-browse.html#~getBrowseFacetOptions">getBrowseFacetOptions</a></li><li data-type='method'><a href="module-browse.html#~getBrowseFacets">getBrowseFacets</a></li><li data-type='method'><a href="module-browse.html#~getBrowseGroups">getBrowseGroups</a></li><li data-type='method'><a href="module-browse.html#~getBrowseResults">getBrowseResults</a></li><li data-type='method'><a href="module-browse.html#~getBrowseResultsForItemIds">getBrowseResultsForItemIds</a></li></ul></li><li><a href="module-quizzes.html">quizzes</a><ul class='methods'><li data-type='method'><a href="module-quizzes.html#~getQuizNextQuestion">getQuizNextQuestion</a></li><li data-type='method'><a href="module-quizzes.html#~getQuizResults">getQuizResults</a></li></ul></li><li><a href="module-recommendations.html">recommendations</a><ul class='methods'><li data-type='method'><a href="module-recommendations.html#~getRecommendations">getRecommendations</a></li></ul></li><li><a href="module-search.html">search</a><ul class='methods'><li data-type='method'><a href="module-search.html#~getSearchResults">getSearchResults</a></li><li data-type='method'><a href="module-search.html#~getVoiceSearchResults">getVoiceSearchResults</a></li></ul></li><li><a href="module-tracker.html">tracker</a><ul class='methods'><li data-type='method'><a href="module-tracker.html#~on">on</a></li><li data-type='method'><a href="module-tracker.html#~trackAutocompleteSelect">trackAutocompleteSelect</a></li><li data-type='method'><a href="module-tracker.html#~trackBrowseResultClick">trackBrowseResultClick</a></li><li data-type='method'><a href="module-tracker.html#~trackBrowseResultsLoaded">trackBrowseResultsLoaded</a></li><li data-type='method'><a href="module-tracker.html#~trackConversion">trackConversion</a></li><li data-type='method'><a href="module-tracker.html#~trackGenericResultClick">trackGenericResultClick</a></li><li data-type='method'><a href="module-tracker.html#~trackInputFocus">trackInputFocus</a></li><li data-type='method'><a href="module-tracker.html#~trackItemDetailLoad">trackItemDetailLoad</a></li><li data-type='method'><a href="module-tracker.html#~trackPurchase">trackPurchase</a></li><li data-type='method'><a href="module-tracker.html#~trackQuizConversion">trackQuizConversion</a></li><li data-type='method'><a href="module-tracker.html#~trackQuizResultClick">trackQuizResultClick</a></li><li data-type='method'><a href="module-tracker.html#~trackQuizResultsLoaded">trackQuizResultsLoaded</a></li><li data-type='method'><a href="module-tracker.html#~trackRecommendationClick">trackRecommendationClick</a></li><li data-type='method'><a href="module-tracker.html#~trackRecommendationView">trackRecommendationView</a></li><li data-type='method'><a href="module-tracker.html#~trackSearchResultClick">trackSearchResultClick</a></li><li data-type='method'><a href="module-tracker.html#~trackSearchResultsLoaded">trackSearchResultsLoaded</a></li><li data-type='method'><a href="module-tracker.html#~trackSearchSubmit">trackSearchSubmit</a></li><li data-type='method'><a href="module-tracker.html#~trackSessionStart">trackSessionStart</a></li></ul></li></ul>
+    
 </nav>
 
 <div id="main">
@@ -42,19 +50,21 @@
 <header>
     
         <h2>
-        ConstructorIO
+        
+            ConstructorIO
+        
         </h2>
         
-            <div class="class-description">Class to instantiate the ConstructorIO client.</div>
+            <div class="class-description usertext">Class to instantiate the ConstructorIO client.</div>
         
     
 </header>
 
 <article>
-    <div class="container-overview">
     
+        <div class="container-overview">
         
-<div class="section-method">
+            
 
     
     <h2>Constructor</h2>
@@ -67,6 +77,46 @@
 
 
 
+<dl class="details">
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="constructorio.js.html">constructorio.js</a>, <a href="constructorio.js.html#line35">line 35</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
 
 
 
@@ -102,7 +152,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>object</code></span>
+<span class="param-type">object</span>
+
 
 
             
@@ -115,8 +166,6 @@
             <td class="description last">Interface to <a href="module-search.html">module:search</a></td>
         </tr>
 
-        
-
     
 
         <tr>
@@ -127,7 +176,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>object</code></span>
+<span class="param-type">object</span>
+
 
 
             
@@ -140,8 +190,6 @@
             <td class="description last">Interface to <a href="module-browse.html">module:browse</a></td>
         </tr>
 
-        
-
     
 
         <tr>
@@ -152,7 +200,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>object</code></span>
+<span class="param-type">object</span>
+
 
 
             
@@ -165,8 +214,6 @@
             <td class="description last">Interface to <a href="module-autocomplete.html">module:autocomplete</a></td>
         </tr>
 
-        
-
     
 
         <tr>
@@ -177,7 +224,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>object</code></span>
+<span class="param-type">object</span>
+
 
 
             
@@ -190,8 +238,6 @@
             <td class="description last">Interface to <a href="module-recommendations.html">module:recommendations</a></td>
         </tr>
 
-        
-
     
 
         <tr>
@@ -202,7 +248,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>object</code></span>
+<span class="param-type">object</span>
+
 
 
             
@@ -215,8 +262,6 @@
             <td class="description last">Interface to <a href="module-tracker.html">module:tracker</a></td>
         </tr>
 
-        
-
     
 
         <tr>
@@ -227,7 +272,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>object</code></span>
+<span class="param-type">object</span>
+
 
 
             
@@ -240,8 +286,6 @@
             <td class="description last">Interface to <a href="module-quizzes.html">module:quizzes</a></td>
         </tr>
 
-        
-
     
     </tbody>
 </table>
@@ -249,45 +293,6 @@
 
 
 
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="constructorio.js.html">constructorio.js</a>, <a href="constructorio.js.html#line35">line 35</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
 
 
 
@@ -297,7 +302,8 @@
 
 
 
-    <h5>Parameters:</h5>
+
+    <h5 class="h5-parameters">Parameters:</h5>
     
 
 <table class="params">
@@ -328,7 +334,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>object</code></span>
+<span class="param-type">object</span>
+
 
 
             
@@ -338,10 +345,9 @@
 
             
 
-            <td class="description last">
-                Parameters for client instantiation
+            <td class="description last">Parameters for client instantiation
+                <h6>Properties</h6>
                 
-                    
 
 <table class="params">
     <thead>
@@ -375,7 +381,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>string</code></span>
+<span class="param-type">string</span>
+
 
 
             
@@ -397,10 +404,7 @@
                 </td>
             
 
-            <td class="description last">
-                Constructor.io API key
-                
-            </td>
+            <td class="description last">Constructor.io API key</td>
         </tr>
 
     
@@ -413,7 +417,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>string</code></span>
+<span class="param-type">string</span>
+
 
 
             
@@ -434,15 +439,12 @@
             
                 <td class="default">
                 
-                    'https://ac.cnstrc.com'
+                    <code>'https://ac.cnstrc.com'</code>
                 
                 </td>
             
 
-            <td class="description last">
-                API URL endpoint
-                
-            </td>
+            <td class="description last">API URL endpoint</td>
         </tr>
 
     
@@ -455,7 +457,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>string</code></span>
+<span class="param-type">string</span>
+
 
 
             
@@ -476,15 +479,12 @@
             
                 <td class="default">
                 
-                    'https://quizzes.cnstrc.com'
+                    <code>'https://quizzes.cnstrc.com'</code>
                 
                 </td>
             
 
-            <td class="description last">
-                Quizzes API URL endpoint
-                
-            </td>
+            <td class="description last">Quizzes API URL endpoint</td>
         </tr>
 
     
@@ -497,7 +497,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>array</code></span>
+<span class="param-type">array</span>
+
 
 
             
@@ -521,10 +522,7 @@
                 </td>
             
 
-            <td class="description last">
-                User segments
-                
-            </td>
+            <td class="description last">User segments</td>
         </tr>
 
     
@@ -537,7 +535,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>object</code></span>
+<span class="param-type">object</span>
+
 
 
             
@@ -561,10 +560,7 @@
                 </td>
             
 
-            <td class="description last">
-                User test cells
-                
-            </td>
+            <td class="description last">User test cells</td>
         </tr>
 
     
@@ -577,7 +573,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>string</code></span>
+<span class="param-type">string</span>
+
 
 
             
@@ -601,10 +598,7 @@
                 </td>
             
 
-            <td class="description last">
-                Client ID, defaults to value supplied by 'constructorio-id' module
-                
-            </td>
+            <td class="description last">Client ID, defaults to value supplied by 'constructorio-id' module</td>
         </tr>
 
     
@@ -617,7 +611,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>string</code></span>
+<span class="param-type">string</span>
+
 
 
             
@@ -641,10 +636,7 @@
                 </td>
             
 
-            <td class="description last">
-                Session ID, defaults to value supplied by 'constructorio-id' module
-                
-            </td>
+            <td class="description last">Session ID, defaults to value supplied by 'constructorio-id' module</td>
         </tr>
 
     
@@ -657,7 +649,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>string</code></span>
+<span class="param-type">string</span>
+
 
 
             
@@ -681,10 +674,7 @@
                 </td>
             
 
-            <td class="description last">
-                User ID
-                
-            </td>
+            <td class="description last">User ID</td>
         </tr>
 
     
@@ -697,7 +687,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>function</code></span>
+<span class="param-type">function</span>
+
 
 
             
@@ -721,10 +712,7 @@
                 </td>
             
 
-            <td class="description last">
-                If supplied, will be utilized for requests rather than default Fetch API
-                
-            </td>
+            <td class="description last">If supplied, will be utilized for requests rather than default Fetch API</td>
         </tr>
 
     
@@ -737,7 +725,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>number</code></span>
+<span class="param-type">number</span>
+
 
 
             
@@ -758,15 +747,12 @@
             
                 <td class="default">
                 
-                    250
+                    <code>250</code>
                 
                 </td>
             
 
-            <td class="description last">
-                Amount of time to wait before sending tracking events (in ms)
-                
-            </td>
+            <td class="description last">Amount of time to wait before sending tracking events (in ms)</td>
         </tr>
 
     
@@ -779,7 +765,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>boolean</code></span>
+<span class="param-type">boolean</span>
+
 
 
             
@@ -800,15 +787,12 @@
             
                 <td class="default">
                 
-                    true
+                    <code>true</code>
                 
                 </td>
             
 
-            <td class="description last">
-                Indicates if the referrer is sent with tracking events
-                
-            </td>
+            <td class="description last">Indicates if the referrer is sent with tracking events</td>
         </tr>
 
     
@@ -821,7 +805,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>boolean</code></span>
+<span class="param-type">boolean</span>
+
 
 
             
@@ -842,15 +827,12 @@
             
                 <td class="default">
                 
-                    false
+                    <code>false</code>
                 
                 </td>
             
 
-            <td class="description last">
-                Indicates if tracking events should be dispatched
-                
-            </td>
+            <td class="description last">Indicates if tracking events should be dispatched</td>
         </tr>
 
     
@@ -863,7 +845,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>object</code></span>
+<span class="param-type">object</span>
+
 
 
             
@@ -887,10 +870,7 @@
                 </td>
             
 
-            <td class="description last">
-                Options object to be supplied to 'constructorio-id' module
-                
-            </td>
+            <td class="description last">Options object to be supplied to 'constructorio-id' module</td>
         </tr>
 
     
@@ -903,7 +883,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>object</code></span>
+<span class="param-type">object</span>
+
 
 
             
@@ -927,10 +908,9 @@
                 </td>
             
 
-            <td class="description last">
-                Options related to 'EventDispatcher' class
+            <td class="description last">Options related to 'EventDispatcher' class
+                <h6>Properties</h6>
                 
-                    
 
 <table class="params">
     <thead>
@@ -964,7 +944,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>boolean</code></span>
+<span class="param-type">boolean</span>
+
 
 
             
@@ -985,15 +966,12 @@
             
                 <td class="default">
                 
-                    true
+                    <code>true</code>
                 
                 </td>
             
 
-            <td class="description last">
-                Determine if events should be dispatched
-                
-            </td>
+            <td class="description last">Determine if events should be dispatched</td>
         </tr>
 
     
@@ -1006,7 +984,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>boolean</code></span>
+<span class="param-type">boolean</span>
+
 
 
             
@@ -1027,22 +1006,18 @@
             
                 <td class="default">
                 
-                    true
+                    <code>true</code>
                 
                 </td>
             
 
-            <td class="description last">
-                Wait for beacon before dispatching events
-                
-            </td>
+            <td class="description last">Wait for beacon before dispatching events</td>
         </tr>
 
     
     </tbody>
 </table>
 
-                
             </td>
         </tr>
 
@@ -1056,7 +1031,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>object</code></span>
+<span class="param-type">object</span>
+
 
 
             
@@ -1080,10 +1056,9 @@
                 </td>
             
 
-            <td class="description last">
-                Parameters relevant to network requests
+            <td class="description last">Parameters relevant to network requests
+                <h6>Properties</h6>
                 
-                    
 
 <table class="params">
     <thead>
@@ -1115,7 +1090,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>number</code></span>
+<span class="param-type">number</span>
+
 
 
             
@@ -1135,9 +1111,13 @@
 
             
 
-            <td class="description last">
-                Request timeout (in milliseconds) - may be overridden within individual method calls
-                
+            <td class="description last">Request timeout (in milliseconds) - may be overridden within individual method calls</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
             </td>
         </tr>
 
@@ -1145,15 +1125,6 @@
     </tbody>
 </table>
 
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-                
             </td>
         </tr>
 
@@ -1174,37 +1145,40 @@
 
 
 
-<div class="section-returns">
-<h5>Returns:</h5>
+
+
+<h5 class="h5-returns">Returns:</h5>
 
         
+
 
 <dl class="param-type">
     <dt>
-        Type:
+        Type
     </dt>
     <dd>
         
-<span class="param-type"><code>class</code></span>
+<span class="param-type">class</span>
+
 
 
     </dd>
 </dl>
 
-
     
-</div>
 
 
 
-</div>
+        
+        </div>
     
-    </div>
 
     
 
     
 
+    
+    
     
 
      
@@ -1218,7 +1192,6 @@
 
         
             
-<div class="section-method">
 
     
 
@@ -1228,38 +1201,11 @@
 
 
 
-<div class="description">
-    Sets the client options
-</div>
-
-
-
-
 
 <dl class="details">
-
     
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li>Sets the client options</li></ul></dd>
     
 
     
@@ -1274,6 +1220,30 @@
     
 
     
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 </dl>
 
 
@@ -1284,7 +1254,11 @@
 
 
 
-    <h5>Parameters:</h5>
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
     
 
 <table class="params">
@@ -1317,7 +1291,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>string</code></span>
+<span class="param-type">string</span>
+
 
 
             
@@ -1335,10 +1310,7 @@
 
             
 
-            <td class="description last">
-                Constructor.io API key
-                
-            </td>
+            <td class="description last">Constructor.io API key</td>
         </tr>
 
     
@@ -1351,7 +1323,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>array</code></span>
+<span class="param-type">array</span>
+
 
 
             
@@ -1371,10 +1344,7 @@
 
             
 
-            <td class="description last">
-                User segments
-                
-            </td>
+            <td class="description last">User segments</td>
         </tr>
 
     
@@ -1387,7 +1357,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>object</code></span>
+<span class="param-type">object</span>
+
 
 
             
@@ -1407,10 +1378,7 @@
 
             
 
-            <td class="description last">
-                User test cells
-                
-            </td>
+            <td class="description last">User test cells</td>
         </tr>
 
     
@@ -1423,7 +1391,8 @@
             <td class="type">
             
                 
-<span class="param-type"><code>string</code></span>
+<span class="param-type">string</span>
+
 
 
             
@@ -1443,10 +1412,7 @@
 
             
 
-            <td class="description last">
-                User ID
-                
-            </td>
+            <td class="description last">User ID</td>
         </tr>
 
     
@@ -1468,7 +1434,9 @@
 
 
 
-</div>
+
+
+
         
     
 
@@ -1482,15 +1450,23 @@
 
 
 
+    
+    
 </div>
 
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Wed Apr 12 2023 15:53:34 GMT-0400 (Eastern Daylight Time) using the Minami theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Tue Apr 25 2023 11:18:06 GMT-0700 (Pacific Daylight Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
 <script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+
 </body>
 </html>
