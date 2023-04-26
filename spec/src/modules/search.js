@@ -52,6 +52,7 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
 
     it.only('Should return a response with a valid query, and section', (done) => {
       console.log(testSecret);
+      console.log(btoa(testSecret));
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
