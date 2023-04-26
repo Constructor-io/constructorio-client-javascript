@@ -15,6 +15,7 @@ dotenv.config();
 
 const { fetch } = fetchPonyfill({ Promise });
 const testApiKey = process.env.TEST_REQUEST_API_KEY;
+const testSecret = process.env.TEST_SECRET;
 const clientVersion = 'cio-mocha';
 const bundled = process.env.BUNDLED === 'true';
 const skipNetworkTimeoutTests = process.env.SKIP_NETWORK_TIMEOUT_TESTS === 'true';
@@ -49,7 +50,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     const query = 'item';
     const section = 'Products';
 
-    it('Should return a response with a valid query, and section', (done) => {
+    it.only('Should return a response with a valid query, and section', (done) => {
+      console.log(testSecret);
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
