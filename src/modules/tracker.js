@@ -34,7 +34,7 @@ function applyParams(parameters, options) {
   }
 
   if (userId) {
-    aggregateParams.ui = userId;
+    aggregateParams.ui = String(userId);
   }
 
   if (segments && segments.length) {
