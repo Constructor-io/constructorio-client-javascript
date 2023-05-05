@@ -2838,6 +2838,32 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackConversion(term, requiredParameters)).to.equal(true);
     });
 
+    it('Should ensure userId is passed as a string', (done) => {
+      const userId = 123;
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        userId,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('ui').to.equal(String(userId));
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackConversion(term, requiredParameters)).to.equal(true);
+    });
+
     it('Should respond with a valid response when term, required parameters and testCells are provided', (done) => {
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
