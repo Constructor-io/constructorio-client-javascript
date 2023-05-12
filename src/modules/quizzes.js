@@ -103,7 +103,7 @@ class Quizzes {
    *
    * @function getQuizNextQuestion
    * @description Retrieve next question from Constructor.io API
-   * @param {string} id - The identifier of the quiz
+   * @param {string} quizId - The identifier of the quiz
    * @param {string} [parameters] - Additional parameters to refine result set
    * @param {string} [parameters.section] - Product catalog section
    * @param {array} [parameters.answers] - An array of answers in the format [[1,2],[1]]
@@ -121,14 +121,14 @@ class Quizzes {
    *    quizSessionId: '1234',
    * });
    */
-  getQuizNextQuestion(id, parameters, networkParameters = {}) {
+  getQuizNextQuestion(quizId, parameters, networkParameters = {}) {
     let requestUrl;
     const { fetch } = this.options;
     const controller = new AbortController();
     const { signal } = controller;
 
     try {
-      requestUrl = createQuizUrl(id, parameters, this.options, 'next');
+      requestUrl = createQuizUrl(quizId, parameters, this.options, 'next');
     } catch (e) {
       return Promise.reject(e);
     }
@@ -160,7 +160,7 @@ class Quizzes {
    *
    * @function getQuizResults
    * @description Retrieve quiz recommendation and filter expression from Constructor.io API
-   * @param {string} id - The identifier of the quiz
+   * @param {string} quizId - The identifier of the quiz
    * @param {string} parameters - Additional parameters to refine result set
    * @param {array} parameters.answers - An array of answers in the format [[1,2],[1]]
    * @param {string} [parameters.section] - Product catalog section
@@ -181,14 +181,14 @@ class Quizzes {
    *    quizSessionId: '234'
    * });
    */
-  getQuizResults(id, parameters, networkParameters = {}) {
+  getQuizResults(quizId, parameters, networkParameters = {}) {
     let requestUrl;
     const { fetch } = this.options;
     const controller = new AbortController();
     const { signal } = controller;
 
     try {
-      requestUrl = createQuizUrl(id, parameters, this.options, 'results');
+      requestUrl = createQuizUrl(quizId, parameters, this.options, 'results');
     } catch (e) {
       return Promise.reject(e);
     }

@@ -34,13 +34,13 @@ declare class Quizzes {
   options: ConstructorClientOptions;
 
   getQuizNextQuestion(
-    id: string,
+    quizId: string,
     parameters?: QuizzesParameters,
     networkParameters?: NetworkParameters
   ): Promise<NextQuestionResponse>;
 
   getQuizResults(
-    id: string,
+    quizId: string,
     parameters?: QuizzesResultsParameters,
     networkParameters?: NetworkParameters
   ): Promise<QuizResultsResponse>;
