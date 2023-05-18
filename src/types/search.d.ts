@@ -24,7 +24,7 @@ export interface SearchParameters {
   sortOrder?: string;
   section?: string;
   fmtOptions?: FmtOptions;
-  preFilterExpression: FilterExpression;
+  preFilterExpression?: FilterExpression;
   hiddenFields?: string[];
   hiddenFacets?: string[];
   variationsMap?: Record<string, any>;
