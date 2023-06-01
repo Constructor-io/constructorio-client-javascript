@@ -296,8 +296,9 @@ class Tracker {
         const baseUrl = `${this.behavioralV2Url}autocomplete_select?`;
         const {
           original_query,
+          originalQuery = original_query,
           user_input,
-          userInput = original_query || user_input,
+          userInput = originalQuery || user_input,
           original_section,
           section = original_section,
           tr,

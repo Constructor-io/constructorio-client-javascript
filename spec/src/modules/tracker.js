@@ -684,17 +684,17 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   describe('trackAutocompleteSelect', () => {
     const term = 'Where The Wild Things Are';
     const requiredParameters = {
-      original_query: 'original-query',
+      originalQuery: 'original-query',
       section: 'Search Suggestions',
     };
     const optionalParameters = {
       tr: 'click',
-      group_id: 'All',
-      display_name: 'display-name',
+      groupId: 'All',
+      displayName: 'display-name',
     };
     const v2Parameters = {
-      variation_id: '12345-A',
-      item_id: '12345',
+      variationId: '12345-A',
+      itemId: '12345',
     };
 
     it('V2 Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -719,13 +719,13 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Body
-        expect(bodyParams).to.have.property('user_input').to.equal(requiredParameters.original_query);
+        expect(bodyParams).to.have.property('user_input').to.equal(requiredParameters.originalQuery);
         expect(bodyParams).to.have.property('tr').to.equal(optionalParameters.tr);
-        expect(bodyParams).to.have.property('item_id').to.equal(v2Parameters.item_id);
-        expect(bodyParams).to.have.property('variation_id').to.equal(v2Parameters.variation_id);
+        expect(bodyParams).to.have.property('item_id').to.equal(v2Parameters.itemId);
+        expect(bodyParams).to.have.property('variation_id').to.equal(v2Parameters.variationId);
         expect(bodyParams).to.have.property('section').to.deep.equal(requiredParameters.section);
         expect(bodyParams).to.have.property('item_name').to.equal(term);
-        expect(bodyParams).to.have.property('group_id').to.equal(optionalParameters.group_id);
+        expect(bodyParams).to.have.property('group_id').to.equal(optionalParameters.groupId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -740,6 +740,102 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
       // eslint-disable-next-line max-len
       expect(tracker.trackAutocompleteSelectV2(term, { ...requiredParameters, ...optionalParameters, ...v2Parameters })).to.equal(true);
+    });
+
+    it('Backwards Compatibility - V2 Should respond with a valid response when snake cased parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const snakeCaseParameters = {
+        original_query: 'original-query',
+        section: 'Search Suggestions',
+        tr: 'click',
+        group_id: 'All',
+        display_name: 'display-name',
+        variation_id: '12345-A',
+        item_id: '12345',
+      };
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Body
+        expect(bodyParams).to.have.property('user_input').to.equal(snakeCaseParameters.original_query);
+        expect(bodyParams).to.have.property('tr').to.equal(optionalParameters.tr);
+        expect(bodyParams).to.have.property('item_id').to.equal(snakeCaseParameters.item_id);
+        expect(bodyParams).to.have.property('variation_id').to.equal(snakeCaseParameters.variation_id);
+        expect(bodyParams).to.have.property('section').to.deep.equal(snakeCaseParameters.section);
+        expect(bodyParams).to.have.property('item_name').to.equal(term);
+        expect(bodyParams).to.have.property('group_id').to.equal(optionalParameters.groupId);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      tracker.on('error', (error) => {
+        done(error);
+      });
+
+      // eslint-disable-next-line max-len
+      expect(tracker.trackAutocompleteSelectV2(term, snakeCaseParameters)).to.equal(true);
+    });
+
+    it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const snakeCaseParameters = {
+        original_query: 'original-query',
+        section: 'Search Suggestions',
+        tr: 'click',
+        group_id: 'all',
+        display_name: 'display-name',
+      };
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        expect(requestParams).to.have.property('original_query').to.equal(snakeCaseParameters.original_query);
+        expect(requestParams).to.have.property('section').to.equal(snakeCaseParameters.section);
+        expect(requestParams).to.have.property('group').to.deep.equal({
+          display_name: snakeCaseParameters.display_name,
+          group_id: snakeCaseParameters.group_id,
+        });
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackAutocompleteSelect(term, snakeCaseParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -759,7 +855,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('original_query').to.equal(requiredParameters.original_query);
+        expect(requestParams).to.have.property('original_query').to.equal(requiredParameters.originalQuery);
         expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
@@ -865,8 +961,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('tr').to.equal(optionalParameters.tr);
         expect(requestParams).to.have.property('group').to.deep.equal({
-          group_id: optionalParameters.group_id,
-          display_name: optionalParameters.display_name,
+          group_id: optionalParameters.groupId,
+          display_name: optionalParameters.displayName,
         });
 
         // Response
