@@ -182,6 +182,19 @@ const utils = {
 
     return allValues.join('&');
   },
+
+  toSnakeCase: (camelCasedStr) => camelCasedStr.replace(/[A-Z]/g, (prefix) => `_${prefix.toLowerCase()}`),
+
+  toSnakeCaseKeys: (camelCasedObj, toRecurse = false) => {
+    const snakeCasedObj = {};
+    Object.keys(camelCasedObj).forEach((key) => {
+      const newKey = utils.toSnakeCase(key);
+      snakeCasedObj[newKey] = toRecurse && typeof camelCasedObj[key] === 'object' && !Array.isArray(camelCasedObj[key])
+        ? utils.toSnakeCaseKeys(camelCasedObj[key], toRecurse)
+        : camelCasedObj[key];
+    });
+    return snakeCasedObj;
+  },
 };
 
 module.exports = utils;

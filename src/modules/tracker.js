@@ -132,7 +132,7 @@ class Tracker {
    * Send input focus event to API
    * @private
    * @function trackInputFocusV2
-   * @param {string} user_input - Input at the time user focused on the search bar
+   * @param {string} userInput - Input at the time user focused on the search bar
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -140,14 +140,14 @@ class Tracker {
    * @example
    * constructorio.tracker.trackInputFocusV2("text");
    */
-  trackInputFocusV2(user_input = '', networkParameters = {}) {
+  trackInputFocusV2(userInput = '', networkParameters = {}) {
     const baseUrl = `${this.behavioralV2Url}focus?`;
     const bodyParams = {};
     let networkParametersNew = networkParameters;
-    let userInputNew = user_input;
+    let userInputNew = userInput;
 
-    if (typeof user_input === 'object') {
-      networkParametersNew = user_input;
+    if (typeof userInput === 'object') {
+      networkParametersNew = userInput;
       userInputNew = '';
     }
 
@@ -190,10 +190,10 @@ class Tracker {
    *
    * @function trackItemDetailLoad
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.item_name - Product item name
-   * @param {string} parameters.item_id - Product item unique identifier
+   * @param {string} parameters.itemName - Product item name
+   * @param {string} parameters.itemId - Product item unique identifier
    * @param {string} parameters.url - Current page URL
-   * @param {string} [parameters.variation_id] - Product item variation unique identifier
+   * @param {string} [parameters.variationId] - Product item variation unique identifier
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -201,8 +201,8 @@ class Tracker {
    * @example
    * constructorio.tracker.trackItemDetailLoad(
    *     {
-   *         item_name: 'Red T-Shirt',
-   *         item_id: 'KMH876',
+   *         itemName: 'Red T-Shirt',
+   *         itemId: 'KMH876',
    *         url: 'https://constructor.io/product/KMH876',
    *     },
    * );
@@ -218,26 +218,26 @@ class Tracker {
         name,
         item_id,
         customer_id,
+        customerId = customer_id,
         variation_id,
+        itemName = item_name || name,
+        itemId = item_id || customerId,
+        variationId = variation_id,
         url,
       } = parameters;
 
       // Ensure support for both item_name and name as parameters
-      if (item_name) {
-        bodyParams.item_name = item_name;
-      } else if (name) {
-        bodyParams.item_name = name;
+      if (itemName) {
+        bodyParams.item_name = itemName;
       }
 
       // Ensure support for both item_id and customer_id as parameters
-      if (item_id) {
-        bodyParams.item_id = item_id;
-      } else if (customer_id) {
-        bodyParams.item_id = customer_id;
+      if (itemId) {
+        bodyParams.item_id = itemId;
       }
 
-      if (variation_id) {
-        bodyParams.variation_id = variation_id;
+      if (variationId) {
+        bodyParams.variation_id = variationId;
       }
 
       if (url) {
@@ -263,14 +263,14 @@ class Tracker {
    * Send autocomplete select event to API
    * @private
    * @function trackAutocompleteSelectV2
-   * @param {string} item_name - Name of selected autocomplete item
+   * @param {string} itemName - Name of selected autocomplete item
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.user_input - The current autocomplete search query
+   * @param {string} parameters.userInput - The current autocomplete search query
    * @param {string} [parameters.section] - Section the selected item resides within
    * @param {string} [parameters.tr] - Trigger used to select the item (click, etc.)
-   * @param {string} [parameters.item_id] - Item id of the selected item
-   * @param {string} [parameters.variation_id] - Variation id of the selected item
-   * @param {string} [parameters.group_id] - Group identifier of selected item
+   * @param {string} [parameters.itemId] - Item id of the selected item
+   * @param {string} [parameters.variationId] - Variation id of the selected item
+   * @param {string} [parameters.groupId] - Group identifier of selected item
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -279,39 +279,43 @@ class Tracker {
    * constructorio.tracker.trackAutocompleteSelectV2(
    *     'T-Shirt',
    *      {
-   *          user_input: 'Shirt',
+   *          userInput: 'Shirt',
    *          section: 'Products',
    *          tr: 'click',
-   *          group_id: '88JU230',
-   *          item_id: '12345',
-   *          variation_id: '12345-A',
+   *          groupId: '88JU230',
+   *          itemId: '12345',
+   *          variationId: '12345-A',
    *      },
    * );
    */
-  trackAutocompleteSelectV2(item_name, parameters, networkParameters = {}) {
+  trackAutocompleteSelectV2(itemName, parameters, networkParameters = {}) {
     // Ensure term is provided (required)
-    if (item_name && typeof item_name === 'string') {
+    if (itemName && typeof itemName === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
         const baseUrl = `${this.behavioralV2Url}autocomplete_select?`;
         const {
           original_query,
-          user_input = original_query,
+          user_input,
+          userInput = original_query || user_input,
           original_section,
           section = original_section,
           tr,
           group_id,
+          groupId = group_id,
           item_id,
+          itemId = item_id,
           variation_id,
+          variationId = variation_id,
         } = parameters;
         const queryParams = {};
         const bodyParams = {
-          user_input,
+          user_input: userInput,
           tr,
-          group_id,
-          item_id,
-          variation_id,
-          item_name,
+          group_id: groupId,
+          item_id: itemId,
+          variation_id: variationId,
+          item_name: itemName,
           section,
         };
 
@@ -352,11 +356,11 @@ class Tracker {
    * @function trackAutocompleteSelect
    * @param {string} term - Term of selected autocomplete item
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.original_query - The current autocomplete search query
+   * @param {string} parameters.originalQuery - The current autocomplete search query
    * @param {string} parameters.section - Section the selected item resides within
    * @param {string} [parameters.tr] - Trigger used to select the item (click, etc.)
-   * @param {string} [parameters.group_id] - Group identifier of selected item
-   * @param {string} [parameters.display_name] - Display name of group of selected item
+   * @param {string} [parameters.groupId] - Group identifier of selected item
+   * @param {string} [parameters.displayName] - Display name of group of selected item
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -365,11 +369,11 @@ class Tracker {
    * constructorio.tracker.trackAutocompleteSelect(
    *     'T-Shirt',
    *      {
-   *          original_query: 'Shirt',
-   *          section: 'Products',
-   *          tr: 'click',
-   *          group_id: '88JU230',
-   *          display_name: 'apparel',
+   *         originalQuery: 'Shirt',
+   *         section: 'Products',
+   *         tr: 'click',
+   *         groupId: '88JU230',
+   *         displayName: 'apparel',
    *      },
    * );
    */
@@ -382,29 +386,33 @@ class Tracker {
         const queryParams = {};
         const {
           original_query,
+          originalQuery = original_query,
           section,
           original_section,
+          originalSection = original_section,
           tr,
           group_id,
+          groupId = group_id,
           display_name,
+          displayName = display_name,
         } = parameters;
 
-        if (original_query) {
-          queryParams.original_query = original_query;
+        if (originalQuery) {
+          queryParams.original_query = originalQuery;
         }
 
         if (tr) {
           queryParams.tr = tr;
         }
 
-        if (original_section || section) {
-          queryParams.section = original_section || section;
+        if (originalSection || section) {
+          queryParams.section = originalSection || section;
         }
 
-        if (group_id) {
+        if (groupId) {
           queryParams.group = {
-            group_id,
-            display_name,
+            group_id: groupId,
+            display_name: displayName,
           };
         }
 
@@ -428,10 +436,10 @@ class Tracker {
    * Send autocomplete search event to API
    * @private
    * @function trackSearchSubmitV2
-   * @param {string} search_term - Term of submitted autocomplete event
+   * @param {string} searchTerm - Term of submitted autocomplete event
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.user_input - The current autocomplete search query
-   * @param {string} [parameters.group_id] - Group identifier of selected item
+   * @param {string} parameters.userInput - The current autocomplete search query
+   * @param {string} [parameters.groupId] - Group identifier of selected item
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -440,32 +448,34 @@ class Tracker {
    * constructorio.tracker.trackSearchSubmitV2(
    *     'T-Shirt',
    *     {
-   *         user_input: 'Shirt',
-   *         group_id: '88JU230',
+   *         userInput: 'Shirt',
+   *         groupId: '88JU230',
    *     },
    * );
    */
-  trackSearchSubmitV2(search_term, parameters, networkParameters = {}) {
+  trackSearchSubmitV2(searchTerm, parameters, networkParameters = {}) {
     // Ensure term is provided (required)
-    if (search_term && typeof search_term === 'string') {
+    if (searchTerm && typeof searchTerm === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
         const baseUrl = `${this.behavioralV2Url}search_submit?`;
         const {
           original_query,
-          user_input = original_query,
+          user_input,
+          userInput = original_query || user_input,
           group_id,
+          groupId = group_id,
           section,
         } = parameters;
         const queryParams = {};
         const bodyParams = {
-          user_input,
-          search_term,
+          user_input: userInput,
+          search_term: searchTerm,
           section,
         };
 
         if (group_id) {
-          bodyParams.filters = { group_id };
+          bodyParams.filters = { group_id: groupId };
         }
 
         if (section) {
@@ -504,9 +514,9 @@ class Tracker {
    * @function trackSearchSubmit
    * @param {string} term - Term of submitted autocomplete event
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.original_query - The current autocomplete search query
-   * @param {string} [parameters.group_id] - Group identifier of selected item
-   * @param {string} [parameters.display_name] - Display name of group of selected item
+   * @param {string} parameters.originalQuery - The current autocomplete search query
+   * @param {string} [parameters.groupId] - Group identifier of selected item
+   * @param {string} [parameters.displayName] - Display name of group of selected item
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -515,9 +525,9 @@ class Tracker {
    * constructorio.tracker.trackSearchSubmit(
    *     'T-Shirt',
    *     {
-   *         original_query: 'Shirt',
-   *         group_id: '88JU230',
-   *         display_name: 'apparel',
+   *         originalQuery: 'Shirt',
+   *         groupId: '88JU230',
+   *         displayName: 'apparel',
    *     },
    * );
    */
@@ -528,16 +538,23 @@ class Tracker {
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
         const url = `${this.options.serviceUrl}/autocomplete/${helpers.encodeURIComponentRFC3986(helpers.trimNonBreakingSpaces(term))}/search?`;
         const queryParams = {};
-        const { original_query, group_id, display_name } = parameters;
+        const {
+          original_query,
+          originalQuery = original_query,
+          group_id,
+          groupId = group_id,
+          display_name,
+          displayName = display_name,
+        } = parameters;
 
-        if (original_query) {
-          queryParams.original_query = original_query;
+        if (originalQuery) {
+          queryParams.original_query = originalQuery;
         }
 
-        if (group_id) {
+        if (groupId) {
           queryParams.group = {
-            group_id,
-            display_name,
+            group_id: groupId,
+            display_name: displayName,
           };
         }
 
@@ -561,15 +578,15 @@ class Tracker {
    * Send search results loaded v2 event to API
    * @private
    * @function trackSearchResultsLoadedV2
-   * @param {string} search_term - Search results query term
+   * @param {string} searchTerm - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.url - URL of the search results page
-   * @param {number} [parameters.result_count] - Total number of results
-   * @param {number} [parameters.result_page] - Current page of search results
-   * @param {string} [parameters.result_id] - Browse result identifier (returned in response from Constructor)
-   * @param {object} [parameters.selected_filters] - Selected filters
-   * @param {string} [parameters.sort_order] - Sort order ('ascending' or 'descending')
-   * @param {string} [parameters.sort_by] - Sorting method
+   * @param {number} [parameters.resultCount] - Total number of results
+   * @param {number} [parameters.resultPage] - Current page of search results
+   * @param {string} [parameters.resultId] - Browse result identifier (returned in response from Constructor)
+   * @param {object} [parameters.selectedFilters] - Selected filters
+   * @param {string} [parameters.sortOrder] - Sort order ('ascending' or 'descending')
+   * @param {string} [parameters.sortBy] - Sorting method
    * @param {object[]} [parameters.items] - List of product item unique identifiers in search results listing
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -579,32 +596,38 @@ class Tracker {
    * constructorio.tracker.trackSearchResultsLoadedV2(
    *     'T-Shirt',
    *     {
-   *         result_count: 167,
-   *         items: [{item_id: 'KMH876'}, {item_id: 'KMH140'}, {item_id: 'KMH437'}],
-   *         sort_order: 'ascending'
-   *         sort_by: 'price',
-   *         result_page: 3,
-   *         result_count: 20
+   *         resultCount: 167,
+   *         items: [{itemId: 'KMH876'}, {itemId: 'KMH140'}, {itemId: 'KMH437'}],
+   *         sortOrder: 'ascending'
+   *         sortBy: 'price',
+   *         resultPage: 3,
+   *         resultCount: 20
    *     },
    * );
    */
-  trackSearchResultsLoadedV2(search_term, parameters, networkParameters = {}) {
+  trackSearchResultsLoadedV2(searchTerm, parameters, networkParameters = {}) {
     // Ensure term is provided (required)
-    if (search_term && typeof search_term === 'string') {
+    if (searchTerm && typeof searchTerm === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
         const baseUrl = `${this.behavioralV2Url}search_result_load?`;
         const {
           num_results,
-          result_count = num_results,
+          result_count,
+          resultCount = num_results || result_count,
           customer_ids,
           item_ids,
           items = customer_ids || item_ids,
           result_page,
+          resultPage = result_page,
           result_id,
+          resultId = result_id,
           sort_order,
+          sortOrder = sort_order,
           sort_by,
+          sortBy = sort_by,
           selected_filters,
+          selectedFilters = selected_filters,
           url,
           section,
         } = parameters;
@@ -615,6 +638,8 @@ class Tracker {
           transformedItems = items;
           if (typeof items[0] === 'string' || typeof items[0] === 'number') {
             transformedItems = items.map((itemId) => ({ item_id: String(itemId) }));
+          } else {
+            transformedItems = items.map((item) => helpers.toSnakeCaseKeys(item, false));
           }
         }
 
@@ -623,14 +648,14 @@ class Tracker {
         }
 
         const bodyParams = {
-          search_term,
-          result_count,
+          search_term: searchTerm,
+          result_count: resultCount,
           items: transformedItems,
-          result_page,
-          result_id,
-          sort_order,
-          sort_by,
-          selected_filters,
+          result_page: resultPage,
+          result_id: resultId,
+          sort_order: sortOrder,
+          sort_by: sortBy,
+          selected_filters: selectedFilters,
           url,
           section,
         };
@@ -667,8 +692,8 @@ class Tracker {
    * @function trackSearchResultsLoaded
    * @param {string} term - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {number} parameters.num_results - Total number of results
-   * @param {string[]} [parameters.item_ids] - List of product item unique identifiers in search results listing
+   * @param {number} parameters.numResults - Total number of results
+   * @param {string[]} [parameters.itemIds] - List of product item unique identifiers in search results listing
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -677,8 +702,8 @@ class Tracker {
    * constructorio.tracker.trackSearchResultsLoaded(
    *     'T-Shirt',
    *     {
-   *         num_results: 167,
-   *         item_ids: ['KMH876', 'KMH140', 'KMH437'],
+   *         numResults: 167,
+   *         itemIds: ['KMH876', 'KMH140', 'KMH437'],
    *     },
    * );
    */
@@ -689,21 +714,28 @@ class Tracker {
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
         const url = `${this.options.serviceUrl}/behavior?`;
         const queryParams = { action: 'search-results', term };
-        const { num_results, customer_ids, item_ids } = parameters;
+        const {
+          num_results,
+          numResults = num_results,
+          customer_ids,
+          customerIds = customer_ids,
+          item_ids,
+          itemIds = item_ids,
+        } = parameters;
         let customerIDs;
 
-        if (!helpers.isNil(num_results)) {
-          queryParams.num_results = num_results;
+        if (!helpers.isNil(numResults)) {
+          queryParams.num_results = numResults;
         }
 
         // Ensure support for both item_ids and customer_ids as parameters
-        if (item_ids && Array.isArray(item_ids) && item_ids.length) {
-          customerIDs = item_ids;
-        } else if (customer_ids && Array.isArray(customer_ids) && customer_ids.length) {
-          customerIDs = customer_ids;
+        if (itemIds && Array.isArray(itemIds)) {
+          customerIDs = itemIds;
+        } else if (customerIds && Array.isArray(customerIds)) {
+          customerIDs = customerIds;
         }
 
-        if (customerIDs && customerIDs.length) {
+        if (customerIDs && Array.isArray(customerIDs) && customerIDs.length) {
           queryParams.customer_ids = customerIDs.slice(0, 100).join(',');
         }
 
@@ -727,17 +759,17 @@ class Tracker {
    * Send click through event to API
    * @private
    * @function trackSearchResultClickV2
-   * @param {string} term - Search results query term
+   * @param {string} searchTerm - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.item_name - Product item name (Either item_name or item_id is required)
-   * @param {string} parameters.item_id - Product item unique identifier
-   * @param {string} [parameters.variation_id] - Product item variation unique identifier
-   * @param {string} [parameters.result_id] - Search result identifier (returned in response from Constructor)
-   * @param {number} [parameters.result_count] - Number of results in total
-   * @param {number} [parameters.result_page] - Current page of results
-   * @param {string} [parameters.result_position_on_page] - Position of selected items on page
-   * @param {string} [parameters.num_results_per_page] - Number of results per page
-   * @param {object} [parameters.selected_filters] - Key - Value map of selected filters
+   * @param {string} parameters.itemName - Product item name (Either item_name or item_id is required)
+   * @param {string} parameters.itemId - Product item unique identifier
+   * @param {string} [parameters.variationId] - Product item variation unique identifier
+   * @param {string} [parameters.resultId] - Search result identifier (returned in response from Constructor)
+   * @param {number} [parameters.resultCount] - Number of results in total
+   * @param {number} [parameters.resultPage] - Current page of results
+   * @param {string} [parameters.resultPositionOnPage] - Position of selected items on page
+   * @param {string} [parameters.numResultsPerPage] - Number of results per page
+   * @param {object} [parameters.selectedFilters] - Key - Value map of selected filters
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -747,44 +779,54 @@ class Tracker {
    * constructorio.tracker.trackSearchResultClickV2(
    *     'T-Shirt',
    *     {
-   *         item_name: 'Red T-Shirt',
-   *         item_id: 'KMH876',
-   *         result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         itemName: 'Red T-Shirt',
+   *         itemId: 'KMH876',
+   *         resultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
    *     },
    * );
    */
-  trackSearchResultClickV2(term, parameters, networkParameters = {}) {
+  trackSearchResultClickV2(searchTerm, parameters, networkParameters = {}) {
     // Ensure term is provided (required)
-    if (term && typeof term === 'string') {
+    if (searchTerm && typeof searchTerm === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
         const baseUrl = `${this.behavioralV2Url}search_result_click?`;
         const {
+          num_results,
           customer_id,
-          item_id = customer_id,
+          item_id,
+          itemId = customer_id || item_id,
           name,
-          item_name = name,
+          item_name,
+          itemName = name || item_name,
           variation_id,
+          variationId = variation_id,
           result_id,
+          resultId = result_id,
           result_count,
+          resultCount = num_results || result_count,
           result_page,
+          resultPage = result_page,
           result_position_on_page,
+          resultPositionOnPage = result_position_on_page,
           num_results_per_page,
+          numResultsPerPage = num_results_per_page,
           selected_filters,
+          selectedFilters = selected_filters,
           section,
         } = parameters;
         const bodyParams = {
-          item_name,
-          item_id,
-          variation_id,
-          result_id,
-          result_count,
-          result_page,
-          result_position_on_page,
-          num_results_per_page,
-          selected_filters,
+          item_name: itemName,
+          item_id: itemId,
+          variation_id: variationId,
+          result_id: resultId,
+          result_count: resultCount,
+          result_page: resultPage,
+          result_position_on_page: resultPositionOnPage,
+          num_results_per_page: numResultsPerPage,
+          selected_filters: selectedFilters,
           section,
-          search_term: term,
+          search_term: searchTerm,
         };
         const queryParams = {};
 
@@ -824,11 +866,11 @@ class Tracker {
    * @function trackSearchResultClick
    * @param {string} term - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.item_name - Product item name
-   * @param {string} parameters.item_id - Product item unique identifier
-   * @param {string} [parameters.variation_id] - Product item variation unique identifier
-   * @param {string} [parameters.result_id] - Search result identifier (returned in response from Constructor)
-   * @param {string} [parameters.item_is_convertible] - Whether or not an item is available for a conversion
+   * @param {string} parameters.itemName - Product item name
+   * @param {string} parameters.itemId - Product item unique identifier
+   * @param {string} [parameters.variationId] - Product item variation unique identifier
+   * @param {string} [parameters.resultId] - Search result identifier (returned in response from Constructor)
+   * @param {string} [parameters.itemIsConvertible] - Whether or not an item is available for a conversion
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -838,9 +880,9 @@ class Tracker {
    * constructorio.tracker.trackSearchResultClick(
    *     'T-Shirt',
    *     {
-   *         item_name: 'Red T-Shirt',
-   *         item_id: 'KMH876',
-   *         result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         itemName: 'Red T-Shirt',
+   *         itemId: 'KMH876',
+   *         resultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
    *     },
    * );
    */
@@ -854,38 +896,40 @@ class Tracker {
         const {
           item_name,
           name,
+          itemName = item_name || name,
           item_id,
+          itemId = item_id,
           customer_id,
+          customerId = customer_id || itemId,
           variation_id,
+          variationId = variation_id,
           result_id,
-          section,
+          resultId = result_id,
           item_is_convertible,
+          itemIsConvertible = item_is_convertible,
+          section,
         } = parameters;
 
         // Ensure support for both item_name and name as parameters
-        if (item_name) {
-          queryParams.name = item_name;
-        } else if (name) {
-          queryParams.name = name;
+        if (itemName) {
+          queryParams.name = itemName;
         }
 
         // Ensure support for both item_id and customer_id as parameters
-        if (item_id) {
-          queryParams.customer_id = item_id;
-        } else if (customer_id) {
-          queryParams.customer_id = customer_id;
+        if (customerId) {
+          queryParams.customer_id = customerId;
         }
 
-        if (variation_id) {
-          queryParams.variation_id = variation_id;
+        if (variationId) {
+          queryParams.variation_id = variationId;
         }
 
-        if (result_id) {
-          queryParams.result_id = result_id;
+        if (resultId) {
+          queryParams.result_id = resultId;
         }
 
-        if (typeof item_is_convertible === 'boolean') {
-          queryParams.item_is_convertible = item_is_convertible;
+        if (typeof itemIsConvertible === 'boolean') {
+          queryParams.item_is_convertible = itemIsConvertible;
         }
 
         if (section) {
@@ -914,14 +958,13 @@ class Tracker {
    * @function trackConversion
    * @param {string} [term] - Search results query term that led to conversion event
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.item_id - Product item unique identifier
+   * @param {string} parameters.itemId - Product item unique identifier
    * @param {number} [parameters.revenue] - Sale price if available, otherwise the regular (retail) price of item
-   * @param {string} [parameters.item_name] - Product item name
-   * @param {string} [parameters.variation_id] - Product item variation unique identifier
+   * @param {string} [parameters.itemName] - Product item name
+   * @param {string} [parameters.variationId] - Product item variation unique identifier
    * @param {string} [parameters.type='add_to_cart'] - Conversion type
-   * @param {boolean} [parameters.is_custom_type] - Specify if type is custom conversion type
-   * @param {string} [parameters.display_name] - Display name for the custom conversion type
-   * @param {string} [parameters.result_id] - Result identifier (returned in response from Constructor)
+   * @param {boolean} [parameters.isCustomType] - Specify if type is custom conversion type
+   * @param {string} [parameters.displayName] - Display name for the custom conversion type
    * @param {string} [parameters.section="Products"] - Index section
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -932,12 +975,12 @@ class Tracker {
    * constructorio.tracker.trackConversion(
    *     'T-Shirt',
    *     {
-   *         item_id: 'KMH876',
+   *         itemId: 'KMH876',
    *         revenue: 12.00,
-   *         item_name: 'Red T-Shirt',
-   *         variation_id: 'KMH879-7632',
+   *         itemName: 'Red T-Shirt',
+   *         variationId: 'KMH879-7632',
    *         type: 'like',
-   *         result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         resultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
    *         section: 'Products',
    *     },
    * );
@@ -952,32 +995,33 @@ class Tracker {
       const {
         name,
         item_name,
+        itemName = item_name || name,
         item_id,
         customer_id,
+        itemId = item_id || customer_id,
         variation_id,
+        variationId = variation_id,
         revenue,
         section = 'Products',
         display_name,
+        displayName = display_name,
         type,
         is_custom_type,
+        isCustomType = is_custom_type,
       } = parameters;
 
       // Ensure support for both item_id and customer_id as parameters
-      if (item_id) {
-        bodyParams.item_id = item_id;
-      } else if (customer_id) {
-        bodyParams.item_id = customer_id;
+      if (itemId) {
+        bodyParams.item_id = itemId;
       }
 
       // Ensure support for both item_name and name as parameters
-      if (item_name) {
-        bodyParams.item_name = item_name;
-      } else if (name) {
-        bodyParams.item_name = name;
+      if (itemName) {
+        bodyParams.item_name = itemName;
       }
 
-      if (variation_id) {
-        bodyParams.variation_id = variation_id;
+      if (variationId) {
+        bodyParams.variation_id = variationId;
       }
 
       if (revenue) {
@@ -997,12 +1041,12 @@ class Tracker {
         bodyParams.type = type;
       }
 
-      if (is_custom_type) {
-        bodyParams.is_custom_type = is_custom_type;
+      if (isCustomType) {
+        bodyParams.is_custom_type = isCustomType;
       }
 
-      if (display_name) {
-        bodyParams.display_name = display_name;
+      if (displayName) {
+        bodyParams.display_name = displayName;
       }
 
       const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
@@ -1031,8 +1075,8 @@ class Tracker {
    * @function trackPurchase
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {object[]} parameters.items - List of product item objects
-   * @param {number} parameters.revenue - The subtotal (not including taxes, shipping, etc.) of the entire order
-   * @param {string} [parameters.order_id] - Unique order identifier
+   * @param {number} parameters.revenue - The subtotal (excluding taxes, shipping, etc.) of the entire order
+   * @param {string} [parameters.orderId] - Unique order identifier
    * @param {string} [parameters.section="Products"] - Index section
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -1041,9 +1085,9 @@ class Tracker {
    * @example
    * constructorio.tracker.trackPurchase(
    *     {
-   *         items: [{ item_id: 'KMH876' }, { item_id: 'KMH140' }],
+   *         items: [{ itemId: 'KMH876' }, { itemId: 'KMH140' }],
    *         revenue: 12.00,
-   *         order_id: 'OUNXBG2HMA',
+   *         orderId: 'OUNXBG2HMA',
    *         section: 'Products',
    *     },
    * );
@@ -1054,22 +1098,28 @@ class Tracker {
       const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/purchase?`;
       const queryParams = {};
       const bodyParams = {};
-      const { items, revenue, order_id, section } = parameters;
+      const {
+        items,
+        revenue,
+        order_id,
+        orderId = order_id,
+        section,
+      } = parameters;
 
-      if (order_id) {
+      if (orderId) {
         // Don't send another purchase event if we have already tracked the order
-        if (helpers.hasOrderIdRecord(order_id)) {
+        if (helpers.hasOrderIdRecord(orderId)) {
           return false;
         }
 
-        helpers.addOrderIdRecord(order_id);
+        helpers.addOrderIdRecord(orderId);
 
         // Add order_id to the tracking params
-        bodyParams.order_id = order_id;
+        bodyParams.order_id = orderId;
       }
 
       if (items && Array.isArray(items)) {
-        bodyParams.items = items.slice(0, 100);
+        bodyParams.items = items.slice(0, 100).map((item) => helpers.toSnakeCaseKeys(item, false));
       }
 
       if (revenue) {
@@ -1108,12 +1158,12 @@ class Tracker {
    * @function trackRecommendationView
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.url - Current page URL
-   * @param {string} parameters.pod_id - Pod identifier
-   * @param {number} parameters.num_results_viewed - Number of results viewed
+   * @param {string} parameters.podId - Pod identifier
+   * @param {number} parameters.numResultsViewed - Number of results viewed
    * @param {object[]} [parameters.items] - List of Product Item Objects
-   * @param {number} [parameters.result_count] - Total number of results
-   * @param {number} [parameters.result_page] - Page number of results
-   * @param {string} [parameters.result_id] - Recommendation result identifier (returned in response from Constructor)
+   * @param {number} [parameters.resultCount] - Total number of results
+   * @param {number} [parameters.resultPage] - Page number of results
+   * @param {string} [parameters.resultId] - Recommendation result identifier (returned in response from Constructor)
    * @param {string} [parameters.section="Products"] - Results section
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -1122,13 +1172,13 @@ class Tracker {
    * @example
    * constructorio.tracker.trackRecommendationView(
    *     {
-   *         items: [{ item_id: 'KMH876' }, { item_id: 'KMH140' }],
-   *         result_count: 22,
-   *         result_page: 2,
-   *         result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         items: [{ itemId: 'KMH876' }, { itemId: 'KMH140' }],
+   *         resultCount: 22,
+   *         resultPage: 2,
+   *         resultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
    *         url: 'https://demo.constructor.io/sandbox/farmstand',
-   *         pod_id: '019927c2-f955-4020',
-   *         num_results_viewed: 3,
+   *         podId: '019927c2-f955-4020',
+   *         numResultsViewed: 3,
    *     },
    * );
    */
@@ -1139,25 +1189,30 @@ class Tracker {
       const bodyParams = {};
       const {
         result_count,
+        resultCount = result_count,
         result_page,
+        resultPage = result_page,
         result_id,
+        resultId = result_id,
         section,
         url,
         pod_id,
+        podId = pod_id,
         num_results_viewed,
+        numResultsViewed = num_results_viewed,
         items,
       } = parameters;
 
-      if (!helpers.isNil(result_count)) {
-        bodyParams.result_count = result_count;
+      if (!helpers.isNil(resultCount)) {
+        bodyParams.result_count = resultCount;
       }
 
-      if (!helpers.isNil(result_page)) {
-        bodyParams.result_page = result_page;
+      if (!helpers.isNil(resultPage)) {
+        bodyParams.result_page = resultPage;
       }
 
-      if (result_id) {
-        bodyParams.result_id = result_id;
+      if (resultId) {
+        bodyParams.result_id = resultId;
       }
 
       if (section) {
@@ -1170,16 +1225,16 @@ class Tracker {
         bodyParams.url = url;
       }
 
-      if (pod_id) {
-        bodyParams.pod_id = pod_id;
+      if (podId) {
+        bodyParams.pod_id = podId;
       }
 
-      if (!helpers.isNil(num_results_viewed)) {
-        bodyParams.num_results_viewed = num_results_viewed;
+      if (!helpers.isNil(numResultsViewed)) {
+        bodyParams.num_results_viewed = numResultsViewed;
       }
 
       if (items && Array.isArray(items)) {
-        bodyParams.items = items.slice(0, 100);
+        bodyParams.items = items.slice(0, 100).map((item) => helpers.toSnakeCaseKeys(item, false));
       }
 
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
@@ -1207,17 +1262,17 @@ class Tracker {
    *
    * @function trackRecommendationClick
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.pod_id - Pod identifier
-   * @param {string} parameters.strategy_id - Strategy identifier
-   * @param {string} parameters.item_id - Product item unique identifier
-   * @param {string} parameters.item_name - Product name
-   * @param {string} [parameters.variation_id] - Product item variation unique identifier
+   * @param {string} parameters.podId - Pod identifier
+   * @param {string} parameters.strategyId - Strategy identifier
+   * @param {string} parameters.itemId - Product item unique identifier
+   * @param {string} parameters.itemName - Product item name
+   * @param {string} [parameters.variationId] - Product item variation unique identifier
    * @param {string} [parameters.section="Products"] - Index section
-   * @param {string} [parameters.result_id] - Recommendation result identifier (returned in response from Constructor)
-   * @param {number} [parameters.result_count] - Total number of results
-   * @param {number} [parameters.result_page] - Page number of results
-   * @param {number} [parameters.result_position_on_page] - Position of result on page
-   * @param {number} [parameters.num_results_per_page] - Number of results on page
+   * @param {string} [parameters.resultId] - Recommendation result identifier (returned in response from Constructor)
+   * @param {number} [parameters.resultCount] - Total number of results
+   * @param {number} [parameters.resultPage] - Page number of results
+   * @param {number} [parameters.resultPositionOnPage] - Position of result on page
+   * @param {number} [parameters.numResultsPerPage] - Number of results on page
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -1225,16 +1280,17 @@ class Tracker {
    * @example
    * constructorio.tracker.trackRecommendationClick(
    *     {
-   *         variation_id: 'KMH879-7632',
-   *         result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
-   *         result_count: 22,
-   *         result_page: 2,
-   *         result_position_on_page: 2,
-   *         num_results_per_page: 12,
-   *         pod_id: '019927c2-f955-4020',
-   *         strategy_id: 'complimentary',
-   *         item_name: 'Socks',
-   *         item_id: 'KMH876',
+   *         resultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         variationId: 'KMH879-7632',
+   *         resultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         resultCount: 22,
+   *         resultPage: 2,
+   *         resultPositionOnPage: 2,
+   *         numResultsPerPage: 12,
+   *         podId: '019927c2-f955-4020',
+   *         strategyId: 'complimentary',
+   *         itemId: 'KMH876',
+   *         itemName: 'Socks',
    *     },
    * );
    */
@@ -1245,62 +1301,70 @@ class Tracker {
       const bodyParams = {};
       const {
         variation_id,
-        section,
+        variationId = variation_id,
+        section = 'Products',
         result_id,
+        resultId = result_id,
         result_count,
+        resultCount = result_count,
         result_page,
+        resultPage = result_page,
         result_position_on_page,
+        resultPositionOnPage = result_position_on_page,
         num_results_per_page,
+        numResultsPerPage = num_results_per_page,
         pod_id,
+        podId = pod_id,
         strategy_id,
+        strategyId = strategy_id,
         item_id,
+        itemId = item_id,
         item_name,
+        itemName = item_name,
       } = parameters;
 
-      if (variation_id) {
-        bodyParams.variation_id = variation_id;
+      if (variationId) {
+        bodyParams.variation_id = variationId;
       }
 
       if (section) {
         bodyParams.section = section;
-      } else {
-        bodyParams.section = 'Products';
       }
 
-      if (result_id) {
-        bodyParams.result_id = result_id;
+      if (resultId) {
+        bodyParams.result_id = resultId;
       }
 
-      if (!helpers.isNil(result_count)) {
-        bodyParams.result_count = result_count;
+      if (!helpers.isNil(resultCount)) {
+        bodyParams.result_count = resultCount;
       }
 
-      if (!helpers.isNil(result_page)) {
-        bodyParams.result_page = result_page;
+      if (!helpers.isNil(resultPage)) {
+        bodyParams.result_page = resultPage;
       }
 
-      if (!helpers.isNil(result_position_on_page)) {
-        bodyParams.result_position_on_page = result_position_on_page;
+      if (!helpers.isNil(resultPositionOnPage)) {
+        bodyParams.result_position_on_page = resultPositionOnPage;
       }
 
-      if (!helpers.isNil(num_results_per_page)) {
-        bodyParams.num_results_per_page = num_results_per_page;
+      if (!helpers.isNil(numResultsPerPage)) {
+        bodyParams.num_results_per_page = numResultsPerPage;
       }
 
-      if (pod_id) {
-        bodyParams.pod_id = pod_id;
+      if (podId) {
+        bodyParams.pod_id = podId;
       }
 
-      if (strategy_id) {
-        bodyParams.strategy_id = strategy_id;
+      if (strategyId) {
+        bodyParams.strategy_id = strategyId;
       }
 
-      if (item_id) {
-        bodyParams.item_id = item_id;
+      if (itemId) {
+        bodyParams.item_id = itemId;
       }
 
-      if (item_name) {
-        bodyParams.item_name = item_name;
+      if (itemName) {
+        bodyParams.item_name = itemName;
       }
 
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
@@ -1329,15 +1393,15 @@ class Tracker {
    * @function trackBrowseResultsLoaded
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.url - Current page URL
-   * @param {string} parameters.filter_name - Filter name
-   * @param {string} parameters.filter_value - Filter value
+   * @param {string} parameters.filterName - Filter name
+   * @param {string} parameters.filterValue - Filter value
    * @param {string} [parameters.section="Products"] - Index section
-   * @param {number} [parameters.result_count] - Total number of results
-   * @param {number} [parameters.result_page] - Page number of results
-   * @param {string} [parameters.result_id] - Browse result identifier (returned in response from Constructor)
-   * @param {object} [parameters.selected_filters] - Selected filters
-   * @param {string} [parameters.sort_order] - Sort order ('ascending' or 'descending')
-   * @param {string} [parameters.sort_by] - Sorting method
+   * @param {number} [parameters.resultCount] - Total number of results
+   * @param {number} [parameters.resultPage] - Page number of results
+   * @param {string} [parameters.resultId] - Browse result identifier (returned in response from Constructor)
+   * @param {object} [parameters.selectedFilters] - Selected filters
+   * @param {string} [parameters.sortOrder] - Sort order ('ascending' or 'descending')
+   * @param {string} [parameters.sortBy] - Sorting method
    * @param {object[]} [parameters.items] - List of product item objects
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -1346,16 +1410,16 @@ class Tracker {
    * @example
    * constructorio.tracker.trackBrowseResultsLoaded(
    *     {
-   *         result_count: 22,
-   *         result_page: 2,
-   *         result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
-   *         selected_filters: { brand: ['foo'], color: ['black'] },
-   *         sort_order: 'ascending',
-   *         sort_by: 'price',
-   *         items: [{ item_id: 'KMH876' }, { item_id: 'KMH140' }],
+   *         resultCount: 22,
+   *         resultPage: 2,
+   *         resultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         selectedFilters: { brand: ['foo'], color: ['black'] },
+   *         sortOrder: 'ascending',
+   *         sortBy: 'price',
+   *         items: [{ itemId: 'KMH876' }, { itemId: 'KMH140' }],
    *         url: 'https://demo.constructor.io/sandbox/farmstand',
-   *         filter_name: 'brand',
-   *         filter_value: 'XYZ',
+   *         filterName: 'brand',
+   *         filterValue: 'XYZ',
    *     },
    * );
    */
@@ -1365,63 +1429,69 @@ class Tracker {
       const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/browse_result_load?`;
       const bodyParams = {};
       const {
-        section,
+        section = 'Products',
         result_count,
+        resultCount = result_count,
         result_page,
+        resultPage = result_page,
         result_id,
+        resultId = result_id,
         selected_filters,
+        selectedFilters = selected_filters,
         url,
         sort_order,
+        sortOrder = sort_order,
         sort_by,
+        sortBy = sort_by,
         filter_name,
+        filterName = filter_name,
         filter_value,
+        filterValue = filter_value,
         items,
       } = parameters;
 
       if (section) {
         bodyParams.section = section;
-      } else {
-        bodyParams.section = 'Products';
       }
 
-      if (!helpers.isNil(result_count)) {
-        bodyParams.result_count = result_count;
+      if (!helpers.isNil(resultCount)) {
+        bodyParams.result_count = resultCount;
       }
 
-      if (!helpers.isNil(result_page)) {
-        bodyParams.result_page = result_page;
+      if (!helpers.isNil(resultPage)) {
+        bodyParams.result_page = resultPage;
       }
 
-      if (result_id) {
-        bodyParams.result_id = result_id;
+      if (resultId) {
+        bodyParams.result_id = resultId;
       }
 
-      if (selected_filters) {
-        bodyParams.selected_filters = selected_filters;
+      if (selectedFilters) {
+        bodyParams.selected_filters = selectedFilters;
       }
 
       if (url) {
         bodyParams.url = url;
       }
 
-      if (sort_order) {
-        bodyParams.sort_order = sort_order;
+      if (sortOrder) {
+        bodyParams.sort_order = sortOrder;
       }
 
-      if (sort_by) {
-        bodyParams.sort_by = sort_by;
+      if (sortBy) {
+        bodyParams.sort_by = sortBy;
       }
 
-      if (filter_name) {
-        bodyParams.filter_name = filter_name;
+      if (filterName) {
+        bodyParams.filter_name = filterName;
       }
 
-      if (filter_value) {
-        bodyParams.filter_value = filter_value;
+      if (filterValue) {
+        bodyParams.filter_value = filterValue;
       }
 
       if (items && Array.isArray(items)) {
-        bodyParams.items = items.slice(0, 100);
+        bodyParams.items = items.slice(0, 100).map((item) => helpers.toSnakeCaseKeys(item, false));
       }
 
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
@@ -1449,18 +1519,18 @@ class Tracker {
    *
    * @function trackBrowseResultClick
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.filter_name - Filter name
-   * @param {string} parameters.filter_value - Filter value
-   * @param {string} parameters.item_id - Product item unique identifier
-   * @param {string} parameters.item_name - Product item name
+   * @param {string} parameters.filterName - Filter name
+   * @param {string} parameters.filterValue - Filter value
+   * @param {string} parameters.itemId - Product item unique identifier
+   * @param {string} parameters.itemName - Product item name
    * @param {string} [parameters.section="Products"] - Index section
-   * @param {string} [parameters.variation_id] - Product item variation unique identifier
-   * @param {string} [parameters.result_id] - Browse result identifier (returned in response from Constructor)
-   * @param {number} [parameters.result_count] - Total number of results
-   * @param {number} [parameters.result_page] - Page number of results
-   * @param {number} [parameters.result_position_on_page] - Position of clicked item
-   * @param {number} [parameters.num_results_per_page] - Number of results shown
-   * @param {object} [parameters.selected_filters] - Selected filters
+   * @param {string} [parameters.variationId] - Product item variation unique identifier
+   * @param {string} [parameters.resultId] - Browse result identifier (returned in response from Constructor)
+   * @param {number} [parameters.resultCount] - Total number of results
+   * @param {number} [parameters.resultPage] - Page number of results
+   * @param {number} [parameters.resultPositionOnPage] - Position of clicked item
+   * @param {number} [parameters.numResultsPerPage] - Number of results shown
+   * @param {object} [parameters.selectedFilters] -  Selected filters
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -1468,16 +1538,16 @@ class Tracker {
    * @example
    * constructorio.tracker.trackBrowseResultClick(
    *     {
-   *         variation_id: 'KMH879-7632',
-   *         result_id: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
-   *         result_count: 22,
-   *         result_page: 2,
-   *         result_position_on_page: 2,
-   *         num_results_per_page: 12,
-   *         selected_filters: { brand: ['foo'], color: ['black'] },
-   *         filter_name: 'brand',
-   *         filter_value: 'XYZ',
-   *         item_id: 'KMH876',
+   *         variationId: 'KMH879-7632',
+   *         resultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         resultCount: 22,
+   *         resultPage: 2,
+   *         resultPositionOnPage: 2,
+   *         numResultsPerPage: 12,
+   *         selectedFilters: { brand: ['foo'], color: ['black'] },
+   *         filterName: 'brand',
+   *         filterValue: 'XYZ',
+   *         itemId: 'KMH876',
    *     },
    * );
    */
@@ -1487,76 +1557,80 @@ class Tracker {
       const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/browse_result_click?`;
       const bodyParams = {};
       const {
-        section,
+        section = 'Products',
         variation_id,
+        variationId = variation_id,
         result_id,
+        resultId = result_id,
         result_count,
+        resultCount = result_count,
         result_page,
+        resultPage = result_page,
         result_position_on_page,
+        resultPositionOnPage = result_position_on_page,
         num_results_per_page,
+        numResultsPerPage = num_results_per_page,
         selected_filters,
+        selectedFilters = selected_filters,
         filter_name,
+        filterName = filter_name,
         filter_value,
-        item_id,
+        filterValue = filter_value,
         customer_id,
+        item_id,
+        itemId = customer_id || item_id,
         item_name,
         name,
+        itemName = item_name || name,
       } = parameters;
 
       if (section) {
         bodyParams.section = section;
-      } else {
-        bodyParams.section = 'Products';
       }
 
-      if (variation_id) {
-        bodyParams.variation_id = variation_id;
+      if (variationId) {
+        bodyParams.variation_id = variationId;
       }
 
-      if (result_id) {
-        bodyParams.result_id = result_id;
+      if (resultId) {
+        bodyParams.result_id = resultId;
       }
 
-      if (!helpers.isNil(result_count)) {
-        bodyParams.result_count = result_count;
+      if (!helpers.isNil(resultCount)) {
+        bodyParams.result_count = resultCount;
       }
 
-      if (!helpers.isNil(result_page)) {
-        bodyParams.result_page = result_page;
+      if (!helpers.isNil(resultPage)) {
+        bodyParams.result_page = resultPage;
       }
 
-      if (!helpers.isNil(result_position_on_page)) {
-        bodyParams.result_position_on_page = result_position_on_page;
+      if (!helpers.isNil(resultPositionOnPage)) {
+        bodyParams.result_position_on_page = resultPositionOnPage;
       }
 
-      if (!helpers.isNil(num_results_per_page)) {
-        bodyParams.num_results_per_page = num_results_per_page;
+      if (!helpers.isNil(numResultsPerPage)) {
+        bodyParams.num_results_per_page = numResultsPerPage;
       }
 
-      if (selected_filters) {
-        bodyParams.selected_filters = selected_filters;
+      if (selectedFilters) {
+        bodyParams.selected_filters = selectedFilters;
       }
 
-      if (filter_name) {
-        bodyParams.filter_name = filter_name;
+      if (filterName) {
+        bodyParams.filter_name = filterName;
       }
 
-      if (filter_value) {
-        bodyParams.filter_value = filter_value;
+      if (filterValue) {
+        bodyParams.filter_value = filterValue;
       }
 
-      // Ensure support for both item_id and customer_id as parameters
-      if (item_id) {
-        bodyParams.item_id = item_id;
-      } else if (customer_id) {
-        bodyParams.item_id = customer_id;
+      if (itemId) {
+        bodyParams.item_id = itemId;
       }
 
       // Ensure support for both item_name and name as parameters
-      if (item_name) {
-        bodyParams.item_name = item_name;
-      } else if (name) {
-        bodyParams.item_name = name;
+      if (itemName) {
+        bodyParams.item_name = itemName;
       }
 
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
@@ -1584,9 +1658,9 @@ class Tracker {
    *
    * @function trackGenericResultClick
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.item_id - Product item unique identifier
-   * @param {string} [parameters.item_name] - Product item name
-   * @param {string} [parameters.variation_id] - Product item variation unique identifier
+   * @param {string} parameters.itemId - Product item unique identifier
+   * @param {string} [parameters.itemName] - Product item name
+   * @param {string} [parameters.variationId] - Product item variation unique identifier
    * @param {string} [parameters.section="Products"] - Index section
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -1595,9 +1669,9 @@ class Tracker {
    * @example
    * constructorio.tracker.trackGenericResultClick(
    *     {
-   *         item_id: 'KMH876',
-   *         item_name: 'Red T-Shirt',
-   *         variation_id: 'KMH879-7632',
+   *         itemId: 'KMH876',
+   *         itemName: 'Red T-Shirt',
+   *         variationId: 'KMH879-7632',
    *     },
    * );
    */
@@ -1608,20 +1682,23 @@ class Tracker {
       const bodyParams = {};
       const {
         item_id,
+        itemId = item_id,
         item_name,
+        itemName = item_name,
         variation_id,
-        section,
+        variationId = variation_id,
+        section = 'Products',
       } = parameters;
 
-      bodyParams.section = section || 'Products';
-      bodyParams.item_id = item_id;
+      bodyParams.section = section;
+      bodyParams.item_id = itemId;
 
-      if (item_name) {
-        bodyParams.item_name = item_name;
+      if (itemName) {
+        bodyParams.item_name = itemName;
       }
 
-      if (variation_id) {
-        bodyParams.variation_id = variation_id;
+      if (variationId) {
+        bodyParams.variation_id = variationId;
       }
 
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
@@ -1649,14 +1726,14 @@ class Tracker {
    *
    * @function trackQuizResultsLoaded
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.quiz_id - Quiz identifier
-   * @param {string} parameters.quiz_version_id - Quiz version identifier
-   * @param {string} parameters.quiz_session_id - Quiz session identifier associated with this conversion event
+   * @param {string} parameters.quizId - Quiz identifier
+   * @param {string} parameters.quizVersionId - Quiz version identifier
+   * @param {string} parameters.quizSessionId - Quiz session identifier associated with this conversion event
    * @param {string} parameters.url - Current page url
    * @param {string} [parameters.section='Products'] - Index section
-   * @param {number} [parameters.result_count] - Total number of results
-   * @param {number} [parameters.result_page] - The page of the results
-   * @param {string} [parameters.result_id] - Quiz result identifier (returned in response from Constructor)
+   * @param {number} [parameters.resultCount] - Total number of results
+   * @param {number} [parameters.resultPage] - The page of the results
+   * @param {string} [parameters.resultId] - Quiz result identifier (returned in response from Constructor)
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -1664,11 +1741,11 @@ class Tracker {
    * @example
    * constructorio.tracker.trackQuizResultsLoaded(
    *     {
-   *         quiz_id: 'coffee-quiz',
-   *         quiz_version_id: '1231244',
-   *         quiz_session_id: '3123',
+   *         quizId: 'coffee-quiz',
+   *         quizVersionId: '1231244',
+   *         quizSessionId: '3123',
    *         url: 'www.example.com',
-   *         result_count: 167,
+   *         resultCount: 167,
    *     },
    * );
    */
@@ -1678,26 +1755,32 @@ class Tracker {
       const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/quiz_result_load?`;
       const {
         quiz_id,
+        quizId = quiz_id,
         quiz_version_id,
+        quizVersionId = quiz_version_id,
         quiz_session_id,
+        quizSessionId = quiz_session_id,
         url,
         section = 'Products',
         result_count,
+        resultCount = result_count,
         result_id,
+        resultId = result_id,
         result_page,
+        resultPage = result_page,
       } = parameters;
       const queryParams = {};
       const bodyParams = {};
 
-      if (typeof quiz_id !== 'string') {
+      if (typeof quizId !== 'string') {
         return new Error('"quiz_id" is a required parameter of type string');
       }
 
-      if (typeof quiz_version_id !== 'string') {
+      if (typeof quizVersionId !== 'string') {
         return new Error('"quiz_version_id" is a required parameter of type string');
       }
 
-      if (typeof quiz_session_id !== 'string') {
+      if (typeof quizSessionId !== 'string') {
         return new Error('"quiz_session_id" is a required parameter of type string');
       }
 
@@ -1705,9 +1788,9 @@ class Tracker {
         return new Error('"url" is a required parameter of type string');
       }
 
-      bodyParams.quiz_id = quiz_id;
-      bodyParams.quiz_version_id = quiz_version_id;
-      bodyParams.quiz_session_id = quiz_session_id;
+      bodyParams.quiz_id = quizId;
+      bodyParams.quiz_version_id = quizVersionId;
+      bodyParams.quiz_session_id = quizSessionId;
       bodyParams.url = url;
 
       if (!helpers.isNil(section)) {
@@ -1718,25 +1801,25 @@ class Tracker {
         bodyParams.section = section;
       }
 
-      if (!helpers.isNil(result_count)) {
-        if (typeof result_count !== 'number') {
-          return new Error('"result_count" must be a number');
+      if (!helpers.isNil(resultCount)) {
+        if (typeof resultCount !== 'number') {
+          return new Error('"resultCount" must be a number');
         }
-        bodyParams.result_count = result_count;
+        bodyParams.result_count = resultCount;
       }
 
-      if (!helpers.isNil(result_id)) {
-        if (typeof result_id !== 'string') {
-          return new Error('"result_id" must be a string');
+      if (!helpers.isNil(resultId)) {
+        if (typeof resultId !== 'string') {
+          return new Error('"resultId" must be a string');
         }
-        bodyParams.result_id = result_id;
+        bodyParams.result_id = resultId;
       }
 
-      if (!helpers.isNil(result_page)) {
-        if (typeof result_page !== 'number') {
-          return new Error('"result_page" must be a number');
+      if (!helpers.isNil(resultPage)) {
+        if (typeof resultPage !== 'number') {
+          return new Error('"resultPage" must be a number');
         }
-        bodyParams.result_page = result_page;
+        bodyParams.result_page = resultPage;
       }
 
       bodyParams.action_class = 'result_load';
@@ -1766,17 +1849,17 @@ class Tracker {
    *
    * @function trackQuizResultClick
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.quiz_id - Quiz identifier
-   * @param {string} parameters.quiz_version_id - Quiz version identifier
-   * @param {string} parameters.quiz_session_id - Quiz session identifier associated with this conversion event
-   * @param {string} [parameters.item_id] - Product item unique identifier (Either item_id or item_name is required)
-   * @param {string} [parameters.item_name] - Product item name
+   * @param {string} parameters.quizId - Quiz identifier
+   * @param {string} parameters.quizVersionId - Quiz version identifier
+   * @param {string} parameters.quizSessionId - Quiz session identifier associated with this conversion event
+   * @param {string} [parameters.itemId] - Product item unique identifier (Either item_id or item_name is required)
+   * @param {string} [parameters.itemName] - Product item name
    * @param {string} [parameters.section='Products'] - Index section
-   * @param {number} [parameters.result_count] - Total number of results
-   * @param {number} [parameters.result_page] - The page of the results
-   * @param {string} [parameters.result_id] - Quiz result identifier (returned in response from Constructor)
-   * @param {number} [parameters.result_position_on_page] - Position of clicked item
-   * @param {number} [parameters.num_results_per_page] - Number of results shown
+   * @param {number} [parameters.resultCount] - Total number of results
+   * @param {number} [parameters.resultPage] - The page of the results
+   * @param {string} [parameters.resultId] - Quiz result identifier (returned in response from Constructor)
+   * @param {number} [parameters.resultPositionOnPage] - Position of clicked item
+   * @param {number} [parameters.numResultsPerPage] - Number of results shown
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -1784,11 +1867,11 @@ class Tracker {
    * @example
    * constructorio.tracker.trackQuizResultClick(
    *     {
-   *         quiz_id: 'coffee-quiz',
-   *         quiz_version_id: '1231244',
-   *         quiz_session_id: '123',
-   *         item_id: '123',
-   *         item_name: 'espresso'
+   *         quizId: 'coffee-quiz',
+   *         quizVersionId: '1231244',
+   *         quizSessionId: '123',
+   *         itemId: '123',
+   *         itemName: 'espresso'
    *     },
    * );
    */
@@ -1799,54 +1882,63 @@ class Tracker {
       const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/quiz_result_click?`;
       const {
         quiz_id,
+        quizId = quiz_id,
         quiz_version_id,
+        quizVersionId = quiz_version_id,
         quiz_session_id,
+        quizSessionId = quiz_session_id,
         item_id,
+        itemId = item_id,
         item_name,
+        itemName = item_name,
         result_count,
+        resultCount = result_count,
         result_id,
+        resultId = result_id,
         result_page,
+        resultPage = result_page,
         num_results_per_page,
+        numResultsPerPage = num_results_per_page,
         result_position_on_page,
+        resultPositionOnPage = result_position_on_page,
         section = 'Products',
       } = parameters;
 
       const queryParams = {};
       const bodyParams = {};
 
-      // Ensure required parameters provided
-      if (typeof quiz_id !== 'string') {
+      if (typeof quizId !== 'string') {
         return new Error('"quiz_id" is a required parameter of type string');
       }
 
-      if (typeof quiz_version_id !== 'string') {
+      if (typeof quizVersionId !== 'string') {
         return new Error('"quiz_version_id" is a required parameter of type string');
       }
 
-      if (typeof quiz_session_id !== 'string') {
+      if (typeof quizSessionId !== 'string') {
         return new Error('"quiz_session_id" is a required parameter of type string');
       }
 
-      if (typeof item_id !== 'string' && typeof item_name !== 'string') {
-        return new Error('"item_id" or "item_name" is a required parameter of type string');
+      if (typeof itemId !== 'string' && typeof itemName !== 'string') {
+        return new Error('"itemId" or "itemName" is a required parameter of type string');
       }
 
-      bodyParams.quiz_id = quiz_id;
-      bodyParams.quiz_version_id = quiz_version_id;
-      bodyParams.quiz_session_id = quiz_session_id;
+      bodyParams.quiz_id = quizId;
+      bodyParams.quiz_version_id = quizVersionId;
+      bodyParams.quiz_session_id = quizSessionId;
 
-      if (!helpers.isNil(item_id)) {
-        if (typeof item_id !== 'string') {
+      if (!helpers.isNil(itemId)) {
+        if (typeof itemId !== 'string') {
           return new Error('"item_id" must be a string');
         }
-        bodyParams.item_id = item_id;
+        bodyParams.item_id = itemId;
       }
 
-      if (!helpers.isNil(item_name)) {
-        if (typeof item_name !== 'string') {
+      if (!helpers.isNil(itemName)) {
+        if (typeof itemName !== 'string') {
           return new Error('"item_name" must be a string');
         }
-        bodyParams.item_name = item_name;
+        bodyParams.item_name = itemName;
       }
 
       if (!helpers.isNil(section)) {
@@ -1856,39 +1948,39 @@ class Tracker {
         queryParams.section = section;
       }
 
-      if (!helpers.isNil(result_count)) {
-        if (typeof result_count !== 'number') {
-          return new Error('"result_count" must be a number');
+      if (!helpers.isNil(resultCount)) {
+        if (typeof resultCount !== 'number') {
+          return new Error('"resultCount" must be a number');
         }
-        bodyParams.result_count = result_count;
+        bodyParams.result_count = resultCount;
       }
 
-      if (!helpers.isNil(result_id)) {
-        if (typeof result_id !== 'string') {
-          return new Error('"result_id" must be a string');
+      if (!helpers.isNil(resultId)) {
+        if (typeof resultId !== 'string') {
+          return new Error('"resultId" must be a string');
         }
-        bodyParams.result_id = result_id;
+        bodyParams.result_id = resultId;
       }
 
-      if (!helpers.isNil(result_page)) {
-        if (typeof result_page !== 'number') {
-          return new Error('"result_page" must be a number');
+      if (!helpers.isNil(resultPage)) {
+        if (typeof resultPage !== 'number') {
+          return new Error('"resultPage" must be a number');
         }
-        bodyParams.result_page = result_page;
+        bodyParams.result_page = resultPage;
       }
 
-      if (!helpers.isNil(num_results_per_page)) {
-        if (typeof num_results_per_page !== 'number') {
-          return new Error('"num_results_per_page" must be a number');
+      if (!helpers.isNil(numResultsPerPage)) {
+        if (typeof numResultsPerPage !== 'number') {
+          return new Error('"numResultsPerPage" must be a number');
         }
-        bodyParams.num_results_per_page = num_results_per_page;
+        bodyParams.num_results_per_page = numResultsPerPage;
       }
 
-      if (!helpers.isNil(result_position_on_page)) {
-        if (typeof result_position_on_page !== 'number') {
-          return new Error('"result_position_on_page" must be a number');
+      if (!helpers.isNil(resultPositionOnPage)) {
+        if (typeof resultPositionOnPage !== 'number') {
+          return new Error('"resultPositionOnPage" must be a number');
         }
-        bodyParams.result_position_on_page = result_position_on_page;
+        bodyParams.result_position_on_page = resultPositionOnPage;
       }
 
       bodyParams.action_class = 'result_click';
@@ -1918,17 +2010,17 @@ class Tracker {
    *
    * @function trackQuizConversion
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.quiz_id - Quiz identifier
-   * @param {string} parameters.quiz_version_id - Quiz version identifier
-   * @param {string} parameters.quiz_session_id - Quiz session identifier associated with this conversion event
-   * @param {string} [parameters.item_id] - Product item unique identifier (Either item_id or item_name is required)
-   * @param {string} [parameters.item_name] - Product item name
-   * @param {string} [parameters.variation_id] - Product item variation unique identifier
+   * @param {string} parameters.quizId - Quiz identifier
+   * @param {string} parameters.quizVersionId - Quiz version identifier
+   * @param {string} parameters.quizSessionId - Quiz session identifier associated with this conversion event
+   * @param {string} [parameters.itemId] - Product item unique identifier (Either item_id or item_name is required)
+   * @param {string} [parameters.itemName] - Product item name
+   * @param {string} [parameters.variationId] - Product item variation unique identifier
    * @param {string} [parameters.revenue] - Sale price if available, otherwise the regular (retail) price of item
    * @param {string} [parameters.section='Products'] - Index section
    * @param {string} [parameters.type='add_to_cart'] - Conversion type
-   * @param {boolean} [parameters.is_custom_type] - Specify if type is custom conversion type
-   * @param {string} [parameters.display_name] - Display name for the custom conversion type
+   * @param {boolean} [parameters.isCustomType] - Specify if type is custom conversion type
+   * @param {string} [parameters.displayName] - Display name for the custom conversion type
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -1936,11 +2028,11 @@ class Tracker {
    * @example
    * constructorio.tracker.trackQuizConversion(
    *     {
-   *         quiz_id: 'coffee-quiz',
-   *         quiz_version_id: '1231244',
-   *         quiz_session_id: '3123',
-   *         item_name: 'espresso',
-   *         variation_id: '167',
+   *         quizId: 'coffee-quiz',
+   *         quizVersionId: '1231244',
+   *         quizSessionId: '3123',
+   *         itemName: 'espresso',
+   *         variationId: '167',
    *         type: 'add_to_cart",
    *         revenue: '1.0"
    *     },
@@ -1953,61 +2045,69 @@ class Tracker {
       const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/quiz_conversion?`;
       const {
         quiz_id,
+        quizId = quiz_id,
         quiz_version_id,
+        quizVersionId = quiz_version_id,
         quiz_session_id,
+        quizSessionId = quiz_session_id,
         item_id,
+        itemId = item_id,
         item_name,
+        itemName = item_name,
         variation_id,
+        variationId = variation_id,
         revenue,
         section = 'Products',
         type,
         is_custom_type,
+        isCustomType = is_custom_type,
         display_name,
+        displayName = display_name,
       } = parameters;
 
       const queryParams = {};
       const bodyParams = {};
 
       // Ensure required parameters provided
-      if (typeof quiz_id !== 'string') {
-        return new Error('"quiz_id" is a required parameter of type string');
+      if (typeof quizId !== 'string') {
+        return new Error('"quizId" is a required parameter of type string');
       }
 
-      if (typeof quiz_version_id !== 'string') {
-        return new Error('"quiz_version_id" is a required parameter of type string');
+      if (typeof quizVersionId !== 'string') {
+        return new Error('"quizVersionId" is a required parameter of type string');
       }
 
-      if (typeof quiz_session_id !== 'string') {
-        return new Error('"quiz_session_id" is a required parameter of type string');
+      if (typeof quizSessionId !== 'string') {
+        return new Error('"quizSessionId" is a required parameter of type string');
       }
 
-      if (typeof item_id !== 'string' && typeof item_name !== 'string') {
-        return new Error('"item_id" or "item_name" is a required parameter of type string');
+      if (typeof itemId !== 'string' && typeof itemName !== 'string') {
+        return new Error('"itemId" or "itemName" is a required parameter of type string');
       }
 
-      bodyParams.quiz_id = quiz_id;
-      bodyParams.quiz_version_id = quiz_version_id;
-      bodyParams.quiz_session_id = quiz_session_id;
+      bodyParams.quiz_id = quizId;
+      bodyParams.quiz_version_id = quizVersionId;
+      bodyParams.quiz_session_id = quizSessionId;
 
-      if (!helpers.isNil(item_id)) {
-        if (typeof item_id !== 'string') {
-          return new Error('"item_id" must be a string');
+      if (!helpers.isNil(itemId)) {
+        if (typeof itemId !== 'string') {
+          return new Error('"itemId" must be a string');
         }
-        bodyParams.item_id = item_id;
+        bodyParams.item_id = itemId;
       }
 
-      if (!helpers.isNil(item_name)) {
-        if (typeof item_name !== 'string') {
-          return new Error('"item_name" must be a string');
+      if (!helpers.isNil(itemName)) {
+        if (typeof itemName !== 'string') {
+          return new Error('"itemName" must be a string');
         }
-        bodyParams.item_name = item_name;
+        bodyParams.item_name = itemName;
       }
 
-      if (!helpers.isNil(variation_id)) {
-        if (typeof variation_id !== 'string') {
-          return new Error('"variation_id" must be a string');
+      if (!helpers.isNil(variationId)) {
+        if (typeof variationId !== 'string') {
+          return new Error('"variationId" must be a string');
         }
-        bodyParams.variation_id = variation_id;
+        bodyParams.variation_id = variationId;
       }
 
       if (!helpers.isNil(revenue)) {
@@ -2031,18 +2131,18 @@ class Tracker {
         bodyParams.type = type;
       }
 
-      if (!helpers.isNil(is_custom_type)) {
-        if (typeof is_custom_type !== 'boolean') {
-          return new Error('"is_custom_type" must be a boolean');
+      if (!helpers.isNil(isCustomType)) {
+        if (typeof isCustomType !== 'boolean') {
+          return new Error('"isCustomType" must be a boolean');
         }
-        bodyParams.is_custom_type = is_custom_type;
+        bodyParams.is_custom_type = isCustomType;
       }
 
-      if (!helpers.isNil(display_name)) {
-        if (typeof display_name !== 'string') {
-          return new Error('"display_name" must be a string');
+      if (!helpers.isNil(displayName)) {
+        if (typeof displayName !== 'string') {
+          return new Error('"displayName" must be a string');
         }
-        bodyParams.display_name = display_name;
+        bodyParams.display_name = displayName;
       }
 
       bodyParams.action_class = 'conversion';
