@@ -2484,27 +2484,85 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   describe('trackSearchResultClick', () => {
     const term = 'Where The Wild Things Are';
     const requiredParameters = {
-      item_name: 'name',
-      item_id: 'customer-id',
+      itemName: 'name',
+      itemId: 'customer-id',
     };
     const legacyParameters = {
       name: 'name',
-      customer_id: 'customer-id',
+      customerId: 'customer-id',
     };
     const optionalParameters = {
-      variation_id: 'foobar',
-      result_id: 'result-id',
+      variationId: 'foobar',
+      resultId: 'result-id',
       section: 'Products',
     };
     const v2Parameters = {
-      result_count: 1337,
-      result_page: 3,
-      result_position_on_page: 3,
-      num_results_per_page: 20,
-      selected_filters: {
+      resultCount: 1337,
+      resultPage: 3,
+      resultPositionOnPage: 3,
+      numResultsPerPage: 20,
+      selectedFilters: {
         test: ['test'],
       },
     };
+
+    it('Backwards Compatibility - V2 Should respond with a valid response when term and required parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const snakeCaseParameters = {
+        item_name: 'name',
+        item_id: 'customer-id',
+        variation_id: 'foobar',
+        result_id: 'result-id',
+        result_count: 1337,
+        result_page: 3,
+        result_position_on_page: 3,
+        num_results_per_page: 20,
+        selected_filters: {
+          test: ['test'],
+        },
+      };
+
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Body
+        expect(bodyParams).to.have.property('item_name').to.equal(snakeCaseParameters.item_name);
+        expect(bodyParams).to.have.property('item_id').to.equal(snakeCaseParameters.item_id);
+        expect(bodyParams).to.have.property('variation_id').to.equal(snakeCaseParameters.variation_id);
+        expect(bodyParams).to.have.property('result_page').to.equal(snakeCaseParameters.result_page);
+        expect(bodyParams).to.have.property('result_position_on_page').to.equal(snakeCaseParameters.result_position_on_page);
+        expect(bodyParams).to.have.property('result_count').to.equal(snakeCaseParameters.result_count);
+        expect(bodyParams).to.have.property('num_results_per_page').to.equal(snakeCaseParameters.num_results_per_page);
+        expect(bodyParams).to.have.property('selected_filters').to.deep.equal(snakeCaseParameters.selected_filters);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      tracker.on('error', (error) => {
+        done(error);
+      });
+
+      // eslint-disable-next-line max-len
+      expect(tracker.trackSearchResultClickV2(term, snakeCaseParameters)).to.equal(true);
+    });
 
     it('V2 Should respond with a valid response when term and required parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
@@ -2526,15 +2584,15 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Body
-        expect(bodyParams).to.have.property('item_name').to.equal(requiredParameters.item_name);
-        expect(bodyParams).to.have.property('item_id').to.equal(requiredParameters.item_id);
-        expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variation_id);
+        expect(bodyParams).to.have.property('item_name').to.equal(requiredParameters.itemName);
+        expect(bodyParams).to.have.property('item_id').to.equal(requiredParameters.itemId);
+        expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
         expect(bodyParams).to.have.property('section').to.deep.equal(optionalParameters.section);
-        expect(bodyParams).to.have.property('result_page').to.equal(v2Parameters.result_page);
-        expect(bodyParams).to.have.property('result_position_on_page').to.equal(v2Parameters.result_position_on_page);
-        expect(bodyParams).to.have.property('result_count').to.equal(v2Parameters.result_count);
-        expect(bodyParams).to.have.property('num_results_per_page').to.equal(v2Parameters.num_results_per_page);
-        expect(bodyParams).to.have.property('selected_filters').to.deep.equal(v2Parameters.selected_filters);
+        expect(bodyParams).to.have.property('result_page').to.equal(v2Parameters.resultPage);
+        expect(bodyParams).to.have.property('result_position_on_page').to.equal(v2Parameters.resultPositionOnPage);
+        expect(bodyParams).to.have.property('result_count').to.equal(v2Parameters.resultCount);
+        expect(bodyParams).to.have.property('num_results_per_page').to.equal(v2Parameters.numResultsPerPage);
+        expect(bodyParams).to.have.property('selected_filters').to.deep.equal(v2Parameters.selectedFilters);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -2549,6 +2607,43 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
       // eslint-disable-next-line max-len
       expect(tracker.trackSearchResultClickV2(term, { ...requiredParameters, ...optionalParameters, ...v2Parameters })).to.equal(true);
+    });
+
+    it('Backwards Compatibility - Should respond with a valid response when term and required parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const snakeCaseParameters = {
+        item_name: 'name',
+        item_id: 'customer-id',
+        variation_id: 'foobar',
+        result_id: 'result-id',
+      };
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('name').to.equal(snakeCaseParameters.item_name);
+        expect(requestParams).to.have.property('customer_id').to.equal(snakeCaseParameters.item_id);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackSearchResultClick(term, snakeCaseParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -2568,8 +2663,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('name').to.equal(requiredParameters.item_name);
-        expect(requestParams).to.have.property('customer_id').to.equal(requiredParameters.item_id);
+        expect(requestParams).to.have.property('name').to.equal(requiredParameters.itemName);
+        expect(requestParams).to.have.property('customer_id').to.equal(requiredParameters.itemId);
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Response
@@ -2699,8 +2794,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('result_id').to.equal(optionalParameters.result_id);
-        expect(requestParams).to.have.property('variation_id').to.equal(optionalParameters.variation_id);
+        expect(requestParams).to.have.property('result_id').to.equal(optionalParameters.resultId);
+        expect(requestParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('GET');
@@ -2727,7 +2822,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('customer_id').to.equal(legacyParameters.customer_id);
+        expect(requestParams).to.have.property('customer_id').to.equal(legacyParameters.customerId);
         expect(requestParams).to.have.property('name').to.equal(legacyParameters.name);
 
         // Response
@@ -2757,8 +2852,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('name').to.equal(requiredParameters.item_name);
-        expect(requestParams).to.have.property('customer_id').to.equal(requiredParameters.item_id);
+        expect(requestParams).to.have.property('name').to.equal(requiredParameters.itemName);
+        expect(requestParams).to.have.property('customer_id').to.equal(requiredParameters.itemId);
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
         expect(requestParams).to.have.property('item_is_convertible').to.equal('false');
 
