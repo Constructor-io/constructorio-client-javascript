@@ -1167,13 +1167,51 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
   describe('trackItemDetailLoad', () => {
     const requiredParameters = {
-      item_id: 'test1',
-      item_name: 'test name',
+      itemId: 'test1',
+      itemName: 'test name',
       url: 'http://constructor.io',
     };
     const optionalParameters = {
-      variation_id: 'test1-small',
+      variationId: 'test1-small',
     };
+
+    it('Backwards Compatibility - Should respond with a valid response when required parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const snakeCaseParameters = {
+        item_id: 'test1',
+        item_name: 'test name',
+        url: 'http://constructor.io',
+        variation_id: 'test1-small',
+      };
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('item_id').to.equal(snakeCaseParameters.item_id);
+        expect(requestParams).to.have.property('item_name').to.equal(snakeCaseParameters.item_name);
+        expect(requestParams).to.have.property('variation_id').to.equal(snakeCaseParameters.variation_id);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackItemDetailLoad(snakeCaseParameters)).to.equal(true);
+    });
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
@@ -1192,8 +1230,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.item_id);
-        expect(requestParams).to.have.property('item_name').to.equal(requiredParameters.item_name);
+        expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.itemId);
+        expect(requestParams).to.have.property('item_name').to.equal(requiredParameters.itemName);
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Response
@@ -1296,7 +1334,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('variation_id').to.deep.equal(optionalParameters.variation_id);
+        expect(requestParams).to.have.property('variation_id').to.deep.equal(optionalParameters.variationId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
