@@ -462,8 +462,9 @@ class Tracker {
         const baseUrl = `${this.behavioralV2Url}search_submit?`;
         const {
           original_query,
+          originalQuery = original_query,
           user_input,
-          userInput = original_query || user_input,
+          userInput = originalQuery || user_input,
           group_id,
           groupId = group_id,
           section,
@@ -475,7 +476,7 @@ class Tracker {
           section,
         };
 
-        if (group_id) {
+        if (groupId) {
           bodyParams.filters = { group_id: groupId };
         }
 

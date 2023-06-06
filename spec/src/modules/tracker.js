@@ -1445,11 +1445,55 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
   describe('trackSearchSubmit', () => {
     const term = 'Where The Wild Things Are';
-    const requiredParameters = { original_query: 'original-query' };
+    const requiredParameters = { originalQuery: 'original-query' };
     const optionalParameters = {
-      group_id: 'group-id',
-      display_name: 'display-name',
+      groupId: 'group-id',
+      displayName: 'display-name',
     };
+
+    it('Backwards Compatibility - V2 Should respond with a valid response when term and required parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const snakeCaseParameters = {
+        original_query: 'original-query',
+        group_id: 'group-id',
+        display_name: 'display-name',
+      };
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Body
+        expect(bodyParams).to.have.property('user_input').to.equal(snakeCaseParameters.original_query);
+        expect(bodyParams).to.have.property('search_term').to.equal(term);
+        expect(bodyParams.filters).to.have.property('group_id').to.equal(snakeCaseParameters.group_id);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      tracker.on('error', (error) => {
+        done(error);
+      });
+
+      expect(tracker.trackSearchSubmitV2(term, snakeCaseParameters)).to.equal(true);
+    });
 
     it('V2 Should respond with a valid response when term and required parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
@@ -1472,9 +1516,9 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Body
-        expect(bodyParams).to.have.property('user_input').to.equal(requiredParameters.original_query);
+        expect(bodyParams).to.have.property('user_input').to.equal(requiredParameters.originalQuery);
         expect(bodyParams).to.have.property('search_term').to.equal(term);
-        expect(bodyParams.filters).to.have.property('group_id').to.equal(optionalParameters.group_id);
+        expect(bodyParams.filters).to.have.property('group_id').to.equal(optionalParameters.groupId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -1488,6 +1532,41 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackSearchSubmitV2(term, { ...requiredParameters, ...optionalParameters })).to.equal(true);
+    });
+
+    it('Backwards Compatibility - Should respond with a valid response when term and required parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const snakeCaseParameters = {
+        original_query: 'original-query',
+        group_id: 'group-id',
+        display_name: 'display-name',
+      };
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('original_query').to.equal(snakeCaseParameters.original_query);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackSearchSubmit(term, snakeCaseParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -1507,7 +1586,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('original_query').to.equal(requiredParameters.original_query);
+        expect(requestParams).to.have.property('original_query').to.equal(requiredParameters.originalQuery);
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Response
@@ -1611,8 +1690,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         // Request
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('group').to.deep.equal({
-          group_id: optionalParameters.group_id,
-          display_name: optionalParameters.display_name,
+          group_id: optionalParameters.groupId,
+          display_name: optionalParameters.displayName,
         });
 
         // Response
