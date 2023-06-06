@@ -615,8 +615,9 @@ class Tracker {
         const baseUrl = `${this.behavioralV2Url}search_result_load?`;
         const {
           num_results,
+          numResults = num_results,
           result_count,
-          resultCount = num_results || result_count,
+          resultCount = numResults || result_count,
           customer_ids,
           item_ids,
           items = customer_ids || item_ids,
