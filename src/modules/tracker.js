@@ -1778,15 +1778,15 @@ class Tracker {
       const bodyParams = {};
 
       if (typeof quizId !== 'string') {
-        return new Error('"quiz_id" is a required parameter of type string');
+        return new Error('"quizId" is a required parameter of type string');
       }
 
       if (typeof quizVersionId !== 'string') {
-        return new Error('"quiz_version_id" is a required parameter of type string');
+        return new Error('"quizVersionId" is a required parameter of type string');
       }
 
       if (typeof quizSessionId !== 'string') {
-        return new Error('"quiz_session_id" is a required parameter of type string');
+        return new Error('"quizSessionId" is a required parameter of type string');
       }
 
       if (typeof url !== 'string') {
@@ -1913,15 +1913,15 @@ class Tracker {
       const bodyParams = {};
 
       if (typeof quizId !== 'string') {
-        return new Error('"quiz_id" is a required parameter of type string');
+        return new Error('"quizId" is a required parameter of type string');
       }
 
       if (typeof quizVersionId !== 'string') {
-        return new Error('"quiz_version_id" is a required parameter of type string');
+        return new Error('"quizVersionId" is a required parameter of type string');
       }
 
       if (typeof quizSessionId !== 'string') {
-        return new Error('"quiz_session_id" is a required parameter of type string');
+        return new Error('"quizSessionId" is a required parameter of type string');
       }
 
       if (typeof itemId !== 'string' && typeof itemName !== 'string') {
@@ -1934,14 +1934,14 @@ class Tracker {
 
       if (!helpers.isNil(itemId)) {
         if (typeof itemId !== 'string') {
-          return new Error('"item_id" must be a string');
+          return new Error('"itemId" must be a string');
         }
         bodyParams.item_id = itemId;
       }
 
       if (!helpers.isNil(itemName)) {
         if (typeof itemName !== 'string') {
-          return new Error('"item_name" must be a string');
+          return new Error('"itemName" must be a string');
         }
         bodyParams.item_name = itemName;
       }

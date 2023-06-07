@@ -6523,17 +6523,55 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
   describe('trackQuizResultsLoaded', () => {
     const requiredParameters = {
-      quiz_id: 'coffee-quiz',
-      quiz_version_id: '1231243',
-      quiz_session_id: '13443',
+      quizId: 'coffee-quiz',
+      quizVersionId: '1231243',
+      quizSessionId: '13443',
       url: 'www.example.com',
     };
     const optionalParameters = {
       section: 'Products',
-      result_count: 1,
-      result_id: '12312',
-      result_page: 1,
+      resultCount: 1,
+      resultId: '12312',
+      resultPage: 1,
     };
+
+    it('Backwards Compatibility - Should respond with a valid response when required parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const snakeCaseParameters = {
+        quiz_id: 'coffee-quiz',
+        quiz_version_id: '1231243',
+        quiz_session_id: '13443',
+        url: 'www.example.com',
+      };
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        expect(requestParams).to.have.property('quiz_id').to.equal(snakeCaseParameters.quiz_id);
+        expect(requestParams).to.have.property('quiz_version_id').to.equal(snakeCaseParameters.quiz_version_id);
+        expect(requestParams).to.have.property('url').to.equal(snakeCaseParameters.url);
+        expect(requestParams).to.have.property('action_class').to.equal('result_load');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackQuizResultsLoaded(snakeCaseParameters)).to.equal(true);
+    });
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
@@ -6552,8 +6590,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
-        expect(requestParams).to.have.property('quiz_id').to.equal(requiredParameters.quiz_id);
-        expect(requestParams).to.have.property('quiz_version_id').to.equal(requiredParameters.quiz_version_id);
+        expect(requestParams).to.have.property('quiz_id').to.equal(requiredParameters.quizId);
+        expect(requestParams).to.have.property('quiz_version_id').to.equal(requiredParameters.quizVersionId);
         expect(requestParams).to.have.property('url').to.equal(requiredParameters.url);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(requestParams).to.have.property('action_class').to.equal('result_load');
@@ -6586,8 +6624,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
-        expect(requestParams).to.have.property('quiz_id').to.equal(requiredParameters.quiz_id);
-        expect(requestParams).to.have.property('quiz_version_id').to.equal(requiredParameters.quiz_version_id);
+        expect(requestParams).to.have.property('quiz_id').to.equal(requiredParameters.quizId);
+        expect(requestParams).to.have.property('quiz_version_id').to.equal(requiredParameters.quizVersionId);
         expect(requestParams).to.have.property('url').to.equal(requiredParameters.url);
         expect(requestParams).to.have.property('result_count').to.equal(0);
         expect(requestParams).to.have.property('action_class').to.equal('result_load');
@@ -6692,9 +6730,9 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('result_count').to.equal(optionalParameters.result_count);
-        expect(requestParams).to.have.property('result_id').to.equal(optionalParameters.result_id);
-        expect(requestParams).to.have.property('result_page').to.equal(optionalParameters.result_page);
+        expect(requestParams).to.have.property('result_count').to.equal(optionalParameters.resultCount);
+        expect(requestParams).to.have.property('result_id').to.equal(optionalParameters.resultId);
+        expect(requestParams).to.have.property('result_page').to.equal(optionalParameters.resultPage);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
 
         // Response
@@ -6708,22 +6746,22 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         .to.equal(true);
     });
 
-    it('Should throw an error when invalid quiz_id is provided', () => {
+    it('Should throw an error when invalid quizId is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackQuizResultsLoaded({ ...requiredParameters, quiz_id: 1 })).to.be.an('error');
+      expect(tracker.trackQuizResultsLoaded({ ...requiredParameters, quizId: 1 })).to.be.an('error');
     });
 
-    it('Should throw an error when invalid quiz_version_id is provided', () => {
+    it('Should throw an error when invalid quizVersionId is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackQuizResultsLoaded({ ...requiredParameters, quiz_version_id: 1 })).to.be.an('error');
+      expect(tracker.trackQuizResultsLoaded({ ...requiredParameters, quizVersionId: 1 })).to.be.an('error');
     });
 
-    it('Should throw an error when invalid quiz_session_id is provided', () => {
+    it('Should throw an error when invalid quizSessionId is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackQuizResultsLoaded({ ...requiredParameters, quiz_session_id: 1 })).to.be.an('error');
+      expect(tracker.trackQuizResultsLoaded({ ...requiredParameters, quizSessionId: 1 })).to.be.an('error');
     });
 
     it('Should throw an error when invalid url is provided', () => {
@@ -6738,39 +6776,39 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackQuizResultsLoaded({ ...requiredParameters, section: 1 })).to.be.an('error');
     });
 
-    it('Should throw an error when invalid result_count is provided', () => {
+    it('Should throw an error when invalid resultCount is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackQuizResultsLoaded({ ...requiredParameters, result_count: '1' })).to.be.an('error');
+      expect(tracker.trackQuizResultsLoaded({ ...requiredParameters, resultCount: '1' })).to.be.an('error');
     });
 
-    it('Should throw an error when invalid result_page is provided', () => {
+    it('Should throw an error when invalid resultPage is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackQuizResultsLoaded({ ...requiredParameters, result_page: '1' })).to.be.an('error');
+      expect(tracker.trackQuizResultsLoaded({ ...requiredParameters, resultPage: '1' })).to.be.an('error');
     });
 
-    it('Should throw an error when invalid result_id is provided', () => {
+    it('Should throw an error when invalid resultId is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackQuizResultsLoaded({ ...requiredParameters, result_id: 1 })).to.be.an('error');
+      expect(tracker.trackQuizResultsLoaded({ ...requiredParameters, resultId: 1 })).to.be.an('error');
     });
 
     it('Should throw an error when no quiz_id is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
-      const { quiz_id: _, ...rest } = requiredParameters;
+      const { quizId: _, ...rest } = requiredParameters;
       expect(tracker.trackQuizResultsLoaded(rest)).to.be.an('error');
     });
 
     it('Should throw an error when no quiz_version_id is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
-      const { quiz_version_id: _, ...rest } = requiredParameters;
+      const { quizVersionId: _, ...rest } = requiredParameters;
       expect(tracker.trackQuizResultsLoaded(rest)).to.be.an('error');
     });
 
     it('Should throw an error when no quiz_session_id is provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
-      const { quiz_session_id: _, ...rest } = requiredParameters;
+      const { quizSessionId: _, ...rest } = requiredParameters;
       expect(tracker.trackQuizResultsLoaded(rest)).to.be.an('error');
     });
 
