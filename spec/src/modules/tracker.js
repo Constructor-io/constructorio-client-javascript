@@ -4663,18 +4663,61 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   describe('trackRecommendationClick', () => {
     // Note: `variation_id` parameter not being passed as none are defined for this item_id in catalog
     const requiredParameters = {
-      pod_id: 'test_pod_id',
-      strategy_id: 'strategy-id',
-      item_id: 'product0dbae320-3950-11ea-9251-8dee6d0eb3cd-new',
+      podId: 'test_pod_id',
+      strategyId: 'strategy-id',
+      itemId: 'product0dbae320-3950-11ea-9251-8dee6d0eb3cd-new',
     };
     const optionalParameters = {
-      result_position_on_page: 10,
-      num_results_per_page: 5,
-      result_count: 5,
-      result_page: 1,
-      result_id: 'result-id',
+      resultPositionOnPage: 10,
+      numResultsPerPage: 5,
+      resultCount: 5,
+      resultPage: 1,
+      resultId: 'result-id',
       section: 'Products',
     };
+
+    it('Backwards Compatibility - Should respond with a valid response when required parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const snakeCaseParameters = {
+        pod_id: 'test_pod_id',
+        strategy_id: 'strategy-id',
+        item_id: 'product0dbae320-3950-11ea-9251-8dee6d0eb3cd-new',
+        result_position_on_page: 10,
+        num_results_per_page: 5,
+        result_count: 5,
+        result_page: 1,
+        result_id: 'result-id',
+        section: 'Products',
+      };
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('pod_id').to.equal(snakeCaseParameters.pod_id);
+        expect(requestParams).to.have.property('strategy_id').to.equal(snakeCaseParameters.strategy_id);
+        expect(requestParams).to.have.property('item_id').to.equal(snakeCaseParameters.item_id);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackRecommendationClick(snakeCaseParameters)).to.equal(true);
+    });
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
@@ -4693,9 +4736,9 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('pod_id').to.equal(requiredParameters.pod_id);
-        expect(requestParams).to.have.property('strategy_id').to.equal(requiredParameters.strategy_id);
-        expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.item_id);
+        expect(requestParams).to.have.property('pod_id').to.equal(requiredParameters.podId);
+        expect(requestParams).to.have.property('strategy_id').to.equal(requiredParameters.strategyId);
+        expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.itemId);
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Response
@@ -4708,7 +4751,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackRecommendationClick(requiredParameters)).to.equal(true);
     });
 
-    it('Should respond with a valid response when only item_name is provided', (done) => {
+    it('Backwards Compatibility - Should respond with a valid response when only item_name is provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -4733,6 +4776,43 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('pod_id').to.equal(parametersWithItemName.pod_id);
         expect(requestParams).to.have.property('strategy_id').to.equal(parametersWithItemName.strategy_id);
         expect(requestParams).to.have.property('item_name').to.equal(parametersWithItemName.item_name);
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackRecommendationClick(parametersWithItemName)).to.equal(true);
+    });
+
+    it('Should respond with a valid response when only item_name is provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const parametersWithItemName = {
+        podId: 'test_pod_id',
+        strategyId: 'strategy-id',
+        itemName: 'product',
+      };
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('pod_id').to.equal(parametersWithItemName.podId);
+        expect(requestParams).to.have.property('strategy_id').to.equal(parametersWithItemName.strategyId);
+        expect(requestParams).to.have.property('item_name').to.equal(parametersWithItemName.itemName);
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Response
@@ -4862,11 +4942,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('result_position_on_page').to.equal(optionalParameters.result_position_on_page);
-        expect(requestParams).to.have.property('num_results_per_page').to.equal(optionalParameters.num_results_per_page);
-        expect(requestParams).to.have.property('result_count').to.equal(optionalParameters.result_count);
-        expect(requestParams).to.have.property('result_page').to.equal(optionalParameters.result_page);
-        expect(requestParams).to.have.property('result_id').to.equal(optionalParameters.result_id);
+        expect(requestParams).to.have.property('result_position_on_page').to.equal(optionalParameters.resultPositionOnPage);
+        expect(requestParams).to.have.property('num_results_per_page').to.equal(optionalParameters.numResultsPerPage);
+        expect(requestParams).to.have.property('result_count').to.equal(optionalParameters.resultCount);
+        expect(requestParams).to.have.property('result_page').to.equal(optionalParameters.resultPage);
+        expect(requestParams).to.have.property('result_id').to.equal(optionalParameters.resultId);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
 
         // Response
@@ -4888,7 +4968,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       const parameters = {
         ...requiredParameters,
         ...optionalParameters,
-        item_id: 'non-existent-item-id',
+        itemId: 'non-existent-item-id',
       };
 
       tracker.on('success', (responseParams) => {
@@ -4896,11 +4976,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('result_position_on_page').to.equal(parameters.result_position_on_page);
-        expect(requestParams).to.have.property('num_results_per_page').to.equal(parameters.num_results_per_page);
-        expect(requestParams).to.have.property('result_count').to.equal(parameters.result_count);
-        expect(requestParams).to.have.property('result_page').to.equal(parameters.result_page);
-        expect(requestParams).to.have.property('result_id').to.equal(parameters.result_id);
+        expect(requestParams).to.have.property('result_position_on_page').to.equal(parameters.resultPositionOnPage);
+        expect(requestParams).to.have.property('num_results_per_page').to.equal(parameters.numResultsPerPage);
+        expect(requestParams).to.have.property('result_count').to.equal(parameters.resultCount);
+        expect(requestParams).to.have.property('result_page').to.equal(parameters.resultPage);
+        expect(requestParams).to.have.property('result_id').to.equal(parameters.resultId);
         expect(requestParams).to.have.property('section').to.equal(parameters.section);
 
         // Response
@@ -4923,7 +5003,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       const parameters = {
         ...requiredParameters,
         ...optionalParameters,
-        item_id: 'non-existent-item-id',
+        itemId: 'non-existent-item-id',
       };
 
       tracker.on('error', (responseParams) => {
@@ -4931,11 +5011,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('result_position_on_page').to.equal(parameters.result_position_on_page);
-        expect(requestParams).to.have.property('num_results_per_page').to.equal(parameters.num_results_per_page);
-        expect(requestParams).to.have.property('result_count').to.equal(parameters.result_count);
-        expect(requestParams).to.have.property('result_page').to.equal(parameters.result_page);
-        expect(requestParams).to.have.property('result_id').to.equal(parameters.result_id);
+        expect(requestParams).to.have.property('result_position_on_page').to.equal(parameters.resultPositionOnPage);
+        expect(requestParams).to.have.property('num_results_per_page').to.equal(parameters.numResultsPerPage);
+        expect(requestParams).to.have.property('result_count').to.equal(parameters.resultCount);
+        expect(requestParams).to.have.property('result_page').to.equal(parameters.resultPage);
+        expect(requestParams).to.have.property('result_id').to.equal(parameters.resultId);
         expect(requestParams).to.have.property('section').to.equal(parameters.section);
 
         // Response
