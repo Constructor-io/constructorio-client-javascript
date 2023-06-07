@@ -6100,12 +6100,47 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   describe('trackGenericResultClick', () => {
     // Note: `variation_id` parameter not being passed as none are defined for this item_id in catalog
     const requiredParameters = {
-      item_id: 'product0dbae320-3950-11ea-9251-8dee6d0eb3cd-new',
+      itemId: 'product0dbae320-3950-11ea-9251-8dee6d0eb3cd-new',
     };
     const optionalParameters = {
-      item_name: 'Example Product Name',
+      itemName: 'Example Product Name',
       section: 'Products',
     };
+
+    it('Backwards compatibility - Should respond with a valid response when required parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const snakeCaseParameters = {
+        item_id: 'product0dbae320-3950-11ea-9251-8dee6d0eb3cd-new',
+        item_name: 'Example Product Name',
+        variation_id: 'product-variation',
+      };
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        expect(requestParams).to.have.property('item_id').to.equal(snakeCaseParameters.item_id);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackGenericResultClick(snakeCaseParameters)).to.equal(true);
+    });
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
@@ -6125,7 +6160,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
-        expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.item_id);
+        expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.itemId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -6257,8 +6292,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         // Request
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
-        expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.item_id);
-        expect(requestParams).to.have.property('item_name').to.equal(requiredParameters.item_name);
+        expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.itemId);
+        expect(requestParams).to.have.property('item_name').to.equal(optionalParameters.itemName);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -6279,7 +6314,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       const parameters = {
         ...requiredParameters,
         ...optionalParameters,
-        item_id: 'non-existent-item-id',
+        itemId: 'non-existent-item-id',
       };
 
       tracker.on('success', (responseParams) => {
@@ -6288,8 +6323,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         // Request
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('section').to.equal(parameters.section);
-        expect(requestParams).to.have.property('item_id').to.equal(parameters.item_id);
-        expect(requestParams).to.have.property('item_name').to.deep.equal(parameters.item_name);
+        expect(requestParams).to.have.property('item_id').to.equal(parameters.itemId);
+        expect(requestParams).to.have.property('item_name').to.deep.equal(parameters.itemName);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -6311,7 +6346,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       const parameters = {
         ...requiredParameters,
         ...optionalParameters,
-        item_id: 'non-existent-item-id',
+        itemId: 'non-existent-item-id',
       };
 
       tracker.on('error', (responseParams) => {
@@ -6320,8 +6355,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         // Request
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('section').to.equal(parameters.section);
-        expect(requestParams).to.have.property('item_id').to.equal(parameters.item_id);
-        expect(requestParams).to.have.property('item_name').to.equal(parameters.item_name);
+        expect(requestParams).to.have.property('item_id').to.equal(parameters.itemId);
+        expect(requestParams).to.have.property('item_name').to.equal(parameters.itemName);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
