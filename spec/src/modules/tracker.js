@@ -3073,7 +3073,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
   });
 
-  describe.only('trackConversion', () => {
+  describe('trackConversion', () => {
     const term = 'Where The Wild Things Are';
     const requiredParameters = {
       itemId: 'customer-id',
@@ -3694,19 +3694,65 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       items: [
         {
           // cspell:disable-next-line
-          item_id: 'productc60366c42b5d4194ad39962fd88d7266',
-          variation_id: '456',
+          itemId: 'productc60366c42b5d4194ad39962fd88d7266',
+          variationId: '456',
         },
         {
-          item_id: 'product55f1b3577fa84947a93ea01b91d52f45',
+          itemId: 'product55f1b3577fa84947a93ea01b91d52f45',
         },
       ],
       revenue: 123.45,
     };
     const optionalParameters = {
-      order_id: '123938123',
+      orderId: '123938123',
       section: 'Products',
     };
+    const snakeCaseItems = [
+      {
+        // cspell:disable-next-line
+        item_id: 'productc60366c42b5d4194ad39962fd88d7266',
+        variation_id: '456',
+      },
+      {
+        item_id: 'product55f1b3577fa84947a93ea01b91d52f45',
+      },
+    ];
+
+    it('Backwards Compatibility - Should respond with a valid response when required parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const snakeCaseParameters = {
+        order_id: '123938123',
+        revenue: 123.45,
+        items: snakeCaseItems,
+      };
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        expect(requestParams).to.have.property('items').to.deep.equal(snakeCaseParameters.items);
+        expect(requestParams).to.have.property('revenue').to.equal(snakeCaseParameters.revenue);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackPurchase(snakeCaseParameters)).to.equal(true);
+    });
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
@@ -3726,7 +3772,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
-        expect(requestParams).to.have.property('items').to.deep.equal(requiredParameters.items);
+        expect(requestParams).to.have.property('items').to.deep.equal(snakeCaseItems);
         expect(requestParams).to.have.property('revenue').to.equal(requiredParameters.revenue);
 
         // Response
@@ -3753,7 +3799,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         // Request
         expect(fetchSpy).to.have.been.called;
         expect(requestQueryParams).to.have.property('section').to.equal(optionalParameters.section);
-        expect(requestBodyParams).to.have.property('order_id').to.equal(optionalParameters.order_id);
+        expect(requestBodyParams).to.have.property('order_id').to.equal(optionalParameters.orderId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -3931,11 +3977,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         ...requiredParameters,
         items: [
           {
-            item_id: 'bad-item-id-10',
-            variation_id: '456',
+            itemId: 'bad-item-id-10',
+            variationId: '456',
           },
           {
-            item_id: 'bad-item-id-11',
+            itemId: 'bad-item-id-11',
           },
         ],
       })).to.equal(true);
@@ -3967,7 +4013,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         ...requiredParameters,
         items: [
           {
-            item_id: 'bad-item-id-10',
+            itemId: 'bad-item-id-10',
           },
         ],
       })).to.equal(true);
@@ -3999,8 +4045,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         ...requiredParameters,
         items: [
           {
-            item_id: 'bad-item-id-10',
-            variation_id: '456',
+            itemId: 'bad-item-id-10',
+            variationId: '456',
           },
         ],
       })).to.equal(true);
@@ -4069,7 +4115,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         expect(tracker.trackPurchase(Object.assign(requiredParameters, {
           ...optionalParameters,
-          order_id: '848291039',
+          orderId: '848291039',
         }))).to.equal(false);
 
         setTimeout(() => {
@@ -4109,7 +4155,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
       expect(tracker.trackPurchase(Object.assign(requiredParameters, {
         ...optionalParameters,
-        order_id: '328192019',
+        orderId: '328192019',
       }))).to.equal(true);
     });
 
