@@ -2009,7 +2009,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       // eslint-disable-next-line max-len
-      expect(tracker.trackSearchResultsLoadedV2(term, {...requiredParameters, ...v2Parameters})).to.equal(true);
+      expect(tracker.trackSearchResultsLoadedV2(term, { ...requiredParameters, ...v2Parameters })).to.equal(true);
     });
 
     it('Backwards Compatibility - Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -2525,7 +2525,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           test: ['test'],
         },
       };
-
 
       tracker.on('success', (responseParams) => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
@@ -3097,7 +3096,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         ...requestQueueOptions,
       });
       const snakeCaseParameters = {
-        item_id: 'labradoodle',
+        item_id: 'item_name',
         revenue: 123,
         item_name: 'item_name',
         variation_id: 'variation-id',
