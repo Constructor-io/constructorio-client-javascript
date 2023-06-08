@@ -764,7 +764,7 @@ class Tracker {
    * @function trackSearchResultClickV2
    * @param {string} searchTerm - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.itemName - Product item name (Either item_name or item_id is required)
+   * @param {string} parameters.itemName - Product item name (Either itemName or itemId is required)
    * @param {string} parameters.itemId - Product item unique identifier
    * @param {string} [parameters.variationId] - Product item variation unique identifier
    * @param {string} [parameters.resultId] - Search result identifier (returned in response from Constructor)
@@ -1682,7 +1682,7 @@ class Tracker {
    */
   trackGenericResultClick(parameters, networkParameters = {}) {
     // Ensure required parameters are provided
-    if (typeof parameters === 'object' && !!parameters.item_id) {
+    if (typeof parameters === 'object') {
       const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/result_click?`;
       const bodyParams = {};
       const {
@@ -1710,20 +1710,22 @@ class Tracker {
       const requestMethod = 'POST';
       const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
 
-      this.requests.queue(
-        requestURL,
-        requestMethod,
-        requestBody,
-        networkParameters,
-      );
-      this.requests.send();
+      if (itemId) {
+        this.requests.queue(
+          requestURL,
+          requestMethod,
+          requestBody,
+          networkParameters,
+        );
+        this.requests.send();
 
-      return true;
+        return true;
+      }
     }
 
     this.requests.send();
 
-    return new Error('A parameters object with an "item_id" property is required.');
+    return new Error('A parameters object with an "itemId" property is required.');
   }
 
   /**
@@ -1857,7 +1859,7 @@ class Tracker {
    * @param {string} parameters.quizId - Quiz identifier
    * @param {string} parameters.quizVersionId - Quiz version identifier
    * @param {string} parameters.quizSessionId - Quiz session identifier associated with this conversion event
-   * @param {string} [parameters.itemId] - Product item unique identifier (Either item_id or item_name is required)
+   * @param {string} [parameters.itemId] - Product item unique identifier (Either itemId or itemName is required)
    * @param {string} [parameters.itemName] - Product item name
    * @param {string} [parameters.section='Products'] - Index section
    * @param {number} [parameters.resultCount] - Total number of results
@@ -2018,7 +2020,7 @@ class Tracker {
    * @param {string} parameters.quizId - Quiz identifier
    * @param {string} parameters.quizVersionId - Quiz version identifier
    * @param {string} parameters.quizSessionId - Quiz session identifier associated with this conversion event
-   * @param {string} [parameters.itemId] - Product item unique identifier (Either item_id or item_name is required)
+   * @param {string} [parameters.itemId] - Product item unique identifier (Either itemId or itemName is required)
    * @param {string} [parameters.itemName] - Product item name
    * @param {string} [parameters.variationId] - Product item variation unique identifier
    * @param {string} [parameters.revenue] - Sale price if available, otherwise the regular (retail) price of item

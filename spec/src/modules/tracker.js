@@ -2009,7 +2009,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       // eslint-disable-next-line max-len
-      expect(tracker.trackSearchResultsLoadedV2(term, snakeCaseParameters)).to.equal(true);
+      expect(tracker.trackSearchResultsLoadedV2(term, {...requiredParameters, ...v2Parameters})).to.equal(true);
     });
 
     it('Backwards Compatibility - Should respond with a valid response when term and required parameters are provided', (done) => {
