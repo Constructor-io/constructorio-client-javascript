@@ -228,6 +228,7 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.fmt_options.hidden_fields).to.eql(hiddenFields);
         expect(requestedUrlParams.fmt_options).to.have.property('hidden_fields').to.deep.equal(hiddenFields);
         done();
       });
