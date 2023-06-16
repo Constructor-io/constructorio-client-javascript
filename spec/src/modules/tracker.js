@@ -1175,7 +1175,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       variationId: 'test1-small',
     };
 
-    it('Backwards Compatibility - Should respond with a valid response when required parameters are provided', (done) => {
+    it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -3717,7 +3717,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       },
     ];
 
-    it('Backwards Compatibility - Should respond with a valid response when required parameters are provided', (done) => {
+    it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -4272,7 +4272,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       section: 'Products',
     };
 
-    it('Backwards Compatibility - Should respond with a valid response when required parameters are provided', (done) => {
+    it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -4675,7 +4675,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       section: 'Products',
     };
 
-    it('Backwards Compatibility - Should respond with a valid response when required parameters are provided', (done) => {
+    it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -5212,7 +5212,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       },
     ];
 
-    it('Backwards Compatibility - Should respond with a valid response when required parameters are provided', (done) => {
+    it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -5635,7 +5635,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       selectedFilters: { foo: ['bar'] },
     };
 
-    it('Backwards Compatibility - Should respond with a valid response when required parameters are provided', (done) => {
+    it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -6106,7 +6106,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       section: 'Products',
     };
 
-    it('Backwards Compatibility - Should respond with a valid response when required parameters are provided', (done) => {
+    it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -6534,7 +6534,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       resultPage: 1,
     };
 
-    it('Backwards Compatibility - Should respond with a valid response when required parameters are provided', (done) => {
+    it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -6985,7 +6985,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       resultPositionOnPage: 1,
     };
 
-    it('Backwards Compatibility - Should respond with a valid response when required parameters are provided', (done) => {
+    it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -7425,7 +7425,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       displayName: 'name',
     };
 
-    it('Backwards Compatibility - Should respond with a valid response when required parameters are provided', (done) => {
+    it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
