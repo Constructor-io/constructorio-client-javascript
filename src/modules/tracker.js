@@ -441,6 +441,7 @@ class Tracker {
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.userInput - The current autocomplete search query
    * @param {string} [parameters.groupId] - Group identifier of selected item
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -590,6 +591,7 @@ class Tracker {
    * @param {string} [parameters.sortOrder] - Sort order ('ascending' or 'descending')
    * @param {string} [parameters.sortBy] - Sorting method
    * @param {object[]} [parameters.items] - List of product item unique identifiers in search results listing
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -1284,7 +1286,6 @@ class Tracker {
    * @example
    * constructorio.tracker.trackRecommendationClick(
    *     {
-   *         resultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
    *         variationId: 'KMH879-7632',
    *         resultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
    *         resultCount: 22,
@@ -1694,23 +1695,22 @@ class Tracker {
         variationId = variation_id,
         section = 'Products',
       } = parameters;
-
-      bodyParams.section = section;
-      bodyParams.item_id = itemId;
-
-      if (itemName) {
-        bodyParams.item_name = itemName;
-      }
-
-      if (variationId) {
-        bodyParams.variation_id = variationId;
-      }
-
-      const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
-      const requestMethod = 'POST';
-      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
-
       if (itemId) {
+        bodyParams.section = section;
+        bodyParams.item_id = itemId;
+
+        if (itemName) {
+          bodyParams.item_name = itemName;
+        }
+
+        if (variationId) {
+          bodyParams.variation_id = variationId;
+        }
+
+        const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
+        const requestMethod = 'POST';
+        const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
+
         this.requests.queue(
           requestURL,
           requestMethod,
@@ -2040,8 +2040,8 @@ class Tracker {
    *         quizSessionId: '3123',
    *         itemName: 'espresso',
    *         variationId: '167',
-   *         type: 'add_to_cart",
-   *         revenue: '1.0"
+   *         type: 'add_to_cart',
+   *         revenue: '1.0'
    *     },
    * );
    */
