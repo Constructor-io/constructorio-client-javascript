@@ -204,3 +204,17 @@ export interface SearchSuggestion extends Item {
     total_num_results?: number
   } & ItemData;
 }
+
+export interface VariationsMap {
+  group_by: Array<{
+    name: string,
+    field: string
+  }>;
+  values: {
+    [key: string]: {
+        aggregation: 'first' | 'min' | 'max' | 'all',
+        field: string
+    },
+  },
+  dtype: 'array' | 'object'
+}

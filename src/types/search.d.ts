@@ -10,6 +10,7 @@ import {
   RequestFeatureVariant,
   ResultSources,
   SortOption,
+  VariationsMap,
 } from '.';
 import EventDispatcher from './event-dispatcher';
 
@@ -27,7 +28,7 @@ export interface SearchParameters {
   preFilterExpression?: FilterExpression;
   hiddenFields?: string[];
   hiddenFacets?: string[];
-  variationsMap?: Record<string, any>;
+  variationsMap?: VariationsMap;
   qsParam?: Record<string, any>;
 }
 declare class Search {
@@ -95,6 +96,7 @@ export interface Result extends Record<string, any> {
   is_slotted: false;
   labels: Record<string, any>;
   variations: Record<string, any>[];
+  variations_map: Record<string, any> | Record<string, any>[];
 }
 
 export interface Redirect extends Record<string, any> {
