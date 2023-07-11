@@ -114,7 +114,7 @@ export interface SelectQuestion extends BaseQuestion {
 
 export interface OpenQuestion extends BaseQuestion {
   type: 'open'
-  inputPlaceholder?: Nullable<string>;
+  input_placeholder?: Nullable<string>;
 }
 
 export interface CoverQuestion extends BaseQuestion {
