@@ -83,7 +83,10 @@ export interface QuizResultsResponse extends Record<string, any> {
   quiz_version_id: string;
   quiz_session_id: string;
   quiz_id: string;
-  quiz_selected_options: Array<string>;
+  quiz_selected_options: Array<{
+    value: string;
+    has_attribute: boolean
+  }>;
 }
 
 export interface QuizResultData extends Record<string, any> {
