@@ -1,4 +1,4 @@
-import { Nullable } from './index.d';
+import { Nullable } from "./index.d";
 import {
   ConstructorClientOptions,
   Facet,
@@ -10,7 +10,7 @@ import {
   SortOption,
   FilterExpression,
   ResultSources,
-} from '.';
+} from ".";
 
 export default Quizzes;
 
@@ -85,7 +85,7 @@ export interface QuizResultsResponse extends Record<string, any> {
   quiz_id: string;
   quiz_selected_options: Array<{
     value: string;
-    has_attribute: boolean
+    has_attribute: boolean;
   }>;
 }
 
@@ -112,17 +112,17 @@ export interface BaseQuestion extends Record<string, any> {
 }
 
 export interface SelectQuestion extends BaseQuestion {
-  type: 'single' | 'multiple';
+  type: "single" | "multiple";
   options: QuestionOption[];
 }
 
 export interface OpenQuestion extends BaseQuestion {
-  type: 'open';
+  type: "open";
   input_placeholder?: Nullable<string>;
 }
 
 export interface CoverQuestion extends BaseQuestion {
-  type: 'cover';
+  type: "cover";
 }
 
 export interface QuizResult extends Record<string, any> {
