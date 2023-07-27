@@ -88,7 +88,7 @@ declare class Tracker {
 
   trackPurchase(
     parameters: {
-      items: ItemsTracked[];
+      items: ItemsTracked & {quantity: number}[];
       revenue: number;
       orderId?: string;
       section?: string;

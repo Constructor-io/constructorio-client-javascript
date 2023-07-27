@@ -221,5 +221,5 @@ export interface VariationsMap {
 
 export interface ItemsTracked {
   itemId: string;
-  variationId?: string
+  variationId?: string;
 }
