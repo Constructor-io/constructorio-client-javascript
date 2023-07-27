@@ -218,3 +218,8 @@ export interface VariationsMap {
   },
   dtype: 'array' | 'object'
 }
+
+export interface ItemsTracked {
+  itemId: string;
+  variationId?: string
+}
