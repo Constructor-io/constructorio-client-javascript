@@ -1030,7 +1030,7 @@ class Tracker {
         bodyParams.variation_id = variationId;
       }
 
-      if (revenue) {
+      if (revenue || revenue === 0) {
         bodyParams.revenue = revenue.toString();
       }
 
@@ -1128,7 +1128,7 @@ class Tracker {
         bodyParams.items = items.slice(0, 100).map((item) => helpers.toSnakeCaseKeys(item, false));
       }
 
-      if (revenue) {
+      if (revenue || revenue === 0) {
         bodyParams.revenue = revenue;
       }
 
