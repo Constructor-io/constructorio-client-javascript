@@ -1,45 +1,43 @@
 import { expectAssignable } from 'tsd';
 import { QuizResultsResponse, NextQuestionResponse } from '..';
 
-expectAssignable<NextQuestionResponse>(
-  {
-    next_question: {
-      id: 2,
-      title: 'What do you want to ask',
-      description: 'Sample description',
-      type: 'multiple',
-      cta_text: 'Next',
-      images: {
-        primary_url: 'https://example.com/image',
-        primary_alt: 'Example image',
-        secondary_url: 'https://example.com/image',
-        secondary_alt: 'Example image',
-      },
-      options: [
-        {
-          id: 1,
-          value: 'Who',
-          attribute: {
-            name: 'group_id',
-            value: 'test-value',
-          },
-        },
-        {
-          id: 2,
-          value: 'What',
-          attribute: {
-            name: 'group_id',
-            value: 'test-value',
-          },
-        },
-      ],
+expectAssignable<NextQuestionResponse>({
+  next_question: {
+    id: 2,
+    title: 'What do you want to ask',
+    description: 'Sample description',
+    type: 'multiple',
+    cta_text: 'Next',
+    images: {
+      primary_url: 'https://example.com/image',
+      primary_alt: 'Example image',
+      secondary_url: 'https://example.com/image',
+      secondary_alt: 'Example image',
     },
-    quiz_version_id: '6bfaa6d5-7272-466b-acd9-4bcf322a2f1e',
-    quiz_id: 'test-quiz',
-    quiz_session_id: '132feaa5-9968-4c5d-8605-d128747188d6',
-    is_last_question: false,
+    options: [
+      {
+        id: 1,
+        value: 'Who',
+        attribute: {
+          name: 'group_id',
+          value: 'test-value',
+        },
+      },
+      {
+        id: 2,
+        value: 'What',
+        attribute: {
+          name: 'group_id',
+          value: 'test-value',
+        },
+      },
+    ],
   },
-);
+  quiz_version_id: '6bfaa6d5-7272-466b-acd9-4bcf322a2f1e',
+  quiz_id: 'test-quiz',
+  quiz_session_id: '132feaa5-9968-4c5d-8605-d128747188d6',
+  is_last_question: false,
+});
 
 expectAssignable<NextQuestionResponse>({
   next_question: {
@@ -119,7 +117,10 @@ expectAssignable<QuizResultsResponse>({
     },
   },
   response: {
-    result_sources: { token_match: { count: 1 }, embeddings_match: { count: 0 } },
+    result_sources: {
+      token_match: { count: 1 },
+      embeddings_match: { count: 0 },
+    },
     facets: [
       {
         display_name: 'Color',
@@ -223,7 +224,10 @@ expectAssignable<QuizResultsResponse>({
         feature_name: 'filter_items',
         display_name: 'Filter-item boosts',
         enabled: true,
-        variant: { name: 'filter_items_w_atcs_and_purchases', display_name: '' },
+        variant: {
+          name: 'filter_items_w_atcs_and_purchases',
+          display_name: '',
+        },
       },
       {
         feature_name: 'manual_searchandizing',
@@ -248,7 +252,8 @@ expectAssignable<QuizResultsResponse>({
       },
       {
         feature_name: 'use_reranker_service_for_all',
-        display_name: 'Use reranker service to rerank search and browse results',
+        display_name:
+          'Use reranker service to rerank search and browse results',
         enabled: false,
         variant: null,
       },
@@ -270,4 +275,5 @@ expectAssignable<QuizResultsResponse>({
   quiz_id: 'test-quiz',
   quiz_version_id: '6bfcb6d3-7272-466b-acd9-4bcf322f2f1e',
   quiz_session_id: '163fefe3-2968-4c5d-8605-d128747188d6',
+  quiz_selected_options: [{ value: 'OPTION_1', has_attribute: true }],
 });

@@ -4,6 +4,7 @@ import {
   NetworkParameters,
   RequestFeature,
   RequestFeatureVariant,
+  VariationsMap,
 } from '.';
 import EventDispatcher from './event-dispatcher';
 
@@ -14,7 +15,7 @@ export interface IAutocompleteParameters {
   filters?: Record<string, any>;
   resultsPerSection?: Record<string, number>;
   hiddenFields?: string[];
-  variationsMap?: Record<string, any>;
+  variationsMap?: VariationsMap;
 }
 
 declare class Autocomplete {

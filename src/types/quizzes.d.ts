@@ -83,6 +83,10 @@ export interface QuizResultsResponse extends Record<string, any> {
   quiz_version_id: string;
   quiz_session_id: string;
   quiz_id: string;
+  quiz_selected_options: Array<{
+    value: string;
+    has_attribute: boolean;
+  }>;
 }
 
 export interface QuizResultData extends Record<string, any> {
@@ -97,7 +101,7 @@ export interface QuizResultData extends Record<string, any> {
   variations: Record<string, any>[];
 }
 
-export type Question = SelectQuestion | OpenQuestion | CoverQuestion
+export type Question = SelectQuestion | OpenQuestion | CoverQuestion;
 
 export interface BaseQuestion extends Record<string, any> {
   id: number;
@@ -108,17 +112,17 @@ export interface BaseQuestion extends Record<string, any> {
 }
 
 export interface SelectQuestion extends BaseQuestion {
-  type: 'single' | 'multiple'
+  type: 'single' | 'multiple';
   options: QuestionOption[];
 }
 
 export interface OpenQuestion extends BaseQuestion {
-  type: 'open'
-  inputPlaceholder?: Nullable<string>;
+  type: 'open';
+  input_placeholder?: Nullable<string>;
 }
 
 export interface CoverQuestion extends BaseQuestion {
-  type: 'cover'
+  type: 'cover';
 }
 
 export interface QuizResult extends Record<string, any> {

@@ -1,4 +1,4 @@
-import { ConstructorClientOptions, NetworkParameters } from '.';
+import { ConstructorClientOptions, NetworkParameters, VariationsMap } from '.';
 import EventDispatcher from './event-dispatcher';
 
 export default Recommendations;
@@ -9,7 +9,7 @@ export interface RecommendationsParameters {
   section?: string;
   term?: string;
   filters?: Record<string, any>;
-  variationsMap?: Record<string, any>;
+  variationsMap?: VariationsMap;
   hiddenFields?: string[];
 }
 
