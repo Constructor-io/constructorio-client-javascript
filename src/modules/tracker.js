@@ -584,13 +584,13 @@ class Tracker {
    * @param {string} searchTerm - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.url - URL of the search results page
+   * @param {object[]} parameters.items - List of product item unique identifiers in search results listing
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - Current page of search results
    * @param {string} [parameters.resultId] - Browse result identifier (returned in response from Constructor)
    * @param {object} [parameters.selectedFilters] - Selected filters
    * @param {string} [parameters.sortOrder] - Sort order ('ascending' or 'descending')
    * @param {string} [parameters.sortBy] - Sorting method
-   * @param {object[]} [parameters.items] - List of product item unique identifiers in search results listing
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -698,7 +698,7 @@ class Tracker {
    * @param {string} term - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {number} parameters.numResults - Total number of results
-   * @param {string[]} [parameters.itemIds] - List of product item unique identifiers in search results listing
+   * @param {string[]} parameters.itemIds - List of product item unique identifiers in search results listing
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -1400,6 +1400,7 @@ class Tracker {
    * @param {string} parameters.url - Current page URL
    * @param {string} parameters.filterName - Filter name
    * @param {string} parameters.filterValue - Filter value
+   * @param {object[]} parameters.items - List of product item objects
    * @param {string} [parameters.section="Products"] - Index section
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - Page number of results
@@ -1407,7 +1408,6 @@ class Tracker {
    * @param {object} [parameters.selectedFilters] - Selected filters
    * @param {string} [parameters.sortOrder] - Sort order ('ascending' or 'descending')
    * @param {string} [parameters.sortBy] - Sorting method
-   * @param {object[]} [parameters.items] - List of product item objects
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}

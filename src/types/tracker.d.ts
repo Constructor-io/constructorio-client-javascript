@@ -48,11 +48,27 @@ declare class Tracker {
     networkParameters?: NetworkParameters
   ): true | Error;
 
+  trackSearchResultsLoadedV2(
+    term: string,
+    parameters: {
+      url: string;
+      items: ItemTracked[];
+      resultCount?: number;
+      resultPage?: number;
+      resultId?: string;
+      selectedFilters?: Record<string, any>;
+      sortOrder?: string;
+      sortBy?: string;
+      section?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
   trackSearchResultsLoaded(
     term: string,
     parameters: {
       numResults: number;
-      itemIds?: string[];
+      itemIds: string[];
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -139,7 +155,7 @@ declare class Tracker {
       selectedFilters?: object;
       sortOrder?: string;
       sortBy?: string;
-      items?: ItemTracked[];
+      items: ItemTracked[];
     },
     networkParameters?: NetworkParameters
   ): true | Error;
