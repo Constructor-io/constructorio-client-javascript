@@ -37,7 +37,7 @@ expectAssignable<NextQuestionResponse>({
   quiz_id: 'test-quiz',
   quiz_session_id: '132feaa5-9968-4c5d-8605-d128747188d6',
   is_last_question: false,
-  total_questions: 0,
+  total_questions: 1,
 });
 
 expectAssignable<NextQuestionResponse>({
@@ -59,7 +59,7 @@ expectAssignable<NextQuestionResponse>({
   quiz_id: 'test-quiz',
   quiz_session_id: '132feaa5-9968-4c5d-8605-d128747188d6',
   is_last_question: false,
-  total_questions: 0,
+  total_questions: 1,
 });
 
 expectAssignable<QuizResultsResponse>({
