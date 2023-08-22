@@ -1754,6 +1754,7 @@ class Tracker {
    *         quizSessionId: '3123',
    *         url: 'www.example.com',
    *         resultCount: 167,
+   *         items: [{ itemId: 'KMH876', itemName: 'coffee' }, { itemId: 'KMH140', variationId: '123' }],
    *     },
    * );
    */
