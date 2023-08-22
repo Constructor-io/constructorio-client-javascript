@@ -6532,7 +6532,28 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       resultCount: 1,
       resultId: '12312',
       resultPage: 1,
+      items: [
+        {
+          itemId: '123',
+          variationId: '456',
+        },
+        {
+          itemName: 'product test',
+          itemId: '789',
+        },
+      ],
     };
+    const snakeCaseItems = [
+      {
+        // cspell:disable-next-line
+        item_id: '123',
+        variation_id: '456',
+      },
+      {
+        item_name: 'product test',
+        item_id: '789',
+      },
+    ];
 
     it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
@@ -6545,6 +6566,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         quiz_version_id: '1231243',
         quiz_session_id: '13443',
         url: 'www.example.com',
+        items: snakeCaseItems,
       };
 
       tracker.on('success', (responseParams) => {
@@ -6560,6 +6582,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('quiz_id').to.equal(snakeCaseParameters.quiz_id);
         expect(requestParams).to.have.property('quiz_version_id').to.equal(snakeCaseParameters.quiz_version_id);
         expect(requestParams).to.have.property('url').to.equal(snakeCaseParameters.url);
+        expect(requestParams).to.have.property('items').to.deep.equal(snakeCaseItems);
         expect(requestParams).to.have.property('action_class').to.equal('result_load');
 
         // Response
@@ -6593,6 +6616,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('quiz_version_id').to.equal(requiredParameters.quizVersionId);
         expect(requestParams).to.have.property('url').to.equal(requiredParameters.url);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
+        expect(requestParams).to.have.property('items').to.deep.equal(snakeCaseItems);
         expect(requestParams).to.have.property('action_class').to.equal('result_load');
 
         // Response
@@ -6733,6 +6757,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('result_id').to.equal(optionalParameters.resultId);
         expect(requestParams).to.have.property('result_page').to.equal(optionalParameters.resultPage);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
+        expect(requestParams).to.have.property('items').to.deep.equal(snakeCaseItems);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
