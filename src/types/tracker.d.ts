@@ -197,6 +197,7 @@ declare class Tracker {
       resultCount?: number;
       resultPage?: number;
       resultId?: string;
+      items: ItemTracked[];
     },
     networkParameters?: NetworkParameters
   ): true | Error;

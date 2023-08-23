@@ -1737,6 +1737,7 @@ class Tracker {
    * @param {string} parameters.quizVersionId - Quiz version identifier
    * @param {string} parameters.quizSessionId - Quiz session identifier associated with this conversion event
    * @param {string} parameters.url - Current page url
+   * @param {object[]} parameters.items - List of product item objects
    * @param {string} [parameters.section='Products'] - Index section
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - The page of the results
@@ -1753,9 +1754,11 @@ class Tracker {
    *         quizSessionId: '3123',
    *         url: 'www.example.com',
    *         resultCount: 167,
+   *         items: [{ itemId: 'KMH876', itemName: 'coffee' }, { itemId: 'KMH140', variationId: '123' }],
    *     },
    * );
    */
+  // eslint-disable-next-line complexity
   trackQuizResultsLoaded(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
@@ -1775,9 +1778,14 @@ class Tracker {
         resultId = result_id,
         result_page,
         resultPage = result_page,
+        items,
       } = parameters;
       const queryParams = {};
       const bodyParams = {};
+
+      if (items && Array.isArray(items)) {
+        bodyParams.items = items.slice(0, 100).map((item) => helpers.toSnakeCaseKeys(item, false));
+      }
 
       if (typeof quizId !== 'string') {
         return new Error('"quizId" is a required parameter of type string');
