@@ -22,6 +22,7 @@ declare class Tracker {
       itemName: string;
       itemId: string;
       variationId?: string;
+      url: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
