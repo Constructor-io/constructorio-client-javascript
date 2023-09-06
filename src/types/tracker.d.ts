@@ -21,6 +21,7 @@ declare class Tracker {
     parameters: {
       itemName: string;
       itemId: string;
+      url: string;
       variationId?: string;
     },
     networkParameters?: NetworkParameters
