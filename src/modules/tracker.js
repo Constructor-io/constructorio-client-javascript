@@ -1,5 +1,5 @@
 /* eslint-disable object-curly-newline, no-underscore-dangle, camelcase, no-unneeded-ternary */
-const EventEmitter = require('events');
+const EventEmitter = require('events-polyfill');
 const helpers = require('../utils/helpers');
 const RequestQueue = require('../utils/request-queue');
 

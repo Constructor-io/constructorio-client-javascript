@@ -1,4 +1,4 @@
-import EventEmitter = require('events');
+import EventEmitter = require('events-polyfill');
 import { ConstructorClientOptions, ItemTracked, NetworkParameters } from '.';
 import RequestQueue = require('../utils/request-queue');
 
