@@ -7,6 +7,7 @@ export * from './recommendations';
 export * from './browse';
 export * from './tracker';
 export * from './event-dispatcher';
+export * from './constructorio';
 
 export interface NetworkParameters extends Record<string, any> {
   timeout?: number;
