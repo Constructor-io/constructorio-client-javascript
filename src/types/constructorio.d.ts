@@ -6,6 +6,8 @@ import Quizzes from './quizzes';
 import Tracker from './tracker';
 import { ConstructorClientOptions } from '.';
 
+export = ConstructorIO;
+
 declare class ConstructorIO {
   constructor(options: ConstructorClientOptions);
 
