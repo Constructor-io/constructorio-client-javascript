@@ -3,7 +3,6 @@ import EventDispatcher from './event-dispatcher';
 import ConstructorIO from './constructorio';
 
 export default ConstructorIO;
-
 export * from './search';
 export * from './autocomplete';
 export * from './quizzes';
