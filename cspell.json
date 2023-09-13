@@ -11,7 +11,8 @@
     "lib",
     "docs",
     "dist",
-    "test/utils/botlist.js"
+    "test/utils/botlist.js",
+    "src/utils/events.js"
   ],
   // flagWords - list of words to be always considered incorrect
   // This is useful for offensive words and common spelling errors.
