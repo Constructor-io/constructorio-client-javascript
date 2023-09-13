@@ -48,7 +48,6 @@
     "@babel/preset-env": "^7.15.8",
     "@babel/register": "^7.15.3",
     "@cspell/eslint-plugin": "^6.8.2",
-    "@types/events": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^5.48.1",
     "@typescript-eslint/parser": "^5.48.1",
     "chai": "^4.2.0",
@@ -74,7 +73,6 @@
   "dependencies": {
     "@constructor-io/constructorio-id": "^2.4.10",
     "crc-32": "^1.2.2",
-    "events": "^3.0.0",
     "fetch-ponyfill": "^7.1.0",
     "store2": "^2.14.2"
   },
