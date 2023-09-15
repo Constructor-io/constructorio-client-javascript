@@ -210,6 +210,7 @@ declare class Tracker {
       quizSessionId: string;
       itemId?: string;
       itemName?: string;
+      variationId?: string;
       section?: string;
       resultCount?: number;
       resultPage?: number;
