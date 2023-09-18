@@ -1837,8 +1837,6 @@ class Tracker {
         bodyParams.result_page = resultPage;
       }
 
-      bodyParams.action_class = 'result_load';
-
       const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
       const requestMethod = 'POST';
       const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
@@ -1869,6 +1867,7 @@ class Tracker {
    * @param {string} parameters.quizSessionId - Quiz session identifier associated with this conversion event
    * @param {string} [parameters.itemId] - Product item unique identifier (Either itemId or itemName is required)
    * @param {string} [parameters.itemName] - Product item name
+   * @param {string} [parameters.variationId] - Product variation unique identifier
    * @param {string} [parameters.section='Products'] - Index section
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - The page of the results
@@ -1887,6 +1886,7 @@ class Tracker {
    *         quizSessionId: '123',
    *         itemId: '123',
    *         itemName: 'espresso'
+   *         variationId: '733431',
    *     },
    * );
    */
@@ -1917,6 +1917,7 @@ class Tracker {
         result_position_on_page,
         resultPositionOnPage = result_position_on_page,
         section = 'Products',
+        variationId,
       } = parameters;
 
       const queryParams = {};
@@ -1954,6 +1955,13 @@ class Tracker {
           return new Error('"itemName" must be a string');
         }
         bodyParams.item_name = itemName;
+      }
+
+      if (!helpers.isNil(variationId)) {
+        if (typeof variationId !== 'string') {
+          return new Error('"variationId" must be a string');
+        }
+        bodyParams.variation_id = variationId;
       }
 
       if (!helpers.isNil(section)) {
@@ -1997,8 +2005,6 @@ class Tracker {
         }
         bodyParams.result_position_on_page = resultPositionOnPage;
       }
-
-      bodyParams.action_class = 'result_click';
 
       const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
       const requestMethod = 'POST';
@@ -2159,8 +2165,6 @@ class Tracker {
         }
         bodyParams.display_name = displayName;
       }
-
-      bodyParams.action_class = 'conversion';
 
       const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
       const requestMethod = 'POST';
