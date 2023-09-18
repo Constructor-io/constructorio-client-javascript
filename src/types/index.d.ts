@@ -1,5 +1,8 @@
 import EventDispatcher from './event-dispatcher';
 
+import ConstructorIO from './constructorio';
+
+export default ConstructorIO;
 export * from './search';
 export * from './autocomplete';
 export * from './quizzes';
@@ -7,6 +10,7 @@ export * from './recommendations';
 export * from './browse';
 export * from './tracker';
 export * from './event-dispatcher';
+export * from './constructorio';
 
 export interface NetworkParameters extends Record<string, any> {
   timeout?: number;

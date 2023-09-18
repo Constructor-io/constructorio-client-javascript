@@ -3,7 +3,7 @@
   "version": "2.36.1",
   "description": "Constructor.io JavaScript client",
   "main": "lib/constructorio.js",
-  "types": "lib/types/constructorio.d.ts",
+  "types": "lib/types/index.d.ts",
   "scripts": {
     "clean": "sudo rm -rf node_modules package-lock.json",
     "version": "npm run verify-node-version && npm run docs && git add ./docs/* && npm run bundle && git add -A ./dist",
