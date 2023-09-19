@@ -357,4 +357,5 @@ module.exports = [
   'SEOkicks',
   'tracemyfile',
   'Nimbostratus-Bot',
+  'Bytespider',
 ];
