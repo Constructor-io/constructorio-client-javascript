@@ -35,7 +35,6 @@ class RequestQueue {
       const queue = RequestQueue.get();
 
       if (requestContainsPii(url, body)) {
-        console.log(requestContainsPii(url, body));
         return;
       }
 
