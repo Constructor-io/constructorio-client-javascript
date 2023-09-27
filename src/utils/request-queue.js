@@ -2,6 +2,7 @@
 const store = require('./store');
 const HumanityCheck = require('./humanity-check');
 const helpers = require('./helpers');
+const { requestContainsPii } = require('./helpers');
 
 const storageKey = '_constructorio_requests';
 const requestTTL = 180000; // 3 minutes in milliseconds
@@ -32,6 +33,11 @@ class RequestQueue {
   queue(url, method = 'GET', body = {}, networkParameters = {}) {
     if (this.sendTrackingEvents && !this.humanity.isBot()) {
       const queue = RequestQueue.get();
+
+      if (requestContainsPii(url, body)) {
+        console.log(requestContainsPii(url, body));
+        return;
+      }
 
       queue.push({
         url,
