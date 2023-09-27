@@ -102,6 +102,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         'daniel()*@gmail.com',
         'daniel@%*.com',
         'daniel@tillero@gmail.com',
+        // eslint-disable-next-line @cspell/spellchecker
         'daniel@tillero',
       ],
       phone_number: [
