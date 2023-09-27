@@ -5,6 +5,7 @@
   no-unused-expressions,
   max-nested-callbacks,
 */
+/* cspell:disable */
 const dotenv = require('dotenv');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
@@ -102,7 +103,6 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         'daniel()*@gmail.com',
         'daniel@%*.com',
         'daniel@tillero@gmail.com',
-        // eslint-disable-next-line @cspell/spellchecker
         'daniel@tillero',
       ],
       phone_number: [
