@@ -41,7 +41,7 @@ export interface ConstructorClientOptions {
   apiKey: string;
   version?: string;
   serviceUrl?: string;
-  sessionId?: string;
+  sessionId?: number;
   clientId?: string;
   userId?: string;
   segments?: string[];
