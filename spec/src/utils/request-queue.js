@@ -25,7 +25,7 @@ const { fetch } = fetchPonyfill({ Promise });
 const bundled = process.env.BUNDLED === 'true';
 const testApiKey = process.env.TEST_REQUEST_API_KEY;
 
-describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
+describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
   // Don't run tests in bundle context, as these tests are for library internals
   if (!bundled) {
     this.timeout(3000);
@@ -35,17 +35,17 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
     let requestQueueOptions = {};
     const pii = {
       email: [
-        'example@constructor.io',
-        'daniel-100@constructor.io',
-        'daniel.100@constructor.io',
-        'daniel111@tillero.com',
-        'daniel+123@psl.info',
-        'daniel-100@tillero.net',
-        'daniel.100@tillero.com.au',
-        'daniel@1.com',
-        'daniel@gmail.com.com',
-        'daniel+100@gmail.com',
-        'daniel-100@constructor-test.io',
+        'test@test.com',
+        'test-100@test.com',
+        'test.100@test.com',
+        'test@test.com',
+        'test+123@test.info',
+        'test-100@test.net',
+        'test.100@test.com.au',
+        'test@test.io',
+        'test@test.com.com',
+        'test+100@test.com',
+        'test-100@test-test.io',
       ],
       phone_number: [
         '+12363334011',
@@ -94,16 +94,16 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
     // These terms should be tracked
     const notPii = {
       email: [
-        'daniel',
-        'daniel @constructor.io',
-        'daniel@.com.my',
-        'daniel123@gmail.a',
-        'daniel123@.com',
-        'daniel123@.com.com',
-        'daniel()*@gmail.com',
-        'daniel@%*.com',
-        'daniel@tillero@gmail.com',
-        'daniel@tillero',
+        'test',
+        'test @test.io',
+        'test@.com.my',
+        'test123@test.a',
+        'test123@.com',
+        'test123@.com.com',
+        'test()*@test.com',
+        'test@%*.com',
+        'test@test@test.com',
+        'test@test',
       ],
       phone_number: [
         '123',
