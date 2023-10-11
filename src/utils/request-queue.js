@@ -32,11 +32,11 @@ class RequestQueue {
   // Add request to queue to be dispatched
   queue(url, method = 'GET', body = {}, networkParameters = {}) {
     if (this.sendTrackingEvents && !this.humanity.isBot()) {
-      const queue = RequestQueue.get();
-
       if (requestContainsPii(url, body)) {
         return;
       }
+
+      const queue = RequestQueue.get();
 
       queue.push({
         url,
