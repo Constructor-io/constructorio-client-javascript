@@ -47,7 +47,7 @@ export interface RecommendationsRequestType extends Record<string, any> {
 }
 
 export interface RecommendationsResponseType extends Record<string, any> {
-  results: Partial<RecommendationsResultType>;
+  results: Partial<RecommendationsResultType>[];
   total_num_results: number;
   pod: {
     id: string;
