@@ -84,6 +84,7 @@ export interface QuizResultsResponse extends Record<string, any> {
   quiz_version_id: string;
   quiz_session_id: string;
   quiz_id: string;
+  relevant_options: string[];
   quiz_selected_options: Array<{
     value: string;
     has_attribute: boolean;
