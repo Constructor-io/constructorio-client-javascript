@@ -44,6 +44,12 @@ declare class Quizzes {
     parameters?: QuizzesResultsParameters,
     networkParameters?: NetworkParameters
   ): Promise<QuizResultsResponse>;
+
+  getQuizResultsConfig(
+    quizId: string,
+    parameters?: Pick<QuizzesParameters, 'quizSessionId' | 'quizVersionId'>,
+    networkParameters?: NetworkParameters,
+  ): Promise<QuizResultsConfig>;
 }
 
 /* quizzes results returned from server */
@@ -146,4 +152,25 @@ export interface QuestionImages extends Record<string, any> {
   primary_alt?: Nullable<string>;
   secondary_url?: Nullable<string>;
   secondary_alt?: Nullable<string>;
+}
+
+type ResultConfigFields = {
+  isActive: boolean;
+  text: Nullable<string>
+}
+
+type ViewportResultsConfig = {
+  title: Nullable<ResultConfigFields>;
+  description: Nullable<ResultConfigFields>;
+};
+
+export interface QuizResultsConfig extends Record<string, any> {
+  desktop: ViewportResultsConfig;
+}
+
+export interface QuizResultsConfigResponse extends Record<string, any> {
+  config: QuizResultsConfig,
+  quiz_version_id: string;
+  quiz_id: string;
+  quiz_session_id: string;
 }
