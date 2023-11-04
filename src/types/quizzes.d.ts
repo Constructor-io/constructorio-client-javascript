@@ -155,7 +155,7 @@ export interface QuestionImages extends Record<string, any> {
 }
 
 type ResultConfigFields = {
-  isActive: boolean;
+  is_active: boolean;
   text: Nullable<string>
 }
 

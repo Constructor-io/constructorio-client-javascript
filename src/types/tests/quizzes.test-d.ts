@@ -284,11 +284,11 @@ expectAssignable<QuizResultsConfigResponse>({
   config: {
     desktop: {
       description: {
-        isActive: true,
+        is_active: true,
         text: 'Sample description',
       },
       title: {
-        isActive: true,
+        is_active: true,
         text: 'Sample title',
       }
     }
