@@ -277,5 +277,5 @@ expectAssignable<QuizResultsResponse>({
   quiz_id: 'test-quiz',
   quiz_version_id: '6bfcb6d3-7272-466b-acd9-4bcf322f2f1e',
   quiz_session_id: '163fefe3-2968-4c5d-8605-d128747188d6',
-  quiz_selected_options: [{ value: 'OPTION_1', has_attribute: true }],
+  quiz_selected_options: [{ value: 'OPTION_1', has_attribute: true, is_matched: true }],
 });

@@ -87,6 +87,7 @@ export interface QuizResultsResponse extends Record<string, any> {
   quiz_selected_options: Array<{
     value: string;
     has_attribute: boolean;
+    is_matched: boolean;
   }>;
 }
 
