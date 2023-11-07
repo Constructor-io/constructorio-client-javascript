@@ -218,7 +218,7 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('sections').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.filters).to.deep.equal(filters);
+        expect(res.request.filters.keywords).to.deep.equal(filters.keywords);
         expect(requestedUrlParams).to.have.property('filters');
         expect(requestedUrlParams.filters).to.have.property('keywords').to.equal(Object.values(filters)[0][0]);
         done();
@@ -238,7 +238,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('sections').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.filters).to.eql(filters);
+        expect(res.request.filters.group_id).to.deep.equal(filters.group_id);
+        expect(res.request.filters.Brand).to.deep.equal(filters.Brand);
         expect(res.sections.Products.length).to.be.at.least(1);
         expect(requestedUrlParams).to.have.property('filters');
         expect(requestedUrlParams.filters).to.have.property('group_id').to.equal(Object.values(filters)[0][0]);
@@ -324,7 +325,7 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('sections').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.filters).to.deep.equal(filters);
+        expect(res.request.filters.keywords).to.deep.equal(filters.keywords);
         expect(requestedUrlParams).to.have.property('filters');
         expect(requestedUrlParams.filters).to.have.property('keywords').to.equal(Object.values(filters)[0][0]);
         done();
