@@ -138,6 +138,7 @@ class Quizzes {
 
     return fetch(requestUrl, { signal })
       .then((response) => {
+        console.log('response', response);
         if (response.ok) {
           return response.json();
         }
@@ -230,7 +231,6 @@ class Quizzes {
    * @example
    * constructorio.quizzes.getQuizResultsConfig('quizId', {
    *    quizVersionId: '123',
-   *    quizSessionId: '234'
    * });
    */
   getQuizResultsConfig(quizId, parameters, networkParameters = {}) {

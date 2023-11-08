@@ -47,9 +47,9 @@ declare class Quizzes {
 
   getQuizResultsConfig(
     quizId: string,
-    parameters?: Pick<QuizzesParameters, 'quizSessionId' | 'quizVersionId'>,
+    parameters?: Pick<QuizzesParameters, 'quizVersionId'>,
     networkParameters?: NetworkParameters,
-  ): Promise<QuizResultsConfig>;
+  ): Promise<QuizResultsConfigResponse>;
 }
 
 /* quizzes results returned from server */
@@ -170,8 +170,7 @@ export interface QuizResultsConfig extends Record<string, any> {
 }
 
 export interface QuizResultsConfigResponse extends Record<string, any> {
-  config: QuizResultsConfig,
+  results_config: QuizResultsConfig,
   quiz_version_id: string;
   quiz_id: string;
-  quiz_session_id: string;
 }

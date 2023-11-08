@@ -281,7 +281,7 @@ expectAssignable<QuizResultsResponse>({
 });
 
 expectAssignable<QuizResultsConfigResponse>({
-  config: {
+  results_config: {
     desktop: {
       description: {
         is_active: true,
@@ -290,10 +290,9 @@ expectAssignable<QuizResultsConfigResponse>({
       title: {
         is_active: true,
         text: 'Sample title',
-      }
-    }
+      },
+    },
   },
   quiz_version_id: '6bfaa6d5-7272-466b-acd9-4bcf322a2f1e',
   quiz_id: 'test-quiz',
-  quiz_session_id: '132feaa5-9968-4c5d-8605-d128747188d6',
 });
