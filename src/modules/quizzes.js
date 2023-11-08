@@ -138,7 +138,6 @@ class Quizzes {
 
     return fetch(requestUrl, { signal })
       .then((response) => {
-        console.log('response', response);
         if (response.ok) {
           return response.json();
         }
