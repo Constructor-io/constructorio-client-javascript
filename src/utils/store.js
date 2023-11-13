@@ -50,7 +50,7 @@ const session = {
 
     return keyFromSessionStorage;
   },
-  length() { return sessionStorage.length; },
+  length() { return sessionStorage.length + Object.keys(this.overflow || {}).length; },
   clear() {
     this.overflow = {};
     return sessionStorage.clear();
@@ -109,7 +109,7 @@ const local = {
 
     return keyFromLocalStorage;
   },
-  length() { return localStorage.length; },
+  length() { return localStorage.length + Object.keys(this.overflow || {}).length; },
   clear() {
     this.overflow = {};
     return localStorage.clear();
