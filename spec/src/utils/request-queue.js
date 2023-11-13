@@ -205,7 +205,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         helpers.triggerUnload();
       });
 
-      it.only('Should not add requests to the queue if PII is detected', () => {
+      it('Should not add requests to the queue if PII is detected', () => {
         const requests = new RequestQueue(requestQueueOptions);
 
         Object.entries(pii).forEach(([, exampleValues]) => {
@@ -219,7 +219,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         helpers.triggerUnload();
       });
 
-      it.only('Should add requests to the queue if no PII is detected', () => {
+      it('Should add requests to the queue if no PII is detected', () => {
         const requests = new RequestQueue(requestQueueOptions);
 
         Object.entries(notPii).forEach(([, exampleValues]) => {
