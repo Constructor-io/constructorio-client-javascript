@@ -58,6 +58,22 @@ describe('ConstructorIO - Utils - Store', () => {
 
       expect(store.local.length()).to.be.equal(0);
     });
+
+    it('Should set/get complex values', () => {
+      const testObject = {
+        foo: 'bar',
+        baz: {
+          foo: 'bar',
+        },
+      };
+      const testArray = ['foo', 'bar', 'baz', 1, 2, 3];
+
+      store.local.set('testObject', testObject);
+      store.local.set('testArray', testArray);
+
+      expect(store.local.get('testObject')).to.be.deep.equal(testObject);
+      expect(store.local.get('testArray')).to.be.deep.equal(testArray);
+    });
   });
 
   describe('Should implement sessionStorage', () => {
@@ -94,6 +110,22 @@ describe('ConstructorIO - Utils - Store', () => {
       store.session.clear();
 
       expect(store.session.length()).to.be.equal(0);
+    });
+
+    it('Should set/get complex values', () => {
+      const testObject = {
+        foo: 'bar',
+        baz: {
+          foo: 'bar',
+        },
+      };
+      const testArray = ['foo', 'bar', 'baz', 1, 2, 3];
+
+      store.session.set('testObject', testObject);
+      store.session.set('testArray', testArray);
+
+      expect(store.session.get('testObject')).to.be.deep.equal(testObject);
+      expect(store.session.get('testArray')).to.be.deep.equal(testArray);
     });
   });
 
@@ -169,6 +201,29 @@ describe('ConstructorIO - Utils - Store', () => {
         expect(store.local.key(tries - 1)).to.be.equal(key);
       }
     });
+
+    it('Should set/get complex values', () => {
+      // Fill up local storage
+      for (let tries = 1; tries < 5; tries += 1) {
+        const key = `testData${tries}`;
+
+        store.local.set(key, `${tries}${testData}`);
+      }
+
+      const testObject = {
+        foo: 'bar',
+        baz: {
+          foo: 'bar',
+        },
+      };
+      const testArray = ['foo', 'bar', 'baz', 1, 2, 3];
+
+      store.local.set('testObject', testObject);
+      store.local.set('testArray', testArray);
+
+      expect(store.local.get('testObject')).to.be.deep.equal(testObject);
+      expect(store.local.get('testArray')).to.be.deep.equal(testArray);
+    });
   });
 
   describe('Should handle overflow - Session', () => {
@@ -242,6 +297,29 @@ describe('ConstructorIO - Utils - Store', () => {
 
         expect(store.session.key(tries - 1)).to.be.equal(key);
       }
+    });
+
+    it('Should set/get complex values', () => {
+      // Fill up session storage
+      for (let tries = 1; tries < 5; tries += 1) {
+        const key = `testData${tries}`;
+
+        store.session.set(key, `${tries}${testData}`);
+      }
+
+      const testObject = {
+        foo: 'bar',
+        baz: {
+          foo: 'bar',
+        },
+      };
+      const testArray = ['foo', 'bar', 'baz', 1, 2, 3];
+
+      store.session.set('testObject', testObject);
+      store.session.set('testArray', testArray);
+
+      expect(store.session.get('testObject')).to.be.deep.equal(testObject);
+      expect(store.session.get('testArray')).to.be.deep.equal(testArray);
     });
   });
 });
