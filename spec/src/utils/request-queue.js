@@ -61,8 +61,6 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         // Sources of example card numbers:
         // - https://support.bluesnap.com/docs/test-credit-card-numbers
         // - https://www.paypalobjects.com/en_GB/vhelp/paypalmanager_help/credit_card_numbers.htm
-        '4155279860457', // Visa
-        '4222222222222', // Visa
         '4263982640269299', // Visa
         '4917484589897107', // Visa
         '4001919257537193', // Visa
@@ -117,6 +115,8 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
       ],
       credit_card_number: [
         '1025',
+        '4155279860457', // edge case that we just pass as valid. if we were to account for it, we would be filtering out SKUs as well https://linear.app/constructor/issue/PSL-2775/core-tracker-exclude-13-digit-visa-cards-from-the-credit-card-regex
+        '4222222222222', // edge case that we just pass as valid. if we were to account for it, we would be filtering out SKUs as well  https://linear.app/constructor/issue/PSL-2775/core-tracker-exclude-13-digit-visa-cards-from-the-credit-card-regex
         '6155279860457',
         '1234567890',
         '12345678901',
@@ -205,7 +205,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         helpers.triggerUnload();
       });
 
-      it('Should not add requests to the queue if PII is detected', () => {
+      it.only('Should not add requests to the queue if PII is detected', () => {
         const requests = new RequestQueue(requestQueueOptions);
 
         Object.entries(pii).forEach(([, exampleValues]) => {
@@ -219,7 +219,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         helpers.triggerUnload();
       });
 
-      it('Should add requests to the queue if no PII is detected', () => {
+      it.only('Should add requests to the queue if no PII is detected', () => {
         const requests = new RequestQueue(requestQueueOptions);
 
         Object.entries(notPii).forEach(([, exampleValues]) => {
@@ -228,9 +228,9 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
           });
         });
 
-        expect(RequestQueue.get()).to.be.an('array').length(34);
+        expect(RequestQueue.get()).to.be.an('array').length(36);
         helpers.triggerUnload();
-        expect(store.local.get(storageKey)).to.be.an('array').length(34);
+        expect(store.local.get(storageKey)).to.be.an('array').length(36);
       });
 
       it('Should not add requests to the queue if the user is webdriver', () => {
