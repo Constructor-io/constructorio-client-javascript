@@ -123,10 +123,10 @@ describe('ConstructorIO - Utils - Store', () => {
         store.local.set(key, `${tries}${testData}`);
       }
 
-      const testData1 = store.local.get('testData1');
-      const testData2 = store.local.get('testData2');
-      const testData3 = store.local.get('testData3');
-      const testData4 = store.local.get('testData4');
+      let testData1 = store.local.get('testData1');
+      let testData2 = store.local.get('testData2');
+      let testData3 = store.local.get('testData3');
+      let testData4 = store.local.get('testData4');
 
       expect(testData1[0]).to.be.equal('1');
       expect(testData2[0]).to.be.equal('2');
@@ -135,9 +135,15 @@ describe('ConstructorIO - Utils - Store', () => {
 
       store.local.remove('testData3');
 
-      const valueFromLocal = store.local.get('testData3');
+      testData1 = store.local.get('testData1');
+      testData2 = store.local.get('testData2');
+      testData3 = store.local.get('testData3');
+      testData4 = store.local.get('testData4');
 
-      expect(valueFromLocal).to.be.equal(null);
+      expect(testData1[0]).to.be.equal('1');
+      expect(testData2[0]).to.be.equal('2');
+      expect(testData3).to.be.equal(null);
+      expect(testData4[0]).to.be.equal('4');
     });
 
     it('Should handle keys properly for overflow data', () => {
@@ -191,10 +197,10 @@ describe('ConstructorIO - Utils - Store', () => {
         store.session.set(key, `${tries}${testData}`);
       }
 
-      const testData1 = store.session.get('testData1');
-      const testData2 = store.session.get('testData2');
-      const testData3 = store.session.get('testData3');
-      const testData4 = store.session.get('testData4');
+      let testData1 = store.session.get('testData1');
+      let testData2 = store.session.get('testData2');
+      let testData3 = store.session.get('testData3');
+      let testData4 = store.session.get('testData4');
 
       expect(testData1[0]).to.be.equal('1');
       expect(testData2[0]).to.be.equal('2');
@@ -203,9 +209,15 @@ describe('ConstructorIO - Utils - Store', () => {
 
       store.session.remove('testData3');
 
-      const valueFromSession = store.session.get('testData3');
+      testData1 = store.session.get('testData1');
+      testData2 = store.session.get('testData2');
+      testData3 = store.session.get('testData3');
+      testData4 = store.session.get('testData4');
 
-      expect(valueFromSession).to.be.equal(null);
+      expect(testData1[0]).to.be.equal('1');
+      expect(testData2[0]).to.be.equal('2');
+      expect(testData3).to.be.equal(null);
+      expect(testData4[0]).to.be.equal('4');
     });
 
     it('Should handle keys properly for overflow data', () => {
