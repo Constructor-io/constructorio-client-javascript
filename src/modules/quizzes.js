@@ -216,12 +216,12 @@ class Quizzes {
   }
 
   /**
-   * Retrieves filter expression and recommendation URL from given answers
+   * Retrieves configuration for the results page of a particular quiz
    *
    * @function getQuizResultsConfig
    * @description Retrieve quiz results page configuration from Constructor.io API
    * @param {string} quizId - The identifier of the quiz
-   * @param {string} parameters - Additional parameters to refine result set
+   * @param {string} parameters - Additional parameters
    * @param {string} [parameters.section] - Product catalog section
    * @param {string} [parameters.quizVersionId] - Version identifier for the quiz. Version ID will be returned with the first request and it should be passed with subsequent requests. More information can be found: https://docs.constructor.io/rest_api/quiz/using_quizzes/#quiz-versioning
    * @param {object} [networkParameters] - Parameters relevant to the network request
