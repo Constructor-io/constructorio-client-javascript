@@ -135,8 +135,8 @@ const local = {
   clear() {
     this.overflow = {};
 
-    if (typeof sessionStorage !== 'undefined') {
-      sessionStorage.clear();
+    if (typeof localStorage !== 'undefined') {
+      localStorage.clear();
     }
   },
 };
