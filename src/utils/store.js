@@ -8,6 +8,10 @@ const session = {
       return valueFromOverflow;
     }
 
+    if (typeof sessionStorage === 'undefined') {
+      return null;
+    }
+
     const valueFromSession = sessionStorage.getItem(key);
 
     if (valueFromSession) {
@@ -18,17 +22,9 @@ const session = {
   },
   set(key, value) {
     try {
-      return sessionStorage.setItem(key, JSON.stringify(value));
+      sessionStorage.setItem(key, JSON.stringify(value));
     } catch (e) {
-      if (e.name === 'QUOTA_EXCEEDED_ERR'
-        || e.name === 'NS_ERROR_DOM_QUOTA_REACHED'
-        || e.toString().indexOf('QUOTA_EXCEEDED_ERR') !== -1
-        || e.toString().indexOf('QuotaExceededError') !== -1) {
-        this.overflow[key] = value;
-        return null;
-      }
-
-      throw e;
+      this.overflow[key] = value;
     }
   },
   remove(key) {
@@ -36,11 +32,17 @@ const session = {
       delete this.overflow[key];
     }
 
-    return sessionStorage.removeItem(key);
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.removeItem(key);
+    }
   },
   key(i) {
-    const keyFromSessionStorage = sessionStorage.key(i);
-    const sessionStorageLength = sessionStorage.length;
+    if (typeof sessionStorage === 'undefined') {
+      return Object.keys(this.overflow)?.[i];
+    }
+
+    const keyFromSessionStorage = sessionStorage?.key(i);
+    const sessionStorageLength = sessionStorage?.length || 0;
 
     if (i >= sessionStorageLength) {
       const overflowIndex = i - sessionStorageLength;
@@ -50,10 +52,21 @@ const session = {
 
     return keyFromSessionStorage;
   },
-  length() { return sessionStorage.length + Object.keys(this.overflow || {}).length; },
+  length() {
+    const overflowLength = Object.keys(this.overflow).length;
+
+    if (typeof sessionStorage === 'undefined') {
+      return overflowLength;
+    }
+
+    return sessionStorage.length + overflowLength;
+  },
   clear() {
     this.overflow = {};
-    return sessionStorage.clear();
+
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.clear();
+    }
   },
 };
 
@@ -67,6 +80,9 @@ const local = {
       return valueFromOverflow;
     }
 
+    if (typeof localStorage === 'undefined') {
+      return null;
+    }
     const valueFromLocal = localStorage.getItem(key);
 
     if (valueFromLocal) {
@@ -77,17 +93,9 @@ const local = {
   },
   set(key, value) {
     try {
-      return localStorage.setItem(key, JSON.stringify(value));
+      localStorage.setItem(key, JSON.stringify(value));
     } catch (e) {
-      if (e.name === 'QUOTA_EXCEEDED_ERR'
-        || e.name === 'NS_ERROR_DOM_QUOTA_REACHED'
-        || e.toString().indexOf('QUOTA_EXCEEDED_ERR') !== -1
-        || e.toString().indexOf('QuotaExceededError') !== -1) {
-        this.overflow[key] = value;
-        return null;
-      }
-
-      throw e;
+      this.overflow[key] = value;
     }
   },
   remove(key) {
@@ -95,11 +103,17 @@ const local = {
       delete this.overflow[key];
     }
 
-    return localStorage.removeItem(key);
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem(key);
+    }
   },
   key(i) {
-    const keyFromLocalStorage = localStorage.key(i);
-    const localStorageLength = localStorage.length;
+    if (typeof localStorage === 'undefined') {
+      return Object.keys(this.overflow)?.[i];
+    }
+
+    const keyFromLocalStorage = localStorage?.key(i);
+    const localStorageLength = localStorage?.length || 0;
 
     if (i >= localStorageLength) {
       const overflowIndex = i - localStorageLength;
@@ -109,10 +123,21 @@ const local = {
 
     return keyFromLocalStorage;
   },
-  length() { return localStorage.length + Object.keys(this.overflow || {}).length; },
+  length() {
+    const overflowLength = Object.keys(this.overflow).length;
+
+    if (typeof localStorage === 'undefined') {
+      return overflowLength;
+    }
+
+    return localStorage.length + overflowLength;
+  },
   clear() {
     this.overflow = {};
-    return localStorage.clear();
+
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.clear();
+    }
   },
 };
 
