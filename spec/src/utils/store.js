@@ -4,17 +4,31 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinonChai = require('sinon-chai');
 const store = require('../../../test/utils/store'); // eslint-disable-line import/extensions
+const jsdom = require('./jsdom-global');
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
 dotenv.config();
 
+const bundled = process.env.BUNDLED === 'true';
+
 describe('ConstructorIO - Utils - Store', () => {
   const testData = 'a'.repeat(1024 * 1024 * 2); // 2 MB of data
   const testKey = 'testKey';
   const testValue = 'testValue';
+  let cleanup;
 
   beforeEach(() => {
+    if (bundled) {
+      cleanup = jsdom();
+    }
+  });
+
+  afterEach(() => {
+    if (bundled) {
+      cleanup();
+    }
+
     store.local.clear();
     store.session.clear();
   });
