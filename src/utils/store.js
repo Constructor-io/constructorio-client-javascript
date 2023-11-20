@@ -15,7 +15,13 @@ const session = {
     const valueFromSession = sessionStorage.getItem(key);
 
     if (valueFromSession) {
-      return JSON.parse(valueFromSession);
+      let parsedValueFromSession;
+      try {
+        parsedValueFromSession = JSON.parse(valueFromSession);
+      } catch (error) {
+        // do nothing
+      }
+      return parsedValueFromSession;
     }
 
     return null;
@@ -86,7 +92,13 @@ const local = {
     const valueFromLocal = localStorage.getItem(key);
 
     if (valueFromLocal) {
-      return JSON.parse(valueFromLocal);
+      let parsedValueFromLocal;
+      try {
+        parsedValueFromLocal = JSON.parse(valueFromLocal);
+      } catch (error) {
+        // do nothing
+      }
+      return parsedValueFromLocal;
     }
 
     return null;
