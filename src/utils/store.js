@@ -15,13 +15,13 @@ const session = {
     const valueFromSession = sessionStorage.getItem(key);
 
     if (valueFromSession) {
-      let parsedValueFromSession;
       try {
-        parsedValueFromSession = JSON.parse(valueFromSession);
+        // Try to parse the value and return
+        return JSON.parse(valueFromSession);
       } catch (error) {
-        // do nothing
+        // If value exists but it's not valid JSON, still return the original value
+        return valueFromSession;
       }
-      return parsedValueFromSession;
     }
 
     return null;
@@ -92,13 +92,13 @@ const local = {
     const valueFromLocal = localStorage.getItem(key);
 
     if (valueFromLocal) {
-      let parsedValueFromLocal;
       try {
-        parsedValueFromLocal = JSON.parse(valueFromLocal);
+        // Try to parse the value and return
+        return JSON.parse(valueFromLocal);
       } catch (error) {
-        // do nothing
+        // If value exists but it's not valid JSON, still return the original value
+        return valueFromLocal;
       }
-      return parsedValueFromLocal;
     }
 
     return null;

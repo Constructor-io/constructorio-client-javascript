@@ -16,6 +16,7 @@ describe('ConstructorIO - Utils - Store', () => {
   const testData = 'a'.repeat(1024 * 1024 * 2); // 2 MB of data
   const testKey = 'testKey';
   const testValue = 'testValue';
+  const invalidJson = '{ invalid JSON';
   let cleanup;
 
   beforeEach(() => {
@@ -38,6 +39,14 @@ describe('ConstructorIO - Utils - Store', () => {
       store.local.set(testKey, testValue);
 
       expect(store.local.get(testKey)).to.be.equal(testValue);
+    });
+
+    it('Should get values even if they are not JSON', () => {
+      cleanup = jsdom();
+      localStorage.setItem(testKey, invalidJson);
+
+      expect(store.local.get(testKey)).to.be.equal(invalidJson);
+      cleanup();
     });
 
     it('Should remove values', () => {
@@ -91,6 +100,14 @@ describe('ConstructorIO - Utils - Store', () => {
       store.session.set(testKey, testValue);
 
       expect(store.session.get(testKey)).to.be.equal(testValue);
+    });
+
+    it('Should get values even if they are not JSON', () => {
+      cleanup = jsdom();
+      sessionStorage.setItem(testKey, invalidJson);
+
+      expect(store.session.get(testKey)).to.be.equal(invalidJson);
+      cleanup();
     });
 
     it('Should remove values', () => {
