@@ -189,8 +189,8 @@ export interface Item extends Record<string, any> {
   labels: Record<string, unknown>;
   matched_terms: string[];
   data?: ItemData;
-  strategy?: {id: string};
-  variations?: {data?: ItemData, value: string}[]
+  strategy?: { id: string };
+  variations?: { data?: ItemData, value: string }[]
 }
 
 export interface ItemData extends Record<string, any> {
