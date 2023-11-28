@@ -248,6 +248,49 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should return a response with a valid query and filtersPerSection', (done) => {
+      const filtersPerSection = { 'Search Suggestions': { keywords: ['battery-powered'] } };
+      const { autocomplete } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      autocomplete.getAutocompleteResults(query, { filtersPerSection }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('sections').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.filters).to.deep.equal(filtersPerSection);
+        expect(requestedUrlParams).to.have.property('filters');
+        done();
+      });
+    });
+
+    it('Should return a response with a valid query, and multiple filtersPerSection', (done) => {
+      const filtersPerSection = {
+        Products: { group_id: ['All', 'shop'] },
+        'Search Suggestions': { keywords: ['battery-powered', 'solar'] },
+      };
+      const { autocomplete } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      autocomplete.getAutocompleteResults(query, { filtersPerSection }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('sections').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.filters).to.eql(filtersPerSection);
+        expect(requestedUrlParams).to.have.property('filters');
+        expect(requestedUrlParams.filters).to.have.property('Products').to.deep.equal(Object.values(filtersPerSection)[0]);
+        expect(requestedUrlParams.filters).to.have.property('Search Suggestions').to.deep.equal(Object.values(filtersPerSection)[1]);
+        done();
+      });
+    });
+
     it('Should return a response with a valid query, with a result_id appended to each result', (done) => {
       const { autocomplete } = new ConstructorIO({ apiKey: testApiKey });
 
