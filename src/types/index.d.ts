@@ -189,11 +189,14 @@ export interface Item extends Record<string, any> {
   labels: Record<string, unknown>;
   matched_terms: string[];
   data?: ItemData;
+  strategy?: { id: string };
+  variations?: { data?: ItemData, value: string }[]
 }
 
 export interface ItemData extends Record<string, any> {
   url?: string;
   id?: string;
+  variation_id?: string;
   image_url?: string;
   group_ids?: string[];
   groups?: Group[]
