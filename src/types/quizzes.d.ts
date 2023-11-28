@@ -49,7 +49,6 @@ declare class Quizzes {
 /* quizzes results returned from server */
 export interface NextQuestionResponse extends Record<string, any> {
   next_question: Question;
-  is_last_question?: boolean;
   quiz_version_id?: string;
   quiz_id?: string;
   quiz_session_id?: string;
