@@ -71,7 +71,7 @@
     "tsd": "^0.24.1"
   },
   "dependencies": {
-    "@constructor-io/constructorio-id": "^2.4.10",
+    "@constructor-io/constructorio-id": "^2.4.17",
     "crc-32": "^1.2.2",
     "fetch-ponyfill": "^7.1.0",
     "store2": "^2.14.2"
