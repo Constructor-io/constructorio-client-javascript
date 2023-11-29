@@ -1,5 +1,5 @@
 import { expectAssignable } from 'tsd';
-import { QuizResultsResponse, NextQuestionResponse } from '..';
+import { QuizResultsResponse, NextQuestionResponse, QuizResultsConfigResponse } from '..';
 
 expectAssignable<NextQuestionResponse>({
   next_question: {
@@ -276,4 +276,21 @@ expectAssignable<QuizResultsResponse>({
   quiz_version_id: '6bfcb6d3-7272-466b-acd9-4bcf322f2f1e',
   quiz_session_id: '163fefe3-2968-4c5d-8605-d128747188d6',
   quiz_selected_options: [{ value: 'OPTION_1', has_attribute: true, is_matched: true }],
+});
+
+expectAssignable<QuizResultsConfigResponse>({
+  results_config: {
+    desktop: {
+      description: {
+        is_active: true,
+        text: 'Sample description',
+      },
+      title: {
+        is_active: true,
+        text: 'Sample title',
+      },
+    },
+  },
+  quiz_version_id: '6bfaa6d5-7272-466b-acd9-4bcf322a2f1e',
+  quiz_id: 'test-quiz',
 });
