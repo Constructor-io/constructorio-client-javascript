@@ -13,6 +13,7 @@ export default Autocomplete;
 export interface IAutocompleteParameters {
   numResults?: number;
   filters?: Record<string, any>;
+  filtersPerSection?: Record<string, Record<string, any>>;
   resultsPerSection?: Record<string, number>;
   hiddenFields?: string[];
   variationsMap?: VariationsMap;
