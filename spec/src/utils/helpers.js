@@ -246,7 +246,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
       const orderId = '12345';
 
       afterEach(() => {
-        store.local.clearAll();
+        store.local.clear();
       });
 
       it('Should return true if the order id already exists from a previous purchase event', () => {
@@ -266,7 +266,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
       const orderId3 = '45124';
 
       afterEach(() => {
-        store.local.clearAll();
+        store.local.clear();
       });
 
       it('Should add the order id to the purchase event storage', () => {

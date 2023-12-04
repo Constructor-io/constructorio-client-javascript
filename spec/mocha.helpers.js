@@ -32,8 +32,8 @@ const triggerUnload = () => {
 
 // Clear local and session storage
 const clearStorage = () => {
-  store.local.clearAll();
-  store.session.clearAll();
+  store.local.clear();
+  store.session.clear();
 };
 
 // Extract query parameters as object from url
