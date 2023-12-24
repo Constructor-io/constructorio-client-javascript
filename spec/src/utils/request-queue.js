@@ -46,6 +46,10 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         'test@test.com.com',
         'test+100@test.com',
         'test-100@test-test.io',
+        ' test@test.io',
+        'test@test.com.com ',
+        ' test.100@test.com.au ',
+        'text test.100@test.io text',
       ],
       phone_number: [
         '+12363334011',

@@ -5,7 +5,7 @@ const store = require('./store');
 const purchaseEventStorageKey = '_constructorio_purchase_order_ids';
 
 const PII_REGEX = {
-  email: /^[\w\-+\\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+  email: /^.*\s[\w\-+\\.]+@([\w-]+\.)+[\w-]{2,4}\s.*$/,
   phoneNumber: /^(?:\+\d{11,12}|\+\d{1,3}\s\d{3}\s\d{3}\s\d{3,4}|\(\d{3}\)\d{7}|\(\d{3}\)\s\d{3}\s\d{4}|\(\d{3}\)\d{3}-\d{4}|\(\d{3}\)\s\d{3}-\d{4})$/,
   creditCard:
     /^(?:4[0-9]{15}|(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|6(?:011|5[0-9]{2})[0-9]{12}|(?:2131|1800|35\d{3})\d{11})$/, // Visa, Mastercard, Amex, Discover, JCB and Diners Club, regex source: https://www.regular-expressions.info/creditcard.html
