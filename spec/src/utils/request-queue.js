@@ -33,107 +33,116 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
     const storageKey = '_constructorio_requests';
     const waitInterval = 2000;
     let requestQueueOptions = {};
-    const pii = {
-      email: [
-        'test@test.com',
-        'test-100@test.com',
-        'test.100@test.com',
-        'test@test.com',
-        'test+123@test.info',
-        'test-100@test.net',
-        'test.100@test.com.au',
-        'test@test.io',
-        'test@test.com.com',
-        'test+100@test.com',
-        'test-100@test-test.io',
-      ],
-      phone_number: [
-        '+12363334011',
-        '+1 236 333 4011',
-        '(236)2228542',
-        '(236) 222 8542',
-        '(236)222-8542',
-        '(236) 222-8542',
-        '+420736447763',
-        '+420 736 447 763',
-      ],
-      credit_card_number: [
-        // Sources of example card numbers:
-        // - https://support.bluesnap.com/docs/test-credit-card-numbers
-        // - https://www.paypalobjects.com/en_GB/vhelp/paypalmanager_help/credit_card_numbers.htm
-        '4263982640269299', // Visa
-        '4917484589897107', // Visa
-        '4001919257537193', // Visa
-        '4007702835532454', // Visa
-        '4111111111111111', // Visa
-        '4012888888881881', // Visa
-        '5425233430109903', // MasterCard
-        '2222420000001113', // MasterCard
-        '2223000048410010', // MasterCard
-        '5555555555554444', // MasterCard
-        '5105105105105100', // MasterCard
-        '374245455400126', // American Express
-        '378282246310005', // American Express
-        '371449635398431', // American Express
-        '378734493671000', // American Express
-        '6011556448578945', // Discover
-        '6011000991300009', // Discover
-        '6011111111111117', // Discover
-        '6011000990139424', // Discover
-        '3566000020000410', // JCB
-        '3530111333300000', // JCB
-        '3566002020360505', // JCB
-        '30569309025904', // Diners Club
-        '38520000023237', // Diners Club
-      ],
-    };
+    const piiExamples = [
+      // Email
+      {
+        queries: [
+          'test@test.com',
+          'test-100@test.com',
+          'test.100@test.com',
+          'test@test.com',
+          'test+123@test.info',
+          'test-100@test.net',
+          'test.100@test.com.au',
+          'test@test.io',
+          'test@test.com.com',
+          'test+100@test.com',
+          'test-100@test-test.io',
+        ],
+        replaceBy: '<email_omitted>',
+      },
+      // Phone Number
+      {
+        queries: [
+          '+12363334011',
+          '+1 236 333 4011',
+          '(236)2228542',
+          '(236) 222 8542',
+          '(236)222-8542',
+          '(236) 222-8542',
+          '+420736447763',
+          '+420 736 447 763',
+        ],
+        replaceBy: '<phone_omitted>',
+      },
+      // Credit Card
+      {
+        queries: [
+          // Sources of example card numbers:
+          // - https://support.bluesnap.com/docs/test-credit-card-numbers
+          // - https://www.paypalobjects.com/en_GB/vhelp/paypalmanager_help/credit_card_numbers.htm
+          '4263982640269299', // Visa
+          '4917484589897107', // Visa
+          '4001919257537193', // Visa
+          '4007702835532454', // Visa
+          '4111111111111111', // Visa
+          '4012888888881881', // Visa
+          '5425233430109903', // MasterCard
+          '2222420000001113', // MasterCard
+          '2223000048410010', // MasterCard
+          '5555555555554444', // MasterCard
+          '5105105105105100', // MasterCard
+          '374245455400126', // American Express
+          '378282246310005', // American Express
+          '371449635398431', // American Express
+          '378734493671000', // American Express
+          '6011556448578945', // Discover
+          '6011000991300009', // Discover
+          '6011111111111117', // Discover
+          '6011000990139424', // Discover
+          '3566000020000410', // JCB
+          '3530111333300000', // JCB
+          '3566002020360505', // JCB
+          '30569309025904', // Diners Club
+          '38520000023237', // Diners Club
+        ],
+        replaceBy: '<credit_omitted>',
+      },
+    ];
 
     // A list of valid examples (not PII)
     // These terms should be tracked
-    const notPii = {
-      email: [
-        'test',
-        'test @test.io',
-        'test@.com.my',
-        'test123@test.a',
-        'test123@.com',
-        'test123@.com.com',
-        'test()*@test.com',
-        'test@%*.com',
-        'test@test@test.com',
-        'test@test',
-      ],
-      phone_number: [
-        '123',
-        '123 456 789',
-        '236 222 5432',
-        '2362225432',
-        '736447763',
-        '736 447 763',
-        '236456789012',
-        '2364567890123',
-      ],
-      credit_card_number: [
-        '1025',
-        '4155279860457', // edge case that we just pass as valid. if we were to account for it, we would be filtering out SKUs as well https://linear.app/constructor/issue/PSL-2775/core-tracker-exclude-13-digit-visa-cards-from-the-credit-card-regex
-        '4222222222222', // edge case that we just pass as valid. if we were to account for it, we would be filtering out SKUs as well  https://linear.app/constructor/issue/PSL-2775/core-tracker-exclude-13-digit-visa-cards-from-the-credit-card-regex
-        '6155279860457',
-        '1234567890',
-        '12345678901',
-        '123456789012',
-        '1234567890123',
-        '1234567890145',
-        '12345678901678',
-        '1234567890167890',
-        '12345678901678901',
-        '123456789016789012',
-        '1234567890167890123',
-        '12345678901678901234',
-        '123456789016789012345',
-        '12345678901678901234567',
-        '123456789016789012345678',
-      ],
-    };
+    const notPiiExamples = [
+      // Email
+      'test',
+      'test @test.io',
+      'test@.com.my',
+      'test123@test.a',
+      'test123@.com',
+      'test123@.com.com',
+      'test()*@test.com',
+      'test@%*.com',
+      'test@test@test.com',
+      'test@test',
+      // Phone Number
+      '123',
+      '123 456 789',
+      '236 222 5432',
+      '2362225432',
+      '736447763',
+      '736 447 763',
+      '236456789012',
+      '2364567890123',
+      // Credit Card
+      '1025',
+      '4155279860457', // edge case that we just pass as valid. if we were to account for it, we would be filtering out SKUs as well https://linear.app/constructor/issue/PSL-2775/core-tracker-exclude-13-digit-visa-cards-from-the-credit-card-regex
+      '4222222222222', // edge case that we just pass as valid. if we were to account for it, we would be filtering out SKUs as well  https://linear.app/constructor/issue/PSL-2775/core-tracker-exclude-13-digit-visa-cards-from-the-credit-card-regex
+      '6155279860457',
+      '1234567890',
+      '12345678901',
+      '123456789012',
+      '1234567890123',
+      '1234567890145',
+      '12345678901678',
+      '1234567890167890',
+      '12345678901678901',
+      '123456789016789012',
+      '1234567890167890123',
+      '12345678901678901234',
+      '123456789016789012345',
+      '12345678901678901234567',
+      '123456789016789012345678',
+    ];
 
     describe('queue', () => {
       let defaultAgent;
@@ -205,32 +214,47 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         helpers.triggerUnload();
       });
 
-      it('Should not add requests to the queue if PII is detected', () => {
+      it('Should obfuscate requests if PII is detected', () => {
         const requests = new RequestQueue(requestQueueOptions);
+        const allExamples = [];
 
-        Object.entries(pii).forEach(([, exampleValues]) => {
-          exampleValues.forEach((exampleValue) => {
-            requests.queue(`https://ac.cnstrc.com/autocomplete/${exampleValue}/search?original_query=${exampleValue}&c=ciojs-2.686.3&i=c8a838d3-b7e0-48bd-92f1-81e08f84b9ee&s=5`);
+        piiExamples.forEach((example) => {
+          example.queries.forEach((query) => {
+            allExamples.push({ query, replaceBy: example.replaceBy });
           });
         });
 
-        expect(RequestQueue.get()).to.be.an('array').length(0);
-        expect(store.local.get(storageKey)).to.be.null;
+        allExamples.forEach(({ query }) => {
+          requests.queue(`https://ac.cnstrc.com/autocomplete/${query}/search?original_query=${query}&c=ciojs-2.686.3&i=c8a838d3-b7e0-48bd-92f1-81e08f84b9ee&s=5`);
+        });
+
+        const queue = RequestQueue.get();
+
+        allExamples.forEach(({ replaceBy }, index) => {
+          expect(queue[index].url).to.equal(`https://ac.cnstrc.com/autocomplete/${replaceBy}/search?original_query=${replaceBy}&c=ciojs-2.686.3&i=c8a838d3-b7e0-48bd-92f1-81e08f84b9ee&s=5`);
+        });
+
+        expect(queue).to.be.an('array').length(43);
+        expect(store.local.get(storageKey)).to.be.an('array').length(43);
         helpers.triggerUnload();
       });
 
-      it('Should add requests to the queue if no PII is detected', () => {
+      it('Should not obfuscate requests if no PII is detected', () => {
         const requests = new RequestQueue(requestQueueOptions);
 
-        Object.entries(notPii).forEach(([, exampleValues]) => {
-          exampleValues.forEach((exampleValue) => {
-            requests.queue(`https://ac.cnstrc.com/autocomplete/${exampleValue}/search?original_query=${exampleValue}&c=ciojs-2.686.3&i=c8a838d3-b7e0-48bd-92f1-81e08f84b9ee&s=5`);
-          });
+        notPiiExamples.forEach((query) => {
+          requests.queue(`https://ac.cnstrc.com/autocomplete/${query}/search?original_query=${query}&c=ciojs-2.686.3&i=c8a838d3-b7e0-48bd-92f1-81e08f84b9ee&s=5`);
+        });
+
+        const queue = RequestQueue.get();
+
+        notPiiExamples.forEach((query, index) => {
+          expect(queue[index].url).to.equal(`https://ac.cnstrc.com/autocomplete/${query}/search?original_query=${query}&c=ciojs-2.686.3&i=c8a838d3-b7e0-48bd-92f1-81e08f84b9ee&s=5`);
         });
 
         expect(RequestQueue.get()).to.be.an('array').length(36);
-        helpers.triggerUnload();
         expect(store.local.get(storageKey)).to.be.an('array').length(36);
+        helpers.triggerUnload();
       });
 
       it('Should not add requests to the queue if the user is webdriver', () => {
