@@ -139,7 +139,7 @@ class ConstructorIO {
   /**
    * Sets the client options
    *
-   * @param {object} options - Option parameters to update
+   * @param {object} options - Clint options to update
    * @param {string} [options.apiKey] - Constructor.io API key
    * @param {array} [options.segments] - User segments
    * @param {object} [options.testCells] - User test cells
