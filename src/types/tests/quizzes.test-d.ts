@@ -289,6 +289,12 @@ expectAssignable<QuizResultsConfigResponse>({
         is_active: true,
         text: 'Sample title',
       },
+      response_summary: {
+        is_active: true,
+        text: 'Sample response summary',
+        items_separator: ',',
+        last_separator: 'and'
+      },
     },
   },
   quiz_version_id: '6bfaa6d5-7272-466b-acd9-4bcf322a2f1e',
