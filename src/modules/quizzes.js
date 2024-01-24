@@ -111,6 +111,7 @@ class Quizzes {
    * @param {string} [parameters.quizSessionId] - Session identifier for the quiz. Session ID will be returned with the first request and it should be passed with subsequent requests. More information can be found: https://docs.constructor.io/rest_api/quiz/using_quizzes/#quiz-sessions
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @param {number} [networkParameters.headers] - Request headers
    * @returns {Promise}
    * @see https://docs.constructor.io/rest_api/quiz/using_quizzes/#answering-a-quiz
    * @example
@@ -136,7 +137,7 @@ class Quizzes {
     // Handle network timeout if specified
     helpers.applyNetworkTimeout(this.options, networkParameters, controller);
 
-    return fetch(requestUrl, { signal })
+    return fetch(requestUrl, { signal, headers: networkParameters.headers })
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -196,7 +197,7 @@ class Quizzes {
     // Handle network timeout if specified
     helpers.applyNetworkTimeout(this.options, networkParameters, controller);
 
-    return fetch(requestUrl, { signal })
+    return fetch(requestUrl, { signal, headers: networkParameters.headers })
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -247,7 +248,7 @@ class Quizzes {
     // Handle network timeout if specified
     helpers.applyNetworkTimeout(this.options, networkParameters, controller);
 
-    return fetch(requestUrl, { signal })
+    return fetch(requestUrl, { signal, headers: networkParameters.headers })
       .then((response) => {
         if (response.ok) {
           return response.json();
