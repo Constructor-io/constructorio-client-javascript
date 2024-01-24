@@ -159,7 +159,7 @@ type ResultConfigFields = {
   text: Nullable<string>;
 };
 
-export interface ResponseSummary extends ResultConfigFields {
+type ResponseSummary = ResultConfigFields & {
   items_separator: Nullable<string>;
   last_separator: Nullable<string>;
 }
