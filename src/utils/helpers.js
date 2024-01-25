@@ -4,13 +4,21 @@ const store = require('./store');
 
 const purchaseEventStorageKey = '_constructorio_purchase_order_ids';
 
-const PII_REGEX = {
-  email: /^.*\s[\w\-+\\.]+@([\w-]+\.)+[\w-]{2,4}\s.*$/,
-  phoneNumber: /^(?:\+\d{11,12}|\+\d{1,3}\s\d{3}\s\d{3}\s\d{3,4}|\(\d{3}\)\d{7}|\(\d{3}\)\s\d{3}\s\d{4}|\(\d{3}\)\d{3}-\d{4}|\(\d{3}\)\s\d{3}-\d{4})$/,
-  creditCard:
-    /^(?:4[0-9]{15}|(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|6(?:011|5[0-9]{2})[0-9]{12}|(?:2131|1800|35\d{3})\d{11})$/, // Visa, Mastercard, Amex, Discover, JCB and Diners Club, regex source: https://www.regular-expressions.info/creditcard.html
+const PII_REGEX = [
+  {
+    pattern: /^[\w\-+\\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+    replaceBy: '<email_omitted>',
+  },
+  {
+    pattern: /^(?:\+\d{11,12}|\+\d{1,3}\s\d{3}\s\d{3}\s\d{3,4}|\(\d{3}\)\d{7}|\(\d{3}\)\s\d{3}\s\d{4}|\(\d{3}\)\d{3}-\d{4}|\(\d{3}\)\s\d{3}-\d{4})$/,
+    replaceBy: '<phone_omitted>',
+  },
+  {
+    pattern: /^(?:4[0-9]{15}|(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|6(?:011|5[0-9]{2})[0-9]{12}|(?:2131|1800|35\d{3})\d{11})$/, // Visa, Mastercard, Amex, Discover, JCB and Diners Club, regex source: https://www.regular-expressions.info/creditcard.html
+    replaceBy: '<credit_omitted>',
+  },
   // Add more PII REGEX
-};
+];
 
 const utils = {
   trimNonBreakingSpaces: (string) => string.replace(/\s/g, ' ').trim(),
@@ -203,30 +211,32 @@ const utils = {
     });
     return snakeCasedObj;
   },
-  containsPii(query) {
-    const piiRegex = Object.values(PII_REGEX);
+  containsPii(query, piiPattern) {
     const normalizedTerm = query.toLowerCase();
-
-    return piiRegex.some((regex) => regex.test(normalizedTerm));
+    return piiPattern.test(normalizedTerm);
   },
-  requestContainsPii(urlString) {
+  obfuscatePiiRequest(urlString) {
+    let obfuscatedUrl = urlString;
+
     try {
       const url = new URL(urlString);
       const paths = decodeURI(url?.pathname)?.split('/');
       const paramValues = decodeURIComponent(url?.search)?.split('&').map((param) => param?.split('=')?.[1]);
 
-      if (paths.some((path) => utils.containsPii(path))) {
-        return true;
-      }
+      PII_REGEX.forEach((regex) => {
+        paths.forEach((path) => {
+          if (utils.containsPii(path, regex.pattern)) obfuscatedUrl = obfuscatedUrl.replaceAll(path, regex.replaceBy);
+        });
 
-      if (paramValues.some((value) => utils.containsPii(value))) {
-        return true;
-      }
+        paramValues.forEach((param) => {
+          if (utils.containsPii(param, regex.pattern)) obfuscatedUrl = obfuscatedUrl.replaceAll(param, regex.replaceBy);
+        });
+      });
     } catch (e) {
       // do nothing
     }
 
-    return false;
+    return obfuscatedUrl;
   },
 };
 
