@@ -156,12 +156,18 @@ export interface QuestionImages extends Record<string, any> {
 
 type ResultConfigFields = {
   is_active: boolean;
-  text: Nullable<string>
+  text: Nullable<string>;
+};
+
+type ResponseSummary = ResultConfigFields & {
+  items_separator: Nullable<string>;
+  last_separator: Nullable<string>;
 }
 
 type ViewportResultsConfig = {
   title: Nullable<ResultConfigFields>;
   description: Nullable<ResultConfigFields>;
+  response_summary: Nullable<ResponseSummary>;
 };
 
 export interface QuizResultsConfig extends Record<string, any> {
