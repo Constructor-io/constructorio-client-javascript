@@ -48,6 +48,11 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
           'test@test.com.com',
           'test+100@test.com',
           'test-100@test-test.io',
+          ' test@test.io',
+          'test@test.com.com ',
+          ' test.100@test.com.au ',
+          'text test.100@test.io text',
+          'test@test@test.com', // This string includes a valid email - test@test.com
         ],
         replaceBy: '<email_omitted>',
       },
@@ -112,7 +117,6 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
       'test123@.com.com',
       'test()*@test.com',
       'test@%*.com',
-      'test@test@test.com',
       'test@test',
       // Phone Number
       '123',
@@ -234,8 +238,9 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
           expect(queue[index].url).to.equal(`https://ac.cnstrc.com/autocomplete/${replaceBy}/search?original_query=${replaceBy}&c=ciojs-2.686.3&i=c8a838d3-b7e0-48bd-92f1-81e08f84b9ee&s=5`);
         });
 
-        expect(queue).to.be.an('array').length(43);
-        expect(store.local.get(storageKey)).to.be.an('array').length(43);
+        const piiCount = piiExamples.reduce((acc, curr) => acc + curr.queries.length, 0);
+        expect(queue).to.be.an('array').length(piiCount);
+        expect(store.local.get(storageKey)).to.be.an('array').length(piiCount);
         helpers.triggerUnload();
       });
 
@@ -252,8 +257,9 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
           expect(queue[index].url).to.equal(`https://ac.cnstrc.com/autocomplete/${query}/search?original_query=${query}&c=ciojs-2.686.3&i=c8a838d3-b7e0-48bd-92f1-81e08f84b9ee&s=5`);
         });
 
-        expect(RequestQueue.get()).to.be.an('array').length(36);
-        expect(store.local.get(storageKey)).to.be.an('array').length(36);
+        const noPiiCount = notPiiExamples.length;
+        expect(RequestQueue.get()).to.be.an('array').length(noPiiCount);
+        expect(store.local.get(storageKey)).to.be.an('array').length(noPiiCount);
         helpers.triggerUnload();
       });
 

@@ -6,7 +6,7 @@ const purchaseEventStorageKey = '_constructorio_purchase_order_ids';
 
 const PII_REGEX = [
   {
-    pattern: /^[\w\-+\\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+    pattern: /[\w\-+\\.]+@([\w-]+\.)+[\w-]{2,4}/,
     replaceBy: '<email_omitted>',
   },
   {
