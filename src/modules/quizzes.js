@@ -219,6 +219,57 @@ class Quizzes {
         throw new Error('getQuizResults response data is malformed');
       });
   }
+
+  /**
+   * Retrieves configuration for the results page of a particular quiz
+   *
+   * @function getQuizResultsConfig
+   * @description Retrieve quiz results page configuration from Constructor.io API
+   * @param {string} quizId - The identifier of the quiz
+   * @param {string} parameters - Additional parameters
+   * @param {string} [parameters.section] - Product catalog section
+   * @param {string} [parameters.quizVersionId] - Version identifier for the quiz. Version ID will be returned with the first request and it should be passed with subsequent requests. More information can be found: https://docs.constructor.io/rest_api/quiz/using_quizzes/#quiz-versioning
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {Promise}
+   * @example
+   * constructorio.quizzes.getQuizResultsConfig('quizId', {
+   *    quizVersionId: '123',
+   * });
+   */
+  getQuizResultsConfig(quizId, parameters, networkParameters = {}) {
+    let requestUrl;
+    const { fetch } = this.options;
+    const controller = new AbortController();
+    const { signal } = controller;
+
+    try {
+      requestUrl = createQuizUrl(quizId, parameters, this.options, 'results_config');
+    } catch (e) {
+      return Promise.reject(e);
+    }
+
+    // Handle network timeout if specified
+    helpers.applyNetworkTimeout(this.options, networkParameters, controller);
+
+    return fetch(requestUrl, { signal })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+
+        return helpers.throwHttpErrorFromResponse(new Error(), response);
+      })
+      .then((json) => {
+        if (json.quiz_version_id) {
+          this.eventDispatcher.queue('quizzes.getQuizResultsConfig.completed', json);
+
+          return json;
+        }
+
+        throw new Error('getQuizResultsConfig response data is malformed');
+      });
+  }
 }
 
 module.exports = Quizzes;

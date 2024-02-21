@@ -45,12 +45,17 @@ declare class Quizzes {
     parameters?: QuizzesResultsParameters,
     networkParameters?: NetworkParameters
   ): Promise<QuizResultsResponse>;
+
+  getQuizResultsConfig(
+    quizId: string,
+    parameters?: Pick<QuizzesParameters, 'quizVersionId'>,
+    networkParameters?: NetworkParameters,
+  ): Promise<QuizResultsConfigResponse>;
 }
 
 /* quizzes results returned from server */
 export interface NextQuestionResponse extends Record<string, any> {
   next_question: Question;
-  is_last_question?: boolean;
   quiz_version_id?: string;
   quiz_id?: string;
   quiz_session_id?: string;
@@ -88,6 +93,7 @@ export interface QuizResultsResponse extends Record<string, any> {
   quiz_selected_options: Array<{
     value: string;
     has_attribute: boolean;
+    is_matched: boolean;
   }>;
 }
 
@@ -147,4 +153,30 @@ export interface QuestionImages extends Record<string, any> {
   primary_alt?: Nullable<string>;
   secondary_url?: Nullable<string>;
   secondary_alt?: Nullable<string>;
+}
+
+type ResultConfigFields = {
+  is_active: boolean;
+  text: Nullable<string>;
+};
+
+type ResponseSummary = ResultConfigFields & {
+  items_separator: Nullable<string>;
+  last_separator: Nullable<string>;
+}
+
+type ViewportResultsConfig = {
+  title: Nullable<ResultConfigFields>;
+  description: Nullable<ResultConfigFields>;
+  response_summary: Nullable<ResponseSummary>;
+};
+
+export interface QuizResultsConfig extends Record<string, any> {
+  desktop: ViewportResultsConfig;
+}
+
+export interface QuizResultsConfigResponse extends Record<string, any> {
+  results_config: QuizResultsConfig,
+  quiz_version_id: string;
+  quiz_id: string;
 }

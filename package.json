@@ -1,6 +1,6 @@
 {
   "name": "@constructor-io/constructorio-client-javascript",
-  "version": "2.37.2",
+  "version": "2.42.2",
   "description": "Constructor.io JavaScript client",
   "main": "lib/constructorio.js",
   "types": "lib/types/index.d.ts",
@@ -23,7 +23,7 @@
     "coverage": "nyc --all --reporter=html npm run test:src",
     "postcoverage": "open coverage/index.html && rm -rf test",
     "docs": "jsdoc --configure ./.jsdoc.json ./README.md --recurse ./src --destination ./docs",
-    "compile": "babel src/ -d lib/ --copy-files && rm -rf lib/types/tests",
+    "compile": "rm -rf ./lib/* && babel src/ -d lib/ --copy-files && rm -rf ./lib/types/tests",
     "prepublish": "npm run compile",
     "bundle": "rm -rf ./dist/* && npm run compile && node bundle.js",
     "prepare": "husky install"
@@ -71,10 +71,9 @@
     "tsd": "^0.24.1"
   },
   "dependencies": {
-    "@constructor-io/constructorio-id": "^2.4.10",
+    "@constructor-io/constructorio-id": "^2.4.17",
     "crc-32": "^1.2.2",
-    "fetch-ponyfill": "^7.1.0",
-    "store2": "^2.14.2"
+    "fetch-ponyfill": "^7.1.0"
   },
   "peerDependencies": {
     "@babel/runtime": "^7.19.0"

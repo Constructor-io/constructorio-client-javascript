@@ -139,10 +139,11 @@ class ConstructorIO {
   /**
    * Sets the client options
    *
-   * @param {string} apiKey - Constructor.io API key
-   * @param {array} [segments] - User segments
-   * @param {object} [testCells] - User test cells
-   * @param {string} [userId] - User ID
+   * @param {object} options - Client options to update
+   * @param {string} [options.apiKey] - Constructor.io API key
+   * @param {array} [options.segments] - User segments
+   * @param {object} [options.testCells] - User test cells
+   * @param {string} [options.userId] - User ID
    */
   setClientOptions(options) {
     if (Object.keys(options).length) {
