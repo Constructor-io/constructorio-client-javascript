@@ -40,7 +40,7 @@ function createQuizUrl(quizId, parameters, options, path) {
   }
 
   if (parameters) {
-    const { section, answers, quizSessionId, quizVersionId, page, resultsPerPage, filters } = parameters;
+    const { section, answers, quizSessionId, quizVersionId, page, resultsPerPage, filters, fmtOptions } = parameters;
 
     // Pull section from parameters
     if (section) {
@@ -74,6 +74,10 @@ function createQuizUrl(quizId, parameters, options, path) {
 
     if (filters) {
       queryParams.filters = filters;
+    }
+
+    if (fmtOptions) {
+      queryParams.fmt_options = fmtOptions;
     }
   }
 
@@ -169,6 +173,7 @@ class Quizzes {
    * @param {number} [parameters.page] - The page number of the results
    * @param {number} [parameters.resultsPerPage] - The number of results per page to return
    * @param {object} [parameters.filters] - Key / value mapping (dictionary) of filters used to refine results
+   * @param {object} [parameters.fmtOptions] - Key / value mapping (dictionary) of options used for result formatting
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}

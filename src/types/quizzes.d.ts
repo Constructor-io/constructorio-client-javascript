@@ -26,6 +26,7 @@ export interface QuizzesResultsParameters extends QuizzesParameters {
   page?: number;
   resultsPerPage?: number;
   filters?: Record<string, any>;
+  fmtOptions?: Record<string, any>;
 }
 
 declare class Quizzes {
