@@ -21,12 +21,21 @@ export interface QuizzesParameters {
   quizSessionId?: string;
 }
 
+export interface QuizResultsFmtOptions {
+  groups_start?: 'current' | 'top' | string;
+  groups_max_depth?: number;
+  show_protected_facets?: boolean;
+  show_hidden_facets?: boolean;
+  hidden_facets?: string[];
+  fields?: string[];
+}
+
 export interface QuizzesResultsParameters extends QuizzesParameters {
   answers: any[];
   page?: number;
   resultsPerPage?: number;
   filters?: Record<string, any>;
-  fmtOptions?: Record<string, any>;
+  fmtOptions?: QuizResultsFmtOptions;
 }
 
 declare class Quizzes {
