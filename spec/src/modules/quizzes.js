@@ -277,6 +277,54 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should return a result given fmtOptions parameters', () => {
+      const fmtOptions = { hidden_fields:  ['testField', 'hiddenField2'] };
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+      });
+
+      return quizzes.getQuizResults(validQuizId, { answers: validAnswers, fmtOptions }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const resultWithTestField = res.response.results.find((result) => result.data.testField);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res).to.have.property('quiz_version_id').to.be.an('string');
+        expect(res).to.have.property('quiz_session_id').to.be.an('string');
+        expect(res).to.have.property('quiz_id').to.be.an('string');
+        expect(res.request.fmt_options.hidden_fields).to.eql(fmtOptions.hidden_fields);
+        expect(requestedUrlParams.fmt_options).to.eql(fmtOptions);
+        expect(resultWithTestField.data.testField).to.eql('hiddenFieldValue');
+        expect(fetchSpy).to.have.been.called;
+      });
+    });
+
+    it('Should return a result given hiddenField parameters', () => {
+      const hiddenFields = ['testField', 'hiddenField2'];
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+      });
+
+      return quizzes.getQuizResults(validQuizId, { answers: validAnswers, hiddenFields }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const resultWithTestField = res.response.results.find((result) => result.data.testField);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res).to.have.property('quiz_version_id').to.be.an('string');
+        expect(res).to.have.property('quiz_session_id').to.be.an('string');
+        expect(res).to.have.property('quiz_id').to.be.an('string');
+        expect(res.request.fmt_options.hidden_fields).to.eql(hiddenFields);
+        expect(requestedUrlParams.fmt_options).to.have.property('hidden_fields').to.eql(hiddenFields);
+        expect(resultWithTestField.data.testField).to.eql('hiddenFieldValue');
+        expect(fetchSpy).to.have.been.called;
+      });
+    });
+
     it('Should return a result provided a valid apiKey, quizId, quizVersionId and quizSessionId', () => {
       const quizSessionId = '12345';
       const { quizzes } = new ConstructorIO({
