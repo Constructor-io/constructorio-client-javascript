@@ -27,6 +27,7 @@ export interface QuizResultsFmtOptions {
   show_protected_facets?: boolean;
   show_hidden_facets?: boolean;
   hidden_facets?: string[];
+  hidden_fields?: string[];
   fields?: string[];
 }
 
