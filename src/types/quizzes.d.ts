@@ -37,6 +37,7 @@ export interface QuizzesResultsParameters extends QuizzesParameters {
   resultsPerPage?: number;
   filters?: Record<string, any>;
   fmtOptions?: QuizResultsFmtOptions;
+  hiddenFields?: string[];
 }
 
 declare class Quizzes {

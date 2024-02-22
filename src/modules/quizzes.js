@@ -40,7 +40,7 @@ function createQuizUrl(quizId, parameters, options, path) {
   }
 
   if (parameters) {
-    const { section, answers, quizSessionId, quizVersionId, page, resultsPerPage, filters, fmtOptions } = parameters;
+    const { section, answers, quizSessionId, quizVersionId, page, resultsPerPage, filters, fmtOptions, hiddenFields } = parameters;
 
     // Pull section from parameters
     if (section) {
@@ -78,6 +78,14 @@ function createQuizUrl(quizId, parameters, options, path) {
 
     if (fmtOptions) {
       queryParams.fmt_options = fmtOptions;
+    }
+
+    if (hiddenFields) {
+      if (queryParams.fmt_options) {
+        queryParams.fmt_options.hidden_fields = hiddenFields;
+      } else {
+        queryParams.fmt_options = { hidden_fields: hiddenFields };
+      }
     }
   }
 
@@ -174,6 +182,7 @@ class Quizzes {
    * @param {number} [parameters.resultsPerPage] - The number of results per page to return
    * @param {object} [parameters.filters] - Key / value mapping (dictionary) of filters used to refine results
    * @param {object} [parameters.fmtOptions] - Key / value mapping (dictionary) of options used for result formatting
+   * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
