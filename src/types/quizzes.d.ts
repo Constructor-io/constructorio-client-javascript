@@ -22,11 +22,6 @@ export interface QuizzesParameters {
 }
 
 export interface QuizResultsFmtOptions {
-  groups_start?: 'current' | 'top' | string;
-  groups_max_depth?: number;
-  show_protected_facets?: boolean;
-  show_hidden_facets?: boolean;
-  hidden_facets?: string[];
   hidden_fields?: string[];
   fields?: string[];
 }
