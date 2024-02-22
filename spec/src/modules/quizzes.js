@@ -278,7 +278,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result given fmtOptions parameters', () => {
-      const fmtOptions = { hidden_fields:  ['testField', 'hiddenField2'] };
+      const fmtOptions = { hidden_fields: ['testField', 'hiddenField2'] };
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
