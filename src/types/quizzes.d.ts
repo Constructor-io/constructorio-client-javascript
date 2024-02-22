@@ -21,11 +21,18 @@ export interface QuizzesParameters {
   quizSessionId?: string;
 }
 
+export interface QuizResultsFmtOptions {
+  hidden_fields?: string[];
+  fields?: string[];
+}
+
 export interface QuizzesResultsParameters extends QuizzesParameters {
   answers: any[];
   page?: number;
   resultsPerPage?: number;
   filters?: Record<string, any>;
+  fmtOptions?: QuizResultsFmtOptions;
+  hiddenFields?: string[];
 }
 
 declare class Quizzes {
