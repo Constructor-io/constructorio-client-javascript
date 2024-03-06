@@ -32,7 +32,7 @@ const defaultParameters = {
   domain: 'nike_sportswear',
 };
 
-describe.only(`ConstructorIO - Assistant${bundledDescriptionSuffix}`, () => {
+describe(`ConstructorIO - Assistant${bundledDescriptionSuffix}`, () => {
   const jsdomOptions = { url: 'http://localhost' };
   let cleanup;
 
@@ -200,7 +200,7 @@ describe.only(`ConstructorIO - Assistant${bundledDescriptionSuffix}`, () => {
     });
   });
 
-  describe.only('getAssistantResultsStream', () => {
+  describe('getAssistantResultsStream', () => {
     beforeEach(() => {
       global.EventSource = EventSource;
       global.ReadableStream = ReadableStream;
@@ -231,7 +231,7 @@ describe.only(`ConstructorIO - Assistant${bundledDescriptionSuffix}`, () => {
       expect(() => assistant.getAssistantResultsStream('', {})).throw('intent is a required parameter of type string');
     });
 
-    it.only('should push expected data to the stream', async () => {
+    it('should push expected data to the stream', async () => {
       const { assistant } = new ConstructorIO(defaultOptions);
       const stream = await assistant.getAssistantResultsStream('query', { domain: 'nike_sportswear' });
 
