@@ -9,7 +9,7 @@ const qs = require('qs');
 const { createAssistantUrl, setupEventListeners } = require('../../../src/modules/assistant');
 const Assistant = require('../../../src/modules/assistant');
 const { encodeURIComponentRFC3986 } = require('../../../src/utils/helpers');
-let ConstructorIO = require('../../../test/constructorio');
+let ConstructorIO = require('../../../test/constructorio'); // eslint-disable-line import/extensions
 const jsdom = require('../utils/jsdom-global');
 
 const bundled = process.env.BUNDLED === 'true';
