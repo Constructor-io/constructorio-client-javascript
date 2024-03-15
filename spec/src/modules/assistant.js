@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-expressions */
+/* eslint-disable no-unused-expressions, import/no-unresolved */
 const dotenv = require('dotenv');
 const chai = require('chai');
 const sinon = require('sinon');
