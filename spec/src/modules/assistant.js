@@ -24,6 +24,7 @@ const clientVersion = 'cio-mocha';
 const defaultOptions = {
   apiKey: testApiKey,
   version: clientVersion,
+  assistantServiceUrl: 'https://assistant.cnstrc.com',
   clientId: '123',
   sessionId: 123,
 };
@@ -66,10 +67,12 @@ describe(`ConstructorIO - Assistant${bundledDescriptionSuffix}`, () => {
     it('should correctly construct a URL with minimal valid inputs', () => {
       const intent = 'testIntent';
       const url = createAssistantUrl(intent, defaultParameters, defaultOptions);
+
       expect(url).contain('https://assistant.cnstrc.com/v1/intent/');
       expect(url).contain(`intent/${encodeURIComponentRFC3986(intent)}`);
 
       const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+
       expect(requestedUrlParams).to.have.property('key');
       expect(requestedUrlParams).to.have.property('i');
       expect(requestedUrlParams).to.have.property('s');
@@ -140,6 +143,7 @@ describe(`ConstructorIO - Assistant${bundledDescriptionSuffix}`, () => {
       // Simulate an event being emitted
       const allEventsCallbacks = mockEventSource.addEventListener.getCalls();
       const searchResultsCallback = allEventsCallbacks.find((call) => call.args[0] === eventType).args[1];
+
       searchResultsCallback({ data: JSON.stringify(eventData) });
 
       setImmediate(() => { // Ensure stream processing completes
@@ -157,6 +161,7 @@ describe(`ConstructorIO - Assistant${bundledDescriptionSuffix}`, () => {
       // Simulate the END event being emitted
       const endEventCallback = mockEventSource.addEventListener.getCalls()
         .find((call) => call.args[0] === eventType).args[1];
+
       endEventCallback();
 
       expect(mockEventSource.close.called).to.be.true;
@@ -213,8 +218,8 @@ describe(`ConstructorIO - Assistant${bundledDescriptionSuffix}`, () => {
 
     it('should create a readable stream', () => {
       const { assistant } = new ConstructorIO(defaultOptions);
-
       const stream = assistant.getAssistantResultsStream('I want shoes', { domain: 'nike_sportswear' });
+
       // Assert it return a stream object
       expect(stream).to.have.property('getReader');
     });
@@ -234,9 +239,7 @@ describe(`ConstructorIO - Assistant${bundledDescriptionSuffix}`, () => {
     it('should push expected data to the stream', async () => {
       const { assistant } = new ConstructorIO(defaultOptions);
       const stream = await assistant.getAssistantResultsStream('query', { domain: 'nike_sportswear' });
-
       const reader = stream.getReader();
-
       const { value, done } = await reader.read();
 
       // Assert that the stream is not empty and the first chunk contains expected data
@@ -247,11 +250,8 @@ describe(`ConstructorIO - Assistant${bundledDescriptionSuffix}`, () => {
 
     it('should handle cancel to the stream gracefully', async () => {
       const { assistant } = new ConstructorIO(defaultOptions);
-
       const stream = await assistant.getAssistantResultsStream('query', { domain: 'nike_sportswear' });
-
       const reader = stream.getReader();
-
       const { value, done } = await reader.read();
 
       // Assert that the stream is not empty and the first chunk contains expected data
@@ -263,8 +263,8 @@ describe(`ConstructorIO - Assistant${bundledDescriptionSuffix}`, () => {
     it('should handle pre maturely cancel before reading any data', async () => {
       const { assistant } = new ConstructorIO(defaultOptions);
       const stream = await assistant.getAssistantResultsStream('query', { domain: 'nike_sportswear' });
-
       const reader = stream.getReader();
+
       reader.cancel();
     });
   });

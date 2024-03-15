@@ -62,7 +62,6 @@ function createAssistantUrl(intent, parameters, options) {
     if (filters) {
       queryParams.filters = filters;
     }
-
   }
 
   // eslint-disable-next-line no-underscore-dangle
@@ -80,6 +79,7 @@ function setupEventListeners(eventSource, controller, eventTypes) {
   const addListener = (type) => {
     eventSource.addEventListener(type, (event) => {
       const data = JSON.parse(event.data);
+
       controller.enqueue({ type, data }); // Enqueue data into the stream
     });
   };
@@ -166,8 +166,7 @@ class Assistant {
           setupEventListeners(eventSource, controller, Assistant.EventTypes);
         },
         // To be called on stream cancelling
-        cancel(reason) {
-          console.log(`Stream canceled with reason: ${reason}`);
+        cancel() {
           // Close the EventSource connection when the stream is prematurely canceled
           eventSource.close();
         },
