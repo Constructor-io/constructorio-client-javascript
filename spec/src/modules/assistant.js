@@ -18,7 +18,7 @@ const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 chai.use(sinonChai);
 dotenv.config();
 
-const testApiKey = process.env.TEST_ASA_REQUEST_API_KEY;
+const testApiKey = process.env.TEST_REQUEST_API_KEY;
 const clientVersion = 'cio-mocha';
 
 const defaultOptions = {
@@ -30,7 +30,7 @@ const defaultOptions = {
 };
 
 const defaultParameters = {
-  domain: 'nike_sportswear',
+  domain: 'assistant',
 };
 
 describe(`ConstructorIO - Assistant${bundledDescriptionSuffix}`, () => {
@@ -218,7 +218,7 @@ describe(`ConstructorIO - Assistant${bundledDescriptionSuffix}`, () => {
 
     it('should create a readable stream', () => {
       const { assistant } = new ConstructorIO(defaultOptions);
-      const stream = assistant.getAssistantResultsStream('I want shoes', { domain: 'nike_sportswear' });
+      const stream = assistant.getAssistantResultsStream('I want shoes', { domain: 'assistant' });
 
       // Assert it return a stream object
       expect(stream).to.have.property('getReader');
@@ -238,7 +238,7 @@ describe(`ConstructorIO - Assistant${bundledDescriptionSuffix}`, () => {
 
     it('should push expected data to the stream', async () => {
       const { assistant } = new ConstructorIO(defaultOptions);
-      const stream = await assistant.getAssistantResultsStream('query', { domain: 'nike_sportswear' });
+      const stream = await assistant.getAssistantResultsStream('query', { domain: 'assistant' });
       const reader = stream.getReader();
       const { value, done } = await reader.read();
 
@@ -250,7 +250,7 @@ describe(`ConstructorIO - Assistant${bundledDescriptionSuffix}`, () => {
 
     it('should handle cancel to the stream gracefully', async () => {
       const { assistant } = new ConstructorIO(defaultOptions);
-      const stream = await assistant.getAssistantResultsStream('query', { domain: 'nike_sportswear' });
+      const stream = await assistant.getAssistantResultsStream('query', { domain: 'assistant' });
       const reader = stream.getReader();
       const { value, done } = await reader.read();
 
@@ -262,7 +262,7 @@ describe(`ConstructorIO - Assistant${bundledDescriptionSuffix}`, () => {
 
     it('should handle pre maturely cancel before reading any data', async () => {
       const { assistant } = new ConstructorIO(defaultOptions);
-      const stream = await assistant.getAssistantResultsStream('query', { domain: 'nike_sportswear' });
+      const stream = await assistant.getAssistantResultsStream('query', { domain: 'assistant' });
       const reader = stream.getReader();
 
       reader.cancel();
