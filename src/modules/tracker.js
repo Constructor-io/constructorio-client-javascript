@@ -132,8 +132,8 @@ class Tracker {
    * Send input focus event to API
    * @private
    * @function trackInputFocusV2
-   * @param {string} userInput - Input at the time user focused on the search bar
    * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.userInput - The current autocomplete search query
    * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -142,32 +142,26 @@ class Tracker {
    * @example
    * constructorio.tracker.trackInputFocusV2("text");
    */
-  trackInputFocusV2(userInput = '', parameters = {}, networkParameters = {}) {
+  trackInputFocusV2(parameters = {}, networkParameters = {}) {
     const baseUrl = `${this.behavioralV2Url}focus?`;
     const bodyParams = {};
     const {
-      analyticsTags,
+      userInput = '',
+      analyticsTags = null,
     } = parameters;
-    let networkParametersNew = networkParameters;
-    let userInputNew = userInput;
-
-    if (typeof userInput === 'object') {
-      networkParametersNew = userInput;
-      userInputNew = '';
-    }
 
     if (analyticsTags) {
       bodyParams.analytics_tags = analyticsTags;
     }
 
-    bodyParams.user_input = userInputNew;
+    bodyParams.user_input = userInput;
 
     const requestMethod = 'POST';
     const requestBody = applyParams(bodyParams, {
       ...this.options,
       requestMethod,
     });
-    this.requests.queue(`${baseUrl}${applyParamsAsString({}, this.options)}`, requestMethod, requestBody, networkParametersNew);
+    this.requests.queue(`${baseUrl}${applyParamsAsString({}, this.options)}`, requestMethod, requestBody, networkParameters);
     this.requests.send();
 
     return true;

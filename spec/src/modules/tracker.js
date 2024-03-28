@@ -403,7 +403,10 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         fetch: fetchSpy,
         ...requestQueueOptions,
       });
-      const input = 'test';
+      const parameters = {
+        userInput: 'test',
+        analyticsTags: testAnalyticsTag,
+      };
 
       tracker.on('success', (responseParams) => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
@@ -419,7 +422,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Body
-        expect(bodyParams).to.have.property('user_input').to.equal(input);
+        expect(bodyParams).to.have.property('user_input').to.equal(parameters.userInput);
+        expect(bodyParams).to.have.property('analytics_tags').to.deep.equal(testAnalyticsTag);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -432,7 +436,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done(error);
       });
 
-      expect(tracker.trackInputFocusV2(input)).to.equal(true);
+      expect(tracker.trackInputFocusV2(parameters)).to.equal(true);
     });
 
     it('Should respond with a valid response', (done) => {
