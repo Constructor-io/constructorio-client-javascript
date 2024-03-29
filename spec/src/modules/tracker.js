@@ -403,7 +403,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         fetch: fetchSpy,
         ...requestQueueOptions,
       });
-      const userInput = "Test User Input";
+      const userInput = 'Test User Input';
       const parameters = {
         analyticsTags: testAnalyticsTag,
       };
