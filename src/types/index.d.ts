@@ -231,3 +231,8 @@ export interface ItemTracked {
   itemId?: string;
   variationId?: string;
 }
+
+export interface ItemTrackedPurchase extends ItemTracked {
+  count?: number;
+  price?: number;
+}

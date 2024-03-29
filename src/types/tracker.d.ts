@@ -1,5 +1,5 @@
 import EventEmitter = require('events');
-import { ConstructorClientOptions, ItemTracked, NetworkParameters } from '.';
+import { ConstructorClientOptions, ItemTracked, ItemTrackedPurchase, NetworkParameters } from '.';
 import RequestQueue = require('../utils/request-queue');
 
 export default Tracker;
@@ -105,7 +105,7 @@ declare class Tracker {
 
   trackPurchase(
     parameters: {
-      items: ItemTracked & {quantity: number}[];
+      items: ItemTrackedPurchase[];
       revenue: number;
       orderId?: string;
       section?: string;
