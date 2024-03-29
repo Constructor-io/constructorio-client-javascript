@@ -132,8 +132,8 @@ class Tracker {
    * Send input focus event to API
    * @private
    * @function trackInputFocusV2
+   * @param {string} userInput - The current autocomplete search query
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.userInput - The current autocomplete search query
    * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -142,11 +142,10 @@ class Tracker {
    * @example
    * constructorio.tracker.trackInputFocusV2("text");
    */
-  trackInputFocusV2(parameters = {}, networkParameters = {}) {
+  trackInputFocusV2(userInput = '', parameters = {}, networkParameters = {}) {
     const baseUrl = `${this.behavioralV2Url}focus?`;
     const bodyParams = {};
     const {
-      userInput = '',
       analyticsTags = null,
     } = parameters;
 
