@@ -1085,10 +1085,13 @@ class Tracker {
 
   /**
    * Send purchase event to API
-   *
    * @function trackPurchase
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {object[]} parameters.items - List of product item objects
+   * @param {{itemId: string | undefined
+   * variationId: string | undefined
+   * itemName: string | undefined
+   * count: number | undefined
+   * price: number | undefined}[]} parameters.items - List of product item objects
    * @param {number} parameters.revenue - The subtotal (excluding taxes, shipping, etc.) of the entire order
    * @param {string} [parameters.orderId] - Unique order identifier
    * @param {string} [parameters.section="Products"] - Index section
@@ -1100,7 +1103,7 @@ class Tracker {
    * @example
    * constructorio.tracker.trackPurchase(
    *     {
-   *         items: [{ itemId: 'KMH876' }, { itemId: 'KMH140' }],
+   *         items: [{ itemId: 'KMH876', price: 1, count: 1}, { itemId: 'KMH140', price: 1, count: 1s }],
    *         revenue: 12.00,
    *         orderId: 'OUNXBG2HMA',
    *         section: 'Products',
