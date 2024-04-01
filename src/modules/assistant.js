@@ -148,12 +148,11 @@ class Assistant {
    * const { value, done } = await reader.read();
    */
   getAssistantResultsStream(query, parameters) {
-    let requestUrl;
     let eventSource;
     let readableStream;
 
     try {
-      requestUrl = createAssistantUrl(query, parameters, this.options);
+      const requestUrl = createAssistantUrl(query, parameters, this.options);
 
       // Create an EventSource that connects to the Server Sent Events API
       eventSource = new EventSource(requestUrl);
@@ -173,7 +172,7 @@ class Assistant {
       });
     } catch (e) {
       if (readableStream) {
-        readableStream?.cancel(e);
+        readableStream?.cancel();
       } else {
         // If the stream was not successfully created, close the EventSource directly
         eventSource?.close();

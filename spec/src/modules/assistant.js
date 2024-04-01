@@ -82,7 +82,7 @@ describe(`ConstructorIO - Assistant${bundledDescriptionSuffix}`, () => {
     });
 
     it('should clean and encode parameters correctly', () => {
-      const intentWithSpaces = 'test Intent';
+      const intentWithSpaces = 'test/ [Intent)';
       const url = createAssistantUrl(
         intentWithSpaces,
         { ...defaultParameters },
@@ -121,21 +121,14 @@ describe(`ConstructorIO - Assistant${bundledDescriptionSuffix}`, () => {
       const eventTypes = Assistant.EventTypes;
 
       setupEventListeners(mockEventSource, mockStreamController, eventTypes);
-
-      expect(mockEventSource.addEventListener.calledWith('start')).to.be.true;
-      expect(mockEventSource.addEventListener.calledWith('group')).to.be.true;
-      expect(mockEventSource.addEventListener.calledWith('search_result')).to.be.true;
-      expect(mockEventSource.addEventListener.calledWith('article_reference')).to.be.true;
-      expect(mockEventSource.addEventListener.calledWith('recipe_info')).to.be.true;
-      expect(mockEventSource.addEventListener.calledWith('recipe_instructions')).to.be.true;
-      expect(mockEventSource.addEventListener.calledWith('server_error')).to.be.true;
-      expect(mockEventSource.addEventListener.calledWith('image_meta')).to.be.true;
-      expect(mockEventSource.addEventListener.calledWith('end')).to.be.true;
+      Object.values(Assistant.EventTypes).forEach((event) => {
+        expect(mockEventSource.addEventListener.calledWith(event)).to.be.true;
+      });
     });
 
     it('should enqueue event data into the stream', (done) => {
       const eventTypes = Assistant.EventTypes;
-      const eventType = 'search_result';
+      const eventType = Assistant.EventTypes.SEARCH_RESULT;
       const eventData = { data: 'Hello, world!' };
 
       setupEventListeners(mockEventSource, mockStreamController, eventTypes);
@@ -154,7 +147,7 @@ describe(`ConstructorIO - Assistant${bundledDescriptionSuffix}`, () => {
 
     it('should close the EventSource and the stream when END event is received', () => {
       const eventTypes = Assistant.EventTypes;
-      const eventType = 'end';
+      const eventType = Assistant.EventTypes.END;
 
       setupEventListeners(mockEventSource, mockStreamController, eventTypes);
 
@@ -185,7 +178,7 @@ describe(`ConstructorIO - Assistant${bundledDescriptionSuffix}`, () => {
     });
 
     it('should correctly handle and enqueue events with specific data structures', (done) => {
-      const eventType = 'search_result';
+      const eventType = Assistant.EventTypes.SEARCH_RESULT;
       const complexData = { intent_result_id: 123, response: { results: [{ name: 'Item 1' }, { name: 'Item 2' }] } };
       const eventTypes = Assistant.EventTypes;
 

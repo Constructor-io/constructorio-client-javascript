@@ -5,6 +5,7 @@ import {
 export default Assistant;
 
 export interface IAssistantParameters {
+  domain: string;
   numResultsPerPage?: number;
   filters?: Record<string, any>;
 }
