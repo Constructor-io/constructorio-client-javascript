@@ -84,18 +84,12 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
   it('Should return an instance with correct serviceUrl when a http serviceUrl is passed', () => {
     const clientId = 'client-id';
     const sessionId = 'session-id';
-    const serviceUrl = 'https://constructor.io';
-    const quizzesServiceUrl = 'http://quizzes.constructor.io';
-    const version = 'custom-version';
-    const networkParameters = { timeout: 5000 };
+    const serviceUrl = 'http://constructor.io';
     const instance = new ConstructorIO({
       apiKey: validApiKey,
       clientId,
       sessionId,
       serviceUrl,
-      quizzesServiceUrl,
-      version,
-      networkParameters,
     });
 
     expect(instance).to.be.an('object');
