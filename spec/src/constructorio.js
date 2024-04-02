@@ -81,6 +81,26 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
     expect(instance.options).to.have.property('networkParameters').to.equal(networkParameters);
   });
 
+  it('Should default customOriginReferrer to an empty string', () => {
+    const instance = new ConstructorIO({
+      apiKey: validApiKey,
+    });
+
+    expect(instance).to.be.an('object');
+    expect(instance.options).to.have.property('customOriginReferrer').to.equal('');
+  });
+
+  it('Should set customOriginReferrer if passed as option', () => {
+    const customOriginReferrer = 'customOriginReferrer';
+    const instance = new ConstructorIO({
+      apiKey: validApiKey,
+      customOriginReferrer,
+    });
+
+    expect(instance).to.be.an('object');
+    expect(instance.options).to.have.property('customOriginReferrer').to.equal(customOriginReferrer);
+  });
+
   it('Should remove any trailing slashes from the serviceUrl', () => {
     const serviceUrl = 'https://constructor.io/';
     const instance = new ConstructorIO({

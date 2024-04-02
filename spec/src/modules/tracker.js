@@ -249,6 +249,34 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackSessionStart()).to.equal(true);
     });
 
+    it('Should send custom origin_referrer query param if defined', (done) => {
+      const customOriginReferrer = 'customOriginReferrer';
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: false,
+        customOriginReferrer,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('origin_referrer');
+        expect(requestParams.origin_referrer).to.equal(`${customOriginReferrer}/path/name`);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackSessionStart()).to.equal(true);
+    });
+
     it('Should respond with a valid response with testCells', (done) => {
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({

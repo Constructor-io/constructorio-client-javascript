@@ -14,6 +14,7 @@ function applyParams(parameters, options) {
     testCells,
     requestMethod,
     beaconMode,
+    customOriginReferrer,
   } = options;
   const { host, pathname } = helpers.getWindowLocation();
   const sendReferrerWithTrackingEvents = (options.sendReferrerWithTrackingEvents === false)
@@ -58,9 +59,14 @@ function applyParams(parameters, options) {
   if (sendReferrerWithTrackingEvents && host) {
     aggregateParams.origin_referrer = host;
 
-    if (pathname) {
-      aggregateParams.origin_referrer += pathname;
-    }
+  }
+
+  if (sendReferrerWithTrackingEvents && customOriginReferrer) {
+    aggregateParams.origin_referrer = customOriginReferrer;
+  }
+
+  if (pathname) {
+    aggregateParams.origin_referrer += pathname;
   }
 
   aggregateParams._dt = Date.now();

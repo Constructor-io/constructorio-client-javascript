@@ -47,6 +47,7 @@ class ConstructorIO {
    * @param {number} [parameters.trackingSendDelay=250] - Amount of time to wait before sending tracking events (in ms)
    * @param {boolean} [parameters.sendReferrerWithTrackingEvents=true] - Indicates if the referrer is sent with tracking events
    * @param {boolean} [parameters.sendTrackingEvents=false] - Indicates if tracking events should be dispatched
+   * @param {string} [parameters.customOriginReferrer = ""] - Custom origin referrer value to send with requests. Useful for Domless environments
    * @param {object} [parameters.idOptions] - Options object to be supplied to 'constructorio-id' module
    * @param {object} [parameters.eventDispatcher] - Options related to 'EventDispatcher' class
    * @param {boolean} [parameters.eventDispatcher.enabled=true] - Determine if events should be dispatched
@@ -119,6 +120,7 @@ class ConstructorIO {
       trackingSendDelay,
       sendTrackingEvents,
       sendReferrerWithTrackingEvents,
+      customOriginReferrer: options.customOriginReferrer ?? '',
       eventDispatcher,
       beaconMode: (beaconMode === false) ? false : true, // Defaults to 'true',
       networkParameters: networkParameters || {},
