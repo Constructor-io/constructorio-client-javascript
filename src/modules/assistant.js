@@ -46,7 +46,7 @@ function createAssistantUrl(intent, parameters, options) {
   }
 
   if (parameters) {
-    const { domain, numResultsPerPage, filters } = parameters;
+    const { domain, numResultsPerPage } = parameters;
 
     // Pull domain from parameters
     if (domain) {
@@ -56,11 +56,6 @@ function createAssistantUrl(intent, parameters, options) {
     // Pull results number from parameters
     if (numResultsPerPage) {
       queryParams.num_results_per_page = numResultsPerPage;
-    }
-
-    // Pull filters from parameters
-    if (filters) {
-      queryParams.filters = filters;
     }
   }
 
@@ -138,7 +133,6 @@ class Assistant {
    * @param {object} [parameters] - Additional parameters to refine result set
    * @param {string} [parameters.domain] - domain name e.g. swimming sports gear, groceries
    * @param {number} [parameters.numResultsPerPage] - The total number of results to return
-   * @param {object} [parameters.filters] - Key / value mapping (dictionary) of filters used to refine results
    * @returns {ReadableStream} Returns a ReadableStream.
    * @example
    * const readableStream = constructorio.assistant.getAssistantResultsStream('I want to get shoes', {
