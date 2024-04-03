@@ -1085,6 +1085,7 @@ class Tracker {
 
   /**
    * Send purchase event to API
+   *
    * @function trackPurchase
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {Array.<{itemId: string | undefined,
