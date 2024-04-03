@@ -151,13 +151,7 @@ class Quizzes {
     helpers.applyNetworkTimeout(this.options, networkParameters, controller);
 
     return fetch(requestUrl, { signal })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-
-        return helpers.throwHttpErrorFromResponse(new Error(), response);
-      })
+      .then(helpers.convertResponseToJson)
       .then((json) => {
         if (json.quiz_version_id) {
           this.eventDispatcher.queue('quizzes.getQuizNextQuestion.completed', json);
@@ -213,13 +207,7 @@ class Quizzes {
     helpers.applyNetworkTimeout(this.options, networkParameters, controller);
 
     return fetch(requestUrl, { signal })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-
-        return helpers.throwHttpErrorFromResponse(new Error(), response);
-      })
+      .then(helpers.convertResponseToJson)
       .then((json) => {
         if (json.quiz_version_id) {
           this.eventDispatcher.queue('quizzes.getQuizResults.completed', json);
@@ -264,13 +252,7 @@ class Quizzes {
     helpers.applyNetworkTimeout(this.options, networkParameters, controller);
 
     return fetch(requestUrl, { signal })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-
-        return helpers.throwHttpErrorFromResponse(new Error(), response);
-      })
+      .then(helpers.convertResponseToJson)
       .then((json) => {
         if (json.quiz_version_id) {
           this.eventDispatcher.queue('quizzes.getQuizResultsConfig.completed', json);

@@ -20,6 +20,7 @@ const {
   addOrderIdRecord,
   applyNetworkTimeout,
   stringify,
+  convertResponseToJson,
 } = require('../../../test/utils/helpers'); // eslint-disable-line import/extensions
 const jsdom = require('./jsdom-global');
 const store = require('../../../test/utils/store'); // eslint-disable-line import/extensions
@@ -400,6 +401,40 @@ describe('ConstructorIO - Utils - Helpers', () => {
         const stringified = stringify(obj);
 
         expect(stringified).to.equal('a=1&b=1%2C2&c=2&c=3&d=true&d=false&e%5Bf%5D=g&e%5Bf%5D=h');
+      });
+    });
+
+    describe('convertResponseToJson', () => {
+      it('Should return valid JSON response', () => {
+        const responseData = { testKey: 'testValue' };
+        const response = {
+          ok: true,
+          json: async () => Promise.resolve(responseData),
+        };
+
+        return expect(convertResponseToJson(response)).to.eventually.deep.equal(responseData);
+      });
+
+      it('Should return error if response cannot be converted to json', () => {
+        const response = {
+          ok: true,
+          code: 500,
+          json: async () => { throw Error('invalid JSON'); },
+          text: async () => 'plaintext response',
+        };
+
+        return expect(convertResponseToJson(response)).to.eventually.be.rejectedWith('Server responded with an invalid JSON object. Response code: 500, Response: plaintext response');
+      });
+
+      it('Should return error if response is not ok', () => {
+        const response = {
+          ok: false,
+          code: 500,
+          json: async () => { throw Error('invalid JSON'); },
+          text: async () => 'plaintext response',
+        };
+
+        return expect(convertResponseToJson(response)).to.eventually.be.rejectedWith('invalid JSON');
       });
     });
   }

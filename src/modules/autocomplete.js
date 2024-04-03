@@ -1,6 +1,6 @@
 /* eslint-disable object-curly-newline, no-underscore-dangle */
 const EventDispatcher = require('../utils/event-dispatcher');
-const { throwHttpErrorFromResponse, cleanParams, applyNetworkTimeout, trimNonBreakingSpaces, encodeURIComponentRFC3986, stringify } = require('../utils/helpers');
+const { convertResponseToJson, cleanParams, applyNetworkTimeout, trimNonBreakingSpaces, encodeURIComponentRFC3986, stringify } = require('../utils/helpers');
 
 // Create URL from supplied query (term) and parameters
 function createAutocompleteUrl(query, parameters, options) {
@@ -155,13 +155,7 @@ class Autocomplete {
     }
 
     return fetch(requestUrl, { signal })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-
-        return throwHttpErrorFromResponse(new Error(), response);
-      })
+      .then(convertResponseToJson)
       .then((json) => {
         if (json.sections) {
           if (json.result_id) {

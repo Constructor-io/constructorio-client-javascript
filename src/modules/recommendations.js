@@ -136,13 +136,7 @@ class Recommendations {
     }
 
     return fetch(requestUrl, { signal })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-
-        return helpers.throwHttpErrorFromResponse(new Error(), response);
-      })
+      .then(helpers.convertResponseToJson)
       .then((json) => {
         if (json.response && json.response.results) {
           if (json.result_id) {
