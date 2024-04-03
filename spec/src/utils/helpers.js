@@ -436,7 +436,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
         };
 
         return expect(convertResponseToJson(response)).to.eventually.be.rejectedWith('invalid JSON');
-      })
+      });
     });
 
     describe('addHTTPSToString', () => {
