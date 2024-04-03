@@ -21,6 +21,7 @@ const {
   applyNetworkTimeout,
   stringify,
   convertResponseToJson,
+  addHTTPSToString,
 } = require('../../../test/utils/helpers'); // eslint-disable-line import/extensions
 const jsdom = require('./jsdom-global');
 const store = require('../../../test/utils/store'); // eslint-disable-line import/extensions
@@ -435,6 +436,34 @@ describe('ConstructorIO - Utils - Helpers', () => {
         };
 
         return expect(convertResponseToJson(response)).to.eventually.be.rejectedWith('invalid JSON');
+      })
+    });
+
+    describe('addHTTPSToString', () => {
+      it('Should return the url without any modification', () => {
+        const testUrl = 'https://www.constructor.io';
+
+        expect(addHTTPSToString(testUrl)).to.equal(testUrl);
+      });
+
+      it('Should return url with no protocol with https at the beginning', () => {
+        const testUrl = 'www.constructor.io';
+        const expectedUrl = 'https://www.constructor.io';
+
+        expect(addHTTPSToString(testUrl)).to.equal(expectedUrl);
+      });
+
+      it('Should return url with an http protocol with https at the beginning', () => {
+        const testUrl = 'http://www.constructor.io';
+        const expectedUrl = 'https://www.constructor.io';
+
+        expect(addHTTPSToString(testUrl)).to.equal(expectedUrl);
+      });
+
+      it('Should return null if param is not a string', () => {
+        const testUrl = {};
+
+        expect(addHTTPSToString(testUrl)).to.equal(null);
       });
     });
   }

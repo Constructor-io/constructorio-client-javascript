@@ -58,7 +58,7 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
   it('Should return an instance with custom options when valid API key is provided', () => {
     const clientId = 'client-id';
     const sessionId = 'session-id';
-    const serviceUrl = 'http://constructor.io';
+    const serviceUrl = 'https://constructor.io';
     const quizzesServiceUrl = 'http://quizzes.constructor.io';
     const version = 'custom-version';
     const networkParameters = { timeout: 5000 };
@@ -79,6 +79,21 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
     expect(instance.options).to.have.property('quizzesServiceUrl').to.equal(quizzesServiceUrl);
     expect(instance.options).to.have.property('version').to.equal(version);
     expect(instance.options).to.have.property('networkParameters').to.equal(networkParameters);
+  });
+
+  it('Should return an instance with correct serviceUrl when a http serviceUrl is passed', () => {
+    const clientId = 'client-id';
+    const sessionId = 'session-id';
+    const serviceUrl = 'http://constructor.io';
+    const instance = new ConstructorIO({
+      apiKey: validApiKey,
+      clientId,
+      sessionId,
+      serviceUrl,
+    });
+
+    expect(instance).to.be.an('object');
+    expect(instance.options).to.have.property('serviceUrl').to.equal('https://constructor.io');
   });
 
   it('Should remove any trailing slashes from the serviceUrl', () => {
