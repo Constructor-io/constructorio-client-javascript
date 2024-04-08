@@ -1,4 +1,4 @@
-/* eslint-disable object-curly-newline, no-param-reassign, no-underscore-dangle */
+/* eslint-disable object-curly-newline, no-param-reassign */
 const EventDispatcher = require('../utils/event-dispatcher');
 const helpers = require('../utils/helpers');
 
