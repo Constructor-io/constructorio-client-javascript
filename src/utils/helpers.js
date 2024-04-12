@@ -238,13 +238,14 @@ const utils = {
 
     return obfuscatedUrl;
   },
-  async convertResponseToJson(response) {
+  convertResponseToJson(response) {
     if (response.ok) {
-      try {
-        return await response.json();
-      } catch (e) {
-        throw new Error(`Server responded with an invalid JSON object. Response code: ${response.code}, Response: ${await response.text()}`);
-      }
+      return response.json()
+        .then((json) => json)
+        .catch(() => response.text()
+          .then((responseText) => {
+            throw new Error(`Server responded with an invalid JSON object. Response code: ${response.code}, Response: ${responseText}`);
+          }));
     }
 
     return utils.throwHttpErrorFromResponse(new Error(), response);
