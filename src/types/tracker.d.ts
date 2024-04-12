@@ -1,5 +1,5 @@
 import EventEmitter = require('events');
-import { ConstructorClientOptions, ItemTracked, NetworkParameters } from '.';
+import { ConstructorClientOptions, ItemTracked, ItemTrackedPurchase, NetworkParameters } from '.';
 import RequestQueue = require('../utils/request-queue');
 
 export default Tracker;
@@ -17,12 +17,21 @@ declare class Tracker {
 
   trackInputFocus(networkParameters?: NetworkParameters): true | Error;
 
+  trackInputFocusV2(
+      parameters: {
+        userInput: string;
+        analyticsTags?: Record<string, string>;
+      },
+      networkParameters?: NetworkParameters,
+  ): true | Error;
+
   trackItemDetailLoad(
     parameters: {
       itemName: string;
       itemId: string;
       url: string;
       variationId?: string;
+      analyticsTags?: Record<string, string>;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -105,10 +114,11 @@ declare class Tracker {
 
   trackPurchase(
     parameters: {
-      items: ItemTracked & {quantity: number}[];
+      items: ItemTrackedPurchase[];
       revenue: number;
       orderId?: string;
       section?: string;
+      analyticsTags?: Record<string, string>;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -123,6 +133,7 @@ declare class Tracker {
       resultPage?: number;
       resultId?: string;
       section?: string;
+      analyticsTags?: Record<string, string>;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -140,6 +151,7 @@ declare class Tracker {
       resultPage?: number;
       resultPositionOnPage?: number;
       numResultsPerPage?: number;
+      analyticsTags?: Record<string, string>;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -157,6 +169,7 @@ declare class Tracker {
       sortOrder?: string;
       sortBy?: string;
       items: ItemTracked[];
+      analyticsTags?: Record<string, string>;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -174,6 +187,7 @@ declare class Tracker {
       resultPositionOnPage?: number;
       numResultsPerPage?: number;
       selectedFilters?: object;
+      analyticsTags?: Record<string, string>;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -184,6 +198,7 @@ declare class Tracker {
       itemName?: string;
       variationId?: string;
       section?: string;
+      analyticsTags?: Record<string, string>;
     },
     networkParameters?: NetworkParameters
   ): true | Error;

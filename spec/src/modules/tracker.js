@@ -24,6 +24,7 @@ const bundled = process.env.BUNDLED === 'true';
 const skipNetworkTimeoutTests = process.env.SKIP_NETWORK_TIMEOUT_TESTS === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 const timeoutRejectionMessage = bundled ? 'AbortError: Aborted' : 'AbortError: The user aborted a request.';
+const testAnalyticsTag = { param1: 'test', param2: 'test2' };
 
 describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   let fetchSpy = null;
@@ -402,7 +403,10 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         fetch: fetchSpy,
         ...requestQueueOptions,
       });
-      const input = 'test';
+      const userInput = 'Test User Input';
+      const parameters = {
+        analyticsTags: testAnalyticsTag,
+      };
 
       tracker.on('success', (responseParams) => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
@@ -418,7 +422,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Body
-        expect(bodyParams).to.have.property('user_input').to.equal(input);
+        expect(bodyParams).to.have.property('user_input').to.equal(userInput);
+        expect(bodyParams).to.have.property('analytics_tags').to.deep.equal(testAnalyticsTag);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -431,7 +436,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done(error);
       });
 
-      expect(tracker.trackInputFocusV2(input)).to.equal(true);
+      expect(tracker.trackInputFocusV2(userInput, parameters)).to.equal(true);
     });
 
     it('Should respond with a valid response', (done) => {
@@ -1173,6 +1178,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
     const optionalParameters = {
       variationId: 'test1-small',
+      analyticsTags: testAnalyticsTag,
     };
 
     it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
@@ -1335,6 +1341,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         // Request
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('variation_id').to.deep.equal(optionalParameters.variationId);
+        expect(requestParams).to.have.property('analytics_tags').to.deep.equal(testAnalyticsTag);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -3706,6 +3713,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const optionalParameters = {
       orderId: '123938123',
       section: 'Products',
+      analyticsTags: testAnalyticsTag,
     };
     const snakeCaseItems = [
       {
@@ -3800,6 +3808,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(fetchSpy).to.have.been.called;
         expect(requestQueryParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(requestBodyParams).to.have.property('order_id').to.equal(optionalParameters.orderId);
+        expect(requestBodyParams).to.have.property('analytics_tags').to.deep.equal(testAnalyticsTag);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -4271,6 +4280,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       resultPage: 1,
       resultId: 'result-id',
       section: 'Products',
+      analyticsTags: testAnalyticsTag,
     };
 
     it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
@@ -4498,6 +4508,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('result_page').to.equal(optionalParameters.resultPage);
         expect(requestParams).to.have.property('result_id').to.equal(optionalParameters.resultId);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
+        expect(requestParams).to.have.property('analytics_tags').to.deep.equal(testAnalyticsTag);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -4674,6 +4685,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       resultPage: 1,
       resultId: 'result-id',
       section: 'Products',
+      analyticsTags: testAnalyticsTag,
     };
 
     it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
@@ -4948,6 +4960,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('result_page').to.equal(optionalParameters.resultPage);
         expect(requestParams).to.have.property('result_id').to.equal(optionalParameters.resultId);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
+        expect(requestParams).to.have.property('analytics_tags').to.deep.equal(testAnalyticsTag);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -5202,6 +5215,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           itemId: '789',
         },
       ],
+      analyticsTags: testAnalyticsTag,
     };
     const snakeCaseItems = [
       {
@@ -5416,6 +5430,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('result_id').to.equal(optionalParameters.resultId);
         expect(requestParams).to.have.property('selected_filters').to.deep.equal(optionalParameters.selectedFilters);
         expect(requestParams).to.have.property('items').to.deep.equal(snakeCaseItems);
+        expect(requestParams).to.have.property('analytics_tags').to.deep.equal(testAnalyticsTag);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -5634,6 +5649,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       resultPositionOnPage: 10,
       numResultsPerPage: 5,
       selectedFilters: { foo: ['bar'] },
+      analyticsTags: testAnalyticsTag,
     };
 
     it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
@@ -5839,6 +5855,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('result_position_on_page').to.equal(optionalParameters.resultPositionOnPage);
         expect(requestParams).to.have.property('num_results_per_page').to.equal(optionalParameters.numResultsPerPage);
         expect(requestParams).to.have.property('selected_filters').to.deep.equal(optionalParameters.selectedFilters);
+        expect(requestParams).to.have.property('analytics_tags').to.deep.equal(testAnalyticsTag);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -6105,6 +6122,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const optionalParameters = {
       itemName: 'Example Product Name',
       section: 'Products',
+      analyticsTags: testAnalyticsTag,
     };
 
     it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
@@ -6294,6 +6312,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
         expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.itemId);
         expect(requestParams).to.have.property('item_name').to.equal(optionalParameters.itemName);
+        expect(requestParams).to.have.property('analytics_tags').to.deep.equal(testAnalyticsTag);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');

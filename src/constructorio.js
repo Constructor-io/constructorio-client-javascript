@@ -109,10 +109,12 @@ class ConstructorIO {
       }
     }
 
+    const normalizedServiceUrl = serviceUrl && serviceUrl.replace(/\/$/, '');
+
     this.options = {
       apiKey,
       version: versionFromOptions || versionFromGlobal || computePackageVersion(),
-      serviceUrl: (serviceUrl && serviceUrl.replace(/\/$/, '')) || 'https://ac.cnstrc.com',
+      serviceUrl: helpers.addHTTPSToString(normalizedServiceUrl) || 'https://ac.cnstrc.com',
       quizzesServiceUrl: (quizzesServiceUrl && quizzesServiceUrl.replace(/\/$/, '')) || 'https://quizzes.cnstrc.com',
       assistantServiceUrl: (assistantServiceUrl && assistantServiceUrl.replace(/\/$/, '')) || 'https://assistant.cnstrc.com',
       sessionId: sessionId || session_id,
