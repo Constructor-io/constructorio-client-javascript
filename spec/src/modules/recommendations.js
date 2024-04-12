@@ -293,6 +293,51 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should return a return a response with pre filter expression properly parsed', (done) => {
+      const preFilterExpression = {
+        or: [
+          {
+            and: [
+              {
+                name: 'group_id',
+                value: 'electronics-group-id',
+              },
+              {
+                name: 'Price',
+                range: ['-inf', 200],
+              },
+            ],
+          },
+          {
+            and: [
+              {
+                name: 'Type',
+                value: 'Laptop',
+              },
+              {
+                not: {
+                  name: 'Price',
+                  range: [800, 'inf'],
+                },
+              },
+            ],
+          },
+        ],
+      };
+      const { recommendations } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      recommendations.getRecommendations(podId, { itemIds, preFilterExpression }, {}).then((res) => {
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(JSON.stringify(res.request.pre_filter_expression)).to.equal(JSON.stringify(preFilterExpression));
+        done();
+      });
+    });
+
     it('Should properly encode query parameters', (done) => {
       const specialCharacters = '+[]&';
       const term = `apple ${specialCharacters}`;
