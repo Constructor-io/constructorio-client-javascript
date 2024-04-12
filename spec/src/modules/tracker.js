@@ -3452,7 +3452,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackConversion(term, fullParameters)).to.equal(true);
     });
 
-    it.only('should respond with an error if isCustomType is true, type is provided, and no displayName is specified', (done) => {
+    it('should respond with an error if isCustomType is true, type is provided, and no displayName is specified', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
