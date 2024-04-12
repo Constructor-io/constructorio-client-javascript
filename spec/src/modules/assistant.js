@@ -1,4 +1,6 @@
 /* eslint-disable no-unused-expressions, import/no-unresolved */
+import ConstructorIO from '../../../test/constructorio'; // eslint-disable-line import/extensions
+
 const dotenv = require('dotenv');
 const chai = require('chai');
 const sinon = require('sinon');
@@ -9,7 +11,6 @@ const qs = require('qs');
 const { createAssistantUrl, setupEventListeners } = require('../../../src/modules/assistant');
 const Assistant = require('../../../src/modules/assistant');
 const { encodeURIComponentRFC3986 } = require('../../../src/utils/helpers');
-let ConstructorIO = require('../../../test/constructorio'); // eslint-disable-line import/extensions
 const jsdom = require('../utils/jsdom-global');
 
 const bundled = process.env.BUNDLED === 'true';
@@ -43,7 +44,7 @@ describe(`ConstructorIO - Assistant${bundledDescriptionSuffix}`, () => {
     window.CLIENT_VERSION = clientVersion;
 
     if (bundled) {
-      ConstructorIO = window.ConstructorioClient;
+      ConstructorIO.prop = window.ConstructorioClient;
     }
   });
 
