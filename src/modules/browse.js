@@ -268,13 +268,7 @@ class Browse {
     }
 
     return fetch(requestUrl, { signal })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-
-        return helpers.throwHttpErrorFromResponse(new Error(), response);
-      })
+      .then(helpers.convertResponseToJson)
       .then((json) => {
         if (json.response && json.response.results) {
           if (json.result_id) {
@@ -343,13 +337,7 @@ class Browse {
     }
 
     return fetch(requestUrl, { signal })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-
-        return helpers.throwHttpErrorFromResponse(new Error(), response);
-      })
+      .then(helpers.convertResponseToJson)
       .then((json) => {
         if (json.response && json.response.results) {
           if (json.result_id) {
@@ -411,13 +399,7 @@ class Browse {
     const requestUrl = `${serviceUrl}/browse/groups?${queryString}`;
 
     return fetch(requestUrl, { signal })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-
-        return helpers.throwHttpErrorFromResponse(new Error(), response);
-      })
+      .then(helpers.convertResponseToJson)
       .then((json) => {
         if (json.response && json.response.groups) {
           this.eventDispatcher.queue('browse.getBrowseGroups.completed', json);
@@ -470,13 +452,7 @@ class Browse {
     }
 
     return fetch(requestUrl, { signal })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-
-        return helpers.throwHttpErrorFromResponse(new Error(), response);
-      })
+      .then(helpers.convertResponseToJson)
       .then((json) => {
         if (json.response && json.response.facets) {
           this.eventDispatcher.queue('browse.getBrowseFacets.completed', json);
@@ -526,13 +502,7 @@ class Browse {
     }
 
     return fetch(requestUrl, { signal })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-
-        return helpers.throwHttpErrorFromResponse(new Error(), response);
-      })
+      .then(helpers.convertResponseToJson)
       .then((json) => {
         if (json.response && json.response.facets) {
           this.eventDispatcher.queue('browse.getBrowseFacetOptions.completed', json);

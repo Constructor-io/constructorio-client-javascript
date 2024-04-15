@@ -238,7 +238,17 @@ const utils = {
 
     return obfuscatedUrl;
   },
+  convertResponseToJson(response) {
+    if (response.ok) {
+      return response.json()
+        .catch(() => response.text()
+          .then((responseText) => {
+            throw new Error(`Server responded with an invalid JSON object. Response code: ${response.code}, Response: ${responseText}`);
+          }));
+    }
 
+    return utils.throwHttpErrorFromResponse(new Error(), response);
+  },
   addHTTPSToString(url) {
     if (typeof url !== 'string') {
       return null;

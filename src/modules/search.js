@@ -198,13 +198,7 @@ class Search {
     }
 
     return fetch(requestUrl, { signal })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-
-        return helpers.throwHttpErrorFromResponse(new Error(), response);
-      })
+      .then(helpers.convertResponseToJson)
       .then((json) => {
         // Search results
         if (json.response && json.response.results) {
@@ -278,13 +272,7 @@ class Search {
     }
 
     return fetch(requestUrl, { signal })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-
-        return helpers.throwHttpErrorFromResponse(new Error(), response);
-      })
+      .then(helpers.convertResponseToJson)
       .then((json) => {
         // Search results
         if (json.response && json.response.results) {
