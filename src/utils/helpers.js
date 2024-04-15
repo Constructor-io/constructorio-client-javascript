@@ -241,7 +241,6 @@ const utils = {
   convertResponseToJson(response) {
     if (response.ok) {
       return response.json()
-        .then((json) => json)
         .catch(() => response.text()
           .then((responseText) => {
             throw new Error(`Server responded with an invalid JSON object. Response code: ${response.code}, Response: ${responseText}`);
