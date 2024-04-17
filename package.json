@@ -6,7 +6,8 @@
   "types": "lib/types/index.d.ts",
   "scripts": {
     "clean": "sudo rm -rf node_modules package-lock.json",
-    "version": "npm run verify-node-version && npm run docs && git add ./docs/* && npm run bundle && git add -A ./dist",
+    "preversion": "node ./src/generateVersion.js",
+    "version": "npm run verify-node-version && npm run docs && git add ./docs/* && npm run bundle && git add -A ./dist && git add ./src/version.js",
     "check-license": "license-checker --production --onlyAllow 'Apache-2.0;BSD-3-Clause;MIT;0BSD;BSD-2-Clause'",
     "verify-node-version": "chmod +x ./scripts/verify-node-version.sh && ./scripts/verify-node-version.sh",
     "lint": "eslint 'src/**/*.js' 'spec/**/*.js' 'src/**/*.d.ts'",
@@ -23,7 +24,7 @@
     "coverage": "nyc --all --reporter=html npm run test:src",
     "postcoverage": "open coverage/index.html && rm -rf test",
     "docs": "jsdoc --configure ./.jsdoc.json ./README.md --recurse ./src --destination ./docs",
-    "compile": "node ./src/generateVersion.js && rm -rf ./lib/* && babel src/ -d lib/ --copy-files && rm -rf ./lib/types/tests",
+    "compile": "rm -rf ./lib/* && babel src/ -d lib/ --copy-files && rm -rf ./lib/types/tests",
     "prepublish": "npm run compile",
     "bundle": "rm -rf ./dist/* && npm run compile && node bundle.js",
     "prepare": "husky install"
