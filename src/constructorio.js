@@ -10,7 +10,7 @@ const Recommendations = require('./modules/recommendations');
 const Tracker = require('./modules/tracker');
 const EventDispatcher = require('./utils/event-dispatcher');
 const helpers = require('./utils/helpers');
-const { version: packageVersion } = require('../package.json');
+const packageVersion = require('./version');
 const Quizzes = require('./modules/quizzes');
 
 // Compute package version string

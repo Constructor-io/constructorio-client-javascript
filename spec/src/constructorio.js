@@ -6,7 +6,7 @@ const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 const helpers = require('../mocha.helpers');
 const jsdom = require('./utils/jsdom-global');
-const { version: packageVersion } = require('../../package.json');
+const packageVersion = require('../../test/version');
 let ConstructorIO = require('../../test/constructorio');
 
 chai.use(chaiAsPromised);
