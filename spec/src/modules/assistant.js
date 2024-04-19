@@ -8,7 +8,7 @@ const { ReadableStream } = require('web-streams-polyfill');
 const qs = require('qs');
 const { createAssistantUrl, setupEventListeners } = require('../../../src/modules/assistant');
 const Assistant = require('../../../src/modules/assistant');
-const ConstructorIO = require('../../../test/constructorio');
+let ConstructorIO = require('../../../test/constructorio');
 const { encodeURIComponentRFC3986 } = require('../../../src/utils/helpers');
 const jsdom = require('../utils/jsdom-global');
 
@@ -43,8 +43,7 @@ describe(`ConstructorIO - Assistant${bundledDescriptionSuffix}`, () => {
     window.CLIENT_VERSION = clientVersion;
 
     if (bundled) {
-      // I think in some contexts, imports are read-only so you'll need to edit prop instead
-      ConstructorIO.prop = window.ConstructorioClient;
+      ConstructorIO = window.ConstructorioClient;
     }
   });
 
