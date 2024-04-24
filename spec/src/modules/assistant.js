@@ -202,11 +202,15 @@ describe(`ConstructorIO - Assistant${bundledDescriptionSuffix}`, () => {
     beforeEach(() => {
       global.EventSource = EventSource;
       global.ReadableStream = ReadableStream;
+      window.EventSource = EventSource;
+      window.ReadableStream = ReadableStream;
     });
 
     afterEach(() => {
       delete global.EventSource;
       delete global.ReadableStream;
+      delete window.EventSource;
+      delete window.ReadableStream;
     });
 
     it('should create a readable stream', () => {
