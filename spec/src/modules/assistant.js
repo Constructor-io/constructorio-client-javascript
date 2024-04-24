@@ -8,7 +8,7 @@ const { ReadableStream } = require('web-streams-polyfill');
 const qs = require('qs');
 const { createAssistantUrl, setupEventListeners } = require('../../../src/modules/assistant');
 const Assistant = require('../../../src/modules/assistant');
-let ConstructorIO = require('../../../test/constructorio');
+let ConstructorIO = require('../../../test/constructorio'); // eslint-disable-line import/extensions
 const { encodeURIComponentRFC3986 } = require('../../../src/utils/helpers');
 const jsdom = require('../utils/jsdom-global');
 
