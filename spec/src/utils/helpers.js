@@ -253,7 +253,6 @@ describe('ConstructorIO - Utils - Helpers', () => {
 
       it('Should return true if the order id already exists from a previous purchase event', () => {
         store.local.set(purchaseEventStorageKey, [CRC32.str(orderId)]);
-
         expect(hasOrderIdRecord({ orderId })).to.equal(true);
       });
 
@@ -261,7 +260,12 @@ describe('ConstructorIO - Utils - Helpers', () => {
         expect(hasOrderIdRecord({ orderId })).to.equal(null);
       });
 
+      it('Should return null if the order id is repeated but for a different apiKey', () => {
+        expect(hasOrderIdRecord({ orderId, apiKey: 'test-key' })).to.equal(null);
+      });
+
       it('Should return true if the order id is repeated but for a different apiKey', () => {
+        store.local.set(purchaseEventStorageKey, [CRC32.str(`test-key-${orderId}`)]);
         expect(hasOrderIdRecord({ orderId, apiKey: 'test-key' })).to.equal(true);
       });
     });
@@ -320,8 +324,8 @@ describe('ConstructorIO - Utils - Helpers', () => {
 
         expect(orderIds).to.equal(null);
 
-        addOrderIdRecord({ orderId, apiKey1 });
-        addOrderIdRecord({ orderId, apiKey2 });
+        addOrderIdRecord({ orderId, apiKey: apiKey1 });
+        addOrderIdRecord({ orderId, apiKey: apiKey2 });
         const newOrderIds = store.local.get(purchaseEventStorageKey);
 
         expect(newOrderIds.length).to.equal(2);
