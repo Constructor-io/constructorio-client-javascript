@@ -4118,12 +4118,14 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           fetch: fetchSpy,
           ...requestQueueOptions,
         });
+        const orderId = '848291039';
+        const apiKey = testApiKey;
 
-        addOrderIdRecord('848291039');
+        addOrderIdRecord({ orderId, apiKey });
 
         expect(tracker.trackPurchase(Object.assign(requiredParameters, {
           ...optionalParameters,
-          orderId: '848291039',
+          orderId,
         }))).to.equal(false);
 
         setTimeout(() => {
@@ -4158,8 +4160,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      addOrderIdRecord('239402919');
-      addOrderIdRecord('482039192');
+      addOrderIdRecord({ orderId: '239402919', apiKey: testApiKey });
+      addOrderIdRecord({ orderId: '482039192', apiKey: testApiKey });
 
       expect(tracker.trackPurchase(Object.assign(requiredParameters, {
         ...optionalParameters,

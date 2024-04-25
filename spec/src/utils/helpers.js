@@ -254,11 +254,15 @@ describe('ConstructorIO - Utils - Helpers', () => {
       it('Should return true if the order id already exists from a previous purchase event', () => {
         store.local.set(purchaseEventStorageKey, [CRC32.str(orderId)]);
 
-        expect(hasOrderIdRecord(orderId)).to.equal(true);
+        expect(hasOrderIdRecord({ orderId })).to.equal(true);
       });
 
       it('Should return null if the order id does not already exist', () => {
-        expect(hasOrderIdRecord(orderId)).to.equal(null);
+        expect(hasOrderIdRecord({ orderId })).to.equal(null);
+      });
+
+      it('Should return true if the order id is repeated but for a different apiKey', () => {
+        expect(hasOrderIdRecord({ orderId, apiKey: 'test-key' })).to.equal(true);
       });
     });
 
@@ -275,7 +279,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
         const orderIds = store.local.get(purchaseEventStorageKey);
         expect(orderIds).to.equal(null);
 
-        addOrderIdRecord(orderId);
+        addOrderIdRecord({ orderId });
         const newOrderIds = store.local.get(purchaseEventStorageKey);
         const newOrderIdExists = newOrderIds.includes(CRC32.str(orderId));
 
@@ -290,7 +294,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
         orderIds = store.local.get(purchaseEventStorageKey);
         expect(orderIds).to.eql([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
 
-        addOrderIdRecord(orderId);
+        addOrderIdRecord({ orderId });
         const newOrderIds = store.local.get(purchaseEventStorageKey);
 
         expect(newOrderIds).to.eql([3, 4, 5, 6, 7, 8, 9, 10, 11, CRC32.str(orderId)]);
@@ -300,8 +304,8 @@ describe('ConstructorIO - Utils - Helpers', () => {
         const orderIds = store.local.get(purchaseEventStorageKey);
         expect(orderIds).to.equal(null);
 
-        addOrderIdRecord(orderId);
-        addOrderIdRecord(orderId);
+        addOrderIdRecord({ orderId });
+        addOrderIdRecord({ orderId });
         const newOrderIds = store.local.get(purchaseEventStorageKey);
         const newOrderIdExists = newOrderIds.includes(CRC32.str(orderId));
 
@@ -309,13 +313,27 @@ describe('ConstructorIO - Utils - Helpers', () => {
         expect(newOrderIdExists).to.equal(true);
       });
 
+      it('Should allow adding of duplicate order ids for different keys to the purchase event storage', () => {
+        const orderIds = store.local.get(purchaseEventStorageKey);
+        const apiKey1 = 'test-key-1';
+        const apiKey2 = 'test-key-2';
+
+        expect(orderIds).to.equal(null);
+
+        addOrderIdRecord({ orderId, apiKey1 });
+        addOrderIdRecord({ orderId, apiKey2 });
+        const newOrderIds = store.local.get(purchaseEventStorageKey);
+
+        expect(newOrderIds.length).to.equal(2);
+      });
+
       it('Should keep a history of order ids', () => {
         const orderIds = store.local.get(purchaseEventStorageKey);
         expect(orderIds).to.equal(null);
 
-        addOrderIdRecord(orderId);
-        addOrderIdRecord(orderId2);
-        addOrderIdRecord(orderId3);
+        addOrderIdRecord({ orderId });
+        addOrderIdRecord({ orderId: orderId2 });
+        addOrderIdRecord({ orderId: orderId3 });
         const newOrderIds = store.local.get(purchaseEventStorageKey);
 
         expect(Object.keys(newOrderIds).length).to.equal(3);

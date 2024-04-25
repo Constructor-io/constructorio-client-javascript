@@ -113,8 +113,11 @@ const utils = {
     return null;
   },
 
-  hasOrderIdRecord(orderId) {
-    const orderIdHash = CRC32.str(orderId.toString());
+  hasOrderIdRecord({ orderId, apiKey }) {
+    let orderPerKeyId = orderId;
+    if (apiKey) orderPerKeyId = `${apiKey}-${orderId}`;
+
+    const orderIdHash = CRC32.str(orderPerKeyId.toString());
     let purchaseEventStorage = store.local.get(purchaseEventStorageKey);
 
     if (typeof purchaseEventStorage === 'string') {
@@ -127,8 +130,11 @@ const utils = {
     return null;
   },
 
-  addOrderIdRecord(orderId) {
-    const orderIdHash = CRC32.str(orderId.toString());
+  addOrderIdRecord({ orderId, apiKey }) {
+    let orderPerKeyId = orderId;
+    if (apiKey) orderPerKeyId = `${apiKey}-${orderId}`;
+
+    const orderIdHash = CRC32.str(orderPerKeyId.toString());
     let purchaseEventStorage = store.local.get(purchaseEventStorageKey);
 
     if (typeof purchaseEventStorage === 'string') {
