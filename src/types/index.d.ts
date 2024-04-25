@@ -41,6 +41,8 @@ export interface ConstructorClientOptions {
   apiKey: string;
   version?: string;
   serviceUrl?: string;
+  quizzesServiceUrl?: string;
+  assistantServiceUrl?: string,
   sessionId?: number;
   clientId?: string;
   userId?: string;
