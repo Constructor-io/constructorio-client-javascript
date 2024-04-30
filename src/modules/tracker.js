@@ -1125,14 +1125,15 @@ class Tracker {
         section,
         analyticsTags,
       } = parameters;
+      const { apiKey } = this.options;
 
       if (orderId) {
-        // Don't send another purchase event if we have already tracked the order
-        if (helpers.hasOrderIdRecord(orderId)) {
+        // Don't send another purchase event if we have already tracked the order for the current key
+        if (helpers.hasOrderIdRecord({ orderId, apiKey })) {
           return false;
         }
 
-        helpers.addOrderIdRecord(orderId);
+        helpers.addOrderIdRecord({ orderId, apiKey });
 
         // Add order_id to the tracking params
         bodyParams.order_id = orderId;
