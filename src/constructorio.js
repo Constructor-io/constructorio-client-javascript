@@ -10,7 +10,7 @@ const Recommendations = require('./modules/recommendations');
 const Tracker = require('./modules/tracker');
 const EventDispatcher = require('./utils/event-dispatcher');
 const helpers = require('./utils/helpers');
-const packageVersion = require('./version');
+const { default: packageVersion } = require('./version');
 const Quizzes = require('./modules/quizzes');
 const Assistant = require('./modules/assistant');
 
