@@ -1898,6 +1898,60 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
       expect(tracker.trackSearchSubmit(term, requiredParameters)).to.equal(true);
     });
+
+    it('Should properly obfuscate PII in a path parameter', (done) => {
+      const termWithPII = ' test-email@gmail.com';
+      const replaceBy = '<email_omitted>';
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestUrl = fetchSpy.args[0][0];
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestUrl).to.include(replaceBy);
+        expect(requestUrl).to.not.include(termWithPII);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackSearchSubmit(termWithPII, { originalQuery: termWithPII })).to.equal(true);
+    });
+
+    it('Should properly obfuscate PII in a query parameter', (done) => {
+      const termWithPII = ' test-email@gmail.com';
+      const replaceBy = '<email_omitted>';
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('original_query').to.equal(replaceBy);
+        expect(requestParams).to.have.property('original_query').to.not.include(termWithPII);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackSearchSubmit(termWithPII, { originalQuery: termWithPII })).to.equal(true);
+    });
   });
 
   describe('trackSearchResultsLoaded', () => {

@@ -23,7 +23,7 @@ const PII_REGEX = [
 const utils = {
   trimNonBreakingSpaces: (string) => string.replace(/\s/g, ' ').trim(),
 
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent#encoding_for_rfc3986
   encodeURIComponentRFC3986: (string) => encodeURIComponent(string).replace(/[!'()*]/g, (c) => `%${c.charCodeAt(0).toString(16).toUpperCase()}`),
 
   cleanParams: (paramsObj) => {
@@ -226,16 +226,22 @@ const utils = {
 
     try {
       const url = new URL(urlString);
-      const paths = decodeURI(url?.pathname)?.split('/');
-      const paramValues = decodeURIComponent(url?.search)?.split('&').map((param) => param?.split('=')?.[1]);
+      const paths = url?.pathname?.split('/');
+      const paramValues = url?.search?.split('&')?.map((param) => param.split('=')?.[1]);
 
-      PII_REGEX.forEach((regex) => {
+      PII_REGEX.forEach(({ pattern, replaceBy }) => {
         paths.forEach((path) => {
-          if (utils.containsPii(path, regex.pattern)) obfuscatedUrl = obfuscatedUrl.replaceAll(path, regex.replaceBy);
+          const decodedPath = decodeURIComponent(path);
+          if (utils.containsPii(decodedPath, pattern)) {
+            obfuscatedUrl = obfuscatedUrl.replaceAll(path, replaceBy);
+          }
         });
 
-        paramValues.forEach((param) => {
-          if (utils.containsPii(param, regex.pattern)) obfuscatedUrl = obfuscatedUrl.replaceAll(param, regex.replaceBy);
+        paramValues.forEach((paramValue) => {
+          const decodedParamValue = decodeURIComponent(paramValue);
+          if (utils.containsPii(decodedParamValue, pattern)) {
+            obfuscatedUrl = obfuscatedUrl.replaceAll(decodedParamValue, replaceBy);
+          }
         });
       });
     } catch (e) {
