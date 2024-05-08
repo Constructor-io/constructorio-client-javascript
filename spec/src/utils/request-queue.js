@@ -4,6 +4,7 @@
   import/no-unresolved,
   no-unused-expressions,
   max-nested-callbacks,
+  import/extensions
 */
 /* cspell:disable */
 const dotenv = require('dotenv');
@@ -14,7 +15,7 @@ const sinonChai = require('sinon-chai');
 const fetchPonyfill = require('fetch-ponyfill');
 const store = require('../../../test/utils/store');
 const utilsHelpers = require('../../../test/utils/helpers');
-const RequestQueue = require('../../../test/utils/request-queue'); // eslint-disable-line import/extensions
+const RequestQueue = require('../../../test/utils/request-queue');
 const helpers = require('../../mocha.helpers');
 const jsdom = require('./jsdom-global');
 
