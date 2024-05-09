@@ -55,7 +55,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
           'text test.100@test.io text',
           'test@test@test.com', // This string includes a valid email - test@test.com
         ],
-        replaceBy: '<email_omitted>',
+        replaceWith: '<email_omitted>',
       },
       // Phone Number
       {
@@ -69,7 +69,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
           '+420736447763',
           '+420 736 447 763',
         ],
-        replaceBy: '<phone_omitted>',
+        replaceWith: '<phone_omitted>',
       },
       // Credit Card
       {
@@ -102,7 +102,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
           '30569309025904', // Diners Club
           '38520000023237', // Diners Club
         ],
-        replaceBy: '<credit_omitted>',
+        replaceWith: '<credit_omitted>',
       },
     ];
 
@@ -225,7 +225,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
 
         piiExamples.forEach((example) => {
           example.queries.forEach((query) => {
-            allExamples.push({ query, replaceBy: example.replaceBy });
+            allExamples.push({ query, replaceWith: example.replaceWith });
           });
         });
 
@@ -242,8 +242,8 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
 
         const queue = RequestQueue.get();
 
-        allExamples.forEach(({ replaceBy }, index) => {
-          const expected = `${endpoint}/${replaceBy}/search?original_query=${replaceBy}&${otherQueryParams}`;
+        allExamples.forEach(({ replaceWith }, index) => {
+          const expected = `${endpoint}/${replaceWith}/search?original_query=${replaceWith}&${otherQueryParams}`;
           expect(queue[index].url).to.equal(expected);
         });
 

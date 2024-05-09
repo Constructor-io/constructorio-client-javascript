@@ -7,15 +7,15 @@ const purchaseEventStorageKey = '_constructorio_purchase_order_ids';
 const PII_REGEX = [
   {
     pattern: /[\w\-+\\.]+@([\w-]+\.)+[\w-]{2,4}/,
-    replaceBy: '<email_omitted>',
+    replaceWith: '<email_omitted>',
   },
   {
     pattern: /^(?:\+\d{11,12}|\+\d{1,3}\s\d{3}\s\d{3}\s\d{3,4}|\(\d{3}\)\d{7}|\(\d{3}\)\s\d{3}\s\d{4}|\(\d{3}\)\d{3}-\d{4}|\(\d{3}\)\s\d{3}-\d{4})$/,
-    replaceBy: '<phone_omitted>',
+    replaceWith: '<phone_omitted>',
   },
   {
     pattern: /^(?:4[0-9]{15}|(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|6(?:011|5[0-9]{2})[0-9]{12}|(?:2131|1800|35\d{3})\d{11})$/, // Visa, Mastercard, Amex, Discover, JCB and Diners Club, regex source: https://www.regular-expressions.info/creditcard.html
-    replaceBy: '<credit_omitted>',
+    replaceWith: '<credit_omitted>',
   },
   // Add more PII REGEX
 ];
@@ -229,18 +229,18 @@ const utils = {
       const paths = url?.pathname?.split('/');
       const paramValues = url?.search?.split('&')?.map((param) => param.split('=')?.[1]);
 
-      PII_REGEX.forEach(({ pattern, replaceBy }) => {
+      PII_REGEX.forEach(({ pattern, replaceWith }) => {
         paths.forEach((path) => {
           const decodedPath = decodeURIComponent(path);
           if (utils.containsPii(decodedPath, pattern)) {
-            obfuscatedUrl = obfuscatedUrl.replaceAll(path, replaceBy);
+            obfuscatedUrl = obfuscatedUrl.replaceAll(path, replaceWith);
           }
         });
 
         paramValues.forEach((paramValue) => {
           const decodedParamValue = decodeURIComponent(paramValue);
           if (utils.containsPii(decodedParamValue, pattern)) {
-            obfuscatedUrl = obfuscatedUrl.replaceAll(decodedParamValue, replaceBy);
+            obfuscatedUrl = obfuscatedUrl.replaceAll(decodedParamValue, replaceWith);
           }
         });
       });
