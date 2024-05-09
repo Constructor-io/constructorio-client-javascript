@@ -1901,7 +1901,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     it('Should properly obfuscate PII in a path parameter', (done) => {
       const termWithPII = ' test-email@gmail.com';
-      const replaceBy = '<email_omitted>';
+      const replaceWith = '<email_omitted>';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1913,7 +1913,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestUrl).to.include(replaceBy);
+        expect(requestUrl).to.include(replaceWith);
         expect(requestUrl).to.not.include(termWithPII);
 
         // Response
@@ -1928,7 +1928,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     it('Should properly obfuscate PII in a query parameter', (done) => {
       const termWithPII = ' test-email@gmail.com';
-      const replaceBy = '<email_omitted>';
+      const replaceWith = '<email_omitted>';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1940,7 +1940,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('original_query').to.equal(replaceBy);
+        expect(requestParams).to.have.property('original_query').to.equal(replaceWith);
         expect(requestParams).to.have.property('original_query').to.not.include(termWithPII);
 
         // Response
