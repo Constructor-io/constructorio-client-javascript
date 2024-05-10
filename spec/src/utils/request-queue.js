@@ -4,6 +4,7 @@
   import/no-unresolved,
   no-unused-expressions,
   max-nested-callbacks,
+  import/extensions
 */
 /* cspell:disable */
 const dotenv = require('dotenv');
@@ -12,8 +13,9 @@ const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 const fetchPonyfill = require('fetch-ponyfill');
-const store = require('../../../src/utils/store');
-const RequestQueue = require('../../../test/utils/request-queue'); // eslint-disable-line import/extensions
+const store = require('../../../test/utils/store');
+const utilsHelpers = require('../../../test/utils/helpers');
+const RequestQueue = require('../../../test/utils/request-queue');
 const helpers = require('../../mocha.helpers');
 const jsdom = require('./jsdom-global');
 
@@ -40,7 +42,6 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
           'test@test.com',
           'test-100@test.com',
           'test.100@test.com',
-          'test@test.com',
           'test+123@test.info',
           'test-100@test.net',
           'test.100@test.com.au',
@@ -54,7 +55,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
           'text test.100@test.io text',
           'test@test@test.com', // This string includes a valid email - test@test.com
         ],
-        replaceBy: '<email_omitted>',
+        replaceWith: '<email_omitted>',
       },
       // Phone Number
       {
@@ -68,7 +69,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
           '+420736447763',
           '+420 736 447 763',
         ],
-        replaceBy: '<phone_omitted>',
+        replaceWith: '<phone_omitted>',
       },
       // Credit Card
       {
@@ -101,7 +102,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
           '30569309025904', // Diners Club
           '38520000023237', // Diners Club
         ],
-        replaceBy: '<credit_omitted>',
+        replaceWith: '<credit_omitted>',
       },
     ];
 
@@ -224,18 +225,26 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
 
         piiExamples.forEach((example) => {
           example.queries.forEach((query) => {
-            allExamples.push({ query, replaceBy: example.replaceBy });
+            allExamples.push({ query, replaceWith: example.replaceWith });
           });
         });
 
+        const endpoint = 'https://ac.cnstrc.com/autocomplete';
+        const otherQueryParams = 'c=ciojs-2.686.3&i=c8a838d3-b7e0-48bd-92f1-81e08f84b9ee&s=5';
+        const { trimNonBreakingSpaces, encodeURIComponentRFC3986 } = utilsHelpers;
+
         allExamples.forEach(({ query }) => {
-          requests.queue(`https://ac.cnstrc.com/autocomplete/${query}/search?original_query=${query}&c=ciojs-2.686.3&i=c8a838d3-b7e0-48bd-92f1-81e08f84b9ee&s=5`);
+          const encodedQuery = encodeURIComponentRFC3986(trimNonBreakingSpaces(query));
+          requests.queue(
+            `${endpoint}/${encodedQuery}/search?original_query=${query}&${otherQueryParams}`,
+          );
         });
 
         const queue = RequestQueue.get();
 
-        allExamples.forEach(({ replaceBy }, index) => {
-          expect(queue[index].url).to.equal(`https://ac.cnstrc.com/autocomplete/${replaceBy}/search?original_query=${replaceBy}&c=ciojs-2.686.3&i=c8a838d3-b7e0-48bd-92f1-81e08f84b9ee&s=5`);
+        allExamples.forEach(({ replaceWith }, index) => {
+          const expected = `${endpoint}/${replaceWith}/search?original_query=${replaceWith}&${otherQueryParams}`;
+          expect(queue[index].url).to.equal(expected);
         });
 
         const piiCount = piiExamples.reduce((acc, curr) => acc + curr.queries.length, 0);
