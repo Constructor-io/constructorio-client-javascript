@@ -26,7 +26,7 @@ const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 const timeoutRejectionMessage = bundled ? 'AbortError: Aborted' : 'AbortError: The user aborted a request.';
 const testAnalyticsTag = { param1: 'test', param2: 'test2' };
 
-describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
+describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   let fetchSpy = null;
   let cleanup;
   const jsdomOptions = { url: 'http://localhost.test/path/name?query=term&category=cat' };
@@ -8312,7 +8312,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
   });
 
-  describe('trackAssistantLoadStarted', () => {
+  describe.only('trackAssistantResultLoadStarted', () => {
     const requiredParameters = { intent: 'Show me cookie recipes' };
     const optionalParameters = {
       section: 'Products',
@@ -8346,7 +8346,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantLoadStarted(requiredParameters)).to.equal(true);
+      expect(tracker.trackAssistantResultLoadStarted(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
@@ -8372,7 +8372,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantLoadStarted(requiredParameters)).to.equal(true);
+      expect(tracker.trackAssistantResultLoadStarted(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
@@ -8398,7 +8398,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantLoadStarted(requiredParameters)).to.equal(true);
+      expect(tracker.trackAssistantResultLoadStarted(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
@@ -8424,7 +8424,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantLoadStarted(requiredParameters)).to.equal(true);
+      expect(tracker.trackAssistantResultLoadStarted(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
@@ -8449,19 +8449,19 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantLoadStarted(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackAssistantResultLoadStarted(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackAssistantLoadStarted()).to.be.an('error');
+      expect(tracker.trackAssistantResultLoadStarted()).to.be.an('error');
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackAssistantLoadStarted()).to.be.an('error');
+      expect(tracker.trackAssistantResultLoadStarted()).to.be.an('error');
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
@@ -8486,7 +8486,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantLoadStarted(requiredParameters)).to.equal(true);
+      expect(tracker.trackAssistantResultLoadStarted(requiredParameters)).to.equal(true);
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
@@ -8511,7 +8511,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantLoadStarted(requiredParameters)).to.equal(true);
+      expect(tracker.trackAssistantResultLoadStarted(requiredParameters)).to.equal(true);
     });
 
     if (!skipNetworkTimeoutTests) {
@@ -8526,7 +8526,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           done();
         });
 
-        expect(tracker.trackAssistantLoadStarted(requiredParameters, { timeout: 10 })).to.equal(true);
+        expect(tracker.trackAssistantResultLoadStarted(requiredParameters, { timeout: 10 })).to.equal(true);
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
@@ -8543,7 +8543,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           done();
         });
 
-        expect(tracker.trackAssistantLoadStarted(requiredParameters)).to.equal(true);
+        expect(tracker.trackAssistantResultLoadStarted(requiredParameters)).to.equal(true);
       });
     }
 
@@ -8571,7 +8571,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantLoadStarted(requiredParameters)).to.equal(true);
+      expect(tracker.trackAssistantResultLoadStarted(requiredParameters)).to.equal(true);
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
@@ -8599,11 +8599,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantLoadStarted(requiredParameters)).to.equal(true);
+      expect(tracker.trackAssistantResultLoadStarted(requiredParameters)).to.equal(true);
     });
   });
 
-  describe('trackAssistantLoadFinished', () => {
+  describe.only('trackAssistantResultLoadFinished', () => {
     const requiredParameters = { intent: 'Show me cookie recipes', searchResultCount: 15 };
     const optionalParameters = {
       section: 'Products',
@@ -8638,7 +8638,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantLoadFinished(requiredParameters)).to.equal(true);
+      expect(tracker.trackAssistantResultLoadFinished(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
@@ -8664,7 +8664,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantLoadFinished(requiredParameters)).to.equal(true);
+      expect(tracker.trackAssistantResultLoadFinished(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
@@ -8690,7 +8690,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantLoadFinished(requiredParameters)).to.equal(true);
+      expect(tracker.trackAssistantResultLoadFinished(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
@@ -8716,7 +8716,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantLoadFinished(requiredParameters)).to.equal(true);
+      expect(tracker.trackAssistantResultLoadFinished(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
@@ -8741,19 +8741,19 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantLoadFinished(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackAssistantResultLoadFinished(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackAssistantLoadFinished()).to.be.an('error');
+      expect(tracker.trackAssistantResultLoadFinished()).to.be.an('error');
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackAssistantLoadFinished()).to.be.an('error');
+      expect(tracker.trackAssistantResultLoadFinished()).to.be.an('error');
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
@@ -8778,7 +8778,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantLoadFinished(requiredParameters)).to.equal(true);
+      expect(tracker.trackAssistantResultLoadFinished(requiredParameters)).to.equal(true);
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
@@ -8803,7 +8803,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantLoadFinished(requiredParameters)).to.equal(true);
+      expect(tracker.trackAssistantResultLoadFinished(requiredParameters)).to.equal(true);
     });
 
     if (!skipNetworkTimeoutTests) {
@@ -8818,7 +8818,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           done();
         });
 
-        expect(tracker.trackAssistantLoadFinished(requiredParameters, { timeout: 10 })).to.equal(true);
+        expect(tracker.trackAssistantResultLoadFinished(requiredParameters, { timeout: 10 })).to.equal(true);
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
@@ -8835,7 +8835,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           done();
         });
 
-        expect(tracker.trackAssistantLoadFinished(requiredParameters)).to.equal(true);
+        expect(tracker.trackAssistantResultLoadFinished(requiredParameters)).to.equal(true);
       });
     }
 
@@ -8863,7 +8863,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantLoadFinished(requiredParameters)).to.equal(true);
+      expect(tracker.trackAssistantResultLoadFinished(requiredParameters)).to.equal(true);
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
@@ -8891,7 +8891,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantLoadFinished(requiredParameters)).to.equal(true);
+      expect(tracker.trackAssistantResultLoadFinished(requiredParameters)).to.equal(true);
     });
   });
 
