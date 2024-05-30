@@ -8449,6 +8449,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
+      // eslint-disable-next-line max-len
       expect(tracker.trackAssistantResultLoadStarted(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
     });
 
@@ -8741,6 +8742,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
+      // eslint-disable-next-line max-len
       expect(tracker.trackAssistantResultLoadFinished(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
     });
 
