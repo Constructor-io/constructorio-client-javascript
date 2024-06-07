@@ -261,7 +261,7 @@ declare class Tracker {
     networkParameters?: NetworkParameters
   ): true | Error;
 
-  trackAssistantLoadStarted(
+  trackAssistantResultLoadStarted(
     parameters: {
       intent: string;
       section?: string;
@@ -270,7 +270,7 @@ declare class Tracker {
     networkParameters?: NetworkParameters
   ): true | Error;
 
-  trackAssistantLoadFinished(
+  trackAssistantResultLoadFinished(
     parameters: {
       intent: string;
       searchResultCount: number;

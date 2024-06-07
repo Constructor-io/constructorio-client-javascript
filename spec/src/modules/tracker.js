@@ -8029,7 +8029,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       section: 'Products',
     };
 
-    it('Should respond with a valid response when term and required parameters are provided', (done) => {
+    it('Should respond with a valid response when intent and required parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
