@@ -153,7 +153,7 @@ export interface BaseGroup extends Record<string, any> {
 export interface FmtOptions extends Record<string, any> {
   groups_max_depth?: number;
   groups_start?: 'current' | 'top';
-  fields: string[]; // Array of metadata field to be returned in the data response
+  fields?: string[]; // Array of metadata field to be returned in the data response
 }
 
 export type Nullable<T> = T | null;
