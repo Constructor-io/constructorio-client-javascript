@@ -2303,6 +2303,7 @@ class Tracker {
    * constructorio.tracker.trackAssistantResultLoadStarted(
    *     {
    *         intent: 'show me a recipe for a cookie',
+   *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
    *     },
    * );
    */
@@ -2359,6 +2360,7 @@ class Tracker {
    * constructorio.tracker.trackAssistantResultLoadFinished(
    *     {
    *         intent: 'show me a recipe for a cookie',
+   *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
    *         searchResultCount: 5,
    *     },
    * );
@@ -2422,6 +2424,7 @@ class Tracker {
    *     {
    *         variationId: 'KMH879-7632',
    *         searchResultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
    *         intent: 'show me a recipe for a cookie',
    *         itemId: 'KMH876',
    *     },
@@ -2490,6 +2493,7 @@ class Tracker {
    * constructorio.tracker.trackAssistantResultView(
    *     {
    *         searchResultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
    *         intent: 'show me a recipe for a cookie',
    *         numResultsViewed: 5,
    *         items: [{itemId: 'KMH876'}, {itemId: 'KMH140'}, {itemId: 'KMH437'}],
@@ -2556,6 +2560,7 @@ class Tracker {
    * constructorio.tracker.trackAssistantSearchSubmit({
    *     {
    *         searchResultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
    *         intent: 'show me a recipe for a cookie',
    *         searchTerm: 'flour',
    *     },
