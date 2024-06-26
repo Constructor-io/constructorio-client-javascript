@@ -86,7 +86,6 @@ class Tracker {
     this.options = options || {};
     this.eventemitter = new EventEmitter();
     this.requests = new RequestQueue(options, this.eventemitter);
-    this.behavioralV2Url = 'https://ac.cnstrc.com/v2/behavioral_action/';
   }
 
   /**
@@ -100,7 +99,7 @@ class Tracker {
    * constructorio.tracker.trackSessionStartV2();
    */
   trackSessionStartV2(networkParameters = {}) {
-    const url = `${this.behavioralV2Url}session_start?`;
+    const url = `${this.options.serviceUrl}/v2/behavioral_action/session_start?`;
 
     this.requests.queue(`${url}${applyParamsAsString({}, this.options)}`, 'POST', undefined, networkParameters);
     this.requests.send();
@@ -143,7 +142,7 @@ class Tracker {
    * constructorio.tracker.trackInputFocusV2("text");
    */
   trackInputFocusV2(userInput = '', parameters = {}, networkParameters = {}) {
-    const baseUrl = `${this.behavioralV2Url}focus?`;
+    const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/focus?`;
     const bodyParams = {};
     const {
       analyticsTags = null,
@@ -301,7 +300,7 @@ class Tracker {
     if (itemName && typeof itemName === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-        const baseUrl = `${this.behavioralV2Url}autocomplete_select?`;
+        const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/autocomplete_select?`;
         const {
           original_query,
           originalQuery = original_query,
@@ -468,7 +467,7 @@ class Tracker {
     if (searchTerm && typeof searchTerm === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-        const baseUrl = `${this.behavioralV2Url}search_submit?`;
+        const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/search_submit?`;
         const {
           original_query,
           originalQuery = original_query,
@@ -622,7 +621,7 @@ class Tracker {
     if (searchTerm && typeof searchTerm === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-        const baseUrl = `${this.behavioralV2Url}search_result_load?`;
+        const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/search_result_load?`;
         const {
           num_results,
           numResults = num_results,
@@ -803,7 +802,7 @@ class Tracker {
     if (searchTerm && typeof searchTerm === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-        const baseUrl = `${this.behavioralV2Url}search_result_click?`;
+        const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/search_result_click?`;
         const {
           num_results,
           customer_id,
@@ -2257,7 +2256,7 @@ class Tracker {
   trackAssistantSubmit(parameters, networkParameters = {}) {
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       // Ensure parameters are provided (required)
-      const baseUrl = `${this.behavioralV2Url}assistant_submit?`;
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_submit?`;
       const {
         section,
         intent,
@@ -2267,10 +2266,6 @@ class Tracker {
         intent,
         section,
       };
-
-      if (section) {
-        queryParams.section = section;
-      }
 
       const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
       const requestMethod = 'POST';
@@ -2315,7 +2310,7 @@ class Tracker {
   trackAssistantResultLoadStarted(parameters, networkParameters = {}) {
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       // Ensure parameters are provided (required)
-      const baseUrl = `${this.behavioralV2Url}assistant_result_load_start?`;
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_result_load_start?`;
       const {
         section,
         intentResultId,
@@ -2372,7 +2367,7 @@ class Tracker {
   trackAssistantResultLoadFinished(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const baseUrl = `${this.behavioralV2Url}assistant_result_load_finish?`;
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_result_load_finish?`;
       const {
         section,
         searchResultCount,
@@ -2436,7 +2431,7 @@ class Tracker {
   trackAssistantResultClick(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const requestPath = `${this.behavioralV2Url}assistant_search_result_click?`;
+      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/assistant_search_result_click?`;
       const {
         section = 'Products',
         variationId,
@@ -2505,7 +2500,7 @@ class Tracker {
   trackAssistantResultView(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const requestPath = `${this.behavioralV2Url}assistant_search_result_view?`;
+      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/assistant_search_result_view?`;
       const {
         section = 'Products',
         items,
@@ -2551,10 +2546,8 @@ class Tracker {
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.intent - Intent of user request
    * @param {string} parameters.searchTerm - Term of submitted assistant search event
-   * @param {string} parameters.userInput - The current assistant search query
    * @param {string} parameters.searchResultId - resultId of search result the clicked item belongs to
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
-   * @param {string} [parameters.groupId] - Group identifier of selected item
    * @param {string} [parameters.intentResultId] - intentResultId from the ASA response
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -2565,7 +2558,6 @@ class Tracker {
    *     {
    *         searchResultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
    *         intent: 'show me a recipe for a cookie',
-   *         userInput: 'flour',
    *         searchTerm: 'flour',
    *     },
    * );
@@ -2574,14 +2566,12 @@ class Tracker {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       // Ensure parameters are provided (required)
-      const baseUrl = `${this.behavioralV2Url}assistant_search_submit?`;
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_search_submit?`;
       const {
         section,
         intent,
         searchTerm,
-        userInput,
         searchResultId,
-        groupId,
         intentResultId,
       } = parameters;
 
@@ -2589,14 +2579,9 @@ class Tracker {
         intent,
         section,
         search_term: searchTerm,
-        user_input: userInput,
         search_result_id: searchResultId,
         intent_result_id: intentResultId,
       };
-
-      if (groupId) {
-        bodyParams.filters = { group_id: groupId };
-      }
 
       const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
       const requestMethod = 'POST';

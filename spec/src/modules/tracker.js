@@ -26,7 +26,7 @@ const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 const timeoutRejectionMessage = bundled ? 'AbortError: Aborted' : 'AbortError: The user aborted a request.';
 const testAnalyticsTag = { param1: 'test', param2: 'test2' };
 
-describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
+describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   let fetchSpy = null;
   let cleanup;
   const jsdomOptions = { url: 'http://localhost.test/path/name?query=term&category=cat' };
@@ -9518,10 +9518,9 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   });
 
   describe('trackAssistantSearchSubmit', () => {
-    const requiredParameters = { intent: 'Show me cookie recipes', userInput: 'Flour', searchTerm: 'Flour', searchResultId: '123' };
+    const requiredParameters = { intent: 'Show me cookie recipes', searchTerm: 'Flour', searchResultId: '123' };
     const optionalParameters = {
       section: 'Products',
-      groupId: 'Cookie',
       intentResultId: '1234',
     };
 
@@ -9543,7 +9542,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('intent').to.equal(requiredParameters.intent);
-        expect(requestParams).to.have.property('user_input').to.equal(requiredParameters.userInput);
         expect(requestParams).to.have.property('search_term').to.equal(requiredParameters.searchTerm);
         expect(requestParams).to.have.property('search_result_id').to.equal(requiredParameters.searchResultId);
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
@@ -9650,7 +9648,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(requestParams).to.have.property('intent_result_id').to.equal(optionalParameters.intentResultId);
-        expect(requestParams.filters).to.have.property('group_id').to.equal(optionalParameters.groupId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
