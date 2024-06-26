@@ -253,5 +253,70 @@ declare class Tracker {
     networkParameters?: NetworkParameters
   ): true | Error;
 
+  trackAssistantSubmit(
+    parameters: {
+      intent: string;
+      section?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
+  trackAssistantResultLoadStarted(
+    parameters: {
+      intent: string;
+      section?: string;
+      intentResultId?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
+  trackAssistantResultLoadFinished(
+    parameters: {
+      intent: string;
+      searchResultCount: number;
+      section?: string;
+      intentResultId?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
+  trackAssistantResultClick(
+    parameters: {
+      intent: string;
+      searchResultId: string;
+      itemId?: string;
+      itemName?: string;
+      variationId?: string;
+      section?: string;
+      intentResultId?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
+  trackAssistantResultView(
+    parameters: {
+      intent: string;
+      searchResultId: string;
+      numResultsViewed: number;
+      items?: ItemTracked[];
+      intentResultId?: string;
+      section?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
+  trackAssistantSearchSubmit(
+    parameters: {
+      intent: string,
+      searchTerm: string;
+      userInput: string;
+      searchResultId: string;
+      groupId?: string;
+      section?: string;
+      intentResultId?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
   on(messageType: string, callback: Function): true | Error;
 }
