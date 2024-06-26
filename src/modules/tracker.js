@@ -2261,13 +2261,12 @@ class Tracker {
         section,
         intent,
       } = parameters;
-      const queryParams = {};
       const bodyParams = {
         intent,
         section,
       };
 
-      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+      const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
       const requestMethod = 'POST';
       const requestBody = applyParams(bodyParams, {
         ...this.options,
