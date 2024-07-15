@@ -86,7 +86,6 @@ class Tracker {
     this.options = options || {};
     this.eventemitter = new EventEmitter();
     this.requests = new RequestQueue(options, this.eventemitter);
-    this.behavioralV2Url = 'https://ac.cnstrc.com/v2/behavioral_action/';
   }
 
   /**
@@ -100,7 +99,7 @@ class Tracker {
    * constructorio.tracker.trackSessionStartV2();
    */
   trackSessionStartV2(networkParameters = {}) {
-    const url = `${this.behavioralV2Url}session_start?`;
+    const url = `${this.options.serviceUrl}/v2/behavioral_action/session_start?`;
 
     this.requests.queue(`${url}${applyParamsAsString({}, this.options)}`, 'POST', undefined, networkParameters);
     this.requests.send();
@@ -143,7 +142,7 @@ class Tracker {
    * constructorio.tracker.trackInputFocusV2("text");
    */
   trackInputFocusV2(userInput = '', parameters = {}, networkParameters = {}) {
-    const baseUrl = `${this.behavioralV2Url}focus?`;
+    const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/focus?`;
     const bodyParams = {};
     const {
       analyticsTags = null,
@@ -301,7 +300,7 @@ class Tracker {
     if (itemName && typeof itemName === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-        const baseUrl = `${this.behavioralV2Url}autocomplete_select?`;
+        const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/autocomplete_select?`;
         const {
           original_query,
           originalQuery = original_query,
@@ -468,7 +467,7 @@ class Tracker {
     if (searchTerm && typeof searchTerm === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-        const baseUrl = `${this.behavioralV2Url}search_submit?`;
+        const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/search_submit?`;
         const {
           original_query,
           originalQuery = original_query,
@@ -622,7 +621,7 @@ class Tracker {
     if (searchTerm && typeof searchTerm === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-        const baseUrl = `${this.behavioralV2Url}search_result_load?`;
+        const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/search_result_load?`;
         const {
           num_results,
           numResults = num_results,
@@ -803,7 +802,7 @@ class Tracker {
     if (searchTerm && typeof searchTerm === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-        const baseUrl = `${this.behavioralV2Url}search_result_click?`;
+        const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/search_result_click?`;
         const {
           num_results,
           customer_id,
@@ -2233,6 +2232,380 @@ class Tracker {
     this.requests.send();
 
     return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send ASA request submitted event
+   *
+   * @function trackAssistantSubmit
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.intent - Intent of user request
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User submitted an assistant search
+   *   (pressing enter within assistant input element, or clicking assistant submit element)
+   * @example
+   * constructorio.tracker.trackAssistantSubmit(
+   *     {
+   *         intent: 'show me a recipe for a cookie',
+   *     },
+   * );
+   */
+  trackAssistantSubmit(parameters, networkParameters = {}) {
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      // Ensure parameters are provided (required)
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_submit?`;
+      const {
+        section,
+        intent,
+      } = parameters;
+      const bodyParams = {
+        intent,
+        section,
+      };
+
+      const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send assistant results page load started
+   *
+   * @function trackAssistantResultLoadStarted
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.intent - Intent of user request
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.intentResultId] - The intent result id from the ASA response
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description Assistant results page load begun (but has not necessarily loaded completely)
+   * @example
+   * constructorio.tracker.trackAssistantResultLoadStarted(
+   *     {
+   *         intent: 'show me a recipe for a cookie',
+   *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
+   *     },
+   * );
+   */
+  trackAssistantResultLoadStarted(parameters, networkParameters = {}) {
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      // Ensure parameters are provided (required)
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_result_load_start?`;
+      const {
+        section,
+        intentResultId,
+        intent,
+      } = parameters;
+      const bodyParams = {
+        intent_result_id: intentResultId,
+        intent,
+        section,
+      };
+
+      const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send assistant results page load finished
+   *
+   * @function trackAssistantResultLoadFinished
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.intent - Intent of user request
+   * @param {number} parameters.searchResultCount - Number of search results loaded
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.intentResultId] - The intent result id from the ASA response
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description Assistant results page load finished
+   * @example
+   * constructorio.tracker.trackAssistantResultLoadFinished(
+   *     {
+   *         intent: 'show me a recipe for a cookie',
+   *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
+   *         searchResultCount: 5,
+   *     },
+   * );
+   */
+  trackAssistantResultLoadFinished(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_result_load_finish?`;
+      const {
+        section,
+        searchResultCount,
+        intentResultId,
+        intent,
+      } = parameters;
+      const bodyParams = {
+        intent_result_id: intentResultId,
+        section,
+        intent,
+        search_result_count: searchResultCount,
+      };
+
+      const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send assistant result click event to API
+   *
+   * @function trackAssistantResultClick
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.intent - intent of the user
+   * @param {string} parameters.searchResultId - result_id of the specific search result the clicked item belongs to
+   * @param {string} parameters.itemId - Product item unique identifier
+   * @param {string} parameters.itemName - Product item name
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.variationId] - Product item variation unique identifier
+   * @param {string} [parameters.intentResultId] - Browse result identifier (returned in response from Constructor)
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User clicked a result that appeared within an assistant search result
+   * @example
+   * constructorio.tracker.trackAssistantResultClick(
+   *     {
+   *         variationId: 'KMH879-7632',
+   *         searchResultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
+   *         intent: 'show me a recipe for a cookie',
+   *         itemId: 'KMH876',
+   *     },
+   * );
+   */
+  trackAssistantResultClick(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/assistant_search_result_click?`;
+      const {
+        section = 'Products',
+        variationId,
+        intentResultId,
+        searchResultId,
+        itemId,
+        itemName,
+        intent,
+      } = parameters;
+
+      const bodyParams = {
+        section,
+        variation_id: variationId,
+        intent_result_id: intentResultId,
+        search_result_id: searchResultId,
+        item_id: itemId,
+        item_name: itemName,
+        intent,
+      };
+
+      const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
+
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send assistant search result view event to API
+   *
+   * @function trackAssistantResultView
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.intent - intent of the user
+   * @param {string} parameters.searchResultId - result_id of the specific search result the clicked item belongs to
+   * @param {number} parameters.numResultsViewed - Number of items viewed in this search result
+   * @param {object[]} [parameters.items] - List of product item objects viewed
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.intentResultId] - Browse result identifier (returned in response from Constructor)
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User viewed a search result within an assistant result
+   * @example
+   * constructorio.tracker.trackAssistantResultView(
+   *     {
+   *         searchResultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
+   *         intent: 'show me a recipe for a cookie',
+   *         numResultsViewed: 5,
+   *         items: [{itemId: 'KMH876'}, {itemId: 'KMH140'}, {itemId: 'KMH437'}],
+   *     },
+   * );
+   */
+  trackAssistantResultView(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/assistant_search_result_view?`;
+      const {
+        section = 'Products',
+        items,
+        numResultsViewed,
+        intentResultId,
+        searchResultId,
+        intent,
+      } = parameters;
+
+      const bodyParams = {
+        section,
+        intent_result_id: intentResultId,
+        search_result_id: searchResultId,
+        num_results_viewed: numResultsViewed,
+        items: items && Array.isArray(items) && items.slice(0, 100).map((item) => helpers.toSnakeCaseKeys(item, false)),
+        intent,
+      };
+
+      const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
+
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send ASA search submitted event
+   *
+   * @function trackAssistantSearchSubmit
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.intent - Intent of user request
+   * @param {string} parameters.searchTerm - Term of submitted assistant search event
+   * @param {string} parameters.searchResultId - resultId of search result the clicked item belongs to
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.intentResultId] - intentResultId from the ASA response
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User submitted an alternative assistant search result search term
+   * @example
+   * constructorio.tracker.trackAssistantSearchSubmit({
+   *     {
+   *         searchResultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
+   *         intent: 'show me a recipe for a cookie',
+   *         searchTerm: 'flour',
+   *     },
+   * );
+   */
+  trackAssistantSearchSubmit(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      // Ensure parameters are provided (required)
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_search_submit?`;
+      const {
+        section,
+        intent,
+        searchTerm,
+        searchResultId,
+        intentResultId,
+      } = parameters;
+
+      const bodyParams = {
+        intent,
+        section,
+        search_term: searchTerm,
+        search_result_id: searchResultId,
+        intent_result_id: intentResultId,
+      };
+
+      const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters is a required parameter of type object');
   }
 
   /**
