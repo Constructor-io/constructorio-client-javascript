@@ -375,7 +375,7 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
       });
     });
 
-    it.only('Should return a response with a valid query, section and preFilterExpression', (done) => {
+    it('Should return a response with a valid query, section and preFilterExpression', (done) => {
       const preFilterExpression = {
         or: [
           {
