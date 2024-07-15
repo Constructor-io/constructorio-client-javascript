@@ -43,7 +43,15 @@ function createAutocompleteUrl(query, parameters, options) {
   }
 
   if (parameters) {
-    const { numResults, resultsPerSection, filters, filtersPerSection, hiddenFields, variationsMap } = parameters;
+    const {
+      numResults,
+      resultsPerSection,
+      filters,
+      filtersPerSection,
+      hiddenFields,
+      variationsMap,
+      preFilterExpression,
+    } = parameters;
 
     // Pull results number from parameters
     if (numResults) {
@@ -67,6 +75,11 @@ function createAutocompleteUrl(query, parameters, options) {
       Object.keys(filtersPerSection).forEach((section) => {
         queryParams[`filters[${section}]`] = filtersPerSection[section];
       });
+    }
+
+    // Pull filter expression from parameters
+    if (preFilterExpression) {
+      queryParams.pre_filter_expression = JSON.stringify(preFilterExpression);
     }
 
     // Pull hidden fields from parameters
@@ -117,6 +130,7 @@ class Autocomplete {
    * @param {object} [parameters.filters] - Key / value mapping (dictionary) of filters used to refine results
    * @param {object} [parameters.filtersPerSection] - Filters used to refine results per section
    * @param {object} [parameters.resultsPerSection] - Number of results to return (value) per section (key)
+   * @param {object} [parameters.preFilterExpression] - Faceting expression to scope autocomplete results. Please refer to https://docs.constructor.io/rest_api/collections/#add-items-dynamically for details
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
    * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.io/rest_api/variations_mapping for details
    * @param {object} [networkParameters] - Parameters relevant to the network request

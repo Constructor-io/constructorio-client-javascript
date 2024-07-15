@@ -5,6 +5,7 @@ import {
   RequestFeature,
   RequestFeatureVariant,
   VariationsMap,
+  FilterExpression,
 } from '.';
 import EventDispatcher from './event-dispatcher';
 
@@ -17,6 +18,7 @@ export interface IAutocompleteParameters {
   resultsPerSection?: Record<string, number>;
   hiddenFields?: string[];
   variationsMap?: VariationsMap;
+  preFilterExpression?: FilterExpression;
 }
 
 declare class Autocomplete {
@@ -49,4 +51,6 @@ export interface AutocompleteRequestType extends Record<string, any> {
   features: Partial<RequestFeature>;
   feature_variants: Partial<RequestFeatureVariant>;
   searchandized_items: Record<string, any>;
+  variations_map?: VariationsMap;
+  pre_filter_expression?: FilterExpression;
 }
