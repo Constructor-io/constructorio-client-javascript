@@ -354,6 +354,50 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
       expect(instance.recommendations.options).to.have.property('userId').to.equal(newUserId);
       expect(instance.tracker.options).to.have.property('userId').to.equal(newUserId);
     });
+
+    it('Should clear the user id in client options', () => {
+      const oldUserId = 'old_user_id';
+      const newUserId = '';
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        userId: oldUserId,
+      });
+
+      expect(instance.options).to.have.property('userId').to.deep.equal(oldUserId);
+
+      instance.setClientOptions({
+        userId: newUserId,
+      });
+
+      expect(instance.options).to.have.property('userId').to.deep.equal(newUserId);
+    });
+
+    it('Should clear the user id from the options of modules', () => {
+      const oldUserId = 'old_user_id';
+      const newUserId = '';
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        userId: oldUserId,
+      });
+
+      expect(instance.options).to.have.property('userId').to.deep.equal(oldUserId);
+      expect(instance.search.options).to.have.property('userId').to.equal(oldUserId);
+      expect(instance.autocomplete.options).to.have.property('userId').to.equal(oldUserId);
+      expect(instance.browse.options).to.have.property('userId').to.equal(oldUserId);
+      expect(instance.recommendations.options).to.have.property('userId').to.equal(oldUserId);
+      expect(instance.tracker.options).to.have.property('userId').to.equal(oldUserId);
+
+      instance.setClientOptions({
+        userId: newUserId,
+      });
+
+      expect(instance.options).to.have.property('userId').to.deep.equal(newUserId);
+      expect(instance.search.options).to.have.property('userId').to.equal(newUserId);
+      expect(instance.autocomplete.options).to.have.property('userId').to.equal(newUserId);
+      expect(instance.browse.options).to.have.property('userId').to.equal(newUserId);
+      expect(instance.recommendations.options).to.have.property('userId').to.equal(newUserId);
+      expect(instance.tracker.options).to.have.property('userId').to.equal(newUserId);
+    });
   });
 
   if (bundled) {
