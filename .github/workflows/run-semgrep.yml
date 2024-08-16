@@ -1,4 +1,4 @@
-name: Run Diffend
+name: Run Semgrep
 on:
   pull_request:
     branches:
