@@ -141,7 +141,7 @@ declare class Tracker {
   trackRecommendationClick(
     parameters: {
       podId: string;
-      strategyId: string;
+      strategyId?: string;
       itemId: string;
       itemName: string;
       variationId?: string;
