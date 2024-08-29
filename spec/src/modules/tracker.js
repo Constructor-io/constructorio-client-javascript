@@ -1972,7 +1972,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       section: 'Products',
     };
 
-    const transformedItems = [{item_id: '1'}, {item_id: '2'}, {item_id: '3'}]
+    const transformedItems = [{ item_id: '1' }, { item_id: '2' }, { item_id: '3' }];
 
     it('Backwards Compatibility - V2 Should respond with a valid response when term and snake cased parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
@@ -2133,7 +2133,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         // Request
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('us').to.deep.equal(segments);
-        
+
         // Body
         expect(bodyParams).to.have.property('us').to.deep.equal(segments);
 
@@ -2194,7 +2194,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property(`ef-${Object.keys(testCells)[0]}`).to.equal(Object.values(testCells)[0]);
 
-        //Body
+        // Body
         expect(bodyParams).to.have.property(`ef-${Object.keys(testCells)[0]}`).to.equal(Object.values(testCells)[0]);
 
         // Response
@@ -2298,7 +2298,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         // Body
         expect(fetchSpy).to.have.been.called;
         expect(bodyParams).to.have.property('search_term').to.equal(term);
-
 
         done();
       });
@@ -2428,7 +2427,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         ...requestQueueOptions,
       });
       const itemIDs = [...Array(1000).keys()];
-      const formattedItems = itemIDs.slice(0,100).map((i) => ({item_id: String(i)}));
+      const formattedItems = itemIDs.slice(0, 100).map((i) => ({ item_id: String(i) }));
       const parameters = {
         ...requiredParameters,
         item_ids: itemIDs,
@@ -2459,7 +2458,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         ...requestQueueOptions,
       });
       const customerIDs = [...Array(1000).keys()];
-      const formattedItems = customerIDs.slice(0,100).map((i) => ({item_id: String(i)}));
+      const formattedItems = customerIDs.slice(0, 100).map((i) => ({ item_id: String(i) }));
       const parameters = {
         ...requiredParameters,
         item_ids: customerIDs,
@@ -7959,7 +7958,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     it('Should throw an error when providing no messageType parameter', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.on(null, () => {})).to.be.an('error');
+      expect(tracker.on(null, () => { })).to.be.an('error');
     });
 
     it('Should throw an error when providing an invalid callback parameter', () => {
