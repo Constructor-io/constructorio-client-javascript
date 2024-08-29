@@ -703,6 +703,111 @@ class Tracker {
 
   /**
    * Send click through event to API
+   * @private
+   * @function trackSearchResultClickV2
+   * @param {string} searchTerm - Search results query term
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.itemName - Product item name (Either itemName or itemId is required)
+   * @param {string} parameters.itemId - Product item unique identifier
+   * @param {string} [parameters.variationId] - Product item variation unique identifier
+   * @param {string} [parameters.resultId] - Search result identifier (returned in response from Constructor)
+   * @param {number} [parameters.resultCount] - Number of results in total
+   * @param {number} [parameters.resultPage] - Current page of results
+   * @param {string} [parameters.resultPositionOnPage] - Position of selected items on page
+   * @param {string} [parameters.numResultsPerPage] - Number of results per page
+   * @param {object} [parameters.selectedFilters] - Key - Value map of selected filters
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User clicked a result that appeared within a search product listing page
+   * @example
+   * constructorio.tracker.trackSearchResultClickV2(
+   *     'T-Shirt',
+   *     {
+   *         itemName: 'Red T-Shirt',
+   *         itemId: 'KMH876',
+   *         resultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *     },
+   * );
+   */
+  trackSearchResultClickV2(searchTerm, parameters, networkParameters = {}) {
+    // Ensure term is provided (required)
+    if (searchTerm && typeof searchTerm === 'string') {
+      // Ensure parameters are provided (required)
+      if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+        const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/search_result_click?`;
+        const {
+          num_results,
+          customer_id,
+          item_id,
+          itemId = customer_id || item_id,
+          name,
+          item_name,
+          itemName = name || item_name,
+          variation_id,
+          variationId = variation_id,
+          result_id,
+          resultId = result_id,
+          result_count,
+          resultCount = num_results || result_count,
+          result_page,
+          resultPage = result_page,
+          result_position_on_page,
+          resultPositionOnPage = result_position_on_page,
+          num_results_per_page,
+          numResultsPerPage = num_results_per_page,
+          selected_filters,
+          selectedFilters = selected_filters,
+          section,
+        } = parameters;
+        const bodyParams = {
+          item_name: itemName,
+          item_id: itemId,
+          variation_id: variationId,
+          result_id: resultId,
+          result_count: resultCount,
+          result_page: resultPage,
+          result_position_on_page: resultPositionOnPage,
+          num_results_per_page: numResultsPerPage,
+          selected_filters: selectedFilters,
+          section,
+          search_term: searchTerm,
+        };
+        const queryParams = {};
+
+        if (section) {
+          queryParams.section = section;
+        }
+
+        const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+        const requestMethod = 'POST';
+        const requestBody = applyParams(bodyParams, {
+          ...this.options,
+          requestMethod,
+        });
+        this.requests.queue(
+          requestURL,
+          requestMethod,
+          requestBody,
+          networkParameters,
+        );
+        this.requests.send();
+        return true;
+      }
+
+      this.requests.send();
+
+      return new Error('parameters are required of type object');
+    }
+
+    this.requests.send();
+
+    return new Error('term is a required parameter of type string');
+  }
+
+  /**
+   * Send click through event to API
    *
    * @function trackSearchResultClick
    * @param {string} term - Search results query term
