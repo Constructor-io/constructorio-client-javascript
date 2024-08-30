@@ -313,7 +313,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         });
 
         tracker.on('error', ({ message }) => {
-          console.log(message);
           expect(message).to.equal(timeoutRejectionMessage);
           done();
         });
