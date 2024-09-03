@@ -32,7 +32,7 @@
     "type": "git",
     "url": "git+https://github.com/Constructor-io/constructorio-client-javascript.git"
   },
-  "author": "constructor.io",
+  "author": "Constructor.io Corporation",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Constructor-io/constructorio-client-javascript/issues"
