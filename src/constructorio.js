@@ -13,6 +13,7 @@ const helpers = require('./utils/helpers');
 const { default: packageVersion } = require('./version');
 const Quizzes = require('./modules/quizzes');
 const Assistant = require('./modules/assistant');
+const utils = require('./utils/helpers');
 
 // Compute package version string
 const computePackageVersion = () => {
@@ -28,6 +29,31 @@ const computePackageVersion = () => {
   }
 
   return `${versionPrefix}${versionModifiers.join('-')}${versionModifiers.length ? '-' : ''}${packageVersion}`;
+};
+
+const setSessionId = (sessionId, options) => {
+  const sessionIdCookieName = options?.cookie_name_session_id || 'ConstructorioID_session_id';
+  const sessionIdLocalName = options?.local_name_session_id || '_constructorio_search_session_id';
+  const sessionDataCookieName = options?.cookie_name_session_data || 'ConstructorioID_session';
+  const sessionDataLocalName = options?.local_name_session_data || '_constructorio_search_session';
+
+  const cookiePersistedSessionData = utils.getCookie(sessionDataCookieName);
+  const localPersistedSessionData = utils.getLocalItem(sessionDataLocalName);
+  const newSessionData = {
+    sessionId,
+    lastTime: Date.now(),
+  };
+
+  if (localPersistedSessionData) {
+    utils.updateLocalItem(sessionIdLocalName, sessionId);
+    utils.updateLocalItem(sessionDataLocalName, newSessionData);
+  }
+
+  if (cookiePersistedSessionData) {
+    const expiry = new Date(Date.now() + (options?.cookie_days_to_live || 365) * 24 * 60 * 60 * 1000);
+    utils.updateCookie(sessionIdCookieName, sessionId, expiry);
+    utils.updateCookie(sessionDataCookieName, JSON.stringify(newSessionData), expiry);
+  }
 };
 
 /**
@@ -129,6 +155,7 @@ class ConstructorIO {
       eventDispatcher,
       beaconMode: (beaconMode === false) ? false : true, // Defaults to 'true',
       networkParameters: networkParameters || {},
+      idOptions,
     };
 
     // Expose global modules
@@ -151,11 +178,12 @@ class ConstructorIO {
    * @param {string} [options.apiKey] - Constructor.io API key
    * @param {array} [options.segments] - User segments
    * @param {object} [options.testCells] - User test cells
+   * @param {number} [options.sessionId] - Session ID
    * @param {string} [options.userId] - User ID
    */
   setClientOptions(options) {
     if (Object.keys(options).length) {
-      const { apiKey, segments, testCells, userId = '' } = options;
+      const { apiKey, segments, testCells, sessionId, userId = '' } = options;
 
       if (apiKey) {
         this.options.apiKey = apiKey;
@@ -167,6 +195,11 @@ class ConstructorIO {
 
       if (testCells) {
         this.options.testCells = testCells;
+      }
+
+      if (sessionId) {
+        this.options.sessionId = sessionId;
+        setSessionId(sessionId, this.options.idOptions);
       }
 
       this.options.userId = userId;

@@ -281,6 +281,84 @@ const utils = {
 
     return url;
   },
+
+  getLocalItem(key) {
+    const localStorage = window && window.localStorage;
+    let data;
+
+    if (localStorage && typeof key === 'string') {
+      try {
+        data = JSON.parse(localStorage.getItem(key));
+      } catch (e) {
+        data = localStorage.getItem(key);
+      }
+    }
+    return data;
+  },
+
+  updateLocalItem(key, data) {
+    const localStorage = window && window.localStorage;
+
+    if (localStorage && typeof key === 'string') {
+      if (typeof data === 'object') {
+        try {
+          localStorage.setItem(key, JSON.stringify(data));
+        } catch (e) {
+          // fail silently
+        }
+      }
+
+      if (typeof data === 'string' || typeof data === 'number') {
+        try {
+          localStorage.setItem(key, data);
+        } catch (e) {
+          // fail silently
+        }
+      }
+    }
+  },
+
+  getCookie(name) {
+    const cookieName = `${name}=`;
+    const cookieBits = document.cookie.split(';');
+    for (let i = 0; i < cookieBits.length; i += 1) {
+      const thisCookie = cookieBits[i];
+
+      try {
+        let decodedCookie = decodeURIComponent(thisCookie);
+
+        while (decodedCookie.charAt(0) === ' ') { // remove leading spaces
+          decodedCookie = decodedCookie.substring(1);
+        }
+
+        if (decodedCookie.indexOf(cookieName) === 0) {
+          return decodedCookie.substring(cookieName.length, decodedCookie.length);
+        }
+      } catch (e) {
+        // do nothing
+      }
+    }
+
+    return undefined;
+  },
+
+  updateCookie(name, value, expiry) {
+    // Get the existing cookie by name
+    const existingCookie = document.cookie.split('; ').find((cookie) => cookie.startsWith(`${name}=`));
+
+    if (existingCookie) {
+      // Extract the existing attributes
+      const cookieParts = existingCookie.split(';');
+      const [cookieNameValue, ...cookieAttributes] = cookieParts;
+      const [cookieName] = cookieNameValue.split('=');
+
+      // Build the new cookie string with the updated value and expiry
+      const updatedCookie = `${cookieName}=${value}; expires=${expiry.toUTCString()}; path=/; ${cookieAttributes.join('; ')}`;
+
+      // Set the updated cookie
+      document.cookie = updatedCookie;
+    }
+  },
 };
 
 module.exports = utils;

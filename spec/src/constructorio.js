@@ -398,6 +398,97 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
       expect(instance.recommendations.options).to.have.property('userId').to.equal(newUserId);
       expect(instance.tracker.options).to.have.property('userId').to.equal(newUserId);
     });
+
+    it('Should update the client options with new session id', () => {
+      const oldSessionId = 1;
+      const newSessionId = 2;
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        sessionId: oldSessionId,
+      });
+
+      expect(instance.options).to.have.property('sessionId').to.deep.equal(oldSessionId);
+
+      instance.setClientOptions({
+        sessionId: newSessionId,
+      });
+
+      expect(instance.options).to.have.property('sessionId').to.deep.equal(newSessionId);
+    });
+
+    it('Should update the options for modules with new session id', () => {
+      const oldSessionId = 1;
+      const newSessionId = 2;
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        sessionId: oldSessionId,
+      });
+
+      expect(instance.options).to.have.property('sessionId').to.deep.equal(oldSessionId);
+      expect(instance.search.options).to.have.property('sessionId').to.equal(oldSessionId);
+      expect(instance.autocomplete.options).to.have.property('sessionId').to.equal(oldSessionId);
+      expect(instance.browse.options).to.have.property('sessionId').to.equal(oldSessionId);
+      expect(instance.recommendations.options).to.have.property('sessionId').to.equal(oldSessionId);
+      expect(instance.tracker.options).to.have.property('sessionId').to.equal(oldSessionId);
+
+      instance.setClientOptions({
+        sessionId: newSessionId,
+      });
+
+      expect(instance.options).to.have.property('sessionId').to.deep.equal(newSessionId);
+      expect(instance.search.options).to.have.property('sessionId').to.equal(newSessionId);
+      expect(instance.autocomplete.options).to.have.property('sessionId').to.equal(newSessionId);
+      expect(instance.browse.options).to.have.property('sessionId').to.equal(newSessionId);
+      expect(instance.recommendations.options).to.have.property('sessionId').to.equal(newSessionId);
+      expect(instance.tracker.options).to.have.property('sessionId').to.equal(newSessionId);
+    });
+
+    it('Should update cookies with new session id', () => {
+      const oldSessionId = 1;
+      const newSessionId = 2;
+      const idOptions = {
+        session_id_storage_location: 'cookie',
+        cookie_name_session_id: 'session_id_cookie',
+        cookie_name_session_data: 'session_data_cookie',
+        cookie_days_to_live: 7, // For setting cookie expiry
+      };
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        sessionId: oldSessionId,
+        idOptions,
+      });
+
+      expect(document.cookie).to.include(`${idOptions.cookie_name_session_id}=${oldSessionId}`);
+
+      instance.setClientOptions({
+        sessionId: newSessionId,
+      });
+
+      expect(document.cookie).to.include(`${idOptions.cookie_name_session_id}=${newSessionId}`);
+    });
+
+    it('Should update localStorage with new session id', () => {
+      const oldSessionId = 1;
+      const newSessionId = 2;
+      const idOptions = {
+        session_id_storage_location: 'local',
+        local_name_session_id: 'session_id_local',
+        local_name_session_data: 'session_data_local',
+      };
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        sessionId: oldSessionId,
+        idOptions,
+      });
+
+      expect(localStorage.getItem(idOptions.local_name_session_id)).to.be.equal(oldSessionId.toString());
+
+      instance.setClientOptions({
+        sessionId: newSessionId,
+      });
+
+      expect(localStorage.getItem(idOptions.local_name_session_id)).to.be.equal(newSessionId.toString());
+    });
   });
 
   if (bundled) {

@@ -25,6 +25,7 @@ const {
 } = require('../../../test/utils/helpers'); // eslint-disable-line import/extensions
 const jsdom = require('./jsdom-global');
 const store = require('../../../test/utils/store'); // eslint-disable-line import/extensions
+const { getLocalItem, updateLocalItem, getCookie, updateCookie } = require('../../../src/utils/helpers');
 
 const purchaseEventStorageKey = '_constructorio_purchase_order_ids';
 
@@ -486,6 +487,128 @@ describe('ConstructorIO - Utils - Helpers', () => {
         const testUrl = {};
 
         expect(addHTTPSToString(testUrl)).to.equal(null);
+      });
+    });
+
+    describe('Local Storage Helper Functions', () => {
+      let cleanup;
+
+      describe('getLocalItem', () => {
+        it('should return parsed JSON data if stored as JSON string', () => {
+          cleanup = jsdom();
+          const key = 'testKey';
+          const value = { test: 'value' };
+          localStorage.setItem(key, JSON.stringify(value));
+
+          const result = getLocalItem(key);
+          expect(result).to.deep.equal(value);
+          cleanup();
+        });
+
+        it('should return string data if not stored as JSON string', () => {
+          cleanup = jsdom();
+          const key = 'testKey';
+          const value = 'stringValue';
+          localStorage.setItem(key, value);
+
+          const result = getLocalItem(key);
+          expect(result).to.equal(value);
+          cleanup();
+        });
+
+        it('should return null if the key does not exist', () => {
+          cleanup = jsdom();
+          const key = 'nonExistentKey';
+
+          const result = getLocalItem(key);
+          expect(result).to.be.null;
+          cleanup();
+        });
+      });
+
+      describe('updateLocalItem', () => {
+        it('should store object data as a JSON string', () => {
+          cleanup = jsdom();
+          const key = 'testKey';
+          const value = { test: 'value' };
+
+          updateLocalItem(key, value);
+          expect(localStorage.getItem(key)).to.be.equal(JSON.stringify(value));
+          cleanup();
+        });
+
+        it('should store string data directly', () => {
+          cleanup = jsdom();
+          const key = 'testKey';
+          const value = 'stringValue';
+
+          updateLocalItem(key, value);
+          expect(localStorage.getItem(key)).to.be.equal(value);
+          cleanup();
+        });
+
+        it('should store number data directly', () => {
+          cleanup = jsdom();
+          const key = 'testKey';
+          const value = 42;
+
+          updateLocalItem(key, value);
+          expect(localStorage.getItem(key)).to.be.equal(JSON.stringify(value));
+          cleanup();
+        });
+      });
+    });
+
+    describe('Cookie Helper Functions', () => {
+      let cleanup;
+
+      describe('getCookie', () => {
+        it('should return the cookie value if it exists', () => {
+          cleanup = jsdom();
+          const name = 'testCookie';
+          const value = 'cookieValue';
+          document.cookie = `${name}=${value}`;
+
+          const result = getCookie(name);
+          expect(result).to.equal(value);
+          cleanup();
+        });
+
+        it('should return undefined if the cookie does not exist', () => {
+          cleanup = jsdom();
+          const name = 'nonExistentCookie';
+
+          const result = getCookie(name);
+          expect(result).to.be.undefined;
+          cleanup();
+        });
+
+        it('should handle encoded cookie values', () => {
+          cleanup = jsdom();
+          const name = 'encodedCookie';
+          const value = 'cookie%20value';
+          document.cookie = `${name}=${value}`;
+
+          const result = getCookie(name);
+          expect(result).to.equal('cookie value');
+          cleanup();
+        });
+      });
+
+      describe('updateCookie', () => {
+        it('should update the cookie value and expiry', () => {
+          cleanup = jsdom();
+          const name = 'testCookie';
+          const value = 'newValue';
+          const expiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days from now
+          const existingCookie = `${name}=oldValue; path=/; expires=${expiry.toUTCString()}`;
+          document.cookie = existingCookie;
+          expect(document.cookie).to.include(`${name}=oldValue`);
+
+          updateCookie(name, value, expiry);
+          expect(document.cookie).to.include(`${name}=${value}`);
+          cleanup();
+        });
       });
     });
   }
