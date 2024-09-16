@@ -31,32 +31,23 @@ const computePackageVersion = () => {
 };
 
 const setSessionId = (sessionId, idOptions) => {
-  const {
-    cookie_name_session_id,
-    cookie_name_session_data,
-    local_name_session_id,
-    local_name_session_data,
-    get_cookie,
-    set_cookie,
-    get_local_object,
-    set_local_object,
-  } = new ConstructorioID(idOptions || {});
+  const identity = new ConstructorioID(idOptions || {});
 
-  const cookiePersistedSessionData = get_cookie(cookie_name_session_data);
-  const localPersistedSessionData = get_local_object(local_name_session_data);
+  const cookiePersistedSessionData = identity.get_cookie(identity.cookie_name_session_data);
+  const localPersistedSessionData = identity.get_local_object(identity.local_name_session_data);
   const newSessionData = {
     sessionId,
     lastTime: Date.now(),
   };
 
   if (localPersistedSessionData) {
-    set_local_object(local_name_session_id, sessionId);
-    set_local_object(local_name_session_data, newSessionData);
+    identity.set_local_object(identity.local_name_session_id, sessionId);
+    identity.set_local_object(identity.local_name_session_data, newSessionData);
   }
 
   if (cookiePersistedSessionData) {
-    set_cookie(cookie_name_session_id, sessionId);
-    set_cookie(cookie_name_session_data, JSON.stringify(newSessionData));
+    identity.set_cookie(identity.cookie_name_session_id, sessionId);
+    identity.set_cookie(identity.cookie_name_session_data, JSON.stringify(newSessionData));
   }
 };
 
