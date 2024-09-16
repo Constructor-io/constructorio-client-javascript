@@ -13,7 +13,6 @@ const helpers = require('./utils/helpers');
 const { default: packageVersion } = require('./version');
 const Quizzes = require('./modules/quizzes');
 const Assistant = require('./modules/assistant');
-const utils = require('./utils/helpers');
 
 // Compute package version string
 const computePackageVersion = () => {
@@ -31,28 +30,33 @@ const computePackageVersion = () => {
   return `${versionPrefix}${versionModifiers.join('-')}${versionModifiers.length ? '-' : ''}${packageVersion}`;
 };
 
-const setSessionId = (sessionId, options) => {
-  const sessionIdCookieName = options?.cookie_name_session_id || 'ConstructorioID_session_id';
-  const sessionIdLocalName = options?.local_name_session_id || '_constructorio_search_session_id';
-  const sessionDataCookieName = options?.cookie_name_session_data || 'ConstructorioID_session';
-  const sessionDataLocalName = options?.local_name_session_data || '_constructorio_search_session';
+const setSessionId = (sessionId, idOptions) => {
+  const {
+    cookie_name_session_id,
+    cookie_name_session_data,
+    local_name_session_id,
+    local_name_session_data,
+    get_cookie,
+    set_cookie,
+    get_local_object,
+    set_local_object,
+  } = new ConstructorioID(idOptions || {});
 
-  const cookiePersistedSessionData = utils.getCookie(sessionDataCookieName);
-  const localPersistedSessionData = utils.getLocalItem(sessionDataLocalName);
+  const cookiePersistedSessionData = get_cookie(cookie_name_session_data);
+  const localPersistedSessionData = get_local_object(local_name_session_data);
   const newSessionData = {
     sessionId,
     lastTime: Date.now(),
   };
 
   if (localPersistedSessionData) {
-    utils.updateLocalItem(sessionIdLocalName, sessionId);
-    utils.updateLocalItem(sessionDataLocalName, newSessionData);
+    set_local_object(local_name_session_id, sessionId);
+    set_local_object(local_name_session_data, newSessionData);
   }
 
   if (cookiePersistedSessionData) {
-    const expiry = new Date(Date.now() + (options?.cookie_days_to_live || 365) * 24 * 60 * 60 * 1000);
-    utils.updateCookie(sessionIdCookieName, sessionId, expiry);
-    utils.updateCookie(sessionDataCookieName, JSON.stringify(newSessionData), expiry);
+    set_cookie(cookie_name_session_id, sessionId);
+    set_cookie(cookie_name_session_data, JSON.stringify(newSessionData));
   }
 };
 
