@@ -51,6 +51,7 @@ function createAutocompleteUrl(query, parameters, options) {
       hiddenFields,
       variationsMap,
       preFilterExpression,
+      qsParam,
     } = parameters;
 
     // Pull results number from parameters
@@ -95,6 +96,11 @@ function createAutocompleteUrl(query, parameters, options) {
     if (variationsMap) {
       queryParams.variations_map = JSON.stringify(variationsMap);
     }
+
+    // pull qs param from parameters
+    if (qsParam && Object.isObject(qsParam)) {
+      queryParams.qs = JSON.stringify(qsParam);
+    }
   }
 
   queryParams._dt = Date.now();
@@ -133,6 +139,7 @@ class Autocomplete {
    * @param {object} [parameters.preFilterExpression] - Faceting expression to scope autocomplete results. Please refer to https://docs.constructor.io/rest_api/collections/#add-items-dynamically for details
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
    * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.io/rest_api/variations_mapping for details
+   * @param {object} [parameters.qsParam] - object of additional query parameters to be appended to requests for results
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
