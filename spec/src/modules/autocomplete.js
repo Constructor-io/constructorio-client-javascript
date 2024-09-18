@@ -412,6 +412,23 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it.only('Should return a return a response with qs param properly parsed', (done) => {
+      const qsParam = {
+        us: 'dogs',
+      };
+      const { autocomplete } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      autocomplete.getAutocompleteResults('Jacket', { qsParam }).then((res) => {
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res.request.us).to.equal(qsParam.us);
+        done();
+      });
+    });
+
     it('Should return a variations_map object in the response', (done) => {
       const variationsMap = {
         group_by: [
