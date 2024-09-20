@@ -129,7 +129,6 @@ class ConstructorIO {
       eventDispatcher,
       beaconMode: (beaconMode === false) ? false : true, // Defaults to 'true',
       networkParameters: networkParameters || {},
-      idOptions,
     };
 
     // Expose global modules
