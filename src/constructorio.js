@@ -30,27 +30,6 @@ const computePackageVersion = () => {
   return `${versionPrefix}${versionModifiers.join('-')}${versionModifiers.length ? '-' : ''}${packageVersion}`;
 };
 
-const setSessionId = (sessionId, idOptions) => {
-  const identity = new ConstructorioID(idOptions || {});
-
-  const cookiePersistedSessionData = identity.get_cookie(identity.cookie_name_session_data);
-  const localPersistedSessionData = identity.get_local_object(identity.local_name_session_data);
-  const newSessionData = {
-    sessionId,
-    lastTime: Date.now(),
-  };
-
-  if (localPersistedSessionData) {
-    identity.set_local_object(identity.local_name_session_id, sessionId);
-    identity.set_local_object(identity.local_name_session_data, newSessionData);
-  }
-
-  if (cookiePersistedSessionData) {
-    identity.set_cookie(identity.cookie_name_session_id, sessionId);
-    identity.set_cookie(identity.cookie_name_session_data, JSON.stringify(newSessionData));
-  }
-};
-
 /**
  * Class to instantiate the ConstructorIO client.
  */
@@ -192,9 +171,9 @@ class ConstructorIO {
         this.options.testCells = testCells;
       }
 
-      if (sessionId) {
+      // Set Session ID in dom-less environments only
+      if (sessionId && !helpers.canUseDOM()) {
         this.options.sessionId = sessionId;
-        setSessionId(sessionId, this.options.idOptions);
       }
 
       this.options.userId = userId;
