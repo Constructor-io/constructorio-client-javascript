@@ -151,7 +151,7 @@ class ConstructorIO {
    * @param {string} [options.apiKey] - Constructor.io API key
    * @param {array} [options.segments] - User segments
    * @param {object} [options.testCells] - User test cells
-   * @param {number} [options.sessionId] - Session ID
+   * @param {number} [options.sessionId] - Session ID - Will only be set in DOM-less environments
    * @param {string} [options.userId] - User ID
    */
   setClientOptions(options) {
