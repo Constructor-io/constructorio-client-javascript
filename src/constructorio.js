@@ -150,11 +150,12 @@ class ConstructorIO {
    * @param {string} [options.apiKey] - Constructor.io API key
    * @param {array} [options.segments] - User segments
    * @param {object} [options.testCells] - User test cells
+   * @param {number} [options.sessionId] - Session ID - Will only be set in DOM-less environments
    * @param {string} [options.userId] - User ID
    */
   setClientOptions(options) {
     if (Object.keys(options).length) {
-      const { apiKey, segments, testCells, userId = '' } = options;
+      const { apiKey, segments, testCells, sessionId, userId = '' } = options;
 
       if (apiKey) {
         this.options.apiKey = apiKey;
@@ -166,6 +167,11 @@ class ConstructorIO {
 
       if (testCells) {
         this.options.testCells = testCells;
+      }
+
+      // Set Session ID in dom-less environments only
+      if (sessionId && !helpers.canUseDOM()) {
+        this.options.sessionId = sessionId;
       }
 
       this.options.userId = userId;
