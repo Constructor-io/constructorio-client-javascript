@@ -1,6 +1,5 @@
 /* eslint-disable camelcase, no-unneeded-ternary, max-len, complexity */
 const ConstructorioID = require('@constructor-io/constructorio-id');
-const fetchPonyfill = require('fetch-ponyfill');
 
 // Modules
 const Search = require('./modules/search');
@@ -76,7 +75,7 @@ class ConstructorIO {
       clientId,
       sessionId,
       userId,
-      fetch,
+      fetch: fetchFromOptions,
       trackingSendDelay,
       sendReferrerWithTrackingEvents,
       sendTrackingEvents,
@@ -122,7 +121,7 @@ class ConstructorIO {
       userId,
       segments,
       testCells,
-      fetch: fetch || fetchPonyfill({ Promise }).fetch,
+      fetch: fetchFromOptions || fetch,
       trackingSendDelay,
       sendTrackingEvents,
       sendReferrerWithTrackingEvents,
