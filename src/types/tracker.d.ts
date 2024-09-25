@@ -58,6 +58,19 @@ declare class Tracker {
     networkParameters?: NetworkParameters
   ): true | Error;
 
+  trackSearchSubmitV2(
+    term: string,
+    parameters: {
+      originalQuery: string;
+      groupId?: string;
+      displayName?: string;
+      section?: string;
+      userInput: string;
+      analyticsTags?: Record<string, string>;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
   trackSearchResultsLoadedV2(
     term: string,
     parameters: {
