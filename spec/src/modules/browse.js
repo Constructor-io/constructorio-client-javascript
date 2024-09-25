@@ -327,7 +327,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       });
     });
 
-    it.only('Should return a response with a valid filterName, filterValue and hiddenFacets', (done) => {
+    it('Should return a response with a valid filterName, filterValue and hiddenFacets', (done) => {
       const hiddenFacets = ['Brand', 'testFacet'];
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
