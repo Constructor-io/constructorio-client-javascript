@@ -586,7 +586,7 @@ class Tracker {
 
   /**
    * Send search results loaded  event to API
-   * @private
+   *
    * @function trackSearchResultsLoaded
    * @param {string} searchTerm - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
@@ -650,7 +650,7 @@ class Tracker {
 
         if (items && Array.isArray(items) && items.length !== 0) {
           const trimmedItems = items.slice(0, 100);
-          transformedItems = trimmedItems;
+
           if (typeof items[0] === 'string' || typeof items[0] === 'number') {
             transformedItems = trimmedItems.map((itemId) => ({ item_id: String(itemId) }));
           } else {
