@@ -449,6 +449,7 @@ class Tracker {
    * @param {string} parameters.userInput - The current autocomplete search query
    * @param {string} [parameters.groupId] - Group identifier of selected item
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -476,6 +477,7 @@ class Tracker {
           group_id,
           groupId = group_id,
           section,
+          analyticsTags = null,
         } = parameters;
         const queryParams = {};
         const bodyParams = {
@@ -490,6 +492,10 @@ class Tracker {
 
         if (section) {
           queryParams.section = section;
+        }
+
+        if (analyticsTags) {
+          bodyParams.analytics_tags = analyticsTags;
         }
 
         const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;

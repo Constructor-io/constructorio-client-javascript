@@ -12,7 +12,6 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
-const fetchPonyfill = require('fetch-ponyfill');
 const store = require('../../../test/utils/store');
 const utilsHelpers = require('../../../test/utils/helpers');
 const RequestQueue = require('../../../test/utils/request-queue');
@@ -23,7 +22,6 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 dotenv.config();
 
-const { fetch } = fetchPonyfill({ Promise });
 const bundled = process.env.BUNDLED === 'true';
 const testApiKey = process.env.TEST_REQUEST_API_KEY;
 

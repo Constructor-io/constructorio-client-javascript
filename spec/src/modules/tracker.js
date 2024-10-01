@@ -4,7 +4,6 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
-const fetchPonyfill = require('fetch-ponyfill');
 const cloneDeep = require('lodash.clonedeep');
 const store = require('../../../test/utils/store'); // eslint-disable-line import/extensions
 const helpers = require('../../mocha.helpers');
@@ -16,14 +15,13 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 dotenv.config();
 
-const { fetch } = fetchPonyfill({ Promise });
 const testApiKey = process.env.TEST_REQUEST_API_KEY;
 const clientVersion = 'cio-mocha';
 const delayBetweenTests = 25;
 const bundled = process.env.BUNDLED === 'true';
 const skipNetworkTimeoutTests = process.env.SKIP_NETWORK_TIMEOUT_TESTS === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
-const timeoutRejectionMessage = bundled ? 'AbortError: Aborted' : 'AbortError: The user aborted a request.';
+const timeoutRejectionMessage = bundled ? 'AbortError: Aborted' : 'AbortError: This operation was aborted';
 const testAnalyticsTag = { param1: 'test', param2: 'test2' };
 
 describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {

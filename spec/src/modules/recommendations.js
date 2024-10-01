@@ -4,7 +4,6 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
-const fetchPonyfill = require('fetch-ponyfill');
 const helpers = require('../../mocha.helpers');
 const jsdom = require('../utils/jsdom-global');
 let ConstructorIO = require('../../../test/constructorio'); // eslint-disable-line import/extensions
@@ -13,13 +12,12 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 dotenv.config();
 
-const { fetch } = fetchPonyfill({ Promise });
 const testApiKey = process.env.TEST_REQUEST_API_KEY;
 const clientVersion = 'cio-mocha';
 const bundled = process.env.BUNDLED === 'true';
 const skipNetworkTimeoutTests = process.env.SKIP_NETWORK_TIMEOUT_TESTS === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
-const timeoutRejectionMessage = bundled ? 'Aborted' : 'The user aborted a request.';
+const timeoutRejectionMessage = bundled ? 'Aborted' : 'This operation was aborted';
 
 describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
   const jsdomOptions = { url: 'http://localhost' };

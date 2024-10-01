@@ -1,6 +1,6 @@
 {
   "name": "@constructor-io/constructorio-client-javascript",
-  "version": "2.51.2",
+  "version": "2.53.1",
   "description": "Constructor.io JavaScript client",
   "main": "lib/constructorio.js",
   "types": "lib/types/index.d.ts",
@@ -74,8 +74,7 @@
   },
   "dependencies": {
     "@constructor-io/constructorio-id": "^2.4.17",
-    "crc-32": "^1.2.2",
-    "fetch-ponyfill": "^7.1.0"
+    "crc-32": "^1.2.2"
   },
   "peerDependencies": {
     "@babel/runtime": "^7.19.0"

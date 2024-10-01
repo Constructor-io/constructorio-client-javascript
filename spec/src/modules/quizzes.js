@@ -4,7 +4,6 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
-const fetchPonyfill = require('fetch-ponyfill');
 const fs = require('fs');
 const helpers = require('../../mocha.helpers');
 const jsdom = require('../utils/jsdom-global');
@@ -14,7 +13,6 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 dotenv.config();
 
-const { fetch } = fetchPonyfill({ Promise });
 const quizApiKey = process.env.TEST_REQUEST_API_KEY;
 const clientVersion = 'cio-mocha';
 const bundled = process.env.BUNDLED === 'true';
@@ -207,7 +205,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
           fetch: fetchSpy,
         });
 
-        return expect(quizzes.getQuizNextQuestion(validQuizId, {}, { timeout: 20 })).to.eventually.be.rejectedWith('The user aborted a request.');
+        return expect(quizzes.getQuizNextQuestion(validQuizId, {}, { timeout: 20 })).to.eventually.be.rejectedWith('This operation was aborted');
       });
 
       it('Should be rejected when global network request timeout is provided and reached', () => {
@@ -217,7 +215,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
           networkParameters: { timeout: 20 },
         });
 
-        return expect(quizzes.getQuizNextQuestion(validQuizId, {})).to.eventually.be.rejectedWith('The user aborted a request.');
+        return expect(quizzes.getQuizNextQuestion(validQuizId, {})).to.eventually.be.rejectedWith('This operation was aborted');
       });
     }
 
@@ -523,7 +521,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
           fetch: fetchSpy,
         });
 
-        return expect(quizzes.getQuizResults(validQuizId, { answers: validAnswers }, { timeout: 20 })).to.eventually.be.rejectedWith('The user aborted a request.');
+        return expect(quizzes.getQuizResults(validQuizId, { answers: validAnswers }, { timeout: 20 })).to.eventually.be.rejectedWith('This operation was aborted');
       });
 
       it('Should be rejected when global network request timeout is provided and reached', () => {
@@ -533,7 +531,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
           networkParameters: { timeout: 20 },
         });
 
-        return expect(quizzes.getQuizResults(validQuizId, { answers: validAnswers })).to.eventually.be.rejectedWith('The user aborted a request.');
+        return expect(quizzes.getQuizResults(validQuizId, { answers: validAnswers })).to.eventually.be.rejectedWith('This operation was aborted');
       });
     }
   });
