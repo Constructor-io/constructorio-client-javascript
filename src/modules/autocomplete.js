@@ -98,7 +98,7 @@ function createAutocompleteUrl(query, parameters, options) {
     }
 
     // pull qs param from parameters
-    if (qsParam && Object.isObject(qsParam)) {
+    if (qsParam) {
       queryParams.qs = JSON.stringify(qsParam);
     }
   }

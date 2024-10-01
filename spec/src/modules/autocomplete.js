@@ -424,7 +424,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
       autocomplete.getAutocompleteResults('Jacket', { qsParam }).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('response').to.be.an('object');
-        expect(res.request.us).to.equal(qsParam.us);
+        expect(res.request.us.length).to.equal(1);
+        expect(res.request.us[0]).to.equal(qsParam.us);
         done();
       });
     });
