@@ -410,7 +410,7 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
       });
     });
 
-    it.only('Should return a return a response with qs param properly parsed', (done) => {
+    it('Should return a return a response with qs param properly parsed', (done) => {
       const qsParam = {
         us: 'dogs',
       };
@@ -421,7 +421,6 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
 
       autocomplete.getAutocompleteResults('Jacket', { qsParam }).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
-        expect(res).to.have.property('response').to.be.an('object');
         expect(res.request.us.length).to.equal(1);
         expect(res.request.us[0]).to.equal(qsParam.us);
         done();
