@@ -29,6 +29,9 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
 
     if (bundled) {
       ConstructorIO = window.ConstructorioClient;
+
+      // Make global fetch available on the window
+      window.fetch = fetch;
     }
   });
 
@@ -448,7 +451,7 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
     it('Should not add unexpected properties to global window object', () => {
       const properties = helpers.getUserDefinedWindowProperties();
 
-      expect(properties).to.deep.equal(['0', 'ConstructorioClient', 'CLIENT_VERSION']);
+      expect(properties).to.deep.equal(['0', 'ConstructorioClient', 'CLIENT_VERSION', 'fetch']);
     });
   }
 });

@@ -21,7 +21,7 @@ const delayBetweenTests = 25;
 const bundled = process.env.BUNDLED === 'true';
 const skipNetworkTimeoutTests = process.env.SKIP_NETWORK_TIMEOUT_TESTS === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
-const timeoutRejectionMessage = bundled ? 'AbortError: Aborted' : 'AbortError: This operation was aborted';
+const timeoutRejectionMessage = 'AbortError: This operation was aborted';
 const testAnalyticsTag = { param1: 'test', param2: 'test2' };
 
 describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
@@ -46,6 +46,9 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       // store2 doesn't seem to maintain the `window` context for bundled version - set manually
       window.sessionStorage.clear();
       window.sessionStorage.setItem('_constructorio_is_human', true);
+
+      // Make global fetch available on the window
+      window.fetch = fetch;
 
       ConstructorIO = window.ConstructorioClient;
     }
