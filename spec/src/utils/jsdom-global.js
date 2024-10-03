@@ -59,6 +59,7 @@ function globalJsdom(options = {}) {
   global.localStorage = localStorage;
   global.sessionStorage = sessionStorage;
   window.console = global.console;
+  window.fetch = global.fetch;
 
   // add access to our jsdom instance
   global.$jsdom = jsdom;
@@ -69,6 +70,8 @@ function globalJsdom(options = {}) {
     delete global.window;
     delete global.localStorage;
     delete global.sessionStorage;
+    delete window.console;
+    delete window.fetch;
   };
 
   document.destroy = cleanup;

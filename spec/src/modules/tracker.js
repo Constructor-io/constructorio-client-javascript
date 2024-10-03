@@ -21,7 +21,7 @@ const delayBetweenTests = 25;
 const bundled = process.env.BUNDLED === 'true';
 const skipNetworkTimeoutTests = process.env.SKIP_NETWORK_TIMEOUT_TESTS === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
-const timeoutRejectionMessage = bundled ? 'AbortError: Aborted' : 'AbortError: This operation was aborted';
+const timeoutRejectionMessage = 'AbortError: This operation was aborted';
 const testAnalyticsTag = { param1: 'test', param2: 'test2' };
 
 describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
