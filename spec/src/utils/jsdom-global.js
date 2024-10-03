@@ -70,6 +70,8 @@ function globalJsdom(options = {}) {
     delete global.window;
     delete global.localStorage;
     delete global.sessionStorage;
+    delete window.console;
+    delete window.fetch;
   };
 
   document.destroy = cleanup;
