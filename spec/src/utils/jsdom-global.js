@@ -59,6 +59,7 @@ function globalJsdom(options = {}) {
   global.localStorage = localStorage;
   global.sessionStorage = sessionStorage;
   window.console = global.console;
+  window.fetch = global.fetch;
 
   // add access to our jsdom instance
   global.$jsdom = jsdom;

@@ -47,9 +47,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       window.sessionStorage.clear();
       window.sessionStorage.setItem('_constructorio_is_human', true);
 
-      // Make global fetch available on the window
-      window.fetch = fetch;
-
       ConstructorIO = window.ConstructorioClient;
     }
   });

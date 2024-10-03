@@ -32,9 +32,6 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
 
     if (bundled) {
       ConstructorIO = window.ConstructorioClient;
-
-      // Make global fetch available on the window
-      window.fetch = fetch;
     }
   });
 
