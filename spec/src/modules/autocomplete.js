@@ -17,7 +17,7 @@ const clientVersion = 'cio-mocha';
 const bundled = process.env.BUNDLED === 'true';
 const skipNetworkTimeoutTests = process.env.SKIP_NETWORK_TIMEOUT_TESTS === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
-const timeoutRejectionMessage = bundled ? 'Aborted' : 'This operation was aborted';
+const timeoutRejectionMessage = 'This operation was aborted';
 
 describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
   const jsdomOptions = { url: 'http://localhost' };
