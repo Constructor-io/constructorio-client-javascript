@@ -448,7 +448,7 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
     it('Should not add unexpected properties to global window object', () => {
       const properties = helpers.getUserDefinedWindowProperties();
 
-      expect(properties).to.deep.equal(['0', 'ConstructorioClient', 'CLIENT_VERSION', 'fetch']);
+      expect(properties).to.deep.equal(['0', 'ConstructorioClient', 'fetch', 'CLIENT_VERSION']);
     });
   }
 });
