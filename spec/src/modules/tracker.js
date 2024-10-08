@@ -1957,10 +1957,10 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   describe('trackSearchResultsLoaded', () => {
     const term = 'Cat in the Hat';
     const requiredParameters = { numResults: 1337 };
-    const optionalParameters = { item_ids: [1, 2, 3] };
+    const optionalParameters = { itemIds: [1, 2, 3] };
     const legacyParameters = {
       ...requiredParameters,
-      customer_ids: [1, 2, 3],
+      customerIds: [1, 2, 3],
     };
     const v2Parameters = {
       url: 'test',
@@ -1974,7 +1974,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     const transformedItems = [{ item_id: '1' }, { item_id: '2' }, { item_id: '3' }];
 
-    it('Backwards Compatibility - V2 Should respond with a valid response when term and snake cased parameters are provided', (done) => {
+    it('Backwards Compatibility - Should respond with a valid response when term and snake cased parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
