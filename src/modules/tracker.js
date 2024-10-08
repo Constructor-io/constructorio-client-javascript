@@ -599,6 +599,7 @@ class Tracker {
    * @param {string} [parameters.sortOrder] - Sort order ('ascending' or 'descending')
    * @param {string} [parameters.sortBy] - Sorting method
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -644,6 +645,7 @@ class Tracker {
           selectedFilters = selected_filters,
           url = helpers.getWindowLocation()?.href || 'N/A',
           section,
+          analyticsTags,
         } = parameters;
         const queryParams = {};
         let transformedItems;
@@ -671,6 +673,7 @@ class Tracker {
           sort_order: sortOrder,
           sort_by: sortBy,
           selected_filters: selectedFilters,
+          analytics_tags: analyticsTags,
           url,
           section,
         };
