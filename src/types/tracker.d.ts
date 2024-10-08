@@ -18,11 +18,11 @@ declare class Tracker {
   trackInputFocus(networkParameters?: NetworkParameters): true | Error;
 
   trackInputFocusV2(
-      parameters: {
-        userInput: string;
-        analyticsTags?: Record<string, string>;
-      },
-      networkParameters?: NetworkParameters,
+    parameters: {
+      userInput: string;
+      analyticsTags?: Record<string, string>;
+    },
+    networkParameters?: NetworkParameters,
   ): true | Error;
 
   trackItemDetailLoad(
@@ -83,15 +83,7 @@ declare class Tracker {
       sortOrder?: string;
       sortBy?: string;
       section?: string;
-    },
-    networkParameters?: NetworkParameters
-  ): true | Error;
-
-  trackSearchResultsLoaded(
-    term: string,
-    parameters: {
-      numResults: number;
-      itemIds: string[];
+      analyticsTags?: Record<string, string>;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
