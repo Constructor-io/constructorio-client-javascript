@@ -1,0 +1,15 @@
+name: 'Check for Dependabot alerts & send them to Slack'
+
+on:
+  schedule:
+    - cron: '30 16 * * *' # every day at 9:30 am PST
+  workflow_dispatch: # to have the option to run this ad-hoc
+
+jobs:
+  main:
+    uses: Constructor-io/customer-integrations-public-github-workflows/.github/workflows/dependabot-alerts-to-slack.yml@main
+    secrets:
+      github-app-id: ${{ vars.DEPENDABOT_ACCESS_APP_ID }}
+      github-app-private-key: ${{ secrets.DEPENDABOT_ACCESS_PRIVATE_KEY }}
+      slack-webhook: ${{ secrets.CUSTOMER_INTEGRATIONS_SLACK_WEBHOOK }}
+

@@ -1,6 +1,6 @@
 {
   "name": "@constructor-io/constructorio-client-javascript",
-  "version": "2.51.1",
+  "version": "2.54.0",
   "description": "Constructor.io JavaScript client",
   "main": "lib/constructorio.js",
   "types": "lib/types/index.d.ts",
@@ -32,7 +32,7 @@
     "type": "git",
     "url": "git+https://github.com/Constructor-io/constructorio-client-javascript.git"
   },
-  "author": "constructor.io",
+  "author": "Constructor.io Corporation",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Constructor-io/constructorio-client-javascript/issues"
@@ -74,8 +74,7 @@
   },
   "dependencies": {
     "@constructor-io/constructorio-id": "^2.4.17",
-    "crc-32": "^1.2.2",
-    "fetch-ponyfill": "^7.1.0"
+    "crc-32": "^1.2.2"
   },
   "peerDependencies": {
     "@babel/runtime": "^7.19.0"

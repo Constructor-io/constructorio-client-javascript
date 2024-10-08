@@ -1,6 +1,5 @@
 /* eslint-disable camelcase, no-unneeded-ternary, max-len, complexity */
 const ConstructorioID = require('@constructor-io/constructorio-id');
-const fetchPonyfill = require('fetch-ponyfill');
 
 // Modules
 const Search = require('./modules/search');
@@ -76,7 +75,7 @@ class ConstructorIO {
       clientId,
       sessionId,
       userId,
-      fetch,
+      fetch: fetchFromOptions,
       trackingSendDelay,
       sendReferrerWithTrackingEvents,
       sendTrackingEvents,
@@ -122,7 +121,7 @@ class ConstructorIO {
       userId,
       segments,
       testCells,
-      fetch: fetch || fetchPonyfill({ Promise }).fetch,
+      fetch: fetchFromOptions || fetch,
       trackingSendDelay,
       sendTrackingEvents,
       sendReferrerWithTrackingEvents,
@@ -151,11 +150,12 @@ class ConstructorIO {
    * @param {string} [options.apiKey] - Constructor.io API key
    * @param {array} [options.segments] - User segments
    * @param {object} [options.testCells] - User test cells
+   * @param {number} [options.sessionId] - Session ID - Will only be set in DOM-less environments
    * @param {string} [options.userId] - User ID
    */
   setClientOptions(options) {
     if (Object.keys(options).length) {
-      const { apiKey, segments, testCells, userId = '' } = options;
+      const { apiKey, segments, testCells, sessionId, userId = '' } = options;
 
       if (apiKey) {
         this.options.apiKey = apiKey;
@@ -167,6 +167,11 @@ class ConstructorIO {
 
       if (testCells) {
         this.options.testCells = testCells;
+      }
+
+      // Set Session ID in dom-less environments only
+      if (sessionId && !helpers.canUseDOM()) {
+        this.options.sessionId = sessionId;
       }
 
       this.options.userId = userId;

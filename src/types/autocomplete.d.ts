@@ -19,6 +19,7 @@ export interface IAutocompleteParameters {
   hiddenFields?: string[];
   variationsMap?: VariationsMap;
   preFilterExpression?: FilterExpression;
+  qsParam?: Record<string, any>;
 }
 
 declare class Autocomplete {

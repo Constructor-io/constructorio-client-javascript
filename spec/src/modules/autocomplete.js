@@ -4,7 +4,6 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
-const fetchPonyfill = require('fetch-ponyfill');
 const helpers = require('../../mocha.helpers');
 const jsdom = require('../utils/jsdom-global');
 let ConstructorIO = require('../../../test/constructorio'); // eslint-disable-line import/extensions
@@ -13,13 +12,12 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 dotenv.config();
 
-const { fetch } = fetchPonyfill({ Promise });
 const testApiKey = process.env.TEST_REQUEST_API_KEY;
 const clientVersion = 'cio-mocha';
 const bundled = process.env.BUNDLED === 'true';
 const skipNetworkTimeoutTests = process.env.SKIP_NETWORK_TIMEOUT_TESTS === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
-const timeoutRejectionMessage = bundled ? 'Aborted' : 'The user aborted a request.';
+const timeoutRejectionMessage = 'This operation was aborted';
 
 describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
   const jsdomOptions = { url: 'http://localhost' };
@@ -408,6 +406,23 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
         expect(res.sections.Products.length).to.be.eql(2);
         expect(res.sections.Products[0].data.facets.find((facet) => facet.name === 'Color').values).to.be.an('array').that.include('red');
         expect(res.sections.Products[1].data.facets.find((facet) => facet.name === 'Color').values).to.be.an('array').that.include('blue');
+        done();
+      });
+    });
+
+    it('Should return a return a response with qs param properly parsed', (done) => {
+      const qsParam = {
+        us: 'dogs',
+      };
+      const { autocomplete } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      autocomplete.getAutocompleteResults('Jacket', { qsParam }).then((res) => {
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res.request.us.length).to.equal(1);
+        expect(res.request.us[0]).to.equal(qsParam.us);
         done();
       });
     });
