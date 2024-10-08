@@ -1970,6 +1970,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       sortBy: 'test',
       selectedFilters: { test: ['test'] },
       section: 'Products',
+      analyticsTags: testAnalyticsTag,
     };
 
     const transformedItems = [{ item_id: '1' }, { item_id: '2' }, { item_id: '3' }];
@@ -2059,6 +2060,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(bodyParams).to.have.property('sort_by').to.equal(v2Parameters.sortBy);
         expect(bodyParams).to.have.property('selected_filters').to.deep.equal(v2Parameters.selectedFilters);
         expect(bodyParams).to.have.property('section').to.deep.equal(v2Parameters.section);
+        expect(bodyParams).to.have.property('analytics_tags').to.deep.equal(v2Parameters.analyticsTags);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
