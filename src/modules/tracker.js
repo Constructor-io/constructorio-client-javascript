@@ -633,7 +633,6 @@ class Tracker {
           num_results,
           numResults = num_results,
           result_count,
-          resultCount = numResults || result_count || 0,
           customerIds,
           customer_ids = customerIds,
           itemIds,
@@ -652,6 +651,7 @@ class Tracker {
           url = helpers.getWindowLocation()?.href || 'N/A',
           section,
           analyticsTags,
+          resultCount = numResults || result_count || itemIds?.length || 0,
         } = parameters;
         const queryParams = {};
         let transformedItems;
@@ -1157,7 +1157,6 @@ class Tracker {
       const bodyParams = {};
       const {
         result_count,
-        resultCount = result_count,
         result_page,
         resultPage = result_page,
         result_id,
@@ -1170,6 +1169,7 @@ class Tracker {
         numResultsViewed = num_results_viewed,
         items,
         analyticsTags,
+        resultCount = result_count || items?.length || 0,
       } = parameters;
 
       if (!helpers.isNil(resultCount)) {
@@ -1410,7 +1410,6 @@ class Tracker {
       const {
         section = 'Products',
         result_count,
-        resultCount = result_count,
         result_page,
         resultPage = result_page,
         result_id,
@@ -1428,6 +1427,7 @@ class Tracker {
         filterValue = filter_value,
         items,
         analyticsTags,
+        resultCount = result_count || items?.length || 0,
       } = parameters;
 
       if (section) {
