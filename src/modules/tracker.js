@@ -651,7 +651,7 @@ class Tracker {
           url = helpers.getWindowLocation()?.href || 'N/A',
           section,
           analyticsTags,
-          resultCount = numResults || result_count || itemIds?.length || 0,
+          resultCount = numResults || result_count || items?.length || 0,
         } = parameters;
         const queryParams = {};
         let transformedItems;
