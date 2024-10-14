@@ -17,7 +17,7 @@ dotenv.config();
 
 const testApiKey = process.env.TEST_REQUEST_API_KEY;
 const clientVersion = 'cio-mocha';
-const delayBetweenTests = 25;
+const delayBetweenTests = 50;
 const bundled = process.env.BUNDLED === 'true';
 const skipNetworkTimeoutTests = process.env.SKIP_NETWORK_TIMEOUT_TESTS === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';

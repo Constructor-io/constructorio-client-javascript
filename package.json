@@ -10,13 +10,14 @@
     "check-license": "license-checker --production --onlyAllow 'Apache-2.0;BSD-3-Clause;MIT;0BSD;BSD-2-Clause'",
     "verify-node-version": "chmod +x ./scripts/verify-node-version.sh && ./scripts/verify-node-version.sh",
     "lint": "eslint 'src/**/*.js' 'spec/**/*.js' 'src/**/*.d.ts'",
-    "test": "npm run compile && mkdir -p test && cp -rf lib/* test && mocha --retries 3 ./spec/*",
+    "pretest": "npm run compile && npm run generate-test-folder",
+    "test": "mocha --retries 3 ./spec/*",
     "test:types": "tsd .",
-    "test:parallel": "npm run compile && mkdir -p test && cp -rf lib/* test && mocha --parallel --retries 3 ./spec/*",
+    "test:parallel": "npm run pretest && mocha --parallel --retries 3 ./spec/*",
     "test:src": "mkdir -p test && cp -rf src/* test && mocha --retries 3 ./spec/*",
     "test:src:parallel": "mkdir -p test && cp -rf src/* test && mocha --parallel --retries 3 ./spec/*",
-    "test:bundled": "npm run bundle && BUNDLED=true PACKAGE_VERSION=$(echo $npm_package_version) mocha --retries 3 ./spec/*",
-    "test:bundled:parallel": "npm run bundle && BUNDLED=true PACKAGE_VERSION=$(echo $npm_package_version) mocha --parallel --retries 3 ./spec/*",
+    "test:bundled": "npm run bundle && npm run generate-test-folder && BUNDLED=true PACKAGE_VERSION=$(echo $npm_package_version) mocha --retries 3 ./spec/*",
+    "test:bundled:parallel": "npm run bundle && npm run generate-test-folder && BUNDLED=true PACKAGE_VERSION=$(echo $npm_package_version) mocha --parallel --retries 3 ./spec/*",
     "test:all": "npm run test && npm run test:bundled",
     "test:all:parallel": "npm run test:parallel && npm run test:bundled:parallel",
     "precoverage": "rm -rf ./coverage && rm -rf ./.nyc_output",
@@ -26,7 +27,8 @@
     "compile": "rm -rf ./lib/* && babel src/ -d lib/ --copy-files && rm -rf ./lib/types/tests",
     "prepublish": "npm run compile",
     "bundle": "rm -rf ./dist/* && npm run compile && node bundle.js",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "generate-test-folder": "mkdir -p test && cp -rf lib/* test"
   },
   "repository": {
     "type": "git",
