@@ -1,4 +1,4 @@
-name: Run tests
+name: Run tests - Bundled
 on:
   pull_request:
     branches:
@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Run tests
-        run: npm run test:parallel
+        run: npm run test:bundled:parallel
         env:
           TEST_REQUEST_API_KEY: ${{ secrets.TEST_REQUEST_API_KEY }}
           SKIP_NETWORK_TIMEOUT_TESTS: true
