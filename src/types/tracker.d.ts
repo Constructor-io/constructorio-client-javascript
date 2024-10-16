@@ -71,7 +71,7 @@ declare class Tracker {
     networkParameters?: NetworkParameters
   ): true | Error;
 
-  trackSearchResultsLoadedV2(
+  trackSearchResultsLoaded(
     term: string,
     parameters: {
       url: string;
