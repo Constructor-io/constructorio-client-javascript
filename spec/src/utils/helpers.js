@@ -9,6 +9,7 @@ const {
   cleanParams,
   throwHttpErrorFromResponse,
   canUseDOM,
+  canUseStorage,
   addEventListener,
   removeEventListener,
   getNavigator,
@@ -101,6 +102,28 @@ describe('ConstructorIO - Utils - Helpers', () => {
         const cleanup = jsdom();
         expect(canUseDOM()).to.equal(true);
         cleanup();
+      });
+    });
+
+    describe('canUseStorage', () => {
+      it('Should return true if localStorage is accessible', () => {
+        const cleanup = jsdom();
+        expect(canUseStorage('localStorage')).to.equal(true);
+        cleanup();
+      });
+
+      it('Should return false if localStorage is not accessible', () => {
+        expect(canUseStorage('localStorage')).to.equal(false);
+      });
+
+      it('Should return true if sessionStorage is accessible', () => {
+        const cleanup = jsdom();
+        expect(canUseStorage('sessionStorage')).to.equal(true);
+        cleanup();
+      });
+
+      it('Should return false if sessionStorage is not accessible', () => {
+        expect(canUseStorage('sessionStorage')).to.equal(false);
       });
     });
 

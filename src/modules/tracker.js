@@ -2,6 +2,7 @@
 const EventEmitter = require('../utils/events');
 const helpers = require('../utils/helpers');
 const RequestQueue = require('../utils/request-queue');
+const NonStorageRequestQueue = require('../utils/non-storage-request-queue');
 
 function applyParams(parameters, options) {
   const {
@@ -85,7 +86,7 @@ class Tracker {
   constructor(options) {
     this.options = options || {};
     this.eventemitter = new EventEmitter();
-    this.requests = new RequestQueue(options, this.eventemitter);
+    this.requests = (!helpers.canUseStorage('localStorage') || !helpers.canUseStorage('sessionStorage')) ? new NonStorageRequestQueue(options, this.eventemitter) : new RequestQueue(options, this.eventemitter);
   }
 
   /**

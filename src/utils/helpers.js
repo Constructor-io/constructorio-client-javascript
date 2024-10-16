@@ -58,6 +58,25 @@ const utils = {
     (typeof window !== 'undefined' && window.document && window.document.createElement)
   ),
 
+  canUseStorage: (type) => {
+    let storage;
+    try {
+      storage = window[type];
+      const x = '__storage_test__';
+      storage.setItem(x, x);
+      storage.removeItem(x);
+      return true;
+    } catch (e) {
+      return (
+        e instanceof DOMException
+        && e.name === 'QuotaExceededError'
+        // acknowledge QuotaExceededError only if there's something already stored
+        && storage
+        && storage.length !== 0
+      );
+    }
+  },
+
   addEventListener: (eventType, callback, useCapture) => {
     if (utils.canUseDOM()) {
       window.addEventListener(eventType, callback, useCapture);
@@ -114,50 +133,55 @@ const utils = {
   },
 
   hasOrderIdRecord({ orderId, apiKey }) {
-    let orderPerKeyId = orderId;
-    if (apiKey) orderPerKeyId = `${apiKey}-${orderId}`;
+    // only do this if we can use localStorage
+    if (this.canUseStorage('localStorage')) {
+      let orderPerKeyId = orderId;
+      if (apiKey) orderPerKeyId = `${apiKey}-${orderId}`;
 
-    const orderIdHash = CRC32.str(orderPerKeyId.toString());
-    let purchaseEventStorage = store.local.get(purchaseEventStorageKey);
+      const orderIdHash = CRC32.str(orderPerKeyId.toString());
+      let purchaseEventStorage = store.local.get(purchaseEventStorageKey);
 
-    if (typeof purchaseEventStorage === 'string') {
-      purchaseEventStorage = JSON.parse(purchaseEventStorage);
+      if (typeof purchaseEventStorage === 'string') {
+        purchaseEventStorage = JSON.parse(purchaseEventStorage);
+      }
+      if (purchaseEventStorage && purchaseEventStorage.includes(orderIdHash)) {
+        return true;
+      }
+
     }
-    if (purchaseEventStorage && purchaseEventStorage.includes(orderIdHash)) {
-      return true;
-    }
-
     return null;
   },
 
   addOrderIdRecord({ orderId, apiKey }) {
-    let orderPerKeyId = orderId;
-    if (apiKey) orderPerKeyId = `${apiKey}-${orderId}`;
+    // only do this if we can use localStorage
+    if (this.canUseStorage('localStorage')) {
+      let orderPerKeyId = orderId;
+      if (apiKey) orderPerKeyId = `${apiKey}-${orderId}`;
 
-    const orderIdHash = CRC32.str(orderPerKeyId.toString());
-    let purchaseEventStorage = store.local.get(purchaseEventStorageKey);
+      const orderIdHash = CRC32.str(orderPerKeyId.toString());
+      let purchaseEventStorage = store.local.get(purchaseEventStorageKey);
 
-    if (typeof purchaseEventStorage === 'string') {
-      purchaseEventStorage = JSON.parse(purchaseEventStorage);
-    }
-
-    if (purchaseEventStorage) {
-      // If the order already exists, do nothing
-      if (purchaseEventStorage.includes(orderIdHash)) {
-        return;
+      if (typeof purchaseEventStorage === 'string') {
+        purchaseEventStorage = JSON.parse(purchaseEventStorage);
       }
 
-      if (purchaseEventStorage.length >= 10) {
-        purchaseEventStorage = purchaseEventStorage.slice(-9);
-      }
-      purchaseEventStorage.push(orderIdHash);
-    } else {
-      // Create a new object map for the order ids
-      purchaseEventStorage = [orderIdHash];
-    }
+      if (purchaseEventStorage) {
+        // If the order already exists, do nothing
+        if (purchaseEventStorage.includes(orderIdHash)) {
+          return;
+        }
 
-    // Push the order id map into local storage
-    store.local.set(purchaseEventStorageKey, purchaseEventStorage);
+        if (purchaseEventStorage.length >= 10) {
+          purchaseEventStorage = purchaseEventStorage.slice(-9);
+        }
+        purchaseEventStorage.push(orderIdHash);
+      } else {
+        // Create a new object map for the order ids
+        purchaseEventStorage = [orderIdHash];
+      }
+      // Push the order id map into local storage
+      store.local.set(purchaseEventStorageKey, purchaseEventStorage);
+    }
   },
 
   // Abort network request based on supplied timeout interval (in milliseconds)
