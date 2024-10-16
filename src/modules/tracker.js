@@ -278,7 +278,7 @@ class Tracker {
    * @param {string} [parameters.tr] - Trigger used to select the item (click, etc.)
    * @param {string} [parameters.itemId] - Item id of the selected item
    * @param {string} [parameters.variationId] - Variation id of the selected item
-   * @param {string} [parameters.groupId] - Group identifier of the group to search within if a user elected to search in a group, i.e. "Pumpkin in Canned Goods"
+   * @param {string} [parameters.groupId] - Group identifier of the group to search within. Only required if searching within a group, i.e. "Pumpkin in Canned Goods"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -368,7 +368,7 @@ class Tracker {
    * @param {string} parameters.originalQuery - The current autocomplete search query
    * @param {string} parameters.section - Section the selected item resides within
    * @param {string} [parameters.tr] - Trigger used to select the item (click, etc.)
-   * @param {string} [parameters.groupId] - Group identifier of the group to search within if a user elected to search in a group, i.e. "Pumpkin in Canned Goods"
+   * @param {string} [parameters.groupId] - Group identifier of the group to search within. Only required if searching within a group, i.e. "Pumpkin in Canned Goods"
    * @param {string} [parameters.displayName] - Display name of group of selected item
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -448,7 +448,7 @@ class Tracker {
    * @param {string} searchTerm - Term of submitted autocomplete event
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.userInput - The current autocomplete search query
-   * @param {string} [parameters.groupId] - Group identifier of the group to search within if a user elected to search in a group, i.e. "Pumpkin in Canned Goods"
+   * @param {string} [parameters.groupId] - Group identifier of the group to search within. Only required if searching within a group, i.e. "Pumpkin in Canned Goods"
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
@@ -532,7 +532,7 @@ class Tracker {
    * @param {string} term - Term of submitted autocomplete event
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.originalQuery - The current autocomplete search query
-   * @param {string} [parameters.groupId] - Group identifier of the group to search within if a user elected to search in a group, i.e. "Pumpkin in Canned Goods"
+   * @param {string} [parameters.groupId] - Group identifier of the group to search within. Only required if searching within a group, i.e. "Pumpkin in Canned Goods"
    * @param {string} [parameters.displayName] - Display name of group of selected item
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
