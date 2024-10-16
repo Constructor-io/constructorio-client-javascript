@@ -175,6 +175,7 @@ const local = {
 const store = {
   local,
   session,
+  canUseStorage,
 };
 
 module.exports = store;
