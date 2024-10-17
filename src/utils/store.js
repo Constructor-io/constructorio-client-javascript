@@ -27,7 +27,7 @@ const session = {
       return valueFromOverflow;
     }
 
-    if (canUseStorage('sessionStorage') || typeof sessionStorage === 'undefined') {
+    if (!canUseStorage('sessionStorage') || typeof sessionStorage === 'undefined') {
       return null;
     }
 
@@ -57,12 +57,12 @@ const session = {
       delete this.overflow[key];
     }
 
-    if (canUseStorage('sessionStorage') || typeof sessionStorage !== 'undefined') {
+    if (!canUseStorage('sessionStorage') || typeof sessionStorage !== 'undefined') {
       sessionStorage.removeItem(key);
     }
   },
   key(i) {
-    if (canUseStorage('sessionStorage') || typeof sessionStorage === 'undefined') {
+    if (!canUseStorage('sessionStorage') || typeof sessionStorage === 'undefined') {
       return Object.keys(this.overflow)?.[i];
     }
 
@@ -80,7 +80,7 @@ const session = {
   length() {
     const overflowLength = Object.keys(this.overflow).length;
 
-    if (canUseStorage('sessionStorage') || typeof sessionStorage === 'undefined') {
+    if (!canUseStorage('sessionStorage') || typeof sessionStorage === 'undefined') {
       return overflowLength;
     }
 
@@ -89,7 +89,7 @@ const session = {
   clear() {
     this.overflow = {};
 
-    if (canUseStorage('sessionStorage') || typeof sessionStorage !== 'undefined') {
+    if (!canUseStorage('sessionStorage') || typeof sessionStorage !== 'undefined') {
       sessionStorage.clear();
     }
   },
@@ -105,7 +105,7 @@ const local = {
       return valueFromOverflow;
     }
 
-    if (canUseStorage('localStorage') || typeof localStorage === 'undefined') {
+    if (!canUseStorage('localStorage') || typeof localStorage === 'undefined') {
       return null;
     }
     const valueFromLocal = localStorage.getItem(key);
@@ -134,12 +134,12 @@ const local = {
       delete this.overflow[key];
     }
 
-    if (canUseStorage('localStorage') || typeof localStorage !== 'undefined') {
+    if (!canUseStorage('localStorage') || typeof localStorage !== 'undefined') {
       localStorage.removeItem(key);
     }
   },
   key(i) {
-    if (canUseStorage('localStorage') || typeof localStorage === 'undefined') {
+    if (!canUseStorage('localStorage') || typeof localStorage === 'undefined') {
       return Object.keys(this.overflow)?.[i];
     }
 
@@ -157,7 +157,7 @@ const local = {
   length() {
     const overflowLength = Object.keys(this.overflow).length;
 
-    if (canUseStorage('localStorage') || typeof localStorage === 'undefined') {
+    if (!canUseStorage('localStorage') || typeof localStorage === 'undefined') {
       return overflowLength;
     }
 
@@ -166,7 +166,7 @@ const local = {
   clear() {
     this.overflow = {};
 
-    if (canUseStorage('localStorage') || typeof localStorage !== 'undefined') {
+    if (!canUseStorage('localStorage') || typeof localStorage !== 'undefined') {
       localStorage.clear();
     }
   },
