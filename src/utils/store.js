@@ -57,7 +57,7 @@ const session = {
       delete this.overflow[key];
     }
 
-    if (!canUseStorage('sessionStorage') || typeof sessionStorage !== 'undefined') {
+    if (canUseStorage('sessionStorage') || typeof sessionStorage !== 'undefined') {
       sessionStorage.removeItem(key);
     }
   },
@@ -89,7 +89,7 @@ const session = {
   clear() {
     this.overflow = {};
 
-    if (!canUseStorage('sessionStorage') || typeof sessionStorage !== 'undefined') {
+    if (canUseStorage('sessionStorage') || typeof sessionStorage !== 'undefined') {
       sessionStorage.clear();
     }
   },
@@ -134,7 +134,7 @@ const local = {
       delete this.overflow[key];
     }
 
-    if (!canUseStorage('localStorage') || typeof localStorage !== 'undefined') {
+    if (canUseStorage('localStorage') || typeof localStorage !== 'undefined') {
       localStorage.removeItem(key);
     }
   },
@@ -166,7 +166,7 @@ const local = {
   clear() {
     this.overflow = {};
 
-    if (!canUseStorage('localStorage') || typeof localStorage !== 'undefined') {
+    if (canUseStorage('localStorage') || typeof localStorage !== 'undefined') {
       localStorage.clear();
     }
   },
