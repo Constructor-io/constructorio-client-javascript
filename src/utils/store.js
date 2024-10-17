@@ -1,3 +1,22 @@
+function canUseStorage(type) {
+  let storage;
+  try {
+    storage = window[type];
+    const x = '__storage_test__';
+    storage.setItem(x, x);
+    storage.removeItem(x);
+    return true;
+  } catch (e) {
+    return (
+      e instanceof DOMException
+      && e.name === 'QuotaExceededError'
+      // acknowledge QuotaExceededError only if there's something already stored
+      && storage
+      && storage.length !== 0
+    );
+  }
+}
+
 const session = {
   overflow: {},
   get(key) {
@@ -8,7 +27,7 @@ const session = {
       return valueFromOverflow;
     }
 
-    if (typeof sessionStorage === 'undefined') {
+    if (!canUseStorage('sessionStorage') || typeof sessionStorage === 'undefined') {
       return null;
     }
 
@@ -38,12 +57,12 @@ const session = {
       delete this.overflow[key];
     }
 
-    if (typeof sessionStorage !== 'undefined') {
+    if (canUseStorage('sessionStorage') || typeof sessionStorage !== 'undefined') {
       sessionStorage.removeItem(key);
     }
   },
   key(i) {
-    if (typeof sessionStorage === 'undefined') {
+    if (!canUseStorage('sessionStorage') || typeof sessionStorage === 'undefined') {
       return Object.keys(this.overflow)?.[i];
     }
 
@@ -61,7 +80,7 @@ const session = {
   length() {
     const overflowLength = Object.keys(this.overflow).length;
 
-    if (typeof sessionStorage === 'undefined') {
+    if (!canUseStorage('sessionStorage') || typeof sessionStorage === 'undefined') {
       return overflowLength;
     }
 
@@ -70,7 +89,7 @@ const session = {
   clear() {
     this.overflow = {};
 
-    if (typeof sessionStorage !== 'undefined') {
+    if (canUseStorage('sessionStorage') || typeof sessionStorage !== 'undefined') {
       sessionStorage.clear();
     }
   },
@@ -86,7 +105,7 @@ const local = {
       return valueFromOverflow;
     }
 
-    if (typeof localStorage === 'undefined') {
+    if (!canUseStorage('localStorage') || typeof localStorage === 'undefined') {
       return null;
     }
     const valueFromLocal = localStorage.getItem(key);
@@ -115,12 +134,12 @@ const local = {
       delete this.overflow[key];
     }
 
-    if (typeof localStorage !== 'undefined') {
+    if (canUseStorage('localStorage') || typeof localStorage !== 'undefined') {
       localStorage.removeItem(key);
     }
   },
   key(i) {
-    if (typeof localStorage === 'undefined') {
+    if (!canUseStorage('localStorage') || typeof localStorage === 'undefined') {
       return Object.keys(this.overflow)?.[i];
     }
 
@@ -138,7 +157,7 @@ const local = {
   length() {
     const overflowLength = Object.keys(this.overflow).length;
 
-    if (typeof localStorage === 'undefined') {
+    if (!canUseStorage('localStorage') || typeof localStorage === 'undefined') {
       return overflowLength;
     }
 
@@ -147,7 +166,7 @@ const local = {
   clear() {
     this.overflow = {};
 
-    if (typeof localStorage !== 'undefined') {
+    if (canUseStorage('localStorage') || typeof localStorage !== 'undefined') {
       localStorage.clear();
     }
   },
@@ -156,6 +175,7 @@ const local = {
 const store = {
   local,
   session,
+  canUseStorage,
 };
 
 module.exports = store;
