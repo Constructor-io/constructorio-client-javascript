@@ -73,7 +73,7 @@
     "web-streams-polyfill": "^4.0.0"
   },
   "dependencies": {
-    "@constructor-io/constructorio-id": "^2.4.17",
+    "@constructor-io/constructorio-id": "^2.6.0",
     "crc-32": "^1.2.2"
   },
   "peerDependencies": {
