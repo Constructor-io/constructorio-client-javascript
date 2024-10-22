@@ -229,16 +229,16 @@ class Browse {
    * @param {string} [parameters.sortBy='relevance'] - The sort method for results
    * @param {string} [parameters.sortOrder='descending'] - The sort order for results
    * @param {string} [parameters.section='Products'] - The section name for results
-   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.io/rest_api/browse/queries/ for details
-   * @param {object} [parameters.preFilterExpression] - Faceting expression to scope browse results. Please refer to https://docs.constructor.io/rest_api/collections#add-items-dynamically
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.com/reference/browse-browse-results for details
+   * @param {object} [parameters.preFilterExpression] - Faceting expression to scope browse results. Please refer to https://docs.constructor.com/reference/configuration-collections
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
    * @param {string[]} [parameters.hiddenFacets] - Hidden facets to return
-   * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.io/rest_api/variations_mapping for details
-   * @param {object} [parameters.qsParam] - Parameters listed above can be serialized into a JSON object and parsed through this parameter. Please refer to https://docs.constructor.io/rest_api/browse/queries/
+   * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.com/reference/shared-variations-mapping for details
+   * @param {object} [parameters.qsParam] - Parameters listed above can be serialized into a JSON object and parsed through this parameter. Please refer to https://docs.constructor.com/reference/browse-browse-results
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
-   * @see https://docs.constructor.io/rest_api/browse/results
+   * @see https://docs.constructor.com/reference/shared-results-response-structure
    * @example
    * constructorio.browse.getBrowseResults('group_id', 't-shirts', {
    *     resultsPerPage: 40,
@@ -301,14 +301,14 @@ class Browse {
    * @param {string} [parameters.sortBy='relevance'] - The sort method for results
    * @param {string} [parameters.sortOrder='descending'] - The sort order for results
    * @param {string} [parameters.section='Products'] - The section name for results
-   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.io/rest_api/browse/queries/ for details
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.com/reference/browse-browse-results for details
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
    * @param {string[]} [parameters.hiddenFacets] - Hidden facets to return
-   * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.io/rest_api/variations_mapping for details
+   * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.com/reference/shared-variations-mapping for details
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
-   * @see https://docs.constructor.io/rest_api/browse/items/
+   * @see https://docs.constructor.com/reference/v1-browse-get-browse-items-results
    * @example
    * constructorio.browse.getBrowseResultsForItemIds(['shirt-123', 'shirt-456', 'shirt-789'], {
    *     filters: {
@@ -363,11 +363,11 @@ class Browse {
    * @function getBrowseGroups
    * @param {object} [parameters.filters] - Filters used to refine results
    * @param {string} [parameters.section='Products'] - The section name for results
-   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.io/rest_api/browse/groups/ for details
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.com/reference/v1-browse-get-browse-groups/ for details
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
-   * @see https://docs.constructor.io/rest_api/browse/groups
+   * @see https://docs.constructor.com/reference/v1-browse-get-browse-groups
    * @example
    * constructorio.browse.getBrowseGroups({
    *     filters: {
@@ -419,12 +419,12 @@ class Browse {
    * @param {number} [parameters.page] - The page number of the results (Can't be used together with offset)
    * @param {number} [parameters.offset] - The number of results to skip from the beginning (Can't be used together with page)
    * @param {string} [parameters.section='Products'] - The section name for results
-   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.io/rest_api/browse/facets/ for details
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.com/reference/browse-browse-facets/ for details
    * @param {number} [parameters.resultsPerPage] - The number of results per page to return
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
-   * @see https://docs.constructor.io/rest_api/browse/facets
+   * @see https://docs.constructor.com/reference/browse-browse-facets
    * @example
    * constructorio.browse.getBrowseFacets({
    *     page: 1,
@@ -473,10 +473,10 @@ class Browse {
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @param {object} [parameters] - Additional parameters to refine result set
    * @param {string} [parameters.section='Products'] - The section name for results
-   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.io/rest_api/browse/facet_options/ for details
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.com/reference/v1-browse-get-browse-facet-options for details
    * @param {}
    * @returns {Promise}
-   * @see https://docs.constructor.io/rest_api/browse/facet_options/
+   * @see https://docs.constructor.com/reference/v1-browse-get-browse-facet-options
    * @example
    * constructorio.browse.getBrowseFacetOptions('price', {
    * });
