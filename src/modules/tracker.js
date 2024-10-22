@@ -592,9 +592,9 @@ class Tracker {
   }
 
   /**
-   * Send search results loaded v2 event to API
-   * @private
-   * @function trackSearchResultsLoadedV2
+   * Send search results loaded  event to API
+   *
+   * @function trackSearchResultsLoaded
    * @param {string} searchTerm - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.url - URL of the search results page
@@ -606,12 +606,13 @@ class Tracker {
    * @param {string} [parameters.sortOrder] - Sort order ('ascending' or 'descending')
    * @param {string} [parameters.sortBy] - Sorting method
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description User viewed a search product listing page
    * @example
-   * constructorio.tracker.trackSearchResultsLoadedV2(
+   * constructorio.tracker.trackSearchResultsLoaded(
    *     'T-Shirt',
    *     {
    *         resultCount: 167,
@@ -623,7 +624,7 @@ class Tracker {
    *     },
    * );
    */
-  trackSearchResultsLoadedV2(searchTerm, parameters, networkParameters = {}) {
+  trackSearchResultsLoaded(searchTerm, parameters, networkParameters = {}) {
     // Ensure term is provided (required)
     if (searchTerm && typeof searchTerm === 'string') {
       // Ensure parameters are provided (required)
@@ -633,9 +634,10 @@ class Tracker {
           num_results,
           numResults = num_results,
           result_count,
-          resultCount = numResults || result_count,
-          customer_ids,
-          item_ids,
+          customerIds,
+          customer_ids = customerIds,
+          itemIds,
+          item_ids = itemIds,
           items = customer_ids || item_ids,
           result_page,
           resultPage = result_page,
@@ -647,18 +649,21 @@ class Tracker {
           sortBy = sort_by,
           selected_filters,
           selectedFilters = selected_filters,
-          url,
+          url = helpers.getWindowLocation()?.href || 'N/A',
           section,
+          analyticsTags,
+          resultCount = numResults || result_count || items?.length || 0,
         } = parameters;
         const queryParams = {};
         let transformedItems;
 
         if (items && Array.isArray(items) && items.length !== 0) {
-          transformedItems = items;
+          const trimmedItems = items.slice(0, 100);
+
           if (typeof items[0] === 'string' || typeof items[0] === 'number') {
-            transformedItems = items.map((itemId) => ({ item_id: String(itemId) }));
+            transformedItems = trimmedItems.map((itemId) => ({ item_id: String(itemId) }));
           } else {
-            transformedItems = items.map((item) => helpers.toSnakeCaseKeys(item, false));
+            transformedItems = trimmedItems.map((item) => helpers.toSnakeCaseKeys(item, false));
           }
         }
 
@@ -675,6 +680,7 @@ class Tracker {
           sort_order: sortOrder,
           sort_by: sortBy,
           selected_filters: selectedFilters,
+          analytics_tags: analyticsTags,
           url,
           section,
         };
@@ -692,75 +698,6 @@ class Tracker {
           networkParameters,
         );
         this.requests.send();
-        return true;
-      }
-
-      this.requests.send();
-
-      return new Error('parameters are required of type object');
-    }
-
-    this.requests.send();
-
-    return new Error('term is a required parameter of type string');
-  }
-
-  /**
-   * Send search results loaded event to API
-   *
-   * @function trackSearchResultsLoaded
-   * @param {string} term - Search results query term
-   * @param {object} parameters - Additional parameters to be sent with request
-   * @param {number} parameters.numResults - Total number of results
-   * @param {string[]} parameters.itemIds - List of product item unique identifiers in search results listing
-   * @param {object} [networkParameters] - Parameters relevant to the network request
-   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
-   * @returns {(true|Error)}
-   * @description User viewed a search product listing page
-   * @example
-   * constructorio.tracker.trackSearchResultsLoaded(
-   *     'T-Shirt',
-   *     {
-   *         numResults: 167,
-   *         itemIds: ['KMH876', 'KMH140', 'KMH437'],
-   *     },
-   * );
-   */
-  trackSearchResultsLoaded(term, parameters, networkParameters = {}) {
-    // Ensure term is provided (required)
-    if (term && typeof term === 'string') {
-      // Ensure parameters are provided (required)
-      if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-        const url = `${this.options.serviceUrl}/behavior?`;
-        const queryParams = { action: 'search-results', term };
-        const {
-          num_results,
-          numResults = num_results,
-          customer_ids,
-          customerIds = customer_ids,
-          item_ids,
-          itemIds = item_ids,
-        } = parameters;
-        let customerIDs;
-
-        if (!helpers.isNil(numResults)) {
-          queryParams.num_results = numResults;
-        }
-
-        // Ensure support for both item_ids and customer_ids as parameters
-        if (itemIds && Array.isArray(itemIds)) {
-          customerIDs = itemIds;
-        } else if (customerIds && Array.isArray(customerIds)) {
-          customerIDs = customerIds;
-        }
-
-        if (customerIDs && Array.isArray(customerIDs) && customerIDs.length) {
-          queryParams.customer_ids = customerIDs.slice(0, 100).join(',');
-        }
-
-        this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`, undefined, undefined, networkParameters);
-        this.requests.send();
-
         return true;
       }
 
@@ -1221,7 +1158,6 @@ class Tracker {
       const bodyParams = {};
       const {
         result_count,
-        resultCount = result_count,
         result_page,
         resultPage = result_page,
         result_id,
@@ -1234,6 +1170,7 @@ class Tracker {
         numResultsViewed = num_results_viewed,
         items,
         analyticsTags,
+        resultCount = result_count || items?.length || 0,
       } = parameters;
 
       if (!helpers.isNil(resultCount)) {
@@ -1474,7 +1411,6 @@ class Tracker {
       const {
         section = 'Products',
         result_count,
-        resultCount = result_count,
         result_page,
         resultPage = result_page,
         result_id,
@@ -1492,6 +1428,7 @@ class Tracker {
         filterValue = filter_value,
         items,
         analyticsTags,
+        resultCount = result_count || items?.length || 0,
       } = parameters;
 
       if (section) {
