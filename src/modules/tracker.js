@@ -989,7 +989,7 @@ class Tracker {
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description User performed an action indicating interest in an item (add to cart, add to wishlist, etc.)
-   * @see https://docs.constructor.io/rest_api/behavioral_logging/conversions
+   * @see https://docs.constructor.com/docs/integrating-with-constructor-behavioral-tracking-data-driven-event-tracking
    * @example
    * constructorio.tracker.trackConversion(
    *     'T-Shirt',
