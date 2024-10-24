@@ -20,7 +20,7 @@ class RequestQueue {
       : false; // Defaults to 'false'
 
     // Mark if page environment is unloading
-    helpers.addEventListener('beforeunload', () => {
+    helpers.addEventListener('pagehide', () => {
       this.pageUnloading = true;
     });
 
