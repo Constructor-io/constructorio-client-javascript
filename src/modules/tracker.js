@@ -1646,6 +1646,116 @@ class Tracker {
   }
 
   /**
+   * Send browse redirect event to API
+   * @private
+   * @function trackBrowseRedirect
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.searchTerm - The search query that caused redirect
+   * @param {string} parameters.filterName - Filter name
+   * @param {string} parameters.filterValue - Filter value
+   * @param {string} [parameters.userInput] - The text that a user had typed at the moment when submitting search request
+   * @param {string} [parameters.redirectToUrl] - URL of the  page to which user is redirected
+   * @param {string} [parameters.section="Products"] - Index section
+   * @param {object} [parameters.selectedFilters] - Selected filters
+   * @param {string} [parameters.sortOrder] - Sort order ('ascending' or 'descending')
+   * @param {string} [parameters.sortBy] - Sorting method
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User got redirected to a browse product listing page
+   * @example
+   * constructorio.tracker.trackBrowseRedirect(
+   *     {
+   *         searchTerm: "books",
+   *         filterName: 'brand',
+   *         filterValue: 'XYZ',
+   *         redirectToUrl: 'https://demo.constructor.io/books',
+   *         selectedFilters: { brand: ['foo'], color: ['black'] },
+   *         sortOrder: 'ascending',
+   *         sortBy: 'price',
+   *     },
+   * );
+   */
+  trackBrowseRedirect(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/browse_redirect?`;
+      const bodyParams = {};
+      const {
+        searchTerm,
+        userInput,
+        section = 'Products',
+        selectedFilters,
+        redirectToUrl,
+        sortOrder,
+        sortBy,
+        filterName,
+        filterValue,
+        analyticsTags,
+      } = parameters;
+
+      if (searchTerm) {
+        bodyParams.search_term = searchTerm;
+      }
+
+      if (userInput) {
+        bodyParams.user_input = userInput;
+      }
+
+      if (redirectToUrl) {
+        bodyParams.redirect_to_url = redirectToUrl;
+      }
+
+      if (section) {
+        bodyParams.section = section;
+      }
+
+      if (selectedFilters) {
+        bodyParams.selected_filters = selectedFilters;
+      }
+
+      if (sortOrder) {
+        bodyParams.sort_order = sortOrder;
+      }
+
+      if (sortBy) {
+        bodyParams.sort_by = sortBy;
+      }
+
+      if (filterName) {
+        bodyParams.filter_name = filterName;
+      }
+
+      if (filterValue) {
+        bodyParams.filter_value = filterValue;
+      }
+
+      if (analyticsTags) {
+        bodyParams.analytics_tags = analyticsTags;
+      }
+
+      const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
+
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
    * Send generic result click event to API
    *
    * @function trackGenericResultClick
