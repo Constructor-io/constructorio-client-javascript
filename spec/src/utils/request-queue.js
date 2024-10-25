@@ -25,7 +25,7 @@ dotenv.config();
 const bundled = process.env.BUNDLED === 'true';
 const testApiKey = process.env.TEST_REQUEST_API_KEY;
 
-describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
+describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
   // Don't run tests in bundle context, as these tests are for library internals
   if (!bundled) {
     this.timeout(3000);

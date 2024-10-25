@@ -49,14 +49,14 @@ class HumanityCheck {
 
   // Return boolean indicating if useragent matches botlist
   isBot() {
-    if (this.getIsHumanFromSessionStorage()) {
-      return false;
-    }
-
     const { userAgent, webdriver } = helpers.getNavigator();
     const botRegex = new RegExp(`(${botList.join('|')})`);
+    const isBot = Boolean(userAgent.match(botRegex)) || Boolean(webdriver);
 
-    return Boolean(userAgent.match(botRegex)) || Boolean(webdriver);
+    // Always check the user agent and webdriver fields first to determine if the user is a bot
+    // ... If it isn't, we'll follow up the check by looking at the storage variable to make sure
+    // ... the user passes the human check
+    return isBot || !this.getIsHumanFromSessionStorage();
   }
 }
 
