@@ -25,12 +25,13 @@ dotenv.config();
 const bundled = process.env.BUNDLED === 'true';
 const testApiKey = process.env.TEST_REQUEST_API_KEY;
 
-describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
+describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
   // Don't run tests in bundle context, as these tests are for library internals
   if (!bundled) {
     this.timeout(3000);
 
     const storageKey = '_constructorio_requests';
+    const humanityStorageKey = '_constructorio_is_human';
     const waitInterval = 2000;
     let requestQueueOptions = {};
     const piiExamples = [
@@ -179,7 +180,8 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
         helpers.clearStorage();
       });
 
-      it('Should add url requests to the queue', () => {
+      it('Should add url requests to the queue if the user is human', async () => {
+        store.session.set(humanityStorageKey, true);
         const requests = new RequestQueue(requestQueueOptions);
 
         requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
@@ -191,7 +193,8 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
         expect(store.local.get(storageKey)).to.be.an('array').length(3);
       });
 
-      it('Should add object requests to the queue - POST with body', () => {
+      it('Should add object requests to the queue - POST with body if the user is human', () => {
+        store.session.set(humanityStorageKey, true);
         const requests = new RequestQueue(requestQueueOptions);
 
         requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'session_start' });
@@ -218,6 +221,7 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
       });
 
       it('Should obfuscate requests if PII is detected', () => {
+        store.session.set(humanityStorageKey, true); // Enabled for the test to run
         const requests = new RequestQueue(requestQueueOptions);
         const allExamples = [];
 
@@ -252,6 +256,7 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
       });
 
       it('Should not obfuscate requests if no PII is detected', () => {
+        store.session.set(humanityStorageKey, true); // Enabled for the test to run
         const requests = new RequestQueue(requestQueueOptions);
 
         notPiiExamples.forEach((query) => {
@@ -341,6 +346,7 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
 
       describe('Single Instance', () => {
         it('Should send all url tracking requests if queue is populated and user is human', (done) => {
+          store.session.set(humanityStorageKey, true);
           const requests = new RequestQueue(requestQueueOptions);
 
           requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
@@ -359,6 +365,7 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
         });
 
         it('Should send all object tracking requests if queue is populated and user is human - POST with body', (done) => {
+          store.session.set(humanityStorageKey, true);
           const requests = new RequestQueue(requestQueueOptions);
 
           requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'session_start' });
@@ -376,14 +383,21 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
           }, waitInterval);
         });
 
-        it('Should not send tracking requests if queue is populated and user is not human', (done) => {
+        it('Should not send tracking requests if queue was populated and user is not human', (done) => {
           const requests = new RequestQueue(requestQueueOptions);
+
+          // Set humanity session variable in order to queue some events
+          store.session.set(humanityStorageKey, true);
 
           requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
           requests.queue('https://ac.cnstrc.com/behavior?action=focus');
           requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
           expect(RequestQueue.get()).to.be.an('array').length(3);
+
+          // Remove humanity session variable to emulate a bot trying to send requests
+          store.session.set(humanityStorageKey, false);
+
           requests.send();
 
           setTimeout(() => {
@@ -394,6 +408,9 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
 
         it('Should not send tracking requests if queue is populated and user is human and page is unloading', (done) => {
           const requests = new RequestQueue(requestQueueOptions);
+
+          // Set humanity session variable in order to queue some events
+          store.session.set(humanityStorageKey, true);
 
           requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
           requests.queue('https://ac.cnstrc.com/behavior?action=focus');
@@ -412,6 +429,9 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
 
         it('Should not send tracking requests if queue is populated and user is human and page is unloading and send was called before unload', (done) => {
           const requests = new RequestQueue(requestQueueOptions);
+
+          // Set humanity session variable in order to queue some events
+          store.session.set(humanityStorageKey, true);
 
           requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
           requests.queue('https://ac.cnstrc.com/behavior?action=focus');
@@ -728,6 +748,9 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
           const sendSpy1 = sinon.spy(requests1, 'send');
           const sendSpy2 = sinon.spy(requests2, 'send');
 
+          // Set humanity session variable in order to queue some events
+          store.session.set(humanityStorageKey, true);
+
           requests1.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'number_one' });
           requests1.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'number_two' });
           requests1.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'number_three' });
@@ -753,6 +776,9 @@ describe.only('ConstructorIO - Utils - Request Queue', function utilsRequestQueu
           const requests2 = new RequestQueue(requestQueueOptions);
           const sendSpy1 = sinon.spy(requests1, 'send');
           const sendSpy2 = sinon.spy(requests2, 'send');
+
+          // Set humanity session variable in order to queue some events
+          store.session.set(humanityStorageKey, true);
 
           requests1.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'number_one' });
           requests2.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'number_two' });
