@@ -17,7 +17,7 @@ const bundled = process.env.BUNDLED === 'true';
 describe('ConstructorIO - Utils - Humanity Check', () => {
   // Don't run tests in bundle context, as these tests are for library internals
   if (!bundled) {
-    describe('isHuman', () => {
+    describe('constructor', () => {
       const storageKey = '_constructorio_is_human';
       let cleanup;
 
@@ -37,28 +37,20 @@ describe('ConstructorIO - Utils - Humanity Check', () => {
       it('Should not have isHuman flag set on initial instantiation', () => {
         const humanity = new HumanityCheck();
 
-        expect(humanity.isHuman()).to.equal(false);
+        expect(humanity.hasPerformedHumanEvent).to.equal(false);
         expect(store.session.get(storageKey)).to.equal(null);
       });
 
       it('Should have isHuman flag set if human-like actions are detected', () => {
         const humanity = new HumanityCheck();
 
-        expect(humanity.isHuman()).to.equal(false);
+        expect(humanity.hasPerformedHumanEvent).to.equal(false);
         helpers.triggerResize();
-        expect(humanity.isHuman()).to.equal(true);
-        expect(store.session.get(storageKey)).to.equal(true);
-      });
-
-      it('Should have isHuman flag set if session variable is set', () => {
-        const humanity = new HumanityCheck();
-
-        expect(humanity.isHuman()).to.equal(false);
-        store.session.set(storageKey, true);
-        expect(humanity.isHuman()).to.equal(true);
+        expect(humanity.hasPerformedHumanEvent).to.equal(true);
         expect(store.session.get(storageKey)).to.equal(true);
       });
     });
+
     describe('isBot', () => {
       const storageKey = '_constructorio_is_human';
       let cleanup;
@@ -88,12 +80,12 @@ describe('ConstructorIO - Utils - Humanity Check', () => {
         expect(store.session.get(storageKey)).to.equal(null);
       });
 
-      it('Should return true if it detects a webdriver and the session variable is set', () => {
+      it('Should return true if it detects a webdriver and the session variable is set via human-like action', () => {
         window.navigator.webdriver = true;
         const humanity = new HumanityCheck();
 
         expect(humanity.isBot()).to.equal(true);
-        store.session.set(storageKey, true);
+        helpers.triggerResize();
         expect(humanity.isBot()).to.equal(true);
         expect(store.session.get(storageKey)).to.equal(true);
       });
@@ -106,12 +98,12 @@ describe('ConstructorIO - Utils - Humanity Check', () => {
         expect(store.session.get(storageKey)).to.equal(null);
       });
 
-      it('Should return true if it detects a bot user agent and the session variable is set', () => {
+      it('Should return true if it detects a bot user agent and the session variable is set via human-like action', () => {
         window.navigator.__defineGetter__('userAgent', () => 'Mozilla/5.0 (Linux; Android 5.0) AppleWebKit/537.36 (KHTML, like Gecko) Mobile Safari/537.36 (compatible; Bytespider; spider-feedback@bytedance.com)');
         const humanity = new HumanityCheck();
 
         expect(humanity.isBot()).to.equal(true);
-        store.session.set(storageKey, true);
+        helpers.triggerResize();
         expect(humanity.isBot()).to.equal(true);
         expect(store.session.get(storageKey)).to.equal(true);
       });
@@ -122,11 +114,11 @@ describe('ConstructorIO - Utils - Humanity Check', () => {
         expect(humanity.isBot()).to.equal(true);
       });
 
-      it('Should return false if it does not detect the user is a bot user nor webdriver and the session variable is set', () => {
+      it('Should return false if it does not detect the user is a bot/webdriver and the session variable is set via human-like action', () => {
         const humanity = new HumanityCheck();
 
         expect(humanity.isBot()).to.equal(true);
-        store.session.set(storageKey, true);
+        helpers.triggerResize();
         expect(humanity.isBot()).to.equal(false);
       });
     });
