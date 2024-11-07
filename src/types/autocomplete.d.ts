@@ -20,6 +20,7 @@ export interface IAutocompleteParameters {
   variationsMap?: VariationsMap;
   preFilterExpression?: FilterExpression;
   qsParam?: Record<string, any>;
+  fmtOptions?: FmtOptions;
 }
 
 declare class Autocomplete {

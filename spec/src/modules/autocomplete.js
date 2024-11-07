@@ -410,6 +410,29 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should return a response with a valid query, section and fmtOptions', (done) => {
+      const hiddenFields = ['testField', 'hiddenField2'];
+      const fmtOptions = { hidden_fields: hiddenFields };
+      const { autocomplete } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      autocomplete.getAutocompleteResults(query, { fmtOptions }, {}).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const item = res.sections.Products.find((product) => product.data.testField);
+        const itemData = item && item.data;
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('sections').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(itemData).to.have.property('testField').to.eql('hiddenFieldValue');
+        expect(res.request.fmt_options.hidden_fields).to.eql(hiddenFields);
+        expect(requestedUrlParams.fmt_options).to.have.property('hidden_fields').to.eql(hiddenFields);
+        done();
+      });
+    });
+
     it('Should return a return a response with qs param properly parsed', (done) => {
       const qsParam = {
         us: 'dogs',
