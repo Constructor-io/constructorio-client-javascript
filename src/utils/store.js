@@ -7,8 +7,9 @@ function canUseStorage(type) {
     storage.removeItem(x);
     return true;
   } catch (e) {
-    return (
-      e instanceof DOMException
+    try {
+      return (
+        e instanceof DOMException
       && (e.name === 'QuotaExceededError'
         || e.name === 'QUOTA_EXCEEDED_ERR'
         || e.name === 'NS_ERROR_DOM_QUOTA_REACHED'
@@ -16,7 +17,11 @@ function canUseStorage(type) {
         || e.toString().indexOf('QuotaExceededError') !== -1)
       && storage
       && storage.length !== 0
-    );
+      );
+    // Catch in case DOMException does not exist in domless environments
+    } catch {
+      return false;
+    }
   }
 }
 
