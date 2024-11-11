@@ -694,10 +694,10 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       tr: 'click',
       groupId: 'All',
       displayName: 'display-name',
+      itemId: '12345',
     };
     const v2Parameters = {
       variationId: '12345-A',
-      itemId: '12345',
     };
 
     it('V2 Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -724,7 +724,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         // Body
         expect(bodyParams).to.have.property('user_input').to.equal(requiredParameters.originalQuery);
         expect(bodyParams).to.have.property('tr').to.equal(optionalParameters.tr);
-        expect(bodyParams).to.have.property('item_id').to.equal(v2Parameters.itemId);
+        expect(bodyParams).to.have.property('item_id').to.equal(optionalParameters.itemId);
         expect(bodyParams).to.have.property('variation_id').to.equal(v2Parameters.variationId);
         expect(bodyParams).to.have.property('section').to.deep.equal(requiredParameters.section);
         expect(bodyParams).to.have.property('item_name').to.equal(term);
@@ -811,6 +811,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         tr: 'click',
         group_id: 'all',
         display_name: 'display-name',
+        item_id: '12345',
       };
 
       tracker.on('success', (responseParams) => {
@@ -825,6 +826,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
         expect(requestParams).to.have.property('original_query').to.equal(snakeCaseParameters.original_query);
+        expect(requestParams).to.have.property('item_id').to.equal(snakeCaseParameters.item_id);
         expect(requestParams).to.have.property('section').to.equal(snakeCaseParameters.section);
         expect(requestParams).to.have.property('group').to.deep.equal({
           display_name: snakeCaseParameters.display_name,
@@ -963,6 +965,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         // Request
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('tr').to.equal(optionalParameters.tr);
+        expect(requestParams).to.have.property('item_id').to.equal(optionalParameters.itemId);
         expect(requestParams).to.have.property('group').to.deep.equal({
           group_id: optionalParameters.groupId,
           display_name: optionalParameters.displayName,
