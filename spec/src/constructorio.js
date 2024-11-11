@@ -357,7 +357,7 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
 
     it('Should clear the user id in client options', () => {
       const oldUserId = 'old_user_id';
-      const newUserId = '';
+      const newUserId = null;
       const instance = new ConstructorIO({
         apiKey: validApiKey,
         userId: oldUserId,
@@ -374,7 +374,7 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
 
     it('Should clear the user id from the options of modules', () => {
       const oldUserId = 'old_user_id';
-      const newUserId = '';
+      const newUserId = null;
       const instance = new ConstructorIO({
         apiKey: validApiKey,
         userId: oldUserId,
