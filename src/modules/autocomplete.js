@@ -52,6 +52,7 @@ function createAutocompleteUrl(query, parameters, options) {
       variationsMap,
       preFilterExpression,
       qsParam,
+      fmtOptions,
     } = parameters;
 
     // Pull results number from parameters
@@ -81,6 +82,11 @@ function createAutocompleteUrl(query, parameters, options) {
     // Pull filter expression from parameters
     if (preFilterExpression) {
       queryParams.pre_filter_expression = JSON.stringify(preFilterExpression);
+    }
+
+    // Pull format options from parameters
+    if (fmtOptions) {
+      queryParams.fmt_options = fmtOptions;
     }
 
     // Pull hidden fields from parameters
@@ -136,6 +142,7 @@ class Autocomplete {
    * @param {object} [parameters.filters] - Key / value mapping (dictionary) of filters used to refine results
    * @param {object} [parameters.filtersPerSection] - Filters used to refine results per section
    * @param {object} [parameters.resultsPerSection] - Number of results to return (value) per section (key)
+   * @param {object} [parameters.fmtOptions] - An object containing options to format different aspects of the response. Please refer to https://docs.constructor.com/reference/v1-autocomplete-get-autocomplete-results for details
    * @param {object} [parameters.preFilterExpression] - Faceting expression to scope autocomplete results. Please refer to https://docs.constructor.com/reference/configuration-collections for details
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
    * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.com/reference/shared-variations-mapping for details
