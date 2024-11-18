@@ -727,6 +727,7 @@ class Tracker {
    * @param {string} [parameters.numResultsPerPage] - Number of results per page
    * @param {object} [parameters.selectedFilters] - Key - Value map of selected filters
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -770,6 +771,7 @@ class Tracker {
           selected_filters,
           selectedFilters = selected_filters,
           section,
+          analyticsTags,
         } = parameters;
         const bodyParams = {
           item_name: itemName,
@@ -783,6 +785,7 @@ class Tracker {
           selected_filters: selectedFilters,
           section,
           search_term: searchTerm,
+          analytics_tags: analyticsTags,
         };
         const queryParams = {};
 
@@ -828,6 +831,7 @@ class Tracker {
    * @param {string} [parameters.resultId] - Search result identifier (returned in response from Constructor)
    * @param {string} [parameters.itemIsConvertible] - Whether or not an item is available for a conversion
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -864,6 +868,7 @@ class Tracker {
           item_is_convertible,
           itemIsConvertible = item_is_convertible,
           section,
+          analyticsTags,
         } = parameters;
 
         // Ensure support for both item_name and name as parameters
@@ -890,6 +895,10 @@ class Tracker {
 
         if (section) {
           queryParams.section = section;
+        }
+
+        if (analyticsTags) {
+          queryParams.analytics_tags = analyticsTags;
         }
 
         this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`, undefined, undefined, networkParameters);

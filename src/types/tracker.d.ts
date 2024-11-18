@@ -97,6 +97,7 @@ declare class Tracker {
       resultId?: string;
       itemIsConvertible?: string;
       section?: string;
+      analyticsTags?: Record<string, string>;
     },
     networkParameters?: NetworkParameters
   ): true | Error;

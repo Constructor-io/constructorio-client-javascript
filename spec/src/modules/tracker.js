@@ -2560,6 +2560,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       variationId: 'foobar',
       resultId: 'result-id',
       section: 'Products',
+      analyticsTags: testAnalyticsTag,
     };
     const v2Parameters = {
       resultCount: 1337,
@@ -2569,6 +2570,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       selectedFilters: {
         test: ['test'],
       },
+      analyticsTags: testAnalyticsTag,
     };
 
     it('Backwards Compatibility - V2 Should respond with a valid response when term and snake cased parameters are provided', (done) => {
@@ -2657,6 +2659,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(bodyParams).to.have.property('result_count').to.equal(v2Parameters.resultCount);
         expect(bodyParams).to.have.property('num_results_per_page').to.equal(v2Parameters.numResultsPerPage);
         expect(bodyParams).to.have.property('selected_filters').to.deep.equal(v2Parameters.selectedFilters);
+        expect(bodyParams).to.have.property('analytics_tags').to.deep.equal(testAnalyticsTag);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -2860,6 +2863,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('result_id').to.equal(optionalParameters.resultId);
         expect(requestParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
+        expect(requestParams).to.have.property('analytics_tags').to.deep.equal(testAnalyticsTag);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('GET');
