@@ -155,7 +155,7 @@ class ConstructorIO {
    */
   setClientOptions(options) {
     if (Object.keys(options).length) {
-      const { apiKey, segments, testCells, sessionId, userId = '' } = options;
+      const { apiKey, segments, testCells, sessionId, userId } = options;
 
       if (apiKey) {
         this.options.apiKey = apiKey;
@@ -174,7 +174,10 @@ class ConstructorIO {
         this.options.sessionId = sessionId;
       }
 
-      this.options.userId = userId;
+      // If User ID is passed
+      if ('userId' in options) {
+        this.options.userId = userId;
+      }
     }
   }
 }
