@@ -8,7 +8,8 @@ function canUseStorage(type) {
     return true;
   } catch (e) {
     return (
-      e instanceof DOMException
+      typeof DOMException !== 'undefined'
+      && e instanceof DOMException
       && (e.name === 'QuotaExceededError'
         || e.name === 'QUOTA_EXCEEDED_ERR'
         || e.name === 'NS_ERROR_DOM_QUOTA_REACHED'
