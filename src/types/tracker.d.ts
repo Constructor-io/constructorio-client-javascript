@@ -22,7 +22,7 @@ declare class Tracker {
       userInput: string;
       analyticsTags?: Record<string, string>;
     },
-    networkParameters?: NetworkParameters,
+    networkParameters?: NetworkParameters
   ): true | Error;
 
   trackItemDetailLoad(
@@ -44,6 +44,7 @@ declare class Tracker {
       tr?: string;
       groupId?: string;
       displayName?: string;
+      itemId?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -312,7 +313,7 @@ declare class Tracker {
 
   trackAssistantSearchSubmit(
     parameters: {
-      intent: string,
+      intent: string;
       searchTerm: string;
       userInput: string;
       searchResultId: string;
