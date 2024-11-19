@@ -370,6 +370,7 @@ class Tracker {
    * @param {string} [parameters.tr] - Trigger used to select the item (click, etc.)
    * @param {string} [parameters.groupId] - Group identifier of the group to search within. Only required if searching within a group, i.e. "Pumpkin in Canned Goods"
    * @param {string} [parameters.displayName] - Display name of group of selected item
+   * @param {string} [parameters.itemId] - Item id of the selected item
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -383,6 +384,7 @@ class Tracker {
    *         tr: 'click',
    *         groupId: '88JU230',
    *         displayName: 'apparel',
+   *         itemId: '12345',
    *      },
    * );
    */
@@ -404,6 +406,8 @@ class Tracker {
           groupId = group_id,
           display_name,
           displayName = display_name,
+          item_id,
+          itemId = item_id,
         } = parameters;
 
         if (originalQuery) {
@@ -423,6 +427,10 @@ class Tracker {
             group_id: groupId,
             display_name: displayName,
           };
+        }
+
+        if (itemId) {
+          queryParams.item_id = itemId;
         }
 
         this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`, undefined, undefined, networkParameters);
