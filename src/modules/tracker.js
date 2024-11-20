@@ -687,7 +687,7 @@ class Tracker {
           selected_filters: selectedFilters,
           url,
           section,
-          analyticsTags,
+          analytics_tags: analyticsTags,
         };
 
         const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
