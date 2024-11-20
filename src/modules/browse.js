@@ -251,6 +251,9 @@ class Browse {
    *     filters: {
    *         size: 'medium'
    *     },
+   *     filterMatchTypes: {
+   *        size: 'all'
+   *     }
    * });
    */
   getBrowseResults(filterName, filterValue, parameters, networkParameters = {}) {
@@ -321,6 +324,9 @@ class Browse {
    *     filters: {
    *         size: 'medium'
    *     },
+   *     filterMatchTypes: {
+   *        size: 'all'
+   *     }
    * });
    */
   getBrowseResultsForItemIds(itemIds, parameters, networkParameters = {}) {
