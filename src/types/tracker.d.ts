@@ -84,6 +84,7 @@ declare class Tracker {
       sortOrder?: string;
       sortBy?: string;
       section?: string;
+      analyticsTags?: Record<string, string>;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
