@@ -359,4 +359,5 @@ module.exports = [
   'Nimbostratus-Bot',
   'Bytespider',
   'BTTAgent',
+  'OnCrawl',
 ];
