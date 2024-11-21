@@ -8323,7 +8323,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     it('Should throw an error when providing no messageType parameter', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.on(null, () => { })).to.be.an('error');
+      expect(tracker.on(null, () => {})).to.be.an('error');
     });
 
     it('Should throw an error when providing an invalid callback parameter', () => {

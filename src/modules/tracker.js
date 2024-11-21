@@ -737,7 +737,7 @@ class Tracker {
    *     },
    * );
    */
-  trackSearchResultsLoaded(term, parameters, networkParameters = {}) { // eslint-disable-line complexity
+  trackSearchResultsLoaded(term, parameters, networkParameters = {}) {
     // Ensure term is provided (required)
     if (term && typeof term === 'string') {
       // Ensure parameters are provided (required)
