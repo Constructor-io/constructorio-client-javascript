@@ -1966,12 +1966,14 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const v2Parameters = {
       url: 'test',
       resultPage: 3,
+      resultCount: 10,
       resultId: 'test',
       sortOrder: 'descending',
       sortBy: 'test',
       selectedFilters: { test: ['test'] },
       section: 'Products',
       analyticsTags: testAnalyticsTag,
+      items: [{ itemId: 1 }, { item_id: 2 }],
     };
 
     it('Backwards Compatibility - V2 Should respond with a valid response when term and snake cased parameters are provided', (done) => {
@@ -2108,6 +2110,36 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackSearchResultsLoaded(term, snakeCaseParameters)).to.equal(true);
+    });
+
+    it('Backwards Compatibility - Should respond with a valid response when v2 parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('num_results').to.equal(v2Parameters.resultCount.toString());
+        expect(requestParams).to.have.property('customer_ids').to.equal(v2Parameters.items.map((item) => item.itemId || item.item_id).join(','));
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackSearchResultsLoaded(term, v2Parameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -8291,7 +8323,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     it('Should throw an error when providing no messageType parameter', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.on(null, () => {})).to.be.an('error');
+      expect(tracker.on(null, () => { })).to.be.an('error');
     });
 
     it('Should throw an error when providing an invalid callback parameter', () => {

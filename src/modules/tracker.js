@@ -737,7 +737,7 @@ class Tracker {
    *     },
    * );
    */
-  trackSearchResultsLoaded(term, parameters, networkParameters = {}) {
+  trackSearchResultsLoaded(term, parameters, networkParameters = {}) { // eslint-disable-line complexity
     // Ensure term is provided (required)
     if (term && typeof term === 'string') {
       // Ensure parameters are provided (required)
@@ -746,11 +746,14 @@ class Tracker {
         const queryParams = { action: 'search-results', term };
         const {
           num_results,
-          numResults = num_results,
+          result_count,
+          resultCount = result_count,
+          numResults = num_results || resultCount,
           customer_ids,
           customerIds = customer_ids,
           item_ids,
           itemIds = item_ids,
+          items,
         } = parameters;
         let customerIDs;
 
@@ -763,6 +766,8 @@ class Tracker {
           customerIDs = itemIds;
         } else if (customerIds && Array.isArray(customerIds)) {
           customerIDs = customerIds;
+        } else if (items && Array.isArray(items)) {
+          customerIDs = items.map((item) => item.item_id || item.itemId);
         }
 
         if (customerIDs && Array.isArray(customerIDs) && customerIDs.length) {
