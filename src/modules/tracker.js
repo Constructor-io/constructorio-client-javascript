@@ -642,7 +642,6 @@ class Tracker {
           num_results,
           numResults = num_results,
           result_count,
-          resultCount = numResults || result_count,
           customer_ids,
           item_ids,
           items = customer_ids || item_ids,
@@ -656,19 +655,21 @@ class Tracker {
           sortBy = sort_by,
           selected_filters,
           selectedFilters = selected_filters,
-          url,
+          url = helpers.getWindowLocation()?.href || 'N/A',
           section,
           analyticsTags,
+          resultCount = numResults ?? result_count ?? items?.length ?? 0,
         } = parameters;
         const queryParams = {};
         let transformedItems;
 
         if (items && Array.isArray(items) && items.length !== 0) {
-          transformedItems = items;
+          const trimmedItems = items.slice(0, 100);
+
           if (typeof items[0] === 'string' || typeof items[0] === 'number') {
-            transformedItems = items.map((itemId) => ({ item_id: String(itemId) }));
+            transformedItems = trimmedItems.map((itemId) => ({ item_id: String(itemId) }));
           } else {
-            transformedItems = items.map((item) => helpers.toSnakeCaseKeys(item, false));
+            transformedItems = trimmedItems.map((item) => helpers.toSnakeCaseKeys(item, false));
           }
         }
 
@@ -748,7 +749,7 @@ class Tracker {
           num_results,
           result_count,
           resultCount = result_count,
-          numResults = num_results || resultCount,
+          numResults = num_results ?? resultCount,
           customer_ids,
           customerIds = customer_ids,
           item_ids,
@@ -1246,7 +1247,6 @@ class Tracker {
       const bodyParams = {};
       const {
         result_count,
-        resultCount = result_count,
         result_page,
         resultPage = result_page,
         result_id,
@@ -1259,6 +1259,7 @@ class Tracker {
         numResultsViewed = num_results_viewed,
         items,
         analyticsTags,
+        resultCount = result_count || items?.length || 0,
       } = parameters;
 
       if (!helpers.isNil(resultCount)) {

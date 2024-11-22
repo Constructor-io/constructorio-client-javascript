@@ -1973,7 +1973,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       selectedFilters: { test: ['test'] },
       section: 'Products',
       analyticsTags: testAnalyticsTag,
-      items: [{ itemId: 1 }, { item_id: 2 }],
+      items: [{ itemId: '1' }, { item_id: '2' }],
     };
 
     it('Backwards Compatibility - V2 Should respond with a valid response when term and snake cased parameters are provided', (done) => {
@@ -2053,7 +2053,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
 
         // Body
-        expect(bodyParams).to.have.property('result_count').to.equal(requiredParameters.numResults);
+        expect(bodyParams).to.have.property('result_count').to.equal(v2Parameters.resultCount);
         expect(bodyParams).to.have.property('url').to.equal(v2Parameters.url);
         expect(bodyParams).to.have.property('result_page').to.equal(v2Parameters.resultPage);
         expect(bodyParams).to.have.property('result_id').to.equal(v2Parameters.resultId);
