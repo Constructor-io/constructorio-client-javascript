@@ -51,6 +51,7 @@ function createQueryParams(parameters, options) {
       variationsMap,
       qsParam,
       preFilterExpression,
+      filterMatchTypes,
     } = parameters;
 
     // Pull page from parameters
@@ -70,6 +71,10 @@ function createQueryParams(parameters, options) {
 
     if (filters) {
       queryParams.filters = filters;
+    }
+
+    if (filterMatchTypes) {
+      queryParams.filter_match_types = filterMatchTypes;
     }
 
     // Pull sort by from parameters
@@ -235,6 +240,7 @@ class Browse {
    * @param {string[]} [parameters.hiddenFacets] - Hidden facets to return
    * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.com/reference/shared-variations-mapping for details
    * @param {object} [parameters.qsParam] - Parameters listed above can be serialized into a JSON object and parsed through this parameter. Please refer to https://docs.constructor.com/reference/browse-browse-results
+   * @param {object} [parameters.filterMatchTypes] - An object specifying whether results must match `all`, `any` or `none` of a given filter. Please refer to https://docs.constructor.com/reference/v1-browse-get-browse-results
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
@@ -245,6 +251,9 @@ class Browse {
    *     filters: {
    *         size: 'medium'
    *     },
+   *     filterMatchTypes: {
+   *        size: 'all'
+   *     }
    * });
    */
   getBrowseResults(filterName, filterValue, parameters, networkParameters = {}) {
@@ -305,6 +314,7 @@ class Browse {
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
    * @param {string[]} [parameters.hiddenFacets] - Hidden facets to return
    * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.com/reference/shared-variations-mapping for details
+   * @param {object} [parameters.filterMatchTypes] - An object specifying whether results must match `all`, `any` or `none` of a given filter. Please refer to https://docs.constructor.com/reference/v1-browse-get-browse-items-results
    * @param {object} [parameters.preFilterExpression] - Faceting expression to scope browse results. Please refer to https://docs.constructor.com/reference/configuration-collections
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -315,6 +325,9 @@ class Browse {
    *     filters: {
    *         size: 'medium'
    *     },
+   *     filterMatchTypes: {
+   *        size: 'all'
+   *     }
    * });
    */
   getBrowseResultsForItemIds(itemIds, parameters, networkParameters = {}) {
