@@ -600,9 +600,9 @@ class Tracker {
   }
 
   /**
-   * Send search results loaded  event to API
-   *
-   * @function trackSearchResultsLoaded
+   * Send search results loaded v2 event to API
+   * @private
+   * @function trackSearchResultsLoadedV2
    * @param {string} searchTerm - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.url - URL of the search results page
@@ -620,7 +620,7 @@ class Tracker {
    * @returns {(true|Error)}
    * @description User viewed a search product listing page
    * @example
-   * constructorio.tracker.trackSearchResultsLoaded(
+   * constructorio.tracker.trackSearchResultsLoadedV2(
    *     'T-Shirt',
    *     {
    *         resultCount: 167,
@@ -632,7 +632,7 @@ class Tracker {
    *     },
    * );
    */
-  trackSearchResultsLoaded(searchTerm, parameters, networkParameters = {}) {
+  trackSearchResultsLoadedV2(searchTerm, parameters, networkParameters = {}) {
     // Ensure term is provided (required)
     if (searchTerm && typeof searchTerm === 'string') {
       // Ensure parameters are provided (required)
@@ -642,10 +642,8 @@ class Tracker {
           num_results,
           numResults = num_results,
           result_count,
-          customerIds,
-          customer_ids = customerIds,
-          itemIds,
-          item_ids = itemIds,
+          customer_ids,
+          item_ids,
           items = customer_ids || item_ids,
           result_page,
           resultPage = result_page,
@@ -660,7 +658,7 @@ class Tracker {
           url = helpers.getWindowLocation()?.href || 'N/A',
           section,
           analyticsTags,
-          resultCount = numResults || result_count || items?.length || 0,
+          resultCount = numResults ?? result_count ?? items?.length ?? 0,
         } = parameters;
         const queryParams = {};
         let transformedItems;
@@ -688,9 +686,9 @@ class Tracker {
           sort_order: sortOrder,
           sort_by: sortBy,
           selected_filters: selectedFilters,
-          analytics_tags: analyticsTags,
           url,
           section,
+          analytics_tags: analyticsTags,
         };
 
         const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
@@ -706,6 +704,80 @@ class Tracker {
           networkParameters,
         );
         this.requests.send();
+        return true;
+      }
+
+      this.requests.send();
+
+      return new Error('parameters are required of type object');
+    }
+
+    this.requests.send();
+
+    return new Error('term is a required parameter of type string');
+  }
+
+  /**
+   * Send search results loaded event to API
+   *
+   * @function trackSearchResultsLoaded
+   * @param {string} term - Search results query term
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {number} parameters.numResults - Total number of results
+   * @param {string[]} parameters.itemIds - List of product item unique identifiers in search results listing
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User viewed a search product listing page
+   * @example
+   * constructorio.tracker.trackSearchResultsLoaded(
+   *     'T-Shirt',
+   *     {
+   *         numResults: 167,
+   *         itemIds: ['KMH876', 'KMH140', 'KMH437'],
+   *     },
+   * );
+   */
+  trackSearchResultsLoaded(term, parameters, networkParameters = {}) {
+    // Ensure term is provided (required)
+    if (term && typeof term === 'string') {
+      // Ensure parameters are provided (required)
+      if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+        const url = `${this.options.serviceUrl}/behavior?`;
+        const queryParams = { action: 'search-results', term };
+        const {
+          num_results,
+          result_count,
+          resultCount = result_count,
+          numResults = num_results ?? resultCount,
+          customer_ids,
+          customerIds = customer_ids,
+          item_ids,
+          itemIds = item_ids,
+          items,
+        } = parameters;
+        let customerIDs;
+
+        if (!helpers.isNil(numResults)) {
+          queryParams.num_results = numResults;
+        }
+
+        // Ensure support for both item_ids and customer_ids as parameters
+        if (itemIds && Array.isArray(itemIds)) {
+          customerIDs = itemIds;
+        } else if (customerIds && Array.isArray(customerIds)) {
+          customerIDs = customerIds;
+        } else if (items && Array.isArray(items)) {
+          customerIDs = items.map((item) => item.item_id || item.itemId);
+        }
+
+        if (customerIDs && Array.isArray(customerIDs) && customerIDs.length) {
+          queryParams.customer_ids = customerIDs.slice(0, 100).join(',');
+        }
+
+        this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`, undefined, undefined, networkParameters);
+        this.requests.send();
+
         return true;
       }
 
@@ -1445,7 +1517,7 @@ class Tracker {
         filterValue = filter_value,
         items,
         analyticsTags,
-        resultCount = result_count || items?.length || 0,
+        resultCount = result_count ?? items?.length ?? 0,
       } = parameters;
 
       if (section) {
