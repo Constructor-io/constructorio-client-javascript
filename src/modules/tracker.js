@@ -1500,7 +1500,6 @@ class Tracker {
       const {
         section = 'Products',
         result_count,
-        resultCount = result_count ?? items?.length ?? 0,
         result_page,
         resultPage = result_page,
         result_id,
@@ -1518,6 +1517,7 @@ class Tracker {
         filterValue = filter_value,
         items,
         analyticsTags,
+        resultCount = result_count ?? items?.length ?? 0,
       } = parameters;
 
       if (section) {
