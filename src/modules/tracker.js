@@ -1500,7 +1500,7 @@ class Tracker {
       const {
         section = 'Products',
         result_count,
-        resultCount = result_count,
+        resultCount = result_count ?? items?.length ?? 0,
         result_page,
         resultPage = result_page,
         result_id,
