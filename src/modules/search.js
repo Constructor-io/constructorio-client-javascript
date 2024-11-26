@@ -45,7 +45,7 @@ function createSearchUrl(query, parameters, options, isVoiceSearch = false) {
   }
 
   if (parameters) {
-    const { offset, page, resultsPerPage, filters, sortBy, sortOrder, section, fmtOptions, hiddenFields, hiddenFacets, variationsMap, qsParam, preFilterExpression } = parameters;
+    const { offset, page, resultsPerPage, filters, sortBy, sortOrder, section, fmtOptions, hiddenFields, hiddenFacets, variationsMap, qsParam, preFilterExpression, filterMatchTypes } = parameters;
 
     // Pull offset from parameters
     if (!helpers.isNil(offset)) {
@@ -65,6 +65,10 @@ function createSearchUrl(query, parameters, options, isVoiceSearch = false) {
     // Pull filters from parameters
     if (filters) {
       queryParams.filters = filters;
+    }
+
+    if (filterMatchTypes) {
+      queryParams.filter_match_types = filterMatchTypes;
     }
 
     // Pull sort by from parameters
@@ -164,6 +168,7 @@ class Search {
    * @param {string[]} [parameters.hiddenFacets] - Hidden facets to return
    * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.com/reference/shared-variations-mapping for details
    * @param {object} [parameters.qsParam] - Parameters listed above can be serialized into a JSON object and parsed through this parameter. Please refer to https://docs.constructor.com/reference/v1-search-get-search-results
+   * @param {object} [parameters.filterMatchTypes] - An object specifying whether results must match `all`, `any` or `none` of a given filter. Please refer to https://docs.constructor.com/reference/v1-search-get-search-results
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
@@ -174,6 +179,9 @@ class Search {
    *     filters: {
    *         size: 'medium'
    *     },
+   *     filterMatchTypes: {
+   *        size: 'all'
+   *     }
    * });
    */
   getSearchResults(query, parameters, networkParameters = {}) {
