@@ -11,6 +11,7 @@ export interface RecommendationsParameters {
   filters?: Record<string, any>;
   variationsMap?: VariationsMap;
   hiddenFields?: string[];
+  preFilterExpression?: FilterExpression;
 }
 
 declare class Recommendations {
