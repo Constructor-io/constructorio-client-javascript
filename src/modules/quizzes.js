@@ -120,7 +120,7 @@ class Quizzes {
    * @param {string} quizId - The identifier of the quiz
    * @param {string} [parameters] - Additional parameters to refine result set
    * @param {string} [parameters.section] - Product catalog section
-   * @param {array} [parameters.answers] - An array of answers in the format [[1,2],[1]]
+   * @param {array} [parameters.answers] - An array of answers in the format [[1,2], [1], ["true"], ["seen"], [""]]. Based on the question type, answers should either be an integer, "true"/"false", "seen" or an empty string ("") if skipped
    * @param {string} [parameters.quizVersionId] - Version identifier for the quiz. Version ID will be returned with the first request and it should be passed with subsequent requests. More information can be found: https://docs.constructor.com/reference/configuration-quizzes
    * @param {string} [parameters.quizSessionId] - Session identifier for the quiz. Session ID will be returned with the first request and it should be passed with subsequent requests. More information can be found: https://docs.constructor.com/reference/configuration-quizzes
    * @param {object} [networkParameters] - Parameters relevant to the network request
@@ -170,7 +170,7 @@ class Quizzes {
    * @description Retrieve quiz recommendation and filter expression from Constructor.io API
    * @param {string} quizId - The identifier of the quiz
    * @param {string} parameters - Additional parameters to refine result set
-   * @param {array} parameters.answers - An array of answers in the format [[1,2],[1]]
+   * @param {array} parameters.answers - An array of answers in the format [[1,2], [1], ["true"], ["seen"], [""]]. Based on the question type, answers should either be an integer, "true"/"false", "seen" or an empty string ("") if skipped
    * @param {string} [parameters.section] - Product catalog section
    * @param {string} [parameters.quizVersionId] - Version identifier for the quiz. Version ID will be returned with the first request and it should be passed with subsequent requests. More information can be found: https://docs.constructor.com/reference/configuration-quizzes
    * @param {string} [parameters.quizSessionId] - Session identifier for the quiz. Session ID will be returned with the first request and it should be passed with subsequent requests. More information can be found: https://docs.constructor.com/reference/configuration-quizzes
