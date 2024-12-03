@@ -54,7 +54,7 @@ class RequestQueue {
 
     if (
       // Consider user "human" if no DOM context is available
-      (!helpers.canUseDOM() || this.humanity.isHuman())
+      (!helpers.canUseDOM() || !this.humanity.isBot())
       && !this.requestPending
       && !this.pageUnloading
       && queue.length
