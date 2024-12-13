@@ -7,6 +7,7 @@ const sinonChai = require('sinon-chai');
 const cloneDeep = require('lodash.clonedeep');
 const store = require('../../../test/utils/store'); // eslint-disable-line import/extensions
 const helpers = require('../../mocha.helpers');
+const clientHelpers = require('../../../src/utils/helpers');
 const jsdom = require('../utils/jsdom-global');
 const { addOrderIdRecord } = require('../../../src/utils/helpers');
 let ConstructorIO = require('../../../test/constructorio'); // eslint-disable-line import/extensions
@@ -1973,7 +1974,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       selectedFilters: { test: ['test'] },
       section: 'Products',
       analyticsTags: testAnalyticsTag,
-      items: [{ itemId: '1' }, { item_id: '2' }],
+      items: [{ itemId: '1', slCampaignId: 'Campaign 123', slCampaignOwner: 'Campaign Man' }, { item_id: '2' }],
     };
 
     it('Backwards Compatibility - V2 Should respond with a valid response when term and snake cased parameters are provided', (done) => {
@@ -2062,6 +2063,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(bodyParams).to.have.property('selected_filters').to.deep.equal(v2Parameters.selectedFilters);
         expect(bodyParams).to.have.property('section').to.deep.equal(v2Parameters.section);
         expect(bodyParams).to.have.property('analytics_tags').to.deep.equal(v2Parameters.analyticsTags);
+        expect(bodyParams).to.have.property('items').to.deep.equal(v2Parameters.items.map((item) => clientHelpers.toSnakeCaseKeys(item, false)));
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -2592,6 +2594,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       resultId: 'result-id',
       section: 'Products',
       analyticsTags: testAnalyticsTag,
+      slCampaignOwner: 'Campaign Man',
+      slCampaignId: 'Campaign 123',
     };
     const v2Parameters = {
       resultCount: 1337,
@@ -2685,6 +2689,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(bodyParams).to.have.property('item_id').to.equal(requiredParameters.itemId);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
         expect(bodyParams).to.have.property('section').to.deep.equal(optionalParameters.section);
+        expect(bodyParams).to.have.property('sl_campaign_id').to.equal(optionalParameters.slCampaignId);
+        expect(bodyParams).to.have.property('sl_campaign_owner').to.deep.equal(optionalParameters.slCampaignOwner);
         expect(bodyParams).to.have.property('result_page').to.equal(v2Parameters.resultPage);
         expect(bodyParams).to.have.property('result_position_on_page').to.equal(v2Parameters.resultPositionOnPage);
         expect(bodyParams).to.have.property('result_count').to.equal(v2Parameters.resultCount);
@@ -2895,6 +2901,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('result_id').to.equal(optionalParameters.resultId);
         expect(requestParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
         expect(requestParams).to.have.property('analytics_tags').to.deep.equal(testAnalyticsTag);
+        expect(requestParams).to.have.property('sl_campaign_owner').to.deep.equal(optionalParameters.slCampaignOwner);
+        expect(requestParams).to.have.property('sl_campaign_id').to.deep.equal(optionalParameters.slCampaignId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('GET');
@@ -5304,6 +5312,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         {
           itemId: '123',
           variationId: '456',
+          slCampaignId: 'Campaign 123',
+          slCampaignOwner: 'Campaign Man',
         },
         {
           itemId: '789',
@@ -5315,6 +5325,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       {
         item_id: '123',
         variation_id: '456',
+        sl_campaign_id: 'Campaign 123',
+        sl_campaign_owner: 'Campaign Man',
       },
       {
         item_id: '789',
@@ -6074,6 +6086,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       numResultsPerPage: 5,
       selectedFilters: { foo: ['bar'] },
       analyticsTags: testAnalyticsTag,
+      slCampaignOwner: 'Campaign Man',
+      slCampaignId: 'Campaign 123',
     };
 
     it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
@@ -6280,6 +6294,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('num_results_per_page').to.equal(optionalParameters.numResultsPerPage);
         expect(requestParams).to.have.property('selected_filters').to.deep.equal(optionalParameters.selectedFilters);
         expect(requestParams).to.have.property('analytics_tags').to.deep.equal(testAnalyticsTag);
+        expect(requestParams).to.have.property('sl_campaign_id').to.deep.equal(optionalParameters.slCampaignId);
+        expect(requestParams).to.have.property('sl_campaign_owner').to.deep.equal(optionalParameters.slCampaignOwner);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');

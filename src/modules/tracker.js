@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline, no-underscore-dangle, camelcase, no-unneeded-ternary */
 const EventEmitter = require('../utils/events');
@@ -852,8 +853,12 @@ class Tracker {
           selectedFilters = selected_filters,
           section,
           analyticsTags,
+          slCampaignId,
+          slCampaignOwner,
         } = parameters;
         const bodyParams = {
+          sl_campaign_id: slCampaignId,
+          sl_campaign_owner: slCampaignOwner,
           item_name: itemName,
           item_id: itemId,
           variation_id: variationId,
@@ -949,6 +954,8 @@ class Tracker {
           itemIsConvertible = item_is_convertible,
           section,
           analyticsTags,
+          slCampaignOwner,
+          slCampaignId,
         } = parameters;
 
         // Ensure support for both item_name and name as parameters
@@ -979,6 +986,14 @@ class Tracker {
 
         if (analyticsTags) {
           queryParams.analytics_tags = analyticsTags;
+        }
+
+        if (slCampaignId) {
+          queryParams.sl_campaign_id = slCampaignId;
+        }
+
+        if (slCampaignOwner) {
+          queryParams.sl_campaign_owner = slCampaignOwner;
         }
 
         this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`, undefined, undefined, networkParameters);
@@ -1659,6 +1674,8 @@ class Tracker {
         name,
         itemName = item_name || name,
         analyticsTags,
+        slCampaignId,
+        slCampaignOwner,
       } = parameters;
 
       if (section) {
@@ -1712,6 +1729,14 @@ class Tracker {
 
       if (analyticsTags) {
         bodyParams.analytics_tags = analyticsTags;
+      }
+
+      if (slCampaignId) {
+        bodyParams.sl_campaign_id = slCampaignId;
+      }
+
+      if (slCampaignOwner) {
+        bodyParams.sl_campaign_owner = slCampaignOwner;
       }
 
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;

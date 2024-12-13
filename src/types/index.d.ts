@@ -233,6 +233,8 @@ export interface ItemTracked {
   itemName?: string;
   itemId?: string;
   variationId?: string;
+  slCampaignId?: string;
+  slCampaignOwner?: string;
 }
 
 export interface ItemTrackedPurchase extends ItemTracked {
