@@ -1956,7 +1956,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
   });
 
-describe('trackSearchResultsLoaded', () => {
+  describe('trackSearchResultsLoaded', () => {
     const term = 'Cat in the Hat';
     const requiredParameters = { numResults: 1337 };
     const optionalParameters = { itemIds: [1, 2, 3] };
