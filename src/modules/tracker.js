@@ -809,6 +809,8 @@ class Tracker {
    * @param {object} [parameters.selectedFilters] - Key - Value map of selected filters
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [parameters.analyticsTags] - Pass additional analytics data
+   * @param {object} [parameters.slCampaignId] - Pass campaign id of sponsored listing
+   * @param {object} [parameters.slCampaignOwner] - Pass campaign owner of sponsored listing
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -820,6 +822,8 @@ class Tracker {
    *         itemName: 'Red T-Shirt',
    *         itemId: 'KMH876',
    *         resultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         slCampaignId: 'Campaign 123',
+   *         slCampaignOwner: 'Store 123',
    *     },
    * );
    */
@@ -917,6 +921,8 @@ class Tracker {
    * @param {string} [parameters.itemIsConvertible] - Whether or not an item is available for a conversion
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [parameters.analyticsTags] - Pass additional analytics data
+   * @param {object} [parameters.slCampaignId] - Pass campaign id of sponsored listing
+   * @param {object} [parameters.slCampaignOwner] - Pass campaign owner of sponsored listing
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -928,6 +934,8 @@ class Tracker {
    *         itemName: 'Red T-Shirt',
    *         itemId: 'KMH876',
    *         resultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         slCampaignId: 'Campaign 123',
+   *         slCampaignOwner: 'Store 123',
    *     },
    * );
    */
@@ -1621,6 +1629,8 @@ class Tracker {
    * @param {number} [parameters.numResultsPerPage] - Number of results shown
    * @param {object} [parameters.selectedFilters] -  Selected filters
    * @param {object} [parameters.analyticsTags] - Pass additional analytics data
+   * @param {object} [parameters.slCampaignId] - Pass campaign id of sponsored listing
+   * @param {object} [parameters.slCampaignOwner] - Pass campaign owner of sponsored listing
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -1638,6 +1648,8 @@ class Tracker {
    *         filterName: 'brand',
    *         filterValue: 'XYZ',
    *         itemId: 'KMH876',
+   *         slCampaignId: 'Campaign 123',
+   *         slCampaignOwner: 'Store 123',
    *     },
    * );
    */
