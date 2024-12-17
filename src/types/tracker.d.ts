@@ -108,6 +108,8 @@ declare class Tracker {
       itemIsConvertible?: string;
       section?: string;
       analyticsTags?: Record<string, string>;
+      slCampaignId?: string;
+      slCampaignOwner?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -204,6 +206,8 @@ declare class Tracker {
       numResultsPerPage?: number;
       selectedFilters?: object;
       analyticsTags?: Record<string, string>;
+      slCampaignId?: string;
+      slCampaignOwner?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
