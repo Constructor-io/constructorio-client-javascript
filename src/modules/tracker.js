@@ -601,7 +601,8 @@ class Tracker {
   }
 
   /**
-   * Send search results loaded v2 event to API
+   * Send search results loaded  event to API
+   *
    * @function trackSearchResultsLoaded
    * @param {string} searchTerm - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
