@@ -72,7 +72,7 @@ declare class Tracker {
     networkParameters?: NetworkParameters
   ): true | Error;
 
-  trackSearchResultsLoadedV2(
+  trackSearchResultsLoaded(
     term: string,
     parameters: {
       url: string;
@@ -85,15 +85,6 @@ declare class Tracker {
       sortBy?: string;
       section?: string;
       analyticsTags?: Record<string, string>;
-    },
-    networkParameters?: NetworkParameters
-  ): true | Error;
-
-  trackSearchResultsLoaded(
-    term: string,
-    parameters: {
-      numResults: number;
-      itemIds: string[];
     },
     networkParameters?: NetworkParameters
   ): true | Error;
