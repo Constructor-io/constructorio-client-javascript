@@ -21,7 +21,9 @@ class RequestQueue {
 
     // Mark if page environment is unloading
     helpers.addEventListener('visibilitychange', () => {
-      this.pageUnloading = true;
+      if (document.visibilityState === 'hidden') {
+        this.pageUnloading = true;
+      }
     });
 
     if (this.sendTrackingEvents) {
