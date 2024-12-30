@@ -31,7 +31,7 @@ export interface IBrowseParameters {
   hiddenFacets?: string[];
   variationsMap?: VariationsMap;
   qsParam?: Record<string, any>;
-  filterMatchTypes: Record<string, 'all'| 'any' | 'none'>
+  filterMatchTypes?: Record<string, 'all'| 'any' | 'none'>
 }
 
 declare class Browse {

@@ -30,7 +30,7 @@ export interface SearchParameters {
   hiddenFacets?: string[];
   variationsMap?: VariationsMap;
   qsParam?: Record<string, any>;
-  filterMatchTypes: Record<string, 'all'| 'any' | 'none'>
+  filterMatchTypes?: Record<string, 'all'| 'any' | 'none'>
 }
 declare class Search {
   constructor(options: ConstructorClientOptions);
