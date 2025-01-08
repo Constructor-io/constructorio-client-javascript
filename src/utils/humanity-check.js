@@ -18,12 +18,11 @@ const humanEvents = [
 
 class HumanityCheck {
   constructor() {
-    // Check if a human event has been performed in the past
-    this.hasPerformedHumanEvent = !!store.session.get(storageKey) || false;
+    this.isHumanBoolean = this.getIsHumanFromSessionStorage();
 
-    // Humanity proved, remove handlers
+    // Humanity proved, remove handlers to prove humanity
     const remove = () => {
-      this.hasPerformedHumanEvent = true;
+      this.isHumanBoolean = true;
 
       store.session.set(storageKey, true);
       humanEvents.forEach((eventType) => {
@@ -32,33 +31,32 @@ class HumanityCheck {
     };
 
     // Add handlers to prove humanity
-    if (!this.hasPerformedHumanEvent) {
+    if (!this.isHumanBoolean) {
       humanEvents.forEach((eventType) => {
         helpers.addEventListener(eventType, remove, true);
       });
     }
   }
 
-  // Return boolean indicating if user is a bot
-  // ...if it has a bot-like useragent
-  // ...or uses webdriver
-  // ...or has not performed a human event
+  getIsHumanFromSessionStorage() {
+    return !!store.session.get(storageKey) || false;
+  }
+
+  // Return boolean indicating if is human
+  isHuman() {
+    return this.isHumanBoolean || !!store.session.get(storageKey);
+  }
+
+  // Return boolean indicating if useragent matches botlist
   isBot() {
+    if (this.getIsHumanFromSessionStorage()) {
+      return false;
+    }
+
     const { userAgent, webdriver } = helpers.getNavigator();
     const botRegex = new RegExp(`(${botList.join('|')})`);
 
-    // Always check the user agent and webdriver fields first to determine if the user is a bot
-    if (Boolean(userAgent.match(botRegex)) || Boolean(webdriver)) {
-      return true;
-    }
-
-    // If the user hasn't performed a human event, it indicates it is a bot
-    if (!this.hasPerformedHumanEvent) {
-      return true;
-    }
-
-    // Otherwise, it is a human
-    return false;
+    return Boolean(userAgent.match(botRegex)) || Boolean(webdriver);
   }
 }
 

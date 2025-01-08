@@ -31,7 +31,6 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
     this.timeout(3000);
 
     const storageKey = '_constructorio_requests';
-    const humanityStorageKey = '_constructorio_is_human';
     const waitInterval = 2000;
     let requestQueueOptions = {};
     const piiExamples = [
@@ -180,8 +179,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         helpers.clearStorage();
       });
 
-      it('Should add url requests to the queue if the user is human', async () => {
-        store.session.set(humanityStorageKey, true);
+      it('Should add url requests to the queue', () => {
         const requests = new RequestQueue(requestQueueOptions);
 
         requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
@@ -193,8 +191,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         expect(store.local.get(storageKey)).to.be.an('array').length(3);
       });
 
-      it('Should add object requests to the queue - POST with body if the user is human', () => {
-        store.session.set(humanityStorageKey, true);
+      it('Should add object requests to the queue - POST with body', () => {
         const requests = new RequestQueue(requestQueueOptions);
 
         requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'session_start' });
@@ -221,7 +218,6 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
       });
 
       it('Should obfuscate requests if PII is detected', () => {
-        store.session.set(humanityStorageKey, true); // Enabled for the test to run
         const requests = new RequestQueue(requestQueueOptions);
         const allExamples = [];
 
@@ -256,7 +252,6 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
       });
 
       it('Should not obfuscate requests if no PII is detected', () => {
-        store.session.set(humanityStorageKey, true); // Enabled for the test to run
         const requests = new RequestQueue(requestQueueOptions);
 
         notPiiExamples.forEach((query) => {
@@ -348,13 +343,12 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         it('Should send all url tracking requests if queue is populated and user is human', (done) => {
           const requests = new RequestQueue(requestQueueOptions);
 
-          helpers.triggerResize(); // Human-like action
-
           requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
           requests.queue('https://ac.cnstrc.com/behavior?action=focus');
           requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
           expect(RequestQueue.get()).to.be.an('array').length(3);
+          helpers.triggerResize();
           requests.send();
 
           setTimeout(() => {
@@ -365,7 +359,6 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         });
 
         it('Should send all object tracking requests if queue is populated and user is human - POST with body', (done) => {
-          store.session.set(humanityStorageKey, true);
           const requests = new RequestQueue(requestQueueOptions);
 
           requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'session_start' });
@@ -383,26 +376,14 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
           }, waitInterval);
         });
 
-        it('Should not send tracking requests if queue was populated and user is not human', (done) => {
+        it('Should not send tracking requests if queue is populated and user is not human', (done) => {
           const requests = new RequestQueue(requestQueueOptions);
 
-          store.local.set(storageKey, [
-            {
-              url: 'https://ac.cnstrc.com/behavior?action=session_start',
-              method: 'GET',
-            },
-            {
-              url: 'https://ac.cnstrc.com/behavior?action=focus',
-              method: 'GET',
-            },
-            {
-              url: 'https://ac.cnstrc.com/behavior?action=magic_number_three',
-              method: 'GET',
-            },
-          ]);
+          requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+          requests.queue('https://ac.cnstrc.com/behavior?action=focus');
+          requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
           expect(RequestQueue.get()).to.be.an('array').length(3);
-
           requests.send();
 
           setTimeout(() => {
@@ -414,20 +395,9 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         it('Should not send tracking requests if queue is populated and user is human and page is unloading', (done) => {
           const requests = new RequestQueue(requestQueueOptions);
 
-          store.local.set(storageKey, [
-            {
-              url: 'https://ac.cnstrc.com/behavior?action=session_start',
-              method: 'GET',
-            },
-            {
-              url: 'https://ac.cnstrc.com/behavior?action=focus',
-              method: 'GET',
-            },
-            {
-              url: 'https://ac.cnstrc.com/behavior?action=magic_number_three',
-              method: 'GET',
-            },
-          ]);
+          requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+          requests.queue('https://ac.cnstrc.com/behavior?action=focus');
+          requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
           expect(RequestQueue.get()).to.be.an('array').length(3);
           helpers.triggerResize();
@@ -443,20 +413,9 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         it('Should not send tracking requests if queue is populated and user is human and page is unloading and send was called before unload', (done) => {
           const requests = new RequestQueue(requestQueueOptions);
 
-          store.local.set(storageKey, [
-            {
-              url: 'https://ac.cnstrc.com/behavior?action=session_start',
-              method: 'GET',
-            },
-            {
-              url: 'https://ac.cnstrc.com/behavior?action=focus',
-              method: 'GET',
-            },
-            {
-              url: 'https://ac.cnstrc.com/behavior?action=magic_number_three',
-              method: 'GET',
-            },
-          ]);
+          requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+          requests.queue('https://ac.cnstrc.com/behavior?action=focus');
+          requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
 
           expect(RequestQueue.get()).to.be.an('array').length(3);
           helpers.triggerResize();
@@ -769,28 +728,11 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
           const sendSpy1 = sinon.spy(requests1, 'send');
           const sendSpy2 = sinon.spy(requests2, 'send');
 
-          store.local.set(storageKey, [
-            {
-              url: 'https://ac.cnstrc.com/behavior?action=session_start',
-              method: 'GET',
-            },
-            {
-              url: 'https://ac.cnstrc.com/behavior?action=focus',
-              method: 'GET',
-            },
-            {
-              url: 'https://ac.cnstrc.com/behavior?action=magic_number_three',
-              method: 'GET',
-            },
-            {
-              url: 'https://ac.cnstrc.com/behavior?action=magic_number_four',
-              method: 'GET',
-            },
-            {
-              url: 'https://ac.cnstrc.com/behavior?action=magic_number_five',
-              method: 'GET',
-            },
-          ]);
+          requests1.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'number_one' });
+          requests1.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'number_two' });
+          requests1.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'number_three' });
+          requests1.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'number_four' });
+          requests1.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'number_five' });
 
           helpers.triggerResize();
           requests1.send();
@@ -812,28 +754,11 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
           const sendSpy1 = sinon.spy(requests1, 'send');
           const sendSpy2 = sinon.spy(requests2, 'send');
 
-          store.local.set(storageKey, [
-            {
-              url: 'https://ac.cnstrc.com/behavior?action=session_start',
-              method: 'GET',
-            },
-            {
-              url: 'https://ac.cnstrc.com/behavior?action=focus',
-              method: 'GET',
-            },
-            {
-              url: 'https://ac.cnstrc.com/behavior?action=magic_number_three',
-              method: 'GET',
-            },
-            {
-              url: 'https://ac.cnstrc.com/behavior?action=magic_number_four',
-              method: 'GET',
-            },
-            {
-              url: 'https://ac.cnstrc.com/behavior?action=magic_number_five',
-              method: 'GET',
-            },
-          ]);
+          requests1.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'number_one' });
+          requests2.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'number_two' });
+          requests1.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'number_three' });
+          requests2.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'number_four' });
+          requests1.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'number_five' });
 
           helpers.triggerResize();
           requests1.send();
