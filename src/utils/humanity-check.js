@@ -19,7 +19,7 @@ const humanEvents = [
 class HumanityCheck {
   constructor() {
     // Check if a human event has been performed in the past
-    this.hasPerformedHumanEvent = !!store.session.get(storageKey) || false;
+    this.hasPerformedHumanEvent = this.getIsHumanFromSessionStorage();
 
     // Humanity proved, remove handlers
     const remove = () => {
@@ -39,6 +39,11 @@ class HumanityCheck {
     }
   }
 
+  // Helper function to grab the human variable from session storage
+  getIsHumanFromSessionStorage() {
+    return !!store.session.get(storageKey) || false;
+  }
+
   // Return boolean indicating if user is a bot
   // ...if it has a bot-like useragent
   // ...or uses webdriver
@@ -53,7 +58,7 @@ class HumanityCheck {
     }
 
     // If the user hasn't performed a human event, it indicates it is a bot
-    if (!this.hasPerformedHumanEvent) {
+    if (!this.getIsHumanFromSessionStorage()) {
       return true;
     }
 
