@@ -57,6 +57,11 @@ class HumanityCheck {
       return true;
     }
 
+    // Bypass Storage/Event check if DOM not available.
+    if (!helpers.canUseDOM()) {
+      return false;
+    }
+
     // If the user hasn't performed a human event, it indicates it is a bot
     if (!this.getIsHumanFromSessionStorage()) {
       return true;
