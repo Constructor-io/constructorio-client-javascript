@@ -31,7 +31,8 @@ class RequestQueue {
 
   // Add request to queue to be dispatched
   queue(url, method = 'GET', body = {}, networkParameters = {}) {
-    if (this.sendTrackingEvents && !this.humanity.isBot()) {
+    // Consider user "human" if no DOM context is available
+    if (this.sendTrackingEvents && (!helpers.canUseDOM() || !this.humanity.isBot())) {
       const queue = RequestQueue.get();
 
       // PII Detection & Obfuscation
