@@ -850,5 +850,81 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         });
       });
     });
+
+    describe('domless', () => {
+      let fetchSpy = null;
+
+      before(() => {
+        helpers.clearStorage();
+      });
+
+      beforeEach(() => {
+        global.CLIENT_VERSION = 'cio-mocha';
+        fetchSpy = sinon.spy(fetch);
+
+        requestQueueOptions = {
+          fetch: fetchSpy,
+          sendTrackingEvents: true,
+          trackingSendDelay: 1,
+        };
+      });
+
+      afterEach(() => {
+        requestQueueOptions = {};
+        helpers.clearStorage();
+      });
+
+      it('Should add url requests to the queue if the user is domless', async () => {
+        const requests = new RequestQueue(requestQueueOptions);
+
+        requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+        requests.queue('https://ac.cnstrc.com/behavior?action=focus');
+        requests.queue('https://ac.cnstrc.com/behavior?action=magic_number_three');
+
+        expect(RequestQueue.get()).to.be.an('array').length(3);
+      });
+
+      it('Should send  requests from the queue if the user is domless', (done) => {
+        const requests1 = new RequestQueue(requestQueueOptions);
+        const requests2 = new RequestQueue(requestQueueOptions);
+        const sendSpy1 = sinon.spy(requests1, 'send');
+        const sendSpy2 = sinon.spy(requests2, 'send');
+
+        store.local.set(storageKey, [
+          {
+            url: 'https://ac.cnstrc.com/behavior?action=session_start',
+            method: 'GET',
+          },
+          {
+            url: 'https://ac.cnstrc.com/behavior?action=focus',
+            method: 'GET',
+          },
+          {
+            url: 'https://ac.cnstrc.com/behavior?action=magic_number_three',
+            method: 'GET',
+          },
+          {
+            url: 'https://ac.cnstrc.com/behavior?action=magic_number_four',
+            method: 'GET',
+          },
+          {
+            url: 'https://ac.cnstrc.com/behavior?action=magic_number_five',
+            method: 'GET',
+          },
+        ]);
+
+        requests1.send();
+        requests2.send();
+
+        setTimeout(() => {
+          expect(sendSpy1.callCount).to.be.at.least(2 + 1); // 2 min sent + 1 finally
+          expect(sendSpy2.callCount).to.be.at.least(2 + 1); // 2 min sent + 1 finally
+          expect(sendSpy1.callCount + sendSpy2.callCount).to.equal(5 + 2); // 5 sent + 2 finally
+          expect(RequestQueue.get()).to.be.an('array').length(0);
+          expect(store.local.get(storageKey)).to.be.null;
+          done();
+        }, waitInterval);
+      });
+    });
   }
 });
