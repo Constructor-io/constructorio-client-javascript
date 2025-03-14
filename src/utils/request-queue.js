@@ -20,8 +20,10 @@ class RequestQueue {
       : false; // Defaults to 'false'
 
     // Mark if page environment is unloading
-    helpers.addEventListener('beforeunload', () => {
-      this.pageUnloading = true;
+    helpers.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') {
+        this.pageUnloading = true;
+      }
     });
 
     if (this.sendTrackingEvents) {
@@ -183,7 +185,7 @@ class RequestQueue {
       if (this.options && this.options.trackingSendDelay === 0) {
         this.sendEvents();
       } else {
-        // Defer sending of events to give beforeunload time to register (avoids race condition)
+        // Defer sending of events to give visibilitychange time to register (avoids race condition)
         setTimeout(this.sendEvents.bind(this), (this.options && this.options.trackingSendDelay) || 250);
       }
     }

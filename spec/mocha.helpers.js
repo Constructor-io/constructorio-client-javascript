@@ -21,7 +21,7 @@ const triggerResize = () => {
 const triggerUnload = () => {
   const unloadEvent = document.createEvent('Event');
 
-  unloadEvent.initEvent('beforeunload', true, true);
+  unloadEvent.initEvent('visibilitychange', true, true);
 
   global.window.unload = () => {
     global.window.dispatchEvent(unloadEvent);
