@@ -6,6 +6,7 @@ import {
   RequestFeatureVariant,
   VariationsMap,
   FilterExpression,
+  FmtOptions,
 } from '.';
 import EventDispatcher from './event-dispatcher';
 
@@ -44,6 +45,7 @@ export interface AutocompleteResponse extends Record<string, any> {
   request: Partial<AutocompleteRequestType>;
   sections: Record<string, Item[]>;
   result_id: string;
+  total_num_results_per_section: Record<string, number>;
 }
 
 export interface AutocompleteRequestType extends Record<string, any> {
