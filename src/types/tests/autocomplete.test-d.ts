@@ -36,6 +36,10 @@ expectAssignable<AutocompleteResponse>({
       },
     ],
   },
+  total_num_results_per_section: {
+    'Search Suggestions': 1,
+    Products: 1,
+  },
   result_id: '5a7e6a84-5ded-4315-83b5-71f08c175a4a',
   request: {
     query: 'red',
