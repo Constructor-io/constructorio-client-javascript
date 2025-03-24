@@ -696,6 +696,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       groupId: 'all',
       displayName: 'display-name',
       itemId: '12345',
+      slCampaignOwner: 'Campaign Man',
+      slCampaignId: 'Campaign 123',
     };
     const v2Parameters = {
       variationId: '12345-A',
@@ -730,6 +732,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(bodyParams).to.have.property('section').to.deep.equal(requiredParameters.section);
         expect(bodyParams).to.have.property('item_name').to.equal(term);
         expect(bodyParams).to.have.property('group_id').to.equal(optionalParameters.groupId);
+        expect(bodyParams).to.have.property('sl_campaign_id').to.equal(optionalParameters.slCampaignId);
+        expect(bodyParams).to.have.property('sl_campaign_owner').to.deep.equal(optionalParameters.slCampaignOwner);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -971,6 +975,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           group_id: optionalParameters.groupId,
           display_name: optionalParameters.displayName,
         });
+        expect(requestParams).to.have.property('sl_campaign_owner').to.deep.equal(optionalParameters.slCampaignOwner);
+        expect(requestParams).to.have.property('sl_campaign_id').to.deep.equal(optionalParameters.slCampaignId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('GET');

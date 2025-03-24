@@ -45,6 +45,8 @@ declare class Tracker {
       groupId?: string;
       displayName?: string;
       itemId?: string;
+      slCampaignId?: string;
+      slCampaignOwner?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
