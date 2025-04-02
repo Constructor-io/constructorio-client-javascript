@@ -1,6 +1,6 @@
 /* eslint-disable import/no-unresolved, import/extensions */
 const qs = require('qs');
-const sinon = require("sinon");
+const sinon = require('sinon');
 const store = require('../test/utils/store');
 
 // Trigger browser resize event
