@@ -23,10 +23,8 @@ class RequestQueue {
       // Mark if page environment is unloading
       if (document.visibilityState === 'hidden') {
         this.pageUnloading = true;
-      }
-
-      // Send events once page is visible
-      if (document.visibilityState === 'visible' && this.pageUnloading === true) {
+      } else if (document.visibilityState === 'visible' && this.pageUnloading === true) {
+        // Send events once page is visible again
         this.pageUnloading = false;
 
         if (this.sendTrackingEvents) {
