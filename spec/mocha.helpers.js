@@ -1,5 +1,6 @@
 /* eslint-disable import/no-unresolved, import/extensions */
 const qs = require('qs');
+const sinon = require("sinon");
 const store = require('../test/utils/store');
 
 // Trigger browser resize event
@@ -22,6 +23,7 @@ const triggerUnload = () => {
   const unloadEvent = document.createEvent('Event');
 
   unloadEvent.initEvent('visibilitychange', true, true);
+  sinon.stub(document, 'visibilityState').value('hidden');
 
   global.window.unload = () => {
     global.window.dispatchEvent(unloadEvent);
