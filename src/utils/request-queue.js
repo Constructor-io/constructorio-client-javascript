@@ -19,10 +19,19 @@ class RequestQueue {
       ? true
       : false; // Defaults to 'false'
 
-    // Mark if page environment is unloading
-    helpers.addEventListener('visibilitychange', () => {
+      helpers.addEventListener('visibilitychange', () => {
+      // Mark if page environment is unloading
       if (document.visibilityState === 'hidden') {
         this.pageUnloading = true;
+      }
+
+      // Send events once page is visible
+      if (this.pageUnloading = true && document.visibilityState === 'visible') {
+        this.pageUnloading = false;
+
+        if (this.sendTrackingEvents) {
+          this.send();
+        }
       }
     });
 
