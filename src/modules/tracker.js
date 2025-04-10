@@ -280,6 +280,8 @@ class Tracker {
    * @param {string} [parameters.itemId] - Item id of the selected item
    * @param {string} [parameters.variationId] - Variation id of the selected item
    * @param {string} [parameters.groupId] - Group identifier of the group to search within. Only required if searching within a group, i.e. "Pumpkin in Canned Goods"
+   * @param {string} [parameters.slCampaignId] - Pass campaign id of sponsored listing
+   * @param {string} [parameters.slCampaignOwner] - Pass campaign owner of sponsored listing
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -294,6 +296,8 @@ class Tracker {
    *          groupId: '88JU230',
    *          itemId: '12345',
    *          variationId: '12345-A',
+   *          slCampaignId: 'Campaign 123',
+   *          slCampaignOwner: 'Store 123',
    *      },
    * );
    */
@@ -317,6 +321,8 @@ class Tracker {
           itemId = item_id,
           variation_id,
           variationId = variation_id,
+          slCampaignId,
+          slCampaignOwner,
         } = parameters;
         const queryParams = {};
         const bodyParams = {
@@ -331,6 +337,14 @@ class Tracker {
 
         if (section) {
           queryParams.section = section;
+        }
+
+        if (slCampaignId) {
+          bodyParams.sl_campaign_id = slCampaignId;
+        }
+
+        if (slCampaignOwner) {
+          bodyParams.sl_campaign_owner = slCampaignOwner;
         }
 
         const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
@@ -372,6 +386,8 @@ class Tracker {
    * @param {string} [parameters.groupId] - Group identifier of the group to search within. Only required if searching within a group, i.e. "Pumpkin in Canned Goods"
    * @param {string} [parameters.displayName] - Display name of group of selected item
    * @param {string} [parameters.itemId] - Item id of the selected item
+   * @param {string} [parameters.slCampaignId] - Pass campaign id of sponsored listing
+   * @param {string} [parameters.slCampaignOwner] - Pass campaign owner of sponsored listing
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -386,6 +402,8 @@ class Tracker {
    *         groupId: '88JU230',
    *         displayName: 'apparel',
    *         itemId: '12345',
+   *         slCampaignId: 'Campaign 123',
+   *         slCampaignOwner: 'Store 123',
    *      },
    * );
    */
@@ -409,6 +427,8 @@ class Tracker {
           displayName = display_name,
           item_id,
           itemId = item_id,
+          slCampaignOwner,
+          slCampaignId,
         } = parameters;
 
         if (originalQuery) {
@@ -432,6 +452,14 @@ class Tracker {
 
         if (itemId) {
           queryParams.item_id = itemId;
+        }
+
+        if (slCampaignId) {
+          queryParams.sl_campaign_id = slCampaignId;
+        }
+
+        if (slCampaignOwner) {
+          queryParams.sl_campaign_owner = slCampaignOwner;
         }
 
         this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`, undefined, undefined, networkParameters);
@@ -737,8 +765,8 @@ class Tracker {
    * @param {object} [parameters.selectedFilters] - Key - Value map of selected filters
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [parameters.analyticsTags] - Pass additional analytics data
-   * @param {object} [parameters.slCampaignId] - Pass campaign id of sponsored listing
-   * @param {object} [parameters.slCampaignOwner] - Pass campaign owner of sponsored listing
+   * @param {string} [parameters.slCampaignId] - Pass campaign id of sponsored listing
+   * @param {string} [parameters.slCampaignOwner] - Pass campaign owner of sponsored listing
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -849,8 +877,8 @@ class Tracker {
    * @param {string} [parameters.itemIsConvertible] - Whether or not an item is available for a conversion
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [parameters.analyticsTags] - Pass additional analytics data
-   * @param {object} [parameters.slCampaignId] - Pass campaign id of sponsored listing
-   * @param {object} [parameters.slCampaignOwner] - Pass campaign owner of sponsored listing
+   * @param {string} [parameters.slCampaignId] - Pass campaign id of sponsored listing
+   * @param {string} [parameters.slCampaignOwner] - Pass campaign owner of sponsored listing
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -1557,8 +1585,8 @@ class Tracker {
    * @param {number} [parameters.numResultsPerPage] - Number of results shown
    * @param {object} [parameters.selectedFilters] -  Selected filters
    * @param {object} [parameters.analyticsTags] - Pass additional analytics data
-   * @param {object} [parameters.slCampaignId] - Pass campaign id of sponsored listing
-   * @param {object} [parameters.slCampaignOwner] - Pass campaign owner of sponsored listing
+   * @param {string} [parameters.slCampaignId] - Pass campaign id of sponsored listing
+   * @param {string} [parameters.slCampaignOwner] - Pass campaign owner of sponsored listing
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
