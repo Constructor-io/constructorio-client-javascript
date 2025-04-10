@@ -19,9 +19,18 @@ class RequestQueue {
       ? true
       : false; // Defaults to 'false'
 
-    // Mark if page environment is unloading
-    helpers.addEventListener('beforeunload', () => {
-      this.pageUnloading = true;
+    helpers.addEventListener('visibilitychange', () => {
+      // Mark if page environment is unloading
+      if (document.visibilityState === 'hidden') {
+        this.pageUnloading = true;
+      } else if (document.visibilityState === 'visible' && this.pageUnloading === true) {
+        // Send events once page is visible again
+        this.pageUnloading = false;
+
+        if (this.sendTrackingEvents) {
+          this.send();
+        }
+      }
     });
 
     if (this.sendTrackingEvents) {
@@ -183,7 +192,7 @@ class RequestQueue {
       if (this.options && this.options.trackingSendDelay === 0) {
         this.sendEvents();
       } else {
-        // Defer sending of events to give beforeunload time to register (avoids race condition)
+        // Defer sending of events to give visibilitychange time to register (avoids race condition)
         setTimeout(this.sendEvents.bind(this), (this.options && this.options.trackingSendDelay) || 250);
       }
     }
