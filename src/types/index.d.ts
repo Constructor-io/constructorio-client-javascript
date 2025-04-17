@@ -37,6 +37,11 @@ export interface IdOptions extends Record<string, any> {
   session_id_storage_location?: string;
 }
 
+export interface EventDispatcherOptions {
+  enabled?: boolean;
+  waitForBeacon?: boolean;
+}
+
 export interface ConstructorClientOptions {
   apiKey: string;
   version?: string;
@@ -53,7 +58,7 @@ export interface ConstructorClientOptions {
   trackingSendDelay?: number;
   sendTrackingEvents?: boolean;
   sendReferrerWithTrackingEvents?: boolean;
-  eventDispatcher?: EventDispatcher;
+  eventDispatcher?: EventDispatcherOptions;
   beaconMode?: boolean;
   networkParameters?: NetworkParameters;
 }
