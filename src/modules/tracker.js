@@ -1,3 +1,4 @@
+/* eslint-disable max-depth */
 /* eslint-disable complexity */
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline, no-underscore-dangle, camelcase, no-unneeded-ternary */
@@ -17,7 +18,7 @@ function applyParams(parameters, options) {
     requestMethod,
     beaconMode,
   } = options;
-  const { host, pathname } = helpers.getWindowLocation();
+  const { host, pathname, search } = helpers.getWindowLocation();
   const sendReferrerWithTrackingEvents = (options.sendReferrerWithTrackingEvents === false)
     ? false
     : true; // Defaults to 'true'
@@ -62,6 +63,37 @@ function applyParams(parameters, options) {
 
     if (pathname) {
       aggregateParams.origin_referrer += pathname;
+    }
+
+    if (search) {
+      try {
+        const searchParams = new URLSearchParams(search);
+        const utmSource = searchParams.get('utm_source');
+        const utmMedium = searchParams.get('utm_medium');
+        const utmCampaign = searchParams.get('utm_campaign');
+
+        // Add UTM parameters to origin_referrer if they exist
+        if (utmSource || utmMedium || utmCampaign) {
+          aggregateParams.origin_referrer += '?';
+
+          if (utmSource) {
+            aggregateParams.origin_referrer += `utm_source=${utmSource}`;
+          }
+
+          if (utmMedium) {
+            if (utmSource) aggregateParams.origin_referrer += '&';
+            aggregateParams.origin_referrer += `utm_medium=${utmMedium}`;
+          }
+
+          if (utmCampaign) {
+            if (utmSource || utmMedium) aggregateParams.origin_referrer += '&';
+            aggregateParams.origin_referrer += `utm_campaign=${utmCampaign}`;
+          }
+        }
+      } catch (e) {
+        // If there's an error parsing the URL parameters, continue without them
+        console.warn('Error extracting UTM parameters:', e);
+      }
     }
   }
 
