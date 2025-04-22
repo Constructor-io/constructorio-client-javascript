@@ -91,8 +91,7 @@ function applyParams(parameters, options) {
           }
         }
       } catch (e) {
-        // If there's an error parsing the URL parameters, continue without them
-        console.warn('Error extracting UTM parameters:', e);
+        // Do nothing
       }
     }
   }
