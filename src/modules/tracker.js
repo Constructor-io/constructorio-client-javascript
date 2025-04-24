@@ -67,28 +67,20 @@ function applyParams(parameters, options) {
 
     if (search) {
       try {
+        const utmParamKeys = ['utm_source', 'utm_medium', 'utm_campaign'];
+        const utmQueryParamStrArr = [];
         const searchParams = new URLSearchParams(search);
-        const utmSource = searchParams.get('utm_source');
-        const utmMedium = searchParams.get('utm_medium');
-        const utmCampaign = searchParams.get('utm_campaign');
 
-        // Add UTM parameters to origin_referrer if they exist
-        if (utmSource || utmMedium || utmCampaign) {
-          aggregateParams.origin_referrer += '?';
+        utmParamKeys.forEach((key) => {
+          const utmParamValue = searchParams.get(key);
 
-          if (utmSource) {
-            aggregateParams.origin_referrer += `utm_source=${utmSource}`;
+          if (utmParamValue) {
+            utmQueryParamStrArr.push(`${key}=${utmParamValue}`);
           }
+        });
 
-          if (utmMedium) {
-            if (utmSource) aggregateParams.origin_referrer += '&';
-            aggregateParams.origin_referrer += `utm_medium=${utmMedium}`;
-          }
-
-          if (utmCampaign) {
-            if (utmSource || utmMedium) aggregateParams.origin_referrer += '&';
-            aggregateParams.origin_referrer += `utm_campaign=${utmCampaign}`;
-          }
+        if (utmQueryParamStrArr.length) {
+          aggregateParams.origin_referrer += `?${utmQueryParamStrArr.join('&')}`;
         }
       } catch (e) {
         // Do nothing
