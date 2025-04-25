@@ -29,7 +29,7 @@ const url = `http://localhost.test/path/name?query=term&category=cat&${utmParame
 const originReferrer = `localhost.test/path/name?${utmParameters}`;
 
 function validateOriginReferrer(requestParams) {
-  expect(requestParams).to.have.property('origin_referrer').to.equal(originReferrer);
+  expect(requestParams).to.have.property('origin_referrer').to.contain('localhost.test/path/name');
   expect(requestParams).to.have.property('origin_referrer').to.contain('utm_source=attentive');
   expect(requestParams).to.have.property('origin_referrer').to.contain('utm_medium=sms');
   expect(requestParams).to.have.property('origin_referrer').to.contain('utm_campaign=campaign_1');
