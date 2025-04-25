@@ -2121,7 +2121,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         // Body
         expect(bodyParams).to.have.property('result_count').to.equal(requiredParameters.numResults);
         expect(bodyParams).to.have.property('url').to.equal(window?.location?.href);
-        expect(bodyParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
         expect(bodyParams).to.have.property('search_term').to.equal(term);
         expect(bodyParams).to.have.property('url').to.equal(window?.location?.href);
         expect(bodyParams).to.have.property('key');
@@ -2129,6 +2128,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(bodyParams).to.have.property('s');
         expect(bodyParams).to.have.property('c').to.equal(clientVersion);
         expect(bodyParams).to.have.property('_dt');
+        validateOriginReferrer(bodyParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -2369,7 +2369,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         validateOriginReferrer(requestParams);
 
         // Body
-        expect(bodyParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(bodyParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
