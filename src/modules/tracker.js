@@ -67,15 +67,12 @@ function applyParams(parameters, options) {
 
     if (search) {
       try {
-        const utmParamKeys = ['utm_source', 'utm_medium', 'utm_campaign'];
         const utmQueryParamStrArr = [];
         const searchParams = new URLSearchParams(search);
 
-        utmParamKeys.forEach((key) => {
-          const utmParamValue = searchParams.get(key);
-
-          if (utmParamValue) {
-            utmQueryParamStrArr.push(`${key}=${utmParamValue}`);
+        searchParams.forEach((value, key) => {
+          if (key.match(/utm_/)) {
+            utmQueryParamStrArr.push(`${key}=${value}`);
           }
         });
 
