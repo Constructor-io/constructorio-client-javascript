@@ -34,7 +34,7 @@ function validateOriginReferrer(requestParams) {
   expect(requestParams).to.have.property('origin_referrer').to.contain('utm_campaign=campaign_1');
 }
 
-describe.only(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
+describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   let fetchSpy = null;
   let cleanup;
   const jsdomOptions = { url };
