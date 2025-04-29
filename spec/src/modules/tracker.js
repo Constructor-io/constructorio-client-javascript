@@ -24,11 +24,20 @@ const skipNetworkTimeoutTests = process.env.SKIP_NETWORK_TIMEOUT_TESTS === 'true
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 const timeoutRejectionMessage = 'AbortError: This operation was aborted';
 const testAnalyticsTag = { param1: 'test', param2: 'test2' };
+const utmParameters = 'utm_source=attentive&utm_medium=sms&utm_campaign=campaign_1';
+const url = `http://localhost.test/path/name?query=term&category=cat&${utmParameters}`;
+
+function validateOriginReferrer(requestParams) {
+  expect(requestParams).to.have.property('origin_referrer').to.contain('localhost.test/path/name');
+  expect(requestParams).to.have.property('origin_referrer').to.contain('utm_source=attentive');
+  expect(requestParams).to.have.property('origin_referrer').to.contain('utm_medium=sms');
+  expect(requestParams).to.have.property('origin_referrer').to.contain('utm_campaign=campaign_1');
+}
 
 describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   let fetchSpy = null;
   let cleanup;
-  const jsdomOptions = { url: 'http://localhost.test/path/name?query=term&category=cat' };
+  const jsdomOptions = { url };
   const requestQueueOptions = {
     sendTrackingEvents: true,
     trackingSendDelay: 1,
@@ -80,7 +89,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -110,7 +119,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('action').to.equal('session_start');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('GET');
@@ -186,7 +195,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('GET');
@@ -211,7 +220,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('GET');
@@ -418,7 +427,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Body
         expect(bodyParams).to.have.property('user_input').to.equal(userInput);
@@ -456,7 +465,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('action').to.equal('focus');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('GET');
@@ -533,7 +542,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('GET');
@@ -722,7 +731,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Body
         expect(bodyParams).to.have.property('user_input').to.equal(requiredParameters.originalQuery);
@@ -778,7 +787,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Body
         expect(bodyParams).to.have.property('user_input').to.equal(snakeCaseParameters.original_query);
@@ -829,7 +838,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
         expect(requestParams).to.have.property('original_query').to.equal(snakeCaseParameters.original_query);
         expect(requestParams).to.have.property('item_id').to.equal(snakeCaseParameters.item_id);
         expect(requestParams).to.have.property('section').to.equal(snakeCaseParameters.section);
@@ -867,7 +876,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('original_query').to.equal(requiredParameters.originalQuery);
         expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('GET');
@@ -1026,7 +1035,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('GET');
@@ -1215,7 +1224,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('item_id').to.equal(snakeCaseParameters.item_id);
         expect(requestParams).to.have.property('item_name').to.equal(snakeCaseParameters.item_name);
         expect(requestParams).to.have.property('variation_id').to.equal(snakeCaseParameters.variation_id);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -1246,7 +1255,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.itemId);
         expect(requestParams).to.have.property('item_name').to.equal(requiredParameters.itemName);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -1387,7 +1396,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -1489,7 +1498,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Body
         expect(bodyParams).to.have.property('user_input').to.equal(snakeCaseParameters.original_query);
@@ -1528,7 +1537,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Body
         expect(bodyParams).to.have.property('user_input').to.equal(requiredParameters.originalQuery);
@@ -1572,7 +1581,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('original_query').to.equal(snakeCaseParameters.original_query);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('GET');
@@ -1602,7 +1611,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('original_query').to.equal(requiredParameters.originalQuery);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('GET');
@@ -1756,7 +1765,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('GET');
@@ -2013,7 +2022,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Body
         expect(bodyParams).to.have.property('result_count').to.equal(snakeCaseParameters.num_results);
@@ -2059,7 +2068,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Body
         expect(bodyParams).to.have.property('result_count').to.equal(requiredParameters.numResults);
@@ -2106,12 +2115,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Body
         expect(bodyParams).to.have.property('result_count').to.equal(requiredParameters.numResults);
         expect(bodyParams).to.have.property('url').to.equal(window?.location?.href);
-        expect(bodyParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
         expect(bodyParams).to.have.property('search_term').to.equal(term);
         expect(bodyParams).to.have.property('url').to.equal(window?.location?.href);
         expect(bodyParams).to.have.property('key');
@@ -2119,6 +2127,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(bodyParams).to.have.property('s');
         expect(bodyParams).to.have.property('c').to.equal(clientVersion);
         expect(bodyParams).to.have.property('_dt');
+        validateOriginReferrer(bodyParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -2356,10 +2365,10 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Body
-        expect(bodyParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(bodyParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -2618,7 +2627,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Body
         expect(bodyParams).to.have.property('item_name').to.equal(snakeCaseParameters.item_name);
@@ -2662,7 +2671,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Body
         expect(bodyParams).to.have.property('item_name').to.equal(requiredParameters.itemName);
@@ -2718,7 +2727,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('name').to.equal(snakeCaseParameters.item_name);
         expect(requestParams).to.have.property('customer_id').to.equal(snakeCaseParameters.item_id);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('GET');
@@ -2749,7 +2758,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('name').to.equal(requiredParameters.itemName);
         expect(requestParams).to.have.property('customer_id').to.equal(requiredParameters.itemId);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('GET');
@@ -2941,7 +2950,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('name').to.equal(requiredParameters.itemName);
         expect(requestParams).to.have.property('customer_id').to.equal(requiredParameters.itemId);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
         expect(requestParams).to.have.property('item_is_convertible').to.equal('false');
 
         // Response
@@ -2994,7 +3003,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('GET');
@@ -3204,7 +3213,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('item_id').to.equal(snakeCaseParameters.item_id);
         expect(requestParams).to.have.property('revenue').to.equal(snakeCaseParameters.revenue.toString());
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -3235,7 +3244,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.itemId);
         expect(requestParams).to.have.property('revenue').to.equal(requiredParameters.revenue.toString());
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -3271,7 +3280,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('item_name').to.equal(optionalParameters.itemName);
         expect(requestParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -3594,7 +3603,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('item_name').to.equal(parameters.name);
         expect(requestParams).to.have.property('revenue').to.equal(parameters.revenue.toString());
         expect(requestParams).to.have.property('section').to.equal(parameters.section);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -3650,7 +3659,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -3828,7 +3837,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
         expect(requestParams).to.have.property('items').to.deep.equal(snakeCaseParameters.items);
         expect(requestParams).to.have.property('revenue').to.equal(snakeCaseParameters.revenue);
 
@@ -3859,7 +3868,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
         expect(requestParams).to.have.property('items').to.deep.equal(snakeCaseItems);
         expect(requestParams).to.have.property('revenue').to.equal(requiredParameters.revenue);
 
@@ -4054,7 +4063,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -4294,7 +4303,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('url').to.equal(snakeCaseParameters.url);
         expect(requestParams).to.have.property('pod_id').to.equal(snakeCaseParameters.pod_id);
         expect(requestParams).to.have.property('num_results_viewed').to.equal(snakeCaseParameters.num_results_viewed);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -4326,7 +4335,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('url').to.equal(requiredParameters.url);
         expect(requestParams).to.have.property('pod_id').to.equal(requiredParameters.podId);
         expect(requestParams).to.have.property('num_results_viewed').to.equal(requiredParameters.numResultsViewed);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -4527,7 +4536,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -4701,7 +4710,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('pod_id').to.equal(snakeCaseParameters.pod_id);
         expect(requestParams).to.have.property('strategy_id').to.equal(snakeCaseParameters.strategy_id);
         expect(requestParams).to.have.property('item_id').to.equal(snakeCaseParameters.item_id);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -4733,7 +4742,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('pod_id').to.equal(requiredParameters.podId);
         expect(requestParams).to.have.property('strategy_id').to.equal(requiredParameters.strategyId);
         expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.itemId);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -4770,7 +4779,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('pod_id').to.equal(parametersWithItemName.pod_id);
         expect(requestParams).to.have.property('strategy_id').to.equal(parametersWithItemName.strategy_id);
         expect(requestParams).to.have.property('item_name').to.equal(parametersWithItemName.item_name);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -4807,7 +4816,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('pod_id').to.equal(parametersWithItemName.podId);
         expect(requestParams).to.have.property('strategy_id').to.equal(parametersWithItemName.strategyId);
         expect(requestParams).to.have.property('item_name').to.equal(parametersWithItemName.itemName);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -4979,7 +4988,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -5178,7 +5187,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('filter_name').to.equal(snakeCaseParameters.filter_name);
         expect(requestParams).to.have.property('filter_value').to.equal(snakeCaseParameters.filter_value);
         expect(requestParams).to.have.property('url').to.equal(snakeCaseParameters.url);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -5212,7 +5221,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('filter_name').to.equal(requiredParameters.filterName);
         expect(requestParams).to.have.property('filter_value').to.equal(requiredParameters.filterValue);
         expect(requestParams).to.have.property('url').to.equal(requiredParameters.url);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -5384,7 +5393,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -5578,7 +5587,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('filter_name').to.equal(requiredParameters.filterName);
         expect(requestParams).to.have.property('filter_value').to.equal(requiredParameters.filterValue);
         expect(requestParams).to.have.property('search_term').to.equal(requiredParameters.searchTerm);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -5748,7 +5757,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -5935,7 +5944,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('item_name').to.equal(snakeCaseParameters.item_name);
         expect(requestParams).to.have.property('filter_name').to.equal(snakeCaseParameters.filter_name);
         expect(requestParams).to.have.property('filter_value').to.equal(snakeCaseParameters.filter_value);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -5968,7 +5977,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('item_name').to.equal(requiredParameters.itemName);
         expect(requestParams).to.have.property('filter_name').to.equal(requiredParameters.filterName);
         expect(requestParams).to.have.property('filter_value').to.equal(requiredParameters.filterValue);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -6178,7 +6187,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -6362,7 +6371,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
         expect(requestParams).to.have.property('item_id').to.equal(snakeCaseParameters.item_id);
 
         // Response
@@ -6392,7 +6401,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
         expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.itemId);
 
         // Response
@@ -6595,7 +6604,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -6779,7 +6788,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
         expect(requestParams).to.have.property('quiz_id').to.equal(snakeCaseParameters.quiz_id);
         expect(requestParams).to.have.property('quiz_version_id').to.equal(snakeCaseParameters.quiz_version_id);
         expect(requestParams).to.have.property('url').to.equal(snakeCaseParameters.url);
@@ -6811,7 +6820,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
         expect(requestParams).to.have.property('quiz_id').to.equal(requiredParameters.quizId);
         expect(requestParams).to.have.property('quiz_version_id').to.equal(requiredParameters.quizVersionId);
         expect(requestParams).to.have.property('url').to.equal(requiredParameters.url);
@@ -6845,7 +6854,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
         expect(requestParams).to.have.property('quiz_id').to.equal(requiredParameters.quizId);
         expect(requestParams).to.have.property('quiz_version_id').to.equal(requiredParameters.quizVersionId);
         expect(requestParams).to.have.property('url').to.equal(requiredParameters.url);
@@ -7065,7 +7074,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -7233,7 +7242,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
         expect(requestParams).to.have.property('quiz_id').to.equal(snakeCaseParameters.quiz_id);
         expect(requestParams).to.have.property('quiz_version_id').to.equal(snakeCaseParameters.quiz_version_id);
         expect(requestParams).to.have.property('item_name').to.equal(snakeCaseParameters.item_name);
@@ -7266,7 +7275,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
         expect(requestParams).to.have.property('quiz_id').to.equal(requiredParameters.quizId);
         expect(requestParams).to.have.property('quiz_version_id').to.equal(requiredParameters.quizVersionId);
         expect(requestParams).to.have.property('item_name').to.equal(requiredParameters.itemName);
@@ -7505,7 +7514,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -7672,7 +7681,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
         expect(requestParams).to.have.property('quiz_id').to.equal(snakeCaseParameters.quiz_id);
         expect(requestParams).to.have.property('quiz_version_id').to.equal(snakeCaseParameters.quiz_version_id);
         expect(requestParams).to.have.property('item_name').to.equal(snakeCaseParameters.item_name);
@@ -7705,7 +7714,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
         expect(requestParams).to.have.property('quiz_id').to.equal(requiredParameters.quizId);
         expect(requestParams).to.have.property('quiz_version_id').to.equal(requiredParameters.quizVersionId);
         expect(requestParams).to.have.property('item_name').to.equal(requiredParameters.itemName);
@@ -7944,7 +7953,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -8173,7 +8182,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('intent').to.equal(requiredParameters.intent);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -8312,7 +8321,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -8463,7 +8472,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('intent').to.equal(requiredParameters.intent);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -8604,7 +8613,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -8756,7 +8765,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('intent').to.equal(requiredParameters.intent);
         expect(requestParams).to.have.property('search_result_count').to.equal(requiredParameters.searchResultCount);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -8897,7 +8906,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -9053,7 +9062,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
         expect(requestParams).to.have.property('intent').to.equal(requiredParameters.intent);
         expect(requestParams).to.have.property('search_result_id').to.equal(requiredParameters.searchResultId);
         expect(requestParams).to.have.property('item_name').to.equal(requiredParameters.itemName);
@@ -9199,7 +9208,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -9376,7 +9385,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('intent').to.equal(requiredParameters.intent);
         expect(requestParams).to.have.property('search_result_id').to.equal(requiredParameters.searchResultId);
         expect(requestParams).to.have.property('num_results_viewed').to.equal(requiredParameters.numResultsViewed);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -9517,7 +9526,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -9670,7 +9679,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('intent').to.equal(requiredParameters.intent);
         expect(requestParams).to.have.property('search_term').to.equal(requiredParameters.searchTerm);
         expect(requestParams).to.have.property('search_result_id').to.equal(requiredParameters.searchResultId);
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -9810,7 +9819,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('origin_referrer').to.equal('localhost.test/path/name');
+        validateOriginReferrer(requestParams);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
