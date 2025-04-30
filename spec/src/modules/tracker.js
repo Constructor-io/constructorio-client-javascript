@@ -4660,6 +4660,122 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
       expect(tracker.trackRecommendationView(requiredParameters)).to.equal(true);
     });
+
+    it('Should respond with a valid response when seedItemIds is an array', (done) => {
+      const seedItemIds = ['123']
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const requiredParamsWithSeedItemIds = {
+        seedItemIds,
+        ...requiredParameters
+      }
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('seed_item_ids').to.deep.equal(['123']);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackRecommendationView(requiredParamsWithSeedItemIds)).to.equal(true);
+    })
+
+    it('Should respond with a valid response and convert seedItemIds to an array if it\'s a string', (done) => {
+      const seedItemIds = '123'
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const requiredParamsWithSeedItemIds = {
+        seedItemIds,
+        ...requiredParameters
+      }
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('seed_item_ids').to.deep.equal(['123']);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackRecommendationView(requiredParamsWithSeedItemIds)).to.equal(true);
+    })
+
+    it('Should respond with a valid response and omit seed_item_ids if seedItemIds is a number', (done) => {
+      const seedItemIds = 123
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const requiredParamsWithSeedItemIds = {
+        seedItemIds,
+        ...requiredParameters
+      }
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('seed_item_ids');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackRecommendationView(requiredParamsWithSeedItemIds)).to.equal(true);
+    })
+
+    it('Should respond with a valid response and omit seed_item_ids if seedItemIds is an object', (done) => {
+      const seedItemIds = { seedItemIds: '123' }
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const requiredParamsWithSeedItemIds = {
+        seedItemIds,
+        ...requiredParameters
+      }
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('seed_item_ids');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackRecommendationView(requiredParamsWithSeedItemIds)).to.equal(true);
+    })
   });
 
   describe('trackRecommendationClick', () => {
