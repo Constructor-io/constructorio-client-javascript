@@ -1302,9 +1302,9 @@ class Tracker {
       }
 
       if (seedItemIds?.length && typeof seedItemIds === 'string') {
-        bodyParams.seed_item_ids = [seedItemIds]
+        bodyParams.seed_item_ids = [seedItemIds];
       } else if (seedItemIds?.length && Array.isArray(seedItemIds)) {
-        bodyParams.seed_item_ids = seedItemIds
+        bodyParams.seed_item_ids = seedItemIds;
       }
 
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;

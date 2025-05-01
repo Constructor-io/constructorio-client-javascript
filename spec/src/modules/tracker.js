@@ -4662,7 +4662,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when seedItemIds is an array', (done) => {
-      const seedItemIds = ['123']
+      const seedItemIds = ['123'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -4670,8 +4670,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
       const requiredParamsWithSeedItemIds = {
         seedItemIds,
-        ...requiredParameters
-      }
+        ...requiredParameters,
+      };
 
       tracker.on('success', (responseParams) => {
         const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
@@ -4688,10 +4688,10 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackRecommendationView(requiredParamsWithSeedItemIds)).to.equal(true);
-    })
+    });
 
     it('Should respond with a valid response and convert seedItemIds to an array if it\'s a string', (done) => {
-      const seedItemIds = '123'
+      const seedItemIds = '123';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -4699,8 +4699,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
       const requiredParamsWithSeedItemIds = {
         seedItemIds,
-        ...requiredParameters
-      }
+        ...requiredParameters,
+      };
 
       tracker.on('success', (responseParams) => {
         const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
@@ -4717,10 +4717,10 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackRecommendationView(requiredParamsWithSeedItemIds)).to.equal(true);
-    })
+    });
 
     it('Should respond with a valid response and omit seed_item_ids if seedItemIds is a number', (done) => {
-      const seedItemIds = 123
+      const seedItemIds = 123;
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -4728,8 +4728,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
       const requiredParamsWithSeedItemIds = {
         seedItemIds,
-        ...requiredParameters
-      }
+        ...requiredParameters,
+      };
 
       tracker.on('success', (responseParams) => {
         const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
@@ -4746,10 +4746,10 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackRecommendationView(requiredParamsWithSeedItemIds)).to.equal(true);
-    })
+    });
 
     it('Should respond with a valid response and omit seed_item_ids if seedItemIds is an object', (done) => {
-      const seedItemIds = { seedItemIds: '123' }
+      const seedItemIds = { seedItemIds: '123' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -4757,8 +4757,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
       const requiredParamsWithSeedItemIds = {
         seedItemIds,
-        ...requiredParameters
-      }
+        ...requiredParameters,
+      };
 
       tracker.on('success', (responseParams) => {
         const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
@@ -4775,7 +4775,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackRecommendationView(requiredParamsWithSeedItemIds)).to.equal(true);
-    })
+    });
   });
 
   describe('trackRecommendationClick', () => {
