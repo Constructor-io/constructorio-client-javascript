@@ -125,6 +125,7 @@ class RequestQueue {
           signal,
         });
       }
+
       if (request) {
         this.requestPending = true;
 
