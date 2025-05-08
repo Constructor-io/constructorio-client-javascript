@@ -240,9 +240,9 @@ export interface ItemTracked {
   variationId?: string;
   slCampaignId?: string;
   slCampaignOwner?: string;
+  price?: number;
 }
 
 export interface ItemTrackedPurchase extends ItemTracked {
   count?: number;
-  price?: number;
 }
