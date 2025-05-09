@@ -1222,6 +1222,7 @@ class Tracker {
    * @param {string} [parameters.resultId] - Recommendation result identifier (returned in response from Constructor)
    * @param {string} [parameters.section="Products"] - Results section
    * @param {object} [parameters.analyticsTags] - Pass additional analytics data
+   * @param {string[]|string|number} [parameters.seedItemIds] - Item ID(s) to be used as seed
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -1258,6 +1259,7 @@ class Tracker {
         numResultsViewed = num_results_viewed,
         items,
         analyticsTags,
+        seedItemIds,
         resultCount = result_count || items?.length || 0,
       } = parameters;
 
@@ -1297,6 +1299,14 @@ class Tracker {
 
       if (analyticsTags) {
         bodyParams.analytics_tags = analyticsTags;
+      }
+
+      if (typeof seedItemIds === 'number') {
+        bodyParams.seed_item_ids = [String(seedItemIds)];
+      } else if (seedItemIds?.length && typeof seedItemIds === 'string') {
+        bodyParams.seed_item_ids = [seedItemIds];
+      } else if (seedItemIds?.length && Array.isArray(seedItemIds)) {
+        bodyParams.seed_item_ids = seedItemIds;
       }
 
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
