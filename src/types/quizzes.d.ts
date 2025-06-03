@@ -1,4 +1,4 @@
-import { Nullable } from "./index.d";
+import { Nullable } from './index.d';
 import {
   ConstructorClientOptions,
   Facet,
@@ -10,7 +10,7 @@ import {
   SortOption,
   FilterExpression,
   ResultSources,
-} from ".";
+} from '.';
 
 export default Quizzes;
 
@@ -22,7 +22,7 @@ export interface QuizzesParameters {
 }
 
 export interface QuizResultsFmtOptions {
-  groups_start?: "current" | "top" | string;
+  groups_start?: 'current' | 'top' | string;
   groups_max_depth?: number;
   show_protected_facets?: boolean;
   show_hidden_facets?: boolean;
@@ -57,7 +57,7 @@ declare class Quizzes {
 
   getQuizResultsConfig(
     quizId: string,
-    parameters?: Pick<QuizzesParameters, "quizVersionId">,
+    parameters?: Pick<QuizzesParameters, 'quizVersionId'>,
     networkParameters?: NetworkParameters
   ): Promise<QuizResultsConfigResponse>;
 }
@@ -133,17 +133,17 @@ export interface BaseQuestion extends Record<string, any> {
 }
 
 export interface SelectQuestion extends BaseQuestion {
-  type: "single" | "multiple";
+  type: 'single' | 'multiple';
   options: QuestionOption[];
 }
 
 export interface OpenQuestion extends BaseQuestion {
-  type: "open";
+  type: 'open';
   input_placeholder?: Nullable<string>;
 }
 
 export interface CoverQuestion extends BaseQuestion {
-  type: "cover";
+  type: 'cover';
 }
 
 export interface QuizResult extends Record<string, any> {
