@@ -19,6 +19,7 @@ export interface QuizzesParameters {
   answers?: any[];
   quizVersionId?: string;
   quizSessionId?: string;
+  direction?: 'next' | 'previous';
 }
 
 export interface QuizResultsFmtOptions {

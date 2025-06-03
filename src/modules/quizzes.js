@@ -40,7 +40,11 @@ function createQuizUrl(quizId, parameters, options, path) {
   }
 
   if (parameters) {
-    const { section, answers, quizSessionId, quizVersionId, page, resultsPerPage, filters } = parameters;
+    const { section, answers, quizSessionId, quizVersionId, page, resultsPerPage, filters, direction } = parameters;
+
+    if (direction) {
+      queryParams.direction = direction;
+    }
 
     // Pull section from parameters
     if (section) {
