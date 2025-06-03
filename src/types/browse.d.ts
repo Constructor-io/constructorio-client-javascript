@@ -31,6 +31,7 @@ export interface IBrowseParameters {
   hiddenFacets?: string[];
   variationsMap?: VariationsMap;
   qsParam?: Record<string, any>;
+  filterMatchTypes?: Record<string, 'all'| 'any' | 'none'>
 }
 
 declare class Browse {
@@ -49,7 +50,7 @@ declare class Browse {
 
   getBrowseResultsForItemIds(
     itemIds: string[],
-    parameters?: Omit<IBrowseParameters, 'preFilterExpression' | 'qsParam'>,
+    parameters?: Omit<IBrowseParameters, 'qsParam'>,
     networkParameters?: NetworkParameters
   ): Promise<GetBrowseResultsForItemIdsResponse>;
 
@@ -141,4 +142,6 @@ export interface BrowseRequestType extends Record<string, any> {
   features: Partial<RequestFeature>;
   feature_variants: Partial<RequestFeatureVariant>;
   searchandized_items: Record<string, any>;
+  variations_map?: VariationsMap;
+  pre_filter_expression?: FilterExpression;
 }

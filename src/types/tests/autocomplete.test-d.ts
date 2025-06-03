@@ -36,6 +36,10 @@ expectAssignable<AutocompleteResponse>({
       },
     ],
   },
+  total_num_results_per_section: {
+    'Search Suggestions': 1,
+    Products: 1,
+  },
   result_id: '5a7e6a84-5ded-4315-83b5-71f08c175a4a',
   request: {
     query: 'red',
@@ -53,6 +57,45 @@ expectAssignable<AutocompleteResponse>({
       manual_searchandizing: null,
       personalization: 'default_personalization',
       filter_items: 'filter_items_w_and_purchases',
+    },
+    variations_map: {
+      group_by: [
+        {
+          name: 'variation_id',
+          field: 'data.VariationId',
+        },
+      ],
+      values: {
+        availability: {
+          aggregation: 'all',
+          field: 'data.availability',
+        },
+        quantity: {
+          aggregation: 'all',
+          field: 'data.quantity',
+        },
+      },
+      dtype: 'object',
+    },
+    pre_filter_expression: {
+      and: [
+        {
+          name: 'online',
+          value: 'True',
+        },
+        {
+          or: [
+            {
+              name: 'availability',
+              value: 'in stock',
+            },
+            {
+              name: 'unavailable',
+              value: 'True',
+            },
+          ],
+        },
+      ],
     },
     searchandized_items: {},
   },

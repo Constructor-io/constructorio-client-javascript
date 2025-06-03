@@ -1,6 +1,5 @@
 /* eslint-disable camelcase, no-unneeded-ternary, max-len, complexity */
 const ConstructorioID = require('@constructor-io/constructorio-id');
-const fetchPonyfill = require('fetch-ponyfill');
 
 // Modules
 const Search = require('./modules/search');
@@ -10,8 +9,9 @@ const Recommendations = require('./modules/recommendations');
 const Tracker = require('./modules/tracker');
 const EventDispatcher = require('./utils/event-dispatcher');
 const helpers = require('./utils/helpers');
-const { version: packageVersion } = require('../package.json');
+const { default: packageVersion } = require('./version');
 const Quizzes = require('./modules/quizzes');
+const Assistant = require('./modules/assistant');
 
 // Compute package version string
 const computePackageVersion = () => {
@@ -38,6 +38,7 @@ class ConstructorIO {
    * @param {string} parameters.apiKey - Constructor.io API key
    * @param {string} [parameters.serviceUrl='https://ac.cnstrc.com'] - API URL endpoint
    * @param {string} [parameters.quizzesServiceUrl='https://quizzes.cnstrc.com'] - Quizzes API URL endpoint
+   * @param {string} [parameters.assistantServiceUrl='https://assistant.cnstrc.com'] - AI Assistant API URL endpoint
    * @param {array} [parameters.segments] - User segments
    * @param {object} [parameters.testCells] - User test cells
    * @param {string} [parameters.clientId] - Client ID, defaults to value supplied by 'constructorio-id' module
@@ -59,6 +60,7 @@ class ConstructorIO {
    * @property {object} recommendations - Interface to {@link module:recommendations}
    * @property {object} tracker - Interface to {@link module:tracker}
    * @property {object} quizzes - Interface to {@link module:quizzes}
+   * @property {object} assistant - Interface to {@link module:assistant}
    * @returns {class}
    */
   constructor(options = {}) {
@@ -67,12 +69,13 @@ class ConstructorIO {
       version: versionFromOptions,
       serviceUrl,
       quizzesServiceUrl,
+      assistantServiceUrl,
       segments,
       testCells,
       clientId,
       sessionId,
       userId,
-      fetch,
+      fetch: fetchFromOptions,
       trackingSendDelay,
       sendReferrerWithTrackingEvents,
       sendTrackingEvents,
@@ -105,17 +108,20 @@ class ConstructorIO {
       }
     }
 
+    const normalizedServiceUrl = serviceUrl && serviceUrl.replace(/\/$/, '');
+
     this.options = {
       apiKey,
       version: versionFromOptions || versionFromGlobal || computePackageVersion(),
-      serviceUrl: (serviceUrl && serviceUrl.replace(/\/$/, '')) || 'https://ac.cnstrc.com',
+      serviceUrl: helpers.addHTTPSToString(normalizedServiceUrl) || 'https://ac.cnstrc.com',
       quizzesServiceUrl: (quizzesServiceUrl && quizzesServiceUrl.replace(/\/$/, '')) || 'https://quizzes.cnstrc.com',
+      assistantServiceUrl: (assistantServiceUrl && assistantServiceUrl.replace(/\/$/, '')) || 'https://assistant.cnstrc.com',
       sessionId: sessionId || session_id,
       clientId: clientId || client_id,
       userId,
       segments,
       testCells,
-      fetch: fetch || fetchPonyfill({ Promise }).fetch,
+      fetch: fetchFromOptions || fetch,
       trackingSendDelay,
       sendTrackingEvents,
       sendReferrerWithTrackingEvents,
@@ -131,6 +137,7 @@ class ConstructorIO {
     this.recommendations = new Recommendations(this.options);
     this.tracker = new Tracker(this.options);
     this.quizzes = new Quizzes(this.options);
+    this.assistant = new Assistant(this.options);
 
     // Dispatch initialization event
     new EventDispatcher(options.eventDispatcher).queue('instantiated', this.options);
@@ -139,14 +146,16 @@ class ConstructorIO {
   /**
    * Sets the client options
    *
-   * @param {string} apiKey - Constructor.io API key
-   * @param {array} [segments] - User segments
-   * @param {object} [testCells] - User test cells
-   * @param {string} [userId] - User ID
+   * @param {object} options - Client options to update
+   * @param {string} [options.apiKey] - Constructor.io API key
+   * @param {array} [options.segments] - User segments
+   * @param {object} [options.testCells] - User test cells
+   * @param {number} [options.sessionId] - Session ID - Will only be set in DOM-less environments
+   * @param {string} [options.userId] - User ID
    */
   setClientOptions(options) {
     if (Object.keys(options).length) {
-      const { apiKey, segments, testCells, userId } = options;
+      const { apiKey, segments, testCells, sessionId, userId } = options;
 
       if (apiKey) {
         this.options.apiKey = apiKey;
@@ -160,7 +169,13 @@ class ConstructorIO {
         this.options.testCells = testCells;
       }
 
-      if (userId) {
+      // Set Session ID in dom-less environments only
+      if (sessionId && !helpers.canUseDOM()) {
+        this.options.sessionId = sessionId;
+      }
+
+      // If User ID is passed
+      if ('userId' in options) {
         this.options.userId = userId;
       }
     }

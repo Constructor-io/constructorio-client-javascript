@@ -5,7 +5,6 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
-const fetchPonyfill = require('fetch-ponyfill');
 const helpers = require('../../mocha.helpers');
 const jsdom = require('../utils/jsdom-global');
 let ConstructorIO = require('../../../test/constructorio'); // eslint-disable-line import/extensions
@@ -14,13 +13,12 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 dotenv.config();
 
-const { fetch } = fetchPonyfill({ Promise });
 const testApiKey = process.env.TEST_REQUEST_API_KEY;
 const clientVersion = 'cio-mocha';
 const bundled = process.env.BUNDLED === 'true';
 const skipNetworkTimeoutTests = process.env.SKIP_NETWORK_TIMEOUT_TESTS === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
-const timeoutRejectionMessage = bundled ? 'Aborted' : 'The user aborted a request.';
+const timeoutRejectionMessage = 'This operation was aborted';
 
 describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
   const jsdomOptions = { url: 'http://localhost' };
@@ -196,6 +194,28 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should return a response with a valid filterName, filterValue and additional filters and filterMatchTypes', (done) => {
+      const filters = { keywords: ['battery-powered'] };
+      const filterMatchTypes = { keywords: 'any' };
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResults(filterName, filterValue, { filters, filterMatchTypes }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.filters).to.deep.equal(filters);
+        expect(requestedUrlParams).to.have.property('filters');
+        expect(requestedUrlParams.filters).to.have.property('keywords').to.equal(Object.values(filters)[0][0]);
+        expect(requestedUrlParams).to.have.property('filter_match_types');
+        expect(requestedUrlParams.filter_match_types).to.have.property('keywords').to.equal(filterMatchTypes.keywords);
+        done();
+      });
+    });
+
     it('Should return a response with a valid filterName, filterValue and additional fmtOptions', (done) => {
       const fmtOptions = { groups_max_depth: 2, groups_start: 'current' };
       const { browse } = new ConstructorIO({
@@ -344,7 +364,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
         expect(res).to.have.property('result_id').to.be.an('string');
         expect(res.request.fmt_options.hidden_facets).to.eql(hiddenFacets);
         expect(requestedUrlParams.fmt_options).to.have.property('hidden_facets').to.eql(hiddenFacets);
-        expect(res.response.facets[0]).to.have.property('name').to.eql('Brand');
+        expect(res.response.facets.some((facet) => facet.name === 'Brand')).to.eql(true);
         done();
       });
     });
@@ -852,6 +872,30 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should return a response with valid ids and additional filters and filterMatchTypes', (done) => {
+      const filters = { keywords: ['battery-powered'] };
+      const filterMatchTypes = { keywords: 'any' };
+
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResultsForItemIds(ids, { filters, filterMatchTypes }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.filters).to.deep.equal(filters);
+        expect(requestedUrlParams).to.have.property('filters');
+        expect(requestedUrlParams.filters).to.have.property('keywords').to.equal(Object.values(filters)[0][0]);
+        expect(requestedUrlParams).to.have.property('filter_match_types');
+        expect(requestedUrlParams.filter_match_types).to.have.property('keywords').to.equal(filterMatchTypes.keywords);
+        done();
+      });
+    });
+
     it('Should return a response with valid ids and additional filters', (done) => {
       const filters = { keywords: ['battery-powered'] };
       const { browse } = new ConstructorIO({
@@ -1055,6 +1099,51 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
         expect(requestedUrlParams).to.have.property('s');
         expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
         expect(requestedUrlParams).to.have.property('_dt');
+        done();
+      });
+    });
+
+    it('Should return a return a response with pre filter expression properly parsed', (done) => {
+      const preFilterExpression = {
+        or: [
+          {
+            and: [
+              {
+                name: 'group_id',
+                value: 'electronics-group-id',
+              },
+              {
+                name: 'Price',
+                range: ['-inf', 200],
+              },
+            ],
+          },
+          {
+            and: [
+              {
+                name: 'Type',
+                value: 'Laptop',
+              },
+              {
+                not: {
+                  name: 'Price',
+                  range: [800, 'inf'],
+                },
+              },
+            ],
+          },
+        ],
+      };
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResultsForItemIds(ids, { preFilterExpression }).then((res) => {
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(JSON.stringify(res.request.pre_filter_expression)).to.equal(JSON.stringify(preFilterExpression));
         done();
       });
     });

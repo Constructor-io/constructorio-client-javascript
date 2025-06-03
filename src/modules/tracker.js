@@ -1,3 +1,6 @@
+/* eslint-disable max-depth */
+/* eslint-disable complexity */
+/* eslint-disable max-len */
 /* eslint-disable object-curly-newline, no-underscore-dangle, camelcase, no-unneeded-ternary */
 const EventEmitter = require('../utils/events');
 const helpers = require('../utils/helpers');
@@ -15,7 +18,7 @@ function applyParams(parameters, options) {
     requestMethod,
     beaconMode,
   } = options;
-  const { host, pathname } = helpers.getWindowLocation();
+  const { host, pathname, search } = helpers.getWindowLocation();
   const sendReferrerWithTrackingEvents = (options.sendReferrerWithTrackingEvents === false)
     ? false
     : true; // Defaults to 'true'
@@ -61,6 +64,25 @@ function applyParams(parameters, options) {
     if (pathname) {
       aggregateParams.origin_referrer += pathname;
     }
+
+    if (search) {
+      try {
+        const utmQueryParamStrArr = [];
+        const searchParams = new URLSearchParams(search);
+
+        searchParams.forEach((value, key) => {
+          if (key.match(/utm_/)) {
+            utmQueryParamStrArr.push(`${key}=${value}`);
+          }
+        });
+
+        if (utmQueryParamStrArr.length) {
+          aggregateParams.origin_referrer += `?${utmQueryParamStrArr.join('&')}`;
+        }
+      } catch (e) {
+        // Do nothing
+      }
+    }
   }
 
   aggregateParams._dt = Date.now();
@@ -86,7 +108,6 @@ class Tracker {
     this.options = options || {};
     this.eventemitter = new EventEmitter();
     this.requests = new RequestQueue(options, this.eventemitter);
-    this.behavioralV2Url = 'https://ac.cnstrc.com/v2/behavioral_action/';
   }
 
   /**
@@ -100,7 +121,7 @@ class Tracker {
    * constructorio.tracker.trackSessionStartV2();
    */
   trackSessionStartV2(networkParameters = {}) {
-    const url = `${this.behavioralV2Url}session_start?`;
+    const url = `${this.options.serviceUrl}/v2/behavioral_action/session_start?`;
 
     this.requests.queue(`${url}${applyParamsAsString({}, this.options)}`, 'POST', undefined, networkParameters);
     this.requests.send();
@@ -132,7 +153,9 @@ class Tracker {
    * Send input focus event to API
    * @private
    * @function trackInputFocusV2
-   * @param {string} userInput - Input at the time user focused on the search bar
+   * @param {string} userInput - The current autocomplete search query
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -140,25 +163,25 @@ class Tracker {
    * @example
    * constructorio.tracker.trackInputFocusV2("text");
    */
-  trackInputFocusV2(userInput = '', networkParameters = {}) {
-    const baseUrl = `${this.behavioralV2Url}focus?`;
+  trackInputFocusV2(userInput = '', parameters = {}, networkParameters = {}) {
+    const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/focus?`;
     const bodyParams = {};
-    let networkParametersNew = networkParameters;
-    let userInputNew = userInput;
+    const {
+      analyticsTags = null,
+    } = parameters;
 
-    if (typeof userInput === 'object') {
-      networkParametersNew = userInput;
-      userInputNew = '';
+    if (analyticsTags) {
+      bodyParams.analytics_tags = analyticsTags;
     }
 
-    bodyParams.user_input = userInputNew;
+    bodyParams.user_input = userInput;
 
     const requestMethod = 'POST';
     const requestBody = applyParams(bodyParams, {
       ...this.options,
       requestMethod,
     });
-    this.requests.queue(`${baseUrl}${applyParamsAsString({}, this.options)}`, requestMethod, requestBody, networkParametersNew);
+    this.requests.queue(`${baseUrl}${applyParamsAsString({}, this.options)}`, requestMethod, requestBody, networkParameters);
     this.requests.send();
 
     return true;
@@ -193,6 +216,7 @@ class Tracker {
    * @param {string} parameters.itemName - Product item name
    * @param {string} parameters.itemId - Product item unique identifier
    * @param {string} parameters.url - Current page URL
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {string} [parameters.variationId] - Product item variation unique identifier
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -224,6 +248,7 @@ class Tracker {
         itemId = item_id || customerId,
         variationId = variation_id,
         url,
+        analyticsTags,
       } = parameters;
 
       // Ensure support for both item_name and name as parameters
@@ -238,6 +263,10 @@ class Tracker {
 
       if (variationId) {
         bodyParams.variation_id = variationId;
+      }
+
+      if (analyticsTags) {
+        bodyParams.analytics_tags = analyticsTags;
       }
 
       if (url) {
@@ -270,7 +299,9 @@ class Tracker {
    * @param {string} [parameters.tr] - Trigger used to select the item (click, etc.)
    * @param {string} [parameters.itemId] - Item id of the selected item
    * @param {string} [parameters.variationId] - Variation id of the selected item
-   * @param {string} [parameters.groupId] - Group identifier of selected item
+   * @param {string} [parameters.groupId] - Group identifier of the group to search within. Only required if searching within a group, i.e. "Pumpkin in Canned Goods"
+   * @param {string} [parameters.slCampaignId] - Pass campaign id of sponsored listing
+   * @param {string} [parameters.slCampaignOwner] - Pass campaign owner of sponsored listing
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -285,6 +316,8 @@ class Tracker {
    *          groupId: '88JU230',
    *          itemId: '12345',
    *          variationId: '12345-A',
+   *          slCampaignId: 'Campaign 123',
+   *          slCampaignOwner: 'Store 123',
    *      },
    * );
    */
@@ -293,7 +326,7 @@ class Tracker {
     if (itemName && typeof itemName === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-        const baseUrl = `${this.behavioralV2Url}autocomplete_select?`;
+        const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/autocomplete_select?`;
         const {
           original_query,
           originalQuery = original_query,
@@ -308,6 +341,8 @@ class Tracker {
           itemId = item_id,
           variation_id,
           variationId = variation_id,
+          slCampaignId,
+          slCampaignOwner,
         } = parameters;
         const queryParams = {};
         const bodyParams = {
@@ -322,6 +357,14 @@ class Tracker {
 
         if (section) {
           queryParams.section = section;
+        }
+
+        if (slCampaignId) {
+          bodyParams.sl_campaign_id = slCampaignId;
+        }
+
+        if (slCampaignOwner) {
+          bodyParams.sl_campaign_owner = slCampaignOwner;
         }
 
         const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
@@ -360,8 +403,11 @@ class Tracker {
    * @param {string} parameters.originalQuery - The current autocomplete search query
    * @param {string} parameters.section - Section the selected item resides within
    * @param {string} [parameters.tr] - Trigger used to select the item (click, etc.)
-   * @param {string} [parameters.groupId] - Group identifier of selected item
+   * @param {string} [parameters.groupId] - Group identifier of the group to search within. Only required if searching within a group, i.e. "Pumpkin in Canned Goods"
    * @param {string} [parameters.displayName] - Display name of group of selected item
+   * @param {string} [parameters.itemId] - Item id of the selected item
+   * @param {string} [parameters.slCampaignId] - Pass campaign id of sponsored listing
+   * @param {string} [parameters.slCampaignOwner] - Pass campaign owner of sponsored listing
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -375,6 +421,9 @@ class Tracker {
    *         tr: 'click',
    *         groupId: '88JU230',
    *         displayName: 'apparel',
+   *         itemId: '12345',
+   *         slCampaignId: 'Campaign 123',
+   *         slCampaignOwner: 'Store 123',
    *      },
    * );
    */
@@ -396,6 +445,10 @@ class Tracker {
           groupId = group_id,
           display_name,
           displayName = display_name,
+          item_id,
+          itemId = item_id,
+          slCampaignOwner,
+          slCampaignId,
         } = parameters;
 
         if (originalQuery) {
@@ -415,6 +468,18 @@ class Tracker {
             group_id: groupId,
             display_name: displayName,
           };
+        }
+
+        if (itemId) {
+          queryParams.item_id = itemId;
+        }
+
+        if (slCampaignId) {
+          queryParams.sl_campaign_id = slCampaignId;
+        }
+
+        if (slCampaignOwner) {
+          queryParams.sl_campaign_owner = slCampaignOwner;
         }
 
         this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`, undefined, undefined, networkParameters);
@@ -440,8 +505,9 @@ class Tracker {
    * @param {string} searchTerm - Term of submitted autocomplete event
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.userInput - The current autocomplete search query
-   * @param {string} [parameters.groupId] - Group identifier of selected item
+   * @param {string} [parameters.groupId] - Group identifier of the group to search within. Only required if searching within a group, i.e. "Pumpkin in Canned Goods"
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -460,7 +526,7 @@ class Tracker {
     if (searchTerm && typeof searchTerm === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-        const baseUrl = `${this.behavioralV2Url}search_submit?`;
+        const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/search_submit?`;
         const {
           original_query,
           originalQuery = original_query,
@@ -469,6 +535,7 @@ class Tracker {
           group_id,
           groupId = group_id,
           section,
+          analyticsTags = null,
         } = parameters;
         const queryParams = {};
         const bodyParams = {
@@ -483,6 +550,10 @@ class Tracker {
 
         if (section) {
           queryParams.section = section;
+        }
+
+        if (analyticsTags) {
+          bodyParams.analytics_tags = analyticsTags;
         }
 
         const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
@@ -518,7 +589,7 @@ class Tracker {
    * @param {string} term - Term of submitted autocomplete event
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.originalQuery - The current autocomplete search query
-   * @param {string} [parameters.groupId] - Group identifier of selected item
+   * @param {string} [parameters.groupId] - Group identifier of the group to search within. Only required if searching within a group, i.e. "Pumpkin in Canned Goods"
    * @param {string} [parameters.displayName] - Display name of group of selected item
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -578,9 +649,9 @@ class Tracker {
   }
 
   /**
-   * Send search results loaded v2 event to API
-   * @private
-   * @function trackSearchResultsLoadedV2
+   * Send search results loaded event to API
+   *
+   * @function trackSearchResultsLoaded
    * @param {string} searchTerm - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.url - URL of the search results page
@@ -592,12 +663,13 @@ class Tracker {
    * @param {string} [parameters.sortOrder] - Sort order ('ascending' or 'descending')
    * @param {string} [parameters.sortBy] - Sorting method
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description User viewed a search product listing page
    * @example
-   * constructorio.tracker.trackSearchResultsLoadedV2(
+   * constructorio.tracker.trackSearchResultsLoaded(
    *     'T-Shirt',
    *     {
    *         resultCount: 167,
@@ -609,19 +681,20 @@ class Tracker {
    *     },
    * );
    */
-  trackSearchResultsLoadedV2(searchTerm, parameters, networkParameters = {}) {
+  trackSearchResultsLoaded(searchTerm, parameters, networkParameters = {}) {
     // Ensure term is provided (required)
     if (searchTerm && typeof searchTerm === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-        const baseUrl = `${this.behavioralV2Url}search_result_load?`;
+        const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/search_result_load?`;
         const {
           num_results,
           numResults = num_results,
           result_count,
-          resultCount = numResults || result_count,
-          customer_ids,
-          item_ids,
+          customerIds,
+          customer_ids = customerIds,
+          itemIds,
+          item_ids = itemIds,
           items = customer_ids || item_ids,
           result_page,
           resultPage = result_page,
@@ -633,18 +706,21 @@ class Tracker {
           sortBy = sort_by,
           selected_filters,
           selectedFilters = selected_filters,
-          url,
+          url = helpers.getWindowLocation()?.href || 'N/A',
           section,
+          analyticsTags,
+          resultCount = numResults ?? result_count ?? items?.length ?? 0,
         } = parameters;
         const queryParams = {};
         let transformedItems;
 
         if (items && Array.isArray(items) && items.length !== 0) {
-          transformedItems = items;
+          const trimmedItems = items.slice(0, 100);
+
           if (typeof items[0] === 'string' || typeof items[0] === 'number') {
-            transformedItems = items.map((itemId) => ({ item_id: String(itemId) }));
+            transformedItems = trimmedItems.map((itemId) => ({ item_id: String(itemId) }));
           } else {
-            transformedItems = items.map((item) => helpers.toSnakeCaseKeys(item, false));
+            transformedItems = trimmedItems.map((item) => helpers.toSnakeCaseKeys(item, false));
           }
         }
 
@@ -663,6 +739,7 @@ class Tracker {
           selected_filters: selectedFilters,
           url,
           section,
+          analytics_tags: analyticsTags,
         };
 
         const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
@@ -692,75 +769,6 @@ class Tracker {
   }
 
   /**
-   * Send search results loaded event to API
-   *
-   * @function trackSearchResultsLoaded
-   * @param {string} term - Search results query term
-   * @param {object} parameters - Additional parameters to be sent with request
-   * @param {number} parameters.numResults - Total number of results
-   * @param {string[]} parameters.itemIds - List of product item unique identifiers in search results listing
-   * @param {object} [networkParameters] - Parameters relevant to the network request
-   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
-   * @returns {(true|Error)}
-   * @description User viewed a search product listing page
-   * @example
-   * constructorio.tracker.trackSearchResultsLoaded(
-   *     'T-Shirt',
-   *     {
-   *         numResults: 167,
-   *         itemIds: ['KMH876', 'KMH140', 'KMH437'],
-   *     },
-   * );
-   */
-  trackSearchResultsLoaded(term, parameters, networkParameters = {}) {
-    // Ensure term is provided (required)
-    if (term && typeof term === 'string') {
-      // Ensure parameters are provided (required)
-      if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-        const url = `${this.options.serviceUrl}/behavior?`;
-        const queryParams = { action: 'search-results', term };
-        const {
-          num_results,
-          numResults = num_results,
-          customer_ids,
-          customerIds = customer_ids,
-          item_ids,
-          itemIds = item_ids,
-        } = parameters;
-        let customerIDs;
-
-        if (!helpers.isNil(numResults)) {
-          queryParams.num_results = numResults;
-        }
-
-        // Ensure support for both item_ids and customer_ids as parameters
-        if (itemIds && Array.isArray(itemIds)) {
-          customerIDs = itemIds;
-        } else if (customerIds && Array.isArray(customerIds)) {
-          customerIDs = customerIds;
-        }
-
-        if (customerIDs && Array.isArray(customerIDs) && customerIDs.length) {
-          queryParams.customer_ids = customerIDs.slice(0, 100).join(',');
-        }
-
-        this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`, undefined, undefined, networkParameters);
-        this.requests.send();
-
-        return true;
-      }
-
-      this.requests.send();
-
-      return new Error('parameters are required of type object');
-    }
-
-    this.requests.send();
-
-    return new Error('term is a required parameter of type string');
-  }
-
-  /**
    * Send click through event to API
    * @private
    * @function trackSearchResultClickV2
@@ -776,6 +784,9 @@ class Tracker {
    * @param {string} [parameters.numResultsPerPage] - Number of results per page
    * @param {object} [parameters.selectedFilters] - Key - Value map of selected filters
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
+   * @param {string} [parameters.slCampaignId] - Pass campaign id of sponsored listing
+   * @param {string} [parameters.slCampaignOwner] - Pass campaign owner of sponsored listing
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -787,6 +798,8 @@ class Tracker {
    *         itemName: 'Red T-Shirt',
    *         itemId: 'KMH876',
    *         resultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         slCampaignId: 'Campaign 123',
+   *         slCampaignOwner: 'Store 123',
    *     },
    * );
    */
@@ -795,7 +808,7 @@ class Tracker {
     if (searchTerm && typeof searchTerm === 'string') {
       // Ensure parameters are provided (required)
       if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-        const baseUrl = `${this.behavioralV2Url}search_result_click?`;
+        const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/search_result_click?`;
         const {
           num_results,
           customer_id,
@@ -819,8 +832,13 @@ class Tracker {
           selected_filters,
           selectedFilters = selected_filters,
           section,
+          analyticsTags,
+          slCampaignId,
+          slCampaignOwner,
         } = parameters;
         const bodyParams = {
+          sl_campaign_id: slCampaignId,
+          sl_campaign_owner: slCampaignOwner,
           item_name: itemName,
           item_id: itemId,
           variation_id: variationId,
@@ -832,6 +850,7 @@ class Tracker {
           selected_filters: selectedFilters,
           section,
           search_term: searchTerm,
+          analytics_tags: analyticsTags,
         };
         const queryParams = {};
 
@@ -877,6 +896,9 @@ class Tracker {
    * @param {string} [parameters.resultId] - Search result identifier (returned in response from Constructor)
    * @param {string} [parameters.itemIsConvertible] - Whether or not an item is available for a conversion
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
+   * @param {string} [parameters.slCampaignId] - Pass campaign id of sponsored listing
+   * @param {string} [parameters.slCampaignOwner] - Pass campaign owner of sponsored listing
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -888,6 +910,8 @@ class Tracker {
    *         itemName: 'Red T-Shirt',
    *         itemId: 'KMH876',
    *         resultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         slCampaignId: 'Campaign 123',
+   *         slCampaignOwner: 'Store 123',
    *     },
    * );
    */
@@ -913,6 +937,9 @@ class Tracker {
           item_is_convertible,
           itemIsConvertible = item_is_convertible,
           section,
+          analyticsTags,
+          slCampaignOwner,
+          slCampaignId,
         } = parameters;
 
         // Ensure support for both item_name and name as parameters
@@ -939,6 +966,18 @@ class Tracker {
 
         if (section) {
           queryParams.section = section;
+        }
+
+        if (analyticsTags) {
+          queryParams.analytics_tags = analyticsTags;
+        }
+
+        if (slCampaignId) {
+          queryParams.sl_campaign_id = slCampaignId;
+        }
+
+        if (slCampaignOwner) {
+          queryParams.sl_campaign_owner = slCampaignOwner;
         }
 
         this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`, undefined, undefined, networkParameters);
@@ -975,7 +1014,7 @@ class Tracker {
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description User performed an action indicating interest in an item (add to cart, add to wishlist, etc.)
-   * @see https://docs.constructor.io/rest_api/behavioral_logging/conversions
+   * @see https://docs.constructor.com/docs/integrating-with-constructor-behavioral-tracking-data-driven-event-tracking
    * @example
    * constructorio.tracker.trackConversion(
    *     'T-Shirt',
@@ -1080,10 +1119,15 @@ class Tracker {
    *
    * @function trackPurchase
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {object[]} parameters.items - List of product item objects
+   * @param {Array.<{itemId: string | undefined,
+   * variationId: string | undefined,
+   * itemName: string | undefined,
+   * count: number | undefined,
+   * price: number | undefined}>} parameters.items - List of product item objects
    * @param {number} parameters.revenue - The subtotal (excluding taxes, shipping, etc.) of the entire order
    * @param {string} [parameters.orderId] - Unique order identifier
    * @param {string} [parameters.section="Products"] - Index section
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -1091,7 +1135,7 @@ class Tracker {
    * @example
    * constructorio.tracker.trackPurchase(
    *     {
-   *         items: [{ itemId: 'KMH876' }, { itemId: 'KMH140' }],
+   *         items: [{ itemId: 'KMH876', price: 1, count: 1}, { itemId: 'KMH140', price: 1, count: 1s }],
    *         revenue: 12.00,
    *         orderId: 'OUNXBG2HMA',
    *         section: 'Products',
@@ -1110,15 +1154,17 @@ class Tracker {
         order_id,
         orderId = order_id,
         section,
+        analyticsTags,
       } = parameters;
+      const { apiKey } = this.options;
 
       if (orderId) {
-        // Don't send another purchase event if we have already tracked the order
-        if (helpers.hasOrderIdRecord(orderId)) {
+        // Don't send another purchase event if we have already tracked the order for the current key
+        if (helpers.hasOrderIdRecord({ orderId, apiKey })) {
           return false;
         }
 
-        helpers.addOrderIdRecord(orderId);
+        helpers.addOrderIdRecord({ orderId, apiKey });
 
         // Add order_id to the tracking params
         bodyParams.order_id = orderId;
@@ -1136,6 +1182,10 @@ class Tracker {
         queryParams.section = section;
       } else {
         queryParams.section = 'Products';
+      }
+
+      if (analyticsTags) {
+        bodyParams.analytics_tags = analyticsTags;
       }
 
       const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
@@ -1171,6 +1221,8 @@ class Tracker {
    * @param {number} [parameters.resultPage] - Page number of results
    * @param {string} [parameters.resultId] - Recommendation result identifier (returned in response from Constructor)
    * @param {string} [parameters.section="Products"] - Results section
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
+   * @param {string[]|string|number} [parameters.seedItemIds] - Item ID(s) to be used as seed
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -1195,7 +1247,6 @@ class Tracker {
       const bodyParams = {};
       const {
         result_count,
-        resultCount = result_count,
         result_page,
         resultPage = result_page,
         result_id,
@@ -1207,6 +1258,9 @@ class Tracker {
         num_results_viewed,
         numResultsViewed = num_results_viewed,
         items,
+        analyticsTags,
+        seedItemIds,
+        resultCount = result_count || items?.length || 0,
       } = parameters;
 
       if (!helpers.isNil(resultCount)) {
@@ -1241,6 +1295,18 @@ class Tracker {
 
       if (items && Array.isArray(items)) {
         bodyParams.items = items.slice(0, 100).map((item) => helpers.toSnakeCaseKeys(item, false));
+      }
+
+      if (analyticsTags) {
+        bodyParams.analytics_tags = analyticsTags;
+      }
+
+      if (typeof seedItemIds === 'number') {
+        bodyParams.seed_item_ids = [String(seedItemIds)];
+      } else if (seedItemIds?.length && typeof seedItemIds === 'string') {
+        bodyParams.seed_item_ids = [seedItemIds];
+      } else if (seedItemIds?.length && Array.isArray(seedItemIds)) {
+        bodyParams.seed_item_ids = seedItemIds;
       }
 
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
@@ -1279,6 +1345,7 @@ class Tracker {
    * @param {number} [parameters.resultPage] - Page number of results
    * @param {number} [parameters.resultPositionOnPage] - Position of result on page
    * @param {number} [parameters.numResultsPerPage] - Number of results on page
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -1326,6 +1393,7 @@ class Tracker {
         itemId = item_id,
         item_name,
         itemName = item_name,
+        analyticsTags,
       } = parameters;
 
       if (variationId) {
@@ -1372,6 +1440,10 @@ class Tracker {
         bodyParams.item_name = itemName;
       }
 
+      if (analyticsTags) {
+        bodyParams.analytics_tags = analyticsTags;
+      }
+
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
       const requestMethod = 'POST';
       const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
@@ -1408,6 +1480,7 @@ class Tracker {
    * @param {object} [parameters.selectedFilters] - Selected filters
    * @param {string} [parameters.sortOrder] - Sort order ('ascending' or 'descending')
    * @param {string} [parameters.sortBy] - Sorting method
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -1436,7 +1509,6 @@ class Tracker {
       const {
         section = 'Products',
         result_count,
-        resultCount = result_count,
         result_page,
         resultPage = result_page,
         result_id,
@@ -1453,6 +1525,8 @@ class Tracker {
         filter_value,
         filterValue = filter_value,
         items,
+        analyticsTags,
+        resultCount = result_count ?? items?.length ?? 0,
       } = parameters;
 
       if (section) {
@@ -1499,6 +1573,10 @@ class Tracker {
         bodyParams.items = items.slice(0, 100).map((item) => helpers.toSnakeCaseKeys(item, false));
       }
 
+      if (analyticsTags) {
+        bodyParams.analytics_tags = analyticsTags;
+      }
+
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
       const requestMethod = 'POST';
       const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
@@ -1536,6 +1614,9 @@ class Tracker {
    * @param {number} [parameters.resultPositionOnPage] - Position of clicked item
    * @param {number} [parameters.numResultsPerPage] - Number of results shown
    * @param {object} [parameters.selectedFilters] -  Selected filters
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
+   * @param {string} [parameters.slCampaignId] - Pass campaign id of sponsored listing
+   * @param {string} [parameters.slCampaignOwner] - Pass campaign owner of sponsored listing
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -1553,6 +1634,8 @@ class Tracker {
    *         filterName: 'brand',
    *         filterValue: 'XYZ',
    *         itemId: 'KMH876',
+   *         slCampaignId: 'Campaign 123',
+   *         slCampaignOwner: 'Store 123',
    *     },
    * );
    */
@@ -1588,6 +1671,9 @@ class Tracker {
         item_name,
         name,
         itemName = item_name || name,
+        analyticsTags,
+        slCampaignId,
+        slCampaignOwner,
       } = parameters;
 
       if (section) {
@@ -1639,6 +1725,128 @@ class Tracker {
         bodyParams.item_name = itemName;
       }
 
+      if (analyticsTags) {
+        bodyParams.analytics_tags = analyticsTags;
+      }
+
+      if (slCampaignId) {
+        bodyParams.sl_campaign_id = slCampaignId;
+      }
+
+      if (slCampaignOwner) {
+        bodyParams.sl_campaign_owner = slCampaignOwner;
+      }
+
+      const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
+
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send browse redirect event to API
+   * @private
+   * @function trackBrowseRedirect
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.searchTerm - The search query that caused redirect
+   * @param {string} parameters.filterName - Filter name
+   * @param {string} parameters.filterValue - Filter value
+   * @param {string} [parameters.userInput] - The text that a user had typed at the moment when submitting search request
+   * @param {string} [parameters.redirectToUrl] - URL of the  page to which user is redirected
+   * @param {string} [parameters.section="Products"] - Index section
+   * @param {object} [parameters.selectedFilters] - Selected filters
+   * @param {string} [parameters.sortOrder] - Sort order ('ascending' or 'descending')
+   * @param {string} [parameters.sortBy] - Sorting method
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User got redirected to a browse product listing page
+   * @example
+   * constructorio.tracker.trackBrowseRedirect(
+   *     {
+   *         searchTerm: "books",
+   *         filterName: 'brand',
+   *         filterValue: 'XYZ',
+   *         redirectToUrl: 'https://demo.constructor.io/books',
+   *         selectedFilters: { brand: ['foo'], color: ['black'] },
+   *         sortOrder: 'ascending',
+   *         sortBy: 'price',
+   *     },
+   * );
+   */
+  trackBrowseRedirect(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/browse_redirect?`;
+      const bodyParams = {};
+      const {
+        searchTerm,
+        userInput,
+        section = 'Products',
+        selectedFilters,
+        redirectToUrl,
+        sortOrder,
+        sortBy,
+        filterName,
+        filterValue,
+        analyticsTags,
+      } = parameters;
+
+      if (searchTerm) {
+        bodyParams.search_term = searchTerm;
+      }
+
+      if (userInput) {
+        bodyParams.user_input = userInput;
+      }
+
+      if (redirectToUrl) {
+        bodyParams.redirect_to_url = redirectToUrl;
+      }
+
+      if (section) {
+        bodyParams.section = section;
+      }
+
+      if (selectedFilters) {
+        bodyParams.selected_filters = selectedFilters;
+      }
+
+      if (sortOrder) {
+        bodyParams.sort_order = sortOrder;
+      }
+
+      if (sortBy) {
+        bodyParams.sort_by = sortBy;
+      }
+
+      if (filterName) {
+        bodyParams.filter_name = filterName;
+      }
+
+      if (filterValue) {
+        bodyParams.filter_value = filterValue;
+      }
+
+      if (analyticsTags) {
+        bodyParams.analytics_tags = analyticsTags;
+      }
+
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
       const requestMethod = 'POST';
       const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
@@ -1668,6 +1876,7 @@ class Tracker {
    * @param {string} [parameters.itemName] - Product item name
    * @param {string} [parameters.variationId] - Product item variation unique identifier
    * @param {string} [parameters.section="Products"] - Index section
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -1694,6 +1903,7 @@ class Tracker {
         variation_id,
         variationId = variation_id,
         section = 'Products',
+        analyticsTags,
       } = parameters;
       if (itemId) {
         bodyParams.section = section;
@@ -1705,6 +1915,10 @@ class Tracker {
 
         if (variationId) {
           bodyParams.variation_id = variationId;
+        }
+
+        if (analyticsTags) {
+          bodyParams.analytics_tags = analyticsTags;
         }
 
         const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
@@ -2184,6 +2398,380 @@ class Tracker {
     this.requests.send();
 
     return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send ASA request submitted event
+   *
+   * @function trackAssistantSubmit
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.intent - Intent of user request
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User submitted an assistant search
+   *   (pressing enter within assistant input element, or clicking assistant submit element)
+   * @example
+   * constructorio.tracker.trackAssistantSubmit(
+   *     {
+   *         intent: 'show me a recipe for a cookie',
+   *     },
+   * );
+   */
+  trackAssistantSubmit(parameters, networkParameters = {}) {
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      // Ensure parameters are provided (required)
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_submit?`;
+      const {
+        section,
+        intent,
+      } = parameters;
+      const bodyParams = {
+        intent,
+        section,
+      };
+
+      const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send assistant results page load started
+   *
+   * @function trackAssistantResultLoadStarted
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.intent - Intent of user request
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.intentResultId] - The intent result id from the ASA response
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description Assistant results page load begun (but has not necessarily loaded completely)
+   * @example
+   * constructorio.tracker.trackAssistantResultLoadStarted(
+   *     {
+   *         intent: 'show me a recipe for a cookie',
+   *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
+   *     },
+   * );
+   */
+  trackAssistantResultLoadStarted(parameters, networkParameters = {}) {
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      // Ensure parameters are provided (required)
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_result_load_start?`;
+      const {
+        section,
+        intentResultId,
+        intent,
+      } = parameters;
+      const bodyParams = {
+        intent_result_id: intentResultId,
+        intent,
+        section,
+      };
+
+      const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send assistant results page load finished
+   *
+   * @function trackAssistantResultLoadFinished
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.intent - Intent of user request
+   * @param {number} parameters.searchResultCount - Number of search results loaded
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.intentResultId] - The intent result id from the ASA response
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description Assistant results page load finished
+   * @example
+   * constructorio.tracker.trackAssistantResultLoadFinished(
+   *     {
+   *         intent: 'show me a recipe for a cookie',
+   *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
+   *         searchResultCount: 5,
+   *     },
+   * );
+   */
+  trackAssistantResultLoadFinished(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_result_load_finish?`;
+      const {
+        section,
+        searchResultCount,
+        intentResultId,
+        intent,
+      } = parameters;
+      const bodyParams = {
+        intent_result_id: intentResultId,
+        section,
+        intent,
+        search_result_count: searchResultCount,
+      };
+
+      const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send assistant result click event to API
+   *
+   * @function trackAssistantResultClick
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.intent - intent of the user
+   * @param {string} parameters.searchResultId - result_id of the specific search result the clicked item belongs to
+   * @param {string} parameters.itemId - Product item unique identifier
+   * @param {string} parameters.itemName - Product item name
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.variationId] - Product item variation unique identifier
+   * @param {string} [parameters.intentResultId] - Browse result identifier (returned in response from Constructor)
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User clicked a result that appeared within an assistant search result
+   * @example
+   * constructorio.tracker.trackAssistantResultClick(
+   *     {
+   *         variationId: 'KMH879-7632',
+   *         searchResultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
+   *         intent: 'show me a recipe for a cookie',
+   *         itemId: 'KMH876',
+   *     },
+   * );
+   */
+  trackAssistantResultClick(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/assistant_search_result_click?`;
+      const {
+        section = 'Products',
+        variationId,
+        intentResultId,
+        searchResultId,
+        itemId,
+        itemName,
+        intent,
+      } = parameters;
+
+      const bodyParams = {
+        section,
+        variation_id: variationId,
+        intent_result_id: intentResultId,
+        search_result_id: searchResultId,
+        item_id: itemId,
+        item_name: itemName,
+        intent,
+      };
+
+      const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
+
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send assistant search result view event to API
+   *
+   * @function trackAssistantResultView
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.intent - intent of the user
+   * @param {string} parameters.searchResultId - result_id of the specific search result the clicked item belongs to
+   * @param {number} parameters.numResultsViewed - Number of items viewed in this search result
+   * @param {object[]} [parameters.items] - List of product item objects viewed
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.intentResultId] - Browse result identifier (returned in response from Constructor)
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User viewed a search result within an assistant result
+   * @example
+   * constructorio.tracker.trackAssistantResultView(
+   *     {
+   *         searchResultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
+   *         intent: 'show me a recipe for a cookie',
+   *         numResultsViewed: 5,
+   *         items: [{itemId: 'KMH876'}, {itemId: 'KMH140'}, {itemId: 'KMH437'}],
+   *     },
+   * );
+   */
+  trackAssistantResultView(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/assistant_search_result_view?`;
+      const {
+        section = 'Products',
+        items,
+        numResultsViewed,
+        intentResultId,
+        searchResultId,
+        intent,
+      } = parameters;
+
+      const bodyParams = {
+        section,
+        intent_result_id: intentResultId,
+        search_result_id: searchResultId,
+        num_results_viewed: numResultsViewed,
+        items: items && Array.isArray(items) && items.slice(0, 100).map((item) => helpers.toSnakeCaseKeys(item, false)),
+        intent,
+      };
+
+      const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
+
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send ASA search submitted event
+   *
+   * @function trackAssistantSearchSubmit
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.intent - Intent of user request
+   * @param {string} parameters.searchTerm - Term of submitted assistant search event
+   * @param {string} parameters.searchResultId - resultId of search result the clicked item belongs to
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.intentResultId] - intentResultId from the ASA response
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User submitted an alternative assistant search result search term
+   * @example
+   * constructorio.tracker.trackAssistantSearchSubmit({
+   *     {
+   *         searchResultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
+   *         intent: 'show me a recipe for a cookie',
+   *         searchTerm: 'flour',
+   *     },
+   * );
+   */
+  trackAssistantSearchSubmit(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      // Ensure parameters are provided (required)
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_search_submit?`;
+      const {
+        section,
+        intent,
+        searchTerm,
+        searchResultId,
+        intentResultId,
+      } = parameters;
+
+      const bodyParams = {
+        intent,
+        section,
+        search_term: searchTerm,
+        search_result_id: searchResultId,
+        intent_result_id: intentResultId,
+      };
+
+      const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters is a required parameter of type object');
   }
 
   /**

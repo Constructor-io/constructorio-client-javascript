@@ -41,7 +41,7 @@ function globalJsdom(options = {}) {
 
   const jsdom = new JSDOM.JSDOM(defaultHtml, options);
   const { window } = jsdom;
-  const { document } = window;
+  const { document, localStorage, sessionStorage } = window;
 
   // generate our list of keys by enumerating document.window - this list may vary
   // based on the jsdom version. filter out internal methods as well as anything
@@ -56,7 +56,10 @@ function globalJsdom(options = {}) {
   // setup document / window / window.console
   global.document = document;
   global.window = window;
+  global.localStorage = localStorage;
+  global.sessionStorage = sessionStorage;
   window.console = global.console;
+  window.fetch = global.fetch;
 
   // add access to our jsdom instance
   global.$jsdom = jsdom;
@@ -65,6 +68,10 @@ function globalJsdom(options = {}) {
     KEYS.forEach((key) => delete global[key]);
     delete global.document;
     delete global.window;
+    delete global.localStorage;
+    delete global.sessionStorage;
+    delete window.console;
+    delete window.fetch;
   };
 
   document.destroy = cleanup;

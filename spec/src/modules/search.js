@@ -4,7 +4,6 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
-const fetchPonyfill = require('fetch-ponyfill');
 const helpers = require('../../mocha.helpers');
 const jsdom = require('../utils/jsdom-global');
 let ConstructorIO = require('../../../test/constructorio'); // eslint-disable-line import/extensions
@@ -13,13 +12,12 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 dotenv.config();
 
-const { fetch } = fetchPonyfill({ Promise });
 const testApiKey = process.env.TEST_REQUEST_API_KEY;
 const clientVersion = 'cio-mocha';
 const bundled = process.env.BUNDLED === 'true';
 const skipNetworkTimeoutTests = process.env.SKIP_NETWORK_TIMEOUT_TESTS === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
-const timeoutRejectionMessage = bundled ? 'Aborted' : 'The user aborted a request.';
+const timeoutRejectionMessage = 'This operation was aborted';
 
 describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
   const jsdomOptions = { url: 'http://localhost' };
@@ -529,6 +527,28 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
         expect(res.response.results[0]).to.have.property('variations_map');
         expect(res.response.results[0].variations_map[0]).to.have.property('size');
         expect(res.response.results[0].variations_map[0]).to.have.property('variation');
+        done();
+      });
+    });
+
+    it('Should return a response with a valid filterName, filterValue and additional filters and filterMatchTypes', (done) => {
+      const filters = { keywords: ['battery-powered'] };
+      const filterMatchTypes = { keywords: 'any' };
+      const { search } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      search.getSearchResults('Jacket', { filters, filterMatchTypes }, {}).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.filters).to.deep.equal(filters);
+        expect(requestedUrlParams).to.have.property('filters');
+        expect(requestedUrlParams.filters).to.have.property('keywords').to.equal(Object.values(filters)[0][0]);
+        expect(requestedUrlParams).to.have.property('filter_match_types');
+        expect(requestedUrlParams.filter_match_types).to.have.property('keywords').to.equal(filterMatchTypes.keywords);
         done();
       });
     });

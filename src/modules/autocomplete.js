@@ -1,6 +1,6 @@
 /* eslint-disable object-curly-newline, no-underscore-dangle */
 const EventDispatcher = require('../utils/event-dispatcher');
-const { throwHttpErrorFromResponse, cleanParams, applyNetworkTimeout, trimNonBreakingSpaces, encodeURIComponentRFC3986, stringify } = require('../utils/helpers');
+const { convertResponseToJson, cleanParams, applyNetworkTimeout, trimNonBreakingSpaces, encodeURIComponentRFC3986, stringify } = require('../utils/helpers');
 
 // Create URL from supplied query (term) and parameters
 function createAutocompleteUrl(query, parameters, options) {
@@ -43,7 +43,17 @@ function createAutocompleteUrl(query, parameters, options) {
   }
 
   if (parameters) {
-    const { numResults, resultsPerSection, filters, hiddenFields, variationsMap } = parameters;
+    const {
+      numResults,
+      resultsPerSection,
+      filters,
+      filtersPerSection,
+      hiddenFields,
+      variationsMap,
+      preFilterExpression,
+      qsParam,
+      fmtOptions,
+    } = parameters;
 
     // Pull results number from parameters
     if (numResults) {
@@ -62,6 +72,23 @@ function createAutocompleteUrl(query, parameters, options) {
       queryParams.filters = filters;
     }
 
+    // Pull filtersPerSection from parameters
+    if (filtersPerSection) {
+      Object.keys(filtersPerSection).forEach((section) => {
+        queryParams[`filters[${section}]`] = filtersPerSection[section];
+      });
+    }
+
+    // Pull filter expression from parameters
+    if (preFilterExpression) {
+      queryParams.pre_filter_expression = JSON.stringify(preFilterExpression);
+    }
+
+    // Pull format options from parameters
+    if (fmtOptions) {
+      queryParams.fmt_options = fmtOptions;
+    }
+
     // Pull hidden fields from parameters
     if (hiddenFields) {
       if (queryParams.fmt_options) {
@@ -74,6 +101,11 @@ function createAutocompleteUrl(query, parameters, options) {
     // Pull variations map from parameters
     if (variationsMap) {
       queryParams.variations_map = JSON.stringify(variationsMap);
+    }
+
+    // pull qs param from parameters
+    if (qsParam) {
+      queryParams.qs = JSON.stringify(qsParam);
     }
   }
 
@@ -108,13 +140,17 @@ class Autocomplete {
    * @param {object} [parameters] - Additional parameters to refine result set
    * @param {number} [parameters.numResults] - The total number of results to return
    * @param {object} [parameters.filters] - Key / value mapping (dictionary) of filters used to refine results
+   * @param {object} [parameters.filtersPerSection] - Filters used to refine results per section
    * @param {object} [parameters.resultsPerSection] - Number of results to return (value) per section (key)
+   * @param {object} [parameters.fmtOptions] - An object containing options to format different aspects of the response. Please refer to https://docs.constructor.com/reference/v1-autocomplete-get-autocomplete-results for details
+   * @param {object} [parameters.preFilterExpression] - Faceting expression to scope autocomplete results. Please refer to https://docs.constructor.com/reference/configuration-collections for details
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
-   * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.io/rest_api/variations_mapping for details
+   * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.com/reference/shared-variations-mapping for details
+   * @param {object} [parameters.qsParam] - object of additional query parameters to be appended to requests for results
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
-   * @see https://docs.constructor.io/rest_api/autocomplete_queries
+   * @see https://docs.constructor.com/reference/autocomplete-autocomplete-results
    * @example
    * constructorio.autocomplete.getAutocompleteResults('t-shirt', {
    *     resultsPerSection: {
@@ -147,13 +183,7 @@ class Autocomplete {
     }
 
     return fetch(requestUrl, { signal })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-
-        return throwHttpErrorFromResponse(new Error(), response);
-      })
+      .then(convertResponseToJson)
       .then((json) => {
         if (json.sections) {
           if (json.result_id) {

@@ -37,10 +37,17 @@ export interface IdOptions extends Record<string, any> {
   session_id_storage_location?: string;
 }
 
+export interface EventDispatcherOptions {
+  enabled?: boolean;
+  waitForBeacon?: boolean;
+}
+
 export interface ConstructorClientOptions {
   apiKey: string;
   version?: string;
   serviceUrl?: string;
+  quizzesServiceUrl?: string;
+  assistantServiceUrl?: string,
   sessionId?: number;
   clientId?: string;
   userId?: string;
@@ -51,7 +58,7 @@ export interface ConstructorClientOptions {
   trackingSendDelay?: number;
   sendTrackingEvents?: boolean;
   sendReferrerWithTrackingEvents?: boolean;
-  eventDispatcher?: EventDispatcher;
+  eventDispatcher?: EventDispatcherOptions;
   beaconMode?: boolean;
   networkParameters?: NetworkParameters;
 }
@@ -150,7 +157,8 @@ export interface BaseGroup extends Record<string, any> {
 
 export interface FmtOptions extends Record<string, any> {
   groups_max_depth?: number;
-  groups_start?: 'current' | 'top';
+  groups_start?: 'current' | 'top' | `group_id:${string}`;
+  fields?: string[]; // Array of metadata field to be returned in the data response
 }
 
 export type Nullable<T> = T | null;
@@ -189,11 +197,14 @@ export interface Item extends Record<string, any> {
   labels: Record<string, unknown>;
   matched_terms: string[];
   data?: ItemData;
+  strategy?: { id: string };
+  variations?: { data?: ItemData, value: string }[]
 }
 
 export interface ItemData extends Record<string, any> {
   url?: string;
   id?: string;
+  variation_id?: string;
   image_url?: string;
   group_ids?: string[];
   groups?: Group[]
@@ -227,4 +238,11 @@ export interface ItemTracked {
   itemName?: string;
   itemId?: string;
   variationId?: string;
+  slCampaignId?: string;
+  slCampaignOwner?: string;
+  price?: number;
+}
+
+export interface ItemTrackedPurchase extends ItemTracked {
+  count?: number;
 }

@@ -1,5 +1,6 @@
 /* eslint-disable import/no-unresolved, import/extensions */
 const qs = require('qs');
+const sinon = require('sinon');
 const store = require('../test/utils/store');
 
 // Trigger browser resize event
@@ -21,7 +22,8 @@ const triggerResize = () => {
 const triggerUnload = () => {
   const unloadEvent = document.createEvent('Event');
 
-  unloadEvent.initEvent('beforeunload', true, true);
+  unloadEvent.initEvent('visibilitychange', true, true);
+  sinon.stub(document, 'visibilityState').value('hidden');
 
   global.window.unload = () => {
     global.window.dispatchEvent(unloadEvent);
@@ -32,8 +34,8 @@ const triggerUnload = () => {
 
 // Clear local and session storage
 const clearStorage = () => {
-  store.local.clearAll();
-  store.session.clearAll();
+  store.local.clear();
+  store.session.clear();
 };
 
 // Extract query parameters as object from url

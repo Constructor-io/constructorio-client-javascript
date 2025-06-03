@@ -1,4 +1,6 @@
 /* eslint-disable object-curly-newline, no-underscore-dangle */
+/* eslint-disable max-len */
+/* eslint-disable complexity */
 const EventDispatcher = require('../utils/event-dispatcher');
 const helpers = require('../utils/helpers');
 
@@ -40,7 +42,7 @@ function createQuizUrl(quizId, parameters, options, path) {
   }
 
   if (parameters) {
-    const { section, answers, quizSessionId, quizVersionId, page, resultsPerPage, filters, direction } = parameters;
+    const { section, answers, quizSessionId, quizVersionId, page, resultsPerPage, filters, fmtOptions, hiddenFields, direction } = parameters;
 
     if (direction) {
       queryParams.direction = direction;
@@ -79,6 +81,18 @@ function createQuizUrl(quizId, parameters, options, path) {
     if (filters) {
       queryParams.filters = filters;
     }
+
+    if (fmtOptions) {
+      queryParams.fmt_options = fmtOptions;
+    }
+
+    if (hiddenFields) {
+      if (queryParams.fmt_options) {
+        queryParams.fmt_options.hidden_fields = hiddenFields;
+      } else {
+        queryParams.fmt_options = { hidden_fields: hiddenFields };
+      }
+    }
   }
 
   queryParams._dt = Date.now();
@@ -110,13 +124,13 @@ class Quizzes {
    * @param {string} quizId - The identifier of the quiz
    * @param {string} [parameters] - Additional parameters to refine result set
    * @param {string} [parameters.section] - Product catalog section
-   * @param {array} [parameters.answers] - An array of answers in the format [[1,2],[1]]
-   * @param {string} [parameters.quizVersionId] - Version identifier for the quiz. Version ID will be returned with the first request and it should be passed with subsequent requests. More information can be found: https://docs.constructor.io/rest_api/quiz/using_quizzes/#quiz-versioning
-   * @param {string} [parameters.quizSessionId] - Session identifier for the quiz. Session ID will be returned with the first request and it should be passed with subsequent requests. More information can be found: https://docs.constructor.io/rest_api/quiz/using_quizzes/#quiz-sessions
+   * @param {array} [parameters.answers] - An array of answers in the format [[1,2], [1], ["true"], ["seen"], [""]]. Based on the question type, answers should either be an integer, "true"/"false", "seen" or an empty string ("") if skipped
+   * @param {string} [parameters.quizVersionId] - Version identifier for the quiz. Version ID will be returned with the first request and it should be passed with subsequent requests. More information can be found: https://docs.constructor.com/reference/configuration-quizzes
+   * @param {string} [parameters.quizSessionId] - Session identifier for the quiz. Session ID will be returned with the first request and it should be passed with subsequent requests. More information can be found: https://docs.constructor.com/reference/configuration-quizzes
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
-   * @see https://docs.constructor.io/rest_api/quiz/using_quizzes/#answering-a-quiz
+   * @see https://docs.constructor.com/reference/v1-quizzes-get-quiz-results
    * @example
    * constructorio.quizzes.getQuizNextQuestion('quizId', {
    *    answers: [[1,2],[1]],
@@ -141,13 +155,7 @@ class Quizzes {
     helpers.applyNetworkTimeout(this.options, networkParameters, controller);
 
     return fetch(requestUrl, { signal })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-
-        return helpers.throwHttpErrorFromResponse(new Error(), response);
-      })
+      .then(helpers.convertResponseToJson)
       .then((json) => {
         if (json.quiz_version_id) {
           this.eventDispatcher.queue('quizzes.getQuizNextQuestion.completed', json);
@@ -166,17 +174,19 @@ class Quizzes {
    * @description Retrieve quiz recommendation and filter expression from Constructor.io API
    * @param {string} quizId - The identifier of the quiz
    * @param {string} parameters - Additional parameters to refine result set
-   * @param {array} parameters.answers - An array of answers in the format [[1,2],[1]]
+   * @param {array} parameters.answers - An array of answers in the format [[1,2], [1], ["true"], ["seen"], [""]]. Based on the question type, answers should either be an integer, "true"/"false", "seen" or an empty string ("") if skipped
    * @param {string} [parameters.section] - Product catalog section
-   * @param {string} [parameters.quizVersionId] - Version identifier for the quiz. Version ID will be returned with the first request and it should be passed with subsequent requests. More information can be found: https://docs.constructor.io/rest_api/quiz/using_quizzes/#quiz-versioning
-   * @param {string} [parameters.quizSessionId] - Session identifier for the quiz. Session ID will be returned with the first request and it should be passed with subsequent requests. More information can be found: https://docs.constructor.io/rest_api/quiz/using_quizzes/#quiz-sessions
+   * @param {string} [parameters.quizVersionId] - Version identifier for the quiz. Version ID will be returned with the first request and it should be passed with subsequent requests. More information can be found: https://docs.constructor.com/reference/configuration-quizzes
+   * @param {string} [parameters.quizSessionId] - Session identifier for the quiz. Session ID will be returned with the first request and it should be passed with subsequent requests. More information can be found: https://docs.constructor.com/reference/configuration-quizzes
    * @param {number} [parameters.page] - The page number of the results
    * @param {number} [parameters.resultsPerPage] - The number of results per page to return
    * @param {object} [parameters.filters] - Key / value mapping (dictionary) of filters used to refine results
+   * @param {object} [parameters.fmtOptions] - Key / value mapping (dictionary) of options used for result formatting
+   * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
-   * @see https://docs.constructor.io/rest_api/quiz/using_quizzes/#completing-the-quiz
+   * @see https://docs.constructor.com/reference/v1-quizzes-get-quiz-results
    * @example
    * constructorio.quizzes.getQuizResults('quizId', {
    *    answers: [[1,2],[1]],
@@ -201,13 +211,7 @@ class Quizzes {
     helpers.applyNetworkTimeout(this.options, networkParameters, controller);
 
     return fetch(requestUrl, { signal })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-
-        return helpers.throwHttpErrorFromResponse(new Error(), response);
-      })
+      .then(helpers.convertResponseToJson)
       .then((json) => {
         if (json.quiz_version_id) {
           this.eventDispatcher.queue('quizzes.getQuizResults.completed', json);
@@ -216,6 +220,51 @@ class Quizzes {
         }
 
         throw new Error('getQuizResults response data is malformed');
+      });
+  }
+
+  /**
+   * Retrieves configuration for the results page of a particular quiz
+   *
+   * @function getQuizResultsConfig
+   * @description Retrieve quiz results page configuration from Constructor.io API
+   * @param {string} quizId - The identifier of the quiz
+   * @param {string} parameters - Additional parameters
+   * @param {string} [parameters.section] - Product catalog section
+   * @param {string} [parameters.quizVersionId] - Version identifier for the quiz. Version ID will be returned with the first request and it should be passed with subsequent requests. More information can be found: https://docs.constructor.com/reference/configuration-quizzes
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {Promise}
+   * @example
+   * constructorio.quizzes.getQuizResultsConfig('quizId', {
+   *    quizVersionId: '123',
+   * });
+   */
+  getQuizResultsConfig(quizId, parameters, networkParameters = {}) {
+    let requestUrl;
+    const { fetch } = this.options;
+    const controller = new AbortController();
+    const { signal } = controller;
+
+    try {
+      requestUrl = createQuizUrl(quizId, parameters, this.options, 'results_config');
+    } catch (e) {
+      return Promise.reject(e);
+    }
+
+    // Handle network timeout if specified
+    helpers.applyNetworkTimeout(this.options, networkParameters, controller);
+
+    return fetch(requestUrl, { signal })
+      .then(helpers.convertResponseToJson)
+      .then((json) => {
+        if (json.quiz_version_id) {
+          this.eventDispatcher.queue('quizzes.getQuizResultsConfig.completed', json);
+
+          return json;
+        }
+
+        throw new Error('getQuizResultsConfig response data is malformed');
       });
   }
 }

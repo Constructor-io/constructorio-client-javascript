@@ -4,7 +4,6 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
-const fetchPonyfill = require('fetch-ponyfill');
 const helpers = require('../../mocha.helpers');
 const jsdom = require('../utils/jsdom-global');
 let ConstructorIO = require('../../../test/constructorio'); // eslint-disable-line import/extensions
@@ -13,13 +12,12 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 dotenv.config();
 
-const { fetch } = fetchPonyfill({ Promise });
 const testApiKey = process.env.TEST_REQUEST_API_KEY;
 const clientVersion = 'cio-mocha';
 const bundled = process.env.BUNDLED === 'true';
 const skipNetworkTimeoutTests = process.env.SKIP_NETWORK_TIMEOUT_TESTS === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
-const timeoutRejectionMessage = bundled ? 'Aborted' : 'The user aborted a request.';
+const timeoutRejectionMessage = 'This operation was aborted';
 
 describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
   const jsdomOptions = { url: 'http://localhost' };
@@ -218,7 +216,7 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('sections').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.filters).to.deep.equal(filters);
+        expect(res.request.filters.keywords).to.deep.equal(filters.keywords);
         expect(requestedUrlParams).to.have.property('filters');
         expect(requestedUrlParams.filters).to.have.property('keywords').to.equal(Object.values(filters)[0][0]);
         done();
@@ -238,11 +236,55 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('sections').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.filters).to.eql(filters);
+        expect(res.request.filters.group_id).to.deep.equal(filters.group_id);
+        expect(res.request.filters.Brand).to.deep.equal(filters.Brand);
         expect(res.sections.Products.length).to.be.at.least(1);
         expect(requestedUrlParams).to.have.property('filters');
         expect(requestedUrlParams.filters).to.have.property('group_id').to.equal(Object.values(filters)[0][0]);
         expect(requestedUrlParams.filters).to.have.property('Brand').to.equal(Object.values(filters)[1][0]);
+        done();
+      });
+    });
+
+    it('Should return a response with a valid query and filtersPerSection', (done) => {
+      const filtersPerSection = { 'Search Suggestions': { keywords: ['battery-powered'] } };
+      const { autocomplete } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      autocomplete.getAutocompleteResults(query, { filtersPerSection }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('sections').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.filters).to.deep.equal(filtersPerSection);
+        expect(requestedUrlParams).to.have.property('filters');
+        done();
+      });
+    });
+
+    it('Should return a response with a valid query, and multiple filtersPerSection', (done) => {
+      const filtersPerSection = {
+        Products: { group_id: ['All', 'shop'] },
+        'Search Suggestions': { keywords: ['battery-powered', 'solar'] },
+      };
+      const { autocomplete } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      autocomplete.getAutocompleteResults(query, { filtersPerSection }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('sections').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.filters).to.eql(filtersPerSection);
+        expect(requestedUrlParams).to.have.property('filters');
+        expect(requestedUrlParams.filters).to.have.property('Products').to.deep.equal(Object.values(filtersPerSection)[0]);
+        expect(requestedUrlParams.filters).to.have.property('Search Suggestions').to.deep.equal(Object.values(filtersPerSection)[1]);
         done();
       });
     });
@@ -324,9 +366,86 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('sections').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res.request.filters).to.deep.equal(filters);
+        expect(res.request.filters.keywords).to.deep.equal(filters.keywords);
         expect(requestedUrlParams).to.have.property('filters');
         expect(requestedUrlParams.filters).to.have.property('keywords').to.equal(Object.values(filters)[0][0]);
+        done();
+      });
+    });
+
+    it('Should return a response with a valid query, section and preFilterExpression', (done) => {
+      const preFilterExpression = {
+        or: [
+          {
+            and: [
+              { name: 'group_id', value: 'BrandXY' },
+              { name: 'Color', value: 'red' },
+            ],
+          },
+          {
+            and: [
+              { name: 'Color', value: 'blue' },
+              { name: 'Brand', value: 'XYZ' },
+            ],
+          },
+        ],
+      };
+      const { autocomplete } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      autocomplete.getAutocompleteResults(query, { preFilterExpression }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(requestedUrlParams).to.have.property('pre_filter_expression');
+        expect(requestedUrlParams.pre_filter_expression).to.eql(JSON.stringify(preFilterExpression));
+        expect(res.sections).to.have.property('Products').to.be.an('array');
+        expect(res.sections.Products.length).to.be.eql(2);
+        expect(res.sections.Products[0].data.facets.find((facet) => facet.name === 'Color').values).to.be.an('array').that.include('red');
+        expect(res.sections.Products[1].data.facets.find((facet) => facet.name === 'Color').values).to.be.an('array').that.include('blue');
+        done();
+      });
+    });
+
+    it('Should return a response with a valid query, section and fmtOptions', (done) => {
+      const hiddenFields = ['testField', 'hiddenField2'];
+      const fmtOptions = { hidden_fields: hiddenFields };
+      const { autocomplete } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      autocomplete.getAutocompleteResults(query, { fmtOptions }, {}).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const item = res.sections.Products.find((product) => product.data.testField);
+        const itemData = item && item.data;
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('sections').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(itemData).to.have.property('testField').to.eql('hiddenFieldValue');
+        expect(res.request.fmt_options.hidden_fields).to.eql(hiddenFields);
+        expect(requestedUrlParams.fmt_options).to.have.property('hidden_fields').to.eql(hiddenFields);
+        done();
+      });
+    });
+
+    it('Should return a return a response with qs param properly parsed', (done) => {
+      const qsParam = {
+        us: 'dogs',
+      };
+      const { autocomplete } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      autocomplete.getAutocompleteResults('Jacket', { qsParam }).then((res) => {
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res.request.us.length).to.equal(1);
+        expect(res.request.us[0]).to.equal(qsParam.us);
         done();
       });
     });

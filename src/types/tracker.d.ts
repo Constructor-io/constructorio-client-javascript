@@ -1,5 +1,5 @@
 import EventEmitter = require('events');
-import { ConstructorClientOptions, ItemTracked, NetworkParameters } from '.';
+import { ConstructorClientOptions, ItemTracked, ItemTrackedPurchase, NetworkParameters } from '.';
 import RequestQueue = require('../utils/request-queue');
 
 export default Tracker;
@@ -17,12 +17,21 @@ declare class Tracker {
 
   trackInputFocus(networkParameters?: NetworkParameters): true | Error;
 
+  trackInputFocusV2(
+    parameters: {
+      userInput: string;
+      analyticsTags?: Record<string, string>;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
   trackItemDetailLoad(
     parameters: {
       itemName: string;
       itemId: string;
       url: string;
       variationId?: string;
+      analyticsTags?: Record<string, string>;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -35,6 +44,9 @@ declare class Tracker {
       tr?: string;
       groupId?: string;
       displayName?: string;
+      itemId?: string;
+      slCampaignId?: string;
+      slCampaignOwner?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -49,7 +61,20 @@ declare class Tracker {
     networkParameters?: NetworkParameters
   ): true | Error;
 
-  trackSearchResultsLoadedV2(
+  trackSearchSubmitV2(
+    term: string,
+    parameters: {
+      originalQuery: string;
+      groupId?: string;
+      displayName?: string;
+      section?: string;
+      userInput: string;
+      analyticsTags?: Record<string, string>;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
+  trackSearchResultsLoaded(
     term: string,
     parameters: {
       url: string;
@@ -61,15 +86,7 @@ declare class Tracker {
       sortOrder?: string;
       sortBy?: string;
       section?: string;
-    },
-    networkParameters?: NetworkParameters
-  ): true | Error;
-
-  trackSearchResultsLoaded(
-    term: string,
-    parameters: {
-      numResults: number;
-      itemIds: string[];
+      analyticsTags?: Record<string, string>;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -83,6 +100,9 @@ declare class Tracker {
       resultId?: string;
       itemIsConvertible?: string;
       section?: string;
+      analyticsTags?: Record<string, string>;
+      slCampaignId?: string;
+      slCampaignOwner?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -105,10 +125,11 @@ declare class Tracker {
 
   trackPurchase(
     parameters: {
-      items: ItemTracked & {quantity: number}[];
+      items: ItemTrackedPurchase[];
       revenue: number;
       orderId?: string;
       section?: string;
+      analyticsTags?: Record<string, string>;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -123,6 +144,7 @@ declare class Tracker {
       resultPage?: number;
       resultId?: string;
       section?: string;
+      analyticsTags?: Record<string, string>;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -140,6 +162,7 @@ declare class Tracker {
       resultPage?: number;
       resultPositionOnPage?: number;
       numResultsPerPage?: number;
+      analyticsTags?: Record<string, string>;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -157,6 +180,7 @@ declare class Tracker {
       sortOrder?: string;
       sortBy?: string;
       items: ItemTracked[];
+      analyticsTags?: Record<string, string>;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -174,6 +198,9 @@ declare class Tracker {
       resultPositionOnPage?: number;
       numResultsPerPage?: number;
       selectedFilters?: object;
+      analyticsTags?: Record<string, string>;
+      slCampaignId?: string;
+      slCampaignOwner?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -184,6 +211,7 @@ declare class Tracker {
       itemName?: string;
       variationId?: string;
       section?: string;
+      analyticsTags?: Record<string, string>;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -234,6 +262,71 @@ declare class Tracker {
       type?: string;
       isCustomType?: boolean;
       displayName?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
+  trackAssistantSubmit(
+    parameters: {
+      intent: string;
+      section?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
+  trackAssistantResultLoadStarted(
+    parameters: {
+      intent: string;
+      section?: string;
+      intentResultId?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
+  trackAssistantResultLoadFinished(
+    parameters: {
+      intent: string;
+      searchResultCount: number;
+      section?: string;
+      intentResultId?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
+  trackAssistantResultClick(
+    parameters: {
+      intent: string;
+      searchResultId: string;
+      itemId?: string;
+      itemName?: string;
+      variationId?: string;
+      section?: string;
+      intentResultId?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
+  trackAssistantResultView(
+    parameters: {
+      intent: string;
+      searchResultId: string;
+      numResultsViewed: number;
+      items?: ItemTracked[];
+      intentResultId?: string;
+      section?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
+  trackAssistantSearchSubmit(
+    parameters: {
+      intent: string;
+      searchTerm: string;
+      userInput: string;
+      searchResultId: string;
+      groupId?: string;
+      section?: string;
+      intentResultId?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;

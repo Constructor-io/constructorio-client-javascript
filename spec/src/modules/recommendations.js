@@ -4,7 +4,6 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
-const fetchPonyfill = require('fetch-ponyfill');
 const helpers = require('../../mocha.helpers');
 const jsdom = require('../utils/jsdom-global');
 let ConstructorIO = require('../../../test/constructorio'); // eslint-disable-line import/extensions
@@ -13,13 +12,12 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 dotenv.config();
 
-const { fetch } = fetchPonyfill({ Promise });
 const testApiKey = process.env.TEST_REQUEST_API_KEY;
 const clientVersion = 'cio-mocha';
 const bundled = process.env.BUNDLED === 'true';
 const skipNetworkTimeoutTests = process.env.SKIP_NETWORK_TIMEOUT_TESTS === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
-const timeoutRejectionMessage = bundled ? 'Aborted' : 'The user aborted a request.';
+const timeoutRejectionMessage = 'This operation was aborted';
 
 describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
   const jsdomOptions = { url: 'http://localhost' };
@@ -289,6 +287,51 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
         res.response.results.forEach((item) => {
           expect(item).to.have.property('result_id').to.be.a('string').to.equal(res.result_id);
         });
+        done();
+      });
+    });
+
+    it('Should return a return a response with pre filter expression properly parsed', (done) => {
+      const preFilterExpression = {
+        or: [
+          {
+            and: [
+              {
+                name: 'group_id',
+                value: 'electronics-group-id',
+              },
+              {
+                name: 'Price',
+                range: ['-inf', 200],
+              },
+            ],
+          },
+          {
+            and: [
+              {
+                name: 'Type',
+                value: 'Laptop',
+              },
+              {
+                not: {
+                  name: 'Price',
+                  range: [800, 'inf'],
+                },
+              },
+            ],
+          },
+        ],
+      };
+      const { recommendations } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      recommendations.getRecommendations(podId, { itemIds, preFilterExpression }, {}).then((res) => {
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(JSON.stringify(res.request.pre_filter_expression)).to.equal(JSON.stringify(preFilterExpression));
         done();
       });
     });
