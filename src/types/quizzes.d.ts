@@ -1,4 +1,4 @@
-import { Nullable } from './index.d';
+import { Nullable } from "./index.d";
 import {
   ConstructorClientOptions,
   Facet,
@@ -10,7 +10,7 @@ import {
   SortOption,
   FilterExpression,
   ResultSources,
-} from '.';
+} from ".";
 
 export default Quizzes;
 
@@ -19,6 +19,16 @@ export interface QuizzesParameters {
   answers?: any[];
   quizVersionId?: string;
   quizSessionId?: string;
+}
+
+export interface QuizResultsFmtOptions {
+  groups_start?: "current" | "top" | string;
+  groups_max_depth?: number;
+  show_protected_facets?: boolean;
+  show_hidden_facets?: boolean;
+  hidden_facets?: string[];
+  hidden_fields?: string[];
+  fields?: string[];
 }
 
 export interface QuizzesResultsParameters extends QuizzesParameters {
@@ -44,6 +54,12 @@ declare class Quizzes {
     parameters?: QuizzesResultsParameters,
     networkParameters?: NetworkParameters
   ): Promise<QuizResultsResponse>;
+
+  getQuizResultsConfig(
+    quizId: string,
+    parameters?: Pick<QuizzesParameters, "quizVersionId">,
+    networkParameters?: NetworkParameters
+  ): Promise<QuizResultsConfigResponse>;
 }
 
 /* quizzes results returned from server */
@@ -54,6 +70,10 @@ export interface NextQuestionResponse extends Record<string, any> {
   quiz_id?: string;
   quiz_session_id?: string;
   total_questions: number;
+  answers: Array<{
+    questionId: number;
+    answerIds: string[];
+  }>;
 }
 
 export interface QuizResultsResponse extends Record<string, any> {
@@ -113,17 +133,17 @@ export interface BaseQuestion extends Record<string, any> {
 }
 
 export interface SelectQuestion extends BaseQuestion {
-  type: 'single' | 'multiple';
+  type: "single" | "multiple";
   options: QuestionOption[];
 }
 
 export interface OpenQuestion extends BaseQuestion {
-  type: 'open';
+  type: "open";
   input_placeholder?: Nullable<string>;
 }
 
 export interface CoverQuestion extends BaseQuestion {
-  type: 'cover';
+  type: "cover";
 }
 
 export interface QuizResult extends Record<string, any> {
@@ -146,4 +166,30 @@ export interface QuestionImages extends Record<string, any> {
   primary_alt?: Nullable<string>;
   secondary_url?: Nullable<string>;
   secondary_alt?: Nullable<string>;
+}
+
+type ResultConfigFields = {
+  is_active: boolean;
+  text: Nullable<string>;
+};
+
+type ResponseSummary = ResultConfigFields & {
+  items_separator: Nullable<string>;
+  last_separator: Nullable<string>;
+};
+
+type ViewportResultsConfig = {
+  title: Nullable<ResultConfigFields>;
+  description: Nullable<ResultConfigFields>;
+  response_summary: Nullable<ResponseSummary>;
+};
+
+export interface QuizResultsConfig extends Record<string, any> {
+  desktop: ViewportResultsConfig;
+}
+
+export interface QuizResultsConfigResponse extends Record<string, any> {
+  results_config: QuizResultsConfig;
+  quiz_version_id: string;
+  quiz_id: string;
 }
