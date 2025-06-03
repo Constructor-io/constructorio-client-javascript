@@ -23,11 +23,6 @@ export interface QuizzesParameters {
 }
 
 export interface QuizResultsFmtOptions {
-  groups_start?: 'current' | 'top' | string;
-  groups_max_depth?: number;
-  show_protected_facets?: boolean;
-  show_hidden_facets?: boolean;
-  hidden_facets?: string[];
   hidden_fields?: string[];
   fields?: string[];
 }
@@ -174,7 +169,7 @@ export interface QuestionImages extends Record<string, any> {
 type ResultConfigFields = {
   is_active: boolean;
   text: Nullable<string>;
-};
+}
 
 type ResponseSummary = ResultConfigFields & {
   items_separator: Nullable<string>;
@@ -185,7 +180,7 @@ type ViewportResultsConfig = {
   title: Nullable<ResultConfigFields>;
   description: Nullable<ResultConfigFields>;
   response_summary: Nullable<ResponseSummary>;
-};
+}
 
 export interface QuizResultsConfig extends Record<string, any> {
   desktop: ViewportResultsConfig;
