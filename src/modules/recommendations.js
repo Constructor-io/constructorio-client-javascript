@@ -27,7 +27,16 @@ function createRecommendationsUrl(podId, parameters, options) {
   }
 
   if (parameters) {
-    const { numResults, itemIds, section, term, filters, variationsMap, hiddenFields } = parameters;
+    const {
+      numResults,
+      itemIds,
+      section,
+      term,
+      filters,
+      variationsMap,
+      hiddenFields,
+      preFilterExpression,
+    } = parameters;
 
     // Pull num results number from parameters
     if (!helpers.isNil(numResults)) {
@@ -67,6 +76,11 @@ function createRecommendationsUrl(podId, parameters, options) {
     if (variationsMap) {
       queryParams.variations_map = JSON.stringify(variationsMap);
     }
+
+    // Pull pre_filter_expression from parameters
+    if (preFilterExpression) {
+      queryParams.pre_filter_expression = JSON.stringify(preFilterExpression);
+    }
   }
 
   queryParams = helpers.cleanParams(queryParams);
@@ -101,12 +115,13 @@ class Recommendations {
    * @param {string} [parameters.section] - The section to return results from
    * @param {string} [parameters.term] - The term to use to refine results (strategy specific)
    * @param {object} [parameters.filters] - Key / value mapping of filters used to refine results
-   * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.io/rest_api/variations_mapping for details
+   * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.com/reference/shared-variations-mapping for details
+   * @param {object} [parameters.preFilterExpression] - Faceting expression to scope search results. Please refer to https://docs.constructor.com/reference/configuration-collections
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
-   * @see https://docs.constructor.io/rest_api/recommendations
+   * @see https://docs.constructor.com/reference/recommendations-recommendation-results
    * @example
    * constructorio.recommendations.getRecommendations('t-shirt-best-sellers', {
    *     numResults: 5,
@@ -136,13 +151,7 @@ class Recommendations {
     }
 
     return fetch(requestUrl, { signal })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-
-        return helpers.throwHttpErrorFromResponse(new Error(), response);
-      })
+      .then(helpers.convertResponseToJson)
       .then((json) => {
         if (json.response && json.response.results) {
           if (json.result_id) {

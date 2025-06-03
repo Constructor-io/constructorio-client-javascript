@@ -6,7 +6,7 @@ const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 const helpers = require('../mocha.helpers');
 const jsdom = require('./utils/jsdom-global');
-const { version: packageVersion } = require('../../package.json');
+const { default: packageVersion } = require('../../test/version');
 let ConstructorIO = require('../../test/constructorio');
 
 chai.use(chaiAsPromised);
@@ -58,7 +58,7 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
   it('Should return an instance with custom options when valid API key is provided', () => {
     const clientId = 'client-id';
     const sessionId = 'session-id';
-    const serviceUrl = 'http://constructor.io';
+    const serviceUrl = 'https://constructor.io';
     const quizzesServiceUrl = 'http://quizzes.constructor.io';
     const version = 'custom-version';
     const networkParameters = { timeout: 5000 };
@@ -79,6 +79,21 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
     expect(instance.options).to.have.property('quizzesServiceUrl').to.equal(quizzesServiceUrl);
     expect(instance.options).to.have.property('version').to.equal(version);
     expect(instance.options).to.have.property('networkParameters').to.equal(networkParameters);
+  });
+
+  it('Should return an instance with correct serviceUrl when a http serviceUrl is passed', () => {
+    const clientId = 'client-id';
+    const sessionId = 'session-id';
+    const serviceUrl = 'http://constructor.io';
+    const instance = new ConstructorIO({
+      apiKey: validApiKey,
+      clientId,
+      sessionId,
+      serviceUrl,
+    });
+
+    expect(instance).to.be.an('object');
+    expect(instance.options).to.have.property('serviceUrl').to.equal('https://constructor.io');
   });
 
   it('Should remove any trailing slashes from the serviceUrl', () => {
@@ -339,13 +354,101 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
       expect(instance.recommendations.options).to.have.property('userId').to.equal(newUserId);
       expect(instance.tracker.options).to.have.property('userId').to.equal(newUserId);
     });
+
+    it('Should clear the user id in client options', () => {
+      const oldUserId = 'old_user_id';
+      const newUserId = null;
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        userId: oldUserId,
+      });
+
+      expect(instance.options).to.have.property('userId').to.deep.equal(oldUserId);
+
+      instance.setClientOptions({
+        userId: newUserId,
+      });
+
+      expect(instance.options).to.have.property('userId').to.deep.equal(newUserId);
+    });
+
+    it('Should clear the user id from the options of modules', () => {
+      const oldUserId = 'old_user_id';
+      const newUserId = null;
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        userId: oldUserId,
+      });
+
+      expect(instance.options).to.have.property('userId').to.deep.equal(oldUserId);
+      expect(instance.search.options).to.have.property('userId').to.equal(oldUserId);
+      expect(instance.autocomplete.options).to.have.property('userId').to.equal(oldUserId);
+      expect(instance.browse.options).to.have.property('userId').to.equal(oldUserId);
+      expect(instance.recommendations.options).to.have.property('userId').to.equal(oldUserId);
+      expect(instance.tracker.options).to.have.property('userId').to.equal(oldUserId);
+
+      instance.setClientOptions({
+        userId: newUserId,
+      });
+
+      expect(instance.options).to.have.property('userId').to.deep.equal(newUserId);
+      expect(instance.search.options).to.have.property('userId').to.equal(newUserId);
+      expect(instance.autocomplete.options).to.have.property('userId').to.equal(newUserId);
+      expect(instance.browse.options).to.have.property('userId').to.equal(newUserId);
+      expect(instance.recommendations.options).to.have.property('userId').to.equal(newUserId);
+      expect(instance.tracker.options).to.have.property('userId').to.equal(newUserId);
+    });
+
+    it('Should not update the client options with new session id in a DOM context', () => {
+      const oldSessionId = 1;
+      const newSessionId = 2;
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        sessionId: oldSessionId,
+      });
+
+      expect(instance.options).to.have.property('sessionId').to.deep.equal(oldSessionId);
+
+      instance.setClientOptions({
+        sessionId: newSessionId,
+      });
+
+      expect(instance.options).to.have.property('sessionId').to.deep.equal(oldSessionId);
+    });
+
+    it('Should not update the options for modules with new session id in a DOM context', () => {
+      const oldSessionId = 1;
+      const newSessionId = 2;
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        sessionId: oldSessionId,
+      });
+
+      expect(instance.options).to.have.property('sessionId').to.deep.equal(oldSessionId);
+      expect(instance.search.options).to.have.property('sessionId').to.equal(oldSessionId);
+      expect(instance.autocomplete.options).to.have.property('sessionId').to.equal(oldSessionId);
+      expect(instance.browse.options).to.have.property('sessionId').to.equal(oldSessionId);
+      expect(instance.recommendations.options).to.have.property('sessionId').to.equal(oldSessionId);
+      expect(instance.tracker.options).to.have.property('sessionId').to.equal(oldSessionId);
+
+      instance.setClientOptions({
+        sessionId: newSessionId,
+      });
+
+      expect(instance.options).to.have.property('sessionId').to.deep.equal(oldSessionId);
+      expect(instance.search.options).to.have.property('sessionId').to.equal(oldSessionId);
+      expect(instance.autocomplete.options).to.have.property('sessionId').to.equal(oldSessionId);
+      expect(instance.browse.options).to.have.property('sessionId').to.equal(oldSessionId);
+      expect(instance.recommendations.options).to.have.property('sessionId').to.equal(oldSessionId);
+      expect(instance.tracker.options).to.have.property('sessionId').to.equal(oldSessionId);
+    });
   });
 
   if (bundled) {
     it('Should not add unexpected properties to global window object', () => {
       const properties = helpers.getUserDefinedWindowProperties();
 
-      expect(properties).to.deep.equal(['0', 'ConstructorioClient', 'CLIENT_VERSION']);
+      expect(properties).to.deep.equal(['0', 'ConstructorioClient', 'fetch', 'CLIENT_VERSION']);
     });
   }
 });
@@ -422,6 +525,54 @@ if (!bundled) {
 
       expect(instance).to.be.an('object');
       expect(instance.options.version).to.equal(`ciojs-client-domless-${packageVersion}`);
+    });
+
+    describe('setClientOptions', () => {
+      it('Should update the client options with new session id in a DOM-less context', () => {
+        const oldSessionId = 1;
+        const newSessionId = 2;
+        const instance = new ConstructorIO({
+          apiKey: validApiKey,
+          clientId,
+          sessionId: oldSessionId,
+        });
+
+        expect(instance.options).to.have.property('sessionId').to.deep.equal(oldSessionId);
+
+        instance.setClientOptions({
+          sessionId: newSessionId,
+        });
+
+        expect(instance.options).to.have.property('sessionId').to.deep.equal(newSessionId);
+      });
+
+      it('Should update the options for modules with new session id in a DOM-less context', () => {
+        const oldSessionId = 1;
+        const newSessionId = 2;
+        const instance = new ConstructorIO({
+          apiKey: validApiKey,
+          clientId,
+          sessionId: oldSessionId,
+        });
+
+        expect(instance.options).to.have.property('sessionId').to.deep.equal(oldSessionId);
+        expect(instance.search.options).to.have.property('sessionId').to.equal(oldSessionId);
+        expect(instance.autocomplete.options).to.have.property('sessionId').to.equal(oldSessionId);
+        expect(instance.browse.options).to.have.property('sessionId').to.equal(oldSessionId);
+        expect(instance.recommendations.options).to.have.property('sessionId').to.equal(oldSessionId);
+        expect(instance.tracker.options).to.have.property('sessionId').to.equal(oldSessionId);
+
+        instance.setClientOptions({
+          sessionId: newSessionId,
+        });
+
+        expect(instance.options).to.have.property('sessionId').to.deep.equal(newSessionId);
+        expect(instance.search.options).to.have.property('sessionId').to.equal(newSessionId);
+        expect(instance.autocomplete.options).to.have.property('sessionId').to.equal(newSessionId);
+        expect(instance.browse.options).to.have.property('sessionId').to.equal(newSessionId);
+        expect(instance.recommendations.options).to.have.property('sessionId').to.equal(newSessionId);
+        expect(instance.tracker.options).to.have.property('sessionId').to.equal(newSessionId);
+      });
     });
   });
 }

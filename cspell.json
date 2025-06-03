@@ -46,5 +46,7 @@
     "reranker",
     "rerank",
     "atcs",
+    "testdata",
+    "Bytespider"
   ]
 }

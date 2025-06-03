@@ -2,7 +2,7 @@
 const store = require('./store');
 const HumanityCheck = require('./humanity-check');
 const helpers = require('./helpers');
-const { requestContainsPii } = require('./helpers');
+const { obfuscatePiiRequest } = require('./helpers');
 
 const storageKey = '_constructorio_requests';
 const requestTTL = 180000; // 3 minutes in milliseconds
@@ -19,9 +19,18 @@ class RequestQueue {
       ? true
       : false; // Defaults to 'false'
 
-    // Mark if page environment is unloading
-    helpers.addEventListener('beforeunload', () => {
-      this.pageUnloading = true;
+    helpers.addEventListener('visibilitychange', () => {
+      // Mark if page environment is unloading
+      if (document.visibilityState === 'hidden') {
+        this.pageUnloading = true;
+      } else if (document.visibilityState === 'visible' && this.pageUnloading === true) {
+        // Send events once page is visible again
+        this.pageUnloading = false;
+
+        if (this.sendTrackingEvents) {
+          this.send();
+        }
+      }
     });
 
     if (this.sendTrackingEvents) {
@@ -31,15 +40,15 @@ class RequestQueue {
 
   // Add request to queue to be dispatched
   queue(url, method = 'GET', body = {}, networkParameters = {}) {
-    if (this.sendTrackingEvents && !this.humanity.isBot()) {
-      if (requestContainsPii(url, body)) {
-        return;
-      }
-
+    // Consider user "human" if no DOM context is available
+    if (this.sendTrackingEvents && (!helpers.canUseDOM() || !this.humanity.isBot())) {
       const queue = RequestQueue.get();
 
+      // PII Detection & Obfuscation
+      const obfuscatedUrl = obfuscatePiiRequest(url);
+
       queue.push({
-        url,
+        url: obfuscatedUrl,
         method,
         body,
         networkParameters,
@@ -55,7 +64,7 @@ class RequestQueue {
 
     if (
       // Consider user "human" if no DOM context is available
-      (!helpers.canUseDOM() || this.humanity.isHuman())
+      (!helpers.canUseDOM() || !this.humanity.isBot())
       && !this.requestPending
       && !this.pageUnloading
       && queue.length
@@ -183,7 +192,7 @@ class RequestQueue {
       if (this.options && this.options.trackingSendDelay === 0) {
         this.sendEvents();
       } else {
-        // Defer sending of events to give beforeunload time to register (avoids race condition)
+        // Defer sending of events to give visibilitychange time to register (avoids race condition)
         setTimeout(this.sendEvents.bind(this), (this.options && this.options.trackingSendDelay) || 250);
       }
     }

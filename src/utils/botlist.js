@@ -358,4 +358,6 @@ module.exports = [
   'tracemyfile',
   'Nimbostratus-Bot',
   'Bytespider',
+  'BTTAgent',
+  'OnCrawl',
 ];

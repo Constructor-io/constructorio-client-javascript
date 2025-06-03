@@ -36,6 +36,8 @@ export interface QuizzesResultsParameters extends QuizzesParameters {
   page?: number;
   resultsPerPage?: number;
   filters?: Record<string, any>;
+  fmtOptions?: QuizResultsFmtOptions;
+  hiddenFields?: string[];
 }
 
 declare class Quizzes {
@@ -58,14 +60,13 @@ declare class Quizzes {
   getQuizResultsConfig(
     quizId: string,
     parameters?: Pick<QuizzesParameters, 'quizVersionId'>,
-    networkParameters?: NetworkParameters
+    networkParameters?: NetworkParameters,
   ): Promise<QuizResultsConfigResponse>;
 }
 
 /* quizzes results returned from server */
 export interface NextQuestionResponse extends Record<string, any> {
   next_question: Question;
-  is_last_question?: boolean;
   quiz_version_id?: string;
   quiz_id?: string;
   quiz_session_id?: string;
@@ -107,6 +108,7 @@ export interface QuizResultsResponse extends Record<string, any> {
   quiz_selected_options: Array<{
     value: string;
     has_attribute: boolean;
+    is_matched: boolean;
   }>;
 }
 

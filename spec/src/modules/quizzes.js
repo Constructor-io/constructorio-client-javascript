@@ -4,7 +4,6 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
-const fetchPonyfill = require('fetch-ponyfill');
 const fs = require('fs');
 const helpers = require('../../mocha.helpers');
 const jsdom = require('../utils/jsdom-global');
@@ -14,7 +13,6 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 dotenv.config();
 
-const { fetch } = fetchPonyfill({ Promise });
 const quizApiKey = process.env.TEST_REQUEST_API_KEY;
 const clientVersion = 'cio-mocha';
 const bundled = process.env.BUNDLED === 'true';
@@ -95,24 +93,27 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result provided a valid apiKey, quizId and quizVersionId, quizSessionId', () => {
-      const quizVersionId = 'e03210db-0cc6-459c-8f17-bf014c4f554d';
       const quizSessionId = '123;';
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
       });
 
-      return quizzes.getQuizNextQuestion(validQuizId, { quizVersionId, quizSessionId }).then((res) => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      return quizzes.getQuizNextQuestion(validQuizId).then((initialResponse) => {
+        const quizVersionId = initialResponse.quiz_version_id;
 
-        expect(res).to.have.property('quiz_version_id').to.be.an('string').to.equal(quizVersionId);
-        expect(res).to.have.property('next_question').to.be.an('object');
-        expect(res).to.have.property('quiz_session_id').to.be.an('string');
-        expect(res.next_question.id).to.equal(1);
-        expect(res.next_question.options[0].id).to.equal(1);
-        expect(requestedUrlParams).to.have.property('quiz_version_id').to.equal(quizVersionId);
-        expect(requestedUrlParams).to.have.property('quiz_session_id').to.equal(quizSessionId);
+        return quizzes.getQuizNextQuestion(validQuizId, { quizVersionId, quizSessionId }).then((res) => {
+          const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
+          expect(res).to.have.property('quiz_version_id').to.be.an('string').to.equal(quizVersionId);
+          expect(res).to.have.property('next_question').to.be.an('object');
+          expect(res).to.have.property('quiz_session_id').to.be.an('string');
+          expect(res.next_question.id).to.equal(1);
+          expect(res.next_question.options[0].id).to.equal(1);
+          expect(requestedUrlParams).to.have.property('quiz_version_id').to.equal(quizVersionId);
+          expect(requestedUrlParams).to.have.property('quiz_session_id').to.equal(quizSessionId);
+
+        });
       });
     });
 
@@ -204,7 +205,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
           fetch: fetchSpy,
         });
 
-        return expect(quizzes.getQuizNextQuestion(validQuizId, {}, { timeout: 20 })).to.eventually.be.rejectedWith('The user aborted a request.');
+        return expect(quizzes.getQuizNextQuestion(validQuizId, {}, { timeout: 20 })).to.eventually.be.rejectedWith('This operation was aborted');
       });
 
       it('Should be rejected when global network request timeout is provided and reached', () => {
@@ -214,7 +215,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
           networkParameters: { timeout: 20 },
         });
 
-        return expect(quizzes.getQuizNextQuestion(validQuizId, {})).to.eventually.be.rejectedWith('The user aborted a request.');
+        return expect(quizzes.getQuizNextQuestion(validQuizId, {})).to.eventually.be.rejectedWith('This operation was aborted');
       });
     }
 
@@ -274,27 +275,81 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should return a result given fmtOptions parameters', () => {
+      const fmtOptions = { hidden_fields: ['testField', 'hiddenField2'] };
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+      });
+
+      return quizzes.getQuizResults(validQuizId, { answers: validAnswers, fmtOptions }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const resultWithTestField = res.response.results.find((result) => result.data.testField);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res).to.have.property('quiz_version_id').to.be.an('string');
+        expect(res).to.have.property('quiz_session_id').to.be.an('string');
+        expect(res).to.have.property('quiz_id').to.be.an('string');
+        expect(res.request.fmt_options.hidden_fields).to.eql(fmtOptions.hidden_fields);
+        expect(requestedUrlParams.fmt_options).to.eql(fmtOptions);
+        expect(resultWithTestField.data.testField).to.eql('hiddenFieldValue');
+        expect(fetchSpy).to.have.been.called;
+      });
+    });
+
+    it('Should return a result given hiddenField parameters', () => {
+      const hiddenFields = ['testField', 'hiddenField2'];
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+      });
+
+      return quizzes.getQuizResults(validQuizId, { answers: validAnswers, hiddenFields }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const resultWithTestField = res.response.results.find((result) => result.data.testField);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res).to.have.property('quiz_version_id').to.be.an('string');
+        expect(res).to.have.property('quiz_session_id').to.be.an('string');
+        expect(res).to.have.property('quiz_id').to.be.an('string');
+        expect(res.request.fmt_options.hidden_fields).to.eql(hiddenFields);
+        expect(requestedUrlParams.fmt_options).to.have.property('hidden_fields').to.eql(hiddenFields);
+        expect(resultWithTestField.data.testField).to.eql('hiddenFieldValue');
+        expect(fetchSpy).to.have.been.called;
+      });
+    });
+
     it('Should return a result provided a valid apiKey, quizId, quizVersionId and quizSessionId', () => {
-      const quizVersionId = 'e03210db-0cc6-459c-8f17-bf014c4f554d';
       const quizSessionId = '12345';
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
       });
 
-      // eslint-disable-next-line max-len
-      return quizzes.getQuizResults(validQuizId, { answers: validAnswers, quizVersionId, quizSessionId }).then((res) => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+      return quizzes.getQuizResults(validQuizId, { answers: validAnswers }).then((initialResponse) => {
+        const quizVersionId = initialResponse.quiz_version_id;
 
-        expect(res).to.have.property('request').to.be.an('object');
-        expect(res).to.have.property('response').to.be.an('object');
-        expect(res).to.have.property('result_id').to.be.an('string');
-        expect(res).to.have.property('quiz_version_id').to.be.an('string').to.equal(quizVersionId);
-        expect(res).to.have.property('quiz_session_id').to.be.an('string').to.equal(quizSessionId);
-        expect(res).to.have.property('quiz_id').to.be.an('string');
-        expect(fetchSpy).to.have.been.called;
-        expect(requestedUrlParams).to.have.property('quiz_version_id').to.equal(quizVersionId);
-        expect(requestedUrlParams).to.have.property('quiz_session_id').to.equal(quizSessionId);
+        return quizzes.getQuizResults(validQuizId, {
+          answers: validAnswers,
+          quizVersionId,
+          quizSessionId,
+        }).then((res) => {
+          const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+          expect(res).to.have.property('request').to.be.an('object');
+          expect(res).to.have.property('response').to.be.an('object');
+          expect(res).to.have.property('result_id').to.be.an('string');
+          expect(res).to.have.property('quiz_version_id').to.be.an('string').to.equal(quizVersionId);
+          expect(res).to.have.property('quiz_session_id').to.be.an('string').to.equal(quizSessionId);
+          expect(res).to.have.property('quiz_id').to.be.an('string');
+          expect(fetchSpy).to.have.been.called;
+          expect(requestedUrlParams).to.have.property('quiz_version_id').to.equal(quizVersionId);
+          expect(requestedUrlParams).to.have.property('quiz_session_id').to.equal(quizSessionId);
+        });
       });
     });
 
@@ -466,7 +521,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
           fetch: fetchSpy,
         });
 
-        return expect(quizzes.getQuizResults(validQuizId, { answers: validAnswers }, { timeout: 20 })).to.eventually.be.rejectedWith('The user aborted a request.');
+        return expect(quizzes.getQuizResults(validQuizId, { answers: validAnswers }, { timeout: 20 })).to.eventually.be.rejectedWith('This operation was aborted');
       });
 
       it('Should be rejected when global network request timeout is provided and reached', () => {
@@ -476,8 +531,81 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
           networkParameters: { timeout: 20 },
         });
 
-        return expect(quizzes.getQuizResults(validQuizId, { answers: validAnswers })).to.eventually.be.rejectedWith('The user aborted a request.');
+        return expect(quizzes.getQuizResults(validQuizId, { answers: validAnswers })).to.eventually.be.rejectedWith('This operation was aborted');
       });
     }
+  });
+
+  describe('getQuizResultsConfig', () => {
+    it('Should return result given valid API key and quiz id', () => {
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+      });
+
+      return quizzes.getQuizResultsConfig(validQuizId).then((res) => {
+        expect(fetchSpy).to.have.been.called;
+        expect(res).to.have.property('quiz_version_id').to.be.an('string');
+        expect(res).to.have.property('quiz_id').to.be.an('string');
+        expect(res).to.have.property('results_config').to.be.an('object');
+      });
+    });
+
+    it('Should return a result provided a valid apiKey, quizId, quizVersionId', () => {
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+      });
+
+      return quizzes.getQuizResultsConfig(validQuizId).then((initialResponse) => {
+        const quizVersionId = initialResponse.quiz_version_id;
+
+        return quizzes.getQuizResultsConfig(validQuizId, { quizVersionId }).then((res) => {
+          const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+          expect(res).to.have.property('results_config').to.be.an('object');
+          expect(res).to.have.property('quiz_version_id').to.be.an('string').to.equal(quizVersionId);
+          expect(res).to.have.property('quiz_id').to.be.an('string');
+          expect(fetchSpy).to.have.been.called;
+          expect(requestedUrlParams).to.have.property('quiz_version_id').to.equal(quizVersionId);
+        });
+      });
+    });
+
+    it('Should be rejected if an invalid quizVersionId is provided', () => {
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+      });
+
+      return expect(quizzes.getQuizResultsConfig(validQuizId, { quizVersionId: 'foo' })).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected if no quizId is provided', () => {
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+      });
+
+      return expect(quizzes.getQuizResultsConfig(null)).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected if an invalid quizId is provided', () => {
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+      });
+
+      return expect(quizzes.getQuizResultsConfig('invalidQuizId')).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected if an invalid apiKey is provided', () => {
+      const { quizzes } = new ConstructorIO({
+        apiKey: 'invalidKey',
+        fetch: fetchSpy,
+      });
+
+      return expect(quizzes.getQuizResultsConfig(validQuizId)).to.eventually.be.rejected;
+    });
   });
 });

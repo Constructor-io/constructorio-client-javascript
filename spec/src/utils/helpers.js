@@ -20,6 +20,8 @@ const {
   addOrderIdRecord,
   applyNetworkTimeout,
   stringify,
+  convertResponseToJson,
+  addHTTPSToString,
 } = require('../../../test/utils/helpers'); // eslint-disable-line import/extensions
 const jsdom = require('./jsdom-global');
 const store = require('../../../test/utils/store'); // eslint-disable-line import/extensions
@@ -246,17 +248,25 @@ describe('ConstructorIO - Utils - Helpers', () => {
       const orderId = '12345';
 
       afterEach(() => {
-        store.local.clearAll();
+        store.local.clear();
       });
 
       it('Should return true if the order id already exists from a previous purchase event', () => {
         store.local.set(purchaseEventStorageKey, [CRC32.str(orderId)]);
-
-        expect(hasOrderIdRecord(orderId)).to.equal(true);
+        expect(hasOrderIdRecord({ orderId })).to.equal(true);
       });
 
       it('Should return null if the order id does not already exist', () => {
-        expect(hasOrderIdRecord(orderId)).to.equal(null);
+        expect(hasOrderIdRecord({ orderId })).to.equal(null);
+      });
+
+      it('Should return null if the order id is repeated but for a different apiKey', () => {
+        expect(hasOrderIdRecord({ orderId, apiKey: 'test-key' })).to.equal(null);
+      });
+
+      it('Should return true if the order id is repeated but for a different apiKey', () => {
+        store.local.set(purchaseEventStorageKey, [CRC32.str(`test-key-${orderId}`)]);
+        expect(hasOrderIdRecord({ orderId, apiKey: 'test-key' })).to.equal(true);
       });
     });
 
@@ -266,14 +276,14 @@ describe('ConstructorIO - Utils - Helpers', () => {
       const orderId3 = '45124';
 
       afterEach(() => {
-        store.local.clearAll();
+        store.local.clear();
       });
 
       it('Should add the order id to the purchase event storage', () => {
         const orderIds = store.local.get(purchaseEventStorageKey);
         expect(orderIds).to.equal(null);
 
-        addOrderIdRecord(orderId);
+        addOrderIdRecord({ orderId });
         const newOrderIds = store.local.get(purchaseEventStorageKey);
         const newOrderIdExists = newOrderIds.includes(CRC32.str(orderId));
 
@@ -288,7 +298,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
         orderIds = store.local.get(purchaseEventStorageKey);
         expect(orderIds).to.eql([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
 
-        addOrderIdRecord(orderId);
+        addOrderIdRecord({ orderId });
         const newOrderIds = store.local.get(purchaseEventStorageKey);
 
         expect(newOrderIds).to.eql([3, 4, 5, 6, 7, 8, 9, 10, 11, CRC32.str(orderId)]);
@@ -298,8 +308,8 @@ describe('ConstructorIO - Utils - Helpers', () => {
         const orderIds = store.local.get(purchaseEventStorageKey);
         expect(orderIds).to.equal(null);
 
-        addOrderIdRecord(orderId);
-        addOrderIdRecord(orderId);
+        addOrderIdRecord({ orderId });
+        addOrderIdRecord({ orderId });
         const newOrderIds = store.local.get(purchaseEventStorageKey);
         const newOrderIdExists = newOrderIds.includes(CRC32.str(orderId));
 
@@ -307,13 +317,27 @@ describe('ConstructorIO - Utils - Helpers', () => {
         expect(newOrderIdExists).to.equal(true);
       });
 
+      it('Should allow adding of duplicate order ids for different keys to the purchase event storage', () => {
+        const orderIds = store.local.get(purchaseEventStorageKey);
+        const apiKey1 = 'test-key-1';
+        const apiKey2 = 'test-key-2';
+
+        expect(orderIds).to.equal(null);
+
+        addOrderIdRecord({ orderId, apiKey: apiKey1 });
+        addOrderIdRecord({ orderId, apiKey: apiKey2 });
+        const newOrderIds = store.local.get(purchaseEventStorageKey);
+
+        expect(newOrderIds.length).to.equal(2);
+      });
+
       it('Should keep a history of order ids', () => {
         const orderIds = store.local.get(purchaseEventStorageKey);
         expect(orderIds).to.equal(null);
 
-        addOrderIdRecord(orderId);
-        addOrderIdRecord(orderId2);
-        addOrderIdRecord(orderId3);
+        addOrderIdRecord({ orderId });
+        addOrderIdRecord({ orderId: orderId2 });
+        addOrderIdRecord({ orderId: orderId3 });
         const newOrderIds = store.local.get(purchaseEventStorageKey);
 
         expect(Object.keys(newOrderIds).length).to.equal(3);
@@ -400,6 +424,68 @@ describe('ConstructorIO - Utils - Helpers', () => {
         const stringified = stringify(obj);
 
         expect(stringified).to.equal('a=1&b=1%2C2&c=2&c=3&d=true&d=false&e%5Bf%5D=g&e%5Bf%5D=h');
+      });
+    });
+
+    describe('convertResponseToJson', () => {
+      it('Should return valid JSON response', () => {
+        const responseData = { testKey: 'testValue' };
+        const response = {
+          ok: true,
+          json: async () => Promise.resolve(responseData),
+        };
+
+        return expect(convertResponseToJson(response)).to.eventually.deep.equal(responseData);
+      });
+
+      it('Should return error if response cannot be converted to json', () => {
+        const response = {
+          ok: true,
+          code: 500,
+          json: async () => { throw Error('invalid JSON'); },
+          text: async () => 'plaintext response',
+        };
+
+        return expect(convertResponseToJson(response)).to.eventually.be.rejectedWith('Server responded with an invalid JSON object. Response code: 500, Response: plaintext response');
+      });
+
+      it('Should return error if response is not ok', () => {
+        const response = {
+          ok: false,
+          code: 500,
+          json: async () => { throw Error('invalid JSON'); },
+          text: async () => 'plaintext response',
+        };
+
+        return expect(convertResponseToJson(response)).to.eventually.be.rejectedWith('invalid JSON');
+      });
+    });
+
+    describe('addHTTPSToString', () => {
+      it('Should return the url without any modification', () => {
+        const testUrl = 'https://www.constructor.io';
+
+        expect(addHTTPSToString(testUrl)).to.equal(testUrl);
+      });
+
+      it('Should return url with no protocol with https at the beginning', () => {
+        const testUrl = 'www.constructor.io';
+        const expectedUrl = 'https://www.constructor.io';
+
+        expect(addHTTPSToString(testUrl)).to.equal(expectedUrl);
+      });
+
+      it('Should return url with an http protocol with https at the beginning', () => {
+        const testUrl = 'http://www.constructor.io';
+        const expectedUrl = 'https://www.constructor.io';
+
+        expect(addHTTPSToString(testUrl)).to.equal(expectedUrl);
+      });
+
+      it('Should return null if param is not a string', () => {
+        const testUrl = {};
+
+        expect(addHTTPSToString(testUrl)).to.equal(null);
       });
     });
   }

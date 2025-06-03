@@ -27,4 +27,4 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Spell check
-        run: npx cspell "**/*.js"
+        run: npx cspell@v8.19.4 "**/*.js"
