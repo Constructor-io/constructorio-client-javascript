@@ -1024,7 +1024,6 @@ class Tracker {
    *         itemName: 'Red T-Shirt',
    *         variationId: 'KMH879-7632',
    *         type: 'like',
-   *         resultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
    *         section: 'Products',
    *     },
    * );
