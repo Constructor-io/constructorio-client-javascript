@@ -1340,6 +1340,7 @@ class Tracker {
    * @param {string} parameters.itemName - Product item name
    * @param {string} [parameters.variationId] - Product item variation unique identifier
    * @param {string} [parameters.section="Products"] - Index section
+   * @param {string} [parameters.resultId] - Recommendation result identifier (returned in response from Constructor)
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - Page number of results
    * @param {number} [parameters.resultPositionOnPage] - Position of result on page
@@ -1353,6 +1354,7 @@ class Tracker {
    * constructorio.tracker.trackRecommendationClick(
    *     {
    *         variationId: 'KMH879-7632',
+   *         resultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
    *         resultCount: 22,
    *         resultPage: 2,
    *         resultPositionOnPage: 2,
