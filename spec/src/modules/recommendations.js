@@ -232,6 +232,26 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should return a response with valid itemIds, and fmtOptions', (done) => {
+      const hiddenFields = ['testField', 'hiddenField2'];
+      const fmtOptions = { hidden_fields: hiddenFields };
+      const { recommendations } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      recommendations.getRecommendations(podId, { itemIds, fmtOptions }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.fmt_options.hidden_fields).to.eql(hiddenFields);
+        expect(requestedUrlParams.fmt_options).to.have.property('hidden_fields').to.eql(hiddenFields);
+        done();
+      });
+    });
+
     it('Should return a response with valid itemIds, and numResults', (done) => {
       const numResults = 2;
       const { recommendations } = new ConstructorIO({
