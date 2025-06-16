@@ -123,7 +123,7 @@ class Recommendations {
    * @param {object} [parameters.filters] - Key / value mapping of filters used to refine results
    * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.com/reference/shared-variations-mapping for details
    * @param {object} [parameters.preFilterExpression] - Faceting expression to scope search results. Please refer to https://docs.constructor.com/reference/configuration-collections
-   * @param {object} [parameters.fmtOptions] - An object containing options to format different aspects of the response. Please refer to https://docs.constructor.com/reference/recommendations-recommendation-results for details
+   * @param {object} [parameters.fmtOptions] - An object containing options to format different aspects of the response. Please refer to https://docs.constructor.com/reference/v1-recommendations-get-pod-results for details
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
