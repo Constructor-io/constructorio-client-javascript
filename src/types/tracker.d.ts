@@ -362,7 +362,7 @@ declare class Tracker {
     section?: string;
   }, networkParameters?: NetworkParameters): true | Error;
 
-  trackAssistantQuestionClick(parameters: {
+  trackAssistantPDPQuestionClick(parameters: {
     itemId: string;
     itemName: string;
     question: string;
@@ -370,7 +370,7 @@ declare class Tracker {
     section?: string;
   }, networkParameters?: NetworkParameters): true | Error;
 
-  trackAssistantQuestionSubmit(parameters: {
+  trackAssistantPDPQuestionSubmit(parameters: {
     itemId: string;
     itemName: string;
     question: string;
@@ -378,7 +378,7 @@ declare class Tracker {
     section?: string;
   }, networkParameters?: NetworkParameters): true | Error;
 
-  trackAssistantAnswerView(parameters: {
+  trackAssistantPDPAnswerView(parameters: {
     itemId: string;
     itemName: string;
     question: string;
@@ -388,7 +388,7 @@ declare class Tracker {
     section?: string;
   }, networkParameters?: NetworkParameters): true | Error;
 
-  trackAssistantAnswerFeedback(parameters: {
+  trackAssistantPDPAnswerFeedback(parameters: {
     itemId: string;
     itemName: string;
     feedbackLabel: string;

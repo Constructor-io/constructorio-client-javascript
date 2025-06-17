@@ -2830,15 +2830,14 @@ class Tracker {
       const queryParams = {};
       const bodyParams = {
         questions,
-        itemId,
-        itemName,
-        variationId,
-        section,
-        viewTimespans,
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
+        view_timespans: viewTimespans,
       };
 
       if (section) {
-        queryParams.section = originalSection || section;
+        queryParams.section = section;
       }
 
       const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
@@ -2905,14 +2904,13 @@ class Tracker {
       const queryParams = {};
       const bodyParams = {
         questions,
-        itemId,
-        itemName,
-        variationId,
-        section,
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
       };
 
       if (section) {
-        queryParams.section = originalSection || section;
+        queryParams.section = section;
       }
 
       const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
@@ -2971,14 +2969,13 @@ class Tracker {
       } = parameters;
       const queryParams = {};
       const bodyParams = {
-        itemId,
-        itemName,
-        variationId,
-        section,
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
       };
 
       if (section) {
-        queryParams.section = originalSection || section;
+        queryParams.section = section;
       }
 
       const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
@@ -3037,14 +3034,13 @@ class Tracker {
       } = parameters;
       const queryParams = {};
       const bodyParams = {
-        itemId,
-        itemName,
-        variationId,
-        section,
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
       };
 
       if (section) {
-        queryParams.section = originalSection || section;
+        queryParams.section = section;
       }
 
       const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
@@ -3071,7 +3067,7 @@ class Tracker {
   /**
    * Send Assistant PDP question click event
    *
-   * @function trackAssistantQuestionClick
+   * @function trackAssistantPDPQuestionClick
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are one
@@ -3083,7 +3079,7 @@ class Tracker {
    * @returns {(true|Error)}
    * @description The PDP Q&A question that was clicked on
    * @example
-   * constructorio.tracker.trackAssistantQuestionClick({
+   * constructorio.tracker.trackAssistantPDPQuestionClick({
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
@@ -3092,11 +3088,11 @@ class Tracker {
    *   },
    * );
    */
-  trackAssistantQuestionClick(parameters, networkParameters = {}) {
+  trackAssistantPDPQuestionClick(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       // Ensure parameters are provided (required)
-      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_focus?`;
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_question_click?`;
       const {
         section,
         itemId,
@@ -3106,15 +3102,14 @@ class Tracker {
       } = parameters;
       const queryParams = {};
       const bodyParams = {
-        itemId,
-        itemName,
-        variationId,
-        section,
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
         question,
       };
 
       if (section) {
-        queryParams.section = originalSection || section;
+        queryParams.section = section;
       }
 
       const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
@@ -3141,7 +3136,7 @@ class Tracker {
   /**
    * Send Assistant PDP question submit
    *
-   * @function trackAssistantQuestionSubmit
+   * @function trackAssistantPDPQuestionSubmit
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are one
@@ -3153,7 +3148,7 @@ class Tracker {
    * @returns {(true|Error)}
    * @description The PDP Q&A question was submitted
    * @example
-   * constructorio.tracker.trackAssistantQuestionSubmit({
+   * constructorio.tracker.trackAssistantPDPQuestionSubmit({
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
@@ -3162,7 +3157,7 @@ class Tracker {
    *   },
    * );
    */
-  trackAssistantQuestionSubmit(parameters, networkParameters = {}) {
+  trackAssistantPDPQuestionSubmit(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       // Ensure parameters are provided (required)
@@ -3176,15 +3171,14 @@ class Tracker {
       } = parameters;
       const queryParams = {};
       const bodyParams = {
-        itemId,
-        itemName,
-        variationId,
-        section,
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
         question,
       };
 
       if (section) {
-        queryParams.section = originalSection || section;
+        queryParams.section = section;
       }
 
       const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
@@ -3211,7 +3205,7 @@ class Tracker {
   /**
    * Send Assistant PDP answer view
    *
-   * @function trackAssistantAnswerView
+   * @function trackAssistantPDPAnswerView
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are one
@@ -3225,7 +3219,7 @@ class Tracker {
    * @returns {(true|Error)}
    * @description The PDP Q&A answer was shown to the user
    * @example
-   * constructorio.tracker.trackAssistantAnswerView({
+   * constructorio.tracker.trackAssistantPDPAnswerView({
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
@@ -3236,7 +3230,7 @@ class Tracker {
    *   },
    * );
    */
-  trackAssistantAnswerView(parameters, networkParameters = {}) {
+  trackAssistantPDPAnswerView(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       // Ensure parameters are provided (required)
@@ -3252,17 +3246,16 @@ class Tracker {
       } = parameters;
       const queryParams = {};
       const bodyParams = {
-        itemId,
-        itemName,
-        variationId,
-        section,
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
         question,
-        answerText,
-        qnaResultId,
+        answer_text: answerText,
+        qna_result_id: qnaResultId,
       };
 
       if (section) {
-        queryParams.section = originalSection || section;
+        queryParams.section = section;
       }
 
       const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
@@ -3289,7 +3282,7 @@ class Tracker {
   /**
    * Send Assistant PDP answer feedback
    *
-   * @function trackAssistantAnswerFeedback
+   * @function trackAssistantPDPAnswerFeedback
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are one
@@ -3302,7 +3295,7 @@ class Tracker {
    * @returns {(true|Error)}
    * @description A user provided feedback on an answers usefulness
    * @example
-   * constructorio.tracker.trackAssistantAnswerFeedback({
+   * constructorio.tracker.trackAssistantPDPAnswerFeedback({
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
@@ -3312,7 +3305,7 @@ class Tracker {
    *   },
    * );
    */
-  trackAssistantAnswerFeedback(parameters, networkParameters = {}) {
+  trackAssistantPDPAnswerFeedback(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       // Ensure parameters are provided (required)
@@ -3327,16 +3320,15 @@ class Tracker {
       } = parameters;
       const queryParams = {};
       const bodyParams = {
-        itemId,
-        itemName,
-        variationId,
-        section,
-        feedbackLabel,
-        qnaResultId,
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
+        feedback_label: feedbackLabel,
+        qna_result_id: qnaResultId,
       };
 
       if (section) {
-        queryParams.section = originalSection || section;
+        queryParams.section = section;
       }
 
       const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
