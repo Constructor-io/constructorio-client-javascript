@@ -10091,7 +10091,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   });
 
   describe.only('trackAssistantPDPOutOfView', () => {
-    const requiredParameters = { itemId: '1', itemName: 'item1', };
+    const requiredParameters = { itemId: '1', itemName: 'item1' };
     const optionalParameters = {
       section: 'Products',
       variationId: '2',
@@ -10384,7 +10384,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   });
 
   describe.only('trackAssistantPDPFocus', () => {
-    const requiredParameters = { itemId: '1', itemName: 'item1', };
+    const requiredParameters = { itemId: '1', itemName: 'item1' };
     const optionalParameters = {
       section: 'Products',
       variationId: '2',
@@ -10677,7 +10677,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   });
 
   describe.only('trackAssistantPDPQuestionClick', () => {
-    const requiredParameters = { itemId: '1', itemName: 'item1', question: 'Why choose this?', };
+    const requiredParameters = { itemId: '1', itemName: 'item1', question: 'Why choose this?' };
     const optionalParameters = {
       section: 'Products',
       variationId: '2',
@@ -10816,7 +10816,9 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPDPQuestionClick(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackAssistantPDPQuestionClick(
+        Object.assign(requiredParameters, optionalParameters),
+      )).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
@@ -10971,7 +10973,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   });
 
   describe.only('trackAssistantPDPQuestionSubmit', () => {
-    const requiredParameters = { itemId: '1', itemName: 'item1', question: 'Why choose this?', };
+    const requiredParameters = { itemId: '1', itemName: 'item1', question: 'Why choose this?' };
     const optionalParameters = {
       section: 'Products',
       variationId: '2',
@@ -11110,7 +11112,9 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPDPQuestionSubmit(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackAssistantPDPQuestionSubmit(
+        Object.assign(requiredParameters, optionalParameters),
+      )).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
@@ -11265,7 +11269,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   });
 
   describe.only('trackAssistantPDPAnswerView', () => {
-    const requiredParameters = { itemId: '1', itemName: 'item1', question: 'Why choose this?', answerText: 'This product is awesome!', };
+    const requiredParameters = { itemId: '1', itemName: 'item1', question: 'Why choose this?', answerText: 'This product is awesome!' };
     const optionalParameters = {
       section: 'Products',
       variationId: '2',
@@ -11562,7 +11566,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   });
 
   describe.only('trackAssistantPDPAnswerFeedback', () => {
-    const requiredParameters = { itemId: '1', itemName: 'item1', feedbackLabel: 'thumbs_up', };
+    const requiredParameters = { itemId: '1', itemName: 'item1', feedbackLabel: 'thumbs_up' };
     const optionalParameters = {
       section: 'Products',
       variationId: '2',
@@ -11702,7 +11706,9 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPDPAnswerFeedback(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackAssistantPDPAnswerFeedback(
+        Object.assign(requiredParameters, optionalParameters),
+      )).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
