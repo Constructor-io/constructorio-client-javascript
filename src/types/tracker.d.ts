@@ -1,5 +1,5 @@
 import EventEmitter = require('events');
-import { ConstructorClientOptions, ItemTracked, ItemTrackedPurchase, NetworkParameters } from '.';
+import { ConstructorClientOptions, ItemTracked, ItemTrackedPurchase, TimeSpan, NetworkParameters } from '.';
 import RequestQueue = require('../utils/request-queue');
 
 export default Tracker;
@@ -330,6 +330,72 @@ declare class Tracker {
     },
     networkParameters?: NetworkParameters
   ): true | Error;
+
+  trackAssistantPDPViews(parameters: {
+    questions: string[];
+    itemId: string;
+    itemName: string;
+    viewTimespans: TimeSpan[];
+    variationId?: string;
+    section?: string;
+  }, networkParameters?: NetworkParameters): true | Error;
+
+  trackAssistantPDPView(parameters: {
+    questions: string[];
+    itemId: string;
+    itemName: string;
+    variationId?: string;
+    section?: string;
+  }, networkParameters?: NetworkParameters): true | Error;
+
+  trackAssistantPDPOutOfView(parameters: {
+    itemId: string;
+    itemName: string;
+    variationId?: string;
+    section?: string;
+  }, networkParameters?: NetworkParameters): true | Error;
+
+  trackAssistantPDPFocus(parameters: {
+    itemId: string;
+    itemName: string;
+    variationId?: string;
+    section?: string;
+  }, networkParameters?: NetworkParameters): true | Error;
+
+  trackAssistantQuestionClick(parameters: {
+    itemId: string;
+    itemName: string;
+    question: string;
+    variationId?: string;
+    section?: string;
+  }, networkParameters?: NetworkParameters): true | Error;
+
+  trackAssistantQuestionSubmit(parameters: {
+    itemId: string;
+    itemName: string;
+    question: string;
+    variationId?: string;
+    section?: string;
+  }, networkParameters?: NetworkParameters): true | Error;
+
+  trackAssistantAnswerView(parameters: {
+    itemId: string;
+    itemName: string;
+    question: string;
+    answerText: string;
+    qnaResultId?: string;
+    variationId?: string;
+    section?: string;
+  }, networkParameters?: NetworkParameters): true | Error;
+
+  trackAssistantAnswerFeedback(parameters: {
+    itemId: string;
+    itemName: string;
+    feedbackLabel: string;
+    qnaResultId?: string;
+    variationId?: string;
+    section?: string;
+  }, networkParameters?: NetworkParameters): true | Error;
 
   on(messageType: string, callback: Function): true | Error;
 }
