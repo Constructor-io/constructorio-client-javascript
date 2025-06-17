@@ -64,6 +64,11 @@ function createRecommendationsUrl(podId, parameters, options) {
       queryParams.filters = filters;
     }
 
+    // Pull format options from parameters
+    if (fmtOptions) {
+      queryParams.fmt_options = fmtOptions;
+    }
+
     // Pull hidden fields from parameters
     if (hiddenFields) {
       if (queryParams.fmt_options) {
@@ -81,11 +86,6 @@ function createRecommendationsUrl(podId, parameters, options) {
     // Pull pre_filter_expression from parameters
     if (preFilterExpression) {
       queryParams.pre_filter_expression = JSON.stringify(preFilterExpression);
-    }
-
-    // Pull format options from parameters
-    if (fmtOptions) {
-      queryParams.fmt_options = fmtOptions;
     }
   }
 
