@@ -2775,6 +2775,584 @@ class Tracker {
   }
 
   /**
+   * Send Assistant PDP view events
+   *
+   * @function trackAssistantPDPViews
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {array} parameters.questions - List of pre-defined questions shown to the user
+   * @param {string} parameters.itemId - Product id whose page we are on
+   * @param {string} parameters.itemName - Product name whose page we are one
+   * @param {array.<{start: string | undefined,
+   * end: string | undefined}>} parameters.viewTimespans - List of timestamp pairs in ISO_8601 format
+   * @param {string} [parameters.variationId] - Variation id whose page we are one
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description The PDP Q&A element appeared in the visible part of the page
+   * @example
+   * constructorio.tracker.trackAssistantPDPViews({
+   *   {
+   *     'itemId': '1',
+   *     'itemName': 'item1',
+   *     'variationId': '2',
+   *     'questions': [
+   *        'Why choose this?',
+   *        'How is this product made?',
+   *        'What are the dimensions of this product?'
+   *     ],
+   *     'viewTimespans': [
+   *       {
+   *         'start': '2025-05-19T14:30:00+02:00',
+   *         'end': '2025-05-19T14:30:05+02:00'
+   *       },
+   *       {
+   *         'start': '2025-05-19T14:30:10+02:00',
+   *         'end': '2025-05-19T14:30:15+02:00'
+   *       }
+   *     ]
+   *   },
+   * );
+   */
+  trackAssistantPDPViews(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      // Ensure parameters are provided (required)
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_view?`;
+      const {
+        section,
+        questions,
+        itemId,
+        itemName,
+        variationId,
+        viewTimespans,
+      } = parameters;
+      const queryParams = {};
+      const bodyParams = {
+        questions,
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
+        view_timespans: viewTimespans,
+      };
+
+      if (section) {
+        queryParams.section = section;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters is a required parameter of type object');
+  }
+
+  /**
+   * Send Assistant PDP view event
+   *
+   * @function trackAssistantPDPView
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {array} parameters.questions - List of pre-defined questions shown to the user
+   * @param {string} parameters.itemId - Product id whose page we are on
+   * @param {string} parameters.itemName - Product name whose page we are one
+   * @param {string} [parameters.variationId] - Variation id whose page we are one
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description The PDP Q&A element appeared in the visible part of the page
+   * @example
+   * constructorio.tracker.trackAssistantPDPView({
+   *   {
+   *     'itemId': '1',
+   *     'itemName': 'item1',
+   *     'variationId': '2',
+   *     'questions': [
+   *        'Why choose this?',
+   *        'How is this product made?',
+   *        'What are the dimensions of this product?'
+   *     ],
+   *   },
+   * );
+   */
+  trackAssistantPDPView(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      // Ensure parameters are provided (required)
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_view?`;
+      const {
+        section,
+        questions,
+        itemId,
+        itemName,
+        variationId,
+      } = parameters;
+      const queryParams = {};
+      const bodyParams = {
+        questions,
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
+      };
+
+      if (section) {
+        queryParams.section = section;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters is a required parameter of type object');
+  }
+
+  /**
+   * Send Assistant PDP out of view event
+   *
+   * @function trackAssistantPDPOutOfView
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.itemId - Product id whose page we are on
+   * @param {string} parameters.itemName - Product name whose page we are one
+   * @param {string} [parameters.variationId] - Variation id whose page we are one
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description The PDP Q&A element disappeared from the visible part of the page
+   * @example
+   * constructorio.tracker.trackAssistantPDPOutOfView({
+   *   {
+   *     'itemId': '1',
+   *     'itemName': 'item1',
+   *     'variationId': '2',
+   *   },
+   * );
+   */
+  trackAssistantPDPOutOfView(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      // Ensure parameters are provided (required)
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_out_of_view?`;
+      const {
+        section,
+        itemId,
+        itemName,
+        variationId,
+      } = parameters;
+      const queryParams = {};
+      const bodyParams = {
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
+      };
+
+      if (section) {
+        queryParams.section = section;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters is a required parameter of type object');
+  }
+
+  /**
+   * Send Assistant PDP out of view event
+   *
+   * @function trackAssistantPDPFocus
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.itemId - Product id whose page we are on
+   * @param {string} parameters.itemName - Product name whose page we are one
+   * @param {string} [parameters.variationId] - Variation id whose page we are one
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description The PDP Q&A element was focused on
+   * @example
+   * constructorio.tracker.trackAssistantPDPFocus({
+   *   {
+   *     'itemId': '1',
+   *     'itemName': 'item1',
+   *     'variationId': '2',
+   *   },
+   * );
+   */
+  trackAssistantPDPFocus(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      // Ensure parameters are provided (required)
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_focus?`;
+      const {
+        section,
+        itemId,
+        itemName,
+        variationId,
+      } = parameters;
+      const queryParams = {};
+      const bodyParams = {
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
+      };
+
+      if (section) {
+        queryParams.section = section;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters is a required parameter of type object');
+  }
+
+  /**
+   * Send Assistant PDP question click event
+   *
+   * @function trackAssistantPDPQuestionClick
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.itemId - Product id whose page we are on
+   * @param {string} parameters.itemName - Product name whose page we are one
+   * @param {string} parameters.question - Question a user clicked on
+   * @param {string} [parameters.variationId] - Variation id whose page we are one
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description The PDP Q&A question that was clicked on
+   * @example
+   * constructorio.tracker.trackAssistantPDPQuestionClick({
+   *   {
+   *     'itemId': '1',
+   *     'itemName': 'item1',
+   *     'variationId': '2',
+   *     'question': 'Why choose this?'
+   *   },
+   * );
+   */
+  trackAssistantPDPQuestionClick(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      // Ensure parameters are provided (required)
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_question_click?`;
+      const {
+        section,
+        itemId,
+        itemName,
+        variationId,
+        question,
+      } = parameters;
+      const queryParams = {};
+      const bodyParams = {
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
+        question,
+      };
+
+      if (section) {
+        queryParams.section = section;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters is a required parameter of type object');
+  }
+
+  /**
+   * Send Assistant PDP question submit
+   *
+   * @function trackAssistantPDPQuestionSubmit
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.itemId - Product id whose page we are on
+   * @param {string} parameters.itemName - Product name whose page we are one
+   * @param {string} parameters.question - Question a user submitted
+   * @param {string} [parameters.variationId] - Variation id whose page we are one
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description The PDP Q&A question was submitted
+   * @example
+   * constructorio.tracker.trackAssistantPDPQuestionSubmit({
+   *   {
+   *     'itemId': '1',
+   *     'itemName': 'item1',
+   *     'variationId': '2',
+   *     'question': 'Tell me some key highlights about this item?'
+   *   },
+   * );
+   */
+  trackAssistantPDPQuestionSubmit(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      // Ensure parameters are provided (required)
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_question_submit?`;
+      const {
+        section,
+        itemId,
+        itemName,
+        variationId,
+        question,
+      } = parameters;
+      const queryParams = {};
+      const bodyParams = {
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
+        question,
+      };
+
+      if (section) {
+        queryParams.section = section;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters is a required parameter of type object');
+  }
+
+  /**
+   * Send Assistant PDP answer view
+   *
+   * @function trackAssistantPDPAnswerView
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.itemId - Product id whose page we are on
+   * @param {string} parameters.itemName - Product name whose page we are one
+   * @param {string} parameters.question - Question a user submitted
+   * @param {string} parameters.answerText - Answer text of the question
+   * @param {string} [parameters.qnaResultId] - Answer result id returned
+   * @param {string} [parameters.variationId] - Variation id whose page we are one
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description The PDP Q&A answer was shown to the user
+   * @example
+   * constructorio.tracker.trackAssistantPDPAnswerView({
+   *   {
+   *     'itemId': '1',
+   *     'itemName': 'item1',
+   *     'variationId': '2',
+   *     'question': 'Why choose this?',
+   *     'answerText': 'This product is awesome!',
+   *     'qnaResultId': '0daf0015-fc29-4727-9140-8d5313a1902c',
+   *   },
+   * );
+   */
+  trackAssistantPDPAnswerView(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      // Ensure parameters are provided (required)
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_answer_view?`;
+      const {
+        section,
+        itemId,
+        itemName,
+        variationId,
+        question,
+        answerText,
+        qnaResultId,
+      } = parameters;
+      const queryParams = {};
+      const bodyParams = {
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
+        question,
+        answer_text: answerText,
+        qna_result_id: qnaResultId,
+      };
+
+      if (section) {
+        queryParams.section = section;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters is a required parameter of type object');
+  }
+
+  /**
+   * Send Assistant PDP answer feedback
+   *
+   * @function trackAssistantPDPAnswerFeedback
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.itemId - Product id whose page we are on
+   * @param {string} parameters.itemName - Product name whose page we are one
+   * @param {string} parameters.feedbackLabel - Feedback value: either "thumbs_up" or "thumbs_down"
+   * @param {string} [parameters.qnaResultId] - Answer result id returned
+   * @param {string} [parameters.variationId] - Variation id whose page we are one
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description A user provided feedback on an answers usefulness
+   * @example
+   * constructorio.tracker.trackAssistantPDPAnswerFeedback({
+   *   {
+   *     'itemId': '1',
+   *     'itemName': 'item1',
+   *     'variationId': '2',
+   *     'feedbackLabel': 'thumbs_up',
+   *     'qnaResultId': '0daf0015-fc29-4727-9140-8d5313a1902c',
+   *   },
+   * );
+   */
+  trackAssistantPDPAnswerFeedback(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      // Ensure parameters are provided (required)
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_answer_feedback?`;
+      const {
+        section,
+        itemId,
+        itemName,
+        variationId,
+        feedbackLabel,
+        qnaResultId,
+      } = parameters;
+      const queryParams = {};
+      const bodyParams = {
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
+        feedback_label: feedbackLabel,
+        qna_result_id: qnaResultId,
+      };
+
+      if (section) {
+        queryParams.section = section;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters is a required parameter of type object');
+  }
+
+  /**
    * Subscribe to success or error messages emitted by tracking requests
    *
    * @function on
