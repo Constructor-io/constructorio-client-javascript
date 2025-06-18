@@ -10090,7 +10090,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
   });
 
-  describe.only('trackAssistantPDPOutOfView', () => {
+  describe('trackAssistantPDPOutOfView', () => {
     const requiredParameters = { itemId: '1', itemName: 'item1' };
     const optionalParameters = {
       section: 'Products',
@@ -10383,7 +10383,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
   });
 
-  describe.only('trackAssistantPDPFocus', () => {
+  describe('trackAssistantPDPFocus', () => {
     const requiredParameters = { itemId: '1', itemName: 'item1' };
     const optionalParameters = {
       section: 'Products',
@@ -10676,7 +10676,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
   });
 
-  describe.only('trackAssistantPDPQuestionClick', () => {
+  describe('trackAssistantPDPQuestionClick', () => {
     const requiredParameters = { itemId: '1', itemName: 'item1', question: 'Why choose this?' };
     const optionalParameters = {
       section: 'Products',
@@ -10972,7 +10972,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
   });
 
-  describe.only('trackAssistantPDPQuestionSubmit', () => {
+  describe('trackAssistantPDPQuestionSubmit', () => {
     const requiredParameters = { itemId: '1', itemName: 'item1', question: 'Why choose this?' };
     const optionalParameters = {
       section: 'Products',
@@ -11268,7 +11268,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
   });
 
-  describe.only('trackAssistantPDPAnswerView', () => {
+  describe('trackAssistantPDPAnswerView', () => {
     const requiredParameters = { itemId: '1', itemName: 'item1', question: 'Why choose this?', answerText: 'This product is awesome!' };
     const optionalParameters = {
       section: 'Products',
@@ -11565,7 +11565,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
   });
 
-  describe.only('trackAssistantPDPAnswerFeedback', () => {
+  describe('trackAssistantPDPAnswerFeedback', () => {
     const requiredParameters = { itemId: '1', itemName: 'item1', feedbackLabel: 'thumbs_up' };
     const optionalParameters = {
       section: 'Products',
