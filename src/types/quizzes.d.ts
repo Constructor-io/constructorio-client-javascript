@@ -19,6 +19,7 @@ export interface QuizzesParameters {
   answers?: any[];
   quizVersionId?: string;
   quizSessionId?: string;
+  direction?: 'next' | 'previous';
 }
 
 export interface QuizResultsFmtOptions {
@@ -66,6 +67,10 @@ export interface NextQuestionResponse extends Record<string, any> {
   quiz_id?: string;
   quiz_session_id?: string;
   total_questions: number;
+  answers: Array<{
+    questionId: number;
+    answerIds: string[];
+  }>;
 }
 
 export interface QuizResultsResponse extends Record<string, any> {
@@ -164,25 +169,25 @@ export interface QuestionImages extends Record<string, any> {
 type ResultConfigFields = {
   is_active: boolean;
   text: Nullable<string>;
-};
+}
 
 type ResponseSummary = ResultConfigFields & {
   items_separator: Nullable<string>;
   last_separator: Nullable<string>;
-}
+};
 
 type ViewportResultsConfig = {
   title: Nullable<ResultConfigFields>;
   description: Nullable<ResultConfigFields>;
   response_summary: Nullable<ResponseSummary>;
-};
+}
 
 export interface QuizResultsConfig extends Record<string, any> {
   desktop: ViewportResultsConfig;
 }
 
 export interface QuizResultsConfigResponse extends Record<string, any> {
-  results_config: QuizResultsConfig,
+  results_config: QuizResultsConfig;
   quiz_version_id: string;
   quiz_id: string;
 }
