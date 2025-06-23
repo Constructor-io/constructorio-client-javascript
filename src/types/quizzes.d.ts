@@ -115,7 +115,7 @@ export interface QuizResultData extends Record<string, any> {
   variations: Record<string, any>[];
 }
 
-export type Question = SelectQuestion | OpenQuestion | CoverQuestion;
+export type Question = SelectQuestion | FilterValueQuestion | OpenQuestion | CoverQuestion;
 
 export interface BaseQuestion extends Record<string, any> {
   id: number;
@@ -123,6 +123,12 @@ export interface BaseQuestion extends Record<string, any> {
   description: string;
   cta_text: Nullable<string>;
   images?: Nullable<QuestionImages>;
+}
+
+export interface FilterValueQuestion extends BaseQuestion {
+  type: 'single_filter_value' |'multiple_filter_values';
+  filter_name: string;
+  options: QuestionOption[];
 }
 
 export interface SelectQuestion extends BaseQuestion {
