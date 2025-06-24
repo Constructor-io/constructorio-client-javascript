@@ -2777,7 +2777,7 @@ class Tracker {
   /**
    * Send Assistant PDP view events
    *
-   * @function trackAssistantPDPViews
+   * @function trackAssistantPdpViews
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {array} parameters.questions - List of pre-defined questions shown to the user
    * @param {string} parameters.itemId - Product id whose page we are on
@@ -2791,7 +2791,7 @@ class Tracker {
    * @returns {(true|Error)}
    * @description The PDP Q&A element appeared in the visible part of the page
    * @example
-   * constructorio.tracker.trackAssistantPDPViews({
+   * constructorio.tracker.trackAssistantPdpViews({
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
@@ -2814,7 +2814,7 @@ class Tracker {
    *   },
    * );
    */
-  trackAssistantPDPViews(parameters, networkParameters = {}) {
+  trackAssistantPdpViews(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       // Ensure parameters are provided (required)
@@ -2864,7 +2864,7 @@ class Tracker {
   /**
    * Send Assistant PDP view event
    *
-   * @function trackAssistantPDPView
+   * @function trackAssistantPdpView
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {array} parameters.questions - List of pre-defined questions shown to the user
    * @param {string} parameters.itemId - Product id whose page we are on
@@ -2876,7 +2876,7 @@ class Tracker {
    * @returns {(true|Error)}
    * @description The PDP Q&A element appeared in the visible part of the page
    * @example
-   * constructorio.tracker.trackAssistantPDPView({
+   * constructorio.tracker.trackAssistantPdpView({
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
@@ -2889,7 +2889,7 @@ class Tracker {
    *   },
    * );
    */
-  trackAssistantPDPView(parameters, networkParameters = {}) {
+  trackAssistantPdpView(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       // Ensure parameters are provided (required)
@@ -2937,7 +2937,7 @@ class Tracker {
   /**
    * Send Assistant PDP out of view event
    *
-   * @function trackAssistantPDPOutOfView
+   * @function trackAssistantPdpOutOfView
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are one
@@ -2948,7 +2948,7 @@ class Tracker {
    * @returns {(true|Error)}
    * @description The PDP Q&A element disappeared from the visible part of the page
    * @example
-   * constructorio.tracker.trackAssistantPDPOutOfView({
+   * constructorio.tracker.trackAssistantPdpOutOfView({
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
@@ -2956,7 +2956,7 @@ class Tracker {
    *   },
    * );
    */
-  trackAssistantPDPOutOfView(parameters, networkParameters = {}) {
+  trackAssistantPdpOutOfView(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       // Ensure parameters are provided (required)
@@ -3002,7 +3002,7 @@ class Tracker {
   /**
    * Send Assistant PDP out of view event
    *
-   * @function trackAssistantPDPFocus
+   * @function trackAssistantPdpFocus
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are one
@@ -3013,7 +3013,7 @@ class Tracker {
    * @returns {(true|Error)}
    * @description The PDP Q&A element was focused on
    * @example
-   * constructorio.tracker.trackAssistantPDPFocus({
+   * constructorio.tracker.trackAssistantPdpFocus({
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
@@ -3021,7 +3021,7 @@ class Tracker {
    *   },
    * );
    */
-  trackAssistantPDPFocus(parameters, networkParameters = {}) {
+  trackAssistantPdpFocus(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       // Ensure parameters are provided (required)
@@ -3067,7 +3067,7 @@ class Tracker {
   /**
    * Send Assistant PDP question click event
    *
-   * @function trackAssistantPDPQuestionClick
+   * @function trackAssistantPdpQuestionClick
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are one
@@ -3079,7 +3079,7 @@ class Tracker {
    * @returns {(true|Error)}
    * @description The PDP Q&A question that was clicked on
    * @example
-   * constructorio.tracker.trackAssistantPDPQuestionClick({
+   * constructorio.tracker.trackAssistantPdpQuestionClick({
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
@@ -3088,7 +3088,7 @@ class Tracker {
    *   },
    * );
    */
-  trackAssistantPDPQuestionClick(parameters, networkParameters = {}) {
+  trackAssistantPdpQuestionClick(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       // Ensure parameters are provided (required)
@@ -3136,7 +3136,7 @@ class Tracker {
   /**
    * Send Assistant PDP question submit
    *
-   * @function trackAssistantPDPQuestionSubmit
+   * @function trackAssistantPdpQuestionSubmit
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are one
@@ -3148,7 +3148,7 @@ class Tracker {
    * @returns {(true|Error)}
    * @description The PDP Q&A question was submitted
    * @example
-   * constructorio.tracker.trackAssistantPDPQuestionSubmit({
+   * constructorio.tracker.trackAssistantPdpQuestionSubmit({
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
@@ -3157,7 +3157,7 @@ class Tracker {
    *   },
    * );
    */
-  trackAssistantPDPQuestionSubmit(parameters, networkParameters = {}) {
+  trackAssistantPdpQuestionSubmit(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       // Ensure parameters are provided (required)
@@ -3205,7 +3205,7 @@ class Tracker {
   /**
    * Send Assistant PDP answer view
    *
-   * @function trackAssistantPDPAnswerView
+   * @function trackAssistantPdpAnswerView
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are one
@@ -3219,7 +3219,7 @@ class Tracker {
    * @returns {(true|Error)}
    * @description The PDP Q&A answer was shown to the user
    * @example
-   * constructorio.tracker.trackAssistantPDPAnswerView({
+   * constructorio.tracker.trackAssistantPdpAnswerView({
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
@@ -3230,7 +3230,7 @@ class Tracker {
    *   },
    * );
    */
-  trackAssistantPDPAnswerView(parameters, networkParameters = {}) {
+  trackAssistantPdpAnswerView(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       // Ensure parameters are provided (required)
@@ -3282,7 +3282,7 @@ class Tracker {
   /**
    * Send Assistant PDP answer feedback
    *
-   * @function trackAssistantPDPAnswerFeedback
+   * @function trackAssistantPdpAnswerFeedback
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are one
@@ -3295,7 +3295,7 @@ class Tracker {
    * @returns {(true|Error)}
    * @description A user provided feedback on an answers usefulness
    * @example
-   * constructorio.tracker.trackAssistantPDPAnswerFeedback({
+   * constructorio.tracker.trackAssistantPdpAnswerFeedback({
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
@@ -3305,7 +3305,7 @@ class Tracker {
    *   },
    * );
    */
-  trackAssistantPDPAnswerFeedback(parameters, networkParameters = {}) {
+  trackAssistantPdpAnswerFeedback(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       // Ensure parameters are provided (required)
