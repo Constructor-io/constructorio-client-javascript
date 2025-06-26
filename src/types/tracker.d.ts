@@ -1,5 +1,5 @@
 import EventEmitter = require('events');
-import { ConstructorClientOptions, ItemTracked, ItemTrackedPurchase, TimeSpan, NetworkParameters } from '.';
+import { ConstructorClientOptions, ItemTracked, ItemTrackedPurchase, Question, TimeSpan, NetworkParameters } from '.';
 import RequestQueue = require('../utils/request-queue');
 
 export default Tracker;
@@ -332,7 +332,7 @@ declare class Tracker {
   ): true | Error;
 
   trackAssistantPdpViews(parameters: {
-    questions: string[];
+    questions: Question[];
     itemId: string;
     itemName: string;
     viewTimespans: TimeSpan[];
@@ -341,7 +341,7 @@ declare class Tracker {
   }, networkParameters?: NetworkParameters): true | Error;
 
   trackAssistantPdpView(parameters: {
-    questions: string[];
+    questions: Question[];
     itemId: string;
     itemName: string;
     variationId?: string;

@@ -2779,7 +2779,7 @@ class Tracker {
    *
    * @function trackAssistantPdpViews
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {array} parameters.questions - List of pre-defined questions shown to the user
+   * @param {array.<{question: string}>} parameters.questions - List of pre-defined questions shown to the user
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are one
    * @param {array.<{start: string | undefined,
@@ -2797,9 +2797,9 @@ class Tracker {
    *     'itemName': 'item1',
    *     'variationId': '2',
    *     'questions': [
-   *        'Why choose this?',
-   *        'How is this product made?',
-   *        'What are the dimensions of this product?'
+   *        { question: 'Why choose this?' },
+   *        { question: 'How is this product made?' },
+   *        { question: 'What are the dimensions of this product?' }
    *     ],
    *     'viewTimespans': [
    *       {
@@ -2817,8 +2817,7 @@ class Tracker {
   trackAssistantPdpViews(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      // Ensure parameters are provided (required)
-      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_view?`;
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_views?`;
       const {
         section,
         questions,
@@ -2866,7 +2865,7 @@ class Tracker {
    *
    * @function trackAssistantPdpView
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {array} parameters.questions - List of pre-defined questions shown to the user
+   * @param {array.<{question: string}>} parameters.questions - List of pre-defined questions shown to the user
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are one
    * @param {string} [parameters.variationId] - Variation id whose page we are one
@@ -2882,9 +2881,9 @@ class Tracker {
    *     'itemName': 'item1',
    *     'variationId': '2',
    *     'questions': [
-   *        'Why choose this?',
-   *        'How is this product made?',
-   *        'What are the dimensions of this product?'
+   *        { question: 'Why choose this?' },
+   *        { question: 'How is this product made?' },
+   *        { question: 'What are the dimensions of this product?' }
    *     ],
    *   },
    * );
@@ -2892,7 +2891,6 @@ class Tracker {
   trackAssistantPdpView(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      // Ensure parameters are provided (required)
       const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_view?`;
       const {
         section,
@@ -2959,7 +2957,6 @@ class Tracker {
   trackAssistantPdpOutOfView(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      // Ensure parameters are provided (required)
       const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_out_of_view?`;
       const {
         section,
@@ -3024,7 +3021,6 @@ class Tracker {
   trackAssistantPdpFocus(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      // Ensure parameters are provided (required)
       const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_focus?`;
       const {
         section,
@@ -3091,7 +3087,6 @@ class Tracker {
   trackAssistantPdpQuestionClick(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      // Ensure parameters are provided (required)
       const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_question_click?`;
       const {
         section,
@@ -3160,7 +3155,6 @@ class Tracker {
   trackAssistantPdpQuestionSubmit(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      // Ensure parameters are provided (required)
       const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_question_submit?`;
       const {
         section,
@@ -3233,7 +3227,6 @@ class Tracker {
   trackAssistantPdpAnswerView(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      // Ensure parameters are provided (required)
       const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_answer_view?`;
       const {
         section,
@@ -3308,7 +3301,6 @@ class Tracker {
   trackAssistantPdpAnswerFeedback(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      // Ensure parameters are provided (required)
       const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_answer_feedback?`;
       const {
         section,
