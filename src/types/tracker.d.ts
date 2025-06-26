@@ -1,5 +1,5 @@
 import EventEmitter = require('events');
-import { ConstructorClientOptions, ItemTracked, ItemTrackedPurchase, NetworkParameters } from '.';
+import { ConstructorClientOptions, ItemTracked, ItemTrackedPurchase, Question, TimeSpan, NetworkParameters } from '.';
 import RequestQueue = require('../utils/request-queue');
 
 export default Tracker;
@@ -330,6 +330,72 @@ declare class Tracker {
     },
     networkParameters?: NetworkParameters
   ): true | Error;
+
+  trackAssistantPdpViews(parameters: {
+    questions: Question[];
+    itemId: string;
+    itemName: string;
+    viewTimespans: TimeSpan[];
+    variationId?: string;
+    section?: string;
+  }, networkParameters?: NetworkParameters): true | Error;
+
+  trackAssistantPdpView(parameters: {
+    questions: Question[];
+    itemId: string;
+    itemName: string;
+    variationId?: string;
+    section?: string;
+  }, networkParameters?: NetworkParameters): true | Error;
+
+  trackAssistantPdpOutOfView(parameters: {
+    itemId: string;
+    itemName: string;
+    variationId?: string;
+    section?: string;
+  }, networkParameters?: NetworkParameters): true | Error;
+
+  trackAssistantPdpFocus(parameters: {
+    itemId: string;
+    itemName: string;
+    variationId?: string;
+    section?: string;
+  }, networkParameters?: NetworkParameters): true | Error;
+
+  trackAssistantPdpQuestionClick(parameters: {
+    itemId: string;
+    itemName: string;
+    question: string;
+    variationId?: string;
+    section?: string;
+  }, networkParameters?: NetworkParameters): true | Error;
+
+  trackAssistantPdpQuestionSubmit(parameters: {
+    itemId: string;
+    itemName: string;
+    question: string;
+    variationId?: string;
+    section?: string;
+  }, networkParameters?: NetworkParameters): true | Error;
+
+  trackAssistantPdpAnswerView(parameters: {
+    itemId: string;
+    itemName: string;
+    question: string;
+    answerText: string;
+    qnaResultId?: string;
+    variationId?: string;
+    section?: string;
+  }, networkParameters?: NetworkParameters): true | Error;
+
+  trackAssistantPdpAnswerFeedback(parameters: {
+    itemId: string;
+    itemName: string;
+    feedbackLabel: string;
+    qnaResultId?: string;
+    variationId?: string;
+    section?: string;
+  }, networkParameters?: NetworkParameters): true | Error;
 
   on(messageType: string, callback: Function): true | Error;
 }

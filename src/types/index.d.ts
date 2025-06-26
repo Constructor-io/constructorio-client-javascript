@@ -246,3 +246,12 @@ export interface ItemTracked {
 export interface ItemTrackedPurchase extends ItemTracked {
   count?: number;
 }
+
+export interface Question {
+  question: string;
+}
+
+export interface TimeSpan {
+  start: string;
+  end: string;
+}
