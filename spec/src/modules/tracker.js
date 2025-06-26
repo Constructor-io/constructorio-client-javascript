@@ -10095,20 +10095,20 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       itemId: '1',
       itemName: 'item1',
       questions: [
-          { question: 'Why choose this?' },
-          { question: 'How is this product made?' },
-          { question: 'What are the dimensions of this product?' },
+        { question: 'Why choose this?' },
+        { question: 'How is this product made?' },
+        { question: 'What are the dimensions of this product?' },
       ],
       viewTimespans: [
         {
-          'start': '2025-05-19T14:30:00+02:00',
-          'end': '2025-05-19T14:30:05+02:00'
+          start: '2025-05-19T14:30:00+02:00',
+          end: '2025-05-19T14:30:05+02:00',
         },
         {
-          'start': '2025-05-19T14:30:10+02:00',
-          'end': '2025-05-19T14:30:15+02:00'
-        }
-      ]
+          start: '2025-05-19T14:30:10+02:00',
+          end: '2025-05-19T14:30:15+02:00',
+        },
+      ],
     };
     const optionalParameters = {
       section: 'Products',
@@ -10408,9 +10408,9 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       itemId: '1',
       itemName: 'item1',
       questions: [
-          { question: 'Why choose this?' },
-          { question: 'How is this product made?' },
-          { question: 'What are the dimensions of this product?' },
+        { question: 'Why choose this?' },
+        { question: 'How is this product made?' },
+        { question: 'What are the dimensions of this product?' },
       ],
     };
     const optionalParameters = {
