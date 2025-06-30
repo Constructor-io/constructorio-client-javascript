@@ -2781,10 +2781,10 @@ class Tracker {
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {array.<{question: string}>} parameters.questions - List of pre-defined questions shown to the user
    * @param {string} parameters.itemId - Product id whose page we are on
-   * @param {string} parameters.itemName - Product name whose page we are one
+   * @param {string} parameters.itemName - Product name whose page we are on
    * @param {array.<{start: string | undefined,
    * end: string | undefined}>} parameters.viewTimespans - List of timestamp pairs in ISO_8601 format
-   * @param {string} [parameters.variationId] - Variation id whose page we are one
+   * @param {string} [parameters.variationId] - Variation id whose page we are on
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -2867,8 +2867,8 @@ class Tracker {
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {array.<{question: string}>} parameters.questions - List of pre-defined questions shown to the user
    * @param {string} parameters.itemId - Product id whose page we are on
-   * @param {string} parameters.itemName - Product name whose page we are one
-   * @param {string} [parameters.variationId] - Variation id whose page we are one
+   * @param {string} parameters.itemName - Product name whose page we are on
+   * @param {string} [parameters.variationId] - Variation id whose page we are on
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -2938,8 +2938,8 @@ class Tracker {
    * @function trackAssistantPdpOutOfView
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.itemId - Product id whose page we are on
-   * @param {string} parameters.itemName - Product name whose page we are one
-   * @param {string} [parameters.variationId] - Variation id whose page we are one
+   * @param {string} parameters.itemName - Product name whose page we are on
+   * @param {string} [parameters.variationId] - Variation id whose page we are on
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3002,13 +3002,13 @@ class Tracker {
    * @function trackAssistantPdpFocus
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.itemId - Product id whose page we are on
-   * @param {string} parameters.itemName - Product name whose page we are one
-   * @param {string} [parameters.variationId] - Variation id whose page we are one
+   * @param {string} parameters.itemName - Product name whose page we are on
+   * @param {string} [parameters.variationId] - Variation id whose page we are on
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
-   * @description The PDP Q&A element was focused on
+   * @description User focused on the PDP Q&A input element
    * @example
    * constructorio.tracker.trackAssistantPdpFocus({
    *   {
@@ -3066,9 +3066,9 @@ class Tracker {
    * @function trackAssistantPdpQuestionClick
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.itemId - Product id whose page we are on
-   * @param {string} parameters.itemName - Product name whose page we are one
+   * @param {string} parameters.itemName - Product name whose page we are on
    * @param {string} parameters.question - Question a user clicked on
-   * @param {string} [parameters.variationId] - Variation id whose page we are one
+   * @param {string} [parameters.variationId] - Variation id whose page we are on
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3134,9 +3134,9 @@ class Tracker {
    * @function trackAssistantPdpQuestionSubmit
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.itemId - Product id whose page we are on
-   * @param {string} parameters.itemName - Product name whose page we are one
+   * @param {string} parameters.itemName - Product name whose page we are on
    * @param {string} parameters.question - Question a user submitted
-   * @param {string} [parameters.variationId] - Variation id whose page we are one
+   * @param {string} [parameters.variationId] - Variation id whose page we are on
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3202,11 +3202,11 @@ class Tracker {
    * @function trackAssistantPdpAnswerView
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.itemId - Product id whose page we are on
-   * @param {string} parameters.itemName - Product name whose page we are one
+   * @param {string} parameters.itemName - Product name whose page we are on
    * @param {string} parameters.question - Question a user submitted
    * @param {string} parameters.answerText - Answer text of the question
    * @param {string} [parameters.qnaResultId] - Answer result id returned
-   * @param {string} [parameters.variationId] - Variation id whose page we are one
+   * @param {string} [parameters.variationId] - Variation id whose page we are on
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3278,10 +3278,10 @@ class Tracker {
    * @function trackAssistantPdpAnswerFeedback
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.itemId - Product id whose page we are on
-   * @param {string} parameters.itemName - Product name whose page we are one
+   * @param {string} parameters.itemName - Product name whose page we are on
    * @param {string} parameters.feedbackLabel - Feedback value: either "thumbs_up" or "thumbs_down"
    * @param {string} [parameters.qnaResultId] - Answer result id returned
-   * @param {string} [parameters.variationId] - Variation id whose page we are one
+   * @param {string} [parameters.variationId] - Variation id whose page we are on
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
