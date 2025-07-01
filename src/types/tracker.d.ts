@@ -331,7 +331,7 @@ declare class Tracker {
     networkParameters?: NetworkParameters
   ): true | Error;
 
-  trackAssistantPdpViews(parameters: {
+  trackProductInsightsAgentViews(parameters: {
     questions: Question[];
     itemId: string;
     itemName: string;
@@ -340,7 +340,7 @@ declare class Tracker {
     section?: string;
   }, networkParameters?: NetworkParameters): true | Error;
 
-  trackAssistantPdpView(parameters: {
+  trackProductInsightsAgentView(parameters: {
     questions: Question[];
     itemId: string;
     itemName: string;
@@ -348,29 +348,21 @@ declare class Tracker {
     section?: string;
   }, networkParameters?: NetworkParameters): true | Error;
 
-  trackAssistantPdpOutOfView(parameters: {
+  trackProductInsightsAgentOutOfView(parameters: {
     itemId: string;
     itemName: string;
     variationId?: string;
     section?: string;
   }, networkParameters?: NetworkParameters): true | Error;
 
-  trackAssistantPdpFocus(parameters: {
+  trackProductInsightsAgentFocus(parameters: {
     itemId: string;
     itemName: string;
     variationId?: string;
     section?: string;
   }, networkParameters?: NetworkParameters): true | Error;
 
-  trackAssistantPdpQuestionClick(parameters: {
-    itemId: string;
-    itemName: string;
-    question: string;
-    variationId?: string;
-    section?: string;
-  }, networkParameters?: NetworkParameters): true | Error;
-
-  trackAssistantPdpQuestionSubmit(parameters: {
+  trackProductInsightsAgentQuestionClick(parameters: {
     itemId: string;
     itemName: string;
     question: string;
@@ -378,7 +370,15 @@ declare class Tracker {
     section?: string;
   }, networkParameters?: NetworkParameters): true | Error;
 
-  trackAssistantPdpAnswerView(parameters: {
+  trackProductInsightsAgentQuestionSubmit(parameters: {
+    itemId: string;
+    itemName: string;
+    question: string;
+    variationId?: string;
+    section?: string;
+  }, networkParameters?: NetworkParameters): true | Error;
+
+  trackProductInsightsAgentAnswerView(parameters: {
     itemId: string;
     itemName: string;
     question: string;
@@ -388,7 +388,7 @@ declare class Tracker {
     section?: string;
   }, networkParameters?: NetworkParameters): true | Error;
 
-  trackAssistantPdpAnswerFeedback(parameters: {
+  trackProductInsightsAgentAnswerFeedback(parameters: {
     itemId: string;
     itemName: string;
     feedbackLabel: string;

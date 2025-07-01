@@ -10090,7 +10090,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
   });
 
-  describe('trackAssistantPdpViews', () => {
+  describe('trackProductInsightsAgentViews', () => {
     const requiredParameters = {
       itemId: '1',
       itemName: 'item1',
@@ -10145,7 +10145,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpViews(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentViews(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
@@ -10171,7 +10171,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpViews(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentViews(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
@@ -10197,7 +10197,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpViews(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentViews(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
@@ -10223,7 +10223,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpViews(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentViews(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
@@ -10249,19 +10249,21 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpViews(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackProductInsightsAgentViews(
+        Object.assign(requiredParameters, optionalParameters),
+      )).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackAssistantPdpViews()).to.be.an('error');
+      expect(tracker.trackProductInsightsAgentViews()).to.be.an('error');
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackAssistantPdpViews()).to.be.an('error');
+      expect(tracker.trackProductInsightsAgentViews()).to.be.an('error');
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
@@ -10286,7 +10288,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpViews(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentViews(requiredParameters)).to.equal(true);
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
@@ -10311,7 +10313,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpViews(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentViews(requiredParameters)).to.equal(true);
     });
 
     if (!skipNetworkTimeoutTests) {
@@ -10326,7 +10328,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           done();
         });
 
-        expect(tracker.trackAssistantPdpViews(requiredParameters, { timeout: 10 })).to.equal(true);
+        expect(tracker.trackProductInsightsAgentViews(requiredParameters, { timeout: 10 })).to.equal(true);
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
@@ -10343,7 +10345,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           done();
         });
 
-        expect(tracker.trackAssistantPdpViews(requiredParameters)).to.equal(true);
+        expect(tracker.trackProductInsightsAgentViews(requiredParameters)).to.equal(true);
       });
     }
 
@@ -10371,7 +10373,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpViews(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentViews(requiredParameters)).to.equal(true);
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
@@ -10399,11 +10401,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpViews(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentViews(requiredParameters)).to.equal(true);
     });
   });
 
-  describe('trackAssistantPdpView', () => {
+  describe('trackProductInsightsAgentView', () => {
     const requiredParameters = {
       itemId: '1',
       itemName: 'item1',
@@ -10447,7 +10449,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpView(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentView(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
@@ -10473,7 +10475,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpView(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentView(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
@@ -10499,7 +10501,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpView(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentView(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
@@ -10525,7 +10527,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpView(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentView(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
@@ -10551,19 +10553,21 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpView(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackProductInsightsAgentView(
+        Object.assign(requiredParameters, optionalParameters),
+      )).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackAssistantPdpView()).to.be.an('error');
+      expect(tracker.trackProductInsightsAgentView()).to.be.an('error');
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackAssistantPdpView()).to.be.an('error');
+      expect(tracker.trackProductInsightsAgentView()).to.be.an('error');
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
@@ -10588,7 +10592,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpView(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentView(requiredParameters)).to.equal(true);
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
@@ -10613,7 +10617,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpView(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentView(requiredParameters)).to.equal(true);
     });
 
     if (!skipNetworkTimeoutTests) {
@@ -10628,7 +10632,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           done();
         });
 
-        expect(tracker.trackAssistantPdpView(requiredParameters, { timeout: 10 })).to.equal(true);
+        expect(tracker.trackProductInsightsAgentView(requiredParameters, { timeout: 10 })).to.equal(true);
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
@@ -10645,7 +10649,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           done();
         });
 
-        expect(tracker.trackAssistantPdpView(requiredParameters)).to.equal(true);
+        expect(tracker.trackProductInsightsAgentView(requiredParameters)).to.equal(true);
       });
     }
 
@@ -10673,7 +10677,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpView(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentView(requiredParameters)).to.equal(true);
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
@@ -10701,11 +10705,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpView(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentView(requiredParameters)).to.equal(true);
     });
   });
 
-  describe('trackAssistantPdpOutOfView', () => {
+  describe('trackProductInsightsAgentOutOfView', () => {
     const requiredParameters = { itemId: '1', itemName: 'item1' };
     const optionalParameters = {
       section: 'Products',
@@ -10740,7 +10744,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpOutOfView(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentOutOfView(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
@@ -10766,7 +10770,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpOutOfView(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentOutOfView(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
@@ -10792,7 +10796,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpOutOfView(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentOutOfView(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
@@ -10818,7 +10822,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpOutOfView(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentOutOfView(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
@@ -10844,19 +10848,21 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpOutOfView(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackProductInsightsAgentOutOfView(
+        Object.assign(requiredParameters, optionalParameters),
+      )).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackAssistantPdpOutOfView()).to.be.an('error');
+      expect(tracker.trackProductInsightsAgentOutOfView()).to.be.an('error');
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackAssistantPdpOutOfView()).to.be.an('error');
+      expect(tracker.trackProductInsightsAgentOutOfView()).to.be.an('error');
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
@@ -10881,7 +10887,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpOutOfView(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentOutOfView(requiredParameters)).to.equal(true);
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
@@ -10906,7 +10912,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpOutOfView(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentOutOfView(requiredParameters)).to.equal(true);
     });
 
     if (!skipNetworkTimeoutTests) {
@@ -10921,7 +10927,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           done();
         });
 
-        expect(tracker.trackAssistantPdpOutOfView(requiredParameters, { timeout: 10 })).to.equal(true);
+        expect(tracker.trackProductInsightsAgentOutOfView(requiredParameters, { timeout: 10 })).to.equal(true);
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
@@ -10938,7 +10944,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           done();
         });
 
-        expect(tracker.trackAssistantPdpOutOfView(requiredParameters)).to.equal(true);
+        expect(tracker.trackProductInsightsAgentOutOfView(requiredParameters)).to.equal(true);
       });
     }
 
@@ -10966,7 +10972,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpOutOfView(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentOutOfView(requiredParameters)).to.equal(true);
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
@@ -10994,11 +11000,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpOutOfView(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentOutOfView(requiredParameters)).to.equal(true);
     });
   });
 
-  describe('trackAssistantPdpFocus', () => {
+  describe('trackProductInsightsAgentFocus', () => {
     const requiredParameters = { itemId: '1', itemName: 'item1' };
     const optionalParameters = {
       section: 'Products',
@@ -11033,7 +11039,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpFocus(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentFocus(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
@@ -11059,7 +11065,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpFocus(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentFocus(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
@@ -11085,7 +11091,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpFocus(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentFocus(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
@@ -11111,7 +11117,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpFocus(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentFocus(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
@@ -11137,19 +11143,21 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpFocus(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackProductInsightsAgentFocus(
+        Object.assign(requiredParameters, optionalParameters),
+      )).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackAssistantPdpFocus()).to.be.an('error');
+      expect(tracker.trackProductInsightsAgentFocus()).to.be.an('error');
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackAssistantPdpFocus()).to.be.an('error');
+      expect(tracker.trackProductInsightsAgentFocus()).to.be.an('error');
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
@@ -11174,7 +11182,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpFocus(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentFocus(requiredParameters)).to.equal(true);
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
@@ -11199,7 +11207,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpFocus(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentFocus(requiredParameters)).to.equal(true);
     });
 
     if (!skipNetworkTimeoutTests) {
@@ -11214,7 +11222,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           done();
         });
 
-        expect(tracker.trackAssistantPdpFocus(requiredParameters, { timeout: 10 })).to.equal(true);
+        expect(tracker.trackProductInsightsAgentFocus(requiredParameters, { timeout: 10 })).to.equal(true);
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
@@ -11231,7 +11239,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           done();
         });
 
-        expect(tracker.trackAssistantPdpFocus(requiredParameters)).to.equal(true);
+        expect(tracker.trackProductInsightsAgentFocus(requiredParameters)).to.equal(true);
       });
     }
 
@@ -11259,7 +11267,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpFocus(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentFocus(requiredParameters)).to.equal(true);
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
@@ -11287,11 +11295,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpFocus(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentFocus(requiredParameters)).to.equal(true);
     });
   });
 
-  describe('trackAssistantPdpQuestionClick', () => {
+  describe('trackProductInsightsAgentQuestionClick', () => {
     const requiredParameters = { itemId: '1', itemName: 'item1', question: 'Why choose this?' };
     const optionalParameters = {
       section: 'Products',
@@ -11327,7 +11335,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpQuestionClick(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentQuestionClick(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
@@ -11353,7 +11361,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpQuestionClick(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentQuestionClick(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
@@ -11379,7 +11387,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpQuestionClick(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentQuestionClick(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
@@ -11405,7 +11413,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpQuestionClick(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentQuestionClick(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
@@ -11431,7 +11439,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpQuestionClick(
+      expect(tracker.trackProductInsightsAgentQuestionClick(
         Object.assign(requiredParameters, optionalParameters),
       )).to.equal(true);
     });
@@ -11439,13 +11447,13 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     it('Should throw an error when no parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackAssistantPdpQuestionClick()).to.be.an('error');
+      expect(tracker.trackProductInsightsAgentQuestionClick()).to.be.an('error');
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackAssistantPdpQuestionClick()).to.be.an('error');
+      expect(tracker.trackProductInsightsAgentQuestionClick()).to.be.an('error');
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
@@ -11470,7 +11478,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpQuestionClick(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentQuestionClick(requiredParameters)).to.equal(true);
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
@@ -11495,7 +11503,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpQuestionClick(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentQuestionClick(requiredParameters)).to.equal(true);
     });
 
     if (!skipNetworkTimeoutTests) {
@@ -11510,7 +11518,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           done();
         });
 
-        expect(tracker.trackAssistantPdpQuestionClick(requiredParameters, { timeout: 10 })).to.equal(true);
+        expect(tracker.trackProductInsightsAgentQuestionClick(requiredParameters, { timeout: 10 })).to.equal(true);
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
@@ -11527,7 +11535,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           done();
         });
 
-        expect(tracker.trackAssistantPdpQuestionClick(requiredParameters)).to.equal(true);
+        expect(tracker.trackProductInsightsAgentQuestionClick(requiredParameters)).to.equal(true);
       });
     }
 
@@ -11555,7 +11563,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpQuestionClick(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentQuestionClick(requiredParameters)).to.equal(true);
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
@@ -11583,11 +11591,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpQuestionClick(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentQuestionClick(requiredParameters)).to.equal(true);
     });
   });
 
-  describe('trackAssistantPdpQuestionSubmit', () => {
+  describe('trackProductInsightsAgentQuestionSubmit', () => {
     const requiredParameters = { itemId: '1', itemName: 'item1', question: 'Why choose this?' };
     const optionalParameters = {
       section: 'Products',
@@ -11623,7 +11631,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpQuestionSubmit(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentQuestionSubmit(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
@@ -11649,7 +11657,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpQuestionSubmit(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentQuestionSubmit(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
@@ -11675,7 +11683,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpQuestionSubmit(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentQuestionSubmit(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
@@ -11701,7 +11709,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpQuestionSubmit(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentQuestionSubmit(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
@@ -11727,7 +11735,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpQuestionSubmit(
+      expect(tracker.trackProductInsightsAgentQuestionSubmit(
         Object.assign(requiredParameters, optionalParameters),
       )).to.equal(true);
     });
@@ -11735,13 +11743,13 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     it('Should throw an error when no parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackAssistantPdpQuestionSubmit()).to.be.an('error');
+      expect(tracker.trackProductInsightsAgentQuestionSubmit()).to.be.an('error');
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackAssistantPdpQuestionSubmit()).to.be.an('error');
+      expect(tracker.trackProductInsightsAgentQuestionSubmit()).to.be.an('error');
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
@@ -11766,7 +11774,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpQuestionSubmit(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentQuestionSubmit(requiredParameters)).to.equal(true);
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
@@ -11791,7 +11799,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpQuestionSubmit(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentQuestionSubmit(requiredParameters)).to.equal(true);
     });
 
     if (!skipNetworkTimeoutTests) {
@@ -11806,7 +11814,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           done();
         });
 
-        expect(tracker.trackAssistantPdpQuestionSubmit(requiredParameters, { timeout: 10 })).to.equal(true);
+        expect(tracker.trackProductInsightsAgentQuestionSubmit(requiredParameters, { timeout: 10 })).to.equal(true);
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
@@ -11823,7 +11831,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           done();
         });
 
-        expect(tracker.trackAssistantPdpQuestionSubmit(requiredParameters)).to.equal(true);
+        expect(tracker.trackProductInsightsAgentQuestionSubmit(requiredParameters)).to.equal(true);
       });
     }
 
@@ -11851,7 +11859,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpQuestionSubmit(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentQuestionSubmit(requiredParameters)).to.equal(true);
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
@@ -11879,11 +11887,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpQuestionSubmit(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentQuestionSubmit(requiredParameters)).to.equal(true);
     });
   });
 
-  describe('trackAssistantPdpAnswerView', () => {
+  describe('trackProductInsightsAgentAnswerView', () => {
     const requiredParameters = { itemId: '1', itemName: 'item1', question: 'Why choose this?', answerText: 'This product is awesome!' };
     const optionalParameters = {
       section: 'Products',
@@ -11921,7 +11929,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpAnswerView(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentAnswerView(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
@@ -11947,7 +11955,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpAnswerView(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentAnswerView(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
@@ -11973,7 +11981,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpAnswerView(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentAnswerView(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
@@ -11999,7 +12007,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpAnswerView(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentAnswerView(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
@@ -12026,19 +12034,21 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpAnswerView(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackProductInsightsAgentAnswerView(
+        Object.assign(requiredParameters, optionalParameters),
+      )).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackAssistantPdpAnswerView()).to.be.an('error');
+      expect(tracker.trackProductInsightsAgentAnswerView()).to.be.an('error');
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackAssistantPdpAnswerView()).to.be.an('error');
+      expect(tracker.trackProductInsightsAgentAnswerView()).to.be.an('error');
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
@@ -12063,7 +12073,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpAnswerView(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentAnswerView(requiredParameters)).to.equal(true);
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
@@ -12088,7 +12098,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpAnswerView(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentAnswerView(requiredParameters)).to.equal(true);
     });
 
     if (!skipNetworkTimeoutTests) {
@@ -12103,7 +12113,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           done();
         });
 
-        expect(tracker.trackAssistantPdpAnswerView(requiredParameters, { timeout: 10 })).to.equal(true);
+        expect(tracker.trackProductInsightsAgentAnswerView(requiredParameters, { timeout: 10 })).to.equal(true);
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
@@ -12120,7 +12130,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           done();
         });
 
-        expect(tracker.trackAssistantPdpAnswerView(requiredParameters)).to.equal(true);
+        expect(tracker.trackProductInsightsAgentAnswerView(requiredParameters)).to.equal(true);
       });
     }
 
@@ -12148,7 +12158,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpAnswerView(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentAnswerView(requiredParameters)).to.equal(true);
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
@@ -12176,11 +12186,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpAnswerView(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentAnswerView(requiredParameters)).to.equal(true);
     });
   });
 
-  describe('trackAssistantPdpAnswerFeedback', () => {
+  describe('trackProductInsightsAgentAnswerFeedback', () => {
     const requiredParameters = { itemId: '1', itemName: 'item1', feedbackLabel: 'thumbs_up' };
     const optionalParameters = {
       section: 'Products',
@@ -12217,7 +12227,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpAnswerFeedback(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentAnswerFeedback(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
@@ -12243,7 +12253,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpAnswerFeedback(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentAnswerFeedback(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
@@ -12269,7 +12279,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpAnswerFeedback(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentAnswerFeedback(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
@@ -12295,7 +12305,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpAnswerFeedback(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentAnswerFeedback(requiredParameters)).to.equal(true);
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
@@ -12321,7 +12331,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpAnswerFeedback(
+      expect(tracker.trackProductInsightsAgentAnswerFeedback(
         Object.assign(requiredParameters, optionalParameters),
       )).to.equal(true);
     });
@@ -12329,13 +12339,13 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     it('Should throw an error when no parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackAssistantPdpAnswerFeedback()).to.be.an('error');
+      expect(tracker.trackProductInsightsAgentAnswerFeedback()).to.be.an('error');
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackAssistantPdpAnswerFeedback()).to.be.an('error');
+      expect(tracker.trackProductInsightsAgentAnswerFeedback()).to.be.an('error');
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
@@ -12360,7 +12370,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpAnswerFeedback(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentAnswerFeedback(requiredParameters)).to.equal(true);
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
@@ -12385,7 +12395,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpAnswerFeedback(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentAnswerFeedback(requiredParameters)).to.equal(true);
     });
 
     if (!skipNetworkTimeoutTests) {
@@ -12400,7 +12410,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           done();
         });
 
-        expect(tracker.trackAssistantPdpAnswerFeedback(requiredParameters, { timeout: 10 })).to.equal(true);
+        expect(tracker.trackProductInsightsAgentAnswerFeedback(requiredParameters, { timeout: 10 })).to.equal(true);
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
@@ -12417,7 +12427,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           done();
         });
 
-        expect(tracker.trackAssistantPdpAnswerFeedback(requiredParameters)).to.equal(true);
+        expect(tracker.trackProductInsightsAgentAnswerFeedback(requiredParameters)).to.equal(true);
       });
     }
 
@@ -12445,7 +12455,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpAnswerFeedback(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentAnswerFeedback(requiredParameters)).to.equal(true);
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
@@ -12473,7 +12483,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantPdpAnswerFeedback(requiredParameters)).to.equal(true);
+      expect(tracker.trackProductInsightsAgentAnswerFeedback(requiredParameters)).to.equal(true);
     });
   });
 });

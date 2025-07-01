@@ -2775,9 +2775,9 @@ class Tracker {
   }
 
   /**
-   * Send Assistant PDP view events
+   * Send product insights agent view events
    *
-   * @function trackAssistantPdpViews
+   * @function trackProductInsightsAgentViews
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {array.<{question: string}>} parameters.questions - List of pre-defined questions shown to the user
    * @param {string} parameters.itemId - Product id whose page we are on
@@ -2789,9 +2789,9 @@ class Tracker {
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
-   * @description The PDP Q&A element appeared in the visible part of the page
+   * @description The product insights agent element appeared in the visible part of the page
    * @example
-   * constructorio.tracker.trackAssistantPdpViews({
+   * constructorio.tracker.trackProductInsightsAgentViews({
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
@@ -2814,7 +2814,7 @@ class Tracker {
    *   },
    * );
    */
-  trackAssistantPdpViews(parameters, networkParameters = {}) {
+  trackProductInsightsAgentViews(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_views?`;
@@ -2861,9 +2861,9 @@ class Tracker {
   }
 
   /**
-   * Send Assistant PDP view event
+   * Send product insights agent view event
    *
-   * @function trackAssistantPdpView
+   * @function trackProductInsightsAgentView
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {array.<{question: string}>} parameters.questions - List of pre-defined questions shown to the user
    * @param {string} parameters.itemId - Product id whose page we are on
@@ -2873,9 +2873,9 @@ class Tracker {
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
-   * @description The PDP Q&A element appeared in the visible part of the page
+   * @description The product insights agent element appeared in the visible part of the page
    * @example
-   * constructorio.tracker.trackAssistantPdpView({
+   * constructorio.tracker.trackProductInsightsAgentView({
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
@@ -2888,7 +2888,7 @@ class Tracker {
    *   },
    * );
    */
-  trackAssistantPdpView(parameters, networkParameters = {}) {
+  trackProductInsightsAgentView(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_view?`;
@@ -2933,9 +2933,9 @@ class Tracker {
   }
 
   /**
-   * Send Assistant PDP out of view event
+   * Send product insights agent out of view event
    *
-   * @function trackAssistantPdpOutOfView
+   * @function trackProductInsightsAgentOutOfView
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are on
@@ -2944,9 +2944,9 @@ class Tracker {
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
-   * @description The PDP Q&A element disappeared from the visible part of the page
+   * @description The product insights agent element disappeared from the visible part of the page
    * @example
-   * constructorio.tracker.trackAssistantPdpOutOfView({
+   * constructorio.tracker.trackProductInsightsAgentOutOfView({
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
@@ -2954,7 +2954,7 @@ class Tracker {
    *   },
    * );
    */
-  trackAssistantPdpOutOfView(parameters, networkParameters = {}) {
+  trackProductInsightsAgentOutOfView(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_out_of_view?`;
@@ -2997,9 +2997,9 @@ class Tracker {
   }
 
   /**
-   * Send Assistant PDP out of view event
+   * Send product insights agent out of view event
    *
-   * @function trackAssistantPdpFocus
+   * @function trackProductInsightsAgentFocus
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are on
@@ -3008,9 +3008,9 @@ class Tracker {
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
-   * @description User focused on the PDP Q&A input element
+   * @description User focused on the product insights agent input element
    * @example
-   * constructorio.tracker.trackAssistantPdpFocus({
+   * constructorio.tracker.trackProductInsightsAgentFocus({
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
@@ -3018,7 +3018,7 @@ class Tracker {
    *   },
    * );
    */
-  trackAssistantPdpFocus(parameters, networkParameters = {}) {
+  trackProductInsightsAgentFocus(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_focus?`;
@@ -3061,9 +3061,9 @@ class Tracker {
   }
 
   /**
-   * Send Assistant PDP question click event
+   * Send product insights agent question click event
    *
-   * @function trackAssistantPdpQuestionClick
+   * @function trackProductInsightsAgentQuestionClick
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are on
@@ -3073,9 +3073,9 @@ class Tracker {
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
-   * @description The PDP Q&A question that was clicked on
+   * @description The product insights agent question that was clicked on
    * @example
-   * constructorio.tracker.trackAssistantPdpQuestionClick({
+   * constructorio.tracker.trackProductInsightsAgentQuestionClick({
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
@@ -3084,7 +3084,7 @@ class Tracker {
    *   },
    * );
    */
-  trackAssistantPdpQuestionClick(parameters, networkParameters = {}) {
+  trackProductInsightsAgentQuestionClick(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_question_click?`;
@@ -3129,9 +3129,9 @@ class Tracker {
   }
 
   /**
-   * Send Assistant PDP question submit
+   * Send product insights agent question submit
    *
-   * @function trackAssistantPdpQuestionSubmit
+   * @function trackProductInsightsAgentQuestionSubmit
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are on
@@ -3141,9 +3141,9 @@ class Tracker {
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
-   * @description The PDP Q&A question was submitted
+   * @description The product insights agent question was submitted
    * @example
-   * constructorio.tracker.trackAssistantPdpQuestionSubmit({
+   * constructorio.tracker.trackProductInsightsAgentQuestionSubmit({
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
@@ -3152,7 +3152,7 @@ class Tracker {
    *   },
    * );
    */
-  trackAssistantPdpQuestionSubmit(parameters, networkParameters = {}) {
+  trackProductInsightsAgentQuestionSubmit(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_question_submit?`;
@@ -3197,9 +3197,9 @@ class Tracker {
   }
 
   /**
-   * Send Assistant PDP answer view
+   * Send product insights agent answer view
    *
-   * @function trackAssistantPdpAnswerView
+   * @function trackProductInsightsAgentAnswerView
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are on
@@ -3211,9 +3211,9 @@ class Tracker {
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
-   * @description The PDP Q&A answer was shown to the user
+   * @description The product insights agent answer was shown to the user
    * @example
-   * constructorio.tracker.trackAssistantPdpAnswerView({
+   * constructorio.tracker.trackProductInsightsAgentAnswerView({
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
@@ -3224,7 +3224,7 @@ class Tracker {
    *   },
    * );
    */
-  trackAssistantPdpAnswerView(parameters, networkParameters = {}) {
+  trackProductInsightsAgentAnswerView(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_answer_view?`;
@@ -3273,9 +3273,9 @@ class Tracker {
   }
 
   /**
-   * Send Assistant PDP answer feedback
+   * Send product insights agent answer feedback
    *
-   * @function trackAssistantPdpAnswerFeedback
+   * @function trackProductInsightsAgentAnswerFeedback
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are on
@@ -3288,7 +3288,7 @@ class Tracker {
    * @returns {(true|Error)}
    * @description A user provided feedback on an answers usefulness
    * @example
-   * constructorio.tracker.trackAssistantPdpAnswerFeedback({
+   * constructorio.tracker.trackProductInsightsAgentAnswerFeedback({
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
@@ -3298,7 +3298,7 @@ class Tracker {
    *   },
    * );
    */
-  trackAssistantPdpAnswerFeedback(parameters, networkParameters = {}) {
+  trackProductInsightsAgentAnswerFeedback(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_answer_feedback?`;
