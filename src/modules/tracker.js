@@ -2997,7 +2997,7 @@ class Tracker {
   }
 
   /**
-   * Send product insights agent out of view event
+   * Send product insights agent input focus event
    *
    * @function trackProductInsightsAgentFocus
    * @param {object} parameters - Additional parameters to be sent with request
@@ -3073,7 +3073,7 @@ class Tracker {
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
-   * @description The product insights agent question that was clicked on
+   * @description User clicked on a question within the product insights agent
    * @example
    * constructorio.tracker.trackProductInsightsAgentQuestionClick({
    *   {
@@ -3129,7 +3129,7 @@ class Tracker {
   }
 
   /**
-   * Send product insights agent question submit
+   * Send product insights agent question submit event
    *
    * @function trackProductInsightsAgentQuestionSubmit
    * @param {object} parameters - Additional parameters to be sent with request
@@ -3141,7 +3141,7 @@ class Tracker {
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
-   * @description The product insights agent question was submitted
+   * @description User submitted a question to the product insights agent
    * @example
    * constructorio.tracker.trackProductInsightsAgentQuestionSubmit({
    *   {
@@ -3197,7 +3197,7 @@ class Tracker {
   }
 
   /**
-   * Send product insights agent answer view
+   * Send product insights agent answer view event
    *
    * @function trackProductInsightsAgentAnswerView
    * @param {object} parameters - Additional parameters to be sent with request
@@ -3211,7 +3211,7 @@ class Tracker {
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
-   * @description The product insights agent answer was shown to the user
+   * @description User viewed the answer provided by the product insights agent
    * @example
    * constructorio.tracker.trackProductInsightsAgentAnswerView({
    *   {
@@ -3273,7 +3273,7 @@ class Tracker {
   }
 
   /**
-   * Send product insights agent answer feedback
+   * Send product insights agent answer feedback event
    *
    * @function trackProductInsightsAgentAnswerFeedback
    * @param {object} parameters - Additional parameters to be sent with request
