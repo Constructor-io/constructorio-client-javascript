@@ -21,7 +21,7 @@ Alternatively, a bundled version consisting of a single JavaScript file is publi
 
 ## 2. Retrieve an API key
 
-You can find this in your [Constructor.io dashboard](https://constructor.io/dashboard). Contact sales if you'd like to sign up, or support if you believe your company already has an account.
+You can find this in your [Constructor.io dashboard](https://app.constructor.io/dashboard). Contact sales if you'd like to sign up, or support if you believe your company already has an account.
 
 ## 3. Implement the Client
 
