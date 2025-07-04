@@ -1,5 +1,5 @@
 import EventEmitter = require('events');
-import { ConstructorClientOptions, ItemTracked, ItemTrackedPurchase, NetworkParameters } from '.';
+import { ConstructorClientOptions, ItemTracked, ItemTrackedPurchase, Question, TimeSpan, NetworkParameters } from '.';
 import RequestQueue = require('../utils/request-queue');
 
 export default Tracker;
@@ -330,6 +330,72 @@ declare class Tracker {
     },
     networkParameters?: NetworkParameters
   ): true | Error;
+
+  trackProductInsightsAgentViews(parameters: {
+    questions: Question[];
+    itemId: string;
+    itemName: string;
+    viewTimespans: TimeSpan[];
+    variationId?: string;
+    section?: string;
+  }, networkParameters?: NetworkParameters): true | Error;
+
+  trackProductInsightsAgentView(parameters: {
+    questions: Question[];
+    itemId: string;
+    itemName: string;
+    variationId?: string;
+    section?: string;
+  }, networkParameters?: NetworkParameters): true | Error;
+
+  trackProductInsightsAgentOutOfView(parameters: {
+    itemId: string;
+    itemName: string;
+    variationId?: string;
+    section?: string;
+  }, networkParameters?: NetworkParameters): true | Error;
+
+  trackProductInsightsAgentFocus(parameters: {
+    itemId: string;
+    itemName: string;
+    variationId?: string;
+    section?: string;
+  }, networkParameters?: NetworkParameters): true | Error;
+
+  trackProductInsightsAgentQuestionClick(parameters: {
+    itemId: string;
+    itemName: string;
+    question: string;
+    variationId?: string;
+    section?: string;
+  }, networkParameters?: NetworkParameters): true | Error;
+
+  trackProductInsightsAgentQuestionSubmit(parameters: {
+    itemId: string;
+    itemName: string;
+    question: string;
+    variationId?: string;
+    section?: string;
+  }, networkParameters?: NetworkParameters): true | Error;
+
+  trackProductInsightsAgentAnswerView(parameters: {
+    itemId: string;
+    itemName: string;
+    question: string;
+    answerText: string;
+    qnaResultId?: string;
+    variationId?: string;
+    section?: string;
+  }, networkParameters?: NetworkParameters): true | Error;
+
+  trackProductInsightsAgentAnswerFeedback(parameters: {
+    itemId: string;
+    itemName: string;
+    feedbackLabel: string;
+    qnaResultId?: string;
+    variationId?: string;
+    section?: string;
+  }, networkParameters?: NetworkParameters): true | Error;
 
   on(messageType: string, callback: Function): true | Error;
 }
