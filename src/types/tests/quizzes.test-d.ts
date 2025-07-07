@@ -293,7 +293,7 @@ expectAssignable<QuizResultsConfigResponse>({
         is_active: true,
         text: 'Sample response summary',
         items_separator: ',',
-        last_separator: 'and'
+        last_separator: 'and',
       },
     },
   },
