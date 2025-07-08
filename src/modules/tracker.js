@@ -6,6 +6,8 @@ const EventEmitter = require('../utils/events');
 const helpers = require('../utils/helpers');
 const RequestQueue = require('../utils/request-queue');
 
+const MAX_URL_LENGTH = 2048;
+
 function applyParams(parameters, options) {
   const {
     apiKey,
@@ -270,7 +272,7 @@ class Tracker {
       }
 
       if (url) {
-        bodyParams.url = url;
+        bodyParams.url = helpers.truncateString(url, MAX_URL_LENGTH);
       }
 
       const requestURL = `${requestUrlPath}${applyParamsAsString(queryParams, this.options)}`;
