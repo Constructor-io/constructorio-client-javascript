@@ -1552,7 +1552,7 @@ class Tracker {
       }
 
       if (url) {
-        bodyParams.url = url;
+        bodyParams.url = helpers.truncateString(url, MAX_URL_LENGTH);
       }
 
       if (sortOrder) {
