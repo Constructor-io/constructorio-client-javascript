@@ -4866,6 +4866,34 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
       expect(tracker.trackRecommendationView(requiredParamsWithSeedItemIds)).to.equal(true);
     });
+
+    it('Should truncate url param to 2048 characters max', (done) => {
+      const longUrl = createLongUrl(3000);
+      const truncatedUrl = longUrl.slice(0, 2048);
+
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', () => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams.url).to.equal(truncatedUrl);
+
+        done();
+      });
+
+      const parameters = {
+        ...requiredParameters,
+        url: longUrl,
+      };
+
+      expect(tracker.trackRecommendationView(parameters)).to.equal(true);
+    });
   });
 
   describe('trackRecommendationClick', () => {
