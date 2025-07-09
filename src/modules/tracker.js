@@ -2022,7 +2022,7 @@ class Tracker {
       bodyParams.quiz_id = quizId;
       bodyParams.quiz_version_id = quizVersionId;
       bodyParams.quiz_session_id = quizSessionId;
-      bodyParams.url = url;
+      bodyParams.url = helpers.truncateString(url, MAX_URL_LENGTH);
 
       if (!helpers.isNil(section)) {
         if (typeof section !== 'string') {
