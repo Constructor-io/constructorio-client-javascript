@@ -1491,7 +1491,12 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackItemDetailLoad({ ...requiredParameters, url: longUrl })).to.equal(true);
+      const parameters = {
+        ...requiredParameters,
+        url: longUrl,
+      };
+
+      expect(tracker.trackItemDetailLoad(parameters)).to.equal(true);
     });
   });
 
