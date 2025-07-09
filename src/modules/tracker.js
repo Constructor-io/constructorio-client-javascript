@@ -739,7 +739,7 @@ class Tracker {
           sort_order: sortOrder,
           sort_by: sortBy,
           selected_filters: selectedFilters,
-          url,
+          url: helpers.truncateString(url, MAX_URL_LENGTH),
           section,
           analytics_tags: analyticsTags,
         };
