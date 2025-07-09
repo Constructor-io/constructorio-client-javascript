@@ -6,6 +6,8 @@ const EventEmitter = require('../utils/events');
 const helpers = require('../utils/helpers');
 const RequestQueue = require('../utils/request-queue');
 
+const MAX_URL_LENGTH = 2048;
+
 function applyParams(parameters, options) {
   const {
     apiKey,
@@ -270,7 +272,7 @@ class Tracker {
       }
 
       if (url) {
-        bodyParams.url = url;
+        bodyParams.url = helpers.truncateString(url, MAX_URL_LENGTH);
       }
 
       const requestURL = `${requestUrlPath}${applyParamsAsString(queryParams, this.options)}`;
@@ -737,7 +739,7 @@ class Tracker {
           sort_order: sortOrder,
           sort_by: sortBy,
           selected_filters: selectedFilters,
-          url,
+          url: helpers.truncateString(url, MAX_URL_LENGTH),
           section,
           analytics_tags: analyticsTags,
         };
@@ -1282,7 +1284,7 @@ class Tracker {
       }
 
       if (url) {
-        bodyParams.url = url;
+        bodyParams.url = helpers.truncateString(url, MAX_URL_LENGTH);
       }
 
       if (podId) {
@@ -1550,7 +1552,7 @@ class Tracker {
       }
 
       if (url) {
-        bodyParams.url = url;
+        bodyParams.url = helpers.truncateString(url, MAX_URL_LENGTH);
       }
 
       if (sortOrder) {
@@ -2020,7 +2022,7 @@ class Tracker {
       bodyParams.quiz_id = quizId;
       bodyParams.quiz_version_id = quizVersionId;
       bodyParams.quiz_session_id = quizSessionId;
-      bodyParams.url = url;
+      bodyParams.url = helpers.truncateString(url, MAX_URL_LENGTH);
 
       if (!helpers.isNil(section)) {
         if (typeof section !== 'string') {
