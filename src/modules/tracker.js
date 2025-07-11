@@ -2817,7 +2817,7 @@ class Tracker {
   trackProductInsightsAgentViews(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_views?`;
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/product_insights_agent_views?`;
       const {
         section,
         questions,
@@ -2891,7 +2891,7 @@ class Tracker {
   trackProductInsightsAgentView(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_view?`;
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/product_insights_agent_view?`;
       const {
         section,
         questions,
@@ -2957,7 +2957,7 @@ class Tracker {
   trackProductInsightsAgentOutOfView(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_out_of_view?`;
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/product_insights_agent_out_of_view?`;
       const {
         section,
         itemId,
@@ -3021,7 +3021,7 @@ class Tracker {
   trackProductInsightsAgentFocus(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_focus?`;
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/product_insights_agent_focus?`;
       const {
         section,
         itemId,
@@ -3087,7 +3087,7 @@ class Tracker {
   trackProductInsightsAgentQuestionClick(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_question_click?`;
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/product_insights_agent_question_click?`;
       const {
         section,
         itemId,
@@ -3155,7 +3155,7 @@ class Tracker {
   trackProductInsightsAgentQuestionSubmit(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_question_submit?`;
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/product_insights_agent_question_submit?`;
       const {
         section,
         itemId,
@@ -3227,7 +3227,7 @@ class Tracker {
   trackProductInsightsAgentAnswerView(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_answer_view?`;
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/product_insights_agent_answer_view?`;
       const {
         section,
         itemId,
@@ -3301,7 +3301,7 @@ class Tracker {
   trackProductInsightsAgentAnswerFeedback(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_pdp_answer_feedback?`;
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/product_insights_agent_answer_feedback?`;
       const {
         section,
         itemId,
