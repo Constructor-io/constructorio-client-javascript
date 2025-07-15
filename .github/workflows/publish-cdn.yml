@@ -45,7 +45,7 @@ jobs:
           aws s3 sync s3_dist s3://constructor-frontend-prod/sdk/client-javascript --cache-control 'public, max-age=31536000, immutable' --acl 'public-read'
 
       - name: Notify Slack about new publish to CDN
-        uses: ravsamhq/notify-slack-action@bca2d7f5660b25833a27bda4f6b8bef389ebfefd25 # v2.3.0
+        uses: ravsamhq/notify-slack-action@bca2d7f5660b833a27bda4f6b8bef389ebfefd25 # v2.3.0
         with:
           notification_title: "☁️ New constructorio-client-javascript release published to CDN at version ${{ steps.copy-files.outputs.version }}"
           status: ${{ job.status }}
