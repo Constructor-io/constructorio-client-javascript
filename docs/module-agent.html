@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>modules/recommendations.js - Documentation</title>
+    <title>agent - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -37,201 +37,417 @@
 
 <div id="main">
     
-    <h1 class="page-title">modules/recommendations.js</h1>
+    <h1 class="page-title">agent</h1>
     
 
     
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/* eslint-disable object-curly-newline, no-param-reassign */
-const EventDispatcher = require('../utils/event-dispatcher');
-const helpers = require('../utils/helpers');
+</header>
 
-// Create URL from supplied parameters
-function createRecommendationsUrl(podId, parameters, options) {
-  const { apiKey, version, serviceUrl, sessionId, userId, clientId, segments } = options;
-  let queryParams = { c: version };
+<article>
+    
+        <div class="container-overview">
+        
+            
 
-  queryParams.key = apiKey;
-  queryParams.i = clientId;
-  queryParams.s = sessionId;
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li>Interface to agent SSE.
+Replaces the previous Assistant module.</li></ul></dd>
+    
 
-  // Validate pod identifier is provided
-  if (!podId || typeof podId !== 'string') {
-    throw new Error('podId is a required parameter of type string');
-  }
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modules_agent.js.html">modules/agent.js</a>, <a href="modules_agent.js.html#line105">line 105</a>
+    </li></ul></dd>
+    
 
-  // Pull user segments from options
-  if (segments &amp;&amp; segments.length) {
-    queryParams.us = segments;
-  }
+    
 
-  // Pull user id from options and ensure string
-  if (userId) {
-    queryParams.ui = String(userId);
-  }
+    
 
-  if (parameters) {
-    const {
-      numResults,
-      itemIds,
-      section,
-      term,
-      filters,
-      variationsMap,
-      hiddenFields,
-      preFilterExpression,
-      fmtOptions,
-    } = parameters;
+    
 
-    // Pull num results number from parameters
-    if (!helpers.isNil(numResults)) {
-      queryParams.num_results = numResults;
-    }
+    
 
-    // Pull item ids from parameters
-    if (itemIds) {
-      queryParams.item_id = itemIds;
-    }
+    
 
-    // Pull section from parameters
-    if (section) {
-      queryParams.section = section;
-    }
+    
 
-    // Pull term from parameters
-    if (term) {
-      queryParams.term = term;
-    }
+    
 
-    // Pull filters from parameters
-    if (filters) {
-      queryParams.filters = filters;
-    }
+    
 
-    // Pull format options from parameters
-    if (fmtOptions) {
-      queryParams.fmt_options = fmtOptions;
-    }
+    
 
-    // Pull hidden fields from parameters
-    if (hiddenFields) {
-      if (queryParams.fmt_options) {
-        queryParams.fmt_options.hidden_fields = hiddenFields;
-      } else {
-        queryParams.fmt_options = { hidden_fields: hiddenFields };
-      }
-    }
+    
 
-    // Pull variations map from parameters
-    if (variationsMap) {
-      queryParams.variations_map = JSON.stringify(variationsMap);
-    }
+    
 
-    // Pull pre_filter_expression from parameters
-    if (preFilterExpression) {
-      queryParams.pre_filter_expression = JSON.stringify(preFilterExpression);
-    }
-  }
+    
 
-  queryParams = helpers.cleanParams(queryParams);
+    
 
-  const queryString = helpers.stringify(queryParams);
+    
 
-  return `${serviceUrl}/recommendations/v1/pods/${helpers.encodeURIComponentRFC3986(helpers.trimNonBreakingSpaces(podId))}?${queryString}`;
-}
+    
+</dl>
 
-/**
- * Interface to recommendations related API calls
- *
- * @module recommendations
- * @inner
- * @returns {object}
- */
-class Recommendations {
-  constructor(options) {
-    this.options = options || {};
-    this.eventDispatcher = new EventDispatcher(options.eventDispatcher);
-  }
 
-  /**
-   * Get recommendations for supplied pod identifier
-   *
-   * @function getRecommendations
-   * @description Retrieve recommendation results from Constructor.io API
-   * @param {string} podId - Pod identifier
-   * @param {object} [parameters] - Additional parameters to refine results
-   * @param {string|array} [parameters.itemIds] - Item ID(s) to retrieve recommendations for (strategy specific)
-   * @param {number} [parameters.numResults] - The number of results to return
-   * @param {string} [parameters.section] - The section to return results from
-   * @param {string} [parameters.term] - The term to use to refine results (strategy specific)
-   * @param {object} [parameters.filters] - Key / value mapping of filters used to refine results
-   * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.com/reference/shared-variations-mapping for details
-   * @param {object} [parameters.preFilterExpression] - Faceting expression to scope search results. Please refer to https://docs.constructor.com/reference/configuration-collections
-   * @param {object} [parameters.fmtOptions] - An object containing options to format different aspects of the response. Please refer to https://docs.constructor.com/reference/v1-recommendations-get-pod-results for details
-   * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
-   * @param {object} [networkParameters] - Parameters relevant to the network request
-   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
-   * @returns {Promise}
-   * @see https://docs.constructor.com/reference/recommendations-recommendation-results
-   * @example
-   * constructorio.recommendations.getRecommendations('t-shirt-best-sellers', {
-   *     numResults: 5,
-   *     filters: {
-   *         size: 'medium'
-   *     },
-   * });
-   */
-  getRecommendations(podId, parameters, networkParameters = {}) {
-    let requestUrl;
-    const { fetch } = this.options;
-    let signal;
 
-    if (typeof AbortController === 'function') {
-      const controller = new AbortController();
 
-      signal = controller &amp;&amp; controller.signal;
+            
+                <div class="description usertext">Interface to agent SSE.
+Replaces the previous Assistant module.</div>
+            
 
-      // Handle network timeout if specified
-      helpers.applyNetworkTimeout(this.options, networkParameters, controller);
-    }
+            
+        
+        </div>
+    
 
-    try {
-      requestUrl = createRecommendationsUrl(podId, parameters, this.options);
-    } catch (e) {
-      return Promise.reject(e);
-    }
+    
 
-    return fetch(requestUrl, { signal })
-      .then(helpers.convertResponseToJson)
-      .then((json) => {
-        if (json.response &amp;&amp; json.response.results) {
-          if (json.result_id) {
-            // Append `result_id` to each result item
-            json.response.results.forEach((result) => {
-              // eslint-disable-next-line no-param-reassign
-              result.result_id = json.result_id;
-            });
-          }
+    
 
-          this.eventDispatcher.queue('recommendations.getRecommendations.completed', json);
+    
+    
+    
 
-          return json;
-        }
+     
 
-        throw new Error('getRecommendations response data is malformed');
-      });
-  }
-}
+    
 
-module.exports = Recommendations;
-</code></pre>
-        </article>
-    </section>
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="~getAgentResultsStream"><span class="type-signature type-signature-inner">(inner) </span>getAgentResultsStream<span class="signature">(intent, parameters<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {ReadableStream}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li>Retrieve a stream of agent results from Constructor.io API</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modules_agent.js.html">modules/agent.js</a>, <a href="modules_agent.js.html#line130">line 130</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-examples">Example</h5>
+    
+    <pre class="prettyprint"><code>const readableStream = constructorio.agent.getAgentResultsStream('I want to get shoes', {
+    domain: "nike_sportswear",
+});
+const reader = readableStream.getReader();
+const { value, done } = await reader.read();</code></pre>
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>intent</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Intent to use to perform an intent based recommendations</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>parameters</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Additional parameters to refine result set
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>domain</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">domain name e.g. swimming sports gear, groceries</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>numResultsPerPage</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The total number of results to return</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
+        
+<div class="param-desc">
+    Returns a ReadableStream.
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">ReadableStream</span>
+
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 

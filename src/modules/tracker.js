@@ -2943,45 +2943,45 @@ class Tracker {
   }
 
   /**
-  * Send product insights agent view events
-  *
-  * @function trackProductInsightsAgentViews
-  * @param {object} parameters - Additional parameters to be sent with request
-  * @param {array.<{question: string}>} parameters.questions - List of pre-defined questions shown to the user
-  * @param {string} parameters.itemId - Product id whose page we are on
-  * @param {string} parameters.itemName - Product name whose page we are on
-  * @param {array.<{start: string | undefined,
-  * end: string | undefined}>} parameters.viewTimespans - List of timestamp pairs in ISO_8601 format
-  * @param {string} [parameters.variationId] - Variation id whose page we are on
-  * @param {string} [parameters.section] - The section name for the item Ex. "Products"
-  * @param {object} [networkParameters] - Parameters relevant to the network request
-  * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
-  * @returns {(true|Error)}
-  * @description The product insights agent element appeared in the visible part of the page
-  * @example
-  * constructorio.tracker.trackProductInsightsAgentViews({
-  *   {
-  *     'itemId': '1',
-  *     'itemName': 'item1',
-  *     'variationId': '2',
-  *     'questions': [
-  *        { question: 'Why choose this?' },
-  *        { question: 'How is this product made?' },
-  *        { question: 'What are the dimensions of this product?' }
-  *     ],
-  *     'viewTimespans': [
-  *       {
-  *         'start': '2025-05-19T14:30:00+02:00',
-  *         'end': '2025-05-19T14:30:05+02:00'
-  *       },
-  *       {
-  *         'start': '2025-05-19T14:30:10+02:00',
-  *         'end': '2025-05-19T14:30:15+02:00'
-  *       }
-  *     ]
-  *   },
-  * );
-  */
+   * Send product insights agent view events
+   *
+   * @function trackProductInsightsAgentViews
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {array.<{question: string}>} parameters.questions - List of pre-defined questions shown to the user
+   * @param {string} parameters.itemId - Product id whose page we are on
+   * @param {string} parameters.itemName - Product name whose page we are on
+   * @param {array.<{start: string | undefined,
+   * end: string | undefined}>} parameters.viewTimespans - List of timestamp pairs in ISO_8601 format
+   * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description The product insights agent element appeared in the visible part of the page
+   * @example
+   * constructorio.tracker.trackProductInsightsAgentViews({
+   *   {
+   *     'itemId': '1',
+   *     'itemName': 'item1',
+   *     'variationId': '2',
+   *     'questions': [
+   *        { question: 'Why choose this?' },
+   *        { question: 'How is this product made?' },
+   *        { question: 'What are the dimensions of this product?' }
+   *     ],
+   *     'viewTimespans': [
+   *       {
+   *         'start': '2025-05-19T14:30:00+02:00',
+   *         'end': '2025-05-19T14:30:05+02:00'
+   *       },
+   *       {
+   *         'start': '2025-05-19T14:30:10+02:00',
+   *         'end': '2025-05-19T14:30:15+02:00'
+   *       }
+   *     ]
+   *   },
+   * );
+   */
   trackProductInsightsAgentViews(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
