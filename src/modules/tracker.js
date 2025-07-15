@@ -2714,7 +2714,7 @@ class Tracker {
    * @function trackAgentSearchSubmit
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.intent - Intent of user request
-   * @param {string} parameters.searchTerm - Term of submitted assistant search event
+   * @param {string} parameters.searchTerm - Term of submitted agent search event
    * @param {string} parameters.searchResultId - resultId of search result the clicked item belongs to
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {string} [parameters.intentResultId] - intentResultId from the ASA response
