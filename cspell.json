@@ -47,6 +47,7 @@
     "rerank",
     "atcs",
     "testdata",
-    "Bytespider"
+    "Bytespider",
+    "Timespans"
   ]
 }
