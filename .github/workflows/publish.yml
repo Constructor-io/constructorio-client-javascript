@@ -12,10 +12,5 @@ concurrency:
 jobs:
   publish_to_cdn:
     name: Publish to CDN
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Publish to CDN
-        uses: ./.github/workflows/publish-cdn.yml
-        secrets: inherit
+    uses: ./.github/workflows/publish-cdn.yml
+    secrets: inherit
