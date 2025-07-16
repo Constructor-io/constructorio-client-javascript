@@ -49,6 +49,6 @@ jobs:
         with:
           notification_title: "☁️ New constructorio-client-javascript release published to CDN at version ${{ steps.copy-files.outputs.version }}"
           status: ${{ job.status }}
-          footer: "CDN URL: https://cdn.constructor.io/sdk/client-javascript/${{ steps.copy-files.outputs.version }}.js"
+          footer: "CDN URL: https://cdn.cnstrc.com/sdk/client-javascript/${{ steps.copy-files.outputs.version }}.js"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
