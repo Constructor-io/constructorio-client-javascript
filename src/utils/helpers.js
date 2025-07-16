@@ -281,6 +281,8 @@ const utils = {
 
     return url;
   },
+
+  truncateString: (string, maxLength) => string.slice(0, maxLength),
 };
 
 module.exports = utils;
