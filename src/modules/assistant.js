@@ -24,7 +24,7 @@ class Assistant extends Agent {
    * @param {number} [parameters.numResultsPerPage] - The total number of results to return
    * @returns {ReadableStream} Returns a ReadableStream.
    * @example
-   * const readableStream = constructorio.agent.getAssistantResultsStream('I want to get shoes', {
+   * const readableStream = constructorio.assistant.getAssistantResultsStream('I want to get shoes', {
    *     domain: "nike_sportswear",
    * });
    * const reader = readableStream.getReader();
