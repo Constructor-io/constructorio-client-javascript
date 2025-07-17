@@ -11,6 +11,7 @@ const EventDispatcher = require('./utils/event-dispatcher');
 const helpers = require('./utils/helpers');
 const { default: packageVersion } = require('./version');
 const Quizzes = require('./modules/quizzes');
+const Agent = require('./modules/agent');
 const Assistant = require('./modules/assistant');
 
 // Compute package version string
@@ -38,7 +39,8 @@ class ConstructorIO {
    * @param {string} parameters.apiKey - Constructor.io API key
    * @param {string} [parameters.serviceUrl='https://ac.cnstrc.com'] - API URL endpoint
    * @param {string} [parameters.quizzesServiceUrl='https://quizzes.cnstrc.com'] - Quizzes API URL endpoint
-   * @param {string} [parameters.assistantServiceUrl='https://assistant.cnstrc.com'] - AI Assistant API URL endpoint
+   * @param {string} [parameters.agentServiceUrl='https://agent.cnstrc.com'] - AI Shopping Agent API URL endpoint
+   * @param {string} [parameters.assistantServiceUrl='https://assistant.cnstrc.com'] - AI Shopping Assistant API URL endpoint
    * @param {array} [parameters.segments] - User segments
    * @param {object} [parameters.testCells] - User test cells
    * @param {string} [parameters.clientId] - Client ID, defaults to value supplied by 'constructorio-id' module
@@ -60,6 +62,7 @@ class ConstructorIO {
    * @property {object} recommendations - Interface to {@link module:recommendations}
    * @property {object} tracker - Interface to {@link module:tracker}
    * @property {object} quizzes - Interface to {@link module:quizzes}
+   * @property {object} agent - Interface to {@link module:agent}
    * @property {object} assistant - Interface to {@link module:assistant}
    * @returns {class}
    */
@@ -69,6 +72,7 @@ class ConstructorIO {
       version: versionFromOptions,
       serviceUrl,
       quizzesServiceUrl,
+      agentServiceUrl,
       assistantServiceUrl,
       segments,
       testCells,
@@ -115,6 +119,7 @@ class ConstructorIO {
       version: versionFromOptions || versionFromGlobal || computePackageVersion(),
       serviceUrl: helpers.addHTTPSToString(normalizedServiceUrl) || 'https://ac.cnstrc.com',
       quizzesServiceUrl: (quizzesServiceUrl && quizzesServiceUrl.replace(/\/$/, '')) || 'https://quizzes.cnstrc.com',
+      agentServiceUrl: (agentServiceUrl && agentServiceUrl.replace(/\/$/, '')) || 'https://agent.cnstrc.com',
       assistantServiceUrl: (assistantServiceUrl && assistantServiceUrl.replace(/\/$/, '')) || 'https://assistant.cnstrc.com',
       sessionId: sessionId || session_id,
       clientId: clientId || client_id,
@@ -137,6 +142,7 @@ class ConstructorIO {
     this.recommendations = new Recommendations(this.options);
     this.tracker = new Tracker(this.options);
     this.quizzes = new Quizzes(this.options);
+    this.agent = new Agent(this.options);
     this.assistant = new Assistant(this.options);
 
     // Dispatch initialization event
