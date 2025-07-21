@@ -40,7 +40,7 @@ class ConstructorIO {
    * @param {string} [parameters.serviceUrl='https://ac.cnstrc.com'] - API URL endpoint
    * @param {string} [parameters.quizzesServiceUrl='https://quizzes.cnstrc.com'] - Quizzes API URL endpoint
    * @param {string} [parameters.agentServiceUrl='https://agent.cnstrc.com'] - AI Shopping Agent API URL endpoint
-   * @param {string} [parameters.assistantServiceUrl='https://assistant.cnstrc.com'] - AI Shopping Assistant API URL endpoint
+   * @param {string} [parameters.assistantServiceUrl='https://assistant.cnstrc.com'] - AI Shopping Assistant API URL endpoint @deprecated This parameter is deprecated and will be removed in a future version. Use parameters.agentServiceUrl instead.
    * @param {array} [parameters.segments] - User segments
    * @param {object} [parameters.testCells] - User test cells
    * @param {string} [parameters.clientId] - Client ID, defaults to value supplied by 'constructorio-id' module
@@ -63,7 +63,7 @@ class ConstructorIO {
    * @property {object} tracker - Interface to {@link module:tracker}
    * @property {object} quizzes - Interface to {@link module:quizzes}
    * @property {object} agent - Interface to {@link module:agent}
-   * @property {object} assistant - Interface to {@link module:assistant}
+   * @property {object} assistant - Interface to {@link module:assistant} @deprecated This property is deprecated and will be removed in a future version. Use the agent property instead.
    * @returns {class}
    */
   constructor(options = {}) {
