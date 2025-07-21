@@ -2910,7 +2910,7 @@ class Tracker {
    * );
    */
   trackAssistantResultView(parameters, networkParameters = {}) {
-    this.trackAgentResultView(parameters, networkParameters);
+    return this.trackAgentResultView(parameters, networkParameters);
   }
 
   /**
