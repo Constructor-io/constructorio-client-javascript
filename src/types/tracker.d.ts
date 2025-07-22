@@ -331,136 +331,107 @@ declare class Tracker {
     networkParameters?: NetworkParameters
   ): true | Error;
 
-  trackAssistantSubmit(
-    parameters: {
-      intent: string;
-      section?: string;
-    },
-    networkParameters?: NetworkParameters
-  ): true | Error;
+  trackAssistantSubmit: typeof Tracker.prototype.trackAgentSubmit;
 
-  trackAssistantResultLoadStarted(
-    parameters: {
-      intent: string;
-      section?: string;
-      intentResultId?: string;
-    },
-    networkParameters?: NetworkParameters
-  ): true | Error;
+  trackAssistantResultLoadStarted: typeof Tracker.prototype.trackAgentResultLoadStarted;
 
-  trackAssistantResultLoadFinished(
-    parameters: {
-      intent: string;
-      searchResultCount: number;
-      section?: string;
-      intentResultId?: string;
-    },
-    networkParameters?: NetworkParameters
-  ): true | Error;
+  trackAssistantResultLoadFinished: typeof Tracker.prototype.trackAgentResultLoadFinished;
 
-  trackAssistantResultClick(
+  trackAssistantResultClick: typeof Tracker.prototype.trackAgentResultClick;
+
+  trackAssistantResultView: typeof Tracker.prototype.trackAgentResultView;
+
+  trackAssistantSearchSubmit: typeof Tracker.prototype.trackAgentSearchSubmit;
+
+  trackProductInsightsAgentViews(
     parameters: {
-      intent: string;
-      searchResultId: string;
-      itemId?: string;
-      itemName?: string;
+      questions: Question[];
+      itemId: string;
+      itemName: string;
+      viewTimespans: TimeSpan[];
       variationId?: string;
       section?: string;
-      intentResultId?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
 
-  trackAssistantResultView(
+  trackProductInsightsAgentView(
     parameters: {
-      intent: string;
-      searchResultId: string;
-      numResultsViewed: number;
-      items?: ItemTracked[];
-      intentResultId?: string;
+      questions: Question[];
+      itemId: string;
+      itemName: string;
+      variationId?: string;
       section?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
 
-  trackAssistantSearchSubmit(
+  trackProductInsightsAgentOutOfView(
     parameters: {
-      intent: string;
-      searchTerm: string;
-      userInput: string;
-      searchResultId: string;
-      groupId?: string;
+      itemId: string;
+      itemName: string;
+      variationId?: string;
       section?: string;
-      intentResultId?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
 
-  trackProductInsightsAgentViews(parameters: {
-    questions: Question[];
-    itemId: string;
-    itemName: string;
-    viewTimespans: TimeSpan[];
-    variationId?: string;
-    section?: string;
-  }, networkParameters?: NetworkParameters): true | Error;
+  trackProductInsightsAgentFocus(
+    parameters: {
+      itemId: string;
+      itemName: string;
+      variationId?: string;
+      section?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
 
-  trackProductInsightsAgentView(parameters: {
-    questions: Question[];
-    itemId: string;
-    itemName: string;
-    variationId?: string;
-    section?: string;
-  }, networkParameters?: NetworkParameters): true | Error;
+  trackProductInsightsAgentQuestionClick(
+    parameters: {
+      itemId: string;
+      itemName: string;
+      question: string;
+      variationId?: string;
+      section?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
 
-  trackProductInsightsAgentOutOfView(parameters: {
-    itemId: string;
-    itemName: string;
-    variationId?: string;
-    section?: string;
-  }, networkParameters?: NetworkParameters): true | Error;
+  trackProductInsightsAgentQuestionSubmit(
+    parameters: {
+      itemId: string;
+      itemName: string;
+      question: string;
+      variationId?: string;
+      section?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
 
-  trackProductInsightsAgentFocus(parameters: {
-    itemId: string;
-    itemName: string;
-    variationId?: string;
-    section?: string;
-  }, networkParameters?: NetworkParameters): true | Error;
+  trackProductInsightsAgentAnswerView(
+    parameters: {
+      itemId: string;
+      itemName: string;
+      question: string;
+      answerText: string;
+      qnaResultId?: string;
+      variationId?: string;
+      section?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
 
-  trackProductInsightsAgentQuestionClick(parameters: {
-    itemId: string;
-    itemName: string;
-    question: string;
-    variationId?: string;
-    section?: string;
-  }, networkParameters?: NetworkParameters): true | Error;
-
-  trackProductInsightsAgentQuestionSubmit(parameters: {
-    itemId: string;
-    itemName: string;
-    question: string;
-    variationId?: string;
-    section?: string;
-  }, networkParameters?: NetworkParameters): true | Error;
-
-  trackProductInsightsAgentAnswerView(parameters: {
-    itemId: string;
-    itemName: string;
-    question: string;
-    answerText: string;
-    qnaResultId?: string;
-    variationId?: string;
-    section?: string;
-  }, networkParameters?: NetworkParameters): true | Error;
-
-  trackProductInsightsAgentAnswerFeedback(parameters: {
-    itemId: string;
-    itemName: string;
-    feedbackLabel: string;
-    qnaResultId?: string;
-    variationId?: string;
-    section?: string;
-  }, networkParameters?: NetworkParameters): true | Error;
+  trackProductInsightsAgentAnswerFeedback(
+    parameters: {
+      itemId: string;
+      itemName: string;
+      feedbackLabel: string;
+      qnaResultId?: string;
+      variationId?: string;
+      section?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
 
   on(messageType: string, callback: Function): true | Error;
 }
