@@ -2422,7 +2422,7 @@ class Tracker {
   trackAgentSubmit(parameters, networkParameters = {}) {
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       // Ensure parameters are provided (required)
-      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/agent_submit?`;
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_submit?`;
       const {
         section,
         intent,
@@ -2476,7 +2476,7 @@ class Tracker {
   trackAgentResultLoadStarted(parameters, networkParameters = {}) {
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       // Ensure parameters are provided (required)
-      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/agent_result_load_start?`;
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_result_load_start?`;
       const {
         section,
         intentResultId,
@@ -2534,7 +2534,7 @@ class Tracker {
   trackAgentResultLoadFinished(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/agent_result_load_finish?`;
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_result_load_finish?`;
       const {
         section,
         searchResultCount,
@@ -2599,7 +2599,7 @@ class Tracker {
   trackAgentResultClick(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/agent_search_result_click?`;
+      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/assistant_search_result_click?`;
       const {
         section = 'Products',
         variationId,
@@ -2669,7 +2669,7 @@ class Tracker {
   trackAgentResultView(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/agent_search_result_view?`;
+      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/assistant_search_result_view?`;
       const {
         section = 'Products',
         items,
@@ -2736,7 +2736,7 @@ class Tracker {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       // Ensure parameters are provided (required)
-      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/agent_search_submit?`;
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_search_submit?`;
       const {
         section,
         intent,
