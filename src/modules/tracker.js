@@ -2404,23 +2404,23 @@ class Tracker {
   /**
    * Send ASA request submitted event
    *
-   * @function trackAssistantSubmit
+   * @function trackAgentSubmit
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.intent - Intent of user request
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
-   * @description User submitted an assistant search
-   *   (pressing enter within assistant input element, or clicking assistant submit element)
+   * @description User submitted an agent search
+   *   (pressing enter within agent input element, or clicking agent submit element)
    * @example
-   * constructorio.tracker.trackAssistantSubmit(
+   * constructorio.tracker.trackAgentSubmit(
    *     {
    *         intent: 'show me a recipe for a cookie',
    *     },
    * );
    */
-  trackAssistantSubmit(parameters, networkParameters = {}) {
+  trackAgentSubmit(parameters, networkParameters = {}) {
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       // Ensure parameters are provided (required)
       const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_submit?`;
@@ -2455,9 +2455,9 @@ class Tracker {
   }
 
   /**
-   * Send assistant results page load started
+   * Send agent results page load started
    *
-   * @function trackAssistantResultLoadStarted
+   * @function trackAgentResultLoadStarted
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.intent - Intent of user request
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
@@ -2465,16 +2465,16 @@ class Tracker {
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
-   * @description Assistant results page load begun (but has not necessarily loaded completely)
+   * @description Agent results page load begun (but has not necessarily loaded completely)
    * @example
-   * constructorio.tracker.trackAssistantResultLoadStarted(
+   * constructorio.tracker.trackAgentResultLoadStarted(
    *     {
    *         intent: 'show me a recipe for a cookie',
    *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
    *     },
    * );
    */
-  trackAssistantResultLoadStarted(parameters, networkParameters = {}) {
+  trackAgentResultLoadStarted(parameters, networkParameters = {}) {
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       // Ensure parameters are provided (required)
       const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_result_load_start?`;
@@ -2511,9 +2511,9 @@ class Tracker {
   }
 
   /**
-   * Send assistant results page load finished
+   * Send agent results page load finished
    *
-   * @function trackAssistantResultLoadFinished
+   * @function trackAgentResultLoadFinished
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.intent - Intent of user request
    * @param {number} parameters.searchResultCount - Number of search results loaded
@@ -2522,9 +2522,9 @@ class Tracker {
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
-   * @description Assistant results page load finished
+   * @description Agent results page load finished
    * @example
-   * constructorio.tracker.trackAssistantResultLoadFinished(
+   * constructorio.tracker.trackAgentResultLoadFinished(
    *     {
    *         intent: 'show me a recipe for a cookie',
    *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
@@ -2532,7 +2532,7 @@ class Tracker {
    *     },
    * );
    */
-  trackAssistantResultLoadFinished(parameters, networkParameters = {}) {
+  trackAgentResultLoadFinished(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_result_load_finish?`;
@@ -2571,9 +2571,9 @@ class Tracker {
   }
 
   /**
-   * Send assistant result click event to API
+   * Send agent result click event to API
    *
-   * @function trackAssistantResultClick
+   * @function trackAgentResultClick
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.intent - intent of the user
    * @param {string} parameters.searchResultId - result_id of the specific search result the clicked item belongs to
@@ -2585,9 +2585,9 @@ class Tracker {
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
-   * @description User clicked a result that appeared within an assistant search result
+   * @description User clicked a result that appeared within an agent search result
    * @example
-   * constructorio.tracker.trackAssistantResultClick(
+   * constructorio.tracker.trackAgentResultClick(
    *     {
    *         variationId: 'KMH879-7632',
    *         searchResultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
@@ -2597,7 +2597,7 @@ class Tracker {
    *     },
    * );
    */
-  trackAssistantResultClick(parameters, networkParameters = {}) {
+  trackAgentResultClick(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/assistant_search_result_click?`;
@@ -2642,9 +2642,9 @@ class Tracker {
   }
 
   /**
-   * Send assistant search result view event to API
+   * Send agent search result view event to API
    *
-   * @function trackAssistantResultView
+   * @function trackAgentResultView
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.intent - intent of the user
    * @param {string} parameters.searchResultId - result_id of the specific search result the clicked item belongs to
@@ -2655,9 +2655,9 @@ class Tracker {
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
-   * @description User viewed a search result within an assistant result
+   * @description User viewed a search result within an agent result
    * @example
-   * constructorio.tracker.trackAssistantResultView(
+   * constructorio.tracker.trackAgentResultView(
    *     {
    *         searchResultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
    *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
@@ -2667,7 +2667,7 @@ class Tracker {
    *     },
    * );
    */
-  trackAssistantResultView(parameters, networkParameters = {}) {
+  trackAgentResultView(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/assistant_search_result_view?`;
@@ -2712,19 +2712,19 @@ class Tracker {
   /**
    * Send ASA search submitted event
    *
-   * @function trackAssistantSearchSubmit
+   * @function trackAgentSearchSubmit
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.intent - Intent of user request
-   * @param {string} parameters.searchTerm - Term of submitted assistant search event
+   * @param {string} parameters.searchTerm - Term of submitted agent search event
    * @param {string} parameters.searchResultId - resultId of search result the clicked item belongs to
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {string} [parameters.intentResultId] - intentResultId from the ASA response
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
-   * @description User submitted an alternative assistant search result search term
+   * @description User submitted an alternative agent search result search term
    * @example
-   * constructorio.tracker.trackAssistantSearchSubmit({
+   * constructorio.tracker.trackAgentSearchSubmit({
    *     {
    *         searchResultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
    *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
@@ -2733,7 +2733,7 @@ class Tracker {
    *     },
    * );
    */
-  trackAssistantSearchSubmit(parameters, networkParameters = {}) {
+  trackAgentSearchSubmit(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       // Ensure parameters are provided (required)
@@ -2773,6 +2773,174 @@ class Tracker {
     this.requests.send();
 
     return new Error('parameters is a required parameter of type object');
+  }
+
+  /**
+   * Send ASA request submitted event
+   *
+   * @deprecated This method will be removed in a future version. Use trackAgentSubmit instead.
+   * @function trackAssistantSubmit
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.intent - Intent of user request
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User submitted an assistant search
+   *   (pressing enter within assistant input element, or clicking assistant submit element)
+   * @example
+   * constructorio.tracker.trackAssistantSubmit(
+   *     {
+   *         intent: 'show me a recipe for a cookie',
+   *     },
+   * );
+   */
+  trackAssistantSubmit(parameters, networkParameters = {}) {
+    return this.trackAgentSubmit(parameters, networkParameters);
+  }
+
+  /**
+   * Send assistant results page load started
+   *
+   * @deprecated This method will be removed in a future version. Use trackAgentResultLoadStarted instead.
+   * @function trackAssistantResultLoadStarted
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.intent - Intent of user request
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.intentResultId] - The intent result id from the ASA response
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description Assistant results page load begun (but has not necessarily loaded completely)
+   * @example
+   * constructorio.tracker.trackAssistantResultLoadStarted(
+   *     {
+   *         intent: 'show me a recipe for a cookie',
+   *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
+   *     },
+   * );
+   */
+  trackAssistantResultLoadStarted(parameters, networkParameters = {}) {
+    return this.trackAgentResultLoadStarted(parameters, networkParameters);
+  }
+
+  /**
+   * Send assistant results page load finished
+   *
+   * @deprecated This method will be removed in a future version. Use trackAgentResultLoadFinished instead.
+   * @function trackAssistantResultLoadFinished
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.intent - Intent of user request
+   * @param {number} parameters.searchResultCount - Number of search results loaded
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.intentResultId] - The intent result id from the ASA response
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description Assistant results page load finished
+   * @example
+   * constructorio.tracker.trackAssistantResultLoadFinished(
+   *     {
+   *         intent: 'show me a recipe for a cookie',
+   *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
+   *         searchResultCount: 5,
+   *     },
+   * );
+   */
+  trackAssistantResultLoadFinished(parameters, networkParameters = {}) {
+    return this.trackAgentResultLoadFinished(parameters, networkParameters);
+  }
+
+  /**
+   * Send assistant result click event to API
+   *
+   * @deprecated This method will be removed in a future version. Use trackAgentResultClick instead.
+   * @function trackAssistantResultClick
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.intent - intent of the user
+   * @param {string} parameters.searchResultId - result_id of the specific search result the clicked item belongs to
+   * @param {string} parameters.itemId - Product item unique identifier
+   * @param {string} parameters.itemName - Product item name
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.variationId] - Product item variation unique identifier
+   * @param {string} [parameters.intentResultId] - Browse result identifier (returned in response from Constructor)
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User clicked a result that appeared within an assistant search result
+   * @example
+   * constructorio.tracker.trackAssistantResultClick(
+   *     {
+   *         variationId: 'KMH879-7632',
+   *         searchResultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
+   *         intent: 'show me a recipe for a cookie',
+   *         itemId: 'KMH876',
+   *     },
+   * );
+   */
+  trackAssistantResultClick(parameters, networkParameters = {}) {
+    return this.trackAgentResultClick(parameters, networkParameters);
+  }
+
+  /**
+   * Send assistant search result view event to API
+   *
+   * @deprecated This method will be removed in a future version. Use trackAgentResultView instead.
+   * @function trackAssistantResultView
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.intent - intent of the user
+   * @param {string} parameters.searchResultId - result_id of the specific search result the clicked item belongs to
+   * @param {number} parameters.numResultsViewed - Number of items viewed in this search result
+   * @param {object[]} [parameters.items] - List of product item objects viewed
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.intentResultId] - Browse result identifier (returned in response from Constructor)
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User viewed a search result within an assistant result
+   * @example
+   * constructorio.tracker.trackAssistantResultView(
+   *     {
+   *         searchResultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
+   *         intent: 'show me a recipe for a cookie',
+   *         numResultsViewed: 5,
+   *         items: [{itemId: 'KMH876'}, {itemId: 'KMH140'}, {itemId: 'KMH437'}],
+   *     },
+   * );
+   */
+  trackAssistantResultView(parameters, networkParameters = {}) {
+    return this.trackAgentResultView(parameters, networkParameters);
+  }
+
+  /**
+   * Send ASA search submitted event
+   *
+   * @deprecated This method will be removed in a future version. Use trackAgentSearchSubmit instead.
+   * @function trackAssistantSearchSubmit
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.intent - Intent of user request
+   * @param {string} parameters.searchTerm - Term of submitted assistant search event
+   * @param {string} parameters.searchResultId - resultId of search result the clicked item belongs to
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.intentResultId] - intentResultId from the ASA response
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User submitted an alternative assistant search result search term
+   * @example
+   * constructorio.tracker.trackAssistantSearchSubmit({
+   *     {
+   *         searchResultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
+   *         intent: 'show me a recipe for a cookie',
+   *         searchTerm: 'flour',
+   *     },
+   * );
+   */
+  trackAssistantSearchSubmit(parameters, networkParameters = {}) {
+    return this.trackAgentSearchSubmit(parameters, networkParameters);
   }
 
   /**
