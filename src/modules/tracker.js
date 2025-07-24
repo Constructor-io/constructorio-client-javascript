@@ -1349,6 +1349,8 @@ class Tracker {
    * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @param {string} [parameters.slCampaignId] - Pass campaign id of sponsored listing
+   * @param {string} [parameters.slCampaignOwner] - Pass campaign owner of sponsored listing
    * @returns {(true|Error)}
    * @description User clicked an item that appeared within a list of recommended results
    * @example
@@ -1395,6 +1397,8 @@ class Tracker {
         item_name,
         itemName = item_name,
         analyticsTags,
+        slCampaignId,
+        slCampaignOwner,
       } = parameters;
 
       if (variationId) {
@@ -1443,6 +1447,14 @@ class Tracker {
 
       if (analyticsTags) {
         bodyParams.analytics_tags = analyticsTags;
+      }
+
+      if (slCampaignId) {
+        bodyParams.sl_campaign_id = slCampaignId;
+      }
+
+      if (slCampaignOwner) {
+        bodyParams.sl_campaign_owner = slCampaignOwner;
       }
 
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
