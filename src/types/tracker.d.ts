@@ -163,6 +163,8 @@ declare class Tracker {
       resultPositionOnPage?: number;
       numResultsPerPage?: number;
       analyticsTags?: Record<string, string>;
+      slCampaignId?: string;
+      slCampaignOwner?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;

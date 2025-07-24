@@ -4911,6 +4911,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       resultId: 'result-id',
       section: 'Products',
       analyticsTags: testAnalyticsTag,
+      slCampaignOwner: 'Campaign Man',
+      slCampaignId: 'Campaign 123',
     };
 
     it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
@@ -5186,6 +5188,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('result_id').to.equal(optionalParameters.resultId);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(requestParams).to.have.property('analytics_tags').to.deep.equal(testAnalyticsTag);
+        expect(requestParams).to.have.property('sl_campaign_id').to.deep.equal(optionalParameters.slCampaignId);
+        expect(requestParams).to.have.property('sl_campaign_owner').to.deep.equal(optionalParameters.slCampaignOwner);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');

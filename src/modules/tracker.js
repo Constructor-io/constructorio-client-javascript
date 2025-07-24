@@ -1395,6 +1395,8 @@ class Tracker {
         item_name,
         itemName = item_name,
         analyticsTags,
+        slCampaignId,
+        slCampaignOwner,
       } = parameters;
 
       if (variationId) {
@@ -1443,6 +1445,14 @@ class Tracker {
 
       if (analyticsTags) {
         bodyParams.analytics_tags = analyticsTags;
+      }
+
+      if (slCampaignId) {
+        bodyParams.sl_campaign_id = slCampaignId;
+      }
+
+      if (slCampaignOwner) {
+        bodyParams.sl_campaign_owner = slCampaignOwner;
       }
 
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
