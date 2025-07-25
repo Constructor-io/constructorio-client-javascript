@@ -307,8 +307,6 @@ class Browse {
    * @param {number} [parameters.offset] - The number of results to skip from the beginning (Can't be used together with page)
    * @param {number} [parameters.resultsPerPage] - The number of results per page to return
    * @param {object} [parameters.filters] - Filters used to refine results
-   * @param {string} [parameters.sortBy='relevance'] - The sort method for results
-   * @param {string} [parameters.sortOrder='descending'] - The sort order for results
    * @param {string} [parameters.section='Products'] - The section name for results
    * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.com/reference/browse-browse-results for details
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
