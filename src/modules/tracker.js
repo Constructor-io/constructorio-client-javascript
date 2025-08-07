@@ -593,6 +593,7 @@ class Tracker {
    * @param {string} parameters.originalQuery - The current autocomplete search query
    * @param {string} [parameters.groupId] - Group identifier of the group to search within. Only required if searching within a group, i.e. "Pumpkin in Canned Goods"
    * @param {string} [parameters.displayName] - Display name of group of selected item
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -621,6 +622,7 @@ class Tracker {
           groupId = group_id,
           display_name,
           displayName = display_name,
+          analyticsTags,
         } = parameters;
 
         if (originalQuery) {
@@ -632,6 +634,10 @@ class Tracker {
             group_id: groupId,
             display_name: displayName,
           };
+        }
+
+        if (analyticsTags) {
+          queryParams.analytics_tags = analyticsTags;
         }
 
         this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`, undefined, undefined, networkParameters);
