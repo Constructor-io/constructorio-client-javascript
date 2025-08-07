@@ -1506,6 +1506,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const optionalParameters = {
       groupId: 'group-id',
       displayName: 'display-name',
+      analyticsTags: testAnalyticsTag,
     };
 
     it('Backwards Compatibility - V2 Should respond with a valid response when term and snake cased parameters are provided', (done) => {
@@ -1750,6 +1751,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           group_id: optionalParameters.groupId,
           display_name: optionalParameters.displayName,
         });
+        expect(requestParams).to.have.property('analytics_tags').to.deep.equal(testAnalyticsTag);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('GET');
