@@ -5352,6 +5352,59 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
       expect(tracker.trackRecommendationClick(requiredParameters)).to.equal(true);
     });
+
+    it('Should respond with a valid response when seedItemIds is provided as an array of strings', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const parametersWithSeedItemIds = {
+        ...requiredParameters,
+        seedItemIds: ['item-123', 'item-456', 'item-789'],
+      };
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('seed_item_ids').to.deep.equal(['item-123', 'item-456', 'item-789']);
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+        done();
+      });
+      expect(tracker.trackRecommendationClick(parametersWithSeedItemIds)).to.equal(true);
+    });
+
+    it('Should throw an error when invalid seedItemIds format is provided (number)', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+      const parametersWithInvalidSeedItemIds = {
+        ...requiredParameters,
+        seedItemIds: 123,
+      };
+      expect(tracker.trackRecommendationClick(parametersWithInvalidSeedItemIds)).to.be.an('error');
+      expect(tracker.trackRecommendationClick(parametersWithInvalidSeedItemIds).message).to.equal('seedItemIds must be an array of strings');
+    });
+
+    it('Should throw an error when invalid seedItemIds format is provided (array with non-strings)', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+      const parametersWithInvalidSeedItemIds = {
+        ...requiredParameters,
+        seedItemIds: ['item-123', 456, 'item-789'],
+      };
+      expect(tracker.trackRecommendationClick(parametersWithInvalidSeedItemIds)).to.be.an('error');
+      expect(tracker.trackRecommendationClick(parametersWithInvalidSeedItemIds).message).to.equal('seedItemIds must be an array of strings');
+    });
+
+    it('Should throw an error when invalid seedItemIds format is provided (object)', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+      const parametersWithInvalidSeedItemIds = {
+        ...requiredParameters,
+        seedItemIds: { id: 'item-123' },
+      };
+      expect(tracker.trackRecommendationClick(parametersWithInvalidSeedItemIds)).to.be.an('error');
+      expect(tracker.trackRecommendationClick(parametersWithInvalidSeedItemIds).message).to.equal('seedItemIds must be an array of strings');
+    });
   });
 
   describe('trackBrowseResultsLoaded', () => {
@@ -8385,7 +8438,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     it('Should throw an error when providing no messageType parameter', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.on(null, () => {})).to.be.an('error');
+      expect(tracker.on(null, () => { })).to.be.an('error');
     });
 
     it('Should throw an error when providing an invalid callback parameter', () => {
