@@ -5376,34 +5376,96 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackRecommendationClick(parametersWithSeedItemIds)).to.equal(true);
     });
 
-    it('Should throw an error when invalid seedItemIds format is provided (number)', () => {
-      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
-      const parametersWithInvalidSeedItemIds = {
+    it('Should respond with a valid response and convert seedItemIds to array when provided as string', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const parametersWithSeedItemIds = {
+        ...requiredParameters,
+        seedItemIds: 'item-123',
+      };
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('seed_item_ids').to.deep.equal(['item-123']);
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+        done();
+      });
+      expect(tracker.trackRecommendationClick(parametersWithSeedItemIds)).to.equal(true);
+    });
+
+    it('Should respond with a valid response and convert seedItemIds to array when provided as number', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const parametersWithSeedItemIds = {
         ...requiredParameters,
         seedItemIds: 123,
       };
-      expect(tracker.trackRecommendationClick(parametersWithInvalidSeedItemIds)).to.be.an('error');
-      expect(tracker.trackRecommendationClick(parametersWithInvalidSeedItemIds).message).to.equal('seedItemIds must be an array of strings');
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('seed_item_ids').to.deep.equal(['123']);
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+        done();
+      });
+      expect(tracker.trackRecommendationClick(parametersWithSeedItemIds)).to.equal(true);
     });
 
-    it('Should throw an error when invalid seedItemIds format is provided (array with non-strings)', () => {
-      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
-      const parametersWithInvalidSeedItemIds = {
+    it('Should respond with a valid response and omit seed_item_ids when seedItemIds is empty string', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const parametersWithSeedItemIds = {
         ...requiredParameters,
-        seedItemIds: ['item-123', 456, 'item-789'],
+        seedItemIds: '',
       };
-      expect(tracker.trackRecommendationClick(parametersWithInvalidSeedItemIds)).to.be.an('error');
-      expect(tracker.trackRecommendationClick(parametersWithInvalidSeedItemIds).message).to.equal('seedItemIds must be an array of strings');
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('seed_item_ids');
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+        done();
+      });
+      expect(tracker.trackRecommendationClick(parametersWithSeedItemIds)).to.equal(true);
     });
 
-    it('Should throw an error when invalid seedItemIds format is provided (object)', () => {
-      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
-      const parametersWithInvalidSeedItemIds = {
+    it('Should respond with a valid response and omit seed_item_ids when seedItemIds is empty array', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const parametersWithSeedItemIds = {
         ...requiredParameters,
-        seedItemIds: { id: 'item-123' },
+        seedItemIds: [],
       };
-      expect(tracker.trackRecommendationClick(parametersWithInvalidSeedItemIds)).to.be.an('error');
-      expect(tracker.trackRecommendationClick(parametersWithInvalidSeedItemIds).message).to.equal('seedItemIds must be an array of strings');
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('seed_item_ids');
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+        done();
+      });
+      expect(tracker.trackRecommendationClick(parametersWithSeedItemIds)).to.equal(true);
     });
   });
 
