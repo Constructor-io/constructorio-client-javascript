@@ -1357,6 +1357,7 @@ class Tracker {
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @param {string} [parameters.slCampaignId] - Pass campaign id of sponsored listing
    * @param {string} [parameters.slCampaignOwner] - Pass campaign owner of sponsored listing
+   * @param {string[]|string|number} [parameters.seedItemIds] - Item ID(s) to be used as seed
    * @returns {(true|Error)}
    * @description User clicked an item that appeared within a list of recommended results
    * @example
@@ -1372,6 +1373,7 @@ class Tracker {
    *         strategyId: 'complimentary',
    *         itemId: 'KMH876',
    *         itemName: 'Socks',
+   *         seedItemIds: ['item-123', 'item-456'],
    *     },
    * );
    */
@@ -1405,6 +1407,7 @@ class Tracker {
         analyticsTags,
         slCampaignId,
         slCampaignOwner,
+        seedItemIds,
       } = parameters;
 
       if (variationId) {
@@ -1461,6 +1464,14 @@ class Tracker {
 
       if (slCampaignOwner) {
         bodyParams.sl_campaign_owner = slCampaignOwner;
+      }
+
+      if (typeof seedItemIds === 'number') {
+        bodyParams.seed_item_ids = [String(seedItemIds)];
+      } else if (seedItemIds?.length && typeof seedItemIds === 'string') {
+        bodyParams.seed_item_ids = [seedItemIds];
+      } else if (seedItemIds?.length && Array.isArray(seedItemIds)) {
+        bodyParams.seed_item_ids = seedItemIds;
       }
 
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
