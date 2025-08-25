@@ -1232,6 +1232,8 @@ class Tracker {
    * @param {string[]|string|number} [parameters.seedItemIds] - Item ID(s) to be used as seed
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @param {string} [parameters.slCampaignId] - Pass campaign id of sponsored listing
+   * @param {string} [parameters.slCampaignOwner] - Pass campaign owner of sponsored listing
    * @returns {(true|Error)}
    * @description User viewed a set of recommendations
    * @example
@@ -1244,6 +1246,8 @@ class Tracker {
    *         url: 'https://demo.constructor.io/sandbox/farmstand',
    *         podId: '019927c2-f955-4020',
    *         numResultsViewed: 3,
+   *         slCampaignId: '019927c2-f955-4020',
+   *         slCampaignOwner: 'constructor',
    *     },
    * );
    */
@@ -1268,6 +1272,8 @@ class Tracker {
         analyticsTags,
         seedItemIds,
         resultCount = result_count || items?.length || 0,
+        slCampaignId,
+        slCampaignOwner,
       } = parameters;
 
       if (!helpers.isNil(resultCount)) {
@@ -1314,6 +1320,14 @@ class Tracker {
         bodyParams.seed_item_ids = [seedItemIds];
       } else if (seedItemIds?.length && Array.isArray(seedItemIds)) {
         bodyParams.seed_item_ids = seedItemIds;
+      }
+
+      if (slCampaignId) {
+        bodyParams.sl_campaign_id = slCampaignId;
+      }
+
+      if (slCampaignOwner) {
+        bodyParams.sl_campaign_owner = slCampaignOwner;
       }
 
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
