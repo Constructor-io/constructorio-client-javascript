@@ -145,6 +145,8 @@ declare class Tracker {
       resultId?: string;
       section?: string;
       analyticsTags?: Record<string, string>;
+      slCampaignId?: string;
+      slCampaignOwner?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
