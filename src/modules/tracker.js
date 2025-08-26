@@ -6,6 +6,8 @@ const EventEmitter = require('../utils/events');
 const helpers = require('../utils/helpers');
 const RequestQueue = require('../utils/request-queue');
 
+const MAX_URL_LENGTH = 2048;
+
 function applyParams(parameters, options) {
   const {
     apiKey,
@@ -270,7 +272,7 @@ class Tracker {
       }
 
       if (url) {
-        bodyParams.url = url;
+        bodyParams.url = helpers.truncateString(url, MAX_URL_LENGTH);
       }
 
       const requestURL = `${requestUrlPath}${applyParamsAsString(queryParams, this.options)}`;
@@ -591,6 +593,7 @@ class Tracker {
    * @param {string} parameters.originalQuery - The current autocomplete search query
    * @param {string} [parameters.groupId] - Group identifier of the group to search within. Only required if searching within a group, i.e. "Pumpkin in Canned Goods"
    * @param {string} [parameters.displayName] - Display name of group of selected item
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -619,6 +622,7 @@ class Tracker {
           groupId = group_id,
           display_name,
           displayName = display_name,
+          analyticsTags,
         } = parameters;
 
         if (originalQuery) {
@@ -630,6 +634,10 @@ class Tracker {
             group_id: groupId,
             display_name: displayName,
           };
+        }
+
+        if (analyticsTags) {
+          queryParams.analytics_tags = analyticsTags;
         }
 
         this.requests.queue(`${url}${applyParamsAsString(queryParams, this.options)}`, undefined, undefined, networkParameters);
@@ -737,7 +745,7 @@ class Tracker {
           sort_order: sortOrder,
           sort_by: sortBy,
           selected_filters: selectedFilters,
-          url,
+          url: helpers.truncateString(url, MAX_URL_LENGTH),
           section,
           analytics_tags: analyticsTags,
         };
@@ -1024,7 +1032,6 @@ class Tracker {
    *         itemName: 'Red T-Shirt',
    *         variationId: 'KMH879-7632',
    *         type: 'like',
-   *         resultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
    *         section: 'Products',
    *     },
    * );
@@ -1282,7 +1289,7 @@ class Tracker {
       }
 
       if (url) {
-        bodyParams.url = url;
+        bodyParams.url = helpers.truncateString(url, MAX_URL_LENGTH);
       }
 
       if (podId) {
@@ -1348,6 +1355,9 @@ class Tracker {
    * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @param {string} [parameters.slCampaignId] - Pass campaign id of sponsored listing
+   * @param {string} [parameters.slCampaignOwner] - Pass campaign owner of sponsored listing
+   * @param {string[]|string|number} [parameters.seedItemIds] - Item ID(s) to be used as seed
    * @returns {(true|Error)}
    * @description User clicked an item that appeared within a list of recommended results
    * @example
@@ -1363,6 +1373,7 @@ class Tracker {
    *         strategyId: 'complimentary',
    *         itemId: 'KMH876',
    *         itemName: 'Socks',
+   *         seedItemIds: ['item-123', 'item-456'],
    *     },
    * );
    */
@@ -1394,6 +1405,9 @@ class Tracker {
         item_name,
         itemName = item_name,
         analyticsTags,
+        slCampaignId,
+        slCampaignOwner,
+        seedItemIds,
       } = parameters;
 
       if (variationId) {
@@ -1442,6 +1456,22 @@ class Tracker {
 
       if (analyticsTags) {
         bodyParams.analytics_tags = analyticsTags;
+      }
+
+      if (slCampaignId) {
+        bodyParams.sl_campaign_id = slCampaignId;
+      }
+
+      if (slCampaignOwner) {
+        bodyParams.sl_campaign_owner = slCampaignOwner;
+      }
+
+      if (typeof seedItemIds === 'number') {
+        bodyParams.seed_item_ids = [String(seedItemIds)];
+      } else if (seedItemIds?.length && typeof seedItemIds === 'string') {
+        bodyParams.seed_item_ids = [seedItemIds];
+      } else if (seedItemIds?.length && Array.isArray(seedItemIds)) {
+        bodyParams.seed_item_ids = seedItemIds;
       }
 
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
@@ -1550,7 +1580,7 @@ class Tracker {
       }
 
       if (url) {
-        bodyParams.url = url;
+        bodyParams.url = helpers.truncateString(url, MAX_URL_LENGTH);
       }
 
       if (sortOrder) {
@@ -2020,7 +2050,7 @@ class Tracker {
       bodyParams.quiz_id = quizId;
       bodyParams.quiz_version_id = quizVersionId;
       bodyParams.quiz_session_id = quizSessionId;
-      bodyParams.url = url;
+      bodyParams.url = helpers.truncateString(url, MAX_URL_LENGTH);
 
       if (!helpers.isNil(section)) {
         if (typeof section !== 'string') {
@@ -2403,23 +2433,23 @@ class Tracker {
   /**
    * Send ASA request submitted event
    *
-   * @function trackAssistantSubmit
+   * @function trackAgentSubmit
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.intent - Intent of user request
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
-   * @description User submitted an assistant search
-   *   (pressing enter within assistant input element, or clicking assistant submit element)
+   * @description User submitted an agent search
+   *   (pressing enter within agent input element, or clicking agent submit element)
    * @example
-   * constructorio.tracker.trackAssistantSubmit(
+   * constructorio.tracker.trackAgentSubmit(
    *     {
    *         intent: 'show me a recipe for a cookie',
    *     },
    * );
    */
-  trackAssistantSubmit(parameters, networkParameters = {}) {
+  trackAgentSubmit(parameters, networkParameters = {}) {
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       // Ensure parameters are provided (required)
       const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_submit?`;
@@ -2454,9 +2484,9 @@ class Tracker {
   }
 
   /**
-   * Send assistant results page load started
+   * Send agent results page load started
    *
-   * @function trackAssistantResultLoadStarted
+   * @function trackAgentResultLoadStarted
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.intent - Intent of user request
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
@@ -2464,16 +2494,16 @@ class Tracker {
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
-   * @description Assistant results page load begun (but has not necessarily loaded completely)
+   * @description Agent results page load begun (but has not necessarily loaded completely)
    * @example
-   * constructorio.tracker.trackAssistantResultLoadStarted(
+   * constructorio.tracker.trackAgentResultLoadStarted(
    *     {
    *         intent: 'show me a recipe for a cookie',
    *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
    *     },
    * );
    */
-  trackAssistantResultLoadStarted(parameters, networkParameters = {}) {
+  trackAgentResultLoadStarted(parameters, networkParameters = {}) {
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       // Ensure parameters are provided (required)
       const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_result_load_start?`;
@@ -2510,9 +2540,9 @@ class Tracker {
   }
 
   /**
-   * Send assistant results page load finished
+   * Send agent results page load finished
    *
-   * @function trackAssistantResultLoadFinished
+   * @function trackAgentResultLoadFinished
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.intent - Intent of user request
    * @param {number} parameters.searchResultCount - Number of search results loaded
@@ -2521,9 +2551,9 @@ class Tracker {
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
-   * @description Assistant results page load finished
+   * @description Agent results page load finished
    * @example
-   * constructorio.tracker.trackAssistantResultLoadFinished(
+   * constructorio.tracker.trackAgentResultLoadFinished(
    *     {
    *         intent: 'show me a recipe for a cookie',
    *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
@@ -2531,7 +2561,7 @@ class Tracker {
    *     },
    * );
    */
-  trackAssistantResultLoadFinished(parameters, networkParameters = {}) {
+  trackAgentResultLoadFinished(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_result_load_finish?`;
@@ -2570,9 +2600,9 @@ class Tracker {
   }
 
   /**
-   * Send assistant result click event to API
+   * Send agent result click event to API
    *
-   * @function trackAssistantResultClick
+   * @function trackAgentResultClick
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.intent - intent of the user
    * @param {string} parameters.searchResultId - result_id of the specific search result the clicked item belongs to
@@ -2584,9 +2614,9 @@ class Tracker {
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
-   * @description User clicked a result that appeared within an assistant search result
+   * @description User clicked a result that appeared within an agent search result
    * @example
-   * constructorio.tracker.trackAssistantResultClick(
+   * constructorio.tracker.trackAgentResultClick(
    *     {
    *         variationId: 'KMH879-7632',
    *         searchResultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
@@ -2596,7 +2626,7 @@ class Tracker {
    *     },
    * );
    */
-  trackAssistantResultClick(parameters, networkParameters = {}) {
+  trackAgentResultClick(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/assistant_search_result_click?`;
@@ -2641,9 +2671,9 @@ class Tracker {
   }
 
   /**
-   * Send assistant search result view event to API
+   * Send agent search result view event to API
    *
-   * @function trackAssistantResultView
+   * @function trackAgentResultView
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.intent - intent of the user
    * @param {string} parameters.searchResultId - result_id of the specific search result the clicked item belongs to
@@ -2654,9 +2684,9 @@ class Tracker {
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
-   * @description User viewed a search result within an assistant result
+   * @description User viewed a search result within an agent result
    * @example
-   * constructorio.tracker.trackAssistantResultView(
+   * constructorio.tracker.trackAgentResultView(
    *     {
    *         searchResultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
    *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
@@ -2666,7 +2696,7 @@ class Tracker {
    *     },
    * );
    */
-  trackAssistantResultView(parameters, networkParameters = {}) {
+  trackAgentResultView(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
       const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/assistant_search_result_view?`;
@@ -2711,6 +2741,212 @@ class Tracker {
   /**
    * Send ASA search submitted event
    *
+   * @function trackAgentSearchSubmit
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.intent - Intent of user request
+   * @param {string} parameters.searchTerm - Term of submitted agent search event
+   * @param {string} parameters.searchResultId - resultId of search result the clicked item belongs to
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.intentResultId] - intentResultId from the ASA response
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User submitted an alternative agent search result search term
+   * @example
+   * constructorio.tracker.trackAgentSearchSubmit({
+   *     {
+   *         searchResultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
+   *         intent: 'show me a recipe for a cookie',
+   *         searchTerm: 'flour',
+   *     },
+   * );
+   */
+  trackAgentSearchSubmit(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      // Ensure parameters are provided (required)
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_search_submit?`;
+      const {
+        section,
+        intent,
+        searchTerm,
+        searchResultId,
+        intentResultId,
+      } = parameters;
+
+      const bodyParams = {
+        intent,
+        section,
+        search_term: searchTerm,
+        search_result_id: searchResultId,
+        intent_result_id: intentResultId,
+      };
+
+      const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters is a required parameter of type object');
+  }
+
+  /**
+   * Send ASA request submitted event
+   *
+   * @deprecated This method will be removed in a future version. Use trackAgentSubmit instead.
+   * @function trackAssistantSubmit
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.intent - Intent of user request
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User submitted an assistant search
+   *   (pressing enter within assistant input element, or clicking assistant submit element)
+   * @example
+   * constructorio.tracker.trackAssistantSubmit(
+   *     {
+   *         intent: 'show me a recipe for a cookie',
+   *     },
+   * );
+   */
+  trackAssistantSubmit(parameters, networkParameters = {}) {
+    return this.trackAgentSubmit(parameters, networkParameters);
+  }
+
+  /**
+   * Send assistant results page load started
+   *
+   * @deprecated This method will be removed in a future version. Use trackAgentResultLoadStarted instead.
+   * @function trackAssistantResultLoadStarted
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.intent - Intent of user request
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.intentResultId] - The intent result id from the ASA response
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description Assistant results page load begun (but has not necessarily loaded completely)
+   * @example
+   * constructorio.tracker.trackAssistantResultLoadStarted(
+   *     {
+   *         intent: 'show me a recipe for a cookie',
+   *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
+   *     },
+   * );
+   */
+  trackAssistantResultLoadStarted(parameters, networkParameters = {}) {
+    return this.trackAgentResultLoadStarted(parameters, networkParameters);
+  }
+
+  /**
+   * Send assistant results page load finished
+   *
+   * @deprecated This method will be removed in a future version. Use trackAgentResultLoadFinished instead.
+   * @function trackAssistantResultLoadFinished
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.intent - Intent of user request
+   * @param {number} parameters.searchResultCount - Number of search results loaded
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.intentResultId] - The intent result id from the ASA response
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description Assistant results page load finished
+   * @example
+   * constructorio.tracker.trackAssistantResultLoadFinished(
+   *     {
+   *         intent: 'show me a recipe for a cookie',
+   *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
+   *         searchResultCount: 5,
+   *     },
+   * );
+   */
+  trackAssistantResultLoadFinished(parameters, networkParameters = {}) {
+    return this.trackAgentResultLoadFinished(parameters, networkParameters);
+  }
+
+  /**
+   * Send assistant result click event to API
+   *
+   * @deprecated This method will be removed in a future version. Use trackAgentResultClick instead.
+   * @function trackAssistantResultClick
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.intent - intent of the user
+   * @param {string} parameters.searchResultId - result_id of the specific search result the clicked item belongs to
+   * @param {string} parameters.itemId - Product item unique identifier
+   * @param {string} parameters.itemName - Product item name
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.variationId] - Product item variation unique identifier
+   * @param {string} [parameters.intentResultId] - Browse result identifier (returned in response from Constructor)
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User clicked a result that appeared within an assistant search result
+   * @example
+   * constructorio.tracker.trackAssistantResultClick(
+   *     {
+   *         variationId: 'KMH879-7632',
+   *         searchResultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
+   *         intent: 'show me a recipe for a cookie',
+   *         itemId: 'KMH876',
+   *     },
+   * );
+   */
+  trackAssistantResultClick(parameters, networkParameters = {}) {
+    return this.trackAgentResultClick(parameters, networkParameters);
+  }
+
+  /**
+   * Send assistant search result view event to API
+   *
+   * @deprecated This method will be removed in a future version. Use trackAgentResultView instead.
+   * @function trackAssistantResultView
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.intent - intent of the user
+   * @param {string} parameters.searchResultId - result_id of the specific search result the clicked item belongs to
+   * @param {number} parameters.numResultsViewed - Number of items viewed in this search result
+   * @param {object[]} [parameters.items] - List of product item objects viewed
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.intentResultId] - Browse result identifier (returned in response from Constructor)
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User viewed a search result within an assistant result
+   * @example
+   * constructorio.tracker.trackAssistantResultView(
+   *     {
+   *         searchResultId: '019927c2-f955-4020-8b8d-6b21b93cb5a2',
+   *         intentResultId: 'Zde93fd-f955-4020-8b8d-6b21b93cb5a2',
+   *         intent: 'show me a recipe for a cookie',
+   *         numResultsViewed: 5,
+   *         items: [{itemId: 'KMH876'}, {itemId: 'KMH140'}, {itemId: 'KMH437'}],
+   *     },
+   * );
+   */
+  trackAssistantResultView(parameters, networkParameters = {}) {
+    return this.trackAgentResultView(parameters, networkParameters);
+  }
+
+  /**
+   * Send ASA search submitted event
+   *
+   * @deprecated This method will be removed in a future version. Use trackAgentSearchSubmit instead.
    * @function trackAssistantSearchSubmit
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.intent - Intent of user request
@@ -2733,27 +2969,559 @@ class Tracker {
    * );
    */
   trackAssistantSearchSubmit(parameters, networkParameters = {}) {
+    return this.trackAgentSearchSubmit(parameters, networkParameters);
+  }
+
+  /**
+   * Send product insights agent view events
+   *
+   * @function trackProductInsightsAgentViews
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {array.<{question: string}>} parameters.questions - List of pre-defined questions shown to the user
+   * @param {string} parameters.itemId - Product id whose page we are on
+   * @param {string} parameters.itemName - Product name whose page we are on
+   * @param {array.<{start: string | undefined,
+   * end: string | undefined}>} parameters.viewTimespans - List of timestamp pairs in ISO_8601 format
+   * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description The product insights agent element appeared in the visible part of the page
+   * @example
+   * constructorio.tracker.trackProductInsightsAgentViews({
+   *   {
+   *     'itemId': '1',
+   *     'itemName': 'item1',
+   *     'variationId': '2',
+   *     'questions': [
+   *        { question: 'Why choose this?' },
+   *        { question: 'How is this product made?' },
+   *        { question: 'What are the dimensions of this product?' }
+   *     ],
+   *     'viewTimespans': [
+   *       {
+   *         'start': '2025-05-19T14:30:00+02:00',
+   *         'end': '2025-05-19T14:30:05+02:00'
+   *       },
+   *       {
+   *         'start': '2025-05-19T14:30:10+02:00',
+   *         'end': '2025-05-19T14:30:15+02:00'
+   *       }
+   *     ]
+   *   },
+   * );
+   */
+  trackProductInsightsAgentViews(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      // Ensure parameters are provided (required)
-      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/assistant_search_submit?`;
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/product_insights_agent_views?`;
       const {
         section,
-        intent,
-        searchTerm,
-        searchResultId,
-        intentResultId,
+        questions,
+        itemId,
+        itemName,
+        variationId,
+        viewTimespans,
       } = parameters;
-
+      const queryParams = {};
       const bodyParams = {
-        intent,
-        section,
-        search_term: searchTerm,
-        search_result_id: searchResultId,
-        intent_result_id: intentResultId,
+        questions,
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
+        view_timespans: viewTimespans,
       };
 
-      const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
+      if (section) {
+        queryParams.section = section;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters is a required parameter of type object');
+  }
+
+  /**
+   * Send product insights agent view event
+   *
+   * @function trackProductInsightsAgentView
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {array.<{question: string}>} parameters.questions - List of pre-defined questions shown to the user
+   * @param {string} parameters.itemId - Product id whose page we are on
+   * @param {string} parameters.itemName - Product name whose page we are on
+   * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description The product insights agent element appeared in the visible part of the page
+   * @example
+   * constructorio.tracker.trackProductInsightsAgentView({
+   *   {
+   *     'itemId': '1',
+   *     'itemName': 'item1',
+   *     'variationId': '2',
+   *     'questions': [
+   *        { question: 'Why choose this?' },
+   *        { question: 'How is this product made?' },
+   *        { question: 'What are the dimensions of this product?' }
+   *     ],
+   *   },
+   * );
+   */
+  trackProductInsightsAgentView(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/product_insights_agent_view?`;
+      const {
+        section,
+        questions,
+        itemId,
+        itemName,
+        variationId,
+      } = parameters;
+      const queryParams = {};
+      const bodyParams = {
+        questions,
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
+      };
+
+      if (section) {
+        queryParams.section = section;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters is a required parameter of type object');
+  }
+
+  /**
+   * Send product insights agent out of view event
+   *
+   * @function trackProductInsightsAgentOutOfView
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.itemId - Product id whose page we are on
+   * @param {string} parameters.itemName - Product name whose page we are on
+   * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description The product insights agent element disappeared from the visible part of the page
+   * @example
+   * constructorio.tracker.trackProductInsightsAgentOutOfView({
+   *   {
+   *     'itemId': '1',
+   *     'itemName': 'item1',
+   *     'variationId': '2',
+   *   },
+   * );
+   */
+  trackProductInsightsAgentOutOfView(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/product_insights_agent_out_of_view?`;
+      const {
+        section,
+        itemId,
+        itemName,
+        variationId,
+      } = parameters;
+      const queryParams = {};
+      const bodyParams = {
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
+      };
+
+      if (section) {
+        queryParams.section = section;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters is a required parameter of type object');
+  }
+
+  /**
+   * Send product insights agent input focus event
+   *
+   * @function trackProductInsightsAgentFocus
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.itemId - Product id whose page we are on
+   * @param {string} parameters.itemName - Product name whose page we are on
+   * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User focused on the product insights agent input element
+   * @example
+   * constructorio.tracker.trackProductInsightsAgentFocus({
+   *   {
+   *     'itemId': '1',
+   *     'itemName': 'item1',
+   *     'variationId': '2',
+   *   },
+   * );
+   */
+  trackProductInsightsAgentFocus(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/product_insights_agent_focus?`;
+      const {
+        section,
+        itemId,
+        itemName,
+        variationId,
+      } = parameters;
+      const queryParams = {};
+      const bodyParams = {
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
+      };
+
+      if (section) {
+        queryParams.section = section;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters is a required parameter of type object');
+  }
+
+  /**
+   * Send product insights agent question click event
+   *
+   * @function trackProductInsightsAgentQuestionClick
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.itemId - Product id whose page we are on
+   * @param {string} parameters.itemName - Product name whose page we are on
+   * @param {string} parameters.question - Question a user clicked on
+   * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User clicked on a question within the product insights agent
+   * @example
+   * constructorio.tracker.trackProductInsightsAgentQuestionClick({
+   *   {
+   *     'itemId': '1',
+   *     'itemName': 'item1',
+   *     'variationId': '2',
+   *     'question': 'Why choose this?'
+   *   },
+   * );
+   */
+  trackProductInsightsAgentQuestionClick(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/product_insights_agent_question_click?`;
+      const {
+        section,
+        itemId,
+        itemName,
+        variationId,
+        question,
+      } = parameters;
+      const queryParams = {};
+      const bodyParams = {
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
+        question,
+      };
+
+      if (section) {
+        queryParams.section = section;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters is a required parameter of type object');
+  }
+
+  /**
+   * Send product insights agent question submit event
+   *
+   * @function trackProductInsightsAgentQuestionSubmit
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.itemId - Product id whose page we are on
+   * @param {string} parameters.itemName - Product name whose page we are on
+   * @param {string} parameters.question - Question a user submitted
+   * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User submitted a question to the product insights agent
+   * @example
+   * constructorio.tracker.trackProductInsightsAgentQuestionSubmit({
+   *   {
+   *     'itemId': '1',
+   *     'itemName': 'item1',
+   *     'variationId': '2',
+   *     'question': 'Tell me some key highlights about this item?'
+   *   },
+   * );
+   */
+  trackProductInsightsAgentQuestionSubmit(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/product_insights_agent_question_submit?`;
+      const {
+        section,
+        itemId,
+        itemName,
+        variationId,
+        question,
+      } = parameters;
+      const queryParams = {};
+      const bodyParams = {
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
+        question,
+      };
+
+      if (section) {
+        queryParams.section = section;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters is a required parameter of type object');
+  }
+
+  /**
+   * Send product insights agent answer view event
+   *
+   * @function trackProductInsightsAgentAnswerView
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.itemId - Product id whose page we are on
+   * @param {string} parameters.itemName - Product name whose page we are on
+   * @param {string} parameters.question - Question a user submitted
+   * @param {string} parameters.answerText - Answer text of the question
+   * @param {string} [parameters.qnaResultId] - Answer result id returned
+   * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User viewed the answer provided by the product insights agent
+   * @example
+   * constructorio.tracker.trackProductInsightsAgentAnswerView({
+   *   {
+   *     'itemId': '1',
+   *     'itemName': 'item1',
+   *     'variationId': '2',
+   *     'question': 'Why choose this?',
+   *     'answerText': 'This product is awesome!',
+   *     'qnaResultId': '0daf0015-fc29-4727-9140-8d5313a1902c',
+   *   },
+   * );
+   */
+  trackProductInsightsAgentAnswerView(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/product_insights_agent_answer_view?`;
+      const {
+        section,
+        itemId,
+        itemName,
+        variationId,
+        question,
+        answerText,
+        qnaResultId,
+      } = parameters;
+      const queryParams = {};
+      const bodyParams = {
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
+        question,
+        answer_text: answerText,
+        qna_result_id: qnaResultId,
+      };
+
+      if (section) {
+        queryParams.section = section;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters is a required parameter of type object');
+  }
+
+  /**
+   * Send product insights agent answer feedback event
+   *
+   * @function trackProductInsightsAgentAnswerFeedback
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.itemId - Product id whose page we are on
+   * @param {string} parameters.itemName - Product name whose page we are on
+   * @param {string} parameters.feedbackLabel - Feedback value: either "thumbs_up" or "thumbs_down"
+   * @param {string} [parameters.qnaResultId] - Answer result id returned
+   * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description A user provided feedback on an answers usefulness
+   * @example
+   * constructorio.tracker.trackProductInsightsAgentAnswerFeedback({
+   *   {
+   *     'itemId': '1',
+   *     'itemName': 'item1',
+   *     'variationId': '2',
+   *     'feedbackLabel': 'thumbs_up',
+   *     'qnaResultId': '0daf0015-fc29-4727-9140-8d5313a1902c',
+   *   },
+   * );
+   */
+  trackProductInsightsAgentAnswerFeedback(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/product_insights_agent_answer_feedback?`;
+      const {
+        section,
+        itemId,
+        itemName,
+        variationId,
+        feedbackLabel,
+        qnaResultId,
+      } = parameters;
+      const queryParams = {};
+      const bodyParams = {
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
+        feedback_label: feedbackLabel,
+        qna_result_id: qnaResultId,
+      };
+
+      if (section) {
+        queryParams.section = section;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
       const requestMethod = 'POST';
       const requestBody = applyParams(bodyParams, {
         ...this.options,

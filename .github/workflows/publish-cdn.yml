@@ -1,0 +1,54 @@
+name: 'Publish: Publish to CDN'
+
+on:
+  workflow_call: {}
+
+# It's required to set permissions to be able to:
+# - Authenticate to AWS with OIDC
+# See: https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  publish-to-cdn:
+    name: Publish to CDN
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@010d0da01d0b5a38af31e9c3470dbfdabdecca3a # v4.0.1
+        with:
+          role-to-assume: ${{ secrets.AWS_GHA_ROLE }}
+          role-session-name: constructorio-client-javascript-cdn-publish
+          aws-region: us-east-1
+
+      - name: Copy files to s3
+        id: copy-files
+        shell: bash
+        run: |
+          # Create a new directory for s3 sync
+          mkdir s3_dist
+
+          # Get the version and copy files
+          VERSION=$(ls dist/constructorio-client-javascript-*.js | sed 's/.*javascript-\(.*\)\.js/\1/')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+          # Copy the bundled file with version number
+          cp dist/constructorio-client-javascript-$VERSION.js s3_dist/$VERSION.js
+
+          # Also create a latest version for easy access
+          cp dist/constructorio-client-javascript-$VERSION.js s3_dist/latest.js
+
+          # Sync to S3 with appropriate caching and permissions
+          aws s3 sync s3_dist s3://constructor-frontend-prod/sdk/client-javascript --cache-control 'public, max-age=31536000, immutable' --acl 'public-read'
+
+      - name: Notify Slack about new publish to CDN
+        uses: ravsamhq/notify-slack-action@bca2d7f5660b833a27bda4f6b8bef389ebfefd25 # v2.3.0
+        with:
+          notification_title: "☁️ New constructorio-client-javascript release published to CDN at version ${{ steps.copy-files.outputs.version }}"
+          status: ${{ job.status }}
+          footer: "CDN URL: https://cdn.cnstrc.com/sdk/client-javascript/${{ steps.copy-files.outputs.version }}.js"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

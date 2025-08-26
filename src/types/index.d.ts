@@ -47,7 +47,8 @@ export interface ConstructorClientOptions {
   version?: string;
   serviceUrl?: string;
   quizzesServiceUrl?: string;
-  assistantServiceUrl?: string,
+  agentServiceUrl?: string;
+  assistantServiceUrl?: string;
   sessionId?: number;
   clientId?: string;
   userId?: string;
@@ -245,4 +246,13 @@ export interface ItemTracked {
 
 export interface ItemTrackedPurchase extends ItemTracked {
   count?: number;
+}
+
+export interface Question {
+  question: string;
+}
+
+export interface TimeSpan {
+  start: string;
+  end: string;
 }

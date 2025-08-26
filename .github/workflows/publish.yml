@@ -1,0 +1,16 @@
+name: Publish to CDN
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch: {}
+
+concurrency:
+  group: cdn-deploy
+  cancel-in-progress: true
+
+jobs:
+  publish_to_cdn:
+    name: Publish to CDN
+    uses: ./.github/workflows/publish-cdn.yml
+    secrets: inherit
