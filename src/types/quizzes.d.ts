@@ -123,10 +123,7 @@ export interface BaseQuestion extends Record<string, any> {
   description: string;
   cta_text: Nullable<string>;
   images?: Nullable<QuestionImages>;
-  key: string;
   is_skippable: Boolean;
-  priority?: Nullable<number>;
-  bucked_id?: Nullable<number>;
 }
 
 export interface FilterValueQuestion extends BaseQuestion {
