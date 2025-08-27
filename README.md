@@ -41,7 +41,7 @@ After instantiating an instance of the client, seven modules will be exposed as 
 
 #### Dispatched events
 
-Modules may dispatch custom events on `window` with response data when a request has been completed. The event name follows the following structure: `cio.client.[moduleName].[methodName].completed`. Example consuming code can be found below:
+Modules may dispatch custom events on the browser `window` with response data when a request has been completed. The event name follows the following structure: `cio.client.[moduleName].[methodName].completed`. Example consuming code can be found below:
 
 ```javascript
 window.addEventListener('cio.client.search.getSearchResults.completed', (event) => {
