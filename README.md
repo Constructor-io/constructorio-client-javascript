@@ -37,7 +37,7 @@ const constructorio = new ConstructorioClient({
 
 ## 4. Retrieve Results
 
-After instantiating an instance of the client, four modules will be exposed as properties to help retrieve data from Constructor.io: `search`, `browse`, `autocomplete`, `recommendations` and `tracker`.
+After instantiating an instance of the client, five modules will be exposed as properties to help retrieve data from Constructor.io: `search`, `browse`, `autocomplete`, `recommendations` and `tracker`.
 
 #### Dispatched events
 The `search`, `browse`, `recommendations` and `autocomplete` modules may dispatch custom events on `window` with response data when a request has been completed. The event name follows the following structure: `cio.client.[moduleName].[methodName].completed`. Example consuming code can be found below:
