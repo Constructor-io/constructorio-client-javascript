@@ -1,6 +1,6 @@
-import EventEmitter = require('events');
+import { EventEmitter } from './events';
 import { ConstructorClientOptions, ItemTracked, ItemTrackedPurchase, Question, TimeSpan, NetworkParameters } from '.';
-import RequestQueue = require('../utils/request-queue');
+import RequestQueue from './request-queue';
 
 export default Tracker;
 
@@ -109,7 +109,7 @@ declare class Tracker {
 
   trackConversion(
     term?: string,
-    parameters: {
+    parameters?: {
       itemId: string;
       revenue?: number;
       itemName?: string;
@@ -165,6 +165,7 @@ declare class Tracker {
       analyticsTags?: Record<string, string>;
       slCampaignId?: string;
       slCampaignOwner?: string;
+      seedItemIds?: string[] | string | number;
     },
     networkParameters?: NetworkParameters
   ): true | Error;

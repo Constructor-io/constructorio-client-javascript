@@ -123,6 +123,7 @@ export interface BaseQuestion extends Record<string, any> {
   description: string;
   cta_text: Nullable<string>;
   images?: Nullable<QuestionImages>;
+  is_skippable: Boolean;
 }
 
 export interface FilterValueQuestion extends BaseQuestion {
@@ -188,6 +189,7 @@ export interface QuizResultsConfig extends Record<string, any> {
 }
 
 export interface QuizResultsConfigResponse extends Record<string, any> {
+  metadata: Nullable<object>,
   results_config: QuizResultsConfig,
   quiz_version_id: string;
   quiz_id: string;

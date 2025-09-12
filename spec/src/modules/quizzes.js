@@ -548,6 +548,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
         expect(res).to.have.property('quiz_version_id').to.be.an('string');
         expect(res).to.have.property('quiz_id').to.be.an('string');
         expect(res).to.have.property('results_config').to.be.an('object');
+        expect(res).to.have.property('metadata').to.be.an('object');
       });
     });
 
@@ -564,6 +565,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
           const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
           expect(res).to.have.property('results_config').to.be.an('object');
+          expect(res).to.have.property('metadata').to.be.an('object');
           expect(res).to.have.property('quiz_version_id').to.be.an('string').to.equal(quizVersionId);
           expect(res).to.have.property('quiz_id').to.be.an('string');
           expect(fetchSpy).to.have.been.called;

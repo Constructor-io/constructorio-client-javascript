@@ -1506,6 +1506,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const optionalParameters = {
       groupId: 'group-id',
       displayName: 'display-name',
+      analyticsTags: testAnalyticsTag,
     };
 
     it('Backwards Compatibility - V2 Should respond with a valid response when term and snake cased parameters are provided', (done) => {
@@ -1750,6 +1751,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           group_id: optionalParameters.groupId,
           display_name: optionalParameters.displayName,
         });
+        expect(requestParams).to.have.property('analytics_tags').to.deep.equal(testAnalyticsTag);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('GET');
@@ -5350,6 +5352,121 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
       expect(tracker.trackRecommendationClick(requiredParameters)).to.equal(true);
     });
+
+    it('Should respond with a valid response when seedItemIds is provided as an array of strings', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const parametersWithSeedItemIds = {
+        ...requiredParameters,
+        seedItemIds: ['item-123', 'item-456', 'item-789'],
+      };
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('seed_item_ids').to.deep.equal(['item-123', 'item-456', 'item-789']);
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+        done();
+      });
+      expect(tracker.trackRecommendationClick(parametersWithSeedItemIds)).to.equal(true);
+    });
+
+    it('Should respond with a valid response and convert seedItemIds to array when provided as string', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const parametersWithSeedItemIds = {
+        ...requiredParameters,
+        seedItemIds: 'item-123',
+      };
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('seed_item_ids').to.deep.equal(['item-123']);
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+        done();
+      });
+      expect(tracker.trackRecommendationClick(parametersWithSeedItemIds)).to.equal(true);
+    });
+
+    it('Should respond with a valid response and convert seedItemIds to array when provided as number', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const parametersWithSeedItemIds = {
+        ...requiredParameters,
+        seedItemIds: 123,
+      };
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('seed_item_ids').to.deep.equal(['123']);
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+        done();
+      });
+      expect(tracker.trackRecommendationClick(parametersWithSeedItemIds)).to.equal(true);
+    });
+
+    it('Should respond with a valid response and omit seed_item_ids when seedItemIds is empty string', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const parametersWithSeedItemIds = {
+        ...requiredParameters,
+        seedItemIds: '',
+      };
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('seed_item_ids');
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+        done();
+      });
+      expect(tracker.trackRecommendationClick(parametersWithSeedItemIds)).to.equal(true);
+    });
+
+    it('Should respond with a valid response and omit seed_item_ids when seedItemIds is empty array', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const parametersWithSeedItemIds = {
+        ...requiredParameters,
+        seedItemIds: [],
+      };
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('seed_item_ids');
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+        done();
+      });
+      expect(tracker.trackRecommendationClick(parametersWithSeedItemIds)).to.equal(true);
+    });
   });
 
   describe('trackBrowseResultsLoaded', () => {
@@ -8383,7 +8500,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     it('Should throw an error when providing no messageType parameter', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.on(null, () => {})).to.be.an('error');
+      expect(tracker.on(null, () => { })).to.be.an('error');
     });
 
     it('Should throw an error when providing an invalid callback parameter', () => {
