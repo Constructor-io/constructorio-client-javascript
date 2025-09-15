@@ -2,7 +2,7 @@ name: Run tests
 on:
   pull_request:
     branches:
-      - '**'
+      - "**"
 concurrency:
   group: run-tests-${{ github.head_ref }}
   cancel-in-progress: true
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ['22.18.0']
+        node: ["18.13.0"]
     steps:
       - name: Check out code
         uses: actions/checkout@v2
