@@ -83,5 +83,9 @@
   },
   "tsd": {
     "directory": "src/types/tests"
+  },
+  "volta": {
+    "node": "18.13.0",
+    "npm": "8.19.3"
   }
 }
