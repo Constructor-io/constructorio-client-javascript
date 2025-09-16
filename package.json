@@ -85,7 +85,7 @@
     "directory": "src/types/tests"
   },
   "volta": {
-    "node": "22.18.0",
-    "npm": "10.9.3"
+    "node": "18.13.0",
+    "npm": "8.19.3"
   }
 }
