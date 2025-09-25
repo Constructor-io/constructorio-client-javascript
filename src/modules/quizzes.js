@@ -265,7 +265,7 @@ class Quizzes {
   }
 
   /**
-   * Retrieves configuration for the results page of a particular quiz
+   * Retrieves all questions for a particular quiz
    *
    * @function getQuizAllQuestions
    * @description Retrieve all questions for a particular quiz from Constructor.io API
