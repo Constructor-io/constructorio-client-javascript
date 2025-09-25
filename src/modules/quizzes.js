@@ -277,7 +277,7 @@ class Quizzes {
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
    * @example
-   * constructorio.quizzes.getQuizResultsConfig('quizId', {
+   * constructorio.quizzes.getQuizAllQuestions('quizId', {
    *    quizVersionId: '123',
    * });
    */
