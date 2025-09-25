@@ -49,6 +49,104 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     fetchSpy = null;
   });
 
+  describe('getQuizAllQuestions', () => {
+    it('Should return a result provided a valid apiKey and quizId', () => {
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+      });
+
+      return quizzes.getQuizAllQuestions(validQuizId).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('quiz_version_id').to.be.an('string');
+        expect(res).to.have.property('questions').to.be.an('array');
+        expect(res.questions[0].id).to.equal(1);
+        expect(res.total_questions).to.equal(1);
+        expect(fetchSpy).to.have.been.called;
+        expect(requestedUrlParams).to.have.property('key');
+        expect(requestedUrlParams).to.have.property('i');
+        expect(requestedUrlParams).to.have.property('s');
+        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestedUrlParams).to.have.property('_dt');
+      });
+    });
+
+    it('Should return a result provided a valid apiKey, quizId and section', () => {
+      const section = 'Products';
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+      });
+
+      return quizzes.getQuizAllQuestions(validQuizId, { section }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('quiz_version_id').to.be.an('string');
+        expect(res).to.have.property('questions').to.be.an('array');
+        expect(fetchSpy).to.have.been.called;
+        expect(requestedUrlParams).to.have.property('section').to.equal(section);
+      });
+    });
+
+    it('Should return a result provided a valid apiKey, quizId and quizVersionId', () => {
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+      });
+
+      return quizzes.getQuizAllQuestions(validQuizId).then((initialResponse) => {
+        const quizVersionId = initialResponse.quiz_version_id;
+
+        return quizzes.getQuizAllQuestions(validQuizId, { quizVersionId }).then((res) => {
+          const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+          expect(res).to.have.property('questions').to.be.an('array');
+          expect(res).to.have.property('quiz_version_id').to.be.an('string').to.equal(quizVersionId);
+          expect(res.total_questions).to.equal(1);
+          expect(fetchSpy).to.have.been.called;
+          expect(requestedUrlParams).to.have.property('quiz_version_id').to.equal(quizVersionId);
+        });
+      });
+    });
+
+    it('Should error when fetching quiz questions with an invalid quizId', () => {
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+      });
+
+      return expect(quizzes.getQuizAllQuestions('invalidQuizId')).to.eventually.be.rejected;
+    });
+
+    it('Should error when fetching quiz questions with no quizId', () => {
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+      });
+
+      return expect(quizzes.getQuizAllQuestions(null)).to.eventually.be.rejected;
+    });
+
+    it('Should error when fetching quiz questions with an invalid apiKey', () => {
+      const { quizzes } = new ConstructorIO({
+        apiKey: 'invalidKey',
+        fetch: fetchSpy,
+      });
+
+      return expect(quizzes.getQuizAllQuestions(validQuizId)).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected if an invalid quizVersionId is provided', () => {
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+      });
+
+      return expect(quizzes.getQuizAllQuestions(validQuizId, { quizVersionId: 'foo' })).to.eventually.be.rejected;
+    });
+  });
+
   describe('getQuizNextQuestion', () => {
     it('Should return a result provided a valid apiKey and quizId', () => {
       const { quizzes } = new ConstructorIO({
