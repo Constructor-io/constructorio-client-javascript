@@ -273,6 +273,7 @@ class Quizzes {
    * @param {object} parameters - Additional parameters
    * @param {string} [parameters.section] - Product catalog section
    * @param {string} [parameters.quizVersionId] - Version identifier for the quiz. Version ID will be returned with the first request and it should be passed with subsequent requests. More information can be found: https://docs.constructor.com/reference/configuration-quizzes
+   * @param {string} [parameters.quizSessionId] - Session identifier for the quiz. Session ID will be returned with the first request or with getQuizResultsConfig and it should be passed with subsequent requests. More information can be found: https://docs.constructor.com/reference/configuration-quizzes
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
