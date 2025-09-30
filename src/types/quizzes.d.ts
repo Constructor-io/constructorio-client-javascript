@@ -68,6 +68,14 @@ export interface NextQuestionResponse extends Record<string, any> {
   total_questions: number;
 }
 
+export interface AllQuestionsResponse extends Record<string, any> {
+  questions: Question[];
+  quiz_version_id?: string;
+  quiz_id?: string;
+  quiz_session_id?: string;
+  total_questions: number;
+}
+
 export interface QuizResultsResponse extends Record<string, any> {
   request?: {
     filters?: Record<string, any>;
