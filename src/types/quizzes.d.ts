@@ -137,7 +137,7 @@ export interface BaseQuestion extends Record<string, any> {
 export interface FilterValueQuestion extends BaseQuestion {
   type: 'single_filter_value' |'multiple_filter_values';
   filter_name: string;
-  options: QuestionOption[];
+  options: FilterQuestionOption[];
 }
 
 export interface SelectQuestion extends BaseQuestion {
@@ -159,14 +159,21 @@ export interface QuizResult extends Record<string, any> {
   results_url: string;
 }
 
-export interface QuestionOption extends Record<string, any> {
-  id: number;
+export interface BaseQuestionOption extends Record<string, any> {
   value: string;
   attribute: Nullable<{
     name: string;
     value: string;
   }>;
   images?: Nullable<QuestionImages>;
+}
+
+export interface QuestionOption extends BaseQuestionOption {
+  id: number;
+}
+
+export interface FilterQuestionOption extends BaseQuestionOption {
+  id: string;
 }
 
 export interface QuestionImages extends Record<string, any> {
