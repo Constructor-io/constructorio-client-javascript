@@ -159,7 +159,7 @@ export interface QuizResult extends Record<string, any> {
   results_url: string;
 }
 
-export interface BaseQuestionOption {
+export interface BaseQuestionOption extends Record<string, any> {
   value: string;
   attribute: Nullable<{
     name: string;
