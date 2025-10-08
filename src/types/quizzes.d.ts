@@ -172,7 +172,7 @@ export interface QuestionOption extends BaseQuestionOption {
   id: number;
 }
 
-export interface FilterQuestionOption extends BaseOption {
+export interface FilterQuestionOption extends BaseQuestionOption {
   id: string;
 }
 
