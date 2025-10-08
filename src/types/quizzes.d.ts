@@ -168,7 +168,7 @@ export interface BaseQuestionOption {
   images?: Nullable<QuestionImages>;
 }
 
-export interface QuestionOption extends BaseOption {
+export interface QuestionOption extends BaseQuestionOption {
   id: number;
 }
 
