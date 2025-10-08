@@ -160,7 +160,7 @@ export interface QuizResult extends Record<string, any> {
 }
 
 export interface QuestionOption extends Record<string, any> {
-  id: number;
+  id: number | string;
   value: string;
   attribute: Nullable<{
     name: string;
