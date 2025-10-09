@@ -279,6 +279,34 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
       expect(instance.options).to.have.property('testCells').to.deep.equal(newTestCells);
     });
 
+    it('Should update the client options with new sendTrackingEvents value', () => {
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        sendTrackingEvents: true,
+      });
+
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+
+      instance.setClientOptions({
+        sendTrackingEvents: false,
+      });
+
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(false);
+    });
+
+    it('Should not update the client options with undefined sendTrackingEvents value', () => {
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        sendTrackingEvents: true,
+      });
+
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+
+      instance.setClientOptions({});
+
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+    });
+
     it('Should update the options for modules with new test cells', () => {
       const oldTestCells = {
         'old-cell-name-1': 'old-cell-value-1',

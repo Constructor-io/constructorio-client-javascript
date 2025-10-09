@@ -158,10 +158,11 @@ class ConstructorIO {
    * @param {object} [options.testCells] - User test cells
    * @param {number} [options.sessionId] - Session ID - Will only be set in DOM-less environments
    * @param {string} [options.userId] - User ID
+   * @param {boolean} [options.sendTrackingEvents] - Indicates if tracking events should be dispatched
    */
   setClientOptions(options) {
     if (Object.keys(options).length) {
-      const { apiKey, segments, testCells, sessionId, userId } = options;
+      const { apiKey, segments, testCells, sessionId, userId, sendTrackingEvents } = options;
 
       if (apiKey) {
         this.options.apiKey = apiKey;
@@ -173,6 +174,10 @@ class ConstructorIO {
 
       if (testCells) {
         this.options.testCells = testCells;
+      }
+
+      if (sendTrackingEvents !== undefined) {
+        this.options.sendTrackingEvents = sendTrackingEvents;
       }
 
       // Set Session ID in dom-less environments only
