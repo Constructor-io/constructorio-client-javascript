@@ -1337,6 +1337,78 @@ class Tracker {
   }
 
   /**
+   * Send media impression view event to API
+   *
+   * @function trackMediaImpressionView
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.bannerAdId - Banner ad identifier
+   * @param {string} parameters.placementId - Placement identifier
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User viewed a media banner
+   * @example
+   * constructorio.tracker.trackMediaImpressionView(
+   *     {
+   *         bannerAdId: 'banner_ad_id',
+   *         placementId: 'placement_id',
+   *     },
+   * );
+   */
+  trackMediaImpressionView(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+
+      const requestPath = `${this.options.mediaServiceUrl}/v2/ad_behavioral_action/display_ad_view?`;
+      const bodyParams = {};
+      const {
+        banner_ad_id,
+        bannerAdId = banner_ad_id,
+        placement_id,
+        placementId = placement_id,
+        result_id,
+        resultId = result_id,
+        analyticsTags,
+      } = parameters;
+
+      if (!helpers.isNil(bannerAdId)) {
+        bodyParams.banner_ad_id = bannerAdId;
+      }
+
+      if (!helpers.isNil(placementId)) {
+        bodyParams.placement_id = placementId;
+      }
+
+      if (!helpers.isNil(resultId)) {
+        bodyParams.result_id = resultId;
+      }
+
+      if (!helpers.isNil(analyticsTags)) {
+        bodyParams.analytics_tags = analyticsTags;
+      }
+
+      const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
+
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
    * Send recommendation click event to API
    *
    * @function trackRecommendationClick
