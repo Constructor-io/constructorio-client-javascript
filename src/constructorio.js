@@ -176,8 +176,9 @@ class ConstructorIO {
         this.options.testCells = testCells;
       }
 
-      if (sendTrackingEvents !== undefined) {
+      if (typeof sendTrackingEvents === 'boolean') {
         this.options.sendTrackingEvents = sendTrackingEvents;
+        this.tracker.requests.sendTrackingEvents = sendTrackingEvents;
       }
 
       // Set Session ID in dom-less environments only

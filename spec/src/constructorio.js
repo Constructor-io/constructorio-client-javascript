@@ -307,6 +307,146 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
       expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
     });
 
+    it('Should not update the client options with null sendTrackingEvents value', () => {
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        sendTrackingEvents: true,
+      });
+
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+
+      instance.setClientOptions({
+        sendTrackingEvents: null,
+      });
+
+      // Should remain true because null is not a valid boolean
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+    });
+
+    it('Should not update the client options with numeric sendTrackingEvents value', () => {
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        sendTrackingEvents: true,
+      });
+
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+
+      instance.setClientOptions({
+        sendTrackingEvents: 0,
+      });
+
+      // Should remain true because 0 is not a valid boolean
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+
+      instance.setClientOptions({
+        sendTrackingEvents: 1,
+      });
+
+      // Should remain true because 1 is not a valid boolean
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+    });
+
+    it('Should not update the client options with string sendTrackingEvents value', () => {
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        sendTrackingEvents: true,
+      });
+
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+
+      instance.setClientOptions({
+        sendTrackingEvents: 'false',
+      });
+
+      // Should remain true because string is not a valid boolean
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+
+      instance.setClientOptions({
+        sendTrackingEvents: '',
+      });
+
+      // Should remain true because empty string is not a valid boolean
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+    });
+
+    it('Should not update the client options with object sendTrackingEvents value', () => {
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        sendTrackingEvents: true,
+      });
+
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+
+      instance.setClientOptions({
+        sendTrackingEvents: {},
+      });
+
+      // Should remain true because object is not a valid boolean
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+
+      instance.setClientOptions({
+        sendTrackingEvents: [],
+      });
+
+      // Should remain true because array is not a valid boolean
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+    });
+
+    it('Should actually suppress tracking events when sendTrackingEvents is set to false', (done) => {
+      const fetchSpy = sinon.spy(fetch);
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        sendTrackingEvents: true,
+        trackingSendDelay: 10,
+        fetch: fetchSpy,
+      });
+
+      instance.tracker.trackSessionStart();
+
+      // Wait for the first event to be queued
+      setTimeout(() => {
+        instance.setClientOptions({
+          sendTrackingEvents: false,
+        });
+
+        expect(instance.options).to.have.property('sendTrackingEvents').to.equal(false);
+
+        fetchSpy.resetHistory();
+        instance.tracker.trackSessionStart();
+
+        // Wait to verify no tracking event was sent
+        setTimeout(() => {
+          expect(fetchSpy).not.to.have.been.called;
+          expect(instance.tracker.requests.sendTrackingEvents).to.equal(false);
+          done();
+        }, 100);
+      }, 50);
+    });
+
+    it('Should propagate sendTrackingEvents update to tracker module', () => {
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        sendTrackingEvents: true,
+      });
+
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+      expect(instance.tracker.requests.sendTrackingEvents).to.equal(true);
+
+      instance.setClientOptions({
+        sendTrackingEvents: false,
+      });
+
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(false);
+      expect(instance.tracker.requests.sendTrackingEvents).to.equal(false);
+
+      instance.setClientOptions({
+        sendTrackingEvents: true,
+      });
+
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+      expect(instance.tracker.requests.sendTrackingEvents).to.equal(true);
+    });
+
     it('Should update the options for modules with new test cells', () => {
       const oldTestCells = {
         'old-cell-name-1': 'old-cell-value-1',
