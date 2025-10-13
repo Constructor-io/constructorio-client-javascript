@@ -5,6 +5,7 @@ const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 const helpers = require('../mocha.helpers');
+const store = require('../../test/utils/store');
 const jsdom = require('./utils/jsdom-global');
 const { default: packageVersion } = require('../../test/version');
 let ConstructorIO = require('../../test/constructorio');
@@ -305,6 +306,191 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
       instance.setClientOptions({});
 
       expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+    });
+
+    it('Should not update the client options with null sendTrackingEvents value', () => {
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        sendTrackingEvents: true,
+      });
+
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+
+      instance.setClientOptions({
+        sendTrackingEvents: null,
+      });
+
+      // Should remain true because null is not a valid boolean
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+    });
+
+    it('Should not update the client options with numeric sendTrackingEvents value', () => {
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        sendTrackingEvents: true,
+      });
+
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+
+      instance.setClientOptions({
+        sendTrackingEvents: 0,
+      });
+
+      // Should remain true because 0 is not a valid boolean
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+
+      instance.setClientOptions({
+        sendTrackingEvents: 1,
+      });
+
+      // Should remain true because 1 is not a valid boolean
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+    });
+
+    it('Should not update the client options with string sendTrackingEvents value', () => {
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        sendTrackingEvents: true,
+      });
+
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+
+      instance.setClientOptions({
+        sendTrackingEvents: 'false',
+      });
+
+      // Should remain true because string is not a valid boolean
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+
+      instance.setClientOptions({
+        sendTrackingEvents: '',
+      });
+
+      // Should remain true because empty string is not a valid boolean
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+    });
+
+    it('Should not update the client options with object sendTrackingEvents value', () => {
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        sendTrackingEvents: true,
+      });
+
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+
+      instance.setClientOptions({
+        sendTrackingEvents: {},
+      });
+
+      // Should remain true because object is not a valid boolean
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+
+      instance.setClientOptions({
+        sendTrackingEvents: [],
+      });
+
+      // Should remain true because array is not a valid boolean
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+    });
+
+    it('Should actually suppress tracking events when sendTrackingEvents is set to false', (done) => {
+      const fetchSpy = sinon.spy(fetch);
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        sendTrackingEvents: true,
+        trackingSendDelay: 10,
+        fetch: fetchSpy,
+      });
+
+      instance.tracker.trackSessionStart();
+
+      // Wait for the first event to be queued
+      setTimeout(() => {
+        instance.setClientOptions({
+          sendTrackingEvents: false,
+        });
+
+        expect(instance.options).to.have.property('sendTrackingEvents').to.equal(false);
+
+        fetchSpy.resetHistory();
+        instance.tracker.trackSessionStart();
+
+        // Wait to verify no tracking event was sent
+        setTimeout(() => {
+          expect(fetchSpy).not.to.have.been.called;
+          expect(instance.tracker.requests.sendTrackingEvents).to.equal(false);
+          done();
+        }, 100);
+      }, 50);
+    });
+
+    it('Should propagate sendTrackingEvents update to tracker module', () => {
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        sendTrackingEvents: true,
+      });
+
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+      expect(instance.tracker.options).to.have.property('sendTrackingEvents').to.equal(true);
+      expect(instance.tracker.requests.sendTrackingEvents).to.equal(true);
+
+      instance.setClientOptions({
+        sendTrackingEvents: false,
+      });
+
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(false);
+      expect(instance.tracker.options).to.have.property('sendTrackingEvents').to.equal(false);
+      expect(instance.tracker.requests.sendTrackingEvents).to.equal(false);
+
+      instance.setClientOptions({
+        sendTrackingEvents: true,
+      });
+
+      expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+      expect(instance.tracker.options).to.have.property('sendTrackingEvents').to.equal(true);
+      expect(instance.tracker.requests.sendTrackingEvents).to.equal(true);
+    });
+
+    it('Should send event, disable and block event, re-enable and allow event', (done) => {
+      helpers.clearStorage();
+      store.session.set('_constructorio_is_human', true);
+
+      const fetchSpy = sinon.spy(fetch);
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        sendTrackingEvents: true,
+        trackingSendDelay: 10,
+        fetch: fetchSpy,
+      });
+
+      instance.tracker.trackSessionStart();
+
+      setTimeout(() => {
+        expect(fetchSpy.callCount).to.be.at.least(1);
+
+        instance.setClientOptions({
+          sendTrackingEvents: false,
+        });
+
+        expect(instance.options.sendTrackingEvents).to.equal(false);
+        expect(instance.tracker.requests.sendTrackingEvents).to.equal(false);
+
+        fetchSpy.resetHistory();
+        instance.tracker.trackSessionStart();
+
+        setTimeout(() => {
+          expect(fetchSpy).not.to.have.been.called;
+
+          instance.setClientOptions({
+            sendTrackingEvents: true,
+          });
+
+          expect(instance.options.sendTrackingEvents).to.equal(true);
+          expect(instance.tracker.requests.sendTrackingEvents).to.equal(true);
+
+          done();
+        }, 100);
+      }, 100);
     });
 
     it('Should update the options for modules with new test cells', () => {
