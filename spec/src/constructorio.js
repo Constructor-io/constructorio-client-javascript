@@ -431,6 +431,7 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
       });
 
       expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+      expect(instance.tracker.options).to.have.property('sendTrackingEvents').to.equal(true);
       expect(instance.tracker.requests.sendTrackingEvents).to.equal(true);
 
       instance.setClientOptions({
@@ -438,6 +439,7 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
       });
 
       expect(instance.options).to.have.property('sendTrackingEvents').to.equal(false);
+      expect(instance.tracker.options).to.have.property('sendTrackingEvents').to.equal(false);
       expect(instance.tracker.requests.sendTrackingEvents).to.equal(false);
 
       instance.setClientOptions({
@@ -445,6 +447,7 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
       });
 
       expect(instance.options).to.have.property('sendTrackingEvents').to.equal(true);
+      expect(instance.tracker.options).to.have.property('sendTrackingEvents').to.equal(true);
       expect(instance.tracker.requests.sendTrackingEvents).to.equal(true);
     });
 
