@@ -49,7 +49,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     fetchSpy = null;
   });
 
-  describe.only('getQuizAllQuestions', () => {
+  describe('getQuizAllQuestions', () => {
     it('Should return a result provided a valid apiKey and quizId', () => {
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
