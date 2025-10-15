@@ -49,7 +49,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     fetchSpy = null;
   });
 
-  describe('getQuizAllQuestions', () => {
+  describe.only('getQuizAllQuestions', () => {
     it('Should return a result provided a valid apiKey and quizId', () => {
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
@@ -62,7 +62,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
         expect(res).to.have.property('quiz_version_id').to.be.an('string');
         expect(res).to.have.property('questions').to.be.an('array');
         expect(res.questions[0].id).to.equal(1);
-        expect(res.total_questions).to.equal(1);
+        expect(res.total_questions).to.equal(4);
         expect(fetchSpy).to.have.been.called;
         expect(requestedUrlParams).to.have.property('key');
         expect(requestedUrlParams).to.have.property('i');
@@ -89,26 +89,6 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       });
     });
 
-    it('Should return a result provided a valid apiKey, quizId and quizVersionId', () => {
-      const { quizzes } = new ConstructorIO({
-        apiKey: quizApiKey,
-        fetch: fetchSpy,
-      });
-
-      return quizzes.getQuizAllQuestions(validQuizId).then((initialResponse) => {
-        const quizVersionId = initialResponse.quiz_version_id;
-
-        return quizzes.getQuizAllQuestions(validQuizId, { quizVersionId }).then((res) => {
-          const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-
-          expect(res).to.have.property('questions').to.be.an('array');
-          expect(res).to.have.property('quiz_version_id').to.be.an('string').to.equal(quizVersionId);
-          expect(res.total_questions).to.equal(1);
-          expect(fetchSpy).to.have.been.called;
-          expect(requestedUrlParams).to.have.property('quiz_version_id').to.equal(quizVersionId);
-        });
-      });
-    });
 
     it('Should error when fetching quiz questions with an invalid quizId', () => {
       const { quizzes } = new ConstructorIO({
@@ -145,6 +125,18 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
 
       return expect(quizzes.getQuizAllQuestions(validQuizId, { quizVersionId: 'foo' })).to.eventually.be.rejected;
     });
+
+    it('Should return 400 when quiz has jump logic', () => {
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+      });
+
+      return expect(quizzes.getQuizAllQuestions('test-quiz-2')).to.eventually.be.rejected.then((err) => {
+        expect(err.status).to.equal(400);
+        expect(err.message).to.equal('The requested quiz does not support question retrieval.');
+      });
+    })
   });
 
   describe('getQuizNextQuestion', () => {

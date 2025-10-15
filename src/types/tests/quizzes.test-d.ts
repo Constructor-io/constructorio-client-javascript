@@ -8,6 +8,7 @@ expectAssignable<NextQuestionResponse>({
     description: 'Sample description',
     type: 'multiple',
     cta_text: 'Next',
+    is_skippable: false,
     images: {
       primary_url: 'https://example.com/image',
       primary_alt: 'Example image',
@@ -44,6 +45,7 @@ expectAssignable<NextQuestionResponse>({
     id: 1,
     title: 'Sample open text question',
     description: 'Sample description',
+    is_skippable: false,
     type: 'open',
     cta_text: 'Next',
     images: {
@@ -299,4 +301,5 @@ expectAssignable<QuizResultsConfigResponse>({
   },
   quiz_version_id: '6bfaa6d5-7272-466b-acd9-4bcf322a2f1e',
   quiz_id: 'test-quiz',
+  metadata: null,
 });
