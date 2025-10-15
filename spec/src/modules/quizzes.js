@@ -49,7 +49,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     fetchSpy = null;
   });
 
-  describe('getQuizAllQuestions', () => {
+  describe.only('getQuizAllQuestions', () => {
     it('Should return a result provided a valid apiKey and quizId', () => {
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
@@ -86,6 +86,27 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
         expect(res).to.have.property('questions').to.be.an('array');
         expect(fetchSpy).to.have.been.called;
         expect(requestedUrlParams).to.have.property('section').to.equal(section);
+      });
+    });
+
+    it('Should return a result provided a valid apiKey, quizId and quizVersionId', () => {
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+      });
+
+      return quizzes.getQuizAllQuestions(validQuizId).then((initialResponse) => {
+        const quizVersionId = initialResponse.quiz_version_id;
+
+        return quizzes.getQuizAllQuestions(validQuizId, { quizVersionId }).then((res) => {
+          const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+          expect(res).to.have.property('questions').to.be.an('array');
+          expect(res).to.have.property('quiz_version_id').to.be.an('string').to.equal(quizVersionId);
+          expect(res.total_questions).to.equal(4);
+          expect(fetchSpy).to.have.been.called;
+          expect(requestedUrlParams).to.have.property('quiz_version_id').to.equal(quizVersionId);
+        });
       });
     });
 
