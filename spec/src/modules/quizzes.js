@@ -89,7 +89,6 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       });
     });
 
-
     it('Should error when fetching quiz questions with an invalid quizId', () => {
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
@@ -136,7 +135,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
         expect(err.status).to.equal(400);
         expect(err.message).to.equal('The requested quiz does not support question retrieval.');
       });
-    })
+    });
   });
 
   describe('getQuizNextQuestion', () => {
