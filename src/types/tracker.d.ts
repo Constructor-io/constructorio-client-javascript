@@ -193,6 +193,7 @@ declare class Tracker {
       filterName: string;
       filterValue: string;
       itemId: string;
+      itemName?: string;
       section?: string;
       variationId?: string;
       resultId?: string;
