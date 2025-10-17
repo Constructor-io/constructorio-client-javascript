@@ -32,8 +32,10 @@ export interface IdOptions extends Record<string, any> {
   cookie_days_to_live?: number;
   on_node?: boolean;
   session_is_new?: boolean;
-  client_id_storage_location?: string;
-  session_id_storage_location?: string;
+  // defaults to 'cookie'
+  client_id_storage_location?: 'cookie'|'local';
+  // defaults to 'local'
+  session_id_storage_location?: 'cookie'|'local';
 }
 
 export interface EventDispatcherOptions {
