@@ -1,4 +1,5 @@
 import {
+  BrowseResultData,
   ConstructorClientOptions,
   Facet,
   Feature,
@@ -56,27 +57,29 @@ declare class Search {
  * search results returned from server
  ********** */
 export interface SearchResponse {
-  request: Partial<SearchRequestType>;
-  response: Partial<SearchResponseType | Redirect>;
+  request: SearchRequestType;
+  response: SearchResponseType | Redirect;
   result_id: string;
 }
 
 export interface SearchResponseType extends Record<string, any> {
-  result_sources: Partial<ResultSources>;
-  facets: Partial<Facet>[];
-  groups: Partial<Group>[];
-  results: Partial<Result>[];
-  sort_options: Partial<SortOption>[];
+  result_sources: ResultSources;
+  facets: Facet[];
+  groups: Group[];
+  results: Result[];
+  sort_options: SortOption[];
   refined_content: Record<string, any>[];
   total_num_results: number;
-  features: Partial<Feature>[];
+  features: Feature[];
+  related_searches?: Record<string, any>[];
+  related_browse_pages?: Record<string, any>[];
 }
 
 export interface SearchRequestType extends Record<string, any> {
   page: number;
   num_results_per_page: number;
   section: string;
-  blacklist_rules: boolean;
+  blacklist_rules?: boolean;
   term: string;
   fmt_options: FmtOptions;
   sort_by: string;
@@ -89,18 +92,7 @@ export interface SearchRequestType extends Record<string, any> {
   pre_filter_expression?: FilterExpression;
 }
 
-export interface Result extends Record<string, any> {
-  matched_terms: string[];
-  data: {
-    id: string;
-    [key: string]: any;
-  };
-  value: string;
-  is_slotted: false;
-  labels: Record<string, any>;
-  variations: Record<string, any>[];
-  variations_map: Record<string, any> | Record<string, any>[];
-}
+export type Result = BrowseResultData;
 
 export interface Redirect extends Record<string, any> {
   redirect: {
