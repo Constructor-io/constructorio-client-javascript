@@ -2431,6 +2431,187 @@ class Tracker {
   }
 
   /**
+   * Send quiz trigger show event to API
+   *
+   * @function trackQuizTriggerShow
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.quizId - Quiz identifier
+   * @param {string} parameters.matchedFacet - Matched facet for this quiz
+   * @param {string} parameters.matchedQuery - Matched query for this quiz
+   * @param {string} parameters.searchQuery - Typed search query for this event to be triggered
+   * @param {string} [parameters.section='Products'] - Index section
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User typed a search query and it caused a quiz trigger to pop up
+   * @example
+   * constructorio.tracker.trackQuizTriggerShow(
+   *     {
+   *         quizId: 'coffee-quiz',
+   *         matchedFacet: 'coffee_facet',
+   *         searchQuery: 'coff',
+   *         url: 'www.example.com',
+   *     },
+   * );
+   */
+  trackQuizTriggerShow(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/quiz_trigger_show?`;
+      const {
+        quiz_id,
+        quizId = quiz_id,
+        section = 'Products',
+        matched_facet,
+        matchedFacet = matched_facet,
+        search_query,
+        searchQuery = search_query,
+        matched_query,
+        matchedQuery = matched_query,
+      } = parameters;
+      const queryParams = {};
+      const bodyParams = {};
+
+      if (typeof quizId !== 'string') {
+        return new Error('"quizId" is a required parameter of type string');
+      }
+
+      if (typeof searchQuery !== 'string') {
+        return new Error('"searchQuery" is a required parameter of type string');
+      }
+
+      if (typeof matchedFacet !== 'string' && typeof matchedQuery !== 'string') {
+        return new Error('"Either matchedFacet or matchedQuery" is a required parameter of type string');
+      }
+
+      if (matchedFacet && typeof matchedFacet !== 'string') {
+        return new Error('If matchedFacet is present, it has to be a string');
+      }
+
+      if (matchedQuery && typeof matchedQuery !== 'string') {
+        return new Error('If matchedQuery is present, it has to be a string');
+      }
+
+      bodyParams.quiz_id = quizId;
+      bodyParams.search_query = searchQuery;
+      bodyParams.matched_facet = matchedFacet;
+      bodyParams.matched_query = matchedQuery;
+
+      if (!helpers.isNil(section)) {
+        if (typeof section !== 'string') {
+          return new Error('"section" must be a string');
+        }
+        queryParams.section = section;
+        bodyParams.section = section;
+      }
+
+      const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
+
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send quiz trigger click event to API
+   *
+   * @function trackQuizTriggerClick
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.quizId - Quiz identifier
+   * @param {string} parameters.matchedFacet - Matched facet for this quiz
+   * @param {string} parameters.matchedQuery - Matched query for this quiz
+   * @param {string} parameters.searchQuery - Typed search query for this event to be triggered
+   * @param {string} [parameters.section='Products'] - Index section
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User typed a search query and it caused a quiz trigger to pop up
+   * @example
+   * constructorio.tracker.trackQuizTriggerClick(
+   *     {
+   *         quizId: 'coffee-quiz',
+   *         matchedFacet: 'coffee_facet',
+   *         searchQuery: 'coff',
+   *         url: 'www.example.com',
+   *     },
+   * );
+   */
+  trackQuizTriggerClick(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const requestPath = `${this.options.serviceUrl}/v2/behavioral_action/quiz_trigger_click?`;
+      const {
+        quiz_id,
+        quizId = quiz_id,
+        section = 'Products',
+        matched_facet,
+        matchedFacet = matched_facet,
+        search_query,
+        searchQuery = search_query,
+        matched_query,
+        matchedQuery = matched_query,
+      } = parameters;
+      const queryParams = {};
+      const bodyParams = {};
+
+      if (typeof quizId !== 'string') {
+        return new Error('"quizId" is a required parameter of type string');
+      }
+
+      if (typeof searchQuery !== 'string') {
+        return new Error('"searchQuery" is a required parameter of type string');
+      }
+
+      if (typeof matchedFacet !== 'string' || typeof matchedQuery !== 'string') {
+        return new Error('"Either matchedFacet or matchedQuery" is a required parameter of type string');
+      }
+
+      bodyParams.quiz_id = quizId;
+      bodyParams.matched_facet = matchedFacet;
+      bodyParams.matchedQuery = matchedQuery;
+
+      if (!helpers.isNil(section)) {
+        if (typeof section !== 'string') {
+          return new Error('"section" must be a string');
+        }
+        queryParams.section = section;
+        bodyParams.section = section;
+      }
+
+      const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
+
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
    * Send ASA request submitted event
    *
    * @function trackAgentSubmit

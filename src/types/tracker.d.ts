@@ -270,6 +270,28 @@ declare class Tracker {
     networkParameters?: NetworkParameters
   ): true | Error;
 
+  trackQuizTriggerShow(
+    parameters: {
+      quizId: string;
+      searchQuery: string;
+      section?: string;
+      matchedFacet?: string;
+      matchedQuery?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
+  trackQuizTriggerClick(
+    parameters: {
+      quizId: string;
+      searchQuery: string;
+      section?: string;
+      matchedFacet?: string;
+      matchedQuery?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
   trackAgentSubmit(
     parameters: {
       intent: string;
