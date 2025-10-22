@@ -1371,7 +1371,6 @@ class Tracker {
       const {
         bannerAdId,
         placementId,
-        resultId,
         analyticsTags,
       } = parameters;
 
@@ -1381,10 +1380,6 @@ class Tracker {
 
       if (!helpers.isNil(placementId)) {
         bodyParams.placement_id = placementId;
-      }
-
-      if (!helpers.isNil(resultId)) {
-        bodyParams.result_id = resultId;
       }
 
       if (!helpers.isNil(analyticsTags)) {
