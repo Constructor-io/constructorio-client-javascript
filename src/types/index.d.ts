@@ -47,6 +47,7 @@ export interface ConstructorClientOptions {
   serviceUrl?: string;
   quizzesServiceUrl?: string;
   agentServiceUrl?: string;
+  mediaServiceUrl?: string;
   assistantServiceUrl?: string;
   sessionId?: number;
   clientId?: string;

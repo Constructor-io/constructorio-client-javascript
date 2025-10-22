@@ -14539,4 +14539,264 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackProductInsightsAgentAnswerFeedback(requiredParameters)).to.equal(true);
     });
   });
+
+  describe('trackMediaImpressionView', () => {
+    const requiredParameters = {
+      bannerAdId: 'banner_ad_id',
+      placementId: 'placement_id',
+    };
+
+    const optionalParameters = {
+      analyticsTags: testAnalyticsTag,
+    };
+
+    it('Should respond with a valid response when required parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        mediaServiceUrl: 'https://media-cnstrc.com',
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams)
+          .to.have.property('banner_ad_id')
+          .to.equal(requiredParameters.bannerAdId);
+        expect(requestParams)
+          .to.have.property('placement_id')
+          .to.equal(requiredParameters.placementId);
+        validateOriginReferrer(requestParams);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackMediaImpressionView(requiredParameters)).to.equal(
+        true,
+      );
+    });
+
+    it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        mediaServiceUrl: 'https://media-cnstrc.com',
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams)
+          .to.have.property('analytics_tags')
+          .to.deep.equal(testAnalyticsTag);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(
+        tracker.trackMediaImpressionView(
+          Object.assign(requiredParameters, optionalParameters),
+        ),
+      ).to.equal(true);
+    });
+
+    it('Should throw an error when invalid parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackMediaImpressionView([])).to.be.an('error');
+    });
+
+    it('Should throw an error when no parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackMediaImpressionView()).to.be.an('error');
+    });
+
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: true,
+        mediaServiceUrl: 'https://media-cnstrc.com',
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        validateOriginReferrer(requestParams);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackMediaImpressionView(requiredParameters)).to.equal(
+        true,
+      );
+    });
+
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: false,
+        mediaServiceUrl: 'https://media-cnstrc.com',
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('origin_referrer');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackMediaImpressionView(requiredParameters)).to.equal(
+        true,
+      );
+    });
+
+    if (!skipNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          mediaServiceUrl: 'https://media-cnstrc.com',
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(
+          tracker.trackMediaImpressionView(requiredParameters, { timeout: 10 }),
+        ).to.equal(true);
+      });
+
+      it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          mediaServiceUrl: 'https://media-cnstrc.com',
+          networkParameters: {
+            timeout: 20,
+          },
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackMediaImpressionView(requiredParameters)).to.equal(
+          true,
+        );
+      });
+    }
+
+    it('Should not encode body parameters', (done) => {
+      const specialCharacters = '+[]&';
+      const userId = `user-id ${specialCharacters}`;
+      const bannerAdId = `banner_ad_id ${specialCharacters}`;
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        userId,
+        fetch: fetchSpy,
+        mediaServiceUrl: 'https://media-cnstrc.com',
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('ui').to.equal(userId);
+        expect(requestParams)
+          .to.have.property('banner_ad_id')
+          .to.equal(bannerAdId);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(
+        tracker.trackMediaImpressionView({ ...requiredParameters, bannerAdId }),
+      ).to.equal(true);
+    });
+
+    it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const breakingSpaces = '   ';
+      const userId = `user-id ${breakingSpaces} user-id`;
+      const bannerAdId = `banner_ad_id ${breakingSpaces} banner_ad_id`;
+      const bannerAdIdExpected = 'banner_ad_id     banner_ad_id';
+      const userIdExpected = 'user-id     user-id';
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        userId,
+        mediaServiceUrl: 'https://media-cnstrc.com',
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('ui').to.equal(userIdExpected);
+        expect(requestParams)
+          .to.have.property('banner_ad_id')
+          .to.equal(bannerAdIdExpected);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(
+        tracker.trackMediaImpressionView({
+          ...requiredParameters,
+          userId,
+          bannerAdId,
+        }),
+      ).to.equal(true);
+    });
+  });
 });
