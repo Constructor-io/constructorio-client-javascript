@@ -40,7 +40,7 @@ class ConstructorIO {
    * @param {string} [parameters.serviceUrl='https://ac.cnstrc.com'] - API URL endpoint
    * @param {string} [parameters.quizzesServiceUrl='https://quizzes.cnstrc.com'] - Quizzes API URL endpoint
    * @param {string} [parameters.agentServiceUrl='https://agent.cnstrc.com'] - AI Shopping Agent API URL endpoint
-   * @param {string} [parameters.mediaServiceUrl='https://behavior.media-cnstrc.com'] - Media API URL endpoint
+   * @param {string} [parameters.mediaServiceUrl='https://media-cnstrc.com'] - Media API URL endpoint
    * @param {string} [parameters.assistantServiceUrl='https://assistant.cnstrc.com'] - AI Shopping Assistant API URL endpoint @deprecated This parameter is deprecated and will be removed in a future version. Use parameters.agentServiceUrl instead.
    * @param {array} [parameters.segments] - User segments
    * @param {object} [parameters.testCells] - User test cells
@@ -123,7 +123,7 @@ class ConstructorIO {
       quizzesServiceUrl: (quizzesServiceUrl && quizzesServiceUrl.replace(/\/$/, '')) || 'https://quizzes.cnstrc.com',
       agentServiceUrl: (agentServiceUrl && agentServiceUrl.replace(/\/$/, '')) || 'https://agent.cnstrc.com',
       assistantServiceUrl: (assistantServiceUrl && assistantServiceUrl.replace(/\/$/, '')) || 'https://assistant.cnstrc.com',
-      mediaServiceUrl: (mediaServiceUrl && mediaServiceUrl.replace(/\/$/, '')) || 'https://behavior.media-cnstrc.com',
+      mediaServiceUrl: (mediaServiceUrl && mediaServiceUrl.replace(/\/$/, '')) || 'https://media-cnstrc.com',
       sessionId: sessionId || session_id,
       clientId: clientId || client_id,
       userId,

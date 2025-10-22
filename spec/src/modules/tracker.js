@@ -14550,54 +14550,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       analyticsTags: testAnalyticsTag,
     };
 
-    it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        fetch: fetchSpy,
-        mediaServiceUrl: 'https://behavior.media-cnstrc.com',
-        ...requestQueueOptions,
-      });
-
-      const snakeCaseParameters = {
-        banner_ad_id: 'banner_ad_id',
-        placement_id: 'placement_id',
-      };
-
-      tracker.on('success', (responseParams) => {
-        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
-
-        // Request
-        expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('key');
-        expect(requestParams).to.have.property('i');
-        expect(requestParams).to.have.property('s');
-        expect(requestParams).to.have.property('c').to.equal(clientVersion);
-        expect(requestParams).to.have.property('_dt');
-        expect(requestParams)
-          .to.have.property('banner_ad_id')
-          .to.equal(snakeCaseParameters.banner_ad_id);
-        expect(requestParams)
-          .to.have.property('placement_id')
-          .to.equal(snakeCaseParameters.placement_id);
-        validateOriginReferrer(requestParams);
-
-        // Response
-        expect(responseParams).to.have.property('method').to.equal('POST');
-        expect(responseParams).to.have.property('message');
-
-        done();
-      });
-
-      expect(tracker.trackMediaImpressionView(snakeCaseParameters)).to.equal(
-        true,
-      );
-    });
-
     it('Should respond with a valid response when required parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
-        mediaServiceUrl: 'https://behavior.media-cnstrc.com',
+        mediaServiceUrl: 'https://media-cnstrc.com',
         ...requestQueueOptions,
       });
 
@@ -14634,7 +14591,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
-        mediaServiceUrl: 'https://behavior.media-cnstrc.com',
+        mediaServiceUrl: 'https://media-cnstrc.com',
         ...requestQueueOptions,
       });
 
@@ -14678,7 +14635,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: true,
-        mediaServiceUrl: 'https://behavior.media-cnstrc.com',
+        mediaServiceUrl: 'https://media-cnstrc.com',
         ...requestQueueOptions,
       });
 
@@ -14706,7 +14663,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         apiKey: testApiKey,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: false,
-        mediaServiceUrl: 'https://behavior.media-cnstrc.com',
+        mediaServiceUrl: 'https://media-cnstrc.com',
         ...requestQueueOptions,
       });
 
@@ -14733,7 +14690,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
-          mediaServiceUrl: 'https://behavior.media-cnstrc.com',
+          mediaServiceUrl: 'https://media-cnstrc.com',
           ...requestQueueOptions,
         });
 
@@ -14750,7 +14707,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
-          mediaServiceUrl: 'https://behavior.media-cnstrc.com',
+          mediaServiceUrl: 'https://media-cnstrc.com',
           networkParameters: {
             timeout: 20,
           },
@@ -14776,7 +14733,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         apiKey: testApiKey,
         userId,
         fetch: fetchSpy,
-        mediaServiceUrl: 'https://behavior.media-cnstrc.com',
+        mediaServiceUrl: 'https://media-cnstrc.com',
         ...requestQueueOptions,
       });
 
@@ -14811,7 +14768,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         userId,
-        mediaServiceUrl: 'https://behavior.media-cnstrc.com',
+        mediaServiceUrl: 'https://media-cnstrc.com',
         fetch: fetchSpy,
         ...requestQueueOptions,
       });
