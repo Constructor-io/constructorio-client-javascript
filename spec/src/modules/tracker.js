@@ -8501,7 +8501,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       section: 'Products',
     };
 
-    it.only('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
+    it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -8922,7 +8922,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       section: 'Products',
     };
 
-    it.only('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
+    it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
