@@ -2581,7 +2581,8 @@ class Tracker {
 
       bodyParams.quiz_id = quizId;
       bodyParams.matched_facet = matchedFacet;
-      bodyParams.matchedQuery = matchedQuery;
+      bodyParams.matched_query = matchedQuery;
+      bodyParams.search_query = searchQuery;
 
       if (!helpers.isNil(section)) {
         if (typeof section !== 'string') {

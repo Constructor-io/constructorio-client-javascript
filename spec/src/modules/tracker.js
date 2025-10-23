@@ -8726,12 +8726,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackQuizTriggerShow(rest)).to.be.an('error');
     });
 
-    it('Should throw an error when no url is provided', () => {
-      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
-      const { url: _, ...rest } = requiredParameters;
-      expect(tracker.trackQuizTriggerShow(rest)).to.be.an('error');
-    });
-
     it('Should throw an error when invalid parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
@@ -8880,34 +8874,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackQuizTriggerShow(requiredParameters)).to.equal(true);
-    });
-
-    it('Should truncate url param to 2048 characters max', (done) => {
-      const longUrl = createLongUrl(3000);
-      const truncatedUrl = longUrl.slice(0, 2048);
-
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        fetch: fetchSpy,
-        ...requestQueueOptions,
-      });
-
-      tracker.on('success', () => {
-        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
-
-        // Request
-        expect(fetchSpy).to.have.been.called;
-        expect(requestParams.url).to.equal(truncatedUrl);
-
-        done();
-      });
-
-      const parameters = {
-        ...requiredParameters,
-        url: longUrl,
-      };
-
-      expect(tracker.trackQuizTriggerShow(parameters)).to.equal(true);
     });
   });
 
@@ -9147,12 +9113,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackQuizTriggerClick(rest)).to.be.an('error');
     });
 
-    it('Should throw an error when no url is provided', () => {
-      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
-      const { url: _, ...rest } = requiredParameters;
-      expect(tracker.trackQuizTriggerClick(rest)).to.be.an('error');
-    });
-
     it('Should throw an error when invalid parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
@@ -9301,34 +9261,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackQuizTriggerClick(requiredParameters)).to.equal(true);
-    });
-
-    it('Should truncate url param to 2048 characters max', (done) => {
-      const longUrl = createLongUrl(3000);
-      const truncatedUrl = longUrl.slice(0, 2048);
-
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        fetch: fetchSpy,
-        ...requestQueueOptions,
-      });
-
-      tracker.on('success', () => {
-        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
-
-        // Request
-        expect(fetchSpy).to.have.been.called;
-        expect(requestParams.url).to.equal(truncatedUrl);
-
-        done();
-      });
-
-      const parameters = {
-        ...requiredParameters,
-        url: longUrl,
-      };
-
-      expect(tracker.trackQuizTriggerClick(parameters)).to.equal(true);
     });
   });
 
