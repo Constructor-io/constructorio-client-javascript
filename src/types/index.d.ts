@@ -35,7 +35,7 @@ export interface IdOptions extends Record<string, any> {
   // defaults to 'cookie'
   client_id_storage_location?: 'cookie' | 'local';
   // defaults to 'local'
-  session_id_storage_location?: 'cookie'|'local';
+  session_id_storage_location?: 'cookie' | 'local';
 }
 
 export interface EventDispatcherOptions {
