@@ -2449,8 +2449,8 @@ class Tracker {
    *     {
    *         quizId: 'coffee-quiz',
    *         matchedFacet: 'coffee_facet',
+   *         matchedQuery: 'nescafe',
    *         searchQuery: 'coff',
-   *         url: 'www.example.com',
    *     },
    * );
    */
@@ -2538,14 +2538,14 @@ class Tracker {
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
-   * @description User typed a search query and it caused a quiz trigger to pop up
+   * @description Triggered whenever user clicks on a quiz trigger popup
    * @example
    * constructorio.tracker.trackQuizTriggerClick(
    *     {
    *         quizId: 'coffee-quiz',
    *         matchedFacet: 'coffee_facet',
+   *         matchedQuery: 'nescafe',
    *         searchQuery: 'coff',
-   *         url: 'www.example.com',
    *     },
    * );
    */
@@ -2575,8 +2575,16 @@ class Tracker {
         return new Error('"searchQuery" is a required parameter of type string');
       }
 
-      if (typeof matchedFacet !== 'string' || typeof matchedQuery !== 'string') {
+      if (typeof matchedFacet !== 'string' && typeof matchedQuery !== 'string') {
         return new Error('"Either matchedFacet or matchedQuery" is a required parameter of type string');
+      }
+
+      if (matchedFacet && typeof matchedFacet !== 'string') {
+        return new Error('If matchedFacet is present, it has to be a string');
+      }
+
+      if (matchedQuery && typeof matchedQuery !== 'string') {
+        return new Error('If matchedQuery is present, it has to be a string');
       }
 
       bodyParams.quiz_id = quizId;
