@@ -281,7 +281,7 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       });
     });
 
-    it.only('Should skip tracking', () => {
+    it('Should skip tracking', () => {
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
