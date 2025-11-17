@@ -127,7 +127,7 @@ class Quizzes {
    * @param {array} [parameters.answers] - An array of answers in the format [[1,2], [1], ["true"], ["seen"], [""]]. Based on the question type, answers should either be an integer, "true"/"false", "seen" or an empty string ("") if skipped
    * @param {string} [parameters.quizVersionId] - Version identifier for the quiz. Version ID will be returned with the first request and it should be passed with subsequent requests. More information can be found: https://docs.constructor.com/reference/configuration-quizzes
    * @param {string} [parameters.quizSessionId] - Session identifier for the quiz. Session ID will be returned with the first request and it should be passed with subsequent requests. More information can be found: https://docs.constructor.com/reference/configuration-quizzes
-   * @param {boolean} [parameters.skipTracking] - Boolean value indicating if tracking for this question has to be skipped. Might be useful, when you are willing to preload first question of the quiz.
+   * @param {boolean} [parameters.skipTracking] - If true, tracking for this question will be skipped. This is useful for preloading the first question of a quiz
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}

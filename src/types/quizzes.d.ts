@@ -19,6 +19,9 @@ export interface QuizzesParameters {
   answers?: any[];
   quizVersionId?: string;
   quizSessionId?: string;
+}
+
+export interface NextQuestionQuizzesParameters extends QuizzesParameters {
   skipTracking?: boolean;
 }
 
@@ -43,7 +46,7 @@ declare class Quizzes {
 
   getQuizNextQuestion(
     quizId: string,
-    parameters?: QuizzesParameters,
+    parameters?: NextQuestionQuizzesParameters,
     networkParameters?: NetworkParameters
   ): Promise<NextQuestionResponse>;
 
