@@ -159,6 +159,9 @@ export interface FmtOptions extends Record<string, any> {
   groups_max_depth?: number;
   groups_start?: 'current' | 'top' | `group_id:${string}`;
   fields?: string[]; // Array of metadata field to be returned in the data response
+  hidden_fields?: string[],
+  show_hidden_fields?: boolean,
+  variations_return_type?: 'default' | 'all' | 'matched';
 }
 
 export type Nullable<T> = T | null;
