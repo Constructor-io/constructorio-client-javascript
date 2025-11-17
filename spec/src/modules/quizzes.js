@@ -281,6 +281,19 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should skip tracking', () => {
+      const { quizzes } = new ConstructorIO({
+        apiKey: quizApiKey,
+        fetch: fetchSpy,
+      });
+
+      return quizzes.getQuizNextQuestion(validQuizId, { answers: validAnswers, skipTracking: true }).then(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(requestedUrlParams).to.have.property('skip_tracking').to.equal('true');
+      });
+    });
+
     it('Should be rejected if an invalid quizVersionId is provided', () => {
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
