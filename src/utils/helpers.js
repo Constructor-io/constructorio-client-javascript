@@ -91,6 +91,29 @@ const utils = {
     return {};
   },
 
+  getDocumentReferrer: () => {
+    if (utils.canUseDOM()) {
+      return document?.referrer;
+    }
+
+    return null;
+  },
+
+  getCanonicalUrl: () => {
+    if (utils.canUseDOM()) {
+      const linkEle = document?.querySelector("link[rel='canonical']");
+      let canonicalURL = null;
+
+      if (linkEle) {
+        canonicalURL = linkEle.getAttribute("href");
+      }
+
+      return canonicalURL;
+    }
+
+    return null;
+  },
+
   dispatchEvent: (event) => {
     if (utils.canUseDOM()) {
       window.dispatchEvent(event);

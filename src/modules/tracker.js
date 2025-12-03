@@ -21,6 +21,8 @@ function applyParams(parameters, options) {
     beaconMode,
   } = options;
   const { host, pathname, search } = helpers.getWindowLocation();
+  const canonicalUrl = helpers.getCanonicalUrl();
+  const documentReferrer = helpers.getDocumentReferrer();
   const sendReferrerWithTrackingEvents = (options.sendReferrerWithTrackingEvents === false)
     ? false
     : true; // Defaults to 'true'
@@ -48,6 +50,14 @@ function applyParams(parameters, options) {
 
   if (apiKey) {
     aggregateParams.key = apiKey;
+  }
+
+  if (documentReferrer) {
+    aggregateParams.document_referrer = documentReferrer;
+  }
+
+  if (canonicalUrl) {
+    aggregateParams.canonical_url = canonicalUrl;
   }
 
   if (testCells) {
