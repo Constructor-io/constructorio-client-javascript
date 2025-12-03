@@ -101,11 +101,11 @@ const utils = {
 
   getCanonicalUrl: () => {
     if (utils.canUseDOM()) {
-      const linkEle = document?.querySelector("link[rel='canonical']");
+      const linkEle = document?.querySelector('link[rel="canonical"]');
       let canonicalURL = null;
 
       if (linkEle) {
-        canonicalURL = linkEle.getAttribute("href");
+        canonicalURL = linkEle.getAttribute('href');
       }
 
       return canonicalURL;
