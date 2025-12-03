@@ -189,6 +189,31 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackSessionStart()).to.equal(true);
     });
 
+    it('Should send along document_referrer and canonical_url query param', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackSessionStart()).to.equal(true);
+    });
+
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is not defined', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
