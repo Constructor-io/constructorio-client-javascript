@@ -26,6 +26,7 @@ const timeoutRejectionMessage = 'AbortError: This operation was aborted';
 const testAnalyticsTag = { param1: 'test', param2: 'test2' };
 const utmParameters = 'utm_source=attentive&utm_medium=sms&utm_campaign=campaign_1';
 const url = `http://localhost.test/path/name?query=term&category=cat&${utmParameters}`;
+const referrer = 'https://www.google.com/';
 
 function validateOriginReferrer(requestParams) {
   expect(requestParams).to.have.property('origin_referrer').to.contain('localhost.test/path/name');
@@ -42,7 +43,7 @@ function createLongUrl(length) {
 describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   let fetchSpy = null;
   let cleanup;
-  const jsdomOptions = { url };
+  const jsdomOptions = { url, referrer };
   const requestQueueOptions = {
     sendTrackingEvents: true,
     trackingSendDelay: 1,
