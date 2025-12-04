@@ -1,0 +1,10 @@
+name: Claude PR Review
+
+on:
+  pull_request:
+    types: [opened, ready_for_review, synchronize]
+
+jobs:
+  review:
+    uses: Constructor-io/shared-claude-code-resources-public/.github/workflows/claude-code-review.yml@main
+    secrets: inherit
