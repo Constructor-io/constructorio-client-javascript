@@ -14,7 +14,7 @@ if (bundled) {
   cioScriptTag = `<script>${cioJSBundle}</script>`;
 }
 
-const defaultHtml = `<!doctype html><html><body>${cioScriptTag}</body></html>`;
+const defaultHtml = `<!doctype html><html><head><link rel="canonical" href="https://localhost"/></head><body>${cioScriptTag}</body></html>`;
 
 // define this here so that we only ever dynamically populate KEYS once.
 const KEYS = [];

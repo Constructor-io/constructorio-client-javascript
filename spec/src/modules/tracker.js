@@ -26,6 +26,7 @@ const timeoutRejectionMessage = 'AbortError: This operation was aborted';
 const testAnalyticsTag = { param1: 'test', param2: 'test2' };
 const utmParameters = 'utm_source=attentive&utm_medium=sms&utm_campaign=campaign_1';
 const url = `http://localhost.test/path/name?query=term&category=cat&${utmParameters}`;
+const referrer = 'https://www.google.com/';
 
 function validateOriginReferrer(requestParams) {
   expect(requestParams).to.have.property('origin_referrer').to.contain('localhost.test/path/name');
@@ -42,7 +43,7 @@ function createLongUrl(length) {
 describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   let fetchSpy = null;
   let cleanup;
-  const jsdomOptions = { url };
+  const jsdomOptions = { url, referrer };
   const requestQueueOptions = {
     sendTrackingEvents: true,
     trackingSendDelay: 1,
@@ -177,6 +178,31 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         // Request
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('ui').to.equal(userId);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('GET');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackSessionStart()).to.equal(true);
+    });
+
+    it('Should send along document_referrer and canonical_url query param', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('GET');
