@@ -14,6 +14,7 @@ const {
   getNavigator,
   isNil,
   getWindowLocation,
+  getCanonicalUrl,
   dispatchEvent,
   createCustomEvent,
   hasOrderIdRecord,
@@ -210,6 +211,35 @@ describe('ConstructorIO - Utils - Helpers', () => {
 
       it('Should return empty object if not in a DOM context', () => {
         expect(getWindowLocation()).to.deep.equal({});
+      });
+    });
+
+    describe('getCanonicalUrl', () => {
+      it('Should return the canonical URL from the DOM link element', () => {
+        const cleanup = jsdom();
+
+        const canonicalUrl = 'https://constructor.io/products/item';
+        const canonicalEle = document.querySelector('[rel=canonical]');
+        canonicalEle.setAttribute('href', canonicalUrl);
+
+        expect(getCanonicalUrl()).to.equal(canonicalUrl);
+
+        cleanup();
+      });
+
+      it('Should return a complete URL when given a relative canonical URL', () => {
+        const cleanup = jsdom();
+
+        const relativeUrl = '/products/item';
+        const canonicalEle = document.querySelector('[rel=canonical]');
+        canonicalEle.setAttribute('href', relativeUrl);
+
+        const result = getCanonicalUrl();
+        console.log(result);
+        expect(result).to.include(relativeUrl);
+        expect(result).to.match(/^https?:\/\//);
+
+        cleanup();
       });
     });
 
