@@ -235,7 +235,6 @@ describe('ConstructorIO - Utils - Helpers', () => {
         canonicalEle.setAttribute('href', relativeUrl);
 
         const result = getCanonicalUrl();
-        console.log(result);
         expect(result).to.include(relativeUrl);
         expect(result).to.match(/^https?:\/\//);
 
