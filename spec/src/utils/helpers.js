@@ -240,6 +240,28 @@ describe('ConstructorIO - Utils - Helpers', () => {
 
         cleanup();
       });
+
+      it('Should return null when canonical link element does not exist', () => {
+        const cleanup = jsdom();
+        const canonicalEle = document.querySelector('[rel=canonical]');
+        canonicalEle.remove();
+
+        expect(getCanonicalUrl()).to.be.null;
+        cleanup();
+      });
+
+      it('Should return null when href attribute is empty', () => {
+        const cleanup = jsdom();
+        const canonicalEle = document.querySelector('[rel=canonical]');
+        canonicalEle.setAttribute('href', '');
+
+        expect(getCanonicalUrl()).to.be.null;
+        cleanup();
+      });
+
+      it('Should return null when not in a DOM context', () => {
+        expect(getCanonicalUrl()).to.be.null;
+      });
     });
 
     describe('dispatchEvent', () => {
