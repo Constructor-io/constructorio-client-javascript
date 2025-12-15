@@ -102,14 +102,18 @@ const utils = {
   getCanonicalUrl: () => {
     let canonicalURL = null;
 
-    if (utils.canUseDOM()) {
-      const linkEle = document?.querySelector('link[rel="canonical"]');
-      const href = linkEle?.getAttribute('href');
+    try {
+      if (utils.canUseDOM()) {
+        const linkEle = document?.querySelector('link[rel="canonical"]');
+        const href = linkEle?.getAttribute('href');
 
-      if (href) {
-        const url = new URL(href, document.location.href);
-        canonicalURL = url.toString();
+        if (href) {
+          const url = new URL(href, document.location.href);
+          canonicalURL = url.toString();
+        }
       }
+    } catch (e) {
+      // do nothing
     }
 
     return canonicalURL;
