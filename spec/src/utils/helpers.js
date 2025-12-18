@@ -15,6 +15,7 @@ const {
   isNil,
   getWindowLocation,
   getCanonicalUrl,
+  getDocumentReferrer,
   dispatchEvent,
   createCustomEvent,
   hasOrderIdRecord,
@@ -215,6 +216,18 @@ describe('ConstructorIO - Utils - Helpers', () => {
     });
 
     describe('getCanonicalUrl', () => {
+      it('Should return android app referrers in a valid url structure', () => {
+        const cleanup = jsdom();
+
+        const canonicalUrl = 'android-app://com.google.android.googlequicksearchbox/';
+        const canonicalEle = document.querySelector('[rel=canonical]');
+        canonicalEle.setAttribute('href', canonicalUrl);
+
+        expect(getCanonicalUrl()).to.equal('https://com.google.android.googlequicksearchbox/');
+
+        cleanup();
+      });
+
       it('Should return the canonical URL from the DOM link element', () => {
         const cleanup = jsdom();
 
@@ -261,6 +274,67 @@ describe('ConstructorIO - Utils - Helpers', () => {
 
       it('Should return null when not in a DOM context', () => {
         expect(getCanonicalUrl()).to.be.null;
+      });
+    });
+
+    describe('getDocumentReferrer', () => {
+      it('Should return android app referrers in a valid url structure', () => {
+        const cleanup = jsdom();
+
+        const referrerUrl = 'android-app://com.google.android.googlequicksearchbox/';
+        Object.defineProperty(document, 'referrer', {
+          value: referrerUrl,
+          configurable: true,
+        });
+
+        expect(getDocumentReferrer()).to.equal('https://com.google.android.googlequicksearchbox/');
+
+        cleanup();
+      });
+
+      it('Should return the referrer URL from the document', () => {
+        const cleanup = jsdom();
+
+        const referrerUrl = 'https://constructor.io/products/item';
+        Object.defineProperty(document, 'referrer', {
+          value: referrerUrl,
+          configurable: true,
+        });
+
+        expect(getDocumentReferrer()).to.equal(referrerUrl);
+
+        cleanup();
+      });
+
+      it('Should return null for a relative url', () => {
+        const cleanup = jsdom();
+
+        const relativeUrl = '/products/item';
+        Object.defineProperty(document, 'referrer', {
+          value: relativeUrl,
+          configurable: true,
+        });
+
+        const result = getDocumentReferrer();
+        expect(result).to.be.null;
+
+        cleanup();
+      });
+
+      it('Should return null when referrer is empty', () => {
+        const cleanup = jsdom();
+
+        Object.defineProperty(document, 'referrer', {
+          value: '',
+          configurable: true,
+        });
+
+        expect(getDocumentReferrer()).to.be.null;
+        cleanup();
+      });
+
+      it('Should return null when not in a DOM context', () => {
+        expect(getDocumentReferrer()).to.be.null;
       });
     });
 

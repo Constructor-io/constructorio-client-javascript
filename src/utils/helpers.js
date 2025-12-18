@@ -44,6 +44,23 @@ const utils = {
     return cleanedParams;
   },
 
+  cleanAndValidateUrl: (url, baseUrl = undefined) => {
+    let validatedUrl = null;
+
+    try {
+      // Handle android app referrers
+      if (url?.startsWith('android-app')) {
+        url = url?.replace('android-app', 'https')
+      }
+
+      validatedUrl = (new URL(url, baseUrl)).toString();
+    } catch (e) {
+      // do nothing
+    }
+
+    return validatedUrl;
+  },
+
   throwHttpErrorFromResponse: (error, response) => response.json().then((json) => {
     error.message = json.message;
     error.status = response.status;
@@ -92,11 +109,17 @@ const utils = {
   },
 
   getDocumentReferrer: () => {
-    if (utils.canUseDOM()) {
-      return document?.referrer;
+    let documentReferrer = null;
+
+    try {
+      if (utils.canUseDOM()) {
+        documentReferrer = utils.cleanAndValidateUrl(document.referrer);
+      }
+    } catch (e) {
+      // do nothing
     }
 
-    return null;
+    return documentReferrer;
   },
 
   getCanonicalUrl: () => {
@@ -108,8 +131,7 @@ const utils = {
         const href = linkEle?.getAttribute('href');
 
         if (href) {
-          const url = new URL(href, document.location.href);
-          canonicalURL = url.toString();
+          canonicalURL = utils.cleanAndValidateUrl(href, document.location.href);
         }
       }
     } catch (e) {
