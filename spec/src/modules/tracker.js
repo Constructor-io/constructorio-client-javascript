@@ -27,6 +27,7 @@ const testAnalyticsTag = { param1: 'test', param2: 'test2' };
 const utmParameters = 'utm_source=attentive&utm_medium=sms&utm_campaign=campaign_1';
 const url = `http://localhost.test/path/name?query=term&category=cat&${utmParameters}`;
 const referrer = 'https://www.google.com/';
+const canonicalUrl = 'https://localhost/';
 
 function validateOriginReferrer(requestParams) {
   expect(requestParams).to.have.property('origin_referrer').to.contain('localhost.test/path/name');
@@ -201,7 +202,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -490,7 +491,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -1066,7 +1067,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
         validateOriginReferrer(requestParams);
 
@@ -1439,7 +1440,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -1850,7 +1851,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -2317,11 +2318,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Body
-        expect(bodyParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(bodyParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(bodyParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -3031,7 +3032,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -3579,7 +3580,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -4168,11 +4169,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestQueryParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestQueryParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestQueryParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Body
-        expect(requestBodyParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestBodyParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestBodyParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -4663,7 +4664,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -5373,7 +5374,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -5920,7 +5921,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -6339,7 +6340,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -6754,7 +6755,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -7204,7 +7205,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -7658,7 +7659,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -8158,7 +8159,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -8596,7 +8597,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -9085,7 +9086,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -9400,7 +9401,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -9718,7 +9719,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -10044,7 +10045,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -10388,7 +10389,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -10707,7 +10708,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -11022,7 +11023,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -11337,7 +11338,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -11655,7 +11656,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -11981,7 +11982,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -12325,7 +12326,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -12644,7 +12645,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -12981,7 +12982,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -13310,7 +13311,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -13632,7 +13633,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -13952,7 +13953,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -14273,7 +14274,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -14594,7 +14595,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -14917,7 +14918,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -15240,7 +15241,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
 
         // Response
@@ -15537,7 +15538,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
-        expect(requestParams).to.have.property('canonical_url').to.equal('https://localhost');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
         expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
         expect(requestParams)
           .to.have.property('banner_ad_id')

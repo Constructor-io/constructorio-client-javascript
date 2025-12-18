@@ -100,18 +100,23 @@ const utils = {
   },
 
   getCanonicalUrl: () => {
-    if (utils.canUseDOM()) {
-      const linkEle = document?.querySelector('link[rel="canonical"]');
-      let canonicalURL = null;
+    let canonicalURL = null;
 
-      if (linkEle) {
-        canonicalURL = linkEle.getAttribute('href');
+    try {
+      if (utils.canUseDOM()) {
+        const linkEle = document?.querySelector('link[rel="canonical"]');
+        const href = linkEle?.getAttribute('href');
+
+        if (href) {
+          const url = new URL(href, document.location.href);
+          canonicalURL = url.toString();
+        }
       }
-
-      return canonicalURL;
+    } catch (e) {
+      // do nothing
     }
 
-    return null;
+    return canonicalURL;
   },
 
   dispatchEvent: (event) => {
