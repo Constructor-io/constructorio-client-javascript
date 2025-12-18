@@ -50,7 +50,7 @@ const utils = {
     try {
       // Handle android app referrers
       if (url?.startsWith('android-app')) {
-        url = url?.replace('android-app', 'https')
+        url = url?.replace('android-app', 'https');
       }
 
       validatedUrl = (new URL(url, baseUrl)).toString();
