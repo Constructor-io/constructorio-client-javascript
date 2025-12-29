@@ -51,7 +51,8 @@ const utils = {
       return urlString;
     }
 
-    const { searchParams } = urlObj;
+    const urlCopy = new URL(urlObj.toString());
+    const { searchParams } = urlCopy;
     const paramEntries = Array.from(searchParams.entries());
 
     if (paramEntries.length === 0) {
@@ -69,7 +70,7 @@ const utils = {
         break;
       }
       searchParams.delete(paramEntries[i][0]);
-      urlString = urlObj.toString();
+      urlString = urlCopy.toString();
     }
 
     if (urlString.length > maxLen) {
