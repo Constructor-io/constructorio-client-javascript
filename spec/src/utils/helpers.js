@@ -24,6 +24,8 @@ const {
   stringify,
   convertResponseToJson,
   addHTTPSToString,
+  trimUrl,
+  cleanAndValidateUrl,
 } = require('../../../test/utils/helpers'); // eslint-disable-line import/extensions
 const jsdom = require('./jsdom-global');
 const store = require('../../../test/utils/store'); // eslint-disable-line import/extensions
@@ -611,6 +613,89 @@ describe('ConstructorIO - Utils - Helpers', () => {
         const testUrl = {};
 
         expect(addHTTPSToString(testUrl)).to.equal(null);
+      });
+    });
+
+    describe('trimUrl', () => {
+      it('Should return the URL as-is if it is under the max length', () => {
+        const testUrl = new URL('https://www.constructor.io/search?q=test');
+        const result = trimUrl(testUrl);
+
+        expect(result).to.equal('https://www.constructor.io/search?q=test');
+      });
+
+      it('Should remove the longest parameter when URL exceeds max length', () => {
+        const longValue = 'a'.repeat(2000);
+        const testUrl = new URL(`https://www.constructor.io/search?short=b&long=${longValue}`);
+        const result = trimUrl(testUrl, 100);
+
+        expect(result).to.include('short=b');
+        expect(result).to.not.include('long=');
+        expect(result.length).to.be.at.most(100);
+      });
+
+      it('Should remove multiple parameters starting with the longest', () => {
+        const testUrl = new URL('https://www.constructor.io/search?a=1&b=22&c=333&d=4444');
+        const result = trimUrl(testUrl, 50);
+
+        expect(result.length).to.be.at.most(50);
+      });
+
+      it('Should truncate URL if removing all parameters is not enough', () => {
+        const longPath = 'a'.repeat(2000);
+        const testUrl = new URL(`https://www.constructor.io/${longPath}`);
+        const result = trimUrl(testUrl, 100);
+
+        expect(result.length).to.equal(100);
+      });
+
+      it('Should use custom maxLen parameter', () => {
+        const testUrl = new URL('https://www.constructor.io/search?param=value');
+        const customMaxLen = 30;
+        const result = trimUrl(testUrl, customMaxLen);
+
+        expect(result.length).to.be.at.most(customMaxLen);
+      });
+    });
+
+    describe('cleanAndValidateUrl', () => {
+      it('Should return a valid URL string', () => {
+        const testUrl = 'https://www.constructor.io/search?q=test';
+        const result = cleanAndValidateUrl(testUrl);
+
+        expect(result).to.equal(testUrl);
+      });
+
+      it('Should handle android-app referrers by converting to https', () => {
+        const androidUrl = 'android-app://com.google.android.googlequicksearchbox/path';
+        const result = cleanAndValidateUrl(androidUrl);
+
+        expect(result).to.include('https://');
+        expect(result).to.include('com.google.android.googlequicksearchbox');
+      });
+
+      it('Should return null for invalid URLs', () => {
+        const invalidUrl = 'not a valid url';
+        const result = cleanAndValidateUrl(invalidUrl);
+
+        expect(result).to.be.null;
+      });
+
+      it('Should handle relative URLs with baseUrl', () => {
+        const relativeUrl = '/search?q=test';
+        const baseUrl = 'https://www.constructor.io';
+        const result = cleanAndValidateUrl(relativeUrl, baseUrl);
+
+        expect(result).to.include('https://www.constructor.io/search?q=test');
+      });
+
+      it('Should trim URLs that exceed max length', () => {
+        const longValue = 'a'.repeat(2000);
+        const testUrl = `https://www.constructor.io/search?param=${longValue}`;
+        const result = cleanAndValidateUrl(testUrl);
+
+        expect(result).to.not.be.null;
+        expect(result.length).to.be.at.most(2000);
       });
     });
   }
