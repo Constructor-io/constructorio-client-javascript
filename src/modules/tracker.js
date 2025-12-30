@@ -1869,12 +1869,11 @@ class Tracker {
 
   /**
    * Send browse redirect event to API
-   * @private
    * @function trackBrowseRedirect
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.searchTerm - The search query that caused redirect
-   * @param {string} parameters.filterName - Filter name
-   * @param {string} parameters.filterValue - Filter value
+   * @param {string} parameters.filterName - Filter name of the browse page the user is redirected to. Should be the same value sent in `trackBrowseResultsLoaded`
+   * @param {string} parameters.filterValue - Filter value of the browse page the user is redirected to. Should be the same value sent in `trackBrowseResultsLoaded`
    * @param {string} [parameters.userInput] - The text that a user had typed at the moment when submitting search request
    * @param {string} [parameters.redirectToUrl] - URL of the  page to which user is redirected
    * @param {string} [parameters.section="Products"] - Index section
