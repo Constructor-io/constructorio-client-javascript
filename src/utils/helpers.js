@@ -19,6 +19,7 @@ const PII_REGEX = [
   },
   // Add more PII REGEX
 ];
+const URL_MAX_LEN = 2000;
 
 const utils = {
   trimNonBreakingSpaces: (string) => string.replace(/\s/g, ' ').trim(),
@@ -42,6 +43,61 @@ const utils = {
     });
 
     return cleanedParams;
+  },
+  trimUrl: (urlObj, maxLen = URL_MAX_LEN) => {
+    let urlString = urlObj.toString();
+
+    if (urlString.length <= maxLen) {
+      return urlString;
+    }
+
+    const urlCopy = new URL(urlObj.toString());
+    const { searchParams } = urlCopy;
+    const paramEntries = Array.from(searchParams.entries());
+
+    if (paramEntries.length === 0) {
+      return utils.truncateString(urlString, maxLen);
+    }
+
+    paramEntries.sort((a, b) => {
+      const aLength = a[0].length + a[1].length;
+      const bLength = b[0].length + b[1].length;
+      return bLength - aLength;
+    });
+
+    for (let i = 0; i < paramEntries.length; i += 1) {
+      if (urlString.length <= maxLen) {
+        break;
+      }
+      searchParams.delete(paramEntries[i][0]);
+      urlString = urlCopy.toString();
+    }
+
+    if (urlString.length > maxLen) {
+      return utils.truncateString(urlString, maxLen);
+    }
+
+    return urlString;
+  },
+
+  cleanAndValidateUrl: (url, baseUrl = undefined) => {
+    let validatedUrl = null;
+
+    try {
+      // Handle android app referrers
+      if (url?.startsWith('android-app')) {
+        url = url?.replace('android-app', 'https');
+      }
+
+      const urlObj = new URL(url, baseUrl);
+      const trimmedUrl = new URL(utils.trimUrl(urlObj));
+
+      validatedUrl = trimmedUrl.toString();
+    } catch (e) {
+      // do nothing
+    }
+
+    return validatedUrl;
   },
 
   throwHttpErrorFromResponse: (error, response) => response.json().then((json) => {
@@ -92,11 +148,17 @@ const utils = {
   },
 
   getDocumentReferrer: () => {
-    if (utils.canUseDOM()) {
-      return document?.referrer;
+    let documentReferrer = null;
+
+    try {
+      if (utils.canUseDOM()) {
+        documentReferrer = utils.cleanAndValidateUrl(document.referrer);
+      }
+    } catch (e) {
+      // do nothing
     }
 
-    return null;
+    return documentReferrer;
   },
 
   getCanonicalUrl: () => {
@@ -108,8 +170,7 @@ const utils = {
         const href = linkEle?.getAttribute('href');
 
         if (href) {
-          const url = new URL(href, document.location.href);
-          canonicalURL = url.toString();
+          canonicalURL = utils.cleanAndValidateUrl(href, document.location.href);
         }
       }
     } catch (e) {
