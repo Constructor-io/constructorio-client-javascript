@@ -108,7 +108,7 @@ export interface Feature extends Record<string, any> {
   } | null;
 }
 
-export type Facet = RangeFacet | OptionFacet | HierarchialOptionFacet;
+export type Facet = RangeFacet | OptionFacet | HierarchicalOptionFacet;
 
 export type BrowseFacet = Pick<Facet, keyof BaseFacet | 'type'>;
 
@@ -131,8 +131,8 @@ export interface OptionFacet extends BaseFacet, Record<string, any> {
   type: 'multiple' | 'single';
 }
 
-export interface HierarchialOptionFacet extends BaseFacet, Record<string, any> {
-  options: HierarchialFacetOption[];
+export interface HierarchicalOptionFacet extends BaseFacet, Record<string, any> {
+  options: HierarchicalFacetOption[];
   type: 'hierarchical';
 }
 
@@ -145,8 +145,8 @@ export interface FacetOption extends Record<string, any> {
   data: Record<string, any>;
 }
 
-export interface HierarchialFacetOption extends FacetOption {
-  options?: HierarchialFacetOption[];
+export interface HierarchicalFacetOption extends FacetOption {
+  options?: HierarchicalFacetOption[];
 }
 
 export type RangeMin = '-inf' | number;
