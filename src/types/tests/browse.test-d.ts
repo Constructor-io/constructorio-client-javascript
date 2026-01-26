@@ -29,6 +29,7 @@ expectAssignable<GetBrowseResultsResponse>({
         data: {},
       },
     ],
+    groups: [],
     results: [
       {
         matched_terms: [],
@@ -62,6 +63,7 @@ expectAssignable<GetBrowseResultsResponse>({
         display_name: 'A - Z',
         sort_order: 'descending',
         status: '',
+        hidden: false,
       },
     ],
     refined_content: [],

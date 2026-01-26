@@ -97,6 +97,7 @@ export interface SortOption extends Record<string, any> {
   display_name: string;
   sort_order: string;
   status: string;
+  hidden: boolean;
 }
 
 export interface Feature extends Record<string, any> {
@@ -110,44 +111,59 @@ export interface Feature extends Record<string, any> {
   } | null;
 }
 
-export type Facet = RangeFacet | OptionFacet;
+export type Facet = RangeFacet | OptionFacet | HierarchicalOptionFacet;
+
+export type BrowseFacet = Pick<Facet, keyof BaseFacet | 'type'>;
 
 export interface BaseFacet extends Record<string, any> {
   data: Record<string, any>;
-  status: Record<string, any>;
   display_name: string;
   name: string;
   hidden: boolean;
 }
 
 export interface RangeFacet extends BaseFacet, Record<string, any> {
-  max: number;
-  min: number;
+  status?: { min: RangeMin, max: RangeMax };
+  max: RangeMax;
+  min: RangeMin;
   type: 'range';
 }
 
 export interface OptionFacet extends BaseFacet, Record<string, any> {
   options: FacetOption[];
-  type: 'multiple' | 'single' | 'hierarchical';
+  type: 'multiple' | 'single';
+}
+
+export interface HierarchicalOptionFacet extends BaseFacet, Record<string, any> {
+  options: HierarchicalFacetOption[];
+  type: 'hierarchical';
 }
 
 export interface FacetOption extends Record<string, any> {
   count: number;
   display_name: string;
   value: string;
-  options?: FacetOption[];
-  range?: ['-inf' | number, 'inf' | number];
+  range?: [RangeMin, RangeMax];
   status: string;
+  data: Record<string, any>;
 }
 
+export interface HierarchicalFacetOption extends FacetOption {
+  options?: HierarchicalFacetOption[];
+}
+
+export type RangeMin = '-inf' | number;
+export type RangeMax = '+inf' | 'inf' | number
+
 export interface Group extends BaseGroup, Record<string, any> {
-  count?: number;
+  count: number;
   data?: Record<string, any>;
-  parents?: BaseGroup[];
-  children?: Group[];
+  parents: BaseGroup[];
+  children: Group[];
 }
 
 export interface Collection extends Record<string, any> {
+  // documentation says this field is called `id`
   collection_id: string;
   display_name: string;
   data: Record<string, any>;
