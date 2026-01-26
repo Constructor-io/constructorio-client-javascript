@@ -40,7 +40,7 @@ export interface RecommendationsResponse extends Record<string, any> {
 
 export interface RecommendationsRequestType extends Record<string, any> {
   num_results: number;
-  item_id: string;
+  item_id: string | string[];
   filters: {
     group_id: string;
     [key: string]: any;
