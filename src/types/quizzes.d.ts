@@ -127,7 +127,7 @@ export interface QuizResultData extends Record<string, any> {
   variations: Record<string, any>[];
 }
 
-export type Question = SelectQuestion | FilterValueQuestion | OpenQuestion | CoverQuestion;
+export type Question = SelectQuestion | FilterValueQuestion | OpenQuestion | CoverQuestion | FreeFormQuestion;
 
 export interface BaseQuestion extends Record<string, any> {
   id: number;
@@ -156,6 +156,11 @@ export interface OpenQuestion extends BaseQuestion {
 
 export interface CoverQuestion extends BaseQuestion {
   type: 'cover';
+}
+
+export interface FreeFormQuestion extends BaseQuestion {
+  type: 'free_form';
+  input_placeholder?: Nullable<string>;
 }
 
 export interface QuizResult extends Record<string, any> {
