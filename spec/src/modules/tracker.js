@@ -15772,4 +15772,227 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       ).to.equal(true);
     });
   });
+
+  describe('trackMediaImpressionClick', () => {
+    const testApiKeyWithAdPlacements = 'u7PNVQx-prod-en-us';
+    const requiredParameters = {
+      bannerAdId: 'AszgOLr3pCZheI0Bx7rNtSraeaN6o3IgNNWvUgan/LqMsf0pTVFaHqjDjWNj1Gz5+IfGOQOs6XOYcWVykjsYSphHF3j04TsXVAlkd2VorLK3dg39SsLiv8mOEVA6TcuBSXAmGLXZCyTmCRjD8JG6QXNEr5qWC073V6CwJRT/XnUYJ/8fiosWNIpNiv5z9VtocQLqILszRllLEMpuGFdXu2HS',
+      placementId: 'home-page-top-banner',
+    };
+
+    const optionalParameters = {
+      analyticsTags: testAnalyticsTag,
+    };
+
+    it('Should respond with a valid response when required parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKeyWithAdPlacements,
+        fetch: fetchSpy,
+        mediaServiceUrl: 'https://dev-behavior.media-cnstrc.com',
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('canonical_url').to.equal(canonicalUrl);
+        expect(requestParams).to.have.property('document_referrer').to.equal(referrer);
+        expect(requestParams)
+          .to.have.property('banner_ad_id')
+          .to.equal(requiredParameters.bannerAdId);
+        expect(requestParams)
+          .to.have.property('placement_id')
+          .to.equal(requiredParameters.placementId);
+        validateOriginReferrer(requestParams);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackMediaImpressionClick(requiredParameters)).to.equal(
+        true,
+      );
+    });
+
+    it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKeyWithAdPlacements,
+        fetch: fetchSpy,
+        mediaServiceUrl: 'https://dev-behavior.media-cnstrc.com',
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams)
+          .to.have.property('analytics_tags')
+          .to.deep.equal(testAnalyticsTag);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(
+        tracker.trackMediaImpressionClick(
+          Object.assign(requiredParameters, optionalParameters),
+        ),
+      ).to.equal(true);
+    });
+
+    it('Should throw an error when invalid parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackMediaImpressionClick([])).to.be.an('error');
+    });
+
+    it('Should throw an error when no parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackMediaImpressionClick()).to.be.an('error');
+    });
+
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKeyWithAdPlacements,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: true,
+        mediaServiceUrl: 'https://dev-behavior.media-cnstrc.com',
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        validateOriginReferrer(requestParams);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackMediaImpressionClick(requiredParameters)).to.equal(
+        true,
+      );
+    });
+
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKeyWithAdPlacements,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: false,
+        mediaServiceUrl: 'https://dev-behavior.media-cnstrc.com',
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('origin_referrer');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackMediaImpressionClick(requiredParameters)).to.equal(
+        true,
+      );
+    });
+
+    if (!skipNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKeyWithAdPlacements,
+          mediaServiceUrl: 'https://dev-behavior.media-cnstrc.com',
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(
+          tracker.trackMediaImpressionClick(requiredParameters, { timeout: 10 }),
+        ).to.equal(true);
+      });
+
+      it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKeyWithAdPlacements,
+          mediaServiceUrl: 'https://dev-behavior.media-cnstrc.com',
+          networkParameters: {
+            timeout: 20,
+          },
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackMediaImpressionClick(requiredParameters)).to.equal(
+          true,
+        );
+      });
+    }
+
+    it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const breakingSpaces = '   ';
+      const userId = `user-id ${breakingSpaces} user-id`;
+      const userIdExpected = 'user-id     user-id';
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKeyWithAdPlacements,
+        userId,
+        mediaServiceUrl: 'https://dev-behavior.media-cnstrc.com',
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('ui').to.equal(userIdExpected);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(
+        tracker.trackMediaImpressionClick({
+          ...requiredParameters,
+          userId,
+        }),
+      ).to.equal(true);
+    });
+  });
 });
