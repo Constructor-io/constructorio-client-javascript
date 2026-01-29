@@ -4,157 +4,451 @@ description: Review the changes in the current branch (or specified branch) and 
 
 # /review
 
-Perform a comprehensive code review of all changes in the current branch (or specified branch) against master (or main).
+Review the changes in the current branch (or specified branch) and provide detailed feedback across multiple quality dimensions.
 
-## Process
+## Arguments
 
-1. **Branch Diff Analysis**
+- `$ARGUMENTS` - Optional: branch name or PR number to review. Defaults to current branch vs main/master.
 
-   - Determine the name of the current branch to review
-   - Run `git merge-base origin/master [branch]` to find the common ancestor commit
-   - Run `git diff [common ancestor commit]..[branch]` to capture all changes in the branch
-   - Run `git log [common ancestor commit]..[branch] --oneline --no-merges` to understand the commit progression
-     - Use `--no-merges` flag to ignore merge commits
-   - Identify all modified, added, and deleted files for comprehensive analysis
+---
 
-2. **File-by-File Code Review**
+## SECTION 1: PROCESS
 
-   - Read each modified file completely to understand context and changes
-   - Focus on the specific diff sections but maintain awareness of surrounding code
+### Step 1: Identify Changes
 
-3. **Quality Validation**
+Determine what to review based on arguments:
 
-   - Verify the changes are covered with tests
-   - Ensure critical code paths have unit tests and edge cases are covered
-   - Check that new components have corresponding test files
+```bash
+# If PR number provided
+gh pr view $ARGUMENTS --json headRefName,baseRefName
 
-4. **Security and Performance Audit**
-
-   - Scan for potential security vulnerabilities following OWASP Top 10
-     - **A01: Broken Access Control** - Authorization bypass, privilege escalation
-     - **A02: Cryptographic Failures** - Weak encryption, exposed secrets, insecure data transmission
-     - **A03: Injection** - SQL injection, XSS in components, unsafe database queries
-     - **A04: Insecure Design** - Missing security controls, inadequate threat modeling
-     - **A05: Security Misconfiguration** - Default configs, exposed debug info, missing security headers
-     - **A06: Vulnerable Components** - Outdated npm packages, insecure gem versions
-     - **A07: Authentication Failures** - Weak passwords, session management flaws
-     - **A08: Data Integrity Failures** - Unsigned software updates, insecure deserialization
-     - **A09: Logging/Monitoring Failures** - Missing audit logs, inadequate error tracking
-     - **A10: Server-Side Request Forgery** - Unvalidated server-side requests
-     - CSRF protection in forms and API endpoints
-     - Proper sanitization of user inputs
-   - Identify performance bottlenecks:
-     - Unnecessary re-renders and missing memoization
-     - Memory leaks
-     - Inefficient database indexes
-   - Check for proper error handling and logging practices
-
-## Review Standards
-
-### Guidelines
-
-- Be concise and specific
-- Provide **only** actionable feedback for all sections except "strengths"
-  - Actionable feedback identifies specific issues that require code changes or improvements
-  - Non-actionable feedback acknowledges good practices without suggesting changes
-  - Example: "Missing error handling in submitForm() function" (actionable) vs "Good use of TypeScript types" (non-actionable)
-  - Do not note what was changed in the actionable sections
-  - Do not acknowledge good practices in the actionable sections
-- Focus on reviewing the code
-  - Do not run tests or linters
-  - Do not make changes
-
-### Code Quality
-
-- Includes appropriate tests (happy-path for new features, failing test for bugs)
-- **New `TODO`s**: include explanation for future work
-- **README impact**: update for new env vars, setup instructions, or dependencies
-- **`package-lock.json` changes**: correspond to `package.json` changes
-
-### Coding Standards
-
-#### Security & Environment Configuration
-
-- **Don't expose environment details client-side**: Read configuration from server-side instead of hardcoding environment-specific paths
-- **Environment-based credentials**: Never hardcode database credentials; always use environment variables
-- **API endpoint whitelisting**: Implement whitelists of allowed endpoints in proxy controllers to prevent unintended exposure
-- **Use correct HTTP status codes**: Return 403 Forbidden instead of 401 Unauthorized for permission-related access denials
-
-#### File Organization & Architecture
-
-- **Use proper shared component placement**: Place shared components in appropriate folders
-- **Extract constants for magic numbers**: Define hardcoded limits as named constants (e.g., `const DISPLAY_LIMIT = 4`)
-
-#### Code Quality
-
-- **`any` usage**: Validate type safety and eliminate `any` usage
-- **Use type guards over type assertions**: Prefer `Type.is(value) ? value.prop : undefined` over unsafe casting
-- **Avoid unnecessary optional chaining**: Only use when nullability is actually possible
-- **Provide unique ESLint disable comments**: Each disable should explain the specific violation
-- **Use descriptive variable names**: Avoid abbreviations; use full descriptive names (`index` not `idx`)
-- **Use `@ts-expect-error` over `@ts-ignore`**: Make type ignores explicit and catchable when no longer needed
-- **Remove redundant type suffixes**: Avoid adding "Cube" or similar redundant suffixes to type names
-
-#### Function Design & Immutability
-
-- **Avoid direct object mutation in utilities**: Functions should return new objects instead of modifying parameters
-- **Extract repeated inline logic**: Convert repeated patterns into reusable helper functions
-
-#### Error Handling & Loading States
-
-- **Independent loading states**: Loading states for unrelated features should not block each other
-- **Complete error and loading state handling**: Always implement error and loading states for hooks and API calls
-- **Prevent race conditions**: Disable interactions during loading states
-- **Handle division by zero explicitly**: Check for zero denominators before performing division operations
-- **Provide actionable error messages**: Include specific guidance on how to resolve issues
-
-#### Testing Requirements
-
-- **Mandatory test coverage**: All code changes must be covered by tests unless explicitly discussed with team
-- **Mocking with jest.spyOn**: Ensure proper mocking with `jest.spyOn`
-- **Test edge cases explicitly**: Include tests for empty strings, null values, undefined data
-- **Use proper testing methodology**: Don't use `renderHook` for non-hook functions
-- **Comprehensive test coverage**: When adding new nullable or undefinable props, test both presence and absence
-- **Use test factories**: Use existing factories from `__tests__/factories` instead of manually creating test objects
-- **Test with realistic data structures**: Update test data to match new data models when extending types
-
-#### Performance & UX Guidelines
-
-- **Implement limits for large datasets**: Add sensible display limits for user-generated content
-- **Real-time preview updates**: Interactive elements should provide immediate feedback
-
-### Suggestions Section
-
-Focus on code quality improvements that enhance maintainability:
-
-- Identify opportunities for code deduplication and suggest shared utilities or components
-- Suggest performance optimizations that aren't critical issues
-- Recommend better naming conventions or code organization
-
-## Output Format
-
-Deliver structured feedback using this format:
-
-```
-## Code Review Results
-
-## ✅ Strengths
-[Write **one short sentence** highlighting good practices and well-implemented features]
-
-## 🚨 Critical Issues
-[Must be fixed before merge - include file_path:line_number references]
-
-## ⚠️ Important Issues
-[Should be addressed - include file_path:line_number references]
-
-## 💡 Suggestions
-[Improvements that enhance code quality - include file_path:line_number references]
-
-**Overall Assessment:** [✅ Pass/⚠️ Needs Work/❌ Critical Issues]
+# If branch name provided or current branch
+git fetch origin
+BASE_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
+MERGE_BASE=$(git merge-base origin/$BASE_BRANCH HEAD)
 ```
 
-## Output Guidelines
+### Step 2: Gather Context
 
-- Always include specific file paths with line numbers for actionable feedback.
-- Be direct and specific about required changes.
-- Do not include additional commentary outside the specified format.
+```bash
+# Get list of changed files
+git diff --name-only $MERGE_BASE...HEAD
+
+# Get full diff with context
+git diff $MERGE_BASE...HEAD
+
+# Get commit history for this branch
+git log --oneline $MERGE_BASE...HEAD
+
+# Check for any PR description context
+gh pr view --json body,title 2>/dev/null || echo "No PR found"
+```
+
+### Step 3: Review Each File
+
+For each changed file:
+
+1. Read the full file for context
+2. Examine the diff hunks
+3. Apply all review domain checklists below
+4. Note issues with severity and file:line references
+
+---
+
+## SECTION 2: REVIEW DOMAINS
+
+### 2.1 Error Handling & Silent Failures
+
+**Logging Quality:**
+
+- [ ] Errors logged with sufficient context (what failed, relevant IDs)
+- [ ] Log levels appropriate (error vs warn vs info)
+- [ ] No sensitive data in logs (passwords, tokens, PII)
+- [ ] Async errors properly caught and logged
+
+**User Feedback:**
+
+- [ ] Errors produce meaningful user-facing messages
+- [ ] No silent failures that leave users confused
+- [ ] Loading/error states handled in UI code
+- [ ] Network failures gracefully degraded
+
+**Catch Block Analysis:**
+
+- [ ] Catch blocks don't swallow errors silently
+- [ ] Caught exceptions are specific, not generic `catch(e)`
+- [ ] Re-thrown errors preserve stack traces
+- [ ] Finally blocks don't mask exceptions
+
+**Fallback Behavior:**
+
+- [ ] Fallback values are intentional, not accidental defaults
+- [ ] `|| defaultValue` patterns checked for falsy edge cases (0, '')
+- [ ] Optional chaining `?.` doesn't hide bugs
+- [ ] Nullish coalescing `??` used appropriately vs `||`
+
+**Hidden Failure Patterns:**
+
+- [ ] Empty catch blocks flagged
+- [ ] `console.log` only error handling flagged
+- [ ] Missing error boundaries in React code
+- [ ] Promises without .catch() or try/catch
+
+---
+
+### 2.2 Test Coverage Analysis
+
+**Coverage Focus:**
+
+- [ ] New code paths have corresponding tests
+- [ ] Edge cases and boundary conditions tested
+- [ ] Error paths tested, not just happy path
+- [ ] Integration points tested appropriately
+
+**Test Quality:**
+
+- [ ] Tests verify behavior, not implementation details
+- [ ] Test names describe the scenario being tested
+- [ ] Assertions are specific and meaningful
+- [ ] No flaky patterns (timing, order-dependent)
+
+**Criticality Rating:**
+
+- **HIGH**: Auth, payments, data mutations, security boundaries
+- **MEDIUM**: Core business logic, API contracts
+- **LOW**: UI presentation, formatting, logging
+
+---
+
+### 2.3 Security Audit (OWASP Top 10)
+
+**A01:2021 - Broken Access Control:**
+
+- [ ] Authorization checked on all protected endpoints
+- [ ] User can only access their own resources
+- [ ] Role/permission checks present and correct
+- [ ] No IDOR vulnerabilities (direct object references)
+
+**A02:2021 - Cryptographic Failures:**
+
+- [ ] Sensitive data encrypted at rest and in transit
+- [ ] No hardcoded secrets, keys, or passwords
+- [ ] Secure algorithms used (no MD5, SHA1 for security)
+- [ ] TLS enforced for external communications
+
+**A03:2021 - Injection:**
+
+- [ ] SQL queries parameterized (no string concatenation)
+- [ ] NoSQL queries use proper escaping
+- [ ] OS command inputs sanitized
+- [ ] LDAP/XPath queries properly escaped
+
+**A04:2021 - Insecure Design:**
+
+- [ ] Business logic flaws considered
+- [ ] Rate limiting on sensitive operations
+- [ ] Proper session management
+- [ ] Defense in depth (multiple layers)
+
+**A05:2021 - Security Misconfiguration:**
+
+- [ ] No debug features in production code
+- [ ] Error messages don't leak stack traces
+- [ ] Default credentials not used
+- [ ] Security headers configured
+
+**A06:2021 - Vulnerable Components:**
+
+- [ ] Dependencies up to date
+- [ ] No known vulnerable packages
+- [ ] Minimal dependency footprint
+
+**A07:2021 - Authentication Failures:**
+
+- [ ] Strong password policies enforced
+- [ ] Brute force protection present
+- [ ] Session tokens properly managed
+- [ ] Multi-factor considerations
+
+**A08:2021 - Data Integrity Failures:**
+
+- [ ] Input validation on all external data
+- [ ] Deserialization of untrusted data avoided
+- [ ] CI/CD pipeline security considered
+
+**A09:2021 - Logging & Monitoring:**
+
+- [ ] Security events logged appropriately
+- [ ] Audit trails for sensitive operations
+- [ ] No sensitive data in logs
+
+**A10:2021 - SSRF:**
+
+- [ ] User-provided URLs validated
+- [ ] Internal network access restricted
+- [ ] Redirect following controlled
+
+**XSS Prevention (Web):**
+
+- [ ] User input escaped in HTML output
+- [ ] React dangerouslySetInnerHTML avoided or sanitized
+- [ ] URLs validated before use in links
+- [ ] Content-Security-Policy considered
+
+---
+
+### 2.4 Performance Review
+
+**Algorithmic Complexity:**
+
+- [ ] No obvious O(n²) or worse in hot paths
+- [ ] Loops don't contain hidden expensive operations
+- [ ] Recursion has proper termination and depth limits
+- [ ] Data structures appropriate for access patterns
+
+**Database Performance:**
+
+- [ ] No N+1 query patterns
+- [ ] Queries use appropriate indexes
+- [ ] Large result sets paginated
+- [ ] Transactions scoped minimally
+- [ ] No SELECT \* on large tables
+
+**Memory Management:**
+
+- [ ] No memory leaks (event listeners, timers, closures)
+- [ ] Large objects released when done
+- [ ] Streams used for large data processing
+- [ ] No unbounded caches or queues
+
+**Caching Opportunities:**
+
+- [ ] Expensive computations cached where stable
+- [ ] Cache invalidation strategy clear
+- [ ] Appropriate TTLs set
+
+**Frontend Performance:**
+
+- [ ] No unnecessary re-renders (React)
+- [ ] Large lists virtualized
+- [ ] Images optimized and lazy-loaded
+- [ ] Bundle size impact considered
+
+---
+
+### 2.5 Architecture & Patterns
+
+**SOLID Principles:**
+
+- [ ] Single Responsibility: Classes/functions do one thing
+- [ ] Open/Closed: Extended without modification
+- [ ] Liskov Substitution: Subtypes substitutable
+- [ ] Interface Segregation: No fat interfaces
+- [ ] Dependency Inversion: Depend on abstractions
+
+**Design Pattern Usage:**
+
+- [ ] Patterns used appropriately, not forced
+- [ ] Pattern choice documented if non-obvious
+- [ ] Consistency with existing codebase patterns
+
+**Anti-Patterns Detected:**
+
+- [ ] God classes/functions (too many responsibilities)
+- [ ] Shotgun surgery (one change = many files)
+- [ ] Feature envy (method uses other class's data)
+- [ ] Primitive obsession (primitives vs value objects)
+- [ ] Speculative generality (YAGNI violations)
+
+**Naming Conventions:**
+
+- [ ] Names are descriptive and consistent
+- [ ] Follows codebase conventions (camelCase, snake_case)
+- [ ] Boolean variables prefixed appropriately (is, has, should)
+- [ ] Functions named as verbs, classes as nouns
+
+**Code Duplication:**
+
+- [ ] No copy-paste code that should be extracted
+- [ ] Similar code patterns unified or intentionally different
+- [ ] Magic numbers/strings extracted to constants
+
+---
+
+### 2.6 Code Quality
+
+**Type Safety:**
+
+- [ ] TypeScript `any` usage justified or eliminated
+- [ ] Type assertions (`as`) minimized and documented
+- [ ] Generic types used where appropriate
+- [ ] Null/undefined handling explicit
+
+**File Organization:**
+
+- [ ] Files in appropriate directories
+- [ ] Imports organized and minimal
+- [ ] No circular dependencies introduced
+- [ ] Module boundaries respected
+
+**Function Design:**
+
+- [ ] Functions are small and focused
+- [ ] Side effects minimized and documented
+- [ ] Pure functions preferred where possible
+- [ ] Parameters count reasonable (≤4)
+
+**Immutability:**
+
+- [ ] State mutations intentional and localized
+- [ ] Const preferred over let
+- [ ] Arrays/objects not mutated unexpectedly
+- [ ] React state updated immutably
+
+**Code Clarity:**
+
+- [ ] Complex logic has explanatory comments
+- [ ] No clever one-liners that sacrifice readability
+- [ ] Control flow is straightforward
+- [ ] Early returns used to reduce nesting
+
+---
+
+## SECTION 3: SEVERITY SYSTEM
+
+### P1 CRITICAL - Must Fix Before Merge
+
+- Security vulnerabilities
+- Data corruption risks
+- Breaking changes to public API
+- Crashes or complete feature failures
+- Hardcoded secrets or credentials
+
+### P2 IMPORTANT - Should Fix
+
+- Performance regressions
+- Missing error handling on important paths
+- Architectural concerns
+- Test coverage gaps on critical code
+- Potential reliability issues
+
+### P3 SUGGESTION - Nice to Have
+
+- Style/formatting improvements
+- Minor refactoring opportunities
+- Documentation additions
+- Non-critical test additions
+- Code organization tweaks
+
+---
+
+## SECTION 4: OUTPUT FORMAT
+
+Structure your review as follows:
+
+```markdown
+## Code Review: [Branch/PR Name]
+
+**Files Reviewed:** X files, +Y/-Z lines
+
+### P1 Critical Issues (X found)
+
+#### [Issue Title]
+
+- **File:** `path/to/file.ts:123`
+- **Issue:** [Clear description of the problem]
+- **Risk:** [What could go wrong]
+- **Fix:** [Specific recommendation]
+
+### P2 Important Issues (X found)
+
+#### [Issue Title]
+
+- **File:** `path/to/file.ts:456`
+- **Issue:** [Description]
+- **Recommendation:** [What to do]
+
+### P3 Suggestions (X found)
+
+- `file.ts:78` - Consider extracting this to a constant
+- `other.ts:92` - Could benefit from a descriptive comment
+
+### Strengths
+
+[One short paragraph highlighting good practices observed]
+
+---
+
+**Overall Assessment:** [APPROVED / NEEDS WORK / CRITICAL ISSUES]
+
+- **APPROVED**: No P1s, minimal P2s, good to merge
+- **NEEDS WORK**: P2s should be addressed, or P1s with clear path to fix
+- **CRITICAL ISSUES**: P1s must be resolved before merge
+```
+
+---
+
+## SECTION 5: REVIEW GUIDELINES
+
+### Do
+
+- Reference specific file:line locations
+- Explain WHY something is an issue
+- Provide actionable fix suggestions
+- Acknowledge good patterns when seen
+- Consider the full context of changes
+
+### Don't
+
+- Run tests or linters (review only)
+- Make changes to the code
+- Be vague ("this looks wrong")
+- Nitpick formatting that linters catch
+- Review files not in the diff
+
+### Prioritization
+
+1. Review security-sensitive files first
+2. Focus on new code over modified code
+3. Pay extra attention to public API changes
+4. Check test files for coverage gaps
+5. Review configuration changes carefully
+
+### Confidence Indicators
+
+When uncertain about an issue, indicate confidence:
+
+- **HIGH**: Definitely a problem, clear evidence
+- **MEDIUM**: Likely an issue, worth investigating
+- **LOW**: Might be intentional, asking for clarification
+
+---
+
+## Quick Reference Checklist
+
+For rapid reviews, ensure these critical items are checked:
+
+**Security (P1)**
+
+- [ ] No hardcoded secrets
+- [ ] Input validation present
+- [ ] Authorization checks exist
+- [ ] No SQL/XSS injection vectors
+
+**Reliability (P1-P2)**
+
+- [ ] Error handling present
+- [ ] No silent failures
+- [ ] Edge cases considered
+
+**Performance (P2)**
+
+- [ ] No N+1 queries
+- [ ] No O(n²) in hot paths
+- [ ] No memory leaks
+
+**Quality (P2-P3)**
+
+- [ ] Types are safe
+- [ ] Names are clear
+- [ ] Logic is readable
