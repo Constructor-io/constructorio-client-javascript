@@ -7,4 +7,6 @@ on:
 jobs:
   review:
     uses: Constructor-io/shared-claude-code-resources-public/.github/workflows/claude-code-review.yml@main
+    with:
+      hide_previous_comments: true
     secrets: inherit
