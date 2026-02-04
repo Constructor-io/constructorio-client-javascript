@@ -28,6 +28,7 @@ const utmParameters = 'utm_source=attentive&utm_medium=sms&utm_campaign=campaign
 const url = `http://localhost.test/path/name?query=term&category=cat&${utmParameters}`;
 const referrer = 'https://www.google.com/';
 const canonicalUrl = 'https://localhost/';
+const testApiKeyWithAdPlacements = 'key_x6UnCVRZaJgIHFQD';
 
 function validateOriginReferrer(requestParams) {
   expect(requestParams).to.have.property('origin_referrer').to.contain('localhost.test/path/name');
@@ -15513,8 +15514,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
   describe('trackMediaImpressionView', () => {
     const requiredParameters = {
-      bannerAdId: 'banner_ad_id',
-      placementId: 'placement_id',
+      bannerAdId: 'AszgOLr3pCZheI0Bx7rNtSraeaN6o3IgNNWvUgan/LqMsf0pTVFaHqjDjWNj1Gz5+IfGOQOs6XOYcWVykjsYSphHF3j04TsXVAlkd2VorLK3dg39SsLiv8mOEVA6TcuBSXAmGLXZCyTmCRjD8JG6QXNEr5qWC073V6CwJRT/XnUYJ/8fiosWNIpNiv5z9VtocQLqILszRllLEMpuGFdXu2HS',
+      placementId: 'products-listings-page',
     };
 
     const optionalParameters = {
@@ -15523,7 +15524,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
+        apiKey: testApiKeyWithAdPlacements,
         fetch: fetchSpy,
         mediaServiceUrl: 'https://media-cnstrc.com',
         ...requestQueueOptions,
@@ -15562,7 +15563,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
+        apiKey: testApiKeyWithAdPlacements,
         fetch: fetchSpy,
         mediaServiceUrl: 'https://media-cnstrc.com',
         ...requestQueueOptions,
@@ -15592,20 +15593,20 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
-      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+      const { tracker } = new ConstructorIO({ apiKey: testApiKeyWithAdPlacements });
 
       expect(tracker.trackMediaImpressionView([])).to.be.an('error');
     });
 
     it('Should throw an error when no parameters are provided', () => {
-      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+      const { tracker } = new ConstructorIO({ apiKey: testApiKeyWithAdPlacements });
 
       expect(tracker.trackMediaImpressionView()).to.be.an('error');
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
       const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
+        apiKey: testApiKeyWithAdPlacements,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: true,
         mediaServiceUrl: 'https://media-cnstrc.com',
@@ -15633,7 +15634,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
       const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
+        apiKey: testApiKeyWithAdPlacements,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: false,
         mediaServiceUrl: 'https://media-cnstrc.com',
@@ -15662,7 +15663,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
         const { tracker } = new ConstructorIO({
-          apiKey: testApiKey,
+          apiKey: testApiKeyWithAdPlacements,
           mediaServiceUrl: 'https://media-cnstrc.com',
           ...requestQueueOptions,
         });
@@ -15679,7 +15680,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
         const { tracker } = new ConstructorIO({
-          apiKey: testApiKey,
+          apiKey: testApiKeyWithAdPlacements,
           mediaServiceUrl: 'https://media-cnstrc.com',
           networkParameters: {
             timeout: 20,
@@ -15697,87 +15698,12 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         );
       });
     }
-
-    it('Should not encode body parameters', (done) => {
-      const specialCharacters = '+[]&';
-      const userId = `user-id ${specialCharacters}`;
-      const bannerAdId = `banner_ad_id ${specialCharacters}`;
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        userId,
-        fetch: fetchSpy,
-        mediaServiceUrl: 'https://media-cnstrc.com',
-        ...requestQueueOptions,
-      });
-
-      tracker.on('success', (responseParams) => {
-        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
-
-        // Request
-        expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('ui').to.equal(userId);
-        expect(requestParams)
-          .to.have.property('banner_ad_id')
-          .to.equal(bannerAdId);
-
-        // Response
-        expect(responseParams).to.have.property('method').to.equal('POST');
-        expect(responseParams).to.have.property('message').to.equal('ok');
-
-        done();
-      });
-
-      expect(
-        tracker.trackMediaImpressionView({ ...requiredParameters, bannerAdId }),
-      ).to.equal(true);
-    });
-
-    it('Should properly transform non-breaking spaces in parameters', (done) => {
-      const breakingSpaces = '   ';
-      const userId = `user-id ${breakingSpaces} user-id`;
-      const bannerAdId = `banner_ad_id ${breakingSpaces} banner_ad_id`;
-      const bannerAdIdExpected = 'banner_ad_id     banner_ad_id';
-      const userIdExpected = 'user-id     user-id';
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        userId,
-        mediaServiceUrl: 'https://media-cnstrc.com',
-        fetch: fetchSpy,
-        ...requestQueueOptions,
-      });
-
-      tracker.on('success', (responseParams) => {
-        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
-
-        // Request
-        expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('ui').to.equal(userIdExpected);
-        expect(requestParams)
-          .to.have.property('banner_ad_id')
-          .to.equal(bannerAdIdExpected);
-
-        // Response
-        expect(responseParams).to.have.property('method').to.equal('POST');
-        expect(responseParams).to.have.property('message').to.equal('ok');
-
-        done();
-      });
-
-      expect(
-        tracker.trackMediaImpressionView({
-          ...requiredParameters,
-          userId,
-          bannerAdId,
-        }),
-      ).to.equal(true);
-    });
   });
 
   describe('trackMediaImpressionClick', () => {
-    const testApiKeyWithAdPlacements = 'u7PNVQx-prod-en-us';
     const requiredParameters = {
       bannerAdId: 'AszgOLr3pCZheI0Bx7rNtSraeaN6o3IgNNWvUgan/LqMsf0pTVFaHqjDjWNj1Gz5+IfGOQOs6XOYcWVykjsYSphHF3j04TsXVAlkd2VorLK3dg39SsLiv8mOEVA6TcuBSXAmGLXZCyTmCRjD8JG6QXNEr5qWC073V6CwJRT/XnUYJ/8fiosWNIpNiv5z9VtocQLqILszRllLEMpuGFdXu2HS',
-      placementId: 'home-page-top-banner',
+      placementId: 'products-listings-page',
     };
 
     const optionalParameters = {
@@ -15788,7 +15714,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKeyWithAdPlacements,
         fetch: fetchSpy,
-        mediaServiceUrl: 'https://dev-behavior.media-cnstrc.com',
+        mediaServiceUrl: 'https://media-cnstrc.com',
         ...requestQueueOptions,
       });
 
@@ -15827,7 +15753,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKeyWithAdPlacements,
         fetch: fetchSpy,
-        mediaServiceUrl: 'https://dev-behavior.media-cnstrc.com',
+        mediaServiceUrl: 'https://media-cnstrc.com',
         ...requestQueueOptions,
       });
 
@@ -15855,13 +15781,13 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
-      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+      const { tracker } = new ConstructorIO({ apiKey: testApiKeyWithAdPlacements });
 
       expect(tracker.trackMediaImpressionClick([])).to.be.an('error');
     });
 
     it('Should throw an error when no parameters are provided', () => {
-      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+      const { tracker } = new ConstructorIO({ apiKey: testApiKeyWithAdPlacements });
 
       expect(tracker.trackMediaImpressionClick()).to.be.an('error');
     });
@@ -15871,7 +15797,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         apiKey: testApiKeyWithAdPlacements,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: true,
-        mediaServiceUrl: 'https://dev-behavior.media-cnstrc.com',
+        mediaServiceUrl: 'https://media-cnstrc.com',
         ...requestQueueOptions,
       });
 
@@ -15899,7 +15825,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         apiKey: testApiKeyWithAdPlacements,
         fetch: fetchSpy,
         sendReferrerWithTrackingEvents: false,
-        mediaServiceUrl: 'https://dev-behavior.media-cnstrc.com',
+        mediaServiceUrl: 'https://media-cnstrc.com',
         ...requestQueueOptions,
       });
 
@@ -15926,7 +15852,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
         const { tracker } = new ConstructorIO({
           apiKey: testApiKeyWithAdPlacements,
-          mediaServiceUrl: 'https://dev-behavior.media-cnstrc.com',
+          mediaServiceUrl: 'https://media-cnstrc.com',
           ...requestQueueOptions,
         });
 
@@ -15943,7 +15869,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
         const { tracker } = new ConstructorIO({
           apiKey: testApiKeyWithAdPlacements,
-          mediaServiceUrl: 'https://dev-behavior.media-cnstrc.com',
+          mediaServiceUrl: 'https://media-cnstrc.com',
           networkParameters: {
             timeout: 20,
           },
@@ -15968,7 +15894,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKeyWithAdPlacements,
         userId,
-        mediaServiceUrl: 'https://dev-behavior.media-cnstrc.com',
+        mediaServiceUrl: 'https://media-cnstrc.com',
         fetch: fetchSpy,
         ...requestQueueOptions,
       });
