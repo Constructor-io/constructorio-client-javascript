@@ -1369,11 +1369,7 @@ class Tracker {
   trackMediaImpressionView(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const baseUrl = new URL(this.options.mediaServiceUrl);
-
-      if (!baseUrl.hostname.startsWith('behavior')) {
-        baseUrl.hostname = `behavior.${baseUrl.hostname}`;
-      }
+      const baseUrl = helpers.getBehaviorUrl(this.options.mediaServiceUrl);
 
       const requestPath = `${baseUrl.toString()}v2/ad_behavioral_action/display_ad_view?`;
 
@@ -1439,11 +1435,7 @@ class Tracker {
   trackMediaImpressionClick(parameters, networkParameters = {}) {
     // Ensure required parameters are provided
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const baseUrl = new URL(this.options.mediaServiceUrl);
-
-      if (!baseUrl.hostname.startsWith('behavior') && !baseUrl.hostname.startsWith('dev-behavior')) {
-        baseUrl.hostname = `behavior.${baseUrl.hostname}`;
-      }
+      const baseUrl = helpers.getBehaviorUrl(this.options.mediaServiceUrl);
 
       const requestPath = `${baseUrl.toString()}v2/ad_behavioral_action/display_ad_click?`;
 

@@ -29,6 +29,7 @@ const url = `http://localhost.test/path/name?query=term&category=cat&${utmParame
 const referrer = 'https://www.google.com/';
 const canonicalUrl = 'https://localhost/';
 const testApiKeyWithAdPlacements = 'key_x6UnCVRZaJgIHFQD';
+const testPlacementId = 'home';
 
 function validateOriginReferrer(requestParams) {
   expect(requestParams).to.have.property('origin_referrer').to.contain('localhost.test/path/name');
@@ -15513,14 +15514,21 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   });
 
   describe('trackMediaImpressionView', () => {
-    const requiredParameters = {
-      bannerAdId: 'AszgOLr3pCZheI0Bx7rNtSraeaN6o3IgNNWvUgan/LqMsf0pTVFaHqjDjWNj1Gz5+IfGOQOs6XOYcWVykjsYSphHF3j04TsXVAlkd2VorLK3dg39SsLiv8mOEVA6TcuBSXAmGLXZCyTmCRjD8JG6QXNEr5qWC073V6CwJRT/XnUYJ/8fiosWNIpNiv5z9VtocQLqILszRllLEMpuGFdXu2HS',
-      placementId: 'products-listings-page',
-    };
+    let requiredParameters;
 
     const optionalParameters = {
       analyticsTags: testAnalyticsTag,
     };
+
+    before(async () => {
+      const response = await fetch(`https://display.media-cnstrc.com/display-ads?key=${testApiKeyWithAdPlacements}&placement_ids=${testPlacementId}`);
+      const data = await response.json();
+      const ad = data.display_ads[testPlacementId];
+      requiredParameters = {
+        bannerAdId: ad.banner_ad_id,
+        placementId: testPlacementId,
+      };
+    });
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
@@ -15551,7 +15559,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
-        expect(responseParams).to.have.property('message');
+        expect(responseParams).to.have.property('message').to.equal('ok');
 
         done();
       });
@@ -15580,7 +15588,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
-        expect(responseParams).to.have.property('message');
+        expect(responseParams).to.have.property('message').to.equal('ok');
 
         done();
       });
@@ -15660,6 +15668,36 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       );
     });
 
+    it('Should not encode body parameters', (done) => {
+      const specialCharacters = '+[]&';
+      const userId = `user-id ${specialCharacters}`;
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKeyWithAdPlacements,
+        userId,
+        mediaServiceUrl: 'https://media-cnstrc.com',
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('ui').to.equal(userId);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackMediaImpressionView(requiredParameters)).to.equal(
+        true,
+      );
+    });
+
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
         const { tracker } = new ConstructorIO({
@@ -15701,14 +15739,22 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   });
 
   describe('trackMediaImpressionClick', () => {
-    const requiredParameters = {
-      bannerAdId: 'AszgOLr3pCZheI0Bx7rNtSraeaN6o3IgNNWvUgan/LqMsf0pTVFaHqjDjWNj1Gz5+IfGOQOs6XOYcWVykjsYSphHF3j04TsXVAlkd2VorLK3dg39SsLiv8mOEVA6TcuBSXAmGLXZCyTmCRjD8JG6QXNEr5qWC073V6CwJRT/XnUYJ/8fiosWNIpNiv5z9VtocQLqILszRllLEMpuGFdXu2HS',
-      placementId: 'products-listings-page',
-    };
+    let requiredParameters;
 
     const optionalParameters = {
       analyticsTags: testAnalyticsTag,
     };
+
+    before(async () => {
+      const response = await fetch(`https://display.media-cnstrc.com/display-ads?key=${testApiKeyWithAdPlacements}&placement_ids=${testPlacementId}`);
+      const data = await response.json();
+      const ad = data.display_ads[testPlacementId];
+
+      requiredParameters = {
+        bannerAdId: ad.banner_ad_id,
+        placementId: testPlacementId,
+      };
+    });
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
@@ -15739,7 +15785,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
-        expect(responseParams).to.have.property('message');
+        expect(responseParams).to.have.property('message').to.equal('ok');
 
         done();
       });
@@ -15768,7 +15814,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
-        expect(responseParams).to.have.property('message');
+        expect(responseParams).to.have.property('message').to.equal('ok');
 
         done();
       });
@@ -15835,6 +15881,36 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         // Request
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.not.have.property('origin_referrer');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackMediaImpressionClick(requiredParameters)).to.equal(
+        true,
+      );
+    });
+
+    it('Should not encode body parameters', (done) => {
+      const specialCharacters = '+[]&';
+      const userId = `user-id ${specialCharacters}`;
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKeyWithAdPlacements,
+        userId,
+        mediaServiceUrl: 'https://media-cnstrc.com',
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('ui').to.equal(userId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
