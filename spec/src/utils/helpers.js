@@ -26,6 +26,7 @@ const {
   addHTTPSToString,
   trimUrl,
   cleanAndValidateUrl,
+  toValidTestCells,
 } = require('../../../test/utils/helpers'); // eslint-disable-line import/extensions
 const jsdom = require('./jsdom-global');
 const store = require('../../../test/utils/store'); // eslint-disable-line import/extensions
@@ -699,4 +700,71 @@ describe('ConstructorIO - Utils - Helpers', () => {
       });
     });
   }
+
+  describe('toValidTestCells', () => {
+    it('Should return an empty object for null input', () => {
+      expect(toValidTestCells(null)).to.deep.equal({});
+    });
+
+    it('Should return an empty object for undefined input', () => {
+      expect(toValidTestCells(undefined)).to.deep.equal({});
+    });
+
+    it('Should return an empty object for an empty object input', () => {
+      expect(toValidTestCells({})).to.deep.equal({});
+    });
+
+    it('Should return an empty object for an array input', () => {
+      expect(toValidTestCells(['foo'])).to.deep.equal({});
+    });
+
+    it('Should return an empty object for a string input', () => {
+      expect(toValidTestCells('foo')).to.deep.equal({});
+    });
+
+    it('Should return an empty object for a number input', () => {
+      expect(toValidTestCells(123)).to.deep.equal({});
+    });
+
+    it('Should filter out entries with null values', () => {
+      expect(toValidTestCells({ key: null })).to.deep.equal({});
+    });
+
+    it('Should filter out entries with undefined values', () => {
+      expect(toValidTestCells({ key: undefined })).to.deep.equal({});
+    });
+
+    it('Should filter out entries with numeric values', () => {
+      expect(toValidTestCells({ key: 123 })).to.deep.equal({});
+    });
+
+    it('Should filter out entries with object values', () => {
+      expect(toValidTestCells({ key: { nested: 'value' } })).to.deep.equal({});
+    });
+
+    it('Should filter out entries with boolean values', () => {
+      expect(toValidTestCells({ key: true })).to.deep.equal({});
+    });
+
+    it('Should filter out entries with empty string values', () => {
+      expect(toValidTestCells({ key: '' })).to.deep.equal({});
+    });
+
+    it('Should keep entries with valid non-empty string values', () => {
+      expect(toValidTestCells({ key: 'valid' })).to.deep.equal({ key: 'valid' });
+    });
+
+    it('Should keep only valid string entries from mixed input', () => {
+      const input = {
+        valid1: 'bar',
+        nullVal: null,
+        numVal: 123,
+        valid2: 'baz',
+        emptyStr: '',
+        objVal: {},
+        undefVal: undefined,
+      };
+      expect(toValidTestCells(input)).to.deep.equal({ valid1: 'bar', valid2: 'baz' });
+    });
+  });
 });

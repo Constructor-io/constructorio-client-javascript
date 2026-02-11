@@ -347,6 +347,29 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackSessionStart()).to.equal(true);
     });
 
+    it('Should only include valid string testCells in request params', (done) => {
+      const testCells = { valid: 'bar', invalid: null, numVal: 123 };
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        testCells,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', () => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('ef-valid').to.equal('bar');
+        expect(requestParams).to.not.have.property('ef-invalid');
+        expect(requestParams).to.not.have.property('ef-numVal');
+
+        done();
+      });
+
+      expect(tracker.trackSessionStart()).to.equal(true);
+    });
+
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
         const { tracker } = new ConstructorIO({

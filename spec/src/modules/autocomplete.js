@@ -112,6 +112,24 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should only include valid string testCells in request params', (done) => {
+      const testCells = { valid: 'bar', invalid: null, numVal: 123 };
+      const { autocomplete } = new ConstructorIO({
+        apiKey: testApiKey,
+        testCells,
+        fetch: fetchSpy,
+      });
+
+      autocomplete.getAutocompleteResults(query).then(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(requestedUrlParams).to.have.property('ef-valid').to.equal('bar');
+        expect(requestedUrlParams).to.not.have.property('ef-invalid');
+        expect(requestedUrlParams).to.not.have.property('ef-numVal');
+        done();
+      });
+    });
+
     it('Should return a response with a valid query, and segments', (done) => {
       const segments = ['foo', 'bar'];
       const { autocomplete } = new ConstructorIO({
