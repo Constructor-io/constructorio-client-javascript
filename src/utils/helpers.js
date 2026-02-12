@@ -372,6 +372,16 @@ const utils = {
   },
 
   truncateString: (string, maxLength) => string.slice(0, maxLength),
+
+  getBehaviorUrl: (mediaServiceUrl) => {
+    const baseUrl = new URL(mediaServiceUrl);
+
+    if (!baseUrl.hostname.startsWith('behavior')) {
+      baseUrl.hostname = `behavior.${baseUrl.hostname}`;
+    }
+
+    return baseUrl;
+  },
 };
 
 module.exports = utils;
