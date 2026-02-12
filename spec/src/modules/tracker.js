@@ -17,6 +17,7 @@ chai.use(sinonChai);
 dotenv.config();
 
 const testApiKey = process.env.TEST_REQUEST_API_KEY;
+const testApiKeyWithAdPlacements = process.env.TEST_MEDIA_REQUEST_API_KEY;
 const clientVersion = 'cio-mocha';
 const delayBetweenTests = 50;
 const bundled = process.env.BUNDLED === 'true';
@@ -28,7 +29,6 @@ const utmParameters = 'utm_source=attentive&utm_medium=sms&utm_campaign=campaign
 const url = `http://localhost.test/path/name?query=term&category=cat&${utmParameters}`;
 const referrer = 'https://www.google.com/';
 const canonicalUrl = 'https://localhost/';
-const testApiKeyWithAdPlacements = 'key_x6UnCVRZaJgIHFQD';
 const testPlacementId = 'home';
 
 function validateOriginReferrer(requestParams) {
