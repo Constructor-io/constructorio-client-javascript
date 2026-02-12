@@ -15821,7 +15821,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
       expect(
         tracker.trackMediaImpressionClick(
-          Object.assign(requiredParameters, optionalParameters),
+          { ...requiredParameters, ...optionalParameters },
         ),
       ).to.equal(true);
     });
