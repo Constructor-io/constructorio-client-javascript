@@ -51,7 +51,7 @@ class HumanityCheck {
 
   // Backward-compatible alias
   getIsHumanFromSessionStorage() {
-    return this.getIsHumanFromStorage();
+    return !!store.session.get(storageKey) || false;
   }
 
   // Return boolean indicating if user is a bot
