@@ -17,15 +17,20 @@ const humanEvents = [
 ];
 
 class HumanityCheck {
-  constructor() {
+  constructor(options = {}) {
+    const { humanityCheckLocation } = options;
+
+    // Resolve storage backend: 'local' for localStorage, 'session' (default) for sessionStorage
+    this.store = humanityCheckLocation === 'local' ? store.local : store.session;
+
     // Check if a human event has been performed in the past
-    this.hasPerformedHumanEvent = this.getIsHumanFromSessionStorage();
+    this.hasPerformedHumanEvent = this.getIsHumanFromStorage();
 
     // Humanity proved, remove handlers
     const remove = () => {
       this.hasPerformedHumanEvent = true;
 
-      store.session.set(storageKey, true);
+      this.store.set(storageKey, true);
       humanEvents.forEach((eventType) => {
         helpers.removeEventListener(eventType, remove, true);
       });
@@ -39,9 +44,14 @@ class HumanityCheck {
     }
   }
 
-  // Helper function to grab the human variable from session storage
+  // Helper function to grab the human variable from storage
+  getIsHumanFromStorage() {
+    return !!this.store.get(storageKey) || false;
+  }
+
+  // Backward-compatible alias
   getIsHumanFromSessionStorage() {
-    return !!store.session.get(storageKey) || false;
+    return this.getIsHumanFromStorage();
   }
 
   // Return boolean indicating if user is a bot
@@ -58,7 +68,7 @@ class HumanityCheck {
     }
 
     // If the user hasn't performed a human event, it indicates it is a bot
-    if (!this.getIsHumanFromSessionStorage()) {
+    if (!this.getIsHumanFromStorage()) {
       return true;
     }
 

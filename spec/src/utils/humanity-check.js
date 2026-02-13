@@ -53,6 +53,77 @@ describe('ConstructorIO - Utils - Humanity Check', () => {
       });
     });
 
+    describe('humanityCheckLocation', () => {
+      const storageKey = '_constructorio_is_human';
+      let cleanup;
+
+      beforeEach(() => {
+        global.CLIENT_VERSION = 'cio-mocha';
+
+        cleanup = jsdom();
+      });
+
+      afterEach(() => {
+        delete global.CLIENT_VERSION;
+        cleanup();
+
+        helpers.clearStorage();
+      });
+
+      it('Should write to sessionStorage by default (no option)', () => {
+        const _ = new HumanityCheck();
+
+        helpers.triggerResize();
+        expect(store.session.get(storageKey)).to.equal(true);
+        expect(store.local.get(storageKey)).to.equal(null);
+      });
+
+      it('Should write to sessionStorage when humanityCheckLocation is "session"', () => {
+        const _ = new HumanityCheck({ humanityCheckLocation: 'session' });
+
+        helpers.triggerResize();
+        expect(store.session.get(storageKey)).to.equal(true);
+        expect(store.local.get(storageKey)).to.equal(null);
+      });
+
+      it('Should write to localStorage when humanityCheckLocation is "local"', () => {
+        const _ = new HumanityCheck({ humanityCheckLocation: 'local' });
+
+        helpers.triggerResize();
+        expect(store.local.get(storageKey)).to.equal(true);
+        expect(store.session.get(storageKey)).to.equal(null);
+      });
+
+      it('Should read existing localStorage value on construction when location is "local"', () => {
+        store.local.set(storageKey, true);
+        const humanity = new HumanityCheck({ humanityCheckLocation: 'local' });
+
+        expect(humanity.hasPerformedHumanEvent).to.equal(true);
+      });
+
+      it('Should NOT read sessionStorage when humanityCheckLocation is "local" (isolation)', () => {
+        store.session.set(storageKey, true);
+        const humanity = new HumanityCheck({ humanityCheckLocation: 'local' });
+
+        expect(humanity.hasPerformedHumanEvent).to.equal(false);
+      });
+
+      it('Should return false from isBot after human action when using localStorage mode', () => {
+        const humanity = new HumanityCheck({ humanityCheckLocation: 'local' });
+
+        expect(humanity.isBot()).to.equal(true);
+        helpers.triggerResize();
+        expect(humanity.isBot()).to.equal(false);
+      });
+
+      it('Should support getIsHumanFromSessionStorage alias', () => {
+        store.local.set(storageKey, true);
+        const humanity = new HumanityCheck({ humanityCheckLocation: 'local' });
+
+        expect(humanity.getIsHumanFromSessionStorage()).to.equal(true);
+      });
+    });
+
     describe('isBot', () => {
       const storageKey = '_constructorio_is_human';
       let cleanup;
