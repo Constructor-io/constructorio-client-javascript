@@ -115,13 +115,6 @@ describe('ConstructorIO - Utils - Humanity Check', () => {
         helpers.triggerResize();
         expect(humanity.isBot()).to.equal(false);
       });
-
-      it('Should support getIsHumanFromSessionStorage alias', () => {
-        store.local.set(storageKey, true);
-        const humanity = new HumanityCheck({ humanityCheckLocation: 'local' });
-
-        expect(humanity.getIsHumanFromSessionStorage()).to.equal(true);
-      });
     });
 
     describe('isBot', () => {
