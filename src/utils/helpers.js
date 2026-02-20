@@ -388,6 +388,8 @@ const utils = {
     });
 
     return filtered;
+  },
+
   getBehaviorUrl: (mediaServiceUrl) => {
     const baseUrl = new URL(mediaServiceUrl);
 
