@@ -382,7 +382,7 @@ const utils = {
     const filtered = {};
 
     Object.keys(testCells).forEach((key) => {
-      if (typeof testCells[key] === 'string' && testCells[key] !== '') {
+      if (typeof testCells[key] === 'string' && testCells[key].trim() !== '') {
         filtered[key] = testCells[key];
       }
     });
