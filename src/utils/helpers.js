@@ -388,6 +388,14 @@ const utils = {
     });
 
     return filtered;
+  getBehaviorUrl: (mediaServiceUrl) => {
+    const baseUrl = new URL(mediaServiceUrl);
+
+    if (!baseUrl.hostname.startsWith('behavior')) {
+      baseUrl.hostname = `behavior.${baseUrl.hostname}`;
+    }
+
+    return baseUrl;
   },
 };
 

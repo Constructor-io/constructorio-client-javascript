@@ -11,7 +11,7 @@ class RequestQueue {
   constructor(options, eventemitter) {
     this.options = options;
     this.eventemitter = eventemitter;
-    this.humanity = new HumanityCheck();
+    this.humanity = new HumanityCheck(options);
     this.requestPending = false;
     this.pageUnloading = false;
 
