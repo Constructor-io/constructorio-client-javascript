@@ -287,6 +287,7 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
         numVal: 123,
         objVal: { nested: 'value' },
         emptyStr: '',
+        boolean: true,
       };
       const instance = new ConstructorIO({
         apiKey: validApiKey,
