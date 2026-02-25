@@ -93,6 +93,24 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should only include valid string testCells in request params', (done) => {
+      const testCells = { valid: 'bar', invalid: null, numVal: 123 };
+      const { search } = new ConstructorIO({
+        apiKey: testApiKey,
+        testCells,
+        fetch: fetchSpy,
+      });
+
+      search.getSearchResults(query, { section }).then(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(requestedUrlParams).to.have.property('ef-valid').to.equal('bar');
+        expect(requestedUrlParams).to.not.have.property('ef-invalid');
+        expect(requestedUrlParams).to.not.have.property('ef-numVal');
+        done();
+      });
+    });
+
     it('Should return a response with a valid query, section and segments', (done) => {
       const segments = ['foo', 'bar'];
       const { search } = new ConstructorIO({

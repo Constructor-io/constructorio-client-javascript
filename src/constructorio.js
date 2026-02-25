@@ -130,7 +130,7 @@ class ConstructorIO {
       clientId: clientId || client_id,
       userId,
       segments,
-      testCells,
+      testCells: helpers.toValidTestCells(testCells),
       fetch: fetchFromOptions || fetch,
       trackingSendDelay,
       sendTrackingEvents,
@@ -179,7 +179,7 @@ class ConstructorIO {
       }
 
       if (testCells) {
-        this.options.testCells = testCells;
+        this.options.testCells = helpers.toValidTestCells(testCells);
       }
 
       if (typeof sendTrackingEvents === 'boolean') {

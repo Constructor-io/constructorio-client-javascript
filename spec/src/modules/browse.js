@@ -97,6 +97,24 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should only include valid string testCells in request params', (done) => {
+      const testCells = { valid: 'bar', invalid: null, numVal: 123 };
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        testCells,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResults(filterName, filterValue).then(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(requestedUrlParams).to.have.property('ef-valid').to.equal('bar');
+        expect(requestedUrlParams).to.not.have.property('ef-invalid');
+        expect(requestedUrlParams).to.not.have.property('ef-numVal');
+        done();
+      });
+    });
+
     it('Should return a response with a valid filterName, filterValue and segments', (done) => {
       const segments = ['foo', 'bar'];
       const { browse } = new ConstructorIO({
