@@ -57,6 +57,8 @@ For each changed file:
 
 ## SECTION 2: REVIEW DOMAINS
 
+> **Note:** Skip checks that don't apply to the project under review. For example, client-side libraries won't have database queries, server-side session management, or React components. Focus on the domains relevant to the codebase.
+
 ### 2.1 Error Handling & Silent Failures
 
 **Logging Quality:**
@@ -311,6 +313,12 @@ For each changed file:
 - [ ] No clever one-liners that sacrifice readability
 - [ ] Control flow is straightforward
 - [ ] Early returns used to reduce nesting
+
+**Project Hygiene:**
+
+- [ ] New `TODO` comments include explanation for the future work
+- [ ] README updated if changes introduce new env vars, setup instructions, or dependencies
+- [ ] `package-lock.json` changes correspond to `package.json` changes
 
 ---
 
