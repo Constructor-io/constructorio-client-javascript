@@ -22,7 +22,7 @@ class AgentOverview extends Agent {
    * @description Retrieve a stream of intent results from Constructor.io API
    * @param {string} intent - Intent to use to perform an intent based recommendations
    * @param {object} [parameters] - Additional parameters to refine result set
-   * @param {string} parameters.domain - Domain name (e.g. "sportsgear", "recipes")
+   * @param {string} parameters.domain - Domain name (e.g. "recipes", "recipes")
    * @param {string} [parameters.threadId] - Conversation thread ID for multi-turn dialogue
    * @param {boolean} [parameters.guard] - Enable content moderation
    * @param {number} [parameters.numResultsPerEvent] - Max products per search_result event
@@ -35,7 +35,7 @@ class AgentOverview extends Agent {
    * @returns {ReadableStream} Returns a ReadableStream.
    * @example
    * const readableStream = constructorio.agentOverview.getIntentResults('I want to get shoes', {
-   *     domain: 'sportsgear',
+   *     domain: 'recipes',
    *     numResultsPerEvent: 5,
    * });
    * const reader = readableStream.getReader();

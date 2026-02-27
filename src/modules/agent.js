@@ -1,6 +1,7 @@
 const { cleanParams, trimNonBreakingSpaces, encodeURIComponentRFC3986, stringify, isNil } = require('../utils/helpers');
 
 // Create URL from supplied intent (term) and parameters
+// eslint-disable-next-line complexity
 function createAgentUrl(intent, parameters, options) {
   const {
     apiKey,
@@ -181,12 +182,13 @@ class Agent {
    * @description Retrieve a stream of agent results from Constructor.io API
    * @param {string} intent - Intent to use to perform an intent based recommendations
    * @param {object} [parameters] - Additional parameters to refine result set
-   * @param {string} parameters.domain - Domain name (e.g. "sportsgear", "recipes")
+   * @param {string} parameters.domain - Domain name (e.g. "recipes", "recipes")
    * @param {string} [parameters.threadId] - Conversation thread ID for multi-turn dialogue
    * @param {boolean} [parameters.guard] - Enable content moderation
    * @param {number} [parameters.numResultsPerEvent] - Max products per search_result event
    * @param {number} [parameters.numResultEvents] - Max number of search_result events
-   * @param {number} [parameters.numResultsPerPage] - The total number of results to return @deprecated Use numResultsPerEvent instead
+   * @param {number} [parameters.numResultsPerPage] - The total number of results to return
+   * @deprecated Use numResultsPerEvent instead
    * @param {object|string} [parameters.qs] - Additional query parameters for the search client
    * @param {object|string} [parameters.preFilterExpression] - Pre-filter expression for results
    * @param {object} [parameters.fmtOptions] - Format options for results

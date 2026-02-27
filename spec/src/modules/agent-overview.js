@@ -158,9 +158,7 @@ describe(`ConstructorIO - Agent Overview${bundledDescriptionSuffix}`, () => {
     it('should throw an error if missing intent', () => {
       const { agentOverview } = new ConstructorIO(defaultOptions);
 
-      expect(() =>
-        agentOverview.getIntentResults('', { domain: 'agent' }),
-      ).throw('intent is a required parameter of type string');
+      expect(() => agentOverview.getIntentResults('', { domain: 'agent' })).throw('intent is a required parameter of type string');
     });
 
     it('should push expected data to the stream', async () => {
