@@ -37,7 +37,7 @@ const constructorio = new ConstructorioClient({
 
 ## 4. Retrieve Results
 
-After instantiating an instance of the client, seven modules will be exposed as properties to help retrieve data or send behavioral events: `search`, `browse`, `autocomplete`, `recommendations`, `quizzes`, `agent`, and `tracker`.
+After instantiating an instance of the client, eight modules will be exposed as properties to help retrieve data or send behavioral events: `search`, `browse`, `autocomplete`, `recommendations`, `quizzes`, `agent`, `agentOverview`, and `tracker`.
 
 #### Dispatched events
 
