@@ -280,6 +280,49 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
       expect(instance.options).to.have.property('testCells').to.deep.equal(newTestCells);
     });
 
+    it('Should filter out non-string testCell values in constructor', () => {
+      const testCells = {
+        valid: 'bar',
+        nullVal: null,
+        numVal: 123,
+        objVal: { nested: 'value' },
+        emptyStr: '',
+        boolean: true,
+      };
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        testCells,
+      });
+
+      expect(instance.options.testCells).to.deep.equal({ valid: 'bar' });
+    });
+
+    it('Should filter out non-string testCell values in setClientOptions', () => {
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        testCells: { initial: 'value' },
+      });
+
+      instance.setClientOptions({
+        testCells: {
+          valid: 'baz',
+          nullVal: null,
+          numVal: 42,
+        },
+      });
+
+      expect(instance.options.testCells).to.deep.equal({ valid: 'baz' });
+    });
+
+    it('Should handle null testCells in constructor without error', () => {
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        testCells: null,
+      });
+
+      expect(instance.options.testCells).to.deep.equal({});
+    });
+
     it('Should update the client options with new sendTrackingEvents value', () => {
       const instance = new ConstructorIO({
         apiKey: validApiKey,
@@ -507,22 +550,22 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
       });
 
       expect(instance.options).to.have.property('testCells').to.deep.equal(oldTestCells);
-      expect(instance.search.options).to.have.property('testCells').to.equal(oldTestCells);
-      expect(instance.autocomplete.options).to.have.property('testCells').to.equal(oldTestCells);
-      expect(instance.browse.options).to.have.property('testCells').to.equal(oldTestCells);
-      expect(instance.recommendations.options).to.have.property('testCells').to.equal(oldTestCells);
-      expect(instance.tracker.options).to.have.property('testCells').to.equal(oldTestCells);
+      expect(instance.search.options).to.have.property('testCells').to.deep.equal(oldTestCells);
+      expect(instance.autocomplete.options).to.have.property('testCells').to.deep.equal(oldTestCells);
+      expect(instance.browse.options).to.have.property('testCells').to.deep.equal(oldTestCells);
+      expect(instance.recommendations.options).to.have.property('testCells').to.deep.equal(oldTestCells);
+      expect(instance.tracker.options).to.have.property('testCells').to.deep.equal(oldTestCells);
 
       instance.setClientOptions({
         testCells: newTestCells,
       });
 
       expect(instance.options).to.have.property('testCells').to.deep.equal(newTestCells);
-      expect(instance.search.options).to.have.property('testCells').to.equal(newTestCells);
-      expect(instance.autocomplete.options).to.have.property('testCells').to.equal(newTestCells);
-      expect(instance.browse.options).to.have.property('testCells').to.equal(newTestCells);
-      expect(instance.recommendations.options).to.have.property('testCells').to.equal(newTestCells);
-      expect(instance.tracker.options).to.have.property('testCells').to.equal(newTestCells);
+      expect(instance.search.options).to.have.property('testCells').to.deep.equal(newTestCells);
+      expect(instance.autocomplete.options).to.have.property('testCells').to.deep.equal(newTestCells);
+      expect(instance.browse.options).to.have.property('testCells').to.deep.equal(newTestCells);
+      expect(instance.recommendations.options).to.have.property('testCells').to.deep.equal(newTestCells);
+      expect(instance.tracker.options).to.have.property('testCells').to.deep.equal(newTestCells);
     });
 
     it('Should update the client options with a new user id', () => {

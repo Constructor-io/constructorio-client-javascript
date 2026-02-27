@@ -65,6 +65,7 @@ export interface ConstructorClientOptions {
   eventDispatcher?: EventDispatcherOptions;
   beaconMode?: boolean;
   networkParameters?: NetworkParameters;
+  humanityCheckLocation?: 'session' | 'local';
 }
 
 export interface RequestFeature extends Record<string, any> {

@@ -58,6 +58,7 @@ class ConstructorIO {
    * @param {boolean} [parameters.eventDispatcher.waitForBeacon=true] - Wait for beacon before dispatching events
    * @param {object} [parameters.networkParameters] - Parameters relevant to network requests
    * @param {number} [parameters.networkParameters.timeout] - Request timeout (in milliseconds) - may be overridden within individual method calls
+   * @param {string} [parameters.humanityCheckLocation='session'] - Storage location for the humanity check flag ('session' for sessionStorage, 'local' for localStorage)
    * @property {object} search - Interface to {@link module:search}
    * @property {object} browse - Interface to {@link module:browse}
    * @property {object} autocomplete - Interface to {@link module:autocomplete}
@@ -91,6 +92,7 @@ class ConstructorIO {
       idOptions,
       beaconMode,
       networkParameters,
+      humanityCheckLocation,
     } = options;
 
     if (!apiKey || typeof apiKey !== 'string') {
@@ -130,7 +132,7 @@ class ConstructorIO {
       clientId: clientId || client_id,
       userId,
       segments,
-      testCells,
+      testCells: helpers.toValidTestCells(testCells),
       fetch: fetchFromOptions || fetch,
       trackingSendDelay,
       sendTrackingEvents,
@@ -138,6 +140,7 @@ class ConstructorIO {
       eventDispatcher,
       beaconMode: (beaconMode === false) ? false : true, // Defaults to 'true',
       networkParameters: networkParameters || {},
+      humanityCheckLocation: humanityCheckLocation || 'session',
     };
 
     // Expose global modules
@@ -179,7 +182,7 @@ class ConstructorIO {
       }
 
       if (testCells) {
-        this.options.testCells = testCells;
+        this.options.testCells = helpers.toValidTestCells(testCells);
       }
 
       if (typeof sendTrackingEvents === 'boolean') {

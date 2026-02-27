@@ -372,6 +372,33 @@ const utils = {
   },
 
   truncateString: (string, maxLength) => string.slice(0, maxLength),
+
+  // Filter testCells to only include entries with non-empty string values
+  toValidTestCells: (testCells) => {
+    if (!testCells || typeof testCells !== 'object' || Array.isArray(testCells)) {
+      return {};
+    }
+
+    const filtered = {};
+
+    Object.keys(testCells).forEach((key) => {
+      if (typeof testCells[key] === 'string' && testCells[key].trim() !== '') {
+        filtered[key] = testCells[key];
+      }
+    });
+
+    return filtered;
+  },
+
+  getBehaviorUrl: (mediaServiceUrl) => {
+    const baseUrl = new URL(mediaServiceUrl);
+
+    if (!baseUrl.hostname.startsWith('behavior')) {
+      baseUrl.hostname = `behavior.${baseUrl.hostname}`;
+    }
+
+    return baseUrl;
+  },
 };
 
 module.exports = utils;

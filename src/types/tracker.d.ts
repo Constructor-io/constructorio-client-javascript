@@ -444,5 +444,12 @@ declare class Tracker {
     }, networkParameters?: NetworkParameters
   ): true | Error;
 
+  trackMediaImpressionClick(parameters: {
+      bannerAdId: string;
+      placementId: string;
+      analyticsTags?: Record<string, string>;
+    }, networkParameters?: NetworkParameters
+  ): true | Error;
+
   on(messageType: string, callback: Function): true | Error;
 }
