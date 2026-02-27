@@ -12,6 +12,7 @@ const helpers = require('./utils/helpers');
 const { default: packageVersion } = require('./version');
 const Quizzes = require('./modules/quizzes');
 const Agent = require('./modules/agent');
+const AgentOverview = require('./modules/agent-overview');
 const Assistant = require('./modules/assistant');
 
 // Compute package version string
@@ -64,6 +65,7 @@ class ConstructorIO {
    * @property {object} tracker - Interface to {@link module:tracker}
    * @property {object} quizzes - Interface to {@link module:quizzes}
    * @property {object} agent - Interface to {@link module:agent}
+   * @property {object} agentOverview - Interface to {@link module:agentOverview}
    * @property {object} assistant - Interface to {@link module:assistant} @deprecated This property is deprecated and will be removed in a future version. Use the agent property instead.
    * @returns {class}
    */
@@ -146,6 +148,7 @@ class ConstructorIO {
     this.tracker = new Tracker(this.options);
     this.quizzes = new Quizzes(this.options);
     this.agent = new Agent(this.options);
+    this.agentOverview = new AgentOverview(this.options);
     this.assistant = new Assistant(this.options);
 
     // Dispatch initialization event

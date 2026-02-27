@@ -1,4 +1,4 @@
-const { cleanParams, trimNonBreakingSpaces, encodeURIComponentRFC3986, stringify } = require('../utils/helpers');
+const { cleanParams, trimNonBreakingSpaces, encodeURIComponentRFC3986, stringify, isNil } = require('../utils/helpers');
 
 // Create URL from supplied intent (term) and parameters
 function createAgentUrl(intent, parameters, options) {
@@ -26,7 +26,7 @@ function createAgentUrl(intent, parameters, options) {
   }
 
   // Validate domain is provided
-  if (!parameters.domain || typeof parameters.domain !== 'string') {
+  if (!parameters || !parameters.domain || typeof parameters.domain !== 'string') {
     throw new Error('parameters.domain is a required parameter of type string');
   }
 
@@ -48,7 +48,17 @@ function createAgentUrl(intent, parameters, options) {
   }
 
   if (parameters) {
-    const { domain, numResultsPerPage } = parameters;
+    const {
+      domain,
+      numResultsPerPage,
+      threadId,
+      guard,
+      numResultsPerEvent,
+      numResultEvents,
+      qs,
+      preFilterExpression,
+      fmtOptions,
+    } = parameters;
 
     // Pull domain from parameters
     if (domain) {
@@ -56,8 +66,45 @@ function createAgentUrl(intent, parameters, options) {
     }
 
     // Pull results number from parameters
-    if (numResultsPerPage) {
+    if (!isNil(numResultsPerPage)) {
       queryParams.num_results_per_page = numResultsPerPage;
+    }
+
+    // Pull thread_id from parameters
+    if (!isNil(threadId)) {
+      queryParams.thread_id = threadId;
+    }
+
+    // Pull guard from parameters
+    if (!isNil(guard)) {
+      queryParams.guard = guard;
+    }
+
+    // Pull num_results_per_event from parameters
+    if (!isNil(numResultsPerEvent)) {
+      queryParams.num_results_per_event = numResultsPerEvent;
+    }
+
+    // Pull num_result_events from parameters
+    if (!isNil(numResultEvents)) {
+      queryParams.num_result_events = numResultEvents;
+    }
+
+    // Pull qs from parameters
+    if (qs) {
+      queryParams.qs = typeof qs === 'string' ? qs : JSON.stringify(qs);
+    }
+
+    // Pull pre_filter_expression from parameters
+    if (preFilterExpression) {
+      queryParams.pre_filter_expression = typeof preFilterExpression === 'string'
+        ? preFilterExpression
+        : JSON.stringify(preFilterExpression);
+    }
+
+    // Pull fmt_options from parameters
+    if (fmtOptions) {
+      queryParams.fmt_options = fmtOptions;
     }
   }
 
@@ -134,8 +181,17 @@ class Agent {
    * @description Retrieve a stream of agent results from Constructor.io API
    * @param {string} intent - Intent to use to perform an intent based recommendations
    * @param {object} [parameters] - Additional parameters to refine result set
-   * @param {string} [parameters.domain] - domain name e.g. swimming sports gear, groceries
-   * @param {number} [parameters.numResultsPerPage] - The total number of results to return
+   * @param {string} parameters.domain - Domain name (e.g. "sportsgear", "recipes")
+   * @param {string} [parameters.threadId] - Conversation thread ID for multi-turn dialogue
+   * @param {boolean} [parameters.guard] - Enable content moderation
+   * @param {number} [parameters.numResultsPerEvent] - Max products per search_result event
+   * @param {number} [parameters.numResultEvents] - Max number of search_result events
+   * @param {number} [parameters.numResultsPerPage] - The total number of results to return @deprecated Use numResultsPerEvent instead
+   * @param {object|string} [parameters.qs] - Additional query parameters for the search client
+   * @param {object|string} [parameters.preFilterExpression] - Pre-filter expression for results
+   * @param {object} [parameters.fmtOptions] - Format options for results
+   * @param {string[]} [parameters.fmtOptions.fields] - Product fields to return
+   * @param {string[]} [parameters.fmtOptions.hidden_fields] - Hidden fields to return
    * @returns {ReadableStream} Returns a ReadableStream.
    * @example
    * const readableStream = constructorio.agent.getAgentResultsStream('I want to get shoes', {
@@ -145,6 +201,7 @@ class Agent {
    * const { value, done } = await reader.read();
    */
   getAgentResultsStream(query, parameters) {
+    const eventTypes = this.constructor.EventTypes;
     let eventSource;
     let readableStream;
 
@@ -158,8 +215,8 @@ class Agent {
       readableStream = new ReadableStream({
         // To be called on stream start
         start(controller) {
-          // Listen to events emitted from ASA Server Sent Events and push data to the ReadableStream
-          setupEventListeners(eventSource, controller, Agent.EventTypes);
+          // Listen to events emitted from SSE and push data to the ReadableStream
+          setupEventListeners(eventSource, controller, eventTypes);
         },
         // To be called on stream cancelling
         cancel() {

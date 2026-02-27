@@ -93,6 +93,165 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
       expect(url).not.contain(' ');
       expect(url).contain(encodeURIComponentRFC3986(intentWithSpaces));
     });
+
+    it('should include threadId parameter when provided', () => {
+      const url = createAgentUrl(
+        'running shoes',
+        { ...defaultParameters, threadId: 'test-thread-id' },
+        defaultOptions,
+      );
+      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+
+      expect(requestedUrlParams).to.have.property('thread_id').to.equal('test-thread-id');
+    });
+
+    it('should include guard parameter when provided as true', () => {
+      const url = createAgentUrl(
+        'running shoes',
+        { ...defaultParameters, guard: true },
+        defaultOptions,
+      );
+      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+
+      expect(requestedUrlParams).to.have.property('guard').to.equal('true');
+    });
+
+    it('should include guard parameter when provided as false', () => {
+      const url = createAgentUrl(
+        'running shoes',
+        { ...defaultParameters, guard: false },
+        defaultOptions,
+      );
+      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+
+      expect(requestedUrlParams).to.have.property('guard').to.equal('false');
+    });
+
+    it('should include numResultsPerEvent parameter when provided', () => {
+      const url = createAgentUrl(
+        'running shoes',
+        { ...defaultParameters, numResultsPerEvent: 5 },
+        defaultOptions,
+      );
+      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+
+      expect(requestedUrlParams).to.have.property('num_results_per_event').to.equal('5');
+    });
+
+    it('should include numResultEvents parameter when provided', () => {
+      const url = createAgentUrl(
+        'running shoes',
+        { ...defaultParameters, numResultEvents: 3 },
+        defaultOptions,
+      );
+      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+
+      expect(requestedUrlParams).to.have.property('num_result_events').to.equal('3');
+    });
+
+    it('should include numResultsPerPage parameter when provided', () => {
+      const url = createAgentUrl(
+        'running shoes',
+        { ...defaultParameters, numResultsPerPage: 10 },
+        defaultOptions,
+      );
+      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+
+      expect(requestedUrlParams).to.have.property('num_results_per_page').to.equal('10');
+    });
+
+    it('should include preFilterExpression as JSON string when provided as object', () => {
+      const preFilterExpression = { and: [{ name: 'brand', value: 'Nike' }] };
+      const url = createAgentUrl(
+        'running shoes',
+        { ...defaultParameters, preFilterExpression },
+        defaultOptions,
+      );
+      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+
+      expect(requestedUrlParams).to.have.property('pre_filter_expression').to.equal(JSON.stringify(preFilterExpression));
+    });
+
+    it('should include preFilterExpression as string when provided as string', () => {
+      const preFilterExpression = '{"and":[{"name":"brand","value":"Nike"}]}';
+      const url = createAgentUrl(
+        'running shoes',
+        { ...defaultParameters, preFilterExpression },
+        defaultOptions,
+      );
+      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+
+      expect(requestedUrlParams).to.have.property('pre_filter_expression').to.equal(preFilterExpression);
+    });
+
+    it('should include qs as JSON string when provided as object', () => {
+      const qsParam = { section: 'Products' };
+      const url = createAgentUrl(
+        'running shoes',
+        { ...defaultParameters, qs: qsParam },
+        defaultOptions,
+      );
+      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+
+      expect(requestedUrlParams).to.have.property('qs').to.equal(JSON.stringify(qsParam));
+    });
+
+    it('should include qs as string when provided as string', () => {
+      const qsParam = 'section=Products';
+      const url = createAgentUrl(
+        'running shoes',
+        { ...defaultParameters, qs: qsParam },
+        defaultOptions,
+      );
+      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+
+      expect(requestedUrlParams).to.have.property('qs').to.equal(qsParam);
+    });
+
+    it('should include fmtOptions when provided', () => {
+      const fmtOptions = { fields: ['title', 'image_url'], hidden_fields: ['price'] };
+      const url = createAgentUrl(
+        'running shoes',
+        { ...defaultParameters, fmtOptions },
+        defaultOptions,
+      );
+      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+
+      expect(requestedUrlParams).to.have.property('fmt_options');
+      expect(requestedUrlParams.fmt_options).to.have.property('fields');
+      expect(requestedUrlParams.fmt_options).to.have.property('hidden_fields');
+    });
+
+    it('should include user segments when provided in options', () => {
+      const url = createAgentUrl('running shoes', defaultParameters, {
+        ...defaultOptions,
+        segments: ['segment1', 'segment2'],
+      });
+      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+
+      expect(requestedUrlParams).to.have.property('us');
+    });
+
+    it('should include userId when provided in options', () => {
+      const url = createAgentUrl('running shoes', defaultParameters, {
+        ...defaultOptions,
+        userId: 'user-123',
+      });
+      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+
+      expect(requestedUrlParams).to.have.property('ui').to.equal('user-123');
+    });
+
+    it('should include testCells when provided in options', () => {
+      const url = createAgentUrl('running shoes', defaultParameters, {
+        ...defaultOptions,
+        testCells: { cellA: 'variant1', cellB: 'variant2' },
+      });
+      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+
+      expect(requestedUrlParams).to.have.property('ef-cellA').to.equal('variant1');
+      expect(requestedUrlParams).to.have.property('ef-cellB').to.equal('variant2');
+    });
   });
 
   // setupEventListeners util Tests
