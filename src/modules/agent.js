@@ -93,14 +93,12 @@ function createAgentUrl(intent, parameters, options) {
 
     // Pull qs from parameters
     if (qs) {
-      queryParams.qs = typeof qs === 'string' ? qs : JSON.stringify(qs);
+      queryParams.qs = JSON.stringify(qs);
     }
 
     // Pull pre_filter_expression from parameters
     if (preFilterExpression) {
-      queryParams.pre_filter_expression = typeof preFilterExpression === 'string'
-        ? preFilterExpression
-        : JSON.stringify(preFilterExpression);
+      queryParams.pre_filter_expression = JSON.stringify(preFilterExpression);
     }
 
     // Pull fmt_options from parameters
