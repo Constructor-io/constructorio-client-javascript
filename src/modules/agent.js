@@ -170,6 +170,8 @@ class Agent {
     RECIPE_INSTRUCTIONS: 'recipe_instructions', // Represents recipe instructions
     SERVER_ERROR: 'server_error', // Server Error event
     IMAGE_META: 'image_meta', // This event type is used for enhancing recommendations with media content such as images
+    MESSAGE: 'message', // Represents a textual message from the agent
+    FOLLOW_UP_QUESTIONS: 'follow_up_questions', // Represents follow-up question suggestions
     END: 'end', // Represents the end of data stream
   };
 

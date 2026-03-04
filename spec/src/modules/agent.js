@@ -355,6 +355,42 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
         done();
       });
     });
+
+    it('should enqueue MESSAGE event data into the stream', (done) => {
+      const eventType = Agent.EventTypes.MESSAGE;
+      const eventData = { text: 'Here are some recommendations' };
+
+      setupEventListeners(mockEventSource, mockStreamController, Agent.EventTypes);
+
+      const messageCallback = mockEventSource.addEventListener
+        .getCalls()
+        .find((call) => call.args[0] === eventType).args[1];
+
+      messageCallback({ data: JSON.stringify(eventData) });
+
+      setImmediate(() => {
+        expect(mockStreamController.enqueue.calledWith({ type: eventType, data: eventData })).to.be.true;
+        done();
+      });
+    });
+
+    it('should enqueue FOLLOW_UP_QUESTIONS event data into the stream', (done) => {
+      const eventType = Agent.EventTypes.FOLLOW_UP_QUESTIONS;
+      const eventData = { questions: ['What size?', 'What color?'] };
+
+      setupEventListeners(mockEventSource, mockStreamController, Agent.EventTypes);
+
+      const followUpCallback = mockEventSource.addEventListener
+        .getCalls()
+        .find((call) => call.args[0] === eventType).args[1];
+
+      followUpCallback({ data: JSON.stringify(eventData) });
+
+      setImmediate(() => {
+        expect(mockStreamController.enqueue.calledWith({ type: eventType, data: eventData })).to.be.true;
+        done();
+      });
+    });
   });
 
   describe('getAgentResultsStream', () => {
@@ -424,4 +460,5 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
       reader.cancel();
     });
   });
+
 });
