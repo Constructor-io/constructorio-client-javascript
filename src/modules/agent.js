@@ -202,7 +202,6 @@ class Agent {
    * const { value, done } = await reader.read();
    */
   getAgentResultsStream(query, parameters) {
-    const eventTypes = this.constructor.EventTypes;
     let eventSource;
     let readableStream;
 
@@ -217,7 +216,7 @@ class Agent {
         // To be called on stream start
         start(controller) {
           // Listen to events emitted from SSE and push data to the ReadableStream
-          setupEventListeners(eventSource, controller, eventTypes);
+          setupEventListeners(eventSource, controller, Agent.EventTypes);
         },
         // To be called on stream cancelling
         cancel() {
