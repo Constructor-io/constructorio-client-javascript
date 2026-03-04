@@ -215,7 +215,7 @@ class Agent {
       readableStream = new ReadableStream({
         // To be called on stream start
         start(controller) {
-          // Listen to events emitted from SSE and push data to the ReadableStream
+          // Listen to events emitted from ASA Server Sent Events and push data to the ReadableStream
           setupEventListeners(eventSource, controller, Agent.EventTypes);
         },
         // To be called on stream cancelling
