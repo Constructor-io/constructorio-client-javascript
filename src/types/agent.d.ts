@@ -16,7 +16,7 @@ export interface IAgentParameters {
   numResultsPerEvent?: number;
   numResultEvents?: number;
   qsParam?: Record<string, any>;
-  preFilterExpression?: FilterExpression | string;
+  preFilterExpression?: FilterExpression;
   fmtOptions?: Pick<FmtOptions, 'fields' | 'hidden_fields'>;
 }
 
