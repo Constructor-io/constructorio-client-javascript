@@ -1,13 +1,10 @@
 import {
   ConstructorClientOptions,
+  FmtOptions,
+  FilterExpression,
 } from '.';
 
 export default Agent;
-
-export interface IAgentFmtOptions {
-  fields?: string[];
-  hidden_fields?: string[];
-}
 
 export interface IAgentParameters {
   domain: string;
@@ -18,9 +15,9 @@ export interface IAgentParameters {
   guard?: boolean;
   numResultsPerEvent?: number;
   numResultEvents?: number;
-  qs?: Record<string, any> | string;
-  preFilterExpression?: Record<string, any> | string;
-  fmtOptions?: IAgentFmtOptions;
+  qsParam?: Record<string, any>;
+  preFilterExpression?: FilterExpression | string;
+  fmtOptions?: Pick<FmtOptions, 'fields' | 'hidden_fields'>;
 }
 
 declare class Agent {
@@ -30,6 +27,6 @@ declare class Agent {
 
   getAgentResultsStream(
     intent: string,
-    parameters: IAgentParameters,
+    parameters?: IAgentParameters,
   ): ReadableStream;
 }
