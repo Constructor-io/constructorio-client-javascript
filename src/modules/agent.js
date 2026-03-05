@@ -189,10 +189,10 @@ class Agent {
    * @param {number} [parameters.numResultEvents] - Max number of search_result events
    * @param {number} [parameters.numResultsPerPage] - Deprecated: use numResultsPerEvent instead
    * @param {object} [parameters.preFilterExpression] - Faceting expression to scope search results. Please refer to https://docs.constructor.com/reference/configuration-collections
-   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.com/reference/v1-search-get-search-results#query-params for details
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.com/reference/v1-asa-retrieve-intent#query-params for details  for details
    * @param {string[]} [parameters.fmtOptions.fields] - Product fields to return
    * @param {string[]} [parameters.fmtOptions.hidden_fields] - Hidden fields to return
-   * @param {object} [parameters.qsParam] - Parameters listed above can be serialized into a JSON object and parsed through this parameter. Please refer to https://docs.constructor.com/reference/v1-search-get-search-results#query-params
+   * @param {object} [parameters.qsParam] - Parameters listed above can be serialized into a JSON object and parsed through this parameter. Please refer to https://docs.constructor.com/reference/v1-asa-retrieve-intent#query-params
    * @returns {ReadableStream} Returns a ReadableStream.
    * @example
    * const readableStream = constructorio.agent.getAgentResultsStream('I want to get shoes', {
