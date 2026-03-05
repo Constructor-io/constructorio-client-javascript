@@ -56,7 +56,7 @@ function createAgentUrl(intent, parameters, options) {
       guard,
       numResultsPerEvent,
       numResultEvents,
-      qs,
+      qsParam,
       preFilterExpression,
       fmtOptions,
     } = parameters;
@@ -67,12 +67,12 @@ function createAgentUrl(intent, parameters, options) {
     }
 
     // Pull results number from parameters
-    if (!isNil(numResultsPerPage)) {
+    if (numResultsPerPage) {
       queryParams.num_results_per_page = numResultsPerPage;
     }
 
     // Pull thread_id from parameters
-    if (!isNil(threadId)) {
+    if (threadId) {
       queryParams.thread_id = threadId;
     }
 
@@ -82,23 +82,23 @@ function createAgentUrl(intent, parameters, options) {
     }
 
     // Pull num_results_per_event from parameters
-    if (!isNil(numResultsPerEvent)) {
+    if (numResultsPerEvent) {
       queryParams.num_results_per_event = numResultsPerEvent;
     }
 
     // Pull num_result_events from parameters
-    if (!isNil(numResultEvents)) {
+    if (numResultEvents) {
       queryParams.num_result_events = numResultEvents;
     }
 
-    // Pull qs from parameters
-    if (qs) {
-      queryParams.qs = typeof qs === 'string' ? qs : JSON.stringify(qs);
+    // Pull qsParam from parameters
+    if (qsParam) {
+      queryParams.qs = JSON.stringify(qsParam);
     }
 
     // Pull pre_filter_expression from parameters
     if (preFilterExpression) {
-      queryParams.pre_filter_expression = typeof preFilterExpression === 'string' ? preFilterExpression : JSON.stringify(preFilterExpression);
+      queryParams.pre_filter_expression = JSON.stringify(preFilterExpression);
     }
 
     // Pull fmt_options from parameters
@@ -188,9 +188,9 @@ class Agent {
    * @param {number} [parameters.numResultsPerEvent] - Max products per search_result event
    * @param {number} [parameters.numResultEvents] - Max number of search_result events
    * @param {number} [parameters.numResultsPerPage] - Deprecated: use numResultsPerEvent instead
-   * @param {object|string} [parameters.qs] - Additional query parameters for the search client
-   * @param {object|string} [parameters.preFilterExpression] - Pre-filter expression for results
-   * @param {object} [parameters.fmtOptions] - Format options for results
+   * @param {object} [parameters.qsParam] - Parameters listed above can be serialized into a JSON object and parsed through this parameter. Please refer to https://docs.constructor.com/reference/v1-search-get-search-results#query-params
+   * @param {object} [parameters.preFilterExpression] - Faceting expression to scope search results. Please refer to https://docs.constructor.com/reference/configuration-collections
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.com/reference/v1-search-get-search-results#query-params for details
    * @param {string[]} [parameters.fmtOptions.fields] - Product fields to return
    * @param {string[]} [parameters.fmtOptions.hidden_fields] - Hidden fields to return
    * @returns {ReadableStream} Returns a ReadableStream.
