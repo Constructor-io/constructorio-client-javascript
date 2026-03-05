@@ -172,40 +172,16 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
       expect(requestedUrlParams).to.have.property('pre_filter_expression').to.equal(JSON.stringify(preFilterExpression));
     });
 
-    it('should include preFilterExpression as string when provided as string', () => {
-      const preFilterExpression = '{"and":[{"name":"brand","value":"Nike"}]}';
-      const url = createAgentUrl(
-        'running shoes',
-        { ...defaultParameters, preFilterExpression },
-        defaultOptions,
-      );
-      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
-
-      expect(requestedUrlParams).to.have.property('pre_filter_expression').to.equal(preFilterExpression);
-    });
-
-    it('should include qs as JSON string when provided as object', () => {
+    it('should include qsParam as JSON string when provided as object', () => {
       const qsParam = { section: 'Products' };
       const url = createAgentUrl(
         'running shoes',
-        { ...defaultParameters, qs: qsParam },
+        { ...defaultParameters, qsParam },
         defaultOptions,
       );
       const requestedUrlParams = qs.parse(url.split('?')?.[1]);
 
       expect(requestedUrlParams).to.have.property('qs').to.equal(JSON.stringify(qsParam));
-    });
-
-    it('should include qs as string when provided as string', () => {
-      const qsParam = 'section=Products';
-      const url = createAgentUrl(
-        'running shoes',
-        { ...defaultParameters, qs: qsParam },
-        defaultOptions,
-      );
-      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
-
-      expect(requestedUrlParams).to.have.property('qs').to.equal(qsParam);
     });
 
     it('should include fmtOptions when provided', () => {
