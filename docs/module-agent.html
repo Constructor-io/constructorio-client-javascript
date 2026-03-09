@@ -80,7 +80,7 @@ Replaces the previous Assistant module.</li></ul></dd>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_agent.js.html">modules/agent.js</a>, <a href="modules_agent.js.html#line105">line 105</a>
+        <a href="modules_agent.js.html">modules/agent.js</a>, <a href="modules_agent.js.html#line151">line 151</a>
     </li></ul></dd>
     
 
@@ -190,7 +190,7 @@ Replaces the previous Assistant module.</li></ul></dd>
 
     
 
-    <h4 class="name" id="~getAgentResultsStream"><span class="type-signature type-signature-inner">(inner) </span>getAgentResultsStream<span class="signature">(intent, parameters<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {ReadableStream}</span></h4>
+    <h4 class="name" id="~getAgentResultsStream"><span class="type-signature type-signature-inner">(inner) </span>getAgentResultsStream<span class="signature">(intent, parameters)</span><span class="type-signature"> &rarr; {ReadableStream}</span></h4>
 
     
 
@@ -206,7 +206,7 @@ Replaces the previous Assistant module.</li></ul></dd>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_agent.js.html">modules/agent.js</a>, <a href="modules_agent.js.html#line130">line 130</a>
+        <a href="modules_agent.js.html">modules/agent.js</a>, <a href="modules_agent.js.html#line178">line 178</a>
     </li></ul></dd>
     
 
@@ -275,8 +275,6 @@ const { value, done } = await reader.read();</code></pre>
         <th>Type</th>
 
         
-        <th>Attributes</th>
-        
 
         
 
@@ -303,14 +301,6 @@ const { value, done } = await reader.read();</code></pre>
             </td>
 
             
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
 
             
 
@@ -334,16 +324,6 @@ const { value, done } = await reader.read();</code></pre>
             
             </td>
 
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
             
 
             
@@ -392,6 +372,38 @@ const { value, done } = await reader.read();</code></pre>
             
                 <td class="attributes">
                 
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Domain name (e.g. "groceries", "recipes")</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>threadId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
                     &lt;optional><br>
                 
 
@@ -403,7 +415,109 @@ const { value, done } = await reader.read();</code></pre>
 
             
 
-            <td class="description last">domain name e.g. swimming sports gear, groceries</td>
+            <td class="description last">Conversation thread ID for multi-turn dialogue</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>guard</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Enable content moderation</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>numResultsPerEvent</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Max products per search_result event</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>numResultEvents</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Max number of search_result events</td>
         </tr>
 
     
@@ -437,7 +551,205 @@ const { value, done } = await reader.read();</code></pre>
 
             
 
-            <td class="description last">The total number of results to return</td>
+            <td class="description last">Deprecated: use numResultsPerEvent instead</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>preFilterExpression</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Faceting expression to scope search results. Please refer to https://docs.constructor.com/reference/configuration-collections</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>fmtOptions</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The format options used to refine result groups. Please refer to https://docs.constructor.com/reference/v1-asa-retrieve-intent#query-params for details
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>fields</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;string></span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Product fields to return</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>hidden_fields</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;string></span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Hidden fields to return</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>qsParam</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Parameters listed above can be serialized into a JSON object and parsed through this parameter. Please refer to https://docs.constructor.com/reference/v1-asa-retrieve-intent#query-params</td>
         </tr>
 
     
@@ -512,7 +824,7 @@ const { value, done } = await reader.read();</code></pre>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Wed Feb 25 2026 14:12:15 GMT+0300 (GMT+03:00) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Mon Mar 09 2026 17:16:12 GMT+0300 (GMT+03:00) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
