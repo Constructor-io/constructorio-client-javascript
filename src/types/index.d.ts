@@ -6,6 +6,7 @@ export default ConstructorIO;
 export * from './search';
 export * from './autocomplete';
 export * from './quizzes';
+export * from './agent';
 export * from './recommendations';
 export * from './browse';
 export * from './tracker';

@@ -1,6 +1,7 @@
-const { cleanParams, trimNonBreakingSpaces, encodeURIComponentRFC3986, stringify } = require('../utils/helpers');
+const { cleanParams, trimNonBreakingSpaces, encodeURIComponentRFC3986, stringify, isNil } = require('../utils/helpers');
 
 // Create URL from supplied intent (term) and parameters
+// eslint-disable-next-line complexity
 function createAgentUrl(intent, parameters, options) {
   const {
     apiKey,
@@ -26,7 +27,7 @@ function createAgentUrl(intent, parameters, options) {
   }
 
   // Validate domain is provided
-  if (!parameters.domain || typeof parameters.domain !== 'string') {
+  if (!parameters || !parameters.domain || typeof parameters.domain !== 'string') {
     throw new Error('parameters.domain is a required parameter of type string');
   }
 
@@ -48,7 +49,17 @@ function createAgentUrl(intent, parameters, options) {
   }
 
   if (parameters) {
-    const { domain, numResultsPerPage } = parameters;
+    const {
+      domain,
+      numResultsPerPage,
+      threadId,
+      guard,
+      numResultsPerEvent,
+      numResultEvents,
+      qsParam,
+      preFilterExpression,
+      fmtOptions,
+    } = parameters;
 
     // Pull domain from parameters
     if (domain) {
@@ -58,6 +69,41 @@ function createAgentUrl(intent, parameters, options) {
     // Pull results number from parameters
     if (numResultsPerPage) {
       queryParams.num_results_per_page = numResultsPerPage;
+    }
+
+    // Pull thread_id from parameters
+    if (threadId) {
+      queryParams.thread_id = threadId;
+    }
+
+    // Pull guard from parameters
+    if (!isNil(guard)) {
+      queryParams.guard = guard;
+    }
+
+    // Pull num_results_per_event from parameters
+    if (numResultsPerEvent) {
+      queryParams.num_results_per_event = numResultsPerEvent;
+    }
+
+    // Pull num_result_events from parameters
+    if (numResultEvents) {
+      queryParams.num_result_events = numResultEvents;
+    }
+
+    // Pull qsParam from parameters
+    if (qsParam) {
+      queryParams.qs = JSON.stringify(qsParam);
+    }
+
+    // Pull pre_filter_expression from parameters
+    if (preFilterExpression) {
+      queryParams.pre_filter_expression = JSON.stringify(preFilterExpression);
+    }
+
+    // Pull fmt_options from parameters
+    if (fmtOptions) {
+      queryParams.fmt_options = fmtOptions;
     }
   }
 
@@ -124,6 +170,8 @@ class Agent {
     RECIPE_INSTRUCTIONS: 'recipe_instructions', // Represents recipe instructions
     SERVER_ERROR: 'server_error', // Server Error event
     IMAGE_META: 'image_meta', // This event type is used for enhancing recommendations with media content such as images
+    MESSAGE: 'message', // Represents a textual message from the agent
+    FOLLOW_UP_QUESTIONS: 'follow_up_questions', // Represents follow-up question suggestions
     END: 'end', // Represents the end of data stream
   };
 
@@ -133,9 +181,18 @@ class Agent {
    * @function getAgentResultsStream
    * @description Retrieve a stream of agent results from Constructor.io API
    * @param {string} intent - Intent to use to perform an intent based recommendations
-   * @param {object} [parameters] - Additional parameters to refine result set
-   * @param {string} [parameters.domain] - domain name e.g. swimming sports gear, groceries
-   * @param {number} [parameters.numResultsPerPage] - The total number of results to return
+   * @param {object} parameters - Additional parameters to refine result set
+   * @param {string} parameters.domain - Domain name (e.g. "groceries", "recipes")
+   * @param {string} [parameters.threadId] - Conversation thread ID for multi-turn dialogue
+   * @param {boolean} [parameters.guard] - Enable content moderation
+   * @param {number} [parameters.numResultsPerEvent] - Max products per search_result event
+   * @param {number} [parameters.numResultEvents] - Max number of search_result events
+   * @param {number} [parameters.numResultsPerPage] - Deprecated: use numResultsPerEvent instead
+   * @param {object} [parameters.preFilterExpression] - Faceting expression to scope search results. Please refer to https://docs.constructor.com/reference/configuration-collections
+   * @param {object} [parameters.fmtOptions] - The format options used to refine result groups. Please refer to https://docs.constructor.com/reference/v1-asa-retrieve-intent#query-params for details
+   * @param {string[]} [parameters.fmtOptions.fields] - Product fields to return
+   * @param {string[]} [parameters.fmtOptions.hidden_fields] - Hidden fields to return
+   * @param {object} [parameters.qsParam] - Parameters listed above can be serialized into a JSON object and parsed through this parameter. Please refer to https://docs.constructor.com/reference/v1-asa-retrieve-intent#query-params
    * @returns {ReadableStream} Returns a ReadableStream.
    * @example
    * const readableStream = constructorio.agent.getAgentResultsStream('I want to get shoes', {
