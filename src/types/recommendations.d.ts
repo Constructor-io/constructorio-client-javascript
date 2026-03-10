@@ -5,6 +5,7 @@ export default Recommendations;
 
 export interface RecommendationsParameters {
   itemIds?: string | string[];
+  variationId?: string;
   numResults?: number;
   section?: string;
   term?: string;
