@@ -124,6 +124,7 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
         expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
         expect(requestedUrlParams).to.have.property('item_id').to.equal(itemId);
         expect(requestedUrlParams).to.have.property('variation_id').to.equal(variationId);
+        expect(res.request.variation_id).to.equal(variationId);
         done();
       });
     });
@@ -496,6 +497,15 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
 
       return expect(recommendations.getRecommendations(podId, {
         variationId,
+      })).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected when variationId is provided with an empty itemIds array', () => {
+      const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(recommendations.getRecommendations(podId, {
+        variationId,
+        itemIds: [],
       })).to.eventually.be.rejected;
     });
 

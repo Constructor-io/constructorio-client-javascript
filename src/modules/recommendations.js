@@ -52,7 +52,7 @@ function createRecommendationsUrl(podId, parameters, options) {
     }
 
     if (variationId) {
-      if (!itemIds) {
+      if (!itemIds || (typeof itemIds === 'string' && !itemIds.trim())) {
         throw new Error('itemIds is a required parameter for variationId');
       }
 

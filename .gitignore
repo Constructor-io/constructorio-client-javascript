@@ -7,6 +7,9 @@ test
 # OS X specific files
 .DS_Store
 
+# Editor specific files
+.idea
+
 # Logs
 logs
 *.log
