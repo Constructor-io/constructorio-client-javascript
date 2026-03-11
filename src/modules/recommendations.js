@@ -1,4 +1,4 @@
-/* eslint-disable object-curly-newline, no-param-reassign, max-len */
+/* eslint-disable object-curly-newline, no-param-reassign */
 const EventDispatcher = require('../utils/event-dispatcher');
 const helpers = require('../utils/helpers');
 
@@ -130,7 +130,8 @@ class Recommendations {
    * @description Retrieve recommendation results from Constructor.io API
    * @param {string} podId - Pod identifier
    * @param {object} [parameters] - Additional parameters to refine results
-   * @param {string|array} [parameters.itemIds] - Item ID(s) to retrieve recommendations for (strategy specific). Required for variationId
+   * @param {string|array} [parameters.itemIds] - Item ID(s) to retrieve recommendations for (strategy specific).
+   * Required for variationId
    * @param {string} [parameters.variationId] - Variation ID to retrieve recommendations for (strategy specific)
    * @param {number} [parameters.numResults] - The number of results to return
    * @param {string} [parameters.section] - The section to return results from
