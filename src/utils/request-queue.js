@@ -112,17 +112,7 @@ class RequestQueue {
         }
       }
 
-      // Build security token header (mirrors Node SDK pattern)
-      const headers = {};
-      if (this.options.securityToken && typeof this.options.securityToken === 'string') {
-        headers['x-cnstrc-token'] = this.options.securityToken;
-      }
-      if (this.options.userIp && typeof this.options.userIp === 'string') {
-        headers['X-Forwarded-For'] = this.options.userIp;
-      }
-      if (this.options.userAgent && typeof this.options.userAgent === 'string') {
-        headers['User-Agent'] = this.options.userAgent;
-      }
+      const headers = this.buildHeaders();
 
       if (nextInQueue.method === 'GET') {
         request = fetch(nextInQueue.url, { headers, signal });
@@ -197,6 +187,21 @@ class RequestQueue {
         });
       }
     }
+  }
+
+  // Build request headers from options
+  buildHeaders() {
+    const headers = {};
+    if (this.options.securityToken && typeof this.options.securityToken === 'string') {
+      headers['x-cnstrc-token'] = this.options.securityToken;
+    }
+    if (this.options.userIp && typeof this.options.userIp === 'string') {
+      headers['X-Forwarded-For'] = this.options.userIp;
+    }
+    if (this.options.userAgent && typeof this.options.userAgent === 'string') {
+      headers['User-Agent'] = this.options.userAgent;
+    }
+    return headers;
   }
 
   // Read from queue and send requests to server
