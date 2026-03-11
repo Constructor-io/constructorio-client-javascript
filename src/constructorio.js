@@ -91,6 +91,9 @@ class ConstructorIO {
       beaconMode,
       networkParameters,
       humanityCheckLocation,
+      securityToken,
+      userIp,
+      userAgent,
     } = options;
 
     if (!apiKey || typeof apiKey !== 'string') {
@@ -139,6 +142,9 @@ class ConstructorIO {
       beaconMode: (beaconMode === false) ? false : true, // Defaults to 'true',
       networkParameters: networkParameters || {},
       humanityCheckLocation: humanityCheckLocation || 'session',
+      securityToken: securityToken || '',
+      userIp: userIp || '',
+      userAgent: userAgent || '',
     };
 
     // Expose global modules

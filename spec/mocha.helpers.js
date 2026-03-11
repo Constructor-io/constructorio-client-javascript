@@ -64,6 +64,13 @@ const extractBodyParamsFromFetch = (fetch) => {
   return null;
 };
 
+// Extract headers from the last fetch spy call
+const extractHeadersFromFetch = (fetch) => {
+  const lastCallArguments = fetch && fetch.args && fetch.args[fetch.args.length - 1];
+  const requestData = lastCallArguments && lastCallArguments[1];
+  return (requestData && requestData.headers) || {};
+};
+
 const getUserDefinedWindowProperties = () => {
   const iframe = document.createElement('iframe');
 
@@ -85,5 +92,6 @@ module.exports = {
   clearStorage,
   extractUrlParamsFromFetch,
   extractBodyParamsFromFetch,
+  extractHeadersFromFetch,
   getUserDefinedWindowProperties,
 };

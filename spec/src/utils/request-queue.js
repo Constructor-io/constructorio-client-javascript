@@ -849,6 +849,131 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
           }, waitInterval);
         });
       });
+
+      describe('headers', () => {
+        describe('securityToken', () => {
+          it('Should send x-cnstrc-token header on POST requests when securityToken is provided', (done) => {
+            const requests = new RequestQueue({
+              ...requestQueueOptions,
+              securityToken: 'test-security-token',
+            });
+
+            store.session.set(humanityStorageKey, true);
+
+            requests.queue('https://ac.cnstrc.com/behavior?action=session_start', 'POST', { action: 'session_start' });
+            requests.send();
+
+            setTimeout(() => {
+              const requestHeaders = helpers.extractHeadersFromFetch(fetchSpy);
+              expect(requestHeaders).to.have.property('x-cnstrc-token').to.equal('test-security-token');
+              done();
+            }, waitInterval);
+          });
+
+          it('Should send x-cnstrc-token header on GET requests when securityToken is provided', (done) => {
+            const requests = new RequestQueue({
+              ...requestQueueOptions,
+              securityToken: 'test-security-token',
+            });
+
+            store.session.set(humanityStorageKey, true);
+
+            requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+            requests.send();
+
+            setTimeout(() => {
+              const requestHeaders = helpers.extractHeadersFromFetch(fetchSpy);
+              expect(requestHeaders).to.have.property('x-cnstrc-token').to.equal('test-security-token');
+              done();
+            }, waitInterval);
+          });
+
+          it('Should not send x-cnstrc-token header when securityToken is not provided', (done) => {
+            const requests = new RequestQueue(requestQueueOptions);
+
+            store.session.set(humanityStorageKey, true);
+
+            requests.queue('https://ac.cnstrc.com/behavior?action=session_start', 'POST', { action: 'session_start' });
+            requests.send();
+
+            setTimeout(() => {
+              const requestHeaders = helpers.extractHeadersFromFetch(fetchSpy);
+              expect(requestHeaders).to.not.have.property('x-cnstrc-token');
+              done();
+            }, waitInterval);
+          });
+        });
+
+        describe('userIp', () => {
+          it('Should send X-Forwarded-For header when userIp is provided', (done) => {
+            const requests = new RequestQueue({
+              ...requestQueueOptions,
+              userIp: '127.0.0.1',
+            });
+
+            store.session.set(humanityStorageKey, true);
+
+            requests.queue('https://ac.cnstrc.com/behavior?action=session_start', 'POST', { action: 'session_start' });
+            requests.send();
+
+            setTimeout(() => {
+              const requestHeaders = helpers.extractHeadersFromFetch(fetchSpy);
+              expect(requestHeaders).to.have.property('X-Forwarded-For').to.equal('127.0.0.1');
+              done();
+            }, waitInterval);
+          });
+
+          it('Should not send X-Forwarded-For header when userIp is not provided', (done) => {
+            const requests = new RequestQueue(requestQueueOptions);
+
+            store.session.set(humanityStorageKey, true);
+
+            requests.queue('https://ac.cnstrc.com/behavior?action=session_start', 'POST', { action: 'session_start' });
+            requests.send();
+
+            setTimeout(() => {
+              const requestHeaders = helpers.extractHeadersFromFetch(fetchSpy);
+              expect(requestHeaders).to.not.have.property('X-Forwarded-For');
+              done();
+            }, waitInterval);
+          });
+        });
+
+        describe('userAgent', () => {
+          it('Should send User-Agent header when userAgent is provided', (done) => {
+            const requests = new RequestQueue({
+              ...requestQueueOptions,
+              userAgent: 'custom-agent/1.0',
+            });
+
+            store.session.set(humanityStorageKey, true);
+
+            requests.queue('https://ac.cnstrc.com/behavior?action=session_start', 'POST', { action: 'session_start' });
+            requests.send();
+
+            setTimeout(() => {
+              const requestHeaders = helpers.extractHeadersFromFetch(fetchSpy);
+              expect(requestHeaders).to.have.property('User-Agent').to.equal('custom-agent/1.0');
+              done();
+            }, waitInterval);
+          });
+
+          it('Should not send User-Agent header when userAgent is not provided', (done) => {
+            const requests = new RequestQueue(requestQueueOptions);
+
+            store.session.set(humanityStorageKey, true);
+
+            requests.queue('https://ac.cnstrc.com/behavior?action=session_start', 'POST', { action: 'session_start' });
+            requests.send();
+
+            setTimeout(() => {
+              const requestHeaders = helpers.extractHeadersFromFetch(fetchSpy);
+              expect(requestHeaders).to.not.have.property('User-Agent');
+              done();
+            }, waitInterval);
+          });
+        });
+      });
     });
 
     describe('domless', () => {

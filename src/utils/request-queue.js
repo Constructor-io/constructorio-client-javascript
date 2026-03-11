@@ -112,16 +112,29 @@ class RequestQueue {
         }
       }
 
+      // Build security token header (mirrors Node SDK pattern)
+      const headers = {};
+      if (this.options.securityToken && typeof this.options.securityToken === 'string') {
+        headers['x-cnstrc-token'] = this.options.securityToken;
+      }
+      if (this.options.userIp && typeof this.options.userIp === 'string') {
+        headers['X-Forwarded-For'] = this.options.userIp;
+      }
+      if (this.options.userAgent && typeof this.options.userAgent === 'string') {
+        headers['User-Agent'] = this.options.userAgent;
+      }
+
       if (nextInQueue.method === 'GET') {
-        request = fetch(nextInQueue.url, { signal });
+        request = fetch(nextInQueue.url, { headers, signal });
       }
 
       if (nextInQueue.method === 'POST') {
+        headers['Content-Type'] = 'text/plain';
         request = fetch(nextInQueue.url, {
           method: nextInQueue.method,
           body: JSON.stringify(nextInQueue.body),
           mode: 'cors',
-          headers: { 'Content-Type': 'text/plain' },
+          headers,
           signal,
         });
       }

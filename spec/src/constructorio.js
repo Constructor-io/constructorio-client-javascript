@@ -741,6 +741,72 @@ if (!bundled) {
       expect(instance).to.have.property('tracker');
     });
 
+    it('Should store securityToken in options when provided', () => {
+      const securityToken = 'test-security-token';
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        clientId,
+        sessionId,
+        securityToken,
+      });
+
+      expect(instance.options).to.have.property('securityToken').to.equal(securityToken);
+    });
+
+    it('Should store empty string for securityToken when not provided', () => {
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        clientId,
+        sessionId,
+      });
+
+      expect(instance.options).to.have.property('securityToken').to.equal('');
+    });
+
+    it('Should store userIp in options when provided', () => {
+      const userIp = '127.0.0.1';
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        clientId,
+        sessionId,
+        userIp,
+      });
+
+      expect(instance.options).to.have.property('userIp').to.equal(userIp);
+    });
+
+    it('Should store empty string for userIp when not provided', () => {
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        clientId,
+        sessionId,
+      });
+
+      expect(instance.options).to.have.property('userIp').to.equal('');
+    });
+
+    it('Should store userAgent in options when provided', () => {
+      const userAgent = 'custom-agent/1.0';
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        clientId,
+        sessionId,
+        userAgent,
+      });
+
+      expect(instance.options).to.have.property('userAgent').to.equal(userAgent);
+    });
+
+    it('Should store empty string for userAgent when not provided', () => {
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        clientId,
+        sessionId,
+      });
+
+      expect(instance.options).to.have.property('userAgent').to.equal('');
+    });
+
     it('Should throw an error if client identifier is not provided', () => {
       expect(() => new ConstructorIO({
         apiKey: validApiKey,
