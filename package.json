@@ -63,7 +63,7 @@
     "eventsource": "^2.0.2",
     "husky": "^7.0.4",
     "jsdoc": "^4.0.2",
-    "jsdom": "^16.7.0",
+    "jsdom": "^28.1.0",
     "license-checker": "^25.0.1",
     "lodash.clonedeep": "^4.5.0",
     "mocha": "^11.1.0",
