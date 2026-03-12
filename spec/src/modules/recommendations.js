@@ -49,6 +49,7 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     const filteredItemsRecommendationsPodId = 'filtered_items';
     const itemId = 'power_drill';
     const itemIds = [itemId, 'drill'];
+    const variationId = 'power_drill_variation';
 
     it('Should return a response with valid itemIds (singular)', (done) => {
       const { recommendations } = new ConstructorIO({
@@ -95,6 +96,35 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
         expect(res.response.pod).to.have.property('id').to.equal(podId);
         expect(res.response.pod).to.have.property('display_name');
         expect(requestedUrlParams).to.have.property('item_id').to.deep.equal(itemIds);
+        done();
+      });
+    });
+
+    it('Should return a response with valid variationId', (done) => {
+      const { recommendations } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      recommendations.getRecommendations(podId, { itemIds: itemId, variationId }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('response').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(res.request.item_id).to.equal(itemId);
+        expect(res.response).to.have.property('results').to.be.an('array');
+        expect(res.response).to.have.property('pod');
+        expect(res.response.pod).to.have.property('id').to.equal(podId);
+        expect(res.response.pod).to.have.property('display_name');
+        expect(fetchSpy).to.have.been.called;
+        expect(requestedUrlParams).to.have.property('key');
+        expect(requestedUrlParams).to.have.property('i');
+        expect(requestedUrlParams).to.have.property('s');
+        expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestedUrlParams).to.have.property('item_id').to.equal(itemId);
+        expect(requestedUrlParams).to.have.property('variation_id').to.equal(variationId);
+        expect(res.request.variation_id).to.equal(variationId);
         done();
       });
     });
@@ -460,6 +490,23 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
       }, false);
 
       recommendations.getRecommendations(podId, { itemIds });
+    });
+
+    it('Should be rejected when variationId is provided without itemId', () => {
+      const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(recommendations.getRecommendations(podId, {
+        variationId,
+      })).to.eventually.be.rejected;
+    });
+
+    it('Should be rejected when variationId is provided with an empty itemIds array', () => {
+      const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
+
+      return expect(recommendations.getRecommendations(podId, {
+        variationId,
+        itemIds: [],
+      })).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid pod id parameter is provided', () => {

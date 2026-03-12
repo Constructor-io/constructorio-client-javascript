@@ -3,6 +3,7 @@ const EventDispatcher = require('../utils/event-dispatcher');
 const helpers = require('../utils/helpers');
 
 // Create URL from supplied parameters
+// eslint-disable-next-line complexity
 function createRecommendationsUrl(podId, parameters, options) {
   const { apiKey, version, serviceUrl, sessionId, userId, clientId, segments } = options;
   let queryParams = { c: version };
@@ -30,6 +31,7 @@ function createRecommendationsUrl(podId, parameters, options) {
     const {
       numResults,
       itemIds,
+      variationId,
       section,
       term,
       filters,
@@ -47,6 +49,18 @@ function createRecommendationsUrl(podId, parameters, options) {
     // Pull item ids from parameters
     if (itemIds) {
       queryParams.item_id = itemIds;
+    }
+
+    if (variationId) {
+      if (!itemIds || (typeof itemIds === 'string' && !itemIds.trim())) {
+        throw new Error('itemIds is a required parameter for variationId');
+      }
+
+      if (Array.isArray(itemIds) && !itemIds.length) {
+        throw new Error('At least one itemId is a required parameter for variationId');
+      }
+
+      queryParams.variation_id = variationId;
     }
 
     // Pull section from parameters
@@ -116,7 +130,9 @@ class Recommendations {
    * @description Retrieve recommendation results from Constructor.io API
    * @param {string} podId - Pod identifier
    * @param {object} [parameters] - Additional parameters to refine results
-   * @param {string|array} [parameters.itemIds] - Item ID(s) to retrieve recommendations for (strategy specific)
+   * @param {string|array} [parameters.itemIds] - Item ID(s) to retrieve recommendations for (strategy specific).
+   * Required for variationId
+   * @param {string} [parameters.variationId] - Variation ID to retrieve recommendations for (strategy specific)
    * @param {number} [parameters.numResults] - The number of results to return
    * @param {string} [parameters.section] - The section to return results from
    * @param {string} [parameters.term] - The term to use to refine results (strategy specific)
