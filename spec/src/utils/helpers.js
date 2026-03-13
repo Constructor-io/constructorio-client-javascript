@@ -197,18 +197,12 @@ describe('ConstructorIO - Utils - Helpers', () => {
 
     describe('getWindowLocation', () => {
       it('Should return information about the window location property if in a DOM context', () => {
-        const cleanup = jsdom();
+        const cleanup = jsdom({ url: 'https://constructor.io/home' });
 
-        const locationInfo = {
-          hostname: 'constructor.io',
-          protocol: 'https',
-          path: '/home',
-        };
-        Object.defineProperty(window, 'location', {
-          get: () => locationInfo,
-        });
-
-        expect(getWindowLocation()).to.deep.equal(locationInfo);
+        const location = getWindowLocation();
+        expect(location.hostname).to.equal('constructor.io');
+        expect(location.protocol).to.equal('https:');
+        expect(location.pathname).to.equal('/home');
 
         cleanup();
       });
