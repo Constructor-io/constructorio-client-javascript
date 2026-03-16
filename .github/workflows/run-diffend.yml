@@ -11,7 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ["22.18.0"]
+        # Diffend doesn't work with newer versions of Node/NPM
+        node: ["18.13.0"]
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -19,8 +20,6 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
-      - name: Downgrade npm for diffend compatibility
-        run: npm install -g npm@10
       - name: Install Diffend (Mend)
         run: npm install -g https://my.diffend.io/releases/npm/stable.tgz
       - name: Install dependencies with Diffend
