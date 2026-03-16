@@ -60,6 +60,7 @@ function globalJsdom(options = {}) {
   global.sessionStorage = sessionStorage;
   window.console = global.console;
   window.fetch = global.fetch;
+  window.ReadableStream = global.ReadableStream;
 
   // add access to our jsdom instance
   global.$jsdom = jsdom;
@@ -72,6 +73,7 @@ function globalJsdom(options = {}) {
     delete global.sessionStorage;
     delete window.console;
     delete window.fetch;
+    delete window.ReadableStream;
   };
 
   document.destroy = cleanup;

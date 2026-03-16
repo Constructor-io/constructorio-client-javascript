@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        # Diffend doesn't work with newer versions of Node/NPM
         node: ["18.13.0"]
     steps:
       - name: Check out code

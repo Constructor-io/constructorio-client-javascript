@@ -6,9 +6,8 @@
   "types": "lib/types/index.d.ts",
   "scripts": {
     "clean": "sudo rm -rf node_modules package-lock.json",
-    "version": "node ./src/generateVersion.js && npm run verify-node-version && npm run docs && git add ./docs/* && npm run bundle && git add -A ./dist && git add ./src/version.js",
+    "version": "node ./src/generateVersion.js && npm run docs && git add ./docs/* && npm run bundle && git add -A ./dist && git add ./src/version.js",
     "check-license": "license-checker --production --onlyAllow 'Apache-2.0;BSD-3-Clause;MIT;0BSD;BSD-2-Clause'",
-    "verify-node-version": "chmod +x ./scripts/verify-node-version.sh && ./scripts/verify-node-version.sh",
     "lint": "eslint 'src/**/*.js' 'spec/**/*.js' 'src/**/*.d.ts'",
     "pretest": "npm run compile && npm run generate-test-folder",
     "test": "mocha --retries 3 ./spec/*",
@@ -63,7 +62,7 @@
     "eventsource": "^2.0.2",
     "husky": "^7.0.4",
     "jsdoc": "^4.0.2",
-    "jsdom": "^16.7.0",
+    "jsdom": "^28.1.0",
     "license-checker": "^25.0.1",
     "lodash.clonedeep": "^4.5.0",
     "mocha": "^11.1.0",
@@ -85,7 +84,7 @@
     "directory": "src/types/tests"
   },
   "volta": {
-    "node": "18.13.0",
-    "npm": "8.19.3"
+    "node": "22.18.0",
+    "npm": "11.0.0"
   }
 }

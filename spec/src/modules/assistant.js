@@ -4,7 +4,6 @@ const chai = require('chai');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 const EventSource = require('eventsource');
-const { ReadableStream } = require('web-streams-polyfill');
 const qs = require('qs');
 const { createAssistantUrl, setupEventListeners } = require('../../../src/modules/assistant');
 const Assistant = require('../../../src/modules/assistant');
@@ -201,16 +200,11 @@ describe(`ConstructorIO - Assistant${bundledDescriptionSuffix}`, () => {
   describe('getAssistantResultsStream', () => {
     beforeEach(() => {
       global.EventSource = EventSource;
-      global.ReadableStream = ReadableStream;
       window.EventSource = EventSource;
-      window.ReadableStream = ReadableStream;
     });
 
     afterEach(() => {
-      delete global.EventSource;
-      delete global.ReadableStream;
       delete window.EventSource;
-      delete window.ReadableStream;
     });
 
     it('should create a readable stream', () => {
