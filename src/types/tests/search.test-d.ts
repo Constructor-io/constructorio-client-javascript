@@ -132,6 +132,7 @@ expectAssignable<SearchResponse>({
           field: 'data.VariationId',
         },
       ],
+      filter_by: {},
       values: {
         availability: {
           aggregation: 'all',

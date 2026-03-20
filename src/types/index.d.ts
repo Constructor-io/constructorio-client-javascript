@@ -90,8 +90,8 @@ export type ErrorData = {
 };
 
 export interface ResultSources extends Record<string, any> {
-  token_match: { count: number; [key: string]: any };
-  embeddings_match: { count: number; [key: string]: any };
+  token_match: { count: number;[key: string]: any };
+  embeddings_match: { count: number;[key: string]: any };
 }
 
 export interface SortOption extends Record<string, any> {
@@ -215,6 +215,17 @@ export type FilterExpressionRange = {
 
 export type FilterExpressionRangeValue = ['-inf' | number, 'inf' | number];
 
+export interface FilterNode {
+  field: string;
+  value: string | number | boolean;
+}
+
+export interface FilterBy {
+  and?: Array<FilterNode | FilterBy>;
+  or?: Array<FilterNode | FilterBy>;
+  not?: FilterNode | FilterBy;
+}
+
 export interface Item extends Record<string, any> {
   value: string;
   is_slotted: boolean;
@@ -249,10 +260,11 @@ export interface VariationsMap {
     name: string,
     field: string
   }>;
+  filter_by: FilterBy;
   values: {
     [key: string]: {
-        aggregation: 'first' | 'min' | 'max' | 'all',
-        field: string
+      aggregation: 'first' | 'min' | 'max' | 'all',
+      field: string
     },
   },
   dtype: 'array' | 'object'
