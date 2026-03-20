@@ -215,10 +215,17 @@ export type FilterExpressionRange = {
 
 export type FilterExpressionRangeValue = ['-inf' | number, 'inf' | number];
 
-export interface FilterNode {
+export interface VariationsMapSingleFilter {
   field: string;
   value: string | number | boolean;
 }
+
+export interface VariationsMapRange {
+  field: string;
+  range: [number, number];
+}
+
+export type FilterNode = VariationsMapSingleFilter | VariationsMapRange;
 
 export interface FilterBy {
   and?: Array<FilterNode | FilterBy>;
@@ -257,7 +264,7 @@ export interface SearchSuggestion extends Item {
 
 export type VariationsMapResponse = Array<Record<string, unknown>> | Record<string, unknown>;
 
-export type Aggregation = 'first' | 'min' | 'max' | 'all' | 'count' | 'field_count' | 'value_count'
+export type Aggregation = 'first' | 'min' | 'max' | 'all' | 'count' | 'field_count' | 'value_count';
 
 export interface VariationsMapBaseValue {
   aggregation: Aggregation;
@@ -271,7 +278,7 @@ export interface VariationsMapValueCount extends VariationsMapBaseValue {
 }
 
 export interface VariationsMapStandardValue extends VariationsMapBaseValue {
-  aggregation: Exclude<Aggregation, 'value_count'>
+  aggregation: Exclude<Aggregation, 'value_count'>;
   field: string;
 }
 
