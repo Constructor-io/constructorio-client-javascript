@@ -255,17 +255,34 @@ export interface SearchSuggestion extends Item {
   } & ItemData;
 }
 
+export type VariationsMapResponse = Array<Record<string, unknown>> | Record<string, unknown>;
+
+export type Aggregation = 'first' | 'min' | 'max' | 'all' | 'count' | 'field_count' | 'value_count'
+
+export interface VariationsMapBaseValue {
+  aggregation: Aggregation;
+  field: string;
+}
+
+export interface VariationsMapValueCount extends VariationsMapBaseValue {
+  aggregation: 'value_count';
+  field: string;
+  value: boolean | number | string;
+}
+
+export interface VariationsMapStandardValue extends VariationsMapBaseValue {
+  aggregation: Exclude<Aggregation, 'value_count'>
+  field: string;
+}
+
 export interface VariationsMap {
-  group_by: Array<{
+  group_by?: Array<{
     name: string,
     field: string
   }>;
-  filter_by: FilterBy;
+  filter_by?: FilterBy;
   values: {
-    [key: string]: {
-      aggregation: 'first' | 'min' | 'max' | 'all',
-      field: string
-    },
+    [key: string]: VariationsMapValueCount | VariationsMapStandardValue,
   },
   dtype: 'array' | 'object'
 }

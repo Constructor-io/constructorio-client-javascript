@@ -65,7 +65,6 @@ expectAssignable<AutocompleteResponse>({
           field: 'data.VariationId',
         },
       ],
-      filter_by: {},
       values: {
         availability: {
           aggregation: 'all',
