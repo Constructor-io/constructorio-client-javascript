@@ -12,6 +12,10 @@ export * from './browse';
 export * from './tracker';
 export * from './event-dispatcher';
 
+type RequireAtLeastOne<T, Keys extends keyof T = keyof T> =
+  Pick<T, Exclude<keyof T, Keys>> &
+  { [K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>> }[Keys];
+
 export interface NetworkParameters extends Record<string, any> {
   timeout?: number;
 }
@@ -227,11 +231,11 @@ export interface VariationsMapRange {
 
 export type FilterNode = VariationsMapSingleFilter | VariationsMapRange;
 
-export interface FilterBy {
+export type FilterBy = RequireAtLeastOne<{
   and?: Array<FilterNode | FilterBy>;
   or?: Array<FilterNode | FilterBy>;
   not?: FilterNode | FilterBy;
-}
+}>;
 
 export interface Item extends Record<string, any> {
   value: string;
@@ -241,7 +245,7 @@ export interface Item extends Record<string, any> {
   data?: ItemData;
   strategy?: { id: string };
   variations?: { data?: ItemData, value: string }[]
-  variationsMap?: VariationsMapResponse;
+  variations_map?: VariationsMapResponse;
 }
 
 export interface ItemData extends Record<string, any> {
@@ -279,7 +283,6 @@ export interface VariationsMapValueCount extends VariationsMapBaseValue {
 
 export interface VariationsMapStandardValue extends VariationsMapBaseValue {
   aggregation: Exclude<Aggregation, 'value_count'>;
-  field: string;
 }
 
 export interface VariationsMap {

@@ -137,7 +137,7 @@ export interface BrowseResultData extends Record<string, any> {
   is_slotted: false;
   labels: Record<string, any>;
   variations?: Record<string, any>[];
-  variationsMap?: VariationsMapResponse;
+  variations_map?: VariationsMapResponse;
 }
 
 export interface BrowseRequestType extends Record<string, any> {
