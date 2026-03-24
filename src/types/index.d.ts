@@ -241,6 +241,7 @@ export interface Item extends Record<string, any> {
   data?: ItemData;
   strategy?: { id: string };
   variations?: { data?: ItemData, value: string }[]
+  variationsMap?: VariationsMapResponse;
 }
 
 export interface ItemData extends Record<string, any> {
