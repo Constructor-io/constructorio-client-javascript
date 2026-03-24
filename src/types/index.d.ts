@@ -90,8 +90,8 @@ export type ErrorData = {
 };
 
 export interface ResultSources extends Record<string, any> {
-  token_match: { count: number;[key: string]: any };
-  embeddings_match: { count: number;[key: string]: any };
+  token_match: { count: number; [key: string]: any };
+  embeddings_match: { count: number; [key: string]: any };
 }
 
 export interface SortOption extends Record<string, any> {
