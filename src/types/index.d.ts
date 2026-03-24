@@ -222,7 +222,7 @@ export interface VariationsMapSingleFilter {
 
 export interface VariationsMapRange {
   field: string;
-  range: [number, number];
+  range: FilterExpressionRangeValue;
 }
 
 export type FilterNode = VariationsMapSingleFilter | VariationsMapRange;

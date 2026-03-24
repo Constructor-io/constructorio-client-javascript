@@ -123,6 +123,20 @@ expectAssignable<GetBrowseResultsResponse>({
           field: 'data.VariationId',
         },
       ],
+      filter_by: {
+        and: [
+          { field: 'data.availability', value: 'in stock' },
+          {
+            not: { field: 'data.discontinued', value: true },
+          },
+          {
+            or: [
+              { field: 'data.price', range: [10, 100] },
+              { field: 'data.backorderable', value: 'true' },
+            ],
+          },
+        ],
+      },
       values: {
         availability: {
           aggregation: 'all',

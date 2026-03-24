@@ -13,6 +13,7 @@ import {
   ResultSources,
   SortOption,
   VariationsMap,
+  VariationsMapResponse,
 } from '.';
 import EventDispatcher from './event-dispatcher';
 
@@ -136,7 +137,7 @@ export interface BrowseResultData extends Record<string, any> {
   is_slotted: false;
   labels: Record<string, any>;
   variations?: Record<string, any>[];
-  variations_map?: Record<string, any> | Record<string, any>[];
+  variationsMap?: VariationsMapResponse;
 }
 
 export interface BrowseRequestType extends Record<string, any> {
