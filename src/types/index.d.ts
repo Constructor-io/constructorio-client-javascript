@@ -274,7 +274,6 @@ export interface VariationsMapBaseValue {
 
 export interface VariationsMapValueCount extends VariationsMapBaseValue {
   aggregation: 'value_count';
-  field: string;
   value: boolean | number | string;
 }
 
