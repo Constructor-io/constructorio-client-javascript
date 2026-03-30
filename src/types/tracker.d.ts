@@ -94,7 +94,7 @@ declare class Tracker {
   trackSearchResultClick(
     term: string,
     parameters: {
-      itemName: string;
+      itemName?: string;
       itemId: string;
       variationId?: string;
       resultId?: string;
