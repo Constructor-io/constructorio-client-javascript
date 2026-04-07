@@ -908,7 +908,7 @@ class Tracker {
    * @function trackSearchResultClick
    * @param {string} term - Search results query term
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.itemName - Product item name
+   * @param {string} [parameters.itemName] - Product item name
    * @param {string} parameters.itemId - Product item unique identifier
    * @param {string} [parameters.variationId] - Product item variation unique identifier
    * @param {string} [parameters.resultId] - Search result identifier (returned in response from Constructor)
