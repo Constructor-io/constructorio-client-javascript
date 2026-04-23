@@ -428,7 +428,7 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
       });
     });
 
-    it.only('Should return a response with a valid query and preFilterExpressionPerSection', (done) => {
+    it('Should return a response with a valid query and preFilterExpressionPerSection', (done) => {
       const preFilterExpressionPerSection = {
         Products: {
           or: [
