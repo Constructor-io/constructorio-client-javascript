@@ -428,6 +428,77 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should return a response with a valid query and preFilterExpressionPerSection', (done) => {
+      const preFilterExpressionPerSection = {
+        Products: {
+          or: [
+            {
+              and: [
+                { name: 'group_id', value: 'BrandXY' },
+                { name: 'Color', value: 'red' },
+              ],
+            },
+            {
+              and: [
+                { name: 'Color', value: 'blue' },
+                { name: 'Brand', value: 'XYZ' },
+              ],
+            },
+          ],
+        },
+      };
+      const { autocomplete } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      autocomplete.getAutocompleteResults(query, { preFilterExpressionPerSection }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(requestedUrlParams.pre_filter_expression).to.have.property('Products');
+        // Parse before comparing so an accidental double-serialization would fail this assertion
+        const products = JSON.parse(requestedUrlParams.pre_filter_expression.Products);
+        expect(products).to.eql(preFilterExpressionPerSection.Products);
+        done();
+      });
+    });
+
+    it('Should return a response with a valid query, and multiple preFilterExpressionPerSection', (done) => {
+      const preFilterExpressionPerSection = {
+        Products: {
+          and: [
+            { name: 'group_id', value: 'BrandXY' },
+            { name: 'Color', value: 'red' },
+          ],
+        },
+        'Search Suggestions': {
+          and: [
+            { name: 'Brand', value: 'XYZ' },
+          ],
+        },
+      };
+      const { autocomplete } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      autocomplete.getAutocompleteResults(query, { preFilterExpressionPerSection }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(requestedUrlParams.pre_filter_expression).to.have.property('Products');
+        expect(requestedUrlParams.pre_filter_expression).to.have.property('Search Suggestions');
+        const products = JSON.parse(requestedUrlParams.pre_filter_expression.Products);
+        const searchSuggestions = JSON.parse(requestedUrlParams.pre_filter_expression['Search Suggestions']);
+        expect(products).to.eql(preFilterExpressionPerSection.Products);
+        expect(searchSuggestions).to.eql(preFilterExpressionPerSection['Search Suggestions']);
+        done();
+      });
+    });
+
     it('Should return a response with a valid query, section and fmtOptions', (done) => {
       const hiddenFields = ['testField', 'hiddenField2'];
       const fmtOptions = { hidden_fields: hiddenFields };
