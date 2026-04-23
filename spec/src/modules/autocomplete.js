@@ -458,8 +458,43 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
         expect(res).to.have.property('request').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
         expect(requestedUrlParams.pre_filter_expression).to.have.property('Products');
-        // eslint-disable-next-line max-len
-        expect(requestedUrlParams.pre_filter_expression.Products).to.eql(JSON.stringify(preFilterExpressionPerSection.Products));
+        // Parse before comparing so an accidental double-serialization would fail this assertion
+        const products = JSON.parse(requestedUrlParams.pre_filter_expression.Products);
+        expect(products).to.eql(preFilterExpressionPerSection.Products);
+        done();
+      });
+    });
+
+    it('Should return a response with a valid query, and multiple preFilterExpressionPerSection', (done) => {
+      const preFilterExpressionPerSection = {
+        Products: {
+          and: [
+            { name: 'group_id', value: 'BrandXY' },
+            { name: 'Color', value: 'red' },
+          ],
+        },
+        'Search Suggestions': {
+          and: [
+            { name: 'Brand', value: 'XYZ' },
+          ],
+        },
+      };
+      const { autocomplete } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      autocomplete.getAutocompleteResults(query, { preFilterExpressionPerSection }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(requestedUrlParams.pre_filter_expression).to.have.property('Products');
+        expect(requestedUrlParams.pre_filter_expression).to.have.property('Search Suggestions');
+        const products = JSON.parse(requestedUrlParams.pre_filter_expression.Products);
+        const searchSuggestions = JSON.parse(requestedUrlParams.pre_filter_expression['Search Suggestions']);
+        expect(products).to.eql(preFilterExpressionPerSection.Products);
+        expect(searchSuggestions).to.eql(preFilterExpressionPerSection['Search Suggestions']);
         done();
       });
     });
