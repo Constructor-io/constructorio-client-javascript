@@ -428,6 +428,42 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it.only('Should return a response with a valid query and preFilterExpressionPerSection', (done) => {
+      const preFilterExpressionPerSection = {
+        Products: {
+          or: [
+            {
+              and: [
+                { name: 'group_id', value: 'BrandXY' },
+                { name: 'Color', value: 'red' },
+              ],
+            },
+            {
+              and: [
+                { name: 'Color', value: 'blue' },
+                { name: 'Brand', value: 'XYZ' },
+              ],
+            },
+          ],
+        },
+      };
+      const { autocomplete } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      autocomplete.getAutocompleteResults(query, { preFilterExpressionPerSection }).then((res) => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(res).to.have.property('request').to.be.an('object');
+        expect(res).to.have.property('result_id').to.be.an('string');
+        expect(requestedUrlParams.pre_filter_expression).to.have.property('Products');
+        // eslint-disable-next-line max-len
+        expect(requestedUrlParams.pre_filter_expression.Products).to.eql(JSON.stringify(preFilterExpressionPerSection.Products));
+        done();
+      });
+    });
+
     it('Should return a response with a valid query, section and fmtOptions', (done) => {
       const hiddenFields = ['testField', 'hiddenField2'];
       const fmtOptions = { hidden_fields: hiddenFields };

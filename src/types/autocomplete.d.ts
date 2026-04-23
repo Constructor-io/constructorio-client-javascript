@@ -20,6 +20,7 @@ export interface IAutocompleteParameters {
   hiddenFields?: string[];
   variationsMap?: VariationsMap;
   preFilterExpression?: FilterExpression;
+  preFilterExpressionPerSection?: Record<string, FilterExpression>;
   qsParam?: Record<string, any>;
   fmtOptions?: FmtOptions;
 }

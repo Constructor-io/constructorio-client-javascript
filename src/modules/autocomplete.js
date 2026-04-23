@@ -51,6 +51,7 @@ function createAutocompleteUrl(query, parameters, options) {
       hiddenFields,
       variationsMap,
       preFilterExpression,
+      preFilterExpressionPerSection,
       qsParam,
       fmtOptions,
     } = parameters;
@@ -82,6 +83,13 @@ function createAutocompleteUrl(query, parameters, options) {
     // Pull filter expression from parameters
     if (preFilterExpression) {
       queryParams.pre_filter_expression = JSON.stringify(preFilterExpression);
+    }
+
+    // Pull filter expression per section from parameters
+    if (preFilterExpressionPerSection) {
+      Object.keys(preFilterExpressionPerSection).forEach((section) => {
+        queryParams[`pre_filter_expression[${section}]`] = JSON.stringify(preFilterExpressionPerSection[section]);
+      });
     }
 
     // Pull format options from parameters
@@ -144,6 +152,7 @@ class Autocomplete {
    * @param {object} [parameters.resultsPerSection] - Number of results to return (value) per section (key)
    * @param {object} [parameters.fmtOptions] - An object containing options to format different aspects of the response. Please refer to https://docs.constructor.com/reference/v1-autocomplete-get-autocomplete-results for details
    * @param {object} [parameters.preFilterExpression] - Faceting expression to scope autocomplete results. Please refer to https://docs.constructor.com/reference/configuration-collections for details
+   * @param {object} [parameters.preFilterExpressionPerSection] - Faceting expression to scope autocomplete results per section (key). Please refer to https://docs.constructor.com/reference/configuration-collections for details
    * @param {string[]} [parameters.hiddenFields] - Hidden metadata fields to return
    * @param {object} [parameters.variationsMap] - The variations map object to aggregate variations. Please refer to https://docs.constructor.com/reference/shared-variations-mapping for details
    * @param {object} [parameters.qsParam] - object of additional query parameters to be appended to requests for results
