@@ -461,7 +461,6 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result provided a valid apiKey, quizId, quizVersionId and quizSessionId', () => {
-      const quizSessionId = '12345';
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
