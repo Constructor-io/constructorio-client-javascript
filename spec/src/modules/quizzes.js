@@ -160,6 +160,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
   });
 
   describe('getQuizNextQuestion', () => {
+    const quizSessionId = 'test-session-id';
+
     it('Should return a result provided a valid apiKey and quizId', () => {
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
@@ -203,7 +205,6 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result provided a valid apiKey, quizId and quizVersionId, quizSessionId', () => {
-      const quizSessionId = '123;';
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
@@ -268,7 +269,6 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return result given answers parameter', () => {
-      const quizSessionId = 'test-session-id';
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
@@ -283,7 +283,6 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should skip tracking', () => {
-      const quizSessionId = 'test-session-id';
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
