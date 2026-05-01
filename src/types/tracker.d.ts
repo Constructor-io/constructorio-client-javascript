@@ -437,6 +437,30 @@ declare class Tracker {
     networkParameters?: NetworkParameters
   ): true | Error;
 
+  trackProductInsightsAgentRecommendationView(
+    parameters: {
+      itemId: string;
+      itemName: string;
+      items?: ItemTracked[];
+      variationId?: string;
+      section?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
+  trackProductInsightsAgentRecommendationClick(
+    parameters: {
+      itemId: string;
+      itemName: string;
+      clickedItemId?: string;
+      clickedItemName?: string;
+      resultPositionOnPage?: number;
+      variationId?: string;
+      section?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
   trackMediaImpressionView(parameters: {
       bannerAdId: string;
       placementId: string;

@@ -3684,6 +3684,156 @@ class Tracker {
   }
 
   /**
+   * Send product insights agent recommendation view event
+   *
+   * @function trackProductInsightsAgentRecommendationView
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.itemId - Product id whose page we are on
+   * @param {string} parameters.itemName - Product name whose page we are on
+   * @param {object[]} [parameters.items] - List of recommended product items displayed
+   * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User was shown product recommendations in the PIA widget
+   * @example
+   * constructorio.tracker.trackProductInsightsAgentRecommendationView(
+   *   {
+   *     'itemId': '1',
+   *     'itemName': 'item1',
+   *     'variationId': '2',
+   *     'items': [{ 'itemId': '10', 'itemName': 'rec1' }],
+   *   },
+   * );
+   */
+  trackProductInsightsAgentRecommendationView(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/product_insights_agent_recommendation_view?`;
+      const {
+        section,
+        itemId,
+        itemName,
+        variationId,
+        items,
+      } = parameters;
+      const queryParams = {};
+      const bodyParams = {
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
+      };
+
+      if (items && Array.isArray(items)) {
+        bodyParams.items = items.slice(0, 100).map((item) => helpers.toSnakeCaseKeys(item, false));
+      }
+
+      if (section) {
+        queryParams.section = section;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters is a required parameter of type object');
+  }
+
+  /**
+   * Send product insights agent recommendation click event
+   *
+   * @function trackProductInsightsAgentRecommendationClick
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.itemId - Product id whose page we are on
+   * @param {string} parameters.itemName - Product name whose page we are on
+   * @param {string} [parameters.clickedItemId] - Product id of the clicked recommendation
+   * @param {string} [parameters.clickedItemName] - Product name of the clicked recommendation
+   * @param {number} [parameters.resultPositionOnPage] - Position of the clicked item in the list
+   * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User clicked a recommended product in the PIA widget
+   * @example
+   * constructorio.tracker.trackProductInsightsAgentRecommendationClick(
+   *   {
+   *     'itemId': '1',
+   *     'itemName': 'item1',
+   *     'variationId': '2',
+   *     'clickedItemId': '10',
+   *     'clickedItemName': 'rec1',
+   *     'resultPositionOnPage': 1,
+   *   },
+   * );
+   */
+  trackProductInsightsAgentRecommendationClick(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/product_insights_agent_recommendation_click?`;
+      const {
+        section,
+        itemId,
+        itemName,
+        variationId,
+        clickedItemId,
+        clickedItemName,
+        resultPositionOnPage,
+      } = parameters;
+      const queryParams = {};
+      const bodyParams = {
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
+        clicked_item_id: clickedItemId,
+        clicked_item_name: clickedItemName,
+      };
+
+      if (!helpers.isNil(resultPositionOnPage)) {
+        bodyParams.result_position_on_page = resultPositionOnPage;
+      }
+
+      if (section) {
+        queryParams.section = section;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters is a required parameter of type object');
+  }
+
+  /**
    * Subscribe to success or error messages emitted by tracking requests
    *
    * @function on
