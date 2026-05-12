@@ -452,9 +452,7 @@ declare class Tracker {
     parameters: {
       itemId: string;
       itemName: string;
-      clickedItemId?: string;
-      clickedItemName?: string;
-      resultPositionOnPage?: number;
+      position?: number;
       variationId?: string;
       section?: string;
     },

@@ -3759,12 +3759,10 @@ class Tracker {
    *
    * @function trackProductInsightsAgentRecommendationClick
    * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.itemId - Product id whose page we are on
-   * @param {string} parameters.itemName - Product name whose page we are on
-   * @param {string} [parameters.clickedItemId] - Product id of the clicked recommendation
-   * @param {string} [parameters.clickedItemName] - Product name of the clicked recommendation
-   * @param {number} [parameters.resultPositionOnPage] - Position of the clicked item in the list
-   * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} parameters.itemId - Product id of the clicked recommendation
+   * @param {string} parameters.itemName - Product name of the clicked recommendation
+   * @param {number} [parameters.position] - Position of the clicked item in the list
+   * @param {string} [parameters.variationId] - Variation id of the clicked recommendation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3773,12 +3771,9 @@ class Tracker {
    * @example
    * constructorio.tracker.trackProductInsightsAgentRecommendationClick(
    *   {
-   *     'itemId': '1',
-   *     'itemName': 'item1',
-   *     'variationId': '2',
-   *     'clickedItemId': '10',
-   *     'clickedItemName': 'rec1',
-   *     'resultPositionOnPage': 1,
+   *     'itemId': '10',
+   *     'itemName': 'rec1',
+   *     'position': 1,
    *   },
    * );
    */
@@ -3791,21 +3786,17 @@ class Tracker {
         itemId,
         itemName,
         variationId,
-        clickedItemId,
-        clickedItemName,
-        resultPositionOnPage,
+        position,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
         item_id: itemId,
         item_name: itemName,
         variation_id: variationId,
-        clicked_item_id: clickedItemId,
-        clicked_item_name: clickedItemName,
       };
 
-      if (!helpers.isNil(resultPositionOnPage)) {
-        bodyParams.result_position_on_page = resultPositionOnPage;
+      if (!helpers.isNil(position)) {
+        bodyParams.position = position;
       }
 
       if (section) {
