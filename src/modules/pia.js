@@ -12,7 +12,9 @@ function createPiaUrl(itemId, parameters, options, questionPath) {
     userId,
     version,
     agentServiceUrl,
+    assistantServiceUrl,
   } = options;
+  const serviceUrl = agentServiceUrl || assistantServiceUrl;
   let queryParams = { c: version };
 
   queryParams.key = apiKey;
@@ -57,7 +59,7 @@ function createPiaUrl(itemId, parameters, options, questionPath) {
 
   const queryString = helpers.stringify(queryParams);
 
-  return `${agentServiceUrl}/v1/item_questions${questionPath}?${queryString}`;
+  return `${serviceUrl}/v1/item_questions${questionPath}?${queryString}`;
 }
 
 /**
@@ -95,16 +97,21 @@ class Pia {
   getSuggestedQuestions(itemId, parameters, networkParameters = {}) {
     let requestUrl;
     const { fetch } = this.options;
-    const controller = new AbortController();
-    const { signal } = controller;
+    let signal;
+
+    if (typeof AbortController === 'function') {
+      const controller = new AbortController();
+
+      signal = controller && controller.signal;
+
+      helpers.applyNetworkTimeout(this.options, networkParameters, controller);
+    }
 
     try {
       requestUrl = createPiaUrl(itemId, parameters, this.options, '');
     } catch (e) {
       return Promise.reject(e);
     }
-
-    helpers.applyNetworkTimeout(this.options, networkParameters, controller);
 
     return fetch(requestUrl, { signal })
       .then(helpers.convertResponseToJson)
@@ -140,8 +147,15 @@ class Pia {
   getAnswerResults(itemId, question, parameters, networkParameters = {}) {
     let requestUrl;
     const { fetch } = this.options;
-    const controller = new AbortController();
-    const { signal } = controller;
+    let signal;
+
+    if (typeof AbortController === 'function') {
+      const controller = new AbortController();
+
+      signal = controller && controller.signal;
+
+      helpers.applyNetworkTimeout(this.options, networkParameters, controller);
+    }
 
     if (!question || typeof question !== 'string') {
       return Promise.reject(new Error('question is a required parameter of type string'));
@@ -153,8 +167,6 @@ class Pia {
     } catch (e) {
       return Promise.reject(e);
     }
-
-    helpers.applyNetworkTimeout(this.options, networkParameters, controller);
 
     return fetch(requestUrl, { signal })
       .then(helpers.convertResponseToJson)
