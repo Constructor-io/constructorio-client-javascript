@@ -19,6 +19,7 @@ expectAssignable<NextQuestionResponse>({
       {
         id: 1,
         value: 'Who',
+        description: 'A warm, vibrant red tone',
         attribute: {
           name: 'group_id',
           value: 'test-value',
@@ -27,6 +28,7 @@ expectAssignable<NextQuestionResponse>({
       {
         id: 2,
         value: 'What',
+        description: null,
         attribute: {
           name: 'group_id',
           value: 'test-value',
