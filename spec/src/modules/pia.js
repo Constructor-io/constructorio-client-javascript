@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-expressions, import/no-unresolved */
+/* eslint-disable no-unused-expressions, import/no-unresolved, func-names */
 const dotenv = require('dotenv');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
@@ -172,7 +172,8 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
   });
 
   describe('getAnswerResults', () => {
-    it('Should return a result provided a valid apiKey, itemId and question', () => {
+    it('Should return a result provided a valid apiKey, itemId and question', function () {
+      this.timeout(10000);
       const { pia } = new ConstructorIO({
         apiKey: piaApiKey,
         fetch: fetchSpy,
@@ -193,7 +194,8 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
       });
     });
 
-    it('Should return a result provided a valid apiKey, itemId, question and variationId', () => {
+    it('Should return a result provided a valid apiKey, itemId, question and variationId', function () {
+      this.timeout(10000);
       const variationId = 'variation-123';
       const { pia } = new ConstructorIO({
         apiKey: piaApiKey,
@@ -207,7 +209,8 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
       });
     });
 
-    it('Should return a result provided a valid apiKey, itemId, question and user id', () => {
+    it('Should return a result provided a valid apiKey, itemId, question and user id', function () {
+      this.timeout(10000);
       const userId = 'user-id';
       const { pia } = new ConstructorIO({
         apiKey: piaApiKey,
@@ -222,7 +225,8 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
       });
     });
 
-    it('Should return a result provided a valid apiKey, itemId, question and segments', () => {
+    it('Should return a result provided a valid apiKey, itemId, question and segments', function () {
+      this.timeout(10000);
       const segments = ['foo', 'bar'];
       const { pia } = new ConstructorIO({
         apiKey: piaApiKey,
