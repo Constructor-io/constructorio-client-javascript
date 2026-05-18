@@ -143,7 +143,22 @@ EventEmitter.prototype.emit = function emit(type) {
       throw er; // Unhandled 'error' event
     }
     // At least give some kind of context to the user
-    var err = new Error('Unhandled error.' + (er ? ' (' + er.message + ')' : ''));
+    var detail = '';
+    if (er && er.message) {
+      detail = ' (' + er.message + ')';
+    } else if (er !== undefined && er !== null) {
+      var serialized;
+      try {
+        serialized = JSON.stringify(er);
+      } catch (e) {
+        serialized = undefined;
+      }
+      if (typeof serialized !== 'string') {
+        serialized = Object.prototype.toString.call(er);
+      }
+      detail = ' (' + serialized + ')';
+    }
+    var err = new Error('Unhandled error.' + detail);
     err.context = er;
     throw err; // Unhandled 'error' event
   }
