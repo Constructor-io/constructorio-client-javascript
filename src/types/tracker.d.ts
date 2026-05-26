@@ -119,6 +119,7 @@ declare class Tracker {
       displayName?: string;
       resultId?: string;
       section?: string;
+      analyticsTags?: Record<string, string>;
     },
     networkParameters?: NetworkParameters
   ): true | Error;

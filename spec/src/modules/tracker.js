@@ -4082,6 +4082,34 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
       expect(tracker.trackConversion(term, requiredParameters)).to.equal(true);
     });
+
+    it('Should respond with a valid response when analyticsTags are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const parametersWithAnalyticsTags = {
+        ...requiredParameters,
+        analyticsTags: testAnalyticsTag,
+      };
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('analytics_tags').to.deep.equal(testAnalyticsTag);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackConversion(term, parametersWithAnalyticsTags)).to.equal(true);
+    });
   });
 
   describe('trackPurchase', () => {
