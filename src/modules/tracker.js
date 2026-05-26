@@ -1028,6 +1028,7 @@ class Tracker {
    * @param {boolean} [parameters.isCustomType] - Specify if type is custom conversion type
    * @param {string} [parameters.displayName] - Display name for the custom conversion type
    * @param {string} [parameters.section="Products"] - Index section
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -1070,6 +1071,7 @@ class Tracker {
         type,
         is_custom_type,
         isCustomType = is_custom_type,
+        analyticsTags,
       } = parameters;
 
       // Ensure support for both item_id and customer_id as parameters
@@ -1109,6 +1111,10 @@ class Tracker {
 
       if (displayName) {
         bodyParams.display_name = displayName;
+      }
+
+      if (analyticsTags) {
+        bodyParams.analytics_tags = analyticsTags;
       }
 
       const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
