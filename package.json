@@ -3,6 +3,7 @@
   "version": "2.79.0",
   "description": "Constructor.io JavaScript client",
   "main": "lib/constructorio.js",
+  "module": "lib/esm/constructorio.js",
   "types": "lib/types/index.d.ts",
   "scripts": {
     "clean": "sudo rm -rf node_modules package-lock.json",
@@ -17,6 +18,8 @@
     "test:src:parallel": "mkdir -p test && cp -rf src/* test && mocha --parallel --retries 3 ./spec/*",
     "test:bundled": "npm run bundle && npm run generate-test-folder && BUNDLED=true PACKAGE_VERSION=$(echo $npm_package_version) mocha --retries 3 ./spec/*",
     "test:bundled:parallel": "npm run bundle && npm run generate-test-folder && BUNDLED=true PACKAGE_VERSION=$(echo $npm_package_version) mocha --parallel --retries 3 ./spec/*",
+    "test:bundled:esm": "npm run bundle && node ./scripts/build-test-iife.js && npm run generate-test-folder && BUNDLED=true BUNDLED_VARIANT=esm PACKAGE_VERSION=$(echo $npm_package_version) mocha --retries 3 ./spec/*",
+    "test:bundled:esm:parallel": "npm run bundle && node ./scripts/build-test-iife.js && npm run generate-test-folder && BUNDLED=true BUNDLED_VARIANT=esm PACKAGE_VERSION=$(echo $npm_package_version) mocha --parallel --retries 3 ./spec/*",
     "test:all": "npm run test && npm run test:bundled",
     "test:all:parallel": "npm run test:parallel && npm run test:bundled:parallel",
     "precoverage": "rm -rf ./coverage && rm -rf ./.nyc_output",
@@ -24,8 +27,10 @@
     "postcoverage": "open coverage/index.html && rm -rf test",
     "docs": "jsdoc --configure ./.jsdoc.json ./README.md --recurse ./src --destination ./docs",
     "compile": "rm -rf ./lib/* && babel src/ -d lib/ --copy-files && rm -rf ./lib/types/tests",
+    "postcompile": "node ./scripts/build-esm.js",
     "prepublish": "npm run compile",
     "bundle": "rm -rf ./dist/* && npm run compile && node bundle.js",
+    "postbundle": "node ./scripts/bundle-esm.js",
     "prepare": "husky install",
     "generate-test-folder": "mkdir -p test && cp -rf lib/* test"
   },

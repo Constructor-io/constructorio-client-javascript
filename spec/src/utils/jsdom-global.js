@@ -10,7 +10,10 @@ const bundled = process.env.BUNDLED === 'true';
 // to make it available in the tests
 let cioScriptTag = '';
 if (bundled) {
-  const cioJSBundle = fs.readFileSync(`./dist/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.js`, 'utf-8');
+  const bundlePath = process.env.BUNDLED_VARIANT === 'esm'
+    ? `./dist/test-only/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.iife.js`
+    : `./dist/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.js`;
+  const cioJSBundle = fs.readFileSync(bundlePath, 'utf-8');
   cioScriptTag = `<script>${cioJSBundle}</script>`;
 }
 
