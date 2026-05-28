@@ -9,6 +9,7 @@ require('esbuild').build({
   target: 'es2017',
   platform: 'browser',
   define: {
+    global: 'window',
     process: '{"env":{"BUNDLED":"true"}}',
   },
   outfile: `./dist/test-only/constructorio-client-javascript-${packageJSON.version}.iife.js`,

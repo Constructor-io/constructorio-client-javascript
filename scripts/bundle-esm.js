@@ -22,6 +22,7 @@ require('esbuild').build({
   target: 'es2017',
   platform: 'browser',
   define: {
+    global: 'window',
     process: '{"env":{"BUNDLED":"true"}}',
   },
   banner: { js: banner },
