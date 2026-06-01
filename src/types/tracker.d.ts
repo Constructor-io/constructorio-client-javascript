@@ -438,6 +438,16 @@ declare class Tracker {
     networkParameters?: NetworkParameters
   ): true | Error;
 
+  trackResultsImpressionView(
+    parameters: {
+      items: ItemTracked[];
+      filterName?: string;
+      filterValue?: string;
+      searchTerm?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
   trackMediaImpressionView(parameters: {
       bannerAdId: string;
       placementId: string;

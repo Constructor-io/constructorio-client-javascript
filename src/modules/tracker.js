@@ -1353,6 +1353,80 @@ class Tracker {
   }
 
   /**
+   * Send results impression view event to API
+   *
+   * @function trackResultsImpressionView
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {object[]} parameters.items - List of product items viewed (required)
+   * @param {string} [parameters.filterName] - Filter name from the relevant browse page
+   * @param {string} [parameters.filterValue] - Filter value from the relevant browse page
+   * @param {string} [parameters.searchTerm] - Search query of the relevant search page
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User viewed results (items became visible in viewport)
+   * @example
+   * constructorio.tracker.trackResultsImpressionView(
+   *     {
+   *         items: [
+   *             { itemId: 'KMH876', itemName: 'Red T-Shirt' },
+   *             { itemId: 'KMH140', itemName: 'Blue Jeans' },
+   *         ],
+   *         searchTerm: 'shirt',
+   *     },
+   * );
+   */
+  trackResultsImpressionView(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const { items, filterName, filterValue, searchTerm } = parameters;
+
+      // Ensure items are provided (required)
+      if (!items || !Array.isArray(items) || items.length === 0) {
+        return new Error('items is a required parameter of type array');
+      }
+
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/impression_view?`;
+      const trimmedItems = items.slice(0, 100);
+      const transformedItems = trimmedItems.map((item) => helpers.toSnakeCaseKeys(item, false));
+
+      const bodyParams = {
+        items: transformedItems,
+      };
+
+      if (filterName) {
+        bodyParams.filter_name = filterName;
+      }
+
+      if (filterValue) {
+        bodyParams.filter_value = filterValue;
+      }
+
+      if (searchTerm) {
+        bodyParams.search_term = searchTerm;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
+
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
    * Send media impression view event to API
    *
    * @function trackMediaImpressionView
