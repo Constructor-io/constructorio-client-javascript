@@ -2160,7 +2160,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
   });
 
-  describe.only('trackSearchResultsLoaded', () => {
+  describe('trackSearchResultsLoaded', () => {
     const term = 'Cat in the Hat';
     const requiredParameters = { numResults: 1337 };
     const optionalParameters = { itemIds: [1, 2, 3] };
@@ -5785,7 +5785,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
   });
 
-  describe.only('trackBrowseResultsLoaded', () => {
+  describe('trackBrowseResultsLoaded', () => {
     const requiredParameters = {
       sortBy: 'price',
       sortOrder: 'ascending',
