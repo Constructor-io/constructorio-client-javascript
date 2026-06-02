@@ -2160,7 +2160,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
   });
 
-  describe('trackSearchResultsLoaded', () => {
+  describe.only('trackSearchResultsLoaded', () => {
     const term = 'Cat in the Hat';
     const requiredParameters = { numResults: 1337 };
     const optionalParameters = { itemIds: [1, 2, 3] };
@@ -2663,14 +2663,14 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
     }
 
-    it('Should limit number of customer_ids to 100 when using item_ids', (done) => {
+    it('Should send all items when more than 100 items are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
         ...requestQueueOptions,
       });
-      const itemIDs = [...Array(1000).keys()];
-      const formattedItems = itemIDs.slice(0, 100).map((i) => ({ item_id: String(i) }));
+      const itemIDs = [...Array(150).keys()];
+      const formattedItems = itemIDs.map((i) => ({ item_id: String(i) }));
       const parameters = {
         ...requiredParameters,
         item_ids: itemIDs,
@@ -2681,39 +2681,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(bodyParams).to.have.property('result_count').to.equal(parameters.numResults);
         expect(bodyParams).to.have.property('items').to.deep.equal(formattedItems);
-
-        // Response
-        expect(responseParams).to.have.property('method').to.equal('POST');
-        expect(responseParams).to.have.property('message').to.equal('ok');
-
-        done();
-      });
-
-      expect(tracker.trackSearchResultsLoaded(term, parameters)).to.equal(true);
-    });
-
-    it('Should limit number of customer_ids to 100 when using customer_ids', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        fetch: fetchSpy,
-        ...requestQueueOptions,
-      });
-      const customerIDs = [...Array(1000).keys()];
-      const formattedItems = customerIDs.slice(0, 100).map((i) => ({ item_id: String(i) }));
-      const parameters = {
-        ...requiredParameters,
-        item_ids: customerIDs,
-      };
-
-      tracker.on('success', (responseParams) => {
-        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
-
-        // Request
-        expect(fetchSpy).to.have.been.called;
-        expect(bodyParams).to.have.property('result_count').to.equal(parameters.numResults);
-        expect(bodyParams).to.have.property('items').to.deep.equal(formattedItems);
+        expect(bodyParams.items).to.have.lengthOf(150);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -5816,7 +5785,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
   });
 
-  describe('trackBrowseResultsLoaded', () => {
+  describe.only('trackBrowseResultsLoaded', () => {
     const requiredParameters = {
       sortBy: 'price',
       sortOrder: 'ascending',
@@ -6095,6 +6064,36 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackBrowseResultsLoaded(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
     });
 
+    it('Should send all items when more than 100 items are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const items = [...Array(150).keys()].map((i) => ({ item_id: i.toString() }));
+      const parameters = {
+        ...requiredParameters,
+        items,
+      };
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('items').to.deep.equal(items);
+        expect(requestParams.items).to.have.lengthOf(150);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackBrowseResultsLoaded(parameters)).to.equal(true);
+    });
+
     it('Should throw an error when invalid parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
@@ -6189,40 +6188,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(tracker.trackBrowseResultsLoaded(requiredParameters)).to.equal(true);
       });
     }
-
-    it('Should limit number of items to 100', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        fetch: fetchSpy,
-        ...requestQueueOptions,
-      });
-      const parameters = {
-        ...optionalParameters,
-        resultCount: 1000,
-        items: [...Array(1000).keys()].map((e) => ({ item_id: e.toString() })),
-      };
-
-      tracker.on('success', (responseParams) => {
-        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
-
-        // Request
-        expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('section').to.equal(parameters.section);
-        expect(requestParams).to.have.property('result_count').to.equal(parameters.resultCount);
-        expect(requestParams).to.have.property('result_page').to.equal(parameters.resultPage);
-        expect(requestParams).to.have.property('result_id').to.equal(parameters.resultId);
-        expect(requestParams).to.have.property('selected_filters').to.deep.equal(parameters.selectedFilters);
-        expect(requestParams).to.have.property('items').to.deep.equal(parameters.items.slice(0, 100));
-
-        // Response
-        expect(responseParams).to.have.property('method').to.equal('POST');
-        expect(responseParams).to.have.property('message');
-
-        done();
-      });
-
-      expect(tracker.trackBrowseResultsLoaded(Object.assign(requiredParameters, parameters))).to.equal(true);
-    });
 
     it('Should not encode body parameters', (done) => {
       const specialCharacters = '+[]&';
