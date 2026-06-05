@@ -70,6 +70,7 @@ export interface ConstructorClientOptions {
   beaconMode?: boolean;
   networkParameters?: NetworkParameters;
   humanityCheckLocation?: 'session' | 'local';
+  trackWindowParameters?: boolean;
 }
 
 export interface RequestFeature extends Record<string, any> {

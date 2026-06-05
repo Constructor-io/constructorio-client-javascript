@@ -459,6 +459,27 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
       expect(tracker.trackSessionStart()).to.equal(true);
     });
+
+    it('Should not include window globals in tracking requests even when trackWindowParameters is true', (done) => {
+      window.cnstrc = { userId: 'window-user-id', testCells: { exp: 'var' }, userSegments: ['seg'] };
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        trackWindowParameters: true,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', () => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        expect(requestedUrlParams).to.not.have.property('ui');
+        expect(requestedUrlParams).to.not.have.property('ef-exp');
+        expect(requestedUrlParams).to.not.have.property('us');
+        delete window.cnstrc;
+        done();
+      });
+
+      expect(tracker.trackSessionStart()).to.equal(true);
+    });
   });
 
   describe('trackInputFocus', () => {

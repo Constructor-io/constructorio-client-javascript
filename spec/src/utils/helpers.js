@@ -27,6 +27,7 @@ const {
   trimUrl,
   cleanAndValidateUrl,
   toValidTestCells,
+  applyWindowParameterGetters,
 } = require('../../../test/utils/helpers'); // eslint-disable-line import/extensions
 const jsdom = require('./jsdom-global');
 const store = require('../../../test/utils/store'); // eslint-disable-line import/extensions
@@ -691,6 +692,172 @@ describe('ConstructorIO - Utils - Helpers', () => {
 
         expect(result).to.not.be.null;
         expect(result.length).to.be.at.most(2000);
+      });
+    });
+
+    describe('applyWindowParameterGetters', () => {
+      const jsdomLocal = require('./jsdom-global');
+      let cleanup;
+
+      beforeEach(() => {
+        cleanup = jsdomLocal({ url: 'http://localhost' });
+      });
+
+      afterEach(() => {
+        delete window.cnstrc;
+        delete window.cnstrcUserId;
+        delete window.cnstrcTestCells;
+        delete window.cnstrcUserSegments;
+        cleanup();
+      });
+
+      it('Should fall back to window.cnstrc.userId when options.userId is absent', () => {
+        window.cnstrc = { userId: 'cnstrc-user' };
+        const options = {};
+        applyWindowParameterGetters(options);
+        expect(options.userId).to.equal('cnstrc-user');
+      });
+
+      it('Should fall back to window.cnstrcUserId when window.cnstrc does not exist', () => {
+        window.cnstrcUserId = 'global-user';
+        const options = {};
+        applyWindowParameterGetters(options);
+        expect(options.userId).to.equal('global-user');
+      });
+
+      it('Should prefer window.cnstrc.userId over window.cnstrcUserId', () => {
+        window.cnstrc = { userId: 'cnstrc-user' };
+        window.cnstrcUserId = 'global-user';
+        const options = {};
+        applyWindowParameterGetters(options);
+        expect(options.userId).to.equal('cnstrc-user');
+      });
+
+      it('Should use options.userId when provided (priority over window globals)', () => {
+        window.cnstrc = { userId: 'cnstrc-user' };
+        const options = { userId: 'options-user' };
+        applyWindowParameterGetters(options);
+        expect(options.userId).to.equal('options-user');
+      });
+
+      it('Should ignore non-string userId from window globals', () => {
+        window.cnstrc = { userId: 12345 };
+        window.cnstrcUserId = { notAString: true };
+        const options = {};
+        applyWindowParameterGetters(options);
+        expect(options.userId).to.be.undefined;
+      });
+
+      it('Should ignore empty string userId from window globals', () => {
+        window.cnstrc = { userId: '' };
+        const options = {};
+        applyWindowParameterGetters(options);
+        expect(options.userId).to.be.undefined;
+      });
+
+      it('Should fall back to window.cnstrc.testCells when options.testCells is empty', () => {
+        window.cnstrc = { testCells: { foo: 'bar' } };
+        const options = { testCells: {} };
+        applyWindowParameterGetters(options);
+        expect(options.testCells).to.deep.equal({ foo: 'bar' });
+      });
+
+      it('Should fall back to window.cnstrcTestCells when window.cnstrc does not exist', () => {
+        window.cnstrcTestCells = { baz: 'qux' };
+        const options = { testCells: {} };
+        applyWindowParameterGetters(options);
+        expect(options.testCells).to.deep.equal({ baz: 'qux' });
+      });
+
+      it('Should prefer window.cnstrc.testCells over window.cnstrcTestCells', () => {
+        window.cnstrc = { testCells: { foo: 'bar' } };
+        window.cnstrcTestCells = { baz: 'qux' };
+        const options = { testCells: {} };
+        applyWindowParameterGetters(options);
+        expect(options.testCells).to.deep.equal({ foo: 'bar' });
+      });
+
+      it('Should use options.testCells when provided (priority over window globals)', () => {
+        window.cnstrc = { testCells: { foo: 'bar' } };
+        const options = { testCells: { mine: 'value' } };
+        applyWindowParameterGetters(options);
+        expect(options.testCells).to.deep.equal({ mine: 'value' });
+      });
+
+      it('Should validate testCells from window through toValidTestCells', () => {
+        window.cnstrc = { testCells: { valid: 'yes', invalid: null, num: 123 } };
+        const options = { testCells: {} };
+        applyWindowParameterGetters(options);
+        expect(options.testCells).to.deep.equal({ valid: 'yes' });
+      });
+
+      it('Should ignore non-object testCells from window globals', () => {
+        window.cnstrc = { testCells: 'not-an-object' };
+        window.cnstrcTestCells = [1, 2, 3];
+        const options = { testCells: {} };
+        applyWindowParameterGetters(options);
+        expect(options.testCells).to.deep.equal({});
+      });
+
+      it('Should fall back to window.cnstrc.userSegments when options.segments is empty', () => {
+        window.cnstrc = { userSegments: ['seg1', 'seg2'] };
+        const options = { segments: [] };
+        applyWindowParameterGetters(options);
+        expect(options.segments).to.deep.equal(['seg1', 'seg2']);
+      });
+
+      it('Should fall back to window.cnstrcUserSegments when window.cnstrc does not exist', () => {
+        window.cnstrcUserSegments = ['seg3'];
+        const options = {};
+        applyWindowParameterGetters(options);
+        expect(options.segments).to.deep.equal(['seg3']);
+      });
+
+      it('Should prefer window.cnstrc.userSegments over window.cnstrcUserSegments', () => {
+        window.cnstrc = { userSegments: ['seg1'] };
+        window.cnstrcUserSegments = ['seg2'];
+        const options = {};
+        applyWindowParameterGetters(options);
+        expect(options.segments).to.deep.equal(['seg1']);
+      });
+
+      it('Should use options.segments when provided (priority over window globals)', () => {
+        window.cnstrc = { userSegments: ['window-seg'] };
+        const options = { segments: ['option-seg'] };
+        applyWindowParameterGetters(options);
+        expect(options.segments).to.deep.equal(['option-seg']);
+      });
+
+      it('Should ignore non-array userSegments from window globals', () => {
+        window.cnstrc = { userSegments: 'not-an-array' };
+        window.cnstrcUserSegments = { notArray: true };
+        const options = {};
+        applyWindowParameterGetters(options);
+        expect(options.segments).to.be.undefined;
+      });
+
+      it('Should ignore empty array userSegments from window globals', () => {
+        window.cnstrc = { userSegments: [] };
+        const options = {};
+        applyWindowParameterGetters(options);
+        expect(options.segments).to.be.undefined;
+      });
+
+      it('Should allow setting values via setter after getters are applied', () => {
+        window.cnstrc = { userId: 'cnstrc-user' };
+        const options = {};
+        applyWindowParameterGetters(options);
+        expect(options.userId).to.equal('cnstrc-user');
+        options.userId = 'new-user';
+        expect(options.userId).to.equal('new-user');
+      });
+
+      it('Should read latest window globals at access time', () => {
+        const options = {};
+        applyWindowParameterGetters(options);
+        expect(options.userId).to.be.undefined;
+        window.cnstrc = { userId: 'late-user' };
+        expect(options.userId).to.equal('late-user');
       });
     });
   }
