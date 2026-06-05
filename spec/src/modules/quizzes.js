@@ -381,6 +381,9 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
         expect(requestedUrlParams).to.have.property('s');
         expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
         expect(requestedUrlParams).to.have.property('_dt');
+        if (res.quiz_asa_results_message !== undefined) {
+          expect(res.quiz_asa_results_message).to.be.a('string');
+        }
       });
     });
 
