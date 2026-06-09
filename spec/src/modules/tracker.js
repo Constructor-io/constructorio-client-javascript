@@ -15532,8 +15532,20 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   describe('trackResultsImpressionView', () => {
     const requiredParameters = {
       items: [
-        { itemId: '1', itemName: 'Item 1' },
-        { itemId: '2', itemName: 'Item 2' },
+        {
+          itemId: '1',
+          itemName: 'Item 1',
+          variationId: 'VAR-1',
+          slCampaignId: 'campaign-123',
+          slCampaignOwner: 'owner-abc',
+        },
+        {
+          itemId: '2',
+          itemName: 'Item 2',
+          variationId: 'VAR-2',
+          slCampaignId: 'campaign-456',
+          slCampaignOwner: 'owner-def',
+        },
       ],
     };
     const optionalParameters = {
@@ -15564,8 +15576,20 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Body
         expect(bodyParams).to.have.property('items').to.deep.equal([
-          { item_id: '1', item_name: 'Item 1' },
-          { item_id: '2', item_name: 'Item 2' },
+          {
+            item_id: '1',
+            item_name: 'Item 1',
+            variation_id: 'VAR-1',
+            sl_campaign_id: 'campaign-123',
+            sl_campaign_owner: 'owner-abc',
+          },
+          {
+            item_id: '2',
+            item_name: 'Item 2',
+            variation_id: 'VAR-2',
+            sl_campaign_id: 'campaign-456',
+            sl_campaign_owner: 'owner-def',
+          },
         ]);
 
         // Response
@@ -15759,38 +15783,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackResultsImpressionView(requiredParameters)).to.equal(true);
-    });
-
-    it('Should limit number of items to 100', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        fetch: fetchSpy,
-        ...requestQueueOptions,
-      });
-      const manyItems = [...Array(200).keys()].map((i) => ({ itemId: String(i), itemName: `Item ${i}` }));
-      const expectedItems = manyItems.slice(0, 100).map((item) => clientHelpers.toSnakeCaseKeys(item, false));
-
-      tracker.on('success', (responseParams) => {
-        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
-
-        // Body
-        expect(fetchSpy).to.have.been.called;
-        expect(bodyParams).to.have.property('items');
-        expect(bodyParams.items).to.have.lengthOf(100);
-        expect(bodyParams.items).to.deep.equal(expectedItems);
-
-        // Response
-        expect(responseParams).to.have.property('method').to.equal('POST');
-        expect(responseParams).to.have.property('message').to.equal('ok');
-
-        done();
-      });
-
-      tracker.on('error', (error) => {
-        done(error);
-      });
-
-      expect(tracker.trackResultsImpressionView({ items: manyItems })).to.equal(true);
     });
 
     it('Should throw an error when invalid parameters are provided', () => {

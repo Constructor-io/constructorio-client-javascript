@@ -1385,8 +1385,7 @@ class Tracker {
       }
 
       const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/impression_view?`;
-      const trimmedItems = items.slice(0, 100);
-      const transformedItems = trimmedItems.map((item) => helpers.toSnakeCaseKeys(item, false));
+      const transformedItems = items.map((item) => helpers.toSnakeCaseKeys(item, false));
 
       const bodyParams = {
         items: transformedItems,
