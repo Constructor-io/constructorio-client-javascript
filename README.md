@@ -52,8 +52,11 @@ window.addEventListener('cio.client.search.getSearchResults.completed', (event) 
 ## Development / npm commands
 
 ```bash
+npm run prepare       # one-time after cloning: install husky git hooks (pre-push lint)
 npm run lint          # run lint on source code and tests
 npm run test          # run tests
 npm run coverage      # run tests and serves coverage reports from localhost:8081
 npm run docs          # output documentation to `./docs` directory
 ```
+
+> **Note:** `.npmrc` sets `ignore-scripts=true` for supply-chain safety, so lifecycle scripts (including husky's hook installation) do not run automatically on `npm install`. Run `npm run prepare` once after cloning to enable the `pre-push` lint hook.
