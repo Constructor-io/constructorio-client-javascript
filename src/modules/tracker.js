@@ -736,12 +736,10 @@ class Tracker {
         let transformedItems;
 
         if (items && Array.isArray(items) && items.length !== 0) {
-          const trimmedItems = items.slice(0, 100);
-
           if (typeof items[0] === 'string' || typeof items[0] === 'number') {
-            transformedItems = trimmedItems.map((itemId) => ({ item_id: String(itemId) }));
+            transformedItems = items.map((itemId) => ({ item_id: String(itemId) }));
           } else {
-            transformedItems = trimmedItems.map((item) => helpers.toSnakeCaseKeys(item, false));
+            transformedItems = items.map((item) => helpers.toSnakeCaseKeys(item, false));
           }
         }
 
@@ -1773,7 +1771,7 @@ class Tracker {
       }
 
       if (items && Array.isArray(items)) {
-        bodyParams.items = items.slice(0, 100).map((item) => helpers.toSnakeCaseKeys(item, false));
+        bodyParams.items = items.map((item) => helpers.toSnakeCaseKeys(item, false));
       }
 
       if (analyticsTags) {
