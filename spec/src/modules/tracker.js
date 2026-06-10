@@ -1076,7 +1076,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAutocompleteSelect(term, Object.assign(requiredParameters, optionalParameters)))
+      expect(tracker.trackAutocompleteSelect(term, { ...requiredParameters, ...optionalParameters }))
         .to.equal(true);
     });
 
@@ -1475,7 +1475,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackItemDetailLoad(Object.assign(requiredParameters, optionalParameters)))
+      expect(tracker.trackItemDetailLoad({ ...requiredParameters, ...optionalParameters }))
         .to.equal(true);
     });
 
@@ -1501,7 +1501,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackItemDetailLoad(Object.assign(requiredParameters, optionalParameters)))
+      expect(tracker.trackItemDetailLoad({ ...requiredParameters, ...optionalParameters }))
         .to.equal(true);
     });
 
@@ -1886,7 +1886,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackSearchSubmit(term, Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackSearchSubmit(term, { ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should respond with a valid response when term, required and optional parameters are provided', (done) => {
@@ -1914,7 +1914,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackSearchSubmit(term, Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackSearchSubmit(term, { ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when invalid term is provided', () => {
@@ -2473,7 +2473,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackSearchResultsLoaded(term, Object.assign(requiredParameters, optionalParameters)))
+      expect(tracker.trackSearchResultsLoaded(term, { ...requiredParameters, ...optionalParameters }))
         .to.equal(true);
     });
 
@@ -4317,7 +4317,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackPurchase(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackPurchase({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should respond with a valid response when optional parameters are provided', (done) => {
@@ -4344,7 +4344,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackPurchase(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackPurchase({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and segments are provided', (done) => {
@@ -4551,10 +4551,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         addOrderIdRecord({ orderId, apiKey });
 
-        expect(tracker.trackPurchase(Object.assign(requiredParameters, {
+        expect(tracker.trackPurchase({
+          ...requiredParameters,
           ...optionalParameters,
           orderId,
-        }))).to.equal(false);
+        })).to.equal(false);
 
         setTimeout(() => {
           // Request
@@ -4591,10 +4592,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       addOrderIdRecord({ orderId: '239402919', apiKey: testApiKey });
       addOrderIdRecord({ orderId: '482039192', apiKey: testApiKey });
 
-      expect(tracker.trackPurchase(Object.assign(requiredParameters, {
+      expect(tracker.trackPurchase({
+        ...requiredParameters,
         ...optionalParameters,
         orderId: '328192019',
-      }))).to.equal(true);
+      })).to.equal(true);
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
@@ -4974,7 +4976,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackRecommendationView(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackRecommendationView({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
@@ -5709,7 +5711,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackRecommendationClick(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackRecommendationClick({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
@@ -6335,7 +6337,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackBrowseResultsLoaded(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackBrowseResultsLoaded({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
@@ -6464,7 +6466,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackBrowseResultsLoaded(Object.assign(requiredParameters, parameters))).to.equal(true);
+      expect(tracker.trackBrowseResultsLoaded({ ...requiredParameters, ...parameters })).to.equal(true);
     });
 
     it('Should not encode body parameters', (done) => {
@@ -6834,7 +6836,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackBrowseRedirect(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackBrowseRedirect({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
@@ -7254,7 +7256,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackBrowseResultClick(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackBrowseResultClick({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and non-existent item id are provided', (done) => {
@@ -7781,7 +7783,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackGenericResultClick(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackGenericResultClick({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and non-existent item id are provided', (done) => {
@@ -8287,7 +8289,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackQuizResultsLoaded(Object.assign(requiredParameters, optionalParameters)))
+      expect(tracker.trackQuizResultsLoaded({ ...requiredParameters, ...optionalParameters }))
         .to.equal(true);
     });
 
@@ -8856,7 +8858,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackQuizResultClick(Object.assign(requiredParameters, optionalParameters)))
+      expect(tracker.trackQuizResultClick({ ...requiredParameters, ...optionalParameters }))
         .to.equal(true);
     });
 
@@ -9414,7 +9416,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackQuizConversion(Object.assign(requiredParameters, optionalParameters)))
+      expect(tracker.trackQuizConversion({ ...requiredParameters, ...optionalParameters }))
         .to.equal(true);
     });
 
@@ -9898,7 +9900,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAgentSubmit(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackAgentSubmit({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
@@ -10215,7 +10217,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       // eslint-disable-next-line max-len
-      expect(tracker.trackAgentResultLoadStarted(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackAgentResultLoadStarted({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
@@ -10533,7 +10535,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       // eslint-disable-next-line max-len
-      expect(tracker.trackAgentResultLoadFinished(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackAgentResultLoadFinished({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
@@ -10859,7 +10861,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAgentResultClick(Object.assign(requiredParameters, optionalParameters)))
+      expect(tracker.trackAgentResultClick({ ...requiredParameters, ...optionalParameters }))
         .to.equal(true);
     });
 
@@ -11203,7 +11205,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAgentResultView(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackAgentResultView({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
@@ -11521,7 +11523,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAgentSearchSubmit(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackAgentSearchSubmit({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
@@ -11835,7 +11837,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantSubmit(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackAssistantSubmit({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
@@ -12152,7 +12154,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       // eslint-disable-next-line max-len
-      expect(tracker.trackAssistantResultLoadStarted(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackAssistantResultLoadStarted({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
@@ -12470,7 +12472,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       // eslint-disable-next-line max-len
-      expect(tracker.trackAssistantResultLoadFinished(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackAssistantResultLoadFinished({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
@@ -12796,7 +12798,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantResultClick(Object.assign(requiredParameters, optionalParameters)))
+      expect(tracker.trackAssistantResultClick({ ...requiredParameters, ...optionalParameters }))
         .to.equal(true);
     });
 
@@ -13140,7 +13142,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantResultView(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackAssistantResultView({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
@@ -13458,7 +13460,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantSearchSubmit(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackAssistantSearchSubmit({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
@@ -13797,7 +13799,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackProductInsightsAgentViews(
-        Object.assign(requiredParameters, optionalParameters),
+        { ...requiredParameters, ...optionalParameters },
       )).to.equal(true);
     });
 
@@ -14126,7 +14128,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackProductInsightsAgentView(
-        Object.assign(requiredParameters, optionalParameters),
+        { ...requiredParameters, ...optionalParameters },
       )).to.equal(true);
     });
 
@@ -14448,7 +14450,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackProductInsightsAgentOutOfView(
-        Object.assign(requiredParameters, optionalParameters),
+        { ...requiredParameters, ...optionalParameters },
       )).to.equal(true);
     });
 
@@ -14768,7 +14770,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackProductInsightsAgentFocus(
-        Object.assign(requiredParameters, optionalParameters),
+        { ...requiredParameters, ...optionalParameters },
       )).to.equal(true);
     });
 
@@ -15089,7 +15091,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackProductInsightsAgentQuestionClick(
-        Object.assign(requiredParameters, optionalParameters),
+        { ...requiredParameters, ...optionalParameters },
       )).to.equal(true);
     });
 
@@ -15410,7 +15412,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackProductInsightsAgentQuestionSubmit(
-        Object.assign(requiredParameters, optionalParameters),
+        { ...requiredParameters, ...optionalParameters },
       )).to.equal(true);
     });
 
@@ -15734,7 +15736,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackProductInsightsAgentAnswerView(
-        Object.assign(requiredParameters, optionalParameters),
+        { ...requiredParameters, ...optionalParameters },
       )).to.equal(true);
     });
 
@@ -16056,7 +16058,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackProductInsightsAgentAnswerFeedback(
-        Object.assign(requiredParameters, optionalParameters),
+        { ...requiredParameters, ...optionalParameters },
       )).to.equal(true);
     });
 
@@ -16293,7 +16295,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
       expect(
         tracker.trackMediaImpressionView(
-          Object.assign(requiredParameters, optionalParameters),
+          { ...requiredParameters, ...optionalParameters },
         ),
       ).to.equal(true);
     });
