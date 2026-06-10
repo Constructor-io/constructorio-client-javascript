@@ -15809,6 +15809,24 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackResultsImpressionView({ items: [] })).to.be.an('error');
     });
 
+    it('Should throw an error when an item is missing itemId', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackResultsImpressionView({ items: [{ itemName: 'Shoe' }] })).to.be.an('error');
+    });
+
+    it('Should throw an error when an item is missing itemName', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackResultsImpressionView({ items: [{ itemId: '1' }] })).to.be.an('error');
+    });
+
+    it('Should throw an error when items contains non-object entries', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackResultsImpressionView({ items: ['string'] })).to.be.an('error');
+    });
+
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
         const { tracker } = new ConstructorIO({

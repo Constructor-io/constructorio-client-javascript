@@ -440,7 +440,7 @@ declare class Tracker {
 
   trackResultsImpressionView(
     parameters: {
-      items: ItemTracked[];
+      items: (Required<Pick<ItemTracked, 'itemId' | 'itemName'>> & Omit<ItemTracked, 'itemId' | 'itemName' | 'price'>)[];
       filterName?: string;
       filterValue?: string;
       searchTerm?: string;

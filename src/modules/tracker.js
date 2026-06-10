@@ -1389,6 +1389,20 @@ class Tracker {
         return new Error('items is a required parameter of type array');
       }
 
+      // Validate each item has required fields and is an object
+      for (let i = 0; i < items.length; i += 1) {
+        const item = items[i];
+        if (!item || typeof item !== 'object' || Array.isArray(item)) {
+          return new Error('All items must be objects');
+        }
+        if (!item.itemId || typeof item.itemId !== 'string') {
+          return new Error('itemId is a required property of type string for each item');
+        }
+        if (!item.itemName || typeof item.itemName !== 'string') {
+          return new Error('itemName is a required property of type string for each item');
+        }
+      }
+
       const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/impression_view?`;
       const transformedItems = items.map((item) => helpers.toSnakeCaseKeys(item, false));
 
