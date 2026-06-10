@@ -1356,6 +1356,11 @@ class Tracker {
    * @function trackResultsImpressionView
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {object[]} parameters.items - List of product items viewed (required)
+   * @param {string} parameters.items[].itemId - Item identifier used for merchandising (required)
+   * @param {string} parameters.items[].itemName - Display name for the item (required)
+   * @param {string} [parameters.items[].variationId] - Variation identifier when applicable
+   * @param {string} [parameters.items[].slCampaignId] - Sponsored listings campaign identifier
+   * @param {string} [parameters.items[].slCampaignOwner] - Sponsored listings campaign owner
    * @param {string} [parameters.filterName] - Filter name from the relevant browse page
    * @param {string} [parameters.filterValue] - Filter value from the relevant browse page
    * @param {string} [parameters.searchTerm] - Search query of the relevant search page
