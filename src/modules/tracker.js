@@ -2083,7 +2083,7 @@ class Tracker {
    * @param {string} [parameters.itemName] - Product item name
    * @param {string} [parameters.variationId] - Product item variation unique identifier
    * @param {string} [parameters.section="Products"] - Index section
-   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites
    * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
