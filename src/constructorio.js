@@ -38,6 +38,7 @@ class ConstructorIO {
    * @param {object} parameters - Parameters for client instantiation
    * @param {string} parameters.apiKey - Constructor.io API key
    * @param {string} [parameters.serviceUrl='https://ac.cnstrc.com'] - API URL endpoint
+   * @param {boolean} [parameters.allowHttpServiceUrl=false] - Allow HTTP protocol in API URL endpoint
    * @param {string} [parameters.quizzesServiceUrl='https://quizzes.cnstrc.com'] - Quizzes API URL endpoint
    * @param {string} [parameters.agentServiceUrl='https://agent.cnstrc.com'] - AI Shopping Agent API URL endpoint
    * @param {string} [parameters.mediaServiceUrl='https://media-cnstrc.com'] - Media API URL endpoint
@@ -73,6 +74,7 @@ class ConstructorIO {
       apiKey,
       version: versionFromOptions,
       serviceUrl,
+      allowHttpServiceUrl = false,
       quizzesServiceUrl,
       agentServiceUrl,
       assistantServiceUrl,
@@ -121,7 +123,7 @@ class ConstructorIO {
     this.options = {
       apiKey,
       version: versionFromOptions || versionFromGlobal || computePackageVersion(),
-      serviceUrl: helpers.addHTTPSToString(normalizedServiceUrl) || 'https://ac.cnstrc.com',
+      serviceUrl: helpers.addHTTPSToString(normalizedServiceUrl, allowHttpServiceUrl) || 'https://ac.cnstrc.com',
       quizzesServiceUrl: (quizzesServiceUrl && quizzesServiceUrl.replace(/\/$/, '')) || 'https://quizzes.cnstrc.com',
       agentServiceUrl: (agentServiceUrl && agentServiceUrl.replace(/\/$/, '')) || 'https://agent.cnstrc.com',
       assistantServiceUrl: (assistantServiceUrl && assistantServiceUrl.replace(/\/$/, '')) || 'https://assistant.cnstrc.com',

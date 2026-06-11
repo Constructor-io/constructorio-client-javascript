@@ -52,6 +52,7 @@ export interface ConstructorClientOptions {
   apiKey: string;
   version?: string;
   serviceUrl?: string;
+  allowHttpServiceUrl?: boolean;
   quizzesServiceUrl?: string;
   agentServiceUrl?: string;
   mediaServiceUrl?: string;

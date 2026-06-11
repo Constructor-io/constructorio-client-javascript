@@ -350,7 +350,7 @@ const utils = {
 
     return utils.throwHttpErrorFromResponse(new Error(), response);
   },
-  addHTTPSToString(url) {
+  addHTTPSToString(url, allowHttp = false) {
     if (typeof url !== 'string') {
       return null;
     }
@@ -359,6 +359,9 @@ const utils = {
     const doesUrlStartWithHTTP = url.startsWith('http://');
 
     if (!doesUrlIncludeHTTPS && doesUrlStartWithHTTP) {
+      if (allowHttp) {
+        return url;
+      }
       return url.replace('http', 'https');
     }
 
