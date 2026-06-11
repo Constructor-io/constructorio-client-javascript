@@ -57,6 +57,10 @@ npm run lint          # run lint on source code and tests
 npm run test          # run tests
 npm run coverage      # run tests and serves coverage reports from localhost:8081
 npm run docs          # output documentation to `./docs` directory
+
+npm version <patch|minor|major> --ignore-scripts=false   # bump version (see note below)
 ```
 
-> **Note:** `.npmrc` sets `ignore-scripts=true` for supply-chain safety, so lifecycle scripts (including husky's hook installation) do not run automatically on `npm install`. Run `npm run prepare` once after cloning to enable the `pre-push` lint hook.
+> **Note:** `.npmrc` sets `ignore-scripts=true` for supply-chain safety, so lifecycle scripts do not run automatically. This affects two workflows:
+> - **husky git hooks:** run `npm run prepare` once after cloning to enable the `pre-push` lint hook.
+> - **`npm version`:** the `version` lifecycle script (which regenerates `src/version.js`, docs, and the `./dist` bundle and stages them into the release commit) is skipped. Always pass `--ignore-scripts=false` when bumping the version so these artifacts are regenerated.
