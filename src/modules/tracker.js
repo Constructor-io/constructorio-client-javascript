@@ -1351,6 +1351,98 @@ class Tracker {
   }
 
   /**
+   * Send results impression view event to API
+   *
+   * @function trackResultsImpressionView
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {object[]} parameters.items - List of product items viewed (required)
+   * @param {string} parameters.items[].itemId - Item identifier used for merchandising (required)
+   * @param {string} parameters.items[].itemName - Display name for the item (required)
+   * @param {string} [parameters.items[].variationId] - Variation identifier when applicable
+   * @param {string} [parameters.items[].slCampaignId] - Sponsored listings campaign identifier
+   * @param {string} [parameters.items[].slCampaignOwner] - Sponsored listings campaign owner
+   * @param {string} [parameters.filterName] - Filter name from the relevant browse page
+   * @param {string} [parameters.filterValue] - Filter value from the relevant browse page
+   * @param {string} [parameters.searchTerm] - Search query of the relevant search page
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User viewed results (items became visible in viewport)
+   * @example
+   * constructorio.tracker.trackResultsImpressionView(
+   *     {
+   *         items: [
+   *             { itemId: 'KMH876', itemName: 'Red T-Shirt' },
+   *             { itemId: 'KMH140', itemName: 'Blue Jeans' },
+   *         ],
+   *         searchTerm: 'shirt',
+   *     },
+   * );
+   */
+  trackResultsImpressionView(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const { items, filterName, filterValue, searchTerm } = parameters;
+
+      // Ensure items are provided (required)
+      if (!items || !Array.isArray(items) || items.length === 0) {
+        return new Error('items is a required parameter of type array');
+      }
+
+      // Validate each item has required fields and is an object
+      for (let i = 0; i < items.length; i += 1) {
+        const item = items[i];
+        if (!item || typeof item !== 'object' || Array.isArray(item)) {
+          return new Error('All items must be objects');
+        }
+        if (!item.itemId || typeof item.itemId !== 'string') {
+          return new Error('itemId is a required property of type string for each item');
+        }
+        if (!item.itemName || typeof item.itemName !== 'string') {
+          return new Error('itemName is a required property of type string for each item');
+        }
+      }
+
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/impression_view?`;
+      const transformedItems = items.map((item) => helpers.toSnakeCaseKeys(item, false));
+
+      const bodyParams = {
+        items: transformedItems,
+      };
+
+      if (filterName) {
+        bodyParams.filter_name = filterName;
+      }
+
+      if (filterValue) {
+        bodyParams.filter_value = filterValue;
+      }
+
+      if (searchTerm) {
+        bodyParams.search_term = searchTerm;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
+
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
    * Send media impression view event to API
    *
    * @function trackMediaImpressionView

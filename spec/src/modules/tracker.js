@@ -15529,6 +15529,338 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
   });
 
+  describe('trackResultsImpressionView', () => {
+    const requiredParameters = {
+      items: [
+        {
+          itemId: '1',
+          itemName: 'Item 1',
+          variationId: 'VAR-1',
+          slCampaignId: 'campaign-123',
+          slCampaignOwner: 'owner-abc',
+        },
+        {
+          itemId: '2',
+          itemName: 'Item 2',
+          variationId: 'VAR-2',
+          slCampaignId: 'campaign-456',
+          slCampaignOwner: 'owner-def',
+        },
+      ],
+    };
+    const optionalParameters = {
+      filterName: 'category',
+      filterValue: 'shoes',
+      searchTerm: 'red shoes',
+    };
+
+    it('Should respond with a valid response when required parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        validateOriginReferrer(requestParams);
+
+        // Body
+        expect(bodyParams).to.have.property('items').to.deep.equal([
+          {
+            item_id: '1',
+            item_name: 'Item 1',
+            variation_id: 'VAR-1',
+            sl_campaign_id: 'campaign-123',
+            sl_campaign_owner: 'owner-abc',
+          },
+          {
+            item_id: '2',
+            item_name: 'Item 2',
+            variation_id: 'VAR-2',
+            sl_campaign_id: 'campaign-456',
+            sl_campaign_owner: 'owner-def',
+          },
+        ]);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      tracker.on('error', (error) => {
+        done(error);
+      });
+
+      expect(tracker.trackResultsImpressionView(requiredParameters)).to.equal(true);
+    });
+
+    it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Body
+        expect(fetchSpy).to.have.been.called;
+        expect(bodyParams).to.have.property('items');
+        expect(bodyParams).to.have.property('filter_name').to.equal(optionalParameters.filterName);
+        expect(bodyParams).to.have.property('filter_value').to.equal(optionalParameters.filterValue);
+        expect(bodyParams).to.have.property('search_term').to.equal(optionalParameters.searchTerm);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      tracker.on('error', (error) => {
+        done(error);
+      });
+
+      expect(tracker.trackResultsImpressionView({ ...requiredParameters, ...optionalParameters })).to.equal(true);
+    });
+
+    it('Should respond with a valid response when required parameters and segments are provided', (done) => {
+      const segments = ['foo', 'bar'];
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        segments,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Body
+        expect(fetchSpy).to.have.been.called;
+        expect(bodyParams).to.have.property('us').to.deep.equal(segments);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      tracker.on('error', (error) => {
+        done(error);
+      });
+
+      expect(tracker.trackResultsImpressionView(requiredParameters)).to.equal(true);
+    });
+
+    it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const userId = 'user-id';
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        userId,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Body
+        expect(fetchSpy).to.have.been.called;
+        expect(bodyParams).to.have.property('ui').to.equal(userId);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      tracker.on('error', (error) => {
+        done(error);
+      });
+
+      expect(tracker.trackResultsImpressionView(requiredParameters)).to.equal(true);
+    });
+
+    it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const testCells = { foo: 'bar' };
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        testCells,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Body
+        expect(fetchSpy).to.have.been.called;
+        expect(bodyParams).to.have.property(`ef-${Object.keys(testCells)[0]}`).to.equal(Object.values(testCells)[0]);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      tracker.on('error', (error) => {
+        done(error);
+      });
+
+      expect(tracker.trackResultsImpressionView(requiredParameters)).to.equal(true);
+    });
+
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Body
+        expect(fetchSpy).to.have.been.called;
+        validateOriginReferrer(bodyParams);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      tracker.on('error', (error) => {
+        done(error);
+      });
+
+      expect(tracker.trackResultsImpressionView(requiredParameters)).to.equal(true);
+    });
+
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Body
+        expect(fetchSpy).to.have.been.called;
+        expect(bodyParams).to.not.have.property('origin_referrer');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      tracker.on('error', (error) => {
+        done(error);
+      });
+
+      expect(tracker.trackResultsImpressionView(requiredParameters)).to.equal(true);
+    });
+
+    it('Should throw an error when invalid parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackResultsImpressionView([])).to.be.an('error');
+    });
+
+    it('Should throw an error when no parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackResultsImpressionView()).to.be.an('error');
+    });
+
+    it('Should throw an error when items is not provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackResultsImpressionView({})).to.be.an('error');
+    });
+
+    it('Should throw an error when items is an empty array', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackResultsImpressionView({ items: [] })).to.be.an('error');
+    });
+
+    it('Should throw an error when an item is missing itemId', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackResultsImpressionView({ items: [{ itemName: 'Shoe' }] })).to.be.an('error');
+    });
+
+    it('Should throw an error when an item is missing itemName', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackResultsImpressionView({ items: [{ itemId: '1' }] })).to.be.an('error');
+    });
+
+    it('Should throw an error when items contains non-object entries', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackResultsImpressionView({ items: ['string'] })).to.be.an('error');
+    });
+
+    if (!skipNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackResultsImpressionView(requiredParameters, { timeout: 10 })).to.equal(true);
+      });
+
+      it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          networkParameters: {
+            timeout: 20,
+          },
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackResultsImpressionView(requiredParameters)).to.equal(true);
+      });
+    }
+  });
+
   describe('trackMediaImpressionView', () => {
     let requiredParameters;
 
