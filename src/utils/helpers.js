@@ -393,6 +393,55 @@ const utils = {
     return filtered;
   },
 
+  applyWindowParameterGetters: (options) => {
+    const backing = {
+      userId: options.userId,
+      testCells: options.testCells,
+      segments: options.segments,
+    };
+
+    Object.defineProperty(options, 'userId', {
+      get() {
+        if (backing.userId) return backing.userId;
+        const windowUserId = (window.cnstrc && window.cnstrc.userId) || window.cnstrcUserId;
+        if (typeof windowUserId === 'string' && windowUserId.length > 0) {
+          return windowUserId;
+        }
+        return undefined;
+      },
+      set(value) { backing.userId = value; },
+      enumerable: true,
+      configurable: true,
+    });
+
+    Object.defineProperty(options, 'testCells', {
+      get() {
+        if (backing.testCells && Object.keys(backing.testCells).length > 0) {
+          return backing.testCells;
+        }
+        const windowTestCells = (window.cnstrc && window.cnstrc.testCells) || window.cnstrcTestCells;
+        return utils.toValidTestCells(windowTestCells);
+      },
+      set(value) { backing.testCells = value; },
+      enumerable: true,
+      configurable: true,
+    });
+
+    Object.defineProperty(options, 'segments', {
+      get() {
+        if (backing.segments && backing.segments.length > 0) return backing.segments;
+        const windowSegments = (window.cnstrc && window.cnstrc.userSegments) || window.cnstrcUserSegments;
+        if (Array.isArray(windowSegments) && windowSegments.length > 0) {
+          return windowSegments;
+        }
+        return undefined;
+      },
+      set(value) { backing.segments = value; },
+      enumerable: true,
+      configurable: true,
+    });
+  },
+
   getBehaviorUrl: (mediaServiceUrl) => {
     const baseUrl = new URL(mediaServiceUrl);
 

@@ -5,7 +5,7 @@ const helpers = require('../utils/helpers');
 // Create URL from supplied parameters
 // eslint-disable-next-line complexity
 function createRecommendationsUrl(podId, parameters, options) {
-  const { apiKey, version, serviceUrl, sessionId, userId, clientId, segments } = options;
+  const { apiKey, version, serviceUrl, sessionId, userId, clientId, segments, testCells } = options;
   let queryParams = { c: version };
 
   queryParams.key = apiKey;
@@ -25,6 +25,13 @@ function createRecommendationsUrl(podId, parameters, options) {
   // Pull user id from options and ensure string
   if (userId) {
     queryParams.ui = String(userId);
+  }
+
+  // Pull test cells from options
+  if (testCells) {
+    Object.keys(testCells).forEach((testCellKey) => {
+      queryParams[`ef-${testCellKey}`] = testCells[testCellKey];
+    });
   }
 
   if (parameters) {
