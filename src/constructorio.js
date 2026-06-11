@@ -74,7 +74,7 @@ class ConstructorIO {
       apiKey,
       version: versionFromOptions,
       serviceUrl,
-      allowHttpServiceUrl,
+      allowHttpServiceUrl = false,
       quizzesServiceUrl,
       agentServiceUrl,
       assistantServiceUrl,
