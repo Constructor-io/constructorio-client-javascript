@@ -29,7 +29,7 @@
     "compile": "rm -rf ./lib/* && babel src/ -d lib/ --copy-files && rm -rf ./lib/types/tests",
     "postcompile": "node ./scripts/build-esm.js",
     "prepublish": "npm run compile",
-"bundle": "rm -rf ./dist/* && npm run compile && node bundle.js && node ./scripts/bundle-esm.js",
+    "bundle": "rm -rf ./dist/* && npm run compile && node ./scripts/bundle.js && node ./scripts/bundle-esm.js",
     "prepare": "husky install",
     "generate-test-folder": "mkdir -p test && cp -rf lib/* test"
   },
