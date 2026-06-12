@@ -676,6 +676,7 @@ class Tracker {
    * @param {object[]} parameters.items - List of product item unique identifiers in search results listing
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - Current page of search results
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
    * @param {string} [parameters.resultId] - Browse result identifier (returned in response from Constructor)
    * @param {object} [parameters.selectedFilters] - Selected filters
    * @param {string} [parameters.sortOrder] - Sort order ('ascending' or 'descending')
@@ -716,6 +717,8 @@ class Tracker {
           items = customer_ids || item_ids,
           result_page,
           resultPage = result_page,
+          result_offset,
+          resultOffset = result_offset,
           result_id,
           resultId = result_id,
           sort_order,
@@ -749,6 +752,7 @@ class Tracker {
           result_count: resultCount,
           items: transformedItems,
           result_page: resultPage,
+          result_offset: resultOffset,
           result_id: resultId,
           sort_order: sortOrder,
           sort_by: sortBy,
@@ -796,6 +800,7 @@ class Tracker {
    * @param {string} [parameters.resultId] - Search result identifier (returned in response from Constructor)
    * @param {number} [parameters.resultCount] - Number of results in total
    * @param {number} [parameters.resultPage] - Current page of results
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
    * @param {string} [parameters.resultPositionOnPage] - Position of selected items on page
    * @param {string} [parameters.numResultsPerPage] - Number of results per page
    * @param {object} [parameters.selectedFilters] - Key - Value map of selected filters
@@ -841,6 +846,8 @@ class Tracker {
           resultCount = num_results || result_count,
           result_page,
           resultPage = result_page,
+          result_offset,
+          resultOffset = result_offset,
           result_position_on_page,
           resultPositionOnPage = result_position_on_page,
           num_results_per_page,
@@ -861,6 +868,7 @@ class Tracker {
           result_id: resultId,
           result_count: resultCount,
           result_page: resultPage,
+          result_offset: resultOffset,
           result_position_on_page: resultPositionOnPage,
           num_results_per_page: numResultsPerPage,
           selected_filters: selectedFilters,
@@ -1240,6 +1248,7 @@ class Tracker {
    * @param {object[]} [parameters.items] - List of Product Item Objects
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - Page number of results
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
    * @param {string} [parameters.resultId] - Recommendation result identifier (returned in response from Constructor)
    * @param {string} [parameters.section="Products"] - Results section
    * @param {object} [parameters.analyticsTags] - Pass additional analytics data
@@ -1270,6 +1279,8 @@ class Tracker {
         result_count,
         result_page,
         resultPage = result_page,
+        result_offset,
+        resultOffset = result_offset,
         result_id,
         resultId = result_id,
         section,
@@ -1290,6 +1301,10 @@ class Tracker {
 
       if (!helpers.isNil(resultPage)) {
         bodyParams.result_page = resultPage;
+      }
+
+      if (!helpers.isNil(resultOffset)) {
+        bodyParams.result_offset = resultOffset;
       }
 
       if (resultId) {
@@ -1588,6 +1603,7 @@ class Tracker {
    * @param {string} [parameters.resultId] - Recommendation result identifier (returned in response from Constructor)
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - Page number of results
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
    * @param {number} [parameters.resultPositionOnPage] - Position of result on page
    * @param {number} [parameters.numResultsPerPage] - Number of results on page
    * @param {object} [parameters.analyticsTags] - Pass additional analytics data
@@ -1630,6 +1646,8 @@ class Tracker {
         resultCount = result_count,
         result_page,
         resultPage = result_page,
+        result_offset,
+        resultOffset = result_offset,
         result_position_on_page,
         resultPositionOnPage = result_position_on_page,
         num_results_per_page,
@@ -1666,6 +1684,10 @@ class Tracker {
 
       if (!helpers.isNil(resultPage)) {
         bodyParams.result_page = resultPage;
+      }
+
+      if (!helpers.isNil(resultOffset)) {
+        bodyParams.result_offset = resultOffset;
       }
 
       if (!helpers.isNil(resultPositionOnPage)) {
@@ -1744,6 +1766,7 @@ class Tracker {
    * @param {string} [parameters.section="Products"] - Index section
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - Page number of results
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
    * @param {string} [parameters.resultId] - Browse result identifier (returned in response from Constructor)
    * @param {object} [parameters.selectedFilters] - Selected filters
    * @param {string} [parameters.sortOrder] - Sort order ('ascending' or 'descending')
@@ -1779,6 +1802,8 @@ class Tracker {
         result_count,
         result_page,
         resultPage = result_page,
+        result_offset,
+        resultOffset = result_offset,
         result_id,
         resultId = result_id,
         selected_filters,
@@ -1807,6 +1832,10 @@ class Tracker {
 
       if (!helpers.isNil(resultPage)) {
         bodyParams.result_page = resultPage;
+      }
+
+      if (!helpers.isNil(resultOffset)) {
+        bodyParams.result_offset = resultOffset;
       }
 
       if (resultId) {
@@ -1879,6 +1908,7 @@ class Tracker {
    * @param {string} [parameters.resultId] - Browse result identifier (returned in response from Constructor)
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - Page number of results
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
    * @param {number} [parameters.resultPositionOnPage] - Position of clicked item
    * @param {number} [parameters.numResultsPerPage] - Number of results shown
    * @param {object} [parameters.selectedFilters] -  Selected filters
@@ -1922,6 +1952,8 @@ class Tracker {
         resultCount = result_count,
         result_page,
         resultPage = result_page,
+        result_offset,
+        resultOffset = result_offset,
         result_position_on_page,
         resultPositionOnPage = result_position_on_page,
         num_results_per_page,
@@ -1962,6 +1994,10 @@ class Tracker {
 
       if (!helpers.isNil(resultPage)) {
         bodyParams.result_page = resultPage;
+      }
+
+      if (!helpers.isNil(resultOffset)) {
+        bodyParams.result_offset = resultOffset;
       }
 
       if (!helpers.isNil(resultPositionOnPage)) {
@@ -2143,6 +2179,7 @@ class Tracker {
    * @param {string} [parameters.itemName] - Product item name
    * @param {string} [parameters.variationId] - Product item variation unique identifier
    * @param {string} [parameters.section="Products"] - Index section
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites
    * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -2170,6 +2207,8 @@ class Tracker {
         variation_id,
         variationId = variation_id,
         section = 'Products',
+        result_offset,
+        resultOffset = result_offset,
         analyticsTags,
       } = parameters;
       if (itemId) {
@@ -2182,6 +2221,10 @@ class Tracker {
 
         if (variationId) {
           bodyParams.variation_id = variationId;
+        }
+
+        if (!helpers.isNil(resultOffset)) {
+          bodyParams.result_offset = resultOffset;
         }
 
         if (analyticsTags) {
@@ -2222,6 +2265,7 @@ class Tracker {
    * @param {string} [parameters.section='Products'] - Index section
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - The page of the results
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
    * @param {string} [parameters.resultId] - Quiz result identifier (returned in response from Constructor)
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -2259,6 +2303,8 @@ class Tracker {
         resultId = result_id,
         result_page,
         resultPage = result_page,
+        result_offset,
+        resultOffset = result_offset,
         items,
       } = parameters;
       const queryParams = {};
@@ -2318,6 +2364,13 @@ class Tracker {
         bodyParams.result_page = resultPage;
       }
 
+      if (!helpers.isNil(resultOffset)) {
+        if (typeof resultOffset !== 'number') {
+          return new Error('"resultOffset" must be a number');
+        }
+        bodyParams.result_offset = resultOffset;
+      }
+
       const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
       const requestMethod = 'POST';
       const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
@@ -2352,6 +2405,7 @@ class Tracker {
    * @param {string} [parameters.section='Products'] - Index section
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - The page of the results
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
    * @param {string} [parameters.resultId] - Quiz result identifier (returned in response from Constructor)
    * @param {number} [parameters.resultPositionOnPage] - Position of clicked item
    * @param {number} [parameters.numResultsPerPage] - Number of results shown
@@ -2393,6 +2447,8 @@ class Tracker {
         resultId = result_id,
         result_page,
         resultPage = result_page,
+        result_offset,
+        resultOffset = result_offset,
         num_results_per_page,
         numResultsPerPage = num_results_per_page,
         result_position_on_page,
@@ -2471,6 +2527,13 @@ class Tracker {
           return new Error('"resultPage" must be a number');
         }
         bodyParams.result_page = resultPage;
+      }
+
+      if (!helpers.isNil(resultOffset)) {
+        if (typeof resultOffset !== 'number') {
+          return new Error('"resultOffset" must be a number');
+        }
+        bodyParams.result_offset = resultOffset;
       }
 
       if (!helpers.isNil(numResultsPerPage)) {
