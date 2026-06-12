@@ -800,6 +800,7 @@ class Tracker {
    * @param {string} [parameters.resultId] - Search result identifier (returned in response from Constructor)
    * @param {number} [parameters.resultCount] - Number of results in total
    * @param {number} [parameters.resultPage] - Current page of results
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
    * @param {string} [parameters.resultPositionOnPage] - Position of selected items on page
    * @param {string} [parameters.numResultsPerPage] - Number of results per page
    * @param {object} [parameters.selectedFilters] - Key - Value map of selected filters
@@ -845,6 +846,8 @@ class Tracker {
           resultCount = num_results || result_count,
           result_page,
           resultPage = result_page,
+          result_offset,
+          resultOffset = result_offset,
           result_position_on_page,
           resultPositionOnPage = result_position_on_page,
           num_results_per_page,
@@ -865,6 +868,7 @@ class Tracker {
           result_id: resultId,
           result_count: resultCount,
           result_page: resultPage,
+          result_offset: resultOffset,
           result_position_on_page: resultPositionOnPage,
           num_results_per_page: numResultsPerPage,
           selected_filters: selectedFilters,

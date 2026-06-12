@@ -3001,6 +3001,87 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackSearchResultClickV2(term, { ...requiredParameters, ...optionalParameters, ...v2Parameters })).to.equal(true);
     });
 
+    it('V2 Should return valid response when resultOffset is passed as an integer', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('result_offset').to.equal(1);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackSearchResultClickV2(term, {
+        ...requiredParameters,
+        resultOffset: 1,
+      })).to.equal(true);
+    });
+
+    it('V2 Should return valid response and omit result_offset when resultOffset is not provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('result_offset');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackSearchResultClickV2(term, {
+        ...requiredParameters,
+      })).to.equal(true);
+    });
+
+    it('V2 Should receive error from backend when both resultPage and resultOffset are passed', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', (error) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('result_page');
+        expect(requestParams).to.have.property('result_offset');
+
+        // Response
+        expect(error).to.have.property('message').to.equal('Invalid parameters');
+
+        done();
+      });
+
+      expect(tracker.trackSearchResultClickV2(term, {
+        ...requiredParameters,
+        resultPage: 10,
+        resultOffset: 1,
+      })).to.equal(true);
+    });
+
     it('Backwards Compatibility - Should respond with a valid response when term and snake cased parameters are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
