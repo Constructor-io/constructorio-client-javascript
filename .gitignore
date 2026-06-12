@@ -4,6 +4,9 @@ lib
 # Test temporary directory
 test
 
+# Test-only build artifact (modern source as IIFE for bundled tests)
+dist/test-only/
+
 # OS X specific files
 .DS_Store
 

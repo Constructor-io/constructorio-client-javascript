@@ -1,0 +1,29 @@
+name: Run tests - Bundled ESM
+on:
+  pull_request:
+    branches:
+      - "**"
+concurrency:
+  group: run-tests-bundled-esm-${{ github.head_ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ["22.18.0"]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Set up node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests
+        run: npm run test:bundled:esm:parallel
+        env:
+          TEST_REQUEST_API_KEY: ${{ secrets.TEST_REQUEST_API_KEY }}
+          TEST_MEDIA_REQUEST_API_KEY: ${{ secrets.TEST_MEDIA_REQUEST_API_KEY }}
+          SKIP_NETWORK_TIMEOUT_TESTS: true
