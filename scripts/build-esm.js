@@ -8,6 +8,5 @@ require('esbuild').build({
   define: {
     global: 'window',
   },
-  external: ['@constructor-io/constructorio-id', 'crc-32'],
   outfile: './lib/esm/constructorio.js',
 }).catch(() => process.exit(1));
