@@ -26,9 +26,7 @@ declare class ConstructorIO {
 
   quizzes: Quizzes;
 
-  agent: Agent;
-
-  pia: Pia;
+  agent: Agent & { pia: Pia };
 
   assistant: Assistant;
 

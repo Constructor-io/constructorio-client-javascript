@@ -89,7 +89,7 @@ class Pia {
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
    * @example
-   * constructorio.pia.getSuggestedQuestions('item-123', {
+   * constructorio.agent.pia.getSuggestedQuestions('item-123', {
    *    variationId: 'variation-456',
    *    numResults: 3,
    * });
@@ -140,7 +140,7 @@ class Pia {
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
    * @example
-   * constructorio.pia.getAnswerResults('item-123', 'What material is this made of?', {
+   * constructorio.agent.pia.getAnswerResults('item-123', 'What material is this made of?', {
    *    threadId: '550e8400-e29b-41d4-a716-446655440000',
    * });
    */
@@ -149,16 +149,16 @@ class Pia {
     const { fetch } = this.options;
     let signal;
 
+    if (!question || typeof question !== 'string') {
+      return Promise.reject(new Error('question is a required parameter of type string'));
+    }
+
     if (typeof AbortController === 'function') {
       const controller = new AbortController();
 
       signal = controller && controller.signal;
 
       helpers.applyNetworkTimeout(this.options, networkParameters, controller);
-    }
-
-    if (!question || typeof question !== 'string') {
-      return Promise.reject(new Error('question is a required parameter of type string'));
     }
 
     try {

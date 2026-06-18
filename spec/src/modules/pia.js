@@ -51,7 +51,7 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
 
   describe('getSuggestedQuestions', () => {
     it('Should return a result provided a valid apiKey and itemId', () => {
-      const { pia } = new ConstructorIO({
+      const { agent: { pia } } = new ConstructorIO({
         apiKey: piaApiKey,
         fetch: fetchSpy,
       });
@@ -74,7 +74,7 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
 
     it('Should return a result provided a valid apiKey, itemId and variationId', () => {
       const variationId = 'variation-123';
-      const { pia } = new ConstructorIO({
+      const { agent: { pia } } = new ConstructorIO({
         apiKey: piaApiKey,
         fetch: fetchSpy,
       });
@@ -88,7 +88,7 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
 
     it('Should return a result provided a valid apiKey, itemId and numResults', () => {
       const numResults = 2;
-      const { pia } = new ConstructorIO({
+      const { agent: { pia } } = new ConstructorIO({
         apiKey: piaApiKey,
         fetch: fetchSpy,
       });
@@ -103,7 +103,7 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
 
     it('Should return a result provided a valid apiKey, itemId and user id', () => {
       const userId = 'user-id';
-      const { pia } = new ConstructorIO({
+      const { agent: { pia } } = new ConstructorIO({
         apiKey: piaApiKey,
         fetch: fetchSpy,
         userId,
@@ -118,7 +118,7 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
 
     it('Should return a result provided a valid apiKey, itemId and segments', () => {
       const segments = ['foo', 'bar'];
-      const { pia } = new ConstructorIO({
+      const { agent: { pia } } = new ConstructorIO({
         apiKey: piaApiKey,
         fetch: fetchSpy,
         segments,
@@ -131,8 +131,35 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should pass threadId as a query parameter when provided', () => {
+      const threadId = '550e8400-e29b-41d4-a716-446655440000';
+      const { agent: { pia } } = new ConstructorIO({
+        apiKey: piaApiKey,
+        fetch: fetchSpy,
+      });
+
+      return pia.getSuggestedQuestions(validItemId, { threadId }).then(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(requestedUrlParams).to.have.property('thread_id').to.equal(threadId);
+      });
+    });
+
+    it('Should be rejected if response is malformed', () => {
+      const malformedFetch = () => Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ bad: 'response' }),
+      });
+      const { agent: { pia } } = new ConstructorIO({
+        apiKey: piaApiKey,
+        fetch: malformedFetch,
+      });
+
+      return expect(pia.getSuggestedQuestions(validItemId)).to.eventually.be.rejectedWith('getSuggestedQuestions response data is malformed');
+    });
+
     it('Should be rejected if no itemId is provided', () => {
-      const { pia } = new ConstructorIO({
+      const { agent: { pia } } = new ConstructorIO({
         apiKey: piaApiKey,
         fetch: fetchSpy,
       });
@@ -141,7 +168,7 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected if an invalid apiKey is provided', () => {
-      const { pia } = new ConstructorIO({
+      const { agent: { pia } } = new ConstructorIO({
         apiKey: 'invalidKey',
         fetch: fetchSpy,
       });
@@ -151,7 +178,7 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', () => {
-        const { pia } = new ConstructorIO({
+        const { agent: { pia } } = new ConstructorIO({
           apiKey: piaApiKey,
           fetch: fetchSpy,
         });
@@ -160,7 +187,7 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', () => {
-        const { pia } = new ConstructorIO({
+        const { agent: { pia } } = new ConstructorIO({
           apiKey: piaApiKey,
           fetch: fetchSpy,
           networkParameters: { timeout: 20 },
@@ -174,7 +201,7 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
   describe('getAnswerResults', () => {
     it('Should return a result provided a valid apiKey, itemId and question', function () {
       this.timeout(10000);
-      const { pia } = new ConstructorIO({
+      const { agent: { pia } } = new ConstructorIO({
         apiKey: piaApiKey,
         fetch: fetchSpy,
       });
@@ -197,7 +224,7 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
     it('Should return a result provided a valid apiKey, itemId, question and variationId', function () {
       this.timeout(10000);
       const variationId = 'variation-123';
-      const { pia } = new ConstructorIO({
+      const { agent: { pia } } = new ConstructorIO({
         apiKey: piaApiKey,
         fetch: fetchSpy,
       });
@@ -212,7 +239,7 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
     it('Should return a result provided a valid apiKey, itemId, question and user id', function () {
       this.timeout(10000);
       const userId = 'user-id';
-      const { pia } = new ConstructorIO({
+      const { agent: { pia } } = new ConstructorIO({
         apiKey: piaApiKey,
         fetch: fetchSpy,
         userId,
@@ -228,7 +255,7 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
     it('Should return a result provided a valid apiKey, itemId, question and segments', function () {
       this.timeout(10000);
       const segments = ['foo', 'bar'];
-      const { pia } = new ConstructorIO({
+      const { agent: { pia } } = new ConstructorIO({
         apiKey: piaApiKey,
         fetch: fetchSpy,
         segments,
@@ -241,8 +268,36 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should pass threadId as a query parameter when provided', function () {
+      this.timeout(10000);
+      const threadId = '550e8400-e29b-41d4-a716-446655440000';
+      const { agent: { pia } } = new ConstructorIO({
+        apiKey: piaApiKey,
+        fetch: fetchSpy,
+      });
+
+      return pia.getAnswerResults(validItemId, validQuestion, { threadId }).then(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(requestedUrlParams).to.have.property('thread_id').to.equal(threadId);
+      });
+    });
+
+    it('Should be rejected if response is malformed', () => {
+      const malformedFetch = () => Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ bad: 'response' }),
+      });
+      const { agent: { pia } } = new ConstructorIO({
+        apiKey: piaApiKey,
+        fetch: malformedFetch,
+      });
+
+      return expect(pia.getAnswerResults(validItemId, validQuestion)).to.eventually.be.rejectedWith('getAnswerResults response data is malformed');
+    });
+
     it('Should be rejected if no itemId is provided', () => {
-      const { pia } = new ConstructorIO({
+      const { agent: { pia } } = new ConstructorIO({
         apiKey: piaApiKey,
         fetch: fetchSpy,
       });
@@ -251,7 +306,7 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected if no question is provided', () => {
-      const { pia } = new ConstructorIO({
+      const { agent: { pia } } = new ConstructorIO({
         apiKey: piaApiKey,
         fetch: fetchSpy,
       });
@@ -260,7 +315,7 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected if an invalid apiKey is provided', () => {
-      const { pia } = new ConstructorIO({
+      const { agent: { pia } } = new ConstructorIO({
         apiKey: 'invalidKey',
         fetch: fetchSpy,
       });
@@ -270,7 +325,7 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', () => {
-        const { pia } = new ConstructorIO({
+        const { agent: { pia } } = new ConstructorIO({
           apiKey: piaApiKey,
           fetch: fetchSpy,
         });
@@ -279,7 +334,7 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', () => {
-        const { pia } = new ConstructorIO({
+        const { agent: { pia } } = new ConstructorIO({
           apiKey: piaApiKey,
           fetch: fetchSpy,
           networkParameters: { timeout: 20 },

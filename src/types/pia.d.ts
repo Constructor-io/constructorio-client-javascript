@@ -26,7 +26,12 @@ export interface PiaSuggestedQuestionsResponse {
 }
 
 export interface PiaAnswerItemResults {
-  request?: Record<string, any>;
+  request?: {
+    item_id: string;
+    variation_id?: string;
+    num_results?: number;
+    thread_id?: string;
+  };
   response: {
     results: Array<Item>;
   };
