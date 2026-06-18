@@ -3633,7 +3633,7 @@ class Tracker {
       }
 
       if (followUpQuestions && Array.isArray(followUpQuestions)) {
-        bodyParams.follow_up_questions = followUpQuestions.map((q) => helpers.toSnakeCaseKeys(q, false));
+        bodyParams.follow_up_questions = followUpQuestions.slice(0, 100).map((q) => helpers.toSnakeCaseKeys(q, false));
       }
 
       if (threadId) {
