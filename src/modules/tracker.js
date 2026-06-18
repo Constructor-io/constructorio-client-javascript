@@ -3164,6 +3164,7 @@ class Tracker {
         itemName,
         variationId,
         viewTimespans,
+        threadId,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3173,6 +3174,10 @@ class Tracker {
         variation_id: variationId,
         view_timespans: viewTimespans,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       if (section) {
         queryParams.section = section;
@@ -3237,6 +3242,7 @@ class Tracker {
         itemId,
         itemName,
         variationId,
+        threadId,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3245,6 +3251,10 @@ class Tracker {
         item_name: itemName,
         variation_id: variationId,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       if (section) {
         queryParams.section = section;
@@ -3302,6 +3312,7 @@ class Tracker {
         itemId,
         itemName,
         variationId,
+        threadId,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3309,6 +3320,10 @@ class Tracker {
         item_name: itemName,
         variation_id: variationId,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       if (section) {
         queryParams.section = section;
@@ -3366,6 +3381,7 @@ class Tracker {
         itemId,
         itemName,
         variationId,
+        threadId,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3373,6 +3389,10 @@ class Tracker {
         item_name: itemName,
         variation_id: variationId,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       if (section) {
         queryParams.section = section;
@@ -3433,6 +3453,7 @@ class Tracker {
         itemName,
         variationId,
         question,
+        threadId,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3441,6 +3462,10 @@ class Tracker {
         variation_id: variationId,
         question,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       if (section) {
         queryParams.section = section;
@@ -3501,6 +3526,7 @@ class Tracker {
         itemName,
         variationId,
         question,
+        threadId,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3509,6 +3535,10 @@ class Tracker {
         variation_id: variationId,
         question,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       if (section) {
         queryParams.section = section;
@@ -3575,6 +3605,9 @@ class Tracker {
         question,
         answerText,
         qnaResultId,
+        items,
+        followUpQuestions,
+        threadId,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3585,6 +3618,18 @@ class Tracker {
         answer_text: answerText,
         qna_result_id: qnaResultId,
       };
+
+      if (items && Array.isArray(items)) {
+        bodyParams.items = items.slice(0, 100).map((item) => helpers.toSnakeCaseKeys(item, false));
+      }
+
+      if (followUpQuestions && Array.isArray(followUpQuestions)) {
+        bodyParams.follow_up_questions = followUpQuestions.map((q) => helpers.toSnakeCaseKeys(q, false));
+      }
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       if (section) {
         queryParams.section = section;
@@ -3648,6 +3693,7 @@ class Tracker {
         variationId,
         feedbackLabel,
         qnaResultId,
+        threadId,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3658,75 +3704,8 @@ class Tracker {
         qna_result_id: qnaResultId,
       };
 
-      if (section) {
-        queryParams.section = section;
-      }
-
-      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
-      const requestMethod = 'POST';
-      const requestBody = applyParams(bodyParams, {
-        ...this.options,
-        requestMethod,
-      });
-      this.requests.queue(
-        requestURL,
-        requestMethod,
-        requestBody,
-        networkParameters,
-      );
-      this.requests.send();
-      return true;
-    }
-
-    this.requests.send();
-
-    return new Error('parameters is a required parameter of type object');
-  }
-
-  /**
-   * Send product insights agent recommendation view event
-   *
-   * @function trackProductInsightsAgentRecommendationView
-   * @param {object} parameters - Additional parameters to be sent with request
-   * @param {string} parameters.itemId - Product id whose page we are on
-   * @param {string} parameters.itemName - Product name whose page we are on
-   * @param {object[]} [parameters.items] - List of recommended product items displayed
-   * @param {string} [parameters.variationId] - Variation id whose page we are on
-   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
-   * @param {object} [networkParameters] - Parameters relevant to the network request
-   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
-   * @returns {(true|Error)}
-   * @description User was shown product recommendations in the PIA widget
-   * @example
-   * constructorio.tracker.trackProductInsightsAgentRecommendationView(
-   *   {
-   *     'itemId': '1',
-   *     'itemName': 'item1',
-   *     'variationId': '2',
-   *     'items': [{ 'itemId': '10', 'itemName': 'rec1' }],
-   *   },
-   * );
-   */
-  trackProductInsightsAgentRecommendationView(parameters, networkParameters = {}) {
-    // Ensure parameters are provided (required)
-    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/product_insights_agent_recommendation_view?`;
-      const {
-        section,
-        itemId,
-        itemName,
-        variationId,
-        items,
-      } = parameters;
-      const queryParams = {};
-      const bodyParams = {
-        item_id: itemId,
-        item_name: itemName,
-        variation_id: variationId,
-      };
-
-      if (items && Array.isArray(items)) {
-        bodyParams.items = items.slice(0, 100).map((item) => helpers.toSnakeCaseKeys(item, false));
+      if (threadId) {
+        bodyParams.thread_id = threadId;
       }
 
       if (section) {
@@ -3755,21 +3734,22 @@ class Tracker {
   }
 
   /**
-   * Send product insights agent recommendation click event
+   * Send product insights agent result click event
    *
-   * @function trackProductInsightsAgentRecommendationClick
+   * @function trackProductInsightsAgentResultClick
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.itemId - Product id of the clicked recommendation
    * @param {string} parameters.itemName - Product name of the clicked recommendation
    * @param {number} [parameters.position] - Position of the clicked item in the list
    * @param {string} [parameters.variationId] - Variation id of the clicked recommendation
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description User clicked a recommended product in the PIA widget
    * @example
-   * constructorio.tracker.trackProductInsightsAgentRecommendationClick(
+   * constructorio.tracker.trackProductInsightsAgentResultClick(
    *   {
    *     'itemId': '10',
    *     'itemName': 'rec1',
@@ -3777,16 +3757,18 @@ class Tracker {
    *   },
    * );
    */
-  trackProductInsightsAgentRecommendationClick(parameters, networkParameters = {}) {
+  trackProductInsightsAgentResultClick(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/product_insights_agent_recommendation_click?`;
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/product_insights_agent_result_click?`;
       const {
         section,
         itemId,
         itemName,
         variationId,
         position,
+        qnaResultId,
+        threadId,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3797,6 +3779,14 @@ class Tracker {
 
       if (!helpers.isNil(position)) {
         bodyParams.position = position;
+      }
+
+      if (qnaResultId) {
+        bodyParams.qna_result_id = qnaResultId;
+      }
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
       }
 
       if (section) {

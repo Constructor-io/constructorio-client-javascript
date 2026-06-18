@@ -354,6 +354,7 @@ declare class Tracker {
       itemName: string;
       viewTimespans: TimeSpan[];
       variationId?: string;
+      threadId?: string;
       section?: string;
     },
     networkParameters?: NetworkParameters
@@ -365,6 +366,7 @@ declare class Tracker {
       itemId: string;
       itemName: string;
       variationId?: string;
+      threadId?: string;
       section?: string;
     },
     networkParameters?: NetworkParameters
@@ -375,6 +377,7 @@ declare class Tracker {
       itemId: string;
       itemName: string;
       variationId?: string;
+      threadId?: string;
       section?: string;
     },
     networkParameters?: NetworkParameters
@@ -385,6 +388,7 @@ declare class Tracker {
       itemId: string;
       itemName: string;
       variationId?: string;
+      threadId?: string;
       section?: string;
     },
     networkParameters?: NetworkParameters
@@ -396,6 +400,7 @@ declare class Tracker {
       itemName: string;
       question: string;
       variationId?: string;
+      threadId?: string;
       section?: string;
     },
     networkParameters?: NetworkParameters
@@ -407,6 +412,7 @@ declare class Tracker {
       itemName: string;
       question: string;
       variationId?: string;
+      threadId?: string;
       section?: string;
     },
     networkParameters?: NetworkParameters
@@ -419,7 +425,10 @@ declare class Tracker {
       question: string;
       answerText: string;
       qnaResultId?: string;
+      items?: ItemTracked[];
+      followUpQuestions?: Array<{ question: string }>;
       variationId?: string;
+      threadId?: string;
       section?: string;
     },
     networkParameters?: NetworkParameters
@@ -432,28 +441,20 @@ declare class Tracker {
       feedbackLabel: string;
       qnaResultId?: string;
       variationId?: string;
+      threadId?: string;
       section?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
 
-  trackProductInsightsAgentRecommendationView(
-    parameters: {
-      itemId: string;
-      itemName: string;
-      items?: ItemTracked[];
-      variationId?: string;
-      section?: string;
-    },
-    networkParameters?: NetworkParameters
-  ): true | Error;
-
-  trackProductInsightsAgentRecommendationClick(
+  trackProductInsightsAgentResultClick(
     parameters: {
       itemId: string;
       itemName: string;
       position?: number;
+      qnaResultId?: string;
       variationId?: string;
+      threadId?: string;
       section?: string;
     },
     networkParameters?: NetworkParameters
