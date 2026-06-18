@@ -3124,6 +3124,7 @@ class Tracker {
    * @param {array.<{start: string | undefined,
    * end: string | undefined}>} parameters.viewTimespans - List of timestamp pairs in ISO_8601 format
    * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3213,6 +3214,7 @@ class Tracker {
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are on
    * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3289,6 +3291,7 @@ class Tracker {
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are on
    * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3358,6 +3361,7 @@ class Tracker {
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are on
    * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3428,6 +3432,7 @@ class Tracker {
    * @param {string} parameters.itemName - Product name whose page we are on
    * @param {string} parameters.question - Question a user clicked on
    * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3501,6 +3506,7 @@ class Tracker {
    * @param {string} parameters.itemName - Product name whose page we are on
    * @param {string} parameters.question - Question a user submitted
    * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3575,14 +3581,17 @@ class Tracker {
    * @param {string} parameters.question - Question a user submitted
    * @param {string} parameters.answerText - Answer text of the question
    * @param {string} [parameters.qnaResultId] - Answer result id returned
+   * @param {Array} [parameters.items] - Array of recommended items shown with the answer (max 100)
+   * @param {Array} [parameters.followUpQuestions] - Follow-up questions displayed with the answer
    * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description User viewed the answer provided by the product insights agent
    * @example
-   * constructorio.tracker.trackProductInsightsAgentAnswerView({
+   * constructorio.tracker.trackProductInsightsAgentAnswerView(
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
@@ -3666,13 +3675,14 @@ class Tracker {
    * @param {string} parameters.feedbackLabel - Feedback value: either "thumbs_up" or "thumbs_down"
    * @param {string} [parameters.qnaResultId] - Answer result id returned
    * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description A user provided feedback on an answers usefulness
    * @example
-   * constructorio.tracker.trackProductInsightsAgentAnswerFeedback({
+   * constructorio.tracker.trackProductInsightsAgentAnswerFeedback(
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
