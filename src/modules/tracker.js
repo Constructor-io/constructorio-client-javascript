@@ -3751,6 +3751,7 @@ class Tracker {
    * @param {string} parameters.itemId - Product id of the clicked recommendation
    * @param {string} parameters.itemName - Product name of the clicked recommendation
    * @param {number} [parameters.position] - Position of the clicked item in the list
+   * @param {string} [parameters.qnaResultId] - Answer result id linking the click to a specific answer
    * @param {string} [parameters.variationId] - Variation id of the clicked recommendation
    * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
