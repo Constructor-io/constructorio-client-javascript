@@ -480,6 +480,27 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
       expect(tracker.trackSessionStart()).to.equal(true);
     });
+
+    it('Should include userId set via setClientOptions in tracking requests', (done) => {
+      window.cnstrc = { userId: 'window-user-id' };
+      const instance = new ConstructorIO({
+        apiKey: testApiKey,
+        trackWindowParameters: true,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      instance.setClientOptions({ userId: 'explicit-user-id' });
+
+      instance.tracker.on('success', () => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        expect(requestedUrlParams).to.have.property('ui').to.equal('explicit-user-id');
+        delete window.cnstrc;
+        done();
+      });
+
+      expect(instance.tracker.trackSessionStart()).to.equal(true);
+    });
   });
 
   describe('trackInputFocus', () => {

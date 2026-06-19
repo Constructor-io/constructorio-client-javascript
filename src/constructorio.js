@@ -144,7 +144,6 @@ class ConstructorIO {
       trackWindowParameters: trackWindowParameters || false,
     };
 
-    // Tracker gets its own options copy (without window parameter getters)
     this.trackerOptions = { ...this.options };
 
     if (trackWindowParameters && helpers.canUseDOM()) {
@@ -179,39 +178,34 @@ class ConstructorIO {
   setClientOptions(options) {
     if (Object.keys(options).length) {
       const { apiKey, segments, testCells, sessionId, userId, sendTrackingEvents } = options;
+      const setOption = (key, value) => {
+        this.options[key] = value;
+        this.trackerOptions[key] = value;
+      };
 
       if (apiKey) {
-        this.options.apiKey = apiKey;
-        this.trackerOptions.apiKey = apiKey;
+        setOption('apiKey', apiKey);
       }
 
       if (segments) {
-        this.options.segments = segments;
-        this.trackerOptions.segments = segments;
+        setOption('segments', segments);
       }
 
       if (testCells) {
-        const validTestCells = helpers.toValidTestCells(testCells);
-        this.options.testCells = validTestCells;
-        this.trackerOptions.testCells = validTestCells;
+        setOption('testCells', helpers.toValidTestCells(testCells));
       }
 
       if (typeof sendTrackingEvents === 'boolean') {
-        this.options.sendTrackingEvents = sendTrackingEvents;
-        this.trackerOptions.sendTrackingEvents = sendTrackingEvents;
+        setOption('sendTrackingEvents', sendTrackingEvents);
         this.tracker.requests.sendTrackingEvents = sendTrackingEvents;
       }
 
-      // Set Session ID in dom-less environments only
       if (sessionId && !helpers.canUseDOM()) {
-        this.options.sessionId = sessionId;
-        this.trackerOptions.sessionId = sessionId;
+        setOption('sessionId', sessionId);
       }
 
-      // If User ID is passed
       if ('userId' in options) {
-        this.options.userId = userId;
-        this.trackerOptions.userId = userId;
+        setOption('userId', userId);
       }
     }
   }

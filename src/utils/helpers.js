@@ -392,9 +392,9 @@ const utils = {
 
   applyWindowParameterGetters: (options) => {
     const backing = {
-      userId: options.userId,
-      testCells: options.testCells,
-      segments: options.segments,
+      userId: options.userId || undefined,
+      testCells: options.testCells || undefined,
+      segments: options.segments || undefined,
     };
 
     Object.defineProperty(options, 'userId', {
@@ -417,7 +417,11 @@ const utils = {
           return backing.testCells;
         }
         const windowTestCells = (window.cnstrc && window.cnstrc.testCells) || window.cnstrcTestCells;
-        return utils.toValidTestCells(windowTestCells);
+        const validated = utils.toValidTestCells(windowTestCells);
+        if (validated && Object.keys(validated).length > 0) {
+          return validated;
+        }
+        return undefined;
       },
       set(value) { backing.testCells = value; },
       enumerable: true,

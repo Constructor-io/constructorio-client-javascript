@@ -796,7 +796,7 @@ describe('ConstructorIO - Utils - Helpers', () => {
         window.cnstrcTestCells = [1, 2, 3];
         const options = { testCells: {} };
         applyWindowParameterGetters(options);
-        expect(options.testCells).to.deep.equal({});
+        expect(options.testCells).to.be.undefined;
       });
 
       it('Should fall back to window.cnstrc.userSegments when options.segments is empty', () => {
