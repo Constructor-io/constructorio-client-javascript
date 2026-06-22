@@ -676,6 +676,7 @@ class Tracker {
    * @param {object[]} parameters.items - List of product item unique identifiers in search results listing
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - Current page of search results
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
    * @param {string} [parameters.resultId] - Browse result identifier (returned in response from Constructor)
    * @param {object} [parameters.selectedFilters] - Selected filters
    * @param {string} [parameters.sortOrder] - Sort order ('ascending' or 'descending')
@@ -716,6 +717,8 @@ class Tracker {
           items = customer_ids || item_ids,
           result_page,
           resultPage = result_page,
+          result_offset,
+          resultOffset = result_offset,
           result_id,
           resultId = result_id,
           sort_order,
@@ -733,12 +736,10 @@ class Tracker {
         let transformedItems;
 
         if (items && Array.isArray(items) && items.length !== 0) {
-          const trimmedItems = items.slice(0, 100);
-
           if (typeof items[0] === 'string' || typeof items[0] === 'number') {
-            transformedItems = trimmedItems.map((itemId) => ({ item_id: String(itemId) }));
+            transformedItems = items.map((itemId) => ({ item_id: String(itemId) }));
           } else {
-            transformedItems = trimmedItems.map((item) => helpers.toSnakeCaseKeys(item, false));
+            transformedItems = items.map((item) => helpers.toSnakeCaseKeys(item, false));
           }
         }
 
@@ -751,6 +752,7 @@ class Tracker {
           result_count: resultCount,
           items: transformedItems,
           result_page: resultPage,
+          result_offset: resultOffset,
           result_id: resultId,
           sort_order: sortOrder,
           sort_by: sortBy,
@@ -798,6 +800,7 @@ class Tracker {
    * @param {string} [parameters.resultId] - Search result identifier (returned in response from Constructor)
    * @param {number} [parameters.resultCount] - Number of results in total
    * @param {number} [parameters.resultPage] - Current page of results
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
    * @param {string} [parameters.resultPositionOnPage] - Position of selected items on page
    * @param {string} [parameters.numResultsPerPage] - Number of results per page
    * @param {object} [parameters.selectedFilters] - Key - Value map of selected filters
@@ -843,6 +846,8 @@ class Tracker {
           resultCount = num_results || result_count,
           result_page,
           resultPage = result_page,
+          result_offset,
+          resultOffset = result_offset,
           result_position_on_page,
           resultPositionOnPage = result_position_on_page,
           num_results_per_page,
@@ -863,6 +868,7 @@ class Tracker {
           result_id: resultId,
           result_count: resultCount,
           result_page: resultPage,
+          result_offset: resultOffset,
           result_position_on_page: resultPositionOnPage,
           num_results_per_page: numResultsPerPage,
           selected_filters: selectedFilters,
@@ -1028,6 +1034,7 @@ class Tracker {
    * @param {boolean} [parameters.isCustomType] - Specify if type is custom conversion type
    * @param {string} [parameters.displayName] - Display name for the custom conversion type
    * @param {string} [parameters.section="Products"] - Index section
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -1070,6 +1077,7 @@ class Tracker {
         type,
         is_custom_type,
         isCustomType = is_custom_type,
+        analyticsTags,
       } = parameters;
 
       // Ensure support for both item_id and customer_id as parameters
@@ -1109,6 +1117,10 @@ class Tracker {
 
       if (displayName) {
         bodyParams.display_name = displayName;
+      }
+
+      if (analyticsTags) {
+        bodyParams.analytics_tags = analyticsTags;
       }
 
       const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
@@ -1236,6 +1248,7 @@ class Tracker {
    * @param {object[]} [parameters.items] - List of Product Item Objects
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - Page number of results
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
    * @param {string} [parameters.resultId] - Recommendation result identifier (returned in response from Constructor)
    * @param {string} [parameters.section="Products"] - Results section
    * @param {object} [parameters.analyticsTags] - Pass additional analytics data
@@ -1266,6 +1279,8 @@ class Tracker {
         result_count,
         result_page,
         resultPage = result_page,
+        result_offset,
+        resultOffset = result_offset,
         result_id,
         resultId = result_id,
         section,
@@ -1286,6 +1301,10 @@ class Tracker {
 
       if (!helpers.isNil(resultPage)) {
         bodyParams.result_page = resultPage;
+      }
+
+      if (!helpers.isNil(resultOffset)) {
+        bodyParams.result_offset = resultOffset;
       }
 
       if (resultId) {
@@ -1327,6 +1346,98 @@ class Tracker {
       }
 
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
+
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
+   * Send results impression view event to API
+   *
+   * @function trackResultsImpressionView
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {object[]} parameters.items - List of product items viewed (required)
+   * @param {string} parameters.items[].itemId - Item identifier used for merchandising (required)
+   * @param {string} parameters.items[].itemName - Display name for the item (required)
+   * @param {string} [parameters.items[].variationId] - Variation identifier when applicable
+   * @param {string} [parameters.items[].slCampaignId] - Sponsored listings campaign identifier
+   * @param {string} [parameters.items[].slCampaignOwner] - Sponsored listings campaign owner
+   * @param {string} [parameters.filterName] - Filter name from the relevant browse page
+   * @param {string} [parameters.filterValue] - Filter value from the relevant browse page
+   * @param {string} [parameters.searchTerm] - Search query of the relevant search page
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User viewed results (items became visible in viewport)
+   * @example
+   * constructorio.tracker.trackResultsImpressionView(
+   *     {
+   *         items: [
+   *             { itemId: 'KMH876', itemName: 'Red T-Shirt' },
+   *             { itemId: 'KMH140', itemName: 'Blue Jeans' },
+   *         ],
+   *         searchTerm: 'shirt',
+   *     },
+   * );
+   */
+  trackResultsImpressionView(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const { items, filterName, filterValue, searchTerm } = parameters;
+
+      // Ensure items are provided (required)
+      if (!items || !Array.isArray(items) || items.length === 0) {
+        return new Error('items is a required parameter of type array');
+      }
+
+      // Validate each item has required fields and is an object
+      for (let i = 0; i < items.length; i += 1) {
+        const item = items[i];
+        if (!item || typeof item !== 'object' || Array.isArray(item)) {
+          return new Error('All items must be objects');
+        }
+        if (!item.itemId || typeof item.itemId !== 'string') {
+          return new Error('itemId is a required property of type string for each item');
+        }
+        if (!item.itemName || typeof item.itemName !== 'string') {
+          return new Error('itemName is a required property of type string for each item');
+        }
+      }
+
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/impression_view?`;
+      const transformedItems = items.map((item) => helpers.toSnakeCaseKeys(item, false));
+
+      const bodyParams = {
+        items: transformedItems,
+      };
+
+      if (filterName) {
+        bodyParams.filter_name = filterName;
+      }
+
+      if (filterValue) {
+        bodyParams.filter_value = filterValue;
+      }
+
+      if (searchTerm) {
+        bodyParams.search_term = searchTerm;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
       const requestMethod = 'POST';
       const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
 
@@ -1492,6 +1603,7 @@ class Tracker {
    * @param {string} [parameters.resultId] - Recommendation result identifier (returned in response from Constructor)
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - Page number of results
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
    * @param {number} [parameters.resultPositionOnPage] - Position of result on page
    * @param {number} [parameters.numResultsPerPage] - Number of results on page
    * @param {object} [parameters.analyticsTags] - Pass additional analytics data
@@ -1534,6 +1646,8 @@ class Tracker {
         resultCount = result_count,
         result_page,
         resultPage = result_page,
+        result_offset,
+        resultOffset = result_offset,
         result_position_on_page,
         resultPositionOnPage = result_position_on_page,
         num_results_per_page,
@@ -1570,6 +1684,10 @@ class Tracker {
 
       if (!helpers.isNil(resultPage)) {
         bodyParams.result_page = resultPage;
+      }
+
+      if (!helpers.isNil(resultOffset)) {
+        bodyParams.result_offset = resultOffset;
       }
 
       if (!helpers.isNil(resultPositionOnPage)) {
@@ -1648,6 +1766,7 @@ class Tracker {
    * @param {string} [parameters.section="Products"] - Index section
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - Page number of results
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
    * @param {string} [parameters.resultId] - Browse result identifier (returned in response from Constructor)
    * @param {object} [parameters.selectedFilters] - Selected filters
    * @param {string} [parameters.sortOrder] - Sort order ('ascending' or 'descending')
@@ -1683,6 +1802,8 @@ class Tracker {
         result_count,
         result_page,
         resultPage = result_page,
+        result_offset,
+        resultOffset = result_offset,
         result_id,
         resultId = result_id,
         selected_filters,
@@ -1711,6 +1832,10 @@ class Tracker {
 
       if (!helpers.isNil(resultPage)) {
         bodyParams.result_page = resultPage;
+      }
+
+      if (!helpers.isNil(resultOffset)) {
+        bodyParams.result_offset = resultOffset;
       }
 
       if (resultId) {
@@ -1742,7 +1867,7 @@ class Tracker {
       }
 
       if (items && Array.isArray(items)) {
-        bodyParams.items = items.slice(0, 100).map((item) => helpers.toSnakeCaseKeys(item, false));
+        bodyParams.items = items.map((item) => helpers.toSnakeCaseKeys(item, false));
       }
 
       if (analyticsTags) {
@@ -1783,6 +1908,7 @@ class Tracker {
    * @param {string} [parameters.resultId] - Browse result identifier (returned in response from Constructor)
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - Page number of results
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
    * @param {number} [parameters.resultPositionOnPage] - Position of clicked item
    * @param {number} [parameters.numResultsPerPage] - Number of results shown
    * @param {object} [parameters.selectedFilters] -  Selected filters
@@ -1826,6 +1952,8 @@ class Tracker {
         resultCount = result_count,
         result_page,
         resultPage = result_page,
+        result_offset,
+        resultOffset = result_offset,
         result_position_on_page,
         resultPositionOnPage = result_position_on_page,
         num_results_per_page,
@@ -1866,6 +1994,10 @@ class Tracker {
 
       if (!helpers.isNil(resultPage)) {
         bodyParams.result_page = resultPage;
+      }
+
+      if (!helpers.isNil(resultOffset)) {
+        bodyParams.result_offset = resultOffset;
       }
 
       if (!helpers.isNil(resultPositionOnPage)) {
@@ -2047,6 +2179,7 @@ class Tracker {
    * @param {string} [parameters.itemName] - Product item name
    * @param {string} [parameters.variationId] - Product item variation unique identifier
    * @param {string} [parameters.section="Products"] - Index section
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites
    * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -2074,6 +2207,8 @@ class Tracker {
         variation_id,
         variationId = variation_id,
         section = 'Products',
+        result_offset,
+        resultOffset = result_offset,
         analyticsTags,
       } = parameters;
       if (itemId) {
@@ -2086,6 +2221,10 @@ class Tracker {
 
         if (variationId) {
           bodyParams.variation_id = variationId;
+        }
+
+        if (!helpers.isNil(resultOffset)) {
+          bodyParams.result_offset = resultOffset;
         }
 
         if (analyticsTags) {
@@ -2126,6 +2265,7 @@ class Tracker {
    * @param {string} [parameters.section='Products'] - Index section
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - The page of the results
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
    * @param {string} [parameters.resultId] - Quiz result identifier (returned in response from Constructor)
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -2163,6 +2303,8 @@ class Tracker {
         resultId = result_id,
         result_page,
         resultPage = result_page,
+        result_offset,
+        resultOffset = result_offset,
         items,
       } = parameters;
       const queryParams = {};
@@ -2222,6 +2364,13 @@ class Tracker {
         bodyParams.result_page = resultPage;
       }
 
+      if (!helpers.isNil(resultOffset)) {
+        if (typeof resultOffset !== 'number') {
+          return new Error('"resultOffset" must be a number');
+        }
+        bodyParams.result_offset = resultOffset;
+      }
+
       const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
       const requestMethod = 'POST';
       const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
@@ -2256,6 +2405,7 @@ class Tracker {
    * @param {string} [parameters.section='Products'] - Index section
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - The page of the results
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
    * @param {string} [parameters.resultId] - Quiz result identifier (returned in response from Constructor)
    * @param {number} [parameters.resultPositionOnPage] - Position of clicked item
    * @param {number} [parameters.numResultsPerPage] - Number of results shown
@@ -2297,6 +2447,8 @@ class Tracker {
         resultId = result_id,
         result_page,
         resultPage = result_page,
+        result_offset,
+        resultOffset = result_offset,
         num_results_per_page,
         numResultsPerPage = num_results_per_page,
         result_position_on_page,
@@ -2375,6 +2527,13 @@ class Tracker {
           return new Error('"resultPage" must be a number');
         }
         bodyParams.result_page = resultPage;
+      }
+
+      if (!helpers.isNil(resultOffset)) {
+        if (typeof resultOffset !== 'number') {
+          return new Error('"resultOffset" must be a number');
+        }
+        bodyParams.result_offset = resultOffset;
       }
 
       if (!helpers.isNil(numResultsPerPage)) {

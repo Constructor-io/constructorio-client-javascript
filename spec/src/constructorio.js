@@ -97,6 +97,22 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
     expect(instance.options).to.have.property('serviceUrl').to.equal('https://constructor.io');
   });
 
+  it('Should return an instance with correct serviceUrl when a http serviceUrl is passed and allowHttpServiceUrl is true', () => {
+    const clientId = 'client-id';
+    const sessionId = 'session-id';
+    const serviceUrl = 'http://constructor.io';
+    const instance = new ConstructorIO({
+      apiKey: validApiKey,
+      clientId,
+      sessionId,
+      serviceUrl,
+      allowHttpServiceUrl: true,
+    });
+
+    expect(instance).to.be.an('object');
+    expect(instance.options).to.have.property('serviceUrl').to.equal('http://constructor.io');
+  });
+
   it('Should remove any trailing slashes from the serviceUrl', () => {
     const serviceUrl = 'https://constructor.io/';
     const instance = new ConstructorIO({
