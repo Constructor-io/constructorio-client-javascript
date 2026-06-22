@@ -1076,7 +1076,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAutocompleteSelect(term, Object.assign(requiredParameters, optionalParameters)))
+      expect(tracker.trackAutocompleteSelect(term, { ...requiredParameters, ...optionalParameters }))
         .to.equal(true);
     });
 
@@ -1475,7 +1475,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackItemDetailLoad(Object.assign(requiredParameters, optionalParameters)))
+      expect(tracker.trackItemDetailLoad({ ...requiredParameters, ...optionalParameters }))
         .to.equal(true);
     });
 
@@ -1501,7 +1501,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackItemDetailLoad(Object.assign(requiredParameters, optionalParameters)))
+      expect(tracker.trackItemDetailLoad({ ...requiredParameters, ...optionalParameters }))
         .to.equal(true);
     });
 
@@ -1886,7 +1886,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackSearchSubmit(term, Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackSearchSubmit(term, { ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should respond with a valid response when term, required and optional parameters are provided', (done) => {
@@ -1914,7 +1914,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackSearchSubmit(term, Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackSearchSubmit(term, { ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when invalid term is provided', () => {
@@ -2473,7 +2473,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackSearchResultsLoaded(term, Object.assign(requiredParameters, optionalParameters)))
+      expect(tracker.trackSearchResultsLoaded(term, { ...requiredParameters, ...optionalParameters }))
         .to.equal(true);
     });
 
@@ -2663,14 +2663,14 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
     }
 
-    it('Should limit number of customer_ids to 100 when using item_ids', (done) => {
+    it('Should send all items when more than 100 items are provided', (done) => {
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
         ...requestQueueOptions,
       });
-      const itemIDs = [...Array(1000).keys()];
-      const formattedItems = itemIDs.slice(0, 100).map((i) => ({ item_id: String(i) }));
+      const itemIDs = [...Array(150).keys()];
+      const formattedItems = itemIDs.map((i) => ({ item_id: String(i) }));
       const parameters = {
         ...requiredParameters,
         item_ids: itemIDs,
@@ -2681,39 +2681,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(bodyParams).to.have.property('result_count').to.equal(parameters.numResults);
         expect(bodyParams).to.have.property('items').to.deep.equal(formattedItems);
-
-        // Response
-        expect(responseParams).to.have.property('method').to.equal('POST');
-        expect(responseParams).to.have.property('message').to.equal('ok');
-
-        done();
-      });
-
-      expect(tracker.trackSearchResultsLoaded(term, parameters)).to.equal(true);
-    });
-
-    it('Should limit number of customer_ids to 100 when using customer_ids', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        fetch: fetchSpy,
-        ...requestQueueOptions,
-      });
-      const customerIDs = [...Array(1000).keys()];
-      const formattedItems = customerIDs.slice(0, 100).map((i) => ({ item_id: String(i) }));
-      const parameters = {
-        ...requiredParameters,
-        item_ids: customerIDs,
-      };
-
-      tracker.on('success', (responseParams) => {
-        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
-
-        // Request
-        expect(fetchSpy).to.have.been.called;
-        expect(bodyParams).to.have.property('result_count').to.equal(parameters.numResults);
-        expect(bodyParams).to.have.property('items').to.deep.equal(formattedItems);
+        expect(bodyParams.items).to.have.lengthOf(150);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -2814,6 +2783,87 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       };
 
       expect(tracker.trackSearchResultsLoaded(term, parameters)).to.equal(true);
+    });
+
+    it('Should return valid response when resultOffset is passed as an integer', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('result_offset').to.equal(1);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackSearchResultsLoaded(term, {
+        ...requiredParameters,
+        resultOffset: 1,
+      })).to.equal(true);
+    });
+
+    it('Should return valid response and omit result_offset when resultOffset is not provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('result_offset');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackSearchResultsLoaded(term, {
+        ...requiredParameters,
+      })).to.equal(true);
+    });
+
+    it('Should receive error from backend when both resultPage and resultOffset are passed', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', (error) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('result_page');
+        expect(requestParams).to.have.property('result_offset');
+
+        // Response
+        expect(error).to.have.property('message').to.equal('Invalid parameters');
+
+        done();
+      });
+
+      expect(tracker.trackSearchResultsLoaded(term, {
+        ...requiredParameters,
+        resultPage: 10,
+        resultOffset: 1,
+      })).to.equal(true);
     });
   });
 
@@ -2949,6 +2999,87 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
       // eslint-disable-next-line max-len
       expect(tracker.trackSearchResultClickV2(term, { ...requiredParameters, ...optionalParameters, ...v2Parameters })).to.equal(true);
+    });
+
+    it('V2 Should return valid response when resultOffset is passed as an integer', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('result_offset').to.equal(1);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackSearchResultClickV2(term, {
+        ...requiredParameters,
+        resultOffset: 1,
+      })).to.equal(true);
+    });
+
+    it('V2 Should return valid response and omit result_offset when resultOffset is not provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('result_offset');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackSearchResultClickV2(term, {
+        ...requiredParameters,
+      })).to.equal(true);
+    });
+
+    it('V2 Should receive error from backend when both resultPage and resultOffset are passed', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', (error) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('result_page');
+        expect(requestParams).to.have.property('result_offset');
+
+        // Response
+        expect(error).to.have.property('message').to.equal('Invalid parameters');
+
+        done();
+      });
+
+      expect(tracker.trackSearchResultClickV2(term, {
+        ...requiredParameters,
+        resultPage: 10,
+        resultOffset: 1,
+      })).to.equal(true);
     });
 
     it('Backwards Compatibility - Should respond with a valid response when term and snake cased parameters are provided', (done) => {
@@ -4082,6 +4213,34 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
       expect(tracker.trackConversion(term, requiredParameters)).to.equal(true);
     });
+
+    it('Should respond with a valid response when analyticsTags are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const parametersWithAnalyticsTags = {
+        ...requiredParameters,
+        analyticsTags: testAnalyticsTag,
+      };
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('analytics_tags').to.deep.equal(testAnalyticsTag);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackConversion(term, parametersWithAnalyticsTags)).to.equal(true);
+    });
   });
 
   describe('trackPurchase', () => {
@@ -4208,7 +4367,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackPurchase(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackPurchase({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should respond with a valid response when optional parameters are provided', (done) => {
@@ -4235,7 +4394,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackPurchase(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackPurchase({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and segments are provided', (done) => {
@@ -4442,10 +4601,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         addOrderIdRecord({ orderId, apiKey });
 
-        expect(tracker.trackPurchase(Object.assign(requiredParameters, {
+        expect(tracker.trackPurchase({
+          ...requiredParameters,
           ...optionalParameters,
           orderId,
-        }))).to.equal(false);
+        })).to.equal(false);
 
         setTimeout(() => {
           // Request
@@ -4482,10 +4642,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       addOrderIdRecord({ orderId: '239402919', apiKey: testApiKey });
       addOrderIdRecord({ orderId: '482039192', apiKey: testApiKey });
 
-      expect(tracker.trackPurchase(Object.assign(requiredParameters, {
+      expect(tracker.trackPurchase({
+        ...requiredParameters,
         ...optionalParameters,
         orderId: '328192019',
-      }))).to.equal(true);
+      })).to.equal(true);
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
@@ -4865,7 +5026,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackRecommendationView(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackRecommendationView({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
@@ -5189,6 +5350,87 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       };
 
       expect(tracker.trackRecommendationView(parameters)).to.equal(true);
+    });
+
+    it('Should return valid response when resultOffset is passed as an integer', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('result_offset').to.equal(1);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackRecommendationView({
+        ...requiredParameters,
+        resultOffset: 1,
+      })).to.equal(true);
+    });
+
+    it('Should return valid response and omit result_offset when resultOffset is not provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('result_offset');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackRecommendationView({
+        ...requiredParameters,
+      })).to.equal(true);
+    });
+
+    it('Should receive error from backend when both resultPage and resultOffset are passed', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', (error) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('result_page');
+        expect(requestParams).to.have.property('result_offset');
+
+        // Response
+        expect(error).to.have.property('message').to.equal('Invalid parameters');
+
+        done();
+      });
+
+      expect(tracker.trackRecommendationView({
+        ...requiredParameters,
+        resultPage: 10,
+        resultOffset: 1,
+      })).to.equal(true);
     });
   });
 
@@ -5519,7 +5761,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackRecommendationClick(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackRecommendationClick({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
@@ -5785,6 +6027,87 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
       expect(tracker.trackRecommendationClick(parametersWithSeedItemIds)).to.equal(true);
+    });
+
+    it('Should return valid response when resultOffset is passed as an integer', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('result_offset').to.equal(1);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackRecommendationClick({
+        ...requiredParameters,
+        resultOffset: 1,
+      })).to.equal(true);
+    });
+
+    it('Should return valid response and omit result_offset when resultOffset is not provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('result_offset');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackRecommendationClick({
+        ...requiredParameters,
+      })).to.equal(true);
+    });
+
+    it('Should receive error from backend when both resultPage and resultOffset are passed', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', (error) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('result_page');
+        expect(requestParams).to.have.property('result_offset');
+
+        // Response
+        expect(error).to.have.property('message').to.equal('Invalid parameters');
+
+        done();
+      });
+
+      expect(tracker.trackRecommendationClick({
+        ...requiredParameters,
+        resultPage: 10,
+        resultOffset: 1,
+      })).to.equal(true);
     });
   });
 
@@ -6064,7 +6387,37 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackBrowseResultsLoaded(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackBrowseResultsLoaded({ ...requiredParameters, ...optionalParameters })).to.equal(true);
+    });
+
+    it('Should send all items when more than 100 items are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const items = [...Array(150).keys()].map((i) => ({ item_id: i.toString() }));
+      const parameters = {
+        ...requiredParameters,
+        items,
+      };
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('items').to.deep.equal(items);
+        expect(requestParams.items).to.have.lengthOf(150);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackBrowseResultsLoaded(parameters)).to.equal(true);
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
@@ -6162,40 +6515,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
     }
 
-    it('Should limit number of items to 100', (done) => {
-      const { tracker } = new ConstructorIO({
-        apiKey: testApiKey,
-        fetch: fetchSpy,
-        ...requestQueueOptions,
-      });
-      const parameters = {
-        ...optionalParameters,
-        resultCount: 1000,
-        items: [...Array(1000).keys()].map((e) => ({ item_id: e.toString() })),
-      };
-
-      tracker.on('success', (responseParams) => {
-        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
-
-        // Request
-        expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('section').to.equal(parameters.section);
-        expect(requestParams).to.have.property('result_count').to.equal(parameters.resultCount);
-        expect(requestParams).to.have.property('result_page').to.equal(parameters.resultPage);
-        expect(requestParams).to.have.property('result_id').to.equal(parameters.resultId);
-        expect(requestParams).to.have.property('selected_filters').to.deep.equal(parameters.selectedFilters);
-        expect(requestParams).to.have.property('items').to.deep.equal(parameters.items.slice(0, 100));
-
-        // Response
-        expect(responseParams).to.have.property('method').to.equal('POST');
-        expect(responseParams).to.have.property('message');
-
-        done();
-      });
-
-      expect(tracker.trackBrowseResultsLoaded(Object.assign(requiredParameters, parameters))).to.equal(true);
-    });
-
     it('Should not encode body parameters', (done) => {
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
@@ -6277,6 +6596,88 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       };
 
       expect(tracker.trackBrowseResultsLoaded(parameters)).to.equal(true);
+    });
+
+    it('Should return valid response when resultOffset is passed as an integer', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('result_offset').to.equal(1);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackBrowseResultsLoaded({
+        ...requiredParameters,
+        resultOffset: 1,
+      })).to.equal(true);
+    });
+
+    it('Should return valid response and omit result_offset when resultOffset is not provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('result_offset');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackBrowseResultsLoaded({
+        ...requiredParameters,
+      })).to.equal(true);
+    });
+
+    it('Should receive error from backend when both resultPage and resultOffset are passed', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', (error) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('result_page');
+        expect(requestParams).to.have.property('result_offset');
+
+        // Response
+        expect(error).to.have.property('message').to.equal('Invalid parameters');
+
+        done();
+      });
+
+      expect(tracker.trackBrowseResultsLoaded({
+        ...requiredParameters,
+        ...optionalParameters,
+        resultPage: 10,
+        resultOffset: 1,
+      })).to.equal(true);
     });
   });
 
@@ -6481,7 +6882,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackBrowseRedirect(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackBrowseRedirect({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
@@ -6901,7 +7302,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackBrowseResultClick(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackBrowseResultClick({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and non-existent item id are provided', (done) => {
@@ -7112,6 +7513,87 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackBrowseResultClick(legacyParameters)).to.equal(true);
+    });
+
+    it('Should return valid response when resultOffset is passed as an integer', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('result_offset').to.equal(1);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackBrowseResultClick({
+        ...requiredParameters,
+        resultOffset: 1,
+      })).to.equal(true);
+    });
+
+    it('Should return valid response and omit result_offset when resultOffset is not provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('result_offset');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackBrowseResultClick({
+        ...requiredParameters,
+      })).to.equal(true);
+    });
+
+    it('Should receive error from backend when both resultPage and resultOffset are passed', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', (error) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('result_page');
+        expect(requestParams).to.have.property('result_offset');
+
+        // Response
+        expect(error).to.have.property('message').to.equal('Invalid parameters');
+
+        done();
+      });
+
+      expect(tracker.trackBrowseResultClick({
+        ...requiredParameters,
+        resultPage: 10,
+        resultOffset: 1,
+      })).to.equal(true);
     });
   });
 
@@ -7335,7 +7817,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
-        expect(requestParams).to.have.property('section').to.equal(requiredParameters.section);
+        expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.itemId);
         expect(requestParams).to.have.property('item_name').to.equal(optionalParameters.itemName);
         expect(requestParams).to.have.property('analytics_tags').to.deep.equal(testAnalyticsTag);
@@ -7347,7 +7829,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackGenericResultClick(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackGenericResultClick({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should respond with a valid response when required parameters and non-existent item id are provided', (done) => {
@@ -7529,6 +8011,59 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackGenericResultClick(requiredParameters)).to.equal(true);
+    });
+
+    it('Should return valid response when resultOffset is passed as an integer', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('result_offset').to.equal(1);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackGenericResultClick({
+        ...requiredParameters,
+        resultOffset: 1,
+      })).to.equal(true);
+    });
+
+    it('Should return valid response and omit result_offset when resultOffset is not provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('result_offset');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackGenericResultClick({
+        ...requiredParameters,
+      })).to.equal(true);
     });
   });
 
@@ -7800,7 +8335,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackQuizResultsLoaded(Object.assign(requiredParameters, optionalParameters)))
+      expect(tracker.trackQuizResultsLoaded({ ...requiredParameters, ...optionalParameters }))
         .to.equal(true);
     });
 
@@ -8053,6 +8588,100 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
       expect(tracker.trackQuizResultsLoaded(parameters)).to.equal(true);
     });
+
+    it('Should return valid response when resultOffset is passed as an integer', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('result_offset').to.equal(1);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackQuizResultsLoaded({
+        ...requiredParameters,
+        resultOffset: 1,
+      })).to.equal(true);
+    });
+
+    it('Should return valid response and omit result_offset when resultOffset is not provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('result_offset');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackQuizResultsLoaded({
+        ...requiredParameters,
+      })).to.equal(true);
+    });
+
+    it('Should return an error when resultOffset is not a number', () => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      expect(tracker.trackQuizResultsLoaded({
+        ...requiredParameters,
+        resultOffset: 'not-a-number',
+      })).to.be.an('error');
+    });
+
+    it('Should receive error from backend when both resultPage and resultOffset are passed', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', (error) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('result_page');
+        expect(requestParams).to.have.property('result_offset');
+
+        // Response
+        expect(error).to.have.property('message').to.equal('Invalid parameters');
+
+        done();
+      });
+
+      expect(tracker.trackQuizResultsLoaded({
+        ...requiredParameters,
+        resultPage: 10,
+        resultOffset: 1,
+      })).to.equal(true);
+    });
   });
 
   describe('trackQuizResultClick', () => {
@@ -8275,7 +8904,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackQuizResultClick(Object.assign(requiredParameters, optionalParameters)))
+      expect(tracker.trackQuizResultClick({ ...requiredParameters, ...optionalParameters }))
         .to.equal(true);
     });
 
@@ -8518,6 +9147,100 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
       expect(tracker.trackQuizResultClick(requiredParameters)).to.equal(true);
     });
+
+    it('Should return valid response when resultOffset is passed as an integer', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('result_offset').to.equal(1);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackQuizResultClick({
+        ...requiredParameters,
+        resultOffset: 1,
+      })).to.equal(true);
+    });
+
+    it('Should return valid response and omit result_offset when resultOffset is not provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.not.have.property('result_offset');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message');
+
+        done();
+      });
+
+      expect(tracker.trackQuizResultClick({
+        ...requiredParameters,
+      })).to.equal(true);
+    });
+
+    it('Should return an error when resultOffset is not a number', () => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      expect(tracker.trackQuizResultClick({
+        ...requiredParameters,
+        resultOffset: 'not-a-number',
+      })).to.be.an('error');
+    });
+
+    it('Should receive error from backend when both resultPage and resultOffset are passed', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('error', (error) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('result_page');
+        expect(requestParams).to.have.property('result_offset');
+
+        // Response
+        expect(error).to.have.property('message').to.equal('Invalid parameters');
+
+        done();
+      });
+
+      expect(tracker.trackQuizResultClick({
+        ...requiredParameters,
+        resultPage: 10,
+        resultOffset: 1,
+      })).to.equal(true);
+    });
   });
 
   describe('trackQuizConversion', () => {
@@ -8739,7 +9462,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackQuizConversion(Object.assign(requiredParameters, optionalParameters)))
+      expect(tracker.trackQuizConversion({ ...requiredParameters, ...optionalParameters }))
         .to.equal(true);
     });
 
@@ -9223,7 +9946,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAgentSubmit(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackAgentSubmit({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
@@ -9540,7 +10263,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       // eslint-disable-next-line max-len
-      expect(tracker.trackAgentResultLoadStarted(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackAgentResultLoadStarted({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
@@ -9858,7 +10581,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       // eslint-disable-next-line max-len
-      expect(tracker.trackAgentResultLoadFinished(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackAgentResultLoadFinished({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
@@ -10184,7 +10907,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAgentResultClick(Object.assign(requiredParameters, optionalParameters)))
+      expect(tracker.trackAgentResultClick({ ...requiredParameters, ...optionalParameters }))
         .to.equal(true);
     });
 
@@ -10528,7 +11251,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAgentResultView(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackAgentResultView({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
@@ -10846,7 +11569,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAgentSearchSubmit(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackAgentSearchSubmit({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
@@ -11160,7 +11883,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantSubmit(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackAssistantSubmit({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
@@ -11477,7 +12200,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       // eslint-disable-next-line max-len
-      expect(tracker.trackAssistantResultLoadStarted(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackAssistantResultLoadStarted({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
@@ -11795,7 +12518,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       // eslint-disable-next-line max-len
-      expect(tracker.trackAssistantResultLoadFinished(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackAssistantResultLoadFinished({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
@@ -12121,7 +12844,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantResultClick(Object.assign(requiredParameters, optionalParameters)))
+      expect(tracker.trackAssistantResultClick({ ...requiredParameters, ...optionalParameters }))
         .to.equal(true);
     });
 
@@ -12465,7 +13188,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantResultView(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackAssistantResultView({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when invalid parameters are provided', () => {
@@ -12783,7 +13506,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         done();
       });
 
-      expect(tracker.trackAssistantSearchSubmit(Object.assign(requiredParameters, optionalParameters))).to.equal(true);
+      expect(tracker.trackAssistantSearchSubmit({ ...requiredParameters, ...optionalParameters })).to.equal(true);
     });
 
     it('Should throw an error when no parameters are provided', () => {
@@ -13122,7 +13845,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackProductInsightsAgentViews(
-        Object.assign(requiredParameters, optionalParameters),
+        { ...requiredParameters, ...optionalParameters },
       )).to.equal(true);
     });
 
@@ -13451,7 +14174,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackProductInsightsAgentView(
-        Object.assign(requiredParameters, optionalParameters),
+        { ...requiredParameters, ...optionalParameters },
       )).to.equal(true);
     });
 
@@ -13773,7 +14496,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackProductInsightsAgentOutOfView(
-        Object.assign(requiredParameters, optionalParameters),
+        { ...requiredParameters, ...optionalParameters },
       )).to.equal(true);
     });
 
@@ -14093,7 +14816,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackProductInsightsAgentFocus(
-        Object.assign(requiredParameters, optionalParameters),
+        { ...requiredParameters, ...optionalParameters },
       )).to.equal(true);
     });
 
@@ -14414,7 +15137,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackProductInsightsAgentQuestionClick(
-        Object.assign(requiredParameters, optionalParameters),
+        { ...requiredParameters, ...optionalParameters },
       )).to.equal(true);
     });
 
@@ -14735,7 +15458,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackProductInsightsAgentQuestionSubmit(
-        Object.assign(requiredParameters, optionalParameters),
+        { ...requiredParameters, ...optionalParameters },
       )).to.equal(true);
     });
 
@@ -15059,7 +15782,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackProductInsightsAgentAnswerView(
-        Object.assign(requiredParameters, optionalParameters),
+        { ...requiredParameters, ...optionalParameters },
       )).to.equal(true);
     });
 
@@ -15381,7 +16104,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackProductInsightsAgentAnswerFeedback(
-        Object.assign(requiredParameters, optionalParameters),
+        { ...requiredParameters, ...optionalParameters },
       )).to.equal(true);
     });
 
@@ -15536,6 +16259,338 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
   });
 
+  describe('trackResultsImpressionView', () => {
+    const requiredParameters = {
+      items: [
+        {
+          itemId: '1',
+          itemName: 'Item 1',
+          variationId: 'VAR-1',
+          slCampaignId: 'campaign-123',
+          slCampaignOwner: 'owner-abc',
+        },
+        {
+          itemId: '2',
+          itemName: 'Item 2',
+          variationId: 'VAR-2',
+          slCampaignId: 'campaign-456',
+          slCampaignOwner: 'owner-def',
+        },
+      ],
+    };
+    const optionalParameters = {
+      filterName: 'category',
+      filterValue: 'shoes',
+      searchTerm: 'red shoes',
+    };
+
+    it('Should respond with a valid response when required parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        validateOriginReferrer(requestParams);
+
+        // Body
+        expect(bodyParams).to.have.property('items').to.deep.equal([
+          {
+            item_id: '1',
+            item_name: 'Item 1',
+            variation_id: 'VAR-1',
+            sl_campaign_id: 'campaign-123',
+            sl_campaign_owner: 'owner-abc',
+          },
+          {
+            item_id: '2',
+            item_name: 'Item 2',
+            variation_id: 'VAR-2',
+            sl_campaign_id: 'campaign-456',
+            sl_campaign_owner: 'owner-def',
+          },
+        ]);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      tracker.on('error', (error) => {
+        done(error);
+      });
+
+      expect(tracker.trackResultsImpressionView(requiredParameters)).to.equal(true);
+    });
+
+    it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Body
+        expect(fetchSpy).to.have.been.called;
+        expect(bodyParams).to.have.property('items');
+        expect(bodyParams).to.have.property('filter_name').to.equal(optionalParameters.filterName);
+        expect(bodyParams).to.have.property('filter_value').to.equal(optionalParameters.filterValue);
+        expect(bodyParams).to.have.property('search_term').to.equal(optionalParameters.searchTerm);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      tracker.on('error', (error) => {
+        done(error);
+      });
+
+      expect(tracker.trackResultsImpressionView({ ...requiredParameters, ...optionalParameters })).to.equal(true);
+    });
+
+    it('Should respond with a valid response when required parameters and segments are provided', (done) => {
+      const segments = ['foo', 'bar'];
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        segments,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Body
+        expect(fetchSpy).to.have.been.called;
+        expect(bodyParams).to.have.property('us').to.deep.equal(segments);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      tracker.on('error', (error) => {
+        done(error);
+      });
+
+      expect(tracker.trackResultsImpressionView(requiredParameters)).to.equal(true);
+    });
+
+    it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const userId = 'user-id';
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        userId,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Body
+        expect(fetchSpy).to.have.been.called;
+        expect(bodyParams).to.have.property('ui').to.equal(userId);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      tracker.on('error', (error) => {
+        done(error);
+      });
+
+      expect(tracker.trackResultsImpressionView(requiredParameters)).to.equal(true);
+    });
+
+    it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const testCells = { foo: 'bar' };
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        testCells,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Body
+        expect(fetchSpy).to.have.been.called;
+        expect(bodyParams).to.have.property(`ef-${Object.keys(testCells)[0]}`).to.equal(Object.values(testCells)[0]);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      tracker.on('error', (error) => {
+        done(error);
+      });
+
+      expect(tracker.trackResultsImpressionView(requiredParameters)).to.equal(true);
+    });
+
+    it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: true,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Body
+        expect(fetchSpy).to.have.been.called;
+        validateOriginReferrer(bodyParams);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      tracker.on('error', (error) => {
+        done(error);
+      });
+
+      expect(tracker.trackResultsImpressionView(requiredParameters)).to.equal(true);
+    });
+
+    it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        sendReferrerWithTrackingEvents: false,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Body
+        expect(fetchSpy).to.have.been.called;
+        expect(bodyParams).to.not.have.property('origin_referrer');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      tracker.on('error', (error) => {
+        done(error);
+      });
+
+      expect(tracker.trackResultsImpressionView(requiredParameters)).to.equal(true);
+    });
+
+    it('Should throw an error when invalid parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackResultsImpressionView([])).to.be.an('error');
+    });
+
+    it('Should throw an error when no parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackResultsImpressionView()).to.be.an('error');
+    });
+
+    it('Should throw an error when items is not provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackResultsImpressionView({})).to.be.an('error');
+    });
+
+    it('Should throw an error when items is an empty array', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackResultsImpressionView({ items: [] })).to.be.an('error');
+    });
+
+    it('Should throw an error when an item is missing itemId', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackResultsImpressionView({ items: [{ itemName: 'Shoe' }] })).to.be.an('error');
+    });
+
+    it('Should throw an error when an item is missing itemName', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackResultsImpressionView({ items: [{ itemId: '1' }] })).to.be.an('error');
+    });
+
+    it('Should throw an error when items contains non-object entries', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackResultsImpressionView({ items: ['string'] })).to.be.an('error');
+    });
+
+    if (!skipNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackResultsImpressionView(requiredParameters, { timeout: 10 })).to.equal(true);
+      });
+
+      it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          networkParameters: {
+            timeout: 20,
+          },
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackResultsImpressionView(requiredParameters)).to.equal(true);
+      });
+    }
+  });
+
   describe('trackMediaImpressionView', () => {
     let requiredParameters;
 
@@ -15618,7 +16673,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
       expect(
         tracker.trackMediaImpressionView(
-          Object.assign(requiredParameters, optionalParameters),
+          { ...requiredParameters, ...optionalParameters },
         ),
       ).to.equal(true);
     });

@@ -584,30 +584,71 @@ describe('ConstructorIO - Utils - Helpers', () => {
     });
 
     describe('addHTTPSToString', () => {
-      it('Should return the url without any modification', () => {
-        const testUrl = 'https://www.constructor.io';
+      describe('when allowHttp is not given', () => {
+        it('Should return the url without any modification', () => {
+          const testUrl = 'https://www.constructor.io';
 
-        expect(addHTTPSToString(testUrl)).to.equal(testUrl);
+          expect(addHTTPSToString(testUrl)).to.equal(testUrl);
+        });
+
+        it('Should return url with no protocol with https at the beginning', () => {
+          const testUrl = 'www.constructor.io';
+          const expectedUrl = 'https://www.constructor.io';
+
+          expect(addHTTPSToString(testUrl)).to.equal(expectedUrl);
+        });
+
+        it('Should return url with an http protocol with https at the beginning', () => {
+          const testUrl = 'http://www.constructor.io';
+          const expectedUrl = 'https://www.constructor.io';
+
+          expect(addHTTPSToString(testUrl)).to.equal(expectedUrl);
+        });
+
+        it('Should not replace "http" in the middle of the url', () => {
+          const testUrl = 'http://www.constructor.io/http/';
+          const expectedUrl = 'https://www.constructor.io/http/';
+
+          expect(addHTTPSToString(testUrl)).to.equal(expectedUrl);
+        });
+
+        it('Should return null if param is not a string', () => {
+          const testUrl = {};
+
+          expect(addHTTPSToString(testUrl)).to.equal(null);
+        });
       });
+      describe('when allowHttp is true', () => {
+        it('Should return the url without any modification', () => {
+          const testUrl = 'https://www.constructor.io';
 
-      it('Should return url with no protocol with https at the beginning', () => {
-        const testUrl = 'www.constructor.io';
-        const expectedUrl = 'https://www.constructor.io';
+          expect(addHTTPSToString(testUrl, true)).to.equal(testUrl);
+        });
 
-        expect(addHTTPSToString(testUrl)).to.equal(expectedUrl);
-      });
+        it('Should return url with no protocol with https at the beginning', () => {
+          const testUrl = 'www.constructor.io';
+          const expectedUrl = 'https://www.constructor.io';
 
-      it('Should return url with an http protocol with https at the beginning', () => {
-        const testUrl = 'http://www.constructor.io';
-        const expectedUrl = 'https://www.constructor.io';
+          expect(addHTTPSToString(testUrl, true)).to.equal(expectedUrl);
+        });
 
-        expect(addHTTPSToString(testUrl)).to.equal(expectedUrl);
-      });
+        it('Should return url with an http protocol without any modification', () => {
+          const testUrl = 'http://localhost:8080';
 
-      it('Should return null if param is not a string', () => {
-        const testUrl = {};
+          expect(addHTTPSToString(testUrl, true)).to.equal(testUrl);
+        });
 
-        expect(addHTTPSToString(testUrl)).to.equal(null);
+        it('Should not replace "http" in the middle of the url', () => {
+          const testUrl = 'http://www.constructor.io/http/';
+
+          expect(addHTTPSToString(testUrl, true)).to.equal(testUrl);
+        });
+
+        it('Should return null if param is not a string', () => {
+          const testUrl = {};
+
+          expect(addHTTPSToString(testUrl, true)).to.equal(null);
+        });
       });
     });
 
