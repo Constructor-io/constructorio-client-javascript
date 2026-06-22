@@ -58,12 +58,12 @@ class RequestQueue {
       const additionalKeys = this.options?.additionalTrackingKeys;
 
       if (Array.isArray(additionalKeys) && additionalKeys.length) {
-        const encodedOriginalKey = encodeURIComponent(this.options.apiKey);
+        const encodedOriginalKey = helpers.encodeURIComponentRFC3986(this.options.apiKey);
 
         const validKeys = additionalKeys.filter((key) => key && typeof key === 'string');
 
         validKeys.forEach((additionalKey) => {
-          const encodedKey = encodeURIComponent(additionalKey);
+          const encodedKey = helpers.encodeURIComponentRFC3986(additionalKey);
           const swappedUrl = url.replace(`key=${encodedOriginalKey}`, `key=${encodedKey}`);
 
           queue.push({
