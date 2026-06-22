@@ -395,7 +395,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         expect(RequestQueue.get()).to.be.an('array').length(1);
       });
 
-      it('Should add duplicate GET requests without a body', () => {
+      it('Should add duplicate requests for GET method', () => {
         store.session.set(humanityStorageKey, true);
         const requests = new RequestQueue({
           sendTrackingEvents: true,
