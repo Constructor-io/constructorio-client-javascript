@@ -318,6 +318,121 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
       });
     });
 
+    describe('additionalTrackingKeys', () => {
+      let defaultAgent;
+      let cleanup;
+
+      before(() => {
+        helpers.clearStorage();
+      });
+
+      beforeEach(() => {
+        global.CLIENT_VERSION = 'cio-mocha';
+        cleanup = jsdom();
+        defaultAgent = window.navigator.userAgent;
+      });
+
+      afterEach(() => {
+        window.navigator.__defineGetter__('userAgent', () => defaultAgent);
+        delete global.CLIENT_VERSION;
+        cleanup();
+        helpers.clearStorage();
+      });
+
+      it('Should add duplicate requests for each additional tracking key', () => {
+        store.session.set(humanityStorageKey, true);
+        const requests = new RequestQueue({
+          sendTrackingEvents: true,
+          trackingSendDelay: 1,
+          apiKey: 'primary-key',
+          additionalTrackingKeys: ['extra-key-1', 'extra-key-2'],
+        });
+
+        requests.queue('https://ac.cnstrc.com/behavior?action=session_start&key=primary-key&_dt=123', 'POST', { action: 'session_start', key: 'primary-key' });
+
+        const queue = RequestQueue.get();
+        expect(queue).to.be.an('array').length(3);
+
+        // Primary request
+        expect(queue[0].url).to.contain('key=primary-key');
+        expect(queue[0].body.key).to.equal('primary-key');
+
+        // First additional key
+        expect(queue[1].url).to.contain('key=extra-key-1');
+        expect(queue[1].url).to.not.contain('key=primary-key');
+        expect(queue[1].body.key).to.equal('extra-key-1');
+
+        // Second additional key
+        expect(queue[2].url).to.contain('key=extra-key-2');
+        expect(queue[2].url).to.not.contain('key=primary-key');
+        expect(queue[2].body.key).to.equal('extra-key-2');
+      });
+
+      it('Should not add duplicates when additionalTrackingKeys is an empty array', () => {
+        store.session.set(humanityStorageKey, true);
+        const requests = new RequestQueue({
+          sendTrackingEvents: true,
+          trackingSendDelay: 1,
+          apiKey: 'primary-key',
+          additionalTrackingKeys: [],
+        });
+
+        requests.queue('https://ac.cnstrc.com/behavior?action=session_start&key=primary-key&_dt=123');
+
+        expect(RequestQueue.get()).to.be.an('array').length(1);
+      });
+
+      it('Should not add duplicates when additionalTrackingKeys is not provided', () => {
+        store.session.set(humanityStorageKey, true);
+        const requests = new RequestQueue({
+          sendTrackingEvents: true,
+          trackingSendDelay: 1,
+          apiKey: 'primary-key',
+        });
+
+        requests.queue('https://ac.cnstrc.com/behavior?action=session_start&key=primary-key&_dt=123');
+
+        expect(RequestQueue.get()).to.be.an('array').length(1);
+      });
+
+      it('Should add duplicate requests for GET method', () => {
+        store.session.set(humanityStorageKey, true);
+        const requests = new RequestQueue({
+          sendTrackingEvents: true,
+          trackingSendDelay: 1,
+          apiKey: 'primary-key',
+          additionalTrackingKeys: ['extra-key-1'],
+        });
+
+        requests.queue('https://ac.cnstrc.com/behavior?action=session_start&key=primary-key&_dt=123');
+
+        const queue = RequestQueue.get();
+        expect(queue).to.be.an('array').length(2);
+
+        expect(queue[0].url).to.contain('key=primary-key');
+        expect(queue[1].url).to.contain('key=extra-key-1');
+        expect(queue[1].url).to.contain('action=session_start');
+        expect(queue[1].body.key).to.equal('extra-key-1');
+      });
+
+      it('Should skip invalid entries in additionalTrackingKeys', () => {
+        store.session.set(humanityStorageKey, true);
+        const requests = new RequestQueue({
+          sendTrackingEvents: true,
+          trackingSendDelay: 1,
+          apiKey: 'primary-key',
+          additionalTrackingKeys: ['valid-key', '', null, 123, 'another-valid-key'],
+        });
+
+        requests.queue('https://ac.cnstrc.com/behavior?action=session_start&key=primary-key&_dt=123', 'POST', { action: 'session_start', key: 'primary-key' });
+
+        const queue = RequestQueue.get();
+        expect(queue).to.be.an('array').length(3);
+        expect(queue[1].url).to.contain('key=valid-key');
+        expect(queue[2].url).to.contain('key=another-valid-key');
+      });
+    });
+
     describe('send', () => {
       let fetchSpy = null;
       let cleanup;

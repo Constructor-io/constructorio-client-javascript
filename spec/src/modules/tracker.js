@@ -17075,4 +17075,39 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       ).to.equal(true);
     });
   });
+
+  describe('additionalTrackingKeys', () => {
+    it('Should send tracking events to both primary and additional keys', (done) => {
+      const additionalKey = 'extra-test-key';
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+        additionalTrackingKeys: [additionalKey],
+      });
+
+      let callCount = 0;
+
+      const checkComplete = () => {
+        callCount += 1;
+
+        if (callCount === 2) {
+          expect(fetchSpy).to.have.been.calledTwice;
+
+          const firstCallUrl = fetchSpy.getCall(0).args[0];
+          const secondCallUrl = fetchSpy.getCall(1).args[0];
+
+          expect(firstCallUrl).to.contain(`key=${testApiKey}`);
+          expect(secondCallUrl).to.contain(`key=${additionalKey}`);
+
+          done();
+        }
+      };
+
+      tracker.on('success', checkComplete);
+      tracker.on('error', checkComplete);
+
+      expect(tracker.trackSessionStartV2()).to.equal(true);
+    });
+  });
 });
