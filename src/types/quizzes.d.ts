@@ -113,7 +113,7 @@ export interface QuizResultsResponse extends Record<string, any> {
     has_attribute: boolean;
     is_matched: boolean;
   }>;
-  quiz_asa_results_message?: Nullable<string>;
+  quiz_asa_results_message?: string;
 }
 
 export interface QuizResultData extends Record<string, any> {
