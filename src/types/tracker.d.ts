@@ -1,5 +1,5 @@
+import { ConstructorClientOptions, ItemTracked, ItemTrackedPurchase, NetworkParameters, Question, TimeSpan } from '.';
 import { EventEmitter } from './events';
-import { ConstructorClientOptions, ItemTracked, ItemTrackedPurchase, Question, TimeSpan, NetworkParameters } from '.';
 import RequestQueue from './request-queue';
 
 export default Tracker;
@@ -81,6 +81,7 @@ declare class Tracker {
       items: ItemTracked[];
       resultCount?: number;
       resultPage?: number;
+      resultOffset?: number;
       resultId?: string;
       selectedFilters?: Record<string, any>;
       sortOrder?: string;
@@ -143,6 +144,7 @@ declare class Tracker {
       items?: ItemTracked[];
       resultCount?: number;
       resultPage?: number;
+      resultOffset?: number;
       resultId?: string;
       section?: string;
       analyticsTags?: Record<string, string>;
@@ -161,6 +163,7 @@ declare class Tracker {
       resultId?: string;
       resultCount?: number;
       resultPage?: number;
+      resultOffset?: number;
       resultPositionOnPage?: number;
       numResultsPerPage?: number;
       analyticsTags?: Record<string, string>;
@@ -179,6 +182,7 @@ declare class Tracker {
       section?: string;
       resultCount?: number;
       resultPage?: number;
+      resultOffset?: number;
       resultId?: string;
       selectedFilters?: object;
       sortOrder?: string;
@@ -200,6 +204,7 @@ declare class Tracker {
       resultId?: string;
       resultCount?: number;
       resultPage?: number;
+      resultOffset?: number;
       resultPositionOnPage?: number;
       numResultsPerPage?: number;
       selectedFilters?: object;
@@ -216,6 +221,7 @@ declare class Tracker {
       itemName?: string;
       variationId?: string;
       section?: string;
+      resultOffset?: number;
       analyticsTags?: Record<string, string>;
     },
     networkParameters?: NetworkParameters
@@ -230,6 +236,7 @@ declare class Tracker {
       section?: string;
       resultCount?: number;
       resultPage?: number;
+      resultOffset?: number;
       resultId?: string;
       items: ItemTracked[];
     },
@@ -247,6 +254,7 @@ declare class Tracker {
       section?: string;
       resultCount?: number;
       resultPage?: number;
+      resultOffset?: number;
       resultId?: string;
       resultPositionOnPage?: number;
       numResultsPerPage?: number;
@@ -434,6 +442,16 @@ declare class Tracker {
       qnaResultId?: string;
       variationId?: string;
       section?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
+  trackResultsImpressionView(
+    parameters: {
+      items: (Required<Pick<ItemTracked, 'itemId' | 'itemName'>> & Omit<ItemTracked, 'itemId' | 'itemName' | 'price'>)[];
+      filterName?: string;
+      filterValue?: string;
+      searchTerm?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
