@@ -75,6 +75,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     delete window.CLIENT_VERSION;
     delete global.CLIENT_VERSION;
+    delete window.cnstrc;
     cleanup();
 
     setTimeout(done, delayBetweenTests);
@@ -460,32 +461,35 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       expect(tracker.trackSessionStart()).to.equal(true);
     });
 
-    it('Should not include window globals in tracking requests even when trackWindowParameters is true', (done) => {
-      window.cnstrc = { userId: 'window-user-id', testCells: { exp: 'var' }, userSegments: ['seg'] };
+    it('Should include window globals in tracking requests when useWindowParameters is true', (done) => {
+      window.cnstrc = { userId: 'window-user-id', testCells: { exp: 'var' }, userSegments: ['seg1', 'seg2'] };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
-        trackWindowParameters: true,
+        useWindowParameters: true,
         fetch: fetchSpy,
         ...requestQueueOptions,
       });
 
       tracker.on('success', () => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-        expect(requestedUrlParams).to.not.have.property('ui');
-        expect(requestedUrlParams).to.not.have.property('ef-exp');
-        expect(requestedUrlParams).to.not.have.property('us');
-        delete window.cnstrc;
-        done();
+        try {
+          const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+          expect(requestedUrlParams).to.have.property('ui').to.equal('window-user-id');
+          expect(requestedUrlParams).to.have.property('ef-exp').to.equal('var');
+          expect(requestedUrlParams).to.have.property('us').to.deep.equal(['seg1', 'seg2']);
+          done();
+        } catch (e) {
+          done(e);
+        }
       });
 
       expect(tracker.trackSessionStart()).to.equal(true);
     });
 
-    it('Should include userId set via setClientOptions in tracking requests', (done) => {
+    it('Should prefer options.userId over window global in tracking requests when useWindowParameters is true', (done) => {
       window.cnstrc = { userId: 'window-user-id' };
       const instance = new ConstructorIO({
         apiKey: testApiKey,
-        trackWindowParameters: true,
+        useWindowParameters: true,
         fetch: fetchSpy,
         ...requestQueueOptions,
       });
@@ -495,7 +499,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       instance.tracker.on('success', () => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
         expect(requestedUrlParams).to.have.property('ui').to.equal('explicit-user-id');
-        delete window.cnstrc;
         done();
       });
 

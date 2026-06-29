@@ -58,7 +58,7 @@ class ConstructorIO {
    * @param {object} [parameters.networkParameters] - Parameters relevant to network requests
    * @param {number} [parameters.networkParameters.timeout] - Request timeout (in milliseconds) - may be overridden within individual method calls
    * @param {string} [parameters.humanityCheckLocation='session'] - Storage location for the humanity check flag ('session' for sessionStorage, 'local' for localStorage)
-   * @param {boolean} [parameters.trackWindowParameters=false] - Indicates if window globals (cnstrc/cnstrcUserId/cnstrcTestCells/cnstrcUserSegments) should be used as fallback for userId, testCells, and segments
+   * @param {boolean} [parameters.useWindowParameters=false] - Indicates if window globals (cnstrc/cnstrcUserId/cnstrcTestCells/cnstrcUserSegments) should be used as fallback for userId, testCells, and segments
    * @property {object} search - Interface to {@link module:search}
    * @property {object} browse - Interface to {@link module:browse}
    * @property {object} autocomplete - Interface to {@link module:autocomplete}
@@ -92,7 +92,7 @@ class ConstructorIO {
       beaconMode,
       networkParameters,
       humanityCheckLocation,
-      trackWindowParameters,
+      useWindowParameters,
     } = options;
 
     if (!apiKey || typeof apiKey !== 'string') {
@@ -141,12 +141,10 @@ class ConstructorIO {
       beaconMode: (beaconMode === false) ? false : true, // Defaults to 'true',
       networkParameters: networkParameters || {},
       humanityCheckLocation: humanityCheckLocation || 'session',
-      trackWindowParameters: trackWindowParameters || false,
+      useWindowParameters: useWindowParameters === true,
     };
 
-    this.trackerOptions = { ...this.options };
-
-    if (trackWindowParameters && helpers.canUseDOM()) {
+    if (useWindowParameters === true) {
       helpers.applyWindowParameterGetters(this.options);
     }
 
@@ -155,7 +153,7 @@ class ConstructorIO {
     this.browse = new Browse(this.options);
     this.autocomplete = new Autocomplete(this.options);
     this.recommendations = new Recommendations(this.options);
-    this.tracker = new Tracker(this.trackerOptions);
+    this.tracker = new Tracker(this.options);
     this.quizzes = new Quizzes(this.options);
     this.agent = new Agent(this.options);
     this.assistant = new Assistant(this.options);
@@ -178,34 +176,30 @@ class ConstructorIO {
   setClientOptions(options) {
     if (Object.keys(options).length) {
       const { apiKey, segments, testCells, sessionId, userId, sendTrackingEvents } = options;
-      const setOption = (key, value) => {
-        this.options[key] = value;
-        this.trackerOptions[key] = value;
-      };
 
       if (apiKey) {
-        setOption('apiKey', apiKey);
+        this.options.apiKey = apiKey;
       }
 
       if (segments) {
-        setOption('segments', segments);
+        this.options.segments = segments;
       }
 
       if (testCells) {
-        setOption('testCells', helpers.toValidTestCells(testCells));
+        this.options.testCells = helpers.toValidTestCells(testCells);
       }
 
       if (typeof sendTrackingEvents === 'boolean') {
-        setOption('sendTrackingEvents', sendTrackingEvents);
+        this.options.sendTrackingEvents = sendTrackingEvents;
         this.tracker.requests.sendTrackingEvents = sendTrackingEvents;
       }
 
       if (sessionId && !helpers.canUseDOM()) {
-        setOption('sessionId', sessionId);
+        this.options.sessionId = sessionId;
       }
 
       if ('userId' in options) {
-        setOption('userId', userId);
+        this.options.userId = userId;
       }
     }
   }
