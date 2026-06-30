@@ -3909,7 +3909,11 @@ class Tracker {
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.itemId - Product id of the clicked recommendation
    * @param {string} parameters.itemName - Product name of the clicked recommendation
+   * @param {string} parameters.question - Question that produced the answer containing this recommendation
+   * @param {string} parameters.seedItemId - Product id of the page the PIA widget is on
    * @param {number} [parameters.position] - Position of the clicked item in the list
+   * @param {string} [parameters.seedItemName] - Product name of the page the PIA widget is on
+   * @param {string} [parameters.seedVariationId] - Variation id of the page the PIA widget is on
    * @param {string} [parameters.qnaResultId] - Answer result id linking the click to a specific answer
    * @param {string} [parameters.variationId] - Variation id of the clicked recommendation
    * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
@@ -3937,6 +3941,10 @@ class Tracker {
         itemName,
         variationId,
         position,
+        question,
+        seedItemId,
+        seedItemName,
+        seedVariationId,
         qnaResultId,
         threadId,
       } = parameters;
@@ -3949,6 +3957,22 @@ class Tracker {
 
       if (!helpers.isNil(position)) {
         bodyParams.position = position;
+      }
+
+      if (question) {
+        bodyParams.question = question;
+      }
+
+      if (seedItemId) {
+        bodyParams.seed_item_id = seedItemId;
+      }
+
+      if (seedItemName) {
+        bodyParams.seed_item_name = seedItemName;
+      }
+
+      if (seedVariationId) {
+        bodyParams.seed_variation_id = seedVariationId;
       }
 
       if (qnaResultId) {

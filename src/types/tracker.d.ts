@@ -435,7 +435,7 @@ declare class Tracker {
       answerText: string;
       qnaResultId?: string;
       items?: ItemTracked[];
-      followUpQuestions?: Array<{ question: string }>;
+      followUpQuestions?: Array<{ value: string }>;
       variationId?: string;
       threadId?: string;
       section?: string;
@@ -460,7 +460,11 @@ declare class Tracker {
     parameters: {
       itemId: string;
       itemName: string;
+      question: string;
+      seedItemId: string;
       position?: number;
+      seedItemName?: string;
+      seedVariationId?: string;
       qnaResultId?: string;
       variationId?: string;
       threadId?: string;

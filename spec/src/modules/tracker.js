@@ -15623,7 +15623,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       qnaResultId: '0daf0015-fc29-4727-9140-8d5313a1902c',
       threadId: 'thread-123',
       items: [{ itemId: 'rec1', itemName: 'Rec Product 1' }, { itemId: 'rec2', itemName: 'Rec Product 2' }],
-      followUpQuestions: [{ question: 'What about size?' }, { question: 'Is it machine washable?' }],
+      followUpQuestions: [{ value: 'What about size?' }, { value: 'Is it machine washable?' }],
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -16273,11 +16273,13 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   });
 
   describe('trackProductInsightsAgentResultClick', () => {
-    const requiredParameters = { itemId: '1', itemName: 'item1' };
+    const requiredParameters = { itemId: '1', itemName: 'item1', question: 'Why choose this?', seedItemId: 'seed-1' };
     const optionalParameters = {
       section: 'Products',
       variationId: '2',
       position: 1,
+      seedItemName: 'Seed Product',
+      seedVariationId: 'seed-var-1',
       threadId: 'thread-123',
       qnaResultId: '0daf0015-fc29-4727-9140-8d5313a1902c',
     };
@@ -16301,6 +16303,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.itemId);
         expect(requestParams).to.have.property('item_name').to.equal(requiredParameters.itemName);
+        expect(requestParams).to.have.property('question').to.equal(requiredParameters.question);
+        expect(requestParams).to.have.property('seed_item_id').to.equal(requiredParameters.seedItemId);
         validateOriginReferrer(requestParams);
 
         // Response
@@ -16328,6 +16332,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
         expect(bodyParams).to.have.property('position').to.equal(optionalParameters.position);
+        expect(bodyParams).to.have.property('seed_item_name').to.equal(optionalParameters.seedItemName);
+        expect(bodyParams).to.have.property('seed_variation_id').to.equal(optionalParameters.seedVariationId);
         expect(bodyParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
         expect(bodyParams).to.have.property('qna_result_id').to.equal(optionalParameters.qnaResultId);
 
