@@ -59,6 +59,7 @@ class ConstructorIO {
    * @param {object} [parameters.networkParameters] - Parameters relevant to network requests
    * @param {number} [parameters.networkParameters.timeout] - Request timeout (in milliseconds) - may be overridden within individual method calls
    * @param {string} [parameters.humanityCheckLocation='session'] - Storage location for the humanity check flag ('session' for sessionStorage, 'local' for localStorage)
+   * @param {boolean} [parameters.useWindowParameters=false] - Indicates if window globals (cnstrc/cnstrcUserId/cnstrcTestCells/cnstrcUserSegments) should be used as fallback for userId, testCells, and segments
    * @property {object} search - Interface to {@link module:search}
    * @property {object} browse - Interface to {@link module:browse}
    * @property {object} autocomplete - Interface to {@link module:autocomplete}
@@ -93,6 +94,7 @@ class ConstructorIO {
       beaconMode,
       networkParameters,
       humanityCheckLocation,
+      useWindowParameters,
     } = options;
 
     if (!apiKey || typeof apiKey !== 'string') {
@@ -141,7 +143,12 @@ class ConstructorIO {
       beaconMode: (beaconMode === false) ? false : true, // Defaults to 'true',
       networkParameters: networkParameters || {},
       humanityCheckLocation: humanityCheckLocation || 'session',
+      useWindowParameters: useWindowParameters === true,
     };
+
+    if (useWindowParameters === true) {
+      helpers.applyWindowParameterGetters(this.options);
+    }
 
     // Expose global modules
     this.search = new Search(this.options);
@@ -189,12 +196,10 @@ class ConstructorIO {
         this.tracker.requests.sendTrackingEvents = sendTrackingEvents;
       }
 
-      // Set Session ID in dom-less environments only
       if (sessionId && !helpers.canUseDOM()) {
         this.options.sessionId = sessionId;
       }
 
-      // If User ID is passed
       if ('userId' in options) {
         this.options.userId = userId;
       }
