@@ -15783,7 +15783,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(bodyParams.items[0]).to.have.property('item_id').to.equal('rec1');
         expect(bodyParams.items[0]).to.have.property('item_name').to.equal('Rec Product 1');
         expect(bodyParams).to.have.property('follow_up_questions').to.be.an('array').with.lengthOf(2);
-        expect(bodyParams.follow_up_questions[0]).to.have.property('question').to.equal('What about size?');
+        expect(bodyParams.follow_up_questions[0]).to.have.property('value').to.equal('What about size?');
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
