@@ -13683,6 +13683,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const optionalParameters = {
       section: 'Products',
       variationId: '2',
+      threadId: 'thread-123',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -13836,6 +13837,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
+        expect(bodyParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -14336,6 +14338,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const optionalParameters = {
       section: 'Products',
       variationId: '2',
+      threadId: 'thread-123',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -14489,6 +14492,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
+        expect(bodyParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -14658,6 +14662,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const optionalParameters = {
       section: 'Products',
       variationId: '2',
+      threadId: 'thread-123',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -14809,6 +14814,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
+        expect(bodyParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -14978,6 +14984,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const optionalParameters = {
       section: 'Products',
       variationId: '2',
+      threadId: 'thread-123',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -15130,6 +15137,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
+        expect(bodyParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -15299,6 +15307,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const optionalParameters = {
       section: 'Products',
       variationId: '2',
+      threadId: 'thread-123',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -15451,6 +15460,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
+        expect(bodyParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -16358,7 +16368,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     it('Should throw an error when invalid parameters are provided', () => {
       const { tracker } = new ConstructorIO({ apiKey: testApiKey });
 
-      expect(tracker.trackProductInsightsAgentResultClick()).to.be.an('error');
+      expect(tracker.trackProductInsightsAgentResultClick('invalid')).to.be.an('error');
     });
 
     it('Should respond with a valid response when required parameters and segments are provided', (done) => {

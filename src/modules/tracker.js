@@ -3788,11 +3788,11 @@ class Tracker {
       };
 
       if (items && Array.isArray(items)) {
-        bodyParams.items = items.slice(0, 100).map((item) => helpers.toSnakeCaseKeys(item, false));
+        bodyParams.items = items.map((item) => helpers.toSnakeCaseKeys(item, false));
       }
 
       if (followUpQuestions && Array.isArray(followUpQuestions)) {
-        bodyParams.follow_up_questions = followUpQuestions.slice(0, 100).map((q) => helpers.toSnakeCaseKeys(q, false));
+        bodyParams.follow_up_questions = followUpQuestions.map((q) => helpers.toSnakeCaseKeys(q, false));
       }
 
       if (threadId) {
@@ -3927,6 +3927,8 @@ class Tracker {
    *   {
    *     'itemId': '10',
    *     'itemName': 'rec1',
+   *     'question': 'Why choose this?',
+   *     'seedItemId': '1',
    *     'position': 1,
    *   },
    * );
@@ -3953,18 +3955,12 @@ class Tracker {
         item_id: itemId,
         item_name: itemName,
         variation_id: variationId,
+        question,
+        seed_item_id: seedItemId,
       };
 
       if (!helpers.isNil(position)) {
         bodyParams.position = position;
-      }
-
-      if (question) {
-        bodyParams.question = question;
-      }
-
-      if (seedItemId) {
-        bodyParams.seed_item_id = seedItemId;
       }
 
       if (seedItemName) {
