@@ -316,6 +316,10 @@ export interface Question {
   question: string;
 }
 
+export interface FollowUpQuestion {
+  value: string;
+}
+
 export interface TimeSpan {
   start: string;
   end: string;

@@ -13728,6 +13728,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const optionalParameters = {
       section: 'Products',
       variationId: '2',
+      threadId: 'thread-123',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -13881,6 +13882,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
+        expect(bodyParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -14058,6 +14060,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const optionalParameters = {
       section: 'Products',
       variationId: '2',
+      threadId: 'thread-123',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -14210,6 +14213,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
+        expect(bodyParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -14379,6 +14383,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const optionalParameters = {
       section: 'Products',
       variationId: '2',
+      threadId: 'thread-123',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -14532,6 +14537,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
+        expect(bodyParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -14701,6 +14707,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const optionalParameters = {
       section: 'Products',
       variationId: '2',
+      threadId: 'thread-123',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -14852,6 +14859,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
+        expect(bodyParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -15021,6 +15029,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const optionalParameters = {
       section: 'Products',
       variationId: '2',
+      threadId: 'thread-123',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -15173,6 +15182,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
+        expect(bodyParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -15342,6 +15352,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const optionalParameters = {
       section: 'Products',
       variationId: '2',
+      threadId: 'thread-123',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -15494,6 +15505,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
+        expect(bodyParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -15664,6 +15676,9 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       section: 'Products',
       variationId: '2',
       qnaResultId: '0daf0015-fc29-4727-9140-8d5313a1902c',
+      threadId: 'thread-123',
+      items: [{ itemId: 'rec1', itemName: 'Rec Product 1' }, { itemId: 'rec2', itemName: 'Rec Product 2' }],
+      followUpQuestions: [{ value: 'What about size?' }, { value: 'Is it machine washable?' }],
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -15818,6 +15833,12 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
         expect(bodyParams).to.have.property('qna_result_id').to.equal(optionalParameters.qnaResultId);
+        expect(bodyParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
+        expect(bodyParams).to.have.property('items').to.be.an('array').with.lengthOf(2);
+        expect(bodyParams.items[0]).to.have.property('item_id').to.equal('rec1');
+        expect(bodyParams.items[0]).to.have.property('item_name').to.equal('Rec Product 1');
+        expect(bodyParams).to.have.property('follow_up_questions').to.be.an('array').with.lengthOf(2);
+        expect(bodyParams.follow_up_questions[0]).to.have.property('value').to.equal('What about size?');
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -15988,6 +16009,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       section: 'Products',
       variationId: '2',
       qnaResultId: '0daf0015-fc29-4727-9140-8d5313a1902c',
+      threadId: 'thread-123',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -16140,6 +16162,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('qna_result_id').to.equal(optionalParameters.qnaResultId);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
+        expect(bodyParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -16302,6 +16325,181 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
       expect(tracker.trackProductInsightsAgentAnswerFeedback(requiredParameters)).to.equal(true);
     });
+  });
+
+  describe('trackProductInsightsAgentResultClick', () => {
+    const requiredParameters = { itemId: '1', itemName: 'item1', question: 'Why choose this?', seedItemId: 'seed-1' };
+    const optionalParameters = {
+      section: 'Products',
+      variationId: '2',
+      position: 1,
+      seedItemName: 'Seed Product',
+      seedVariationId: 'seed-var-1',
+      threadId: 'thread-123',
+      qnaResultId: '0daf0015-fc29-4727-9140-8d5313a1902c',
+    };
+
+    it('Should respond with a valid response when required parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('key');
+        expect(requestParams).to.have.property('i');
+        expect(requestParams).to.have.property('s');
+        expect(requestParams).to.have.property('c').to.equal(clientVersion);
+        expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.itemId);
+        expect(requestParams).to.have.property('item_name').to.equal(requiredParameters.itemName);
+        expect(requestParams).to.have.property('question').to.equal(requiredParameters.question);
+        expect(requestParams).to.have.property('seed_item_id').to.equal(requiredParameters.seedItemId);
+        validateOriginReferrer(requestParams);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackProductInsightsAgentResultClick(requiredParameters)).to.equal(true);
+    });
+
+    it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
+        expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
+        expect(bodyParams).to.have.property('position').to.equal(optionalParameters.position);
+        expect(bodyParams).to.have.property('seed_item_name').to.equal(optionalParameters.seedItemName);
+        expect(bodyParams).to.have.property('seed_variation_id').to.equal(optionalParameters.seedVariationId);
+        expect(bodyParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
+        expect(bodyParams).to.have.property('qna_result_id').to.equal(optionalParameters.qnaResultId);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackProductInsightsAgentResultClick(
+        { ...requiredParameters, ...optionalParameters },
+      )).to.equal(true);
+    });
+
+    it('Should throw an error when no parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackProductInsightsAgentResultClick()).to.be.an('error');
+    });
+
+    it('Should throw an error when invalid parameters are provided', () => {
+      const { tracker } = new ConstructorIO({ apiKey: testApiKey });
+
+      expect(tracker.trackProductInsightsAgentResultClick('invalid')).to.be.an('error');
+    });
+
+    it('Should respond with a valid response when required parameters and segments are provided', (done) => {
+      const segments = ['foo', 'bar'];
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        segments,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('us').to.deep.equal(segments);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackProductInsightsAgentResultClick(requiredParameters)).to.equal(true);
+    });
+
+    it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const userId = 'user-id';
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        userId,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('ui').to.equal(userId);
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackProductInsightsAgentResultClick(requiredParameters)).to.equal(true);
+    });
+
+    if (!skipNetworkTimeoutTests) {
+      it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackProductInsightsAgentResultClick(requiredParameters, { timeout: 10 })).to.equal(true);
+      });
+
+      it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          networkParameters: {
+            timeout: 20,
+          },
+          ...requestQueueOptions,
+        });
+
+        tracker.on('error', ({ message }) => {
+          expect(message).to.equal(timeoutRejectionMessage);
+          done();
+        });
+
+        expect(tracker.trackProductInsightsAgentResultClick(requiredParameters)).to.equal(true);
+      });
+    }
   });
 
   describe('trackResultsImpressionView', () => {

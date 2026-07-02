@@ -3283,6 +3283,7 @@ class Tracker {
    * @param {array.<{start: string | undefined,
    * end: string | undefined}>} parameters.viewTimespans - List of timestamp pairs in ISO_8601 format
    * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3323,6 +3324,7 @@ class Tracker {
         itemName,
         variationId,
         viewTimespans,
+        threadId,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3332,6 +3334,10 @@ class Tracker {
         variation_id: variationId,
         view_timespans: viewTimespans,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       if (section) {
         queryParams.section = section;
@@ -3367,6 +3373,7 @@ class Tracker {
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are on
    * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3396,6 +3403,7 @@ class Tracker {
         itemId,
         itemName,
         variationId,
+        threadId,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3404,6 +3412,10 @@ class Tracker {
         item_name: itemName,
         variation_id: variationId,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       if (section) {
         queryParams.section = section;
@@ -3438,6 +3450,7 @@ class Tracker {
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are on
    * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3461,6 +3474,7 @@ class Tracker {
         itemId,
         itemName,
         variationId,
+        threadId,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3468,6 +3482,10 @@ class Tracker {
         item_name: itemName,
         variation_id: variationId,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       if (section) {
         queryParams.section = section;
@@ -3502,6 +3520,7 @@ class Tracker {
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are on
    * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3525,6 +3544,7 @@ class Tracker {
         itemId,
         itemName,
         variationId,
+        threadId,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3532,6 +3552,10 @@ class Tracker {
         item_name: itemName,
         variation_id: variationId,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       if (section) {
         queryParams.section = section;
@@ -3567,6 +3591,7 @@ class Tracker {
    * @param {string} parameters.itemName - Product name whose page we are on
    * @param {string} parameters.question - Question a user clicked on
    * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3592,6 +3617,7 @@ class Tracker {
         itemName,
         variationId,
         question,
+        threadId,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3600,6 +3626,10 @@ class Tracker {
         variation_id: variationId,
         question,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       if (section) {
         queryParams.section = section;
@@ -3635,6 +3665,7 @@ class Tracker {
    * @param {string} parameters.itemName - Product name whose page we are on
    * @param {string} parameters.question - Question a user submitted
    * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3660,6 +3691,7 @@ class Tracker {
         itemName,
         variationId,
         question,
+        threadId,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3668,6 +3700,10 @@ class Tracker {
         variation_id: variationId,
         question,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       if (section) {
         queryParams.section = section;
@@ -3704,14 +3740,17 @@ class Tracker {
    * @param {string} parameters.question - Question a user submitted
    * @param {string} parameters.answerText - Answer text of the question
    * @param {string} [parameters.qnaResultId] - Answer result id returned
+   * @param {Array} [parameters.items] - Array of recommended items shown with the answer (max 100)
+   * @param {Array} [parameters.followUpQuestions] - Follow-up questions displayed with the answer
    * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description User viewed the answer provided by the product insights agent
    * @example
-   * constructorio.tracker.trackProductInsightsAgentAnswerView({
+   * constructorio.tracker.trackProductInsightsAgentAnswerView(
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
@@ -3734,6 +3773,9 @@ class Tracker {
         question,
         answerText,
         qnaResultId,
+        items,
+        followUpQuestions,
+        threadId,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3744,6 +3786,18 @@ class Tracker {
         answer_text: answerText,
         qna_result_id: qnaResultId,
       };
+
+      if (items && Array.isArray(items)) {
+        bodyParams.items = items.map((item) => helpers.toSnakeCaseKeys(item, false));
+      }
+
+      if (followUpQuestions && Array.isArray(followUpQuestions)) {
+        bodyParams.follow_up_questions = followUpQuestions.map((q) => helpers.toSnakeCaseKeys(q, false));
+      }
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       if (section) {
         queryParams.section = section;
@@ -3780,13 +3834,14 @@ class Tracker {
    * @param {string} parameters.feedbackLabel - Feedback value: either "thumbs_up" or "thumbs_down"
    * @param {string} [parameters.qnaResultId] - Answer result id returned
    * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description A user provided feedback on an answers usefulness
    * @example
-   * constructorio.tracker.trackProductInsightsAgentAnswerFeedback({
+   * constructorio.tracker.trackProductInsightsAgentAnswerFeedback(
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
@@ -3807,6 +3862,7 @@ class Tracker {
         variationId,
         feedbackLabel,
         qnaResultId,
+        threadId,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3816,6 +3872,112 @@ class Tracker {
         feedback_label: feedbackLabel,
         qna_result_id: qnaResultId,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
+
+      if (section) {
+        queryParams.section = section;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters is a required parameter of type object');
+  }
+
+  /**
+   * Send product insights agent result click event
+   *
+   * @function trackProductInsightsAgentResultClick
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.itemId - Product id of the clicked recommendation
+   * @param {string} parameters.itemName - Product name of the clicked recommendation
+   * @param {string} parameters.question - Question that produced the answer containing this recommendation
+   * @param {string} parameters.seedItemId - Product id of the page the PIA widget is on
+   * @param {number} [parameters.position] - Position of the clicked item in the list
+   * @param {string} [parameters.seedItemName] - Product name of the page the PIA widget is on
+   * @param {string} [parameters.seedVariationId] - Variation id of the page the PIA widget is on
+   * @param {string} [parameters.qnaResultId] - Answer result id linking the click to a specific answer
+   * @param {string} [parameters.variationId] - Variation id of the clicked recommendation
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User clicked a recommended product in the PIA widget
+   * @example
+   * constructorio.tracker.trackProductInsightsAgentResultClick(
+   *   {
+   *     'itemId': '10',
+   *     'itemName': 'rec1',
+   *     'question': 'Why choose this?',
+   *     'seedItemId': '1',
+   *     'position': 1,
+   *   },
+   * );
+   */
+  trackProductInsightsAgentResultClick(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/product_insights_agent_result_click?`;
+      const {
+        section,
+        itemId,
+        itemName,
+        variationId,
+        position,
+        question,
+        seedItemId,
+        seedItemName,
+        seedVariationId,
+        qnaResultId,
+        threadId,
+      } = parameters;
+      const queryParams = {};
+      const bodyParams = {
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
+        question,
+        seed_item_id: seedItemId,
+      };
+
+      if (!helpers.isNil(position)) {
+        bodyParams.position = position;
+      }
+
+      if (seedItemName) {
+        bodyParams.seed_item_name = seedItemName;
+      }
+
+      if (seedVariationId) {
+        bodyParams.seed_variation_id = seedVariationId;
+      }
+
+      if (qnaResultId) {
+        bodyParams.qna_result_id = qnaResultId;
+      }
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       if (section) {
         queryParams.section = section;

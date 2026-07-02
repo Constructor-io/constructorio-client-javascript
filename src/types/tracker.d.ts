@@ -1,4 +1,4 @@
-import { ConstructorClientOptions, ItemTracked, ItemTrackedPurchase, NetworkParameters, Question, TimeSpan } from '.';
+import { ConstructorClientOptions, FollowUpQuestion, ItemTracked, ItemTrackedPurchase, NetworkParameters, Question, TimeSpan } from '.';
 import { EventEmitter } from './events';
 import RequestQueue from './request-queue';
 
@@ -363,6 +363,7 @@ declare class Tracker {
       itemName: string;
       viewTimespans: TimeSpan[];
       variationId?: string;
+      threadId?: string;
       section?: string;
     },
     networkParameters?: NetworkParameters
@@ -374,6 +375,7 @@ declare class Tracker {
       itemId: string;
       itemName: string;
       variationId?: string;
+      threadId?: string;
       section?: string;
     },
     networkParameters?: NetworkParameters
@@ -384,6 +386,7 @@ declare class Tracker {
       itemId: string;
       itemName: string;
       variationId?: string;
+      threadId?: string;
       section?: string;
     },
     networkParameters?: NetworkParameters
@@ -394,6 +397,7 @@ declare class Tracker {
       itemId: string;
       itemName: string;
       variationId?: string;
+      threadId?: string;
       section?: string;
     },
     networkParameters?: NetworkParameters
@@ -405,6 +409,7 @@ declare class Tracker {
       itemName: string;
       question: string;
       variationId?: string;
+      threadId?: string;
       section?: string;
     },
     networkParameters?: NetworkParameters
@@ -416,6 +421,7 @@ declare class Tracker {
       itemName: string;
       question: string;
       variationId?: string;
+      threadId?: string;
       section?: string;
     },
     networkParameters?: NetworkParameters
@@ -428,7 +434,10 @@ declare class Tracker {
       question: string;
       answerText: string;
       qnaResultId?: string;
+      items?: ItemTracked[];
+      followUpQuestions?: FollowUpQuestion[];
       variationId?: string;
+      threadId?: string;
       section?: string;
     },
     networkParameters?: NetworkParameters
@@ -441,6 +450,24 @@ declare class Tracker {
       feedbackLabel: string;
       qnaResultId?: string;
       variationId?: string;
+      threadId?: string;
+      section?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
+  trackProductInsightsAgentResultClick(
+    parameters: {
+      itemId: string;
+      itemName: string;
+      question: string;
+      seedItemId: string;
+      position?: number;
+      seedItemName?: string;
+      seedVariationId?: string;
+      qnaResultId?: string;
+      variationId?: string;
+      threadId?: string;
       section?: string;
     },
     networkParameters?: NetworkParameters
