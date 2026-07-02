@@ -1,4 +1,4 @@
-import { ConstructorClientOptions, ItemTracked, ItemTrackedPurchase, NetworkParameters, Question, TimeSpan } from '.';
+import { ConstructorClientOptions, FollowUpQuestion, ItemTracked, ItemTrackedPurchase, NetworkParameters, Question, TimeSpan } from '.';
 import { EventEmitter } from './events';
 import RequestQueue from './request-queue';
 
@@ -435,7 +435,7 @@ declare class Tracker {
       answerText: string;
       qnaResultId?: string;
       items?: ItemTracked[];
-      followUpQuestions?: Array<{ value: string }>;
+      followUpQuestions?: FollowUpQuestion[];
       variationId?: string;
       threadId?: string;
       section?: string;
