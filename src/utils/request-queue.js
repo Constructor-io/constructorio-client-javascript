@@ -60,9 +60,11 @@ class RequestQueue {
       if (Array.isArray(additionalKeys) && additionalKeys.length) {
         const encodedOriginalKey = helpers.encodeURIComponentRFC3986(this.options.apiKey);
 
-        const validKeys = additionalKeys.filter((key) => key && typeof key === 'string');
+        const uniqueKeys = new Set(
+          additionalKeys.filter((key) => key && typeof key === 'string' && key !== this.options.apiKey),
+        );
 
-        validKeys.forEach((additionalKey) => {
+        uniqueKeys.forEach((additionalKey) => {
           const encodedKey = helpers.encodeURIComponentRFC3986(additionalKey);
           const swappedUrl = url.replace(`key=${encodedOriginalKey}`, `key=${encodedKey}`);
 

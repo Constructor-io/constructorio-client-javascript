@@ -16369,6 +16369,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
           expect(firstCallUrl).to.contain(`key=${testApiKey}`);
           expect(secondCallUrl).to.contain(`key=${additionalKey}`);
+          expect(secondCallUrl).to.not.contain(`key=${testApiKey}`);
 
           done();
         }
@@ -16378,6 +16379,50 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       tracker.on('error', checkComplete);
 
       expect(tracker.trackSessionStartV2()).to.equal(true);
+    });
+
+    it('Should send identical request bodies for primary and additional keys', (done) => {
+      const additionalKey = 'extra-test-key';
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+        additionalTrackingKeys: [additionalKey],
+      });
+
+      let callCount = 0;
+
+      const checkComplete = () => {
+        callCount += 1;
+
+        if (callCount === 2) {
+          expect(fetchSpy).to.have.been.calledTwice;
+
+          const firstCallOptions = fetchSpy.getCall(0).args[1];
+          const secondCallOptions = fetchSpy.getCall(1).args[1];
+
+          const firstBody = JSON.parse(firstCallOptions.body);
+          const secondBody = JSON.parse(secondCallOptions.body);
+
+          expect(firstBody.key).to.equal(testApiKey);
+          expect(secondBody.key).to.equal(additionalKey);
+
+          // Verify bodies are the same except for the key
+          const firstBodyWithoutKey = { ...firstBody };
+          const secondBodyWithoutKey = { ...secondBody };
+          delete firstBodyWithoutKey.key;
+          delete secondBodyWithoutKey.key;
+
+          expect(firstBodyWithoutKey).to.deep.equal(secondBodyWithoutKey);
+
+          done();
+        }
+      };
+
+      tracker.on('success', checkComplete);
+      tracker.on('error', checkComplete);
+
+      expect(tracker.trackInputFocusV2('test query')).to.equal(true);
     });
   });
 });

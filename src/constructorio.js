@@ -59,7 +59,7 @@ class ConstructorIO {
    * @param {object} [parameters.networkParameters] - Parameters relevant to network requests
    * @param {number} [parameters.networkParameters.timeout] - Request timeout (in milliseconds) - may be overridden within individual method calls
    * @param {string} [parameters.humanityCheckLocation='session'] - Storage location for the humanity check flag ('session' for sessionStorage, 'local' for localStorage)
-   * @param {string[]} [parameters.additionalTrackingKeys] - Additional API keys to duplicate tracking events to
+   * @param {string[]} [parameters.additionalTrackingKeys] - Additional API keys that each receive a duplicate of every tracking event. Events are always sent to the primary `apiKey` and, in addition, to every key in this array.
    * @property {object} search - Interface to {@link module:search}
    * @property {object} browse - Interface to {@link module:browse}
    * @property {object} autocomplete - Interface to {@link module:autocomplete}
