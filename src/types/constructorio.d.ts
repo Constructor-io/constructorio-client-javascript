@@ -4,6 +4,7 @@ import Autocomplete from './autocomplete';
 import Recommendations from './recommendations';
 import Quizzes from './quizzes';
 import Agent from './agent';
+import Pia from './pia';
 import Assistant from './assistant';
 import Tracker from './tracker';
 import { ConstructorClientOptions } from '.';
@@ -25,7 +26,7 @@ declare class ConstructorIO {
 
   quizzes: Quizzes;
 
-  agent: Agent;
+  agent: Agent & { pia: Pia };
 
   assistant: Assistant;
 
@@ -35,5 +36,5 @@ declare class ConstructorIO {
 }
 
 declare namespace ConstructorIO {
-  export { Search, Browse, Autocomplete, Recommendations, Quizzes, Tracker, Agent, Assistant };
+  export { Search, Browse, Autocomplete, Recommendations, Quizzes, Tracker, Agent, Pia, Assistant };
 }

@@ -26,4 +26,5 @@ jobs:
         env:
           TEST_REQUEST_API_KEY: ${{ secrets.TEST_REQUEST_API_KEY }}
           TEST_MEDIA_REQUEST_API_KEY: ${{ secrets.TEST_MEDIA_REQUEST_API_KEY }}
+          TEST_PIA_REQUEST_API_KEY: ${{ secrets.TEST_PIA_REQUEST_API_KEY }}
           SKIP_NETWORK_TIMEOUT_TESTS: true
