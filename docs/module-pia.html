@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>agent - Documentation</title>
+    <title>pia - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -37,7 +37,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">agent</h1>
+    <h1 class="page-title">pia</h1>
     
 
     
@@ -60,8 +60,7 @@
         <div class="container-overview">
         
             
-                <div class="description usertext">Interface to agent SSE.
-Replaces the previous Assistant module.</div>
+                <div class="description usertext">Interface to Product Insights Agent (PIA) related API calls</div>
             
 
             
@@ -73,14 +72,13 @@ Replaces the previous Assistant module.</div>
 <dl class="details">
     
     <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>Interface to agent SSE.
-Replaces the previous Assistant module.</li></ul></dd>
+    <dd class="tag-description"><ul class="dummy"><li>Interface to Product Insights Agent (PIA) related API calls</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_agent.js.html">modules/agent.js</a>, <a href="modules_agent.js.html#line151">line 151</a>
+        <a href="modules_pia.js.html">modules/pia.js</a>, <a href="modules_pia.js.html#line65">line 65</a>
     </li></ul></dd>
     
 
@@ -190,7 +188,7 @@ Replaces the previous Assistant module.</li></ul></dd>
 
     
 
-    <h4 class="name" id="~getAgentResultsStream"><span class="type-signature type-signature-inner">(inner) </span>getAgentResultsStream<span class="signature">(intent, parameters)</span><span class="type-signature"> &rarr; {ReadableStream}</span></h4>
+    <h4 class="name" id="~getAnswerResults"><span class="type-signature type-signature-inner">(inner) </span>getAnswerResults<span class="signature">(itemId, question, parameters<span class="signature-attributes">opt</span>, networkParameters<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
 
     
 
@@ -200,13 +198,13 @@ Replaces the previous Assistant module.</li></ul></dd>
 <dl class="details">
     
     <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>Retrieve a stream of agent results from Constructor.io API</li></ul></dd>
+    <dd class="tag-description"><ul class="dummy"><li>Retrieve an answer to a product question from Constructor.io API</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_agent.js.html">modules/agent.js</a>, <a href="modules_agent.js.html#line178">line 178</a>
+        <a href="modules_pia.js.html">modules/pia.js</a>, <a href="modules_pia.js.html#line129">line 129</a>
     </li></ul></dd>
     
 
@@ -253,11 +251,9 @@ Replaces the previous Assistant module.</li></ul></dd>
 
     <h5 class="h5-examples">Example</h5>
     
-    <pre class="prettyprint"><code>const readableStream = constructorio.agent.getAgentResultsStream('I want to get shoes', {
-    domain: "nike_sportswear",
-});
-const reader = readableStream.getReader();
-const { value, done } = await reader.read();</code></pre>
+    <pre class="prettyprint"><code>constructorio.agent.pia.getAnswerResults('item-123', 'What material is this made of?', {
+   threadId: '550e8400-e29b-41d4-a716-446655440000',
+});</code></pre>
 
 
 
@@ -275,6 +271,8 @@ const { value, done } = await reader.read();</code></pre>
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -287,7 +285,7 @@ const { value, done } = await reader.read();</code></pre>
 
         <tr>
             
-                <td class="name"><code>intent</code></td>
+                <td class="name"><code>itemId</code></td>
             
 
             <td class="type">
@@ -301,10 +299,50 @@ const { value, done } = await reader.read();</code></pre>
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last">Intent to use to perform an intent based recommendations</td>
+            <td class="description last">The identifier of the item</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>question</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The question to ask about the item</td>
         </tr>
 
     
@@ -324,6 +362,16 @@ const { value, done } = await reader.read();</code></pre>
             
             </td>
 
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
             
 
             
@@ -356,38 +404,6 @@ const { value, done } = await reader.read();</code></pre>
 
         <tr>
             
-                <td class="name"><code>domain</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Domain name (e.g. "groceries", "recipes")</td>
-        </tr>
-
-    
-
-        <tr>
-            
                 <td class="name"><code>threadId</code></td>
             
 
@@ -415,20 +431,20 @@ const { value, done } = await reader.read();</code></pre>
 
             
 
-            <td class="description last">Conversation thread ID for multi-turn dialogue</td>
+            <td class="description last">Thread ID for conversation context (UUID)</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>guard</code></td>
+                <td class="name"><code>variationId</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type">string</span>
 
 
 
@@ -449,116 +465,21 @@ const { value, done } = await reader.read();</code></pre>
 
             
 
-            <td class="description last">Enable content moderation</td>
+            <td class="description last">Variation ID of the item</td>
         </tr>
 
     
+    </tbody>
+</table>
 
-        <tr>
-            
-                <td class="name"><code>numResultsPerEvent</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
             </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Max products per search_result event</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>numResultEvents</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Max number of search_result events</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>numResultsPerPage</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Deprecated: use numResultsPerEvent instead</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>preFilterExpression</code></td>
+                <td class="name"><code>networkParameters</code></td>
             
 
             <td class="type">
@@ -585,41 +506,7 @@ const { value, done } = await reader.read();</code></pre>
 
             
 
-            <td class="description last">Faceting expression to scope search results. Please refer to https://docs.constructor.com/reference/configuration-collections</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>fmtOptions</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">The format options used to refine result groups. Please refer to https://docs.constructor.com/reference/v1-asa-retrieve-intent#query-params for details
+            <td class="description last">Parameters relevant to the network request
                 <h6>Properties</h6>
                 
 
@@ -647,13 +534,13 @@ const { value, done } = await reader.read();</code></pre>
 
         <tr>
             
-                <td class="name"><code>fields</code></td>
+                <td class="name"><code>timeout</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;string></span>
+<span class="param-type">number</span>
 
 
 
@@ -674,82 +561,7 @@ const { value, done } = await reader.read();</code></pre>
 
             
 
-            <td class="description last">Product fields to return</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>hidden_fields</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;string></span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Hidden fields to return</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>qsParam</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Parameters listed above can be serialized into a JSON object and parsed through this parameter. Please refer to https://docs.constructor.com/reference/v1-asa-retrieve-intent#query-params</td>
+            <td class="description last">Request timeout (in milliseconds)</td>
         </tr>
 
     
@@ -781,10 +593,6 @@ const { value, done } = await reader.read();</code></pre>
 <h5 class="h5-returns">Returns:</h5>
 
         
-<div class="param-desc">
-    Returns a ReadableStream.
-</div>
-
 
 
 <dl class="param-type">
@@ -793,7 +601,439 @@ const { value, done } = await reader.read();</code></pre>
     </dt>
     <dd>
         
-<span class="param-type">ReadableStream</span>
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="~getSuggestedQuestions"><span class="type-signature type-signature-inner">(inner) </span>getSuggestedQuestions<span class="signature">(itemId, parameters<span class="signature-attributes">opt</span>, networkParameters<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li>Retrieve suggested questions for a product from Constructor.io API</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modules_pia.js.html">modules/pia.js</a>, <a href="modules_pia.js.html#line78">line 78</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-examples">Example</h5>
+    
+    <pre class="prettyprint"><code>constructorio.agent.pia.getSuggestedQuestions('item-123', {
+   variationId: 'variation-456',
+   numResults: 3,
+});</code></pre>
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>itemId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The identifier of the item</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>parameters</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Additional parameters to refine result set
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>threadId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Thread ID for conversation context (UUID)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>variationId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Variation ID of the item</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>numResults</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Number of suggested questions to return</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>networkParameters</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Parameters relevant to the network request
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>timeout</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Request timeout (in milliseconds)</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
 
 
 
