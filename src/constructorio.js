@@ -128,6 +128,7 @@ class ConstructorIO {
       apiKey,
       version: versionFromOptions || versionFromGlobal || computePackageVersion(),
       serviceUrl: helpers.addHTTPSToString(normalizedServiceUrl, allowHttpServiceUrl) || 'https://ac.cnstrc.com',
+      allowHttpServiceUrl,
       quizzesServiceUrl: (quizzesServiceUrl && quizzesServiceUrl.replace(/\/$/, '')) || 'https://quizzes.cnstrc.com',
       agentServiceUrl: (agentServiceUrl && agentServiceUrl.replace(/\/$/, '')) || 'https://agent.cnstrc.com',
       assistantServiceUrl: (assistantServiceUrl && assistantServiceUrl.replace(/\/$/, '')) || 'https://assistant.cnstrc.com',
@@ -177,10 +178,11 @@ class ConstructorIO {
    * @param {number} [options.sessionId] - Session ID - Will only be set in DOM-less environments
    * @param {string} [options.userId] - User ID
    * @param {boolean} [options.sendTrackingEvents] - Indicates if tracking events should be dispatched
+   * @param {string} [options.serviceUrl] - API URL endpoint (normalized to include an HTTPS protocol and strip a trailing slash)
    */
   setClientOptions(options) {
     if (Object.keys(options).length) {
-      const { apiKey, segments, testCells, sessionId, userId, sendTrackingEvents } = options;
+      const { apiKey, segments, testCells, sessionId, userId, sendTrackingEvents, serviceUrl } = options;
 
       if (apiKey) {
         this.options.apiKey = apiKey;
@@ -205,6 +207,12 @@ class ConstructorIO {
 
       if ('userId' in options) {
         this.options.userId = userId;
+      }
+
+      if (typeof serviceUrl === 'string' && serviceUrl.length) {
+        const normalizedServiceUrl = serviceUrl.replace(/\/$/, '');
+        const formattedServiceUrl = helpers.addHTTPSToString(normalizedServiceUrl, this.options.allowHttpServiceUrl);
+        this.options.serviceUrl = formattedServiceUrl || this.options.serviceUrl;
       }
     }
   }

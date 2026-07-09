@@ -50,6 +50,7 @@
     "Bytespider",
     "Timespans",
     "googlequicksearchbox",
-    "cnstrc"
+    "cnstrc",
+    "iife"
   ]
 }

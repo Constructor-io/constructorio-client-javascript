@@ -715,6 +715,105 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
       expect(instance.recommendations.options).to.have.property('sessionId').to.equal(oldSessionId);
       expect(instance.tracker.options).to.have.property('sessionId').to.equal(oldSessionId);
     });
+
+    it('Should update the client options with a new service url', () => {
+      const newServiceUrl = 'https://new-service-url.cnstrc.com';
+      const instance = new ConstructorIO({ apiKey: validApiKey });
+
+      expect(instance.options).to.have.property('serviceUrl').to.equal('https://ac.cnstrc.com');
+
+      instance.setClientOptions({
+        serviceUrl: newServiceUrl,
+      });
+
+      expect(instance.options).to.have.property('serviceUrl').to.equal(newServiceUrl);
+    });
+
+    it('Should update the options for modules with a new service url', () => {
+      const newServiceUrl = 'https://new-service-url.cnstrc.com';
+      const instance = new ConstructorIO({ apiKey: validApiKey });
+
+      expect(instance.search.options).to.have.property('serviceUrl').to.equal('https://ac.cnstrc.com');
+      expect(instance.autocomplete.options).to.have.property('serviceUrl').to.equal('https://ac.cnstrc.com');
+      expect(instance.browse.options).to.have.property('serviceUrl').to.equal('https://ac.cnstrc.com');
+      expect(instance.recommendations.options).to.have.property('serviceUrl').to.equal('https://ac.cnstrc.com');
+      expect(instance.tracker.options).to.have.property('serviceUrl').to.equal('https://ac.cnstrc.com');
+
+      instance.setClientOptions({
+        serviceUrl: newServiceUrl,
+      });
+
+      expect(instance.search.options).to.have.property('serviceUrl').to.equal(newServiceUrl);
+      expect(instance.autocomplete.options).to.have.property('serviceUrl').to.equal(newServiceUrl);
+      expect(instance.browse.options).to.have.property('serviceUrl').to.equal(newServiceUrl);
+      expect(instance.recommendations.options).to.have.property('serviceUrl').to.equal(newServiceUrl);
+      expect(instance.tracker.options).to.have.property('serviceUrl').to.equal(newServiceUrl);
+    });
+
+    it('Should not update the client options service url with a falsy value', () => {
+      const originalServiceUrl = 'https://custom-service-url.cnstrc.com';
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        serviceUrl: originalServiceUrl,
+      });
+
+      expect(instance.options).to.have.property('serviceUrl').to.equal(originalServiceUrl);
+
+      instance.setClientOptions({
+        serviceUrl: '',
+      });
+
+      expect(instance.options).to.have.property('serviceUrl').to.equal(originalServiceUrl);
+
+      instance.setClientOptions({
+        serviceUrl: null,
+      });
+
+      expect(instance.options).to.have.property('serviceUrl').to.equal(originalServiceUrl);
+    });
+
+    it('Should prepend https to a service url without a protocol', () => {
+      const instance = new ConstructorIO({ apiKey: validApiKey });
+
+      instance.setClientOptions({
+        serviceUrl: 'new-service-url.cnstrc.com',
+      });
+
+      expect(instance.options).to.have.property('serviceUrl').to.equal('https://new-service-url.cnstrc.com');
+    });
+
+    it('Should strip a trailing slash from the service url', () => {
+      const instance = new ConstructorIO({ apiKey: validApiKey });
+
+      instance.setClientOptions({
+        serviceUrl: 'https://new-service-url.cnstrc.com/',
+      });
+
+      expect(instance.options).to.have.property('serviceUrl').to.equal('https://new-service-url.cnstrc.com');
+    });
+
+    it('Should upgrade an http service url to https by default', () => {
+      const instance = new ConstructorIO({ apiKey: validApiKey });
+
+      instance.setClientOptions({
+        serviceUrl: 'http://new-service-url.cnstrc.com',
+      });
+
+      expect(instance.options).to.have.property('serviceUrl').to.equal('https://new-service-url.cnstrc.com');
+    });
+
+    it('Should preserve an http service url when allowHttpServiceUrl is set', () => {
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        allowHttpServiceUrl: true,
+      });
+
+      instance.setClientOptions({
+        serviceUrl: 'http://new-service-url.cnstrc.com',
+      });
+
+      expect(instance.options).to.have.property('serviceUrl').to.equal('http://new-service-url.cnstrc.com');
+    });
   });
 
   if (bundled) {
