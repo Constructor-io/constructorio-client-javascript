@@ -7,24 +7,13 @@ const ConstructorIO = require('../../../test/constructorio'); // eslint-disable-
 // Regression guard for the `hidden_fields` side-effect: passing both
 // `fmtOptions` and `hiddenFields` must not mutate the caller's `fmtOptions`.
 describe('ConstructorIO - fmtOptions immutability', () => {
-  let fetchStub;
-
-  beforeEach(() => {
-    fetchStub = sinon.stub(global, 'fetch').resolves({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve({}),
-    });
-  });
-
-  afterEach(() => {
-    fetchStub.restore();
-  });
-
-  const client = () => new ConstructorIO({
+  // Inject the fetch stub through the client options, as the other module specs
+  // do (e.g. spec/src/modules/search.js), rather than stubbing the global.
+  const client = (fetch) => new ConstructorIO({
     apiKey: 'key_immutability_test',
     sessionId: 1,
     clientId: 'immutability-client-id',
+    fetch,
   });
 
   const cases = [
@@ -37,7 +26,12 @@ describe('ConstructorIO - fmtOptions immutability', () => {
 
   cases.forEach(([name, call]) => {
     it(`does not mutate the caller's fmtOptions object (${name})`, () => {
-      const c = client();
+      const fetchStub = sinon.stub().resolves({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve({}),
+      });
+      const c = client(fetchStub);
       const fmtOptions = { fields: ['id', 'name'] };
       const snapshot = JSON.parse(JSON.stringify(fmtOptions));
 
