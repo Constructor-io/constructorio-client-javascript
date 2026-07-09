@@ -88,7 +88,7 @@ function createSearchUrl(query, parameters, options, isVoiceSearch = false) {
 
     // Pull format options from parameters
     if (fmtOptions) {
-      queryParams.fmt_options = fmtOptions;
+      queryParams.fmt_options = { ...fmtOptions };
     }
 
     // Pull hidden fields from parameters
