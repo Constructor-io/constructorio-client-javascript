@@ -180,7 +180,7 @@ class ConstructorIO {
    */
   setClientOptions(options) {
     if (Object.keys(options).length) {
-      const { apiKey, segments, testCells, sessionId, userId, sendTrackingEvents } = options;
+      const { apiKey, segments, testCells, sessionId, userId, sendTrackingEvents, serviceUrl } = options;
 
       if (apiKey) {
         this.options.apiKey = apiKey;
@@ -205,6 +205,10 @@ class ConstructorIO {
 
       if ('userId' in options) {
         this.options.userId = userId;
+      }
+
+      if (serviceUrl) {
+        this.options.serviceUrl = serviceUrl;
       }
     }
   }
