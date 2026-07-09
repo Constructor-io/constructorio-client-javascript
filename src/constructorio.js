@@ -209,10 +209,10 @@ class ConstructorIO {
         this.options.userId = userId;
       }
 
-      if (serviceUrl) {
+      if (typeof serviceUrl === 'string' && serviceUrl.length) {
         const normalizedServiceUrl = serviceUrl.replace(/\/$/, '');
-
-        this.options.serviceUrl = helpers.addHTTPSToString(normalizedServiceUrl, this.options.allowHttpServiceUrl) || this.options.serviceUrl;
+        const formattedServiceUrl = helpers.addHTTPSToString(normalizedServiceUrl, this.options.allowHttpServiceUrl);
+        this.options.serviceUrl = formattedServiceUrl || this.options.serviceUrl;
       }
     }
   }
