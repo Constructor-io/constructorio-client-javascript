@@ -771,6 +771,49 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
 
       expect(instance.options).to.have.property('serviceUrl').to.equal(originalServiceUrl);
     });
+
+    it('Should prepend https to a service url without a protocol', () => {
+      const instance = new ConstructorIO({ apiKey: validApiKey });
+
+      instance.setClientOptions({
+        serviceUrl: 'new-service-url.cnstrc.com',
+      });
+
+      expect(instance.options).to.have.property('serviceUrl').to.equal('https://new-service-url.cnstrc.com');
+    });
+
+    it('Should strip a trailing slash from the service url', () => {
+      const instance = new ConstructorIO({ apiKey: validApiKey });
+
+      instance.setClientOptions({
+        serviceUrl: 'https://new-service-url.cnstrc.com/',
+      });
+
+      expect(instance.options).to.have.property('serviceUrl').to.equal('https://new-service-url.cnstrc.com');
+    });
+
+    it('Should upgrade an http service url to https by default', () => {
+      const instance = new ConstructorIO({ apiKey: validApiKey });
+
+      instance.setClientOptions({
+        serviceUrl: 'http://new-service-url.cnstrc.com',
+      });
+
+      expect(instance.options).to.have.property('serviceUrl').to.equal('https://new-service-url.cnstrc.com');
+    });
+
+    it('Should preserve an http service url when allowHttpServiceUrl is set', () => {
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        allowHttpServiceUrl: true,
+      });
+
+      instance.setClientOptions({
+        serviceUrl: 'http://new-service-url.cnstrc.com',
+      });
+
+      expect(instance.options).to.have.property('serviceUrl').to.equal('http://new-service-url.cnstrc.com');
+    });
   });
 
   if (bundled) {
