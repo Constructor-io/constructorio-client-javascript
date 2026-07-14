@@ -15030,6 +15030,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       section: 'Products',
       variationId: '2',
       threadId: 'thread-123',
+      questionTopic: 'pricing',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -15183,6 +15184,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
         expect(bodyParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
+        expect(bodyParams).to.have.property('question_topic').to.equal(optionalParameters.questionTopic);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -15353,6 +15355,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       section: 'Products',
       variationId: '2',
       threadId: 'thread-123',
+      questionTopic: 'pricing',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -15506,6 +15509,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
         expect(bodyParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
+        expect(bodyParams).to.have.property('question_topic').to.equal(optionalParameters.questionTopic);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
