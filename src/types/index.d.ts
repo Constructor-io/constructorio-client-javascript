@@ -7,6 +7,7 @@ export * from './search';
 export * from './autocomplete';
 export * from './quizzes';
 export * from './agent';
+export * from './pia';
 export * from './recommendations';
 export * from './browse';
 export * from './tracker';
@@ -71,6 +72,7 @@ export interface ConstructorClientOptions {
   beaconMode?: boolean;
   networkParameters?: NetworkParameters;
   humanityCheckLocation?: 'session' | 'local';
+  useWindowParameters?: boolean;
   additionalTrackingKeys?: string[];
 }
 
@@ -314,6 +316,10 @@ export interface ItemTrackedPurchase extends ItemTracked {
 
 export interface Question {
   question: string;
+}
+
+export interface FollowUpQuestion {
+  value: string;
 }
 
 export interface TimeSpan {

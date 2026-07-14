@@ -49,6 +49,8 @@
     "testdata",
     "Bytespider",
     "Timespans",
-    "googlequicksearchbox"
+    "googlequicksearchbox",
+    "cnstrc",
+    "iife"
   ]
 }

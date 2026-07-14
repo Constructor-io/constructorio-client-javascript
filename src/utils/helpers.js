@@ -393,6 +393,54 @@ const utils = {
     return filtered;
   },
 
+  applyWindowParameterGetters: (options) => {
+    if (!utils.canUseDOM()) {
+      return;
+    }
+
+    const defineWindowGetter = (key, windowKey, validate) => {
+      const initial = options[key] || undefined;
+      let backing = initial;
+
+      Object.defineProperty(options, key, {
+        get() {
+          if (validate(backing)) return backing;
+          const windowValue = (window.cnstrc && window.cnstrc[windowKey]) || window[`cnstrc${windowKey.charAt(0).toUpperCase()}${windowKey.slice(1)}`];
+          const validated = validate(windowValue) ? windowValue : undefined;
+          return validated;
+        },
+        set(value) { backing = value; },
+        enumerable: true,
+        configurable: true,
+      });
+    };
+
+    defineWindowGetter('userId', 'userId', (v) => typeof v === 'string' && v.length > 0);
+
+    defineWindowGetter('segments', 'userSegments', (v) => Array.isArray(v) && v.length > 0);
+
+    // testCells needs special handling for validation through toValidTestCells
+    const initialTestCells = options.testCells || undefined;
+    let backingTestCells = initialTestCells;
+
+    Object.defineProperty(options, 'testCells', {
+      get() {
+        if (backingTestCells && Object.keys(backingTestCells).length > 0) {
+          return backingTestCells;
+        }
+        const windowTestCells = (window.cnstrc && window.cnstrc.testCells) || window.cnstrcTestCells;
+        const validated = utils.toValidTestCells(windowTestCells);
+        if (validated && Object.keys(validated).length > 0) {
+          return validated;
+        }
+        return undefined;
+      },
+      set(value) { backingTestCells = value; },
+      enumerable: true,
+      configurable: true,
+    });
+  },
+
   getBehaviorUrl: (mediaServiceUrl) => {
     const baseUrl = new URL(mediaServiceUrl);
 

@@ -27,7 +27,10 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
   let cleanup;
 
   if (bundled) {
-    jsdomOptions.src = fs.readFileSync(`./dist/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.js`, 'utf-8');
+    const bundlePath = process.env.BUNDLED_VARIANT === 'esm'
+      ? `./dist/test-only/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.iife.js`
+      : `./dist/constructorio-client-javascript-${process.env.PACKAGE_VERSION}.js`;
+    jsdomOptions.src = fs.readFileSync(bundlePath, 'utf-8');
   }
 
   beforeEach(() => {
@@ -381,6 +384,9 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
         expect(requestedUrlParams).to.have.property('s');
         expect(requestedUrlParams).to.have.property('c').to.equal(clientVersion);
         expect(requestedUrlParams).to.have.property('_dt');
+        if (res.quiz_asa_results_message !== undefined) {
+          expect(res.quiz_asa_results_message).to.be.a('string');
+        }
       });
     });
 

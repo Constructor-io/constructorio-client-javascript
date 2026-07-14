@@ -12,6 +12,7 @@ const helpers = require('./utils/helpers');
 const { default: packageVersion } = require('./version');
 const Quizzes = require('./modules/quizzes');
 const Agent = require('./modules/agent');
+const Pia = require('./modules/pia');
 const Assistant = require('./modules/assistant');
 
 // Compute package version string
@@ -59,6 +60,7 @@ class ConstructorIO {
    * @param {object} [parameters.networkParameters] - Parameters relevant to network requests
    * @param {number} [parameters.networkParameters.timeout] - Request timeout (in milliseconds) - may be overridden within individual method calls
    * @param {string} [parameters.humanityCheckLocation='session'] - Storage location for the humanity check flag ('session' for sessionStorage, 'local' for localStorage)
+   * @param {boolean} [parameters.useWindowParameters=false] - Indicates if window globals (cnstrc/cnstrcUserId/cnstrcTestCells/cnstrcUserSegments) should be used as fallback for userId, testCells, and segments
    * @param {string[]} [parameters.additionalTrackingKeys] - Additional API keys that each receive a duplicate of every tracking event. Events are always sent to the primary `apiKey` and, in addition, to every key in this array.
    * @property {object} search - Interface to {@link module:search}
    * @property {object} browse - Interface to {@link module:browse}
@@ -67,6 +69,7 @@ class ConstructorIO {
    * @property {object} tracker - Interface to {@link module:tracker}
    * @property {object} quizzes - Interface to {@link module:quizzes}
    * @property {object} agent - Interface to {@link module:agent}
+   * @property {object} agent.pia - Interface to {@link module:pia}
    * @property {object} assistant - Interface to {@link module:assistant} @deprecated This property is deprecated and will be removed in a future version. Use the agent property instead.
    * @returns {class}
    */
@@ -94,6 +97,7 @@ class ConstructorIO {
       beaconMode,
       networkParameters,
       humanityCheckLocation,
+      useWindowParameters,
       additionalTrackingKeys,
     } = options;
 
@@ -126,6 +130,7 @@ class ConstructorIO {
       apiKey,
       version: versionFromOptions || versionFromGlobal || computePackageVersion(),
       serviceUrl: helpers.addHTTPSToString(normalizedServiceUrl, allowHttpServiceUrl) || 'https://ac.cnstrc.com',
+      allowHttpServiceUrl,
       quizzesServiceUrl: (quizzesServiceUrl && quizzesServiceUrl.replace(/\/$/, '')) || 'https://quizzes.cnstrc.com',
       agentServiceUrl: (agentServiceUrl && agentServiceUrl.replace(/\/$/, '')) || 'https://agent.cnstrc.com',
       assistantServiceUrl: (assistantServiceUrl && assistantServiceUrl.replace(/\/$/, '')) || 'https://assistant.cnstrc.com',
@@ -143,8 +148,13 @@ class ConstructorIO {
       beaconMode: (beaconMode === false) ? false : true, // Defaults to 'true',
       networkParameters: networkParameters || {},
       humanityCheckLocation: humanityCheckLocation || 'session',
+      useWindowParameters: useWindowParameters === true,
       additionalTrackingKeys,
     };
+
+    if (useWindowParameters === true) {
+      helpers.applyWindowParameterGetters(this.options);
+    }
 
     // Expose global modules
     this.search = new Search(this.options);
@@ -154,6 +164,7 @@ class ConstructorIO {
     this.tracker = new Tracker(this.options);
     this.quizzes = new Quizzes(this.options);
     this.agent = new Agent(this.options);
+    this.agent.pia = new Pia(this.options);
     this.assistant = new Assistant(this.options);
 
     // Dispatch initialization event
@@ -170,10 +181,11 @@ class ConstructorIO {
    * @param {number} [options.sessionId] - Session ID - Will only be set in DOM-less environments
    * @param {string} [options.userId] - User ID
    * @param {boolean} [options.sendTrackingEvents] - Indicates if tracking events should be dispatched
+   * @param {string} [options.serviceUrl] - API URL endpoint (normalized to include an HTTPS protocol and strip a trailing slash)
    */
   setClientOptions(options) {
     if (Object.keys(options).length) {
-      const { apiKey, segments, testCells, sessionId, userId, sendTrackingEvents } = options;
+      const { apiKey, segments, testCells, sessionId, userId, sendTrackingEvents, serviceUrl } = options;
 
       if (apiKey) {
         this.options.apiKey = apiKey;
@@ -192,14 +204,18 @@ class ConstructorIO {
         this.tracker.requests.sendTrackingEvents = sendTrackingEvents;
       }
 
-      // Set Session ID in dom-less environments only
       if (sessionId && !helpers.canUseDOM()) {
         this.options.sessionId = sessionId;
       }
 
-      // If User ID is passed
       if ('userId' in options) {
         this.options.userId = userId;
+      }
+
+      if (typeof serviceUrl === 'string' && serviceUrl.length) {
+        const normalizedServiceUrl = serviceUrl.replace(/\/$/, '');
+        const formattedServiceUrl = helpers.addHTTPSToString(normalizedServiceUrl, this.options.allowHttpServiceUrl);
+        this.options.serviceUrl = formattedServiceUrl || this.options.serviceUrl;
       }
     }
   }

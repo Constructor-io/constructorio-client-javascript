@@ -39,6 +39,7 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
   afterEach(() => {
     delete global.CLIENT_VERSION;
     delete window.CLIENT_VERSION;
+    delete window.cnstrc;
     cleanup();
 
     fetchSpy = null;
@@ -149,6 +150,67 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
         expect(res).to.have.property('response').to.be.an('object');
         expect(res).to.have.property('result_id').to.be.an('string');
         expect(requestedUrlParams).to.have.property('ui').to.equal(userId);
+        done();
+      });
+    });
+
+    it('Should include window global userId when useWindowParameters is true and options.userId is absent', (done) => {
+      window.cnstrc = { userId: 'window-user-id' };
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        useWindowParameters: true,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResults(filterName, filterValue).then(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        expect(requestedUrlParams).to.have.property('ui').to.equal('window-user-id');
+        done();
+      });
+    });
+
+    it('Should include window global testCells when useWindowParameters is true and options.testCells is absent', (done) => {
+      window.cnstrc = { testCells: { experiment: 'variation_a' } };
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        useWindowParameters: true,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResults(filterName, filterValue).then(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        expect(requestedUrlParams).to.have.property('ef-experiment').to.equal('variation_a');
+        done();
+      });
+    });
+
+    it('Should include window global userSegments when useWindowParameters is true and options.segments is absent', (done) => {
+      window.cnstrc = { userSegments: ['vip', 'beta'] };
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        useWindowParameters: true,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResults(filterName, filterValue).then(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        expect(requestedUrlParams).to.have.property('us').to.deep.equal(['vip', 'beta']);
+        done();
+      });
+    });
+
+    it('Should not include window globals when useWindowParameters is false', (done) => {
+      window.cnstrc = { userId: 'window-user-id', testCells: { exp: 'var' }, userSegments: ['seg'] };
+      const { browse } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+      });
+
+      browse.getBrowseResults(filterName, filterValue).then(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+        expect(requestedUrlParams).to.not.have.property('ui');
+        expect(requestedUrlParams).to.not.have.property('ef-exp');
+        expect(requestedUrlParams).to.not.have.property('us');
         done();
       });
     });

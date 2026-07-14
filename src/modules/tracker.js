@@ -676,6 +676,7 @@ class Tracker {
    * @param {object[]} parameters.items - List of product item unique identifiers in search results listing
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - Current page of search results
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
    * @param {string} [parameters.resultId] - Browse result identifier (returned in response from Constructor)
    * @param {object} [parameters.selectedFilters] - Selected filters
    * @param {string} [parameters.sortOrder] - Sort order ('ascending' or 'descending')
@@ -716,6 +717,8 @@ class Tracker {
           items = customer_ids || item_ids,
           result_page,
           resultPage = result_page,
+          result_offset,
+          resultOffset = result_offset,
           result_id,
           resultId = result_id,
           sort_order,
@@ -749,6 +752,7 @@ class Tracker {
           result_count: resultCount,
           items: transformedItems,
           result_page: resultPage,
+          result_offset: resultOffset,
           result_id: resultId,
           sort_order: sortOrder,
           sort_by: sortBy,
@@ -796,6 +800,7 @@ class Tracker {
    * @param {string} [parameters.resultId] - Search result identifier (returned in response from Constructor)
    * @param {number} [parameters.resultCount] - Number of results in total
    * @param {number} [parameters.resultPage] - Current page of results
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
    * @param {string} [parameters.resultPositionOnPage] - Position of selected items on page
    * @param {string} [parameters.numResultsPerPage] - Number of results per page
    * @param {object} [parameters.selectedFilters] - Key - Value map of selected filters
@@ -841,6 +846,8 @@ class Tracker {
           resultCount = num_results || result_count,
           result_page,
           resultPage = result_page,
+          result_offset,
+          resultOffset = result_offset,
           result_position_on_page,
           resultPositionOnPage = result_position_on_page,
           num_results_per_page,
@@ -861,6 +868,7 @@ class Tracker {
           result_id: resultId,
           result_count: resultCount,
           result_page: resultPage,
+          result_offset: resultOffset,
           result_position_on_page: resultPositionOnPage,
           num_results_per_page: numResultsPerPage,
           selected_filters: selectedFilters,
@@ -1240,6 +1248,7 @@ class Tracker {
    * @param {object[]} [parameters.items] - List of Product Item Objects
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - Page number of results
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
    * @param {string} [parameters.resultId] - Recommendation result identifier (returned in response from Constructor)
    * @param {string} [parameters.section="Products"] - Results section
    * @param {object} [parameters.analyticsTags] - Pass additional analytics data
@@ -1270,6 +1279,8 @@ class Tracker {
         result_count,
         result_page,
         resultPage = result_page,
+        result_offset,
+        resultOffset = result_offset,
         result_id,
         resultId = result_id,
         section,
@@ -1290,6 +1301,10 @@ class Tracker {
 
       if (!helpers.isNil(resultPage)) {
         bodyParams.result_page = resultPage;
+      }
+
+      if (!helpers.isNil(resultOffset)) {
+        bodyParams.result_offset = resultOffset;
       }
 
       if (resultId) {
@@ -1588,6 +1603,7 @@ class Tracker {
    * @param {string} [parameters.resultId] - Recommendation result identifier (returned in response from Constructor)
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - Page number of results
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
    * @param {number} [parameters.resultPositionOnPage] - Position of result on page
    * @param {number} [parameters.numResultsPerPage] - Number of results on page
    * @param {object} [parameters.analyticsTags] - Pass additional analytics data
@@ -1630,6 +1646,8 @@ class Tracker {
         resultCount = result_count,
         result_page,
         resultPage = result_page,
+        result_offset,
+        resultOffset = result_offset,
         result_position_on_page,
         resultPositionOnPage = result_position_on_page,
         num_results_per_page,
@@ -1666,6 +1684,10 @@ class Tracker {
 
       if (!helpers.isNil(resultPage)) {
         bodyParams.result_page = resultPage;
+      }
+
+      if (!helpers.isNil(resultOffset)) {
+        bodyParams.result_offset = resultOffset;
       }
 
       if (!helpers.isNil(resultPositionOnPage)) {
@@ -1744,6 +1766,7 @@ class Tracker {
    * @param {string} [parameters.section="Products"] - Index section
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - Page number of results
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
    * @param {string} [parameters.resultId] - Browse result identifier (returned in response from Constructor)
    * @param {object} [parameters.selectedFilters] - Selected filters
    * @param {string} [parameters.sortOrder] - Sort order ('ascending' or 'descending')
@@ -1779,6 +1802,8 @@ class Tracker {
         result_count,
         result_page,
         resultPage = result_page,
+        result_offset,
+        resultOffset = result_offset,
         result_id,
         resultId = result_id,
         selected_filters,
@@ -1807,6 +1832,10 @@ class Tracker {
 
       if (!helpers.isNil(resultPage)) {
         bodyParams.result_page = resultPage;
+      }
+
+      if (!helpers.isNil(resultOffset)) {
+        bodyParams.result_offset = resultOffset;
       }
 
       if (resultId) {
@@ -1879,6 +1908,7 @@ class Tracker {
    * @param {string} [parameters.resultId] - Browse result identifier (returned in response from Constructor)
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - Page number of results
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
    * @param {number} [parameters.resultPositionOnPage] - Position of clicked item
    * @param {number} [parameters.numResultsPerPage] - Number of results shown
    * @param {object} [parameters.selectedFilters] -  Selected filters
@@ -1922,6 +1952,8 @@ class Tracker {
         resultCount = result_count,
         result_page,
         resultPage = result_page,
+        result_offset,
+        resultOffset = result_offset,
         result_position_on_page,
         resultPositionOnPage = result_position_on_page,
         num_results_per_page,
@@ -1962,6 +1994,10 @@ class Tracker {
 
       if (!helpers.isNil(resultPage)) {
         bodyParams.result_page = resultPage;
+      }
+
+      if (!helpers.isNil(resultOffset)) {
+        bodyParams.result_offset = resultOffset;
       }
 
       if (!helpers.isNil(resultPositionOnPage)) {
@@ -2143,6 +2179,7 @@ class Tracker {
    * @param {string} [parameters.itemName] - Product item name
    * @param {string} [parameters.variationId] - Product item variation unique identifier
    * @param {string} [parameters.section="Products"] - Index section
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites
    * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -2170,6 +2207,8 @@ class Tracker {
         variation_id,
         variationId = variation_id,
         section = 'Products',
+        result_offset,
+        resultOffset = result_offset,
         analyticsTags,
       } = parameters;
       if (itemId) {
@@ -2182,6 +2221,10 @@ class Tracker {
 
         if (variationId) {
           bodyParams.variation_id = variationId;
+        }
+
+        if (!helpers.isNil(resultOffset)) {
+          bodyParams.result_offset = resultOffset;
         }
 
         if (analyticsTags) {
@@ -2222,6 +2265,7 @@ class Tracker {
    * @param {string} [parameters.section='Products'] - Index section
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - The page of the results
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
    * @param {string} [parameters.resultId] - Quiz result identifier (returned in response from Constructor)
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -2259,6 +2303,8 @@ class Tracker {
         resultId = result_id,
         result_page,
         resultPage = result_page,
+        result_offset,
+        resultOffset = result_offset,
         items,
       } = parameters;
       const queryParams = {};
@@ -2318,6 +2364,13 @@ class Tracker {
         bodyParams.result_page = resultPage;
       }
 
+      if (!helpers.isNil(resultOffset)) {
+        if (typeof resultOffset !== 'number') {
+          return new Error('"resultOffset" must be a number');
+        }
+        bodyParams.result_offset = resultOffset;
+      }
+
       const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
       const requestMethod = 'POST';
       const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
@@ -2352,6 +2405,7 @@ class Tracker {
    * @param {string} [parameters.section='Products'] - Index section
    * @param {number} [parameters.resultCount] - Total number of results
    * @param {number} [parameters.resultPage] - The page of the results
+   * @param {number} [parameters.resultOffset] - Current offset of results, used on scrolling sites. Cannot be used with `resultPage`
    * @param {string} [parameters.resultId] - Quiz result identifier (returned in response from Constructor)
    * @param {number} [parameters.resultPositionOnPage] - Position of clicked item
    * @param {number} [parameters.numResultsPerPage] - Number of results shown
@@ -2393,6 +2447,8 @@ class Tracker {
         resultId = result_id,
         result_page,
         resultPage = result_page,
+        result_offset,
+        resultOffset = result_offset,
         num_results_per_page,
         numResultsPerPage = num_results_per_page,
         result_position_on_page,
@@ -2471,6 +2527,13 @@ class Tracker {
           return new Error('"resultPage" must be a number');
         }
         bodyParams.result_page = resultPage;
+      }
+
+      if (!helpers.isNil(resultOffset)) {
+        if (typeof resultOffset !== 'number') {
+          return new Error('"resultOffset" must be a number');
+        }
+        bodyParams.result_offset = resultOffset;
       }
 
       if (!helpers.isNil(numResultsPerPage)) {
@@ -3220,6 +3283,7 @@ class Tracker {
    * @param {array.<{start: string | undefined,
    * end: string | undefined}>} parameters.viewTimespans - List of timestamp pairs in ISO_8601 format
    * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3260,6 +3324,7 @@ class Tracker {
         itemName,
         variationId,
         viewTimespans,
+        threadId,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3269,6 +3334,10 @@ class Tracker {
         variation_id: variationId,
         view_timespans: viewTimespans,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       if (section) {
         queryParams.section = section;
@@ -3304,6 +3373,7 @@ class Tracker {
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are on
    * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3333,6 +3403,7 @@ class Tracker {
         itemId,
         itemName,
         variationId,
+        threadId,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3341,6 +3412,10 @@ class Tracker {
         item_name: itemName,
         variation_id: variationId,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       if (section) {
         queryParams.section = section;
@@ -3375,6 +3450,7 @@ class Tracker {
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are on
    * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3398,6 +3474,7 @@ class Tracker {
         itemId,
         itemName,
         variationId,
+        threadId,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3405,6 +3482,10 @@ class Tracker {
         item_name: itemName,
         variation_id: variationId,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       if (section) {
         queryParams.section = section;
@@ -3439,6 +3520,7 @@ class Tracker {
    * @param {string} parameters.itemId - Product id whose page we are on
    * @param {string} parameters.itemName - Product name whose page we are on
    * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3462,6 +3544,7 @@ class Tracker {
         itemId,
         itemName,
         variationId,
+        threadId,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3469,6 +3552,10 @@ class Tracker {
         item_name: itemName,
         variation_id: variationId,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       if (section) {
         queryParams.section = section;
@@ -3504,6 +3591,7 @@ class Tracker {
    * @param {string} parameters.itemName - Product name whose page we are on
    * @param {string} parameters.question - Question a user clicked on
    * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3529,6 +3617,7 @@ class Tracker {
         itemName,
         variationId,
         question,
+        threadId,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3537,6 +3626,10 @@ class Tracker {
         variation_id: variationId,
         question,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       if (section) {
         queryParams.section = section;
@@ -3572,6 +3665,7 @@ class Tracker {
    * @param {string} parameters.itemName - Product name whose page we are on
    * @param {string} parameters.question - Question a user submitted
    * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3597,6 +3691,7 @@ class Tracker {
         itemName,
         variationId,
         question,
+        threadId,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3605,6 +3700,10 @@ class Tracker {
         variation_id: variationId,
         question,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       if (section) {
         queryParams.section = section;
@@ -3641,14 +3740,17 @@ class Tracker {
    * @param {string} parameters.question - Question a user submitted
    * @param {string} parameters.answerText - Answer text of the question
    * @param {string} [parameters.qnaResultId] - Answer result id returned
+   * @param {Array} [parameters.items] - Array of recommended items shown with the answer (max 100)
+   * @param {Array} [parameters.followUpQuestions] - Follow-up questions displayed with the answer
    * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description User viewed the answer provided by the product insights agent
    * @example
-   * constructorio.tracker.trackProductInsightsAgentAnswerView({
+   * constructorio.tracker.trackProductInsightsAgentAnswerView(
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
@@ -3671,6 +3773,9 @@ class Tracker {
         question,
         answerText,
         qnaResultId,
+        items,
+        followUpQuestions,
+        threadId,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3681,6 +3786,18 @@ class Tracker {
         answer_text: answerText,
         qna_result_id: qnaResultId,
       };
+
+      if (items && Array.isArray(items)) {
+        bodyParams.items = items.map((item) => helpers.toSnakeCaseKeys(item, false));
+      }
+
+      if (followUpQuestions && Array.isArray(followUpQuestions)) {
+        bodyParams.follow_up_questions = followUpQuestions.map((q) => helpers.toSnakeCaseKeys(q, false));
+      }
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       if (section) {
         queryParams.section = section;
@@ -3717,13 +3834,14 @@ class Tracker {
    * @param {string} parameters.feedbackLabel - Feedback value: either "thumbs_up" or "thumbs_down"
    * @param {string} [parameters.qnaResultId] - Answer result id returned
    * @param {string} [parameters.variationId] - Variation id whose page we are on
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description A user provided feedback on an answers usefulness
    * @example
-   * constructorio.tracker.trackProductInsightsAgentAnswerFeedback({
+   * constructorio.tracker.trackProductInsightsAgentAnswerFeedback(
    *   {
    *     'itemId': '1',
    *     'itemName': 'item1',
@@ -3744,6 +3862,7 @@ class Tracker {
         variationId,
         feedbackLabel,
         qnaResultId,
+        threadId,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3753,6 +3872,112 @@ class Tracker {
         feedback_label: feedbackLabel,
         qna_result_id: qnaResultId,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
+
+      if (section) {
+        queryParams.section = section;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters is a required parameter of type object');
+  }
+
+  /**
+   * Send product insights agent result click event
+   *
+   * @function trackProductInsightsAgentResultClick
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.itemId - Product id of the clicked recommendation
+   * @param {string} parameters.itemName - Product name of the clicked recommendation
+   * @param {string} parameters.question - Question that produced the answer containing this recommendation
+   * @param {string} parameters.seedItemId - Product id of the page the PIA widget is on
+   * @param {number} [parameters.position] - Position of the clicked item in the list
+   * @param {string} [parameters.seedItemName] - Product name of the page the PIA widget is on
+   * @param {string} [parameters.seedVariationId] - Variation id of the page the PIA widget is on
+   * @param {string} [parameters.qnaResultId] - Answer result id linking the click to a specific answer
+   * @param {string} [parameters.variationId] - Variation id of the clicked recommendation
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User clicked a recommended product in the PIA widget
+   * @example
+   * constructorio.tracker.trackProductInsightsAgentResultClick(
+   *   {
+   *     'itemId': '10',
+   *     'itemName': 'rec1',
+   *     'question': 'Why choose this?',
+   *     'seedItemId': '1',
+   *     'position': 1,
+   *   },
+   * );
+   */
+  trackProductInsightsAgentResultClick(parameters, networkParameters = {}) {
+    // Ensure parameters are provided (required)
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/product_insights_agent_result_click?`;
+      const {
+        section,
+        itemId,
+        itemName,
+        variationId,
+        position,
+        question,
+        seedItemId,
+        seedItemName,
+        seedVariationId,
+        qnaResultId,
+        threadId,
+      } = parameters;
+      const queryParams = {};
+      const bodyParams = {
+        item_id: itemId,
+        item_name: itemName,
+        variation_id: variationId,
+        question,
+        seed_item_id: seedItemId,
+      };
+
+      if (!helpers.isNil(position)) {
+        bodyParams.position = position;
+      }
+
+      if (seedItemName) {
+        bodyParams.seed_item_name = seedItemName;
+      }
+
+      if (seedVariationId) {
+        bodyParams.seed_variation_id = seedVariationId;
+      }
+
+      if (qnaResultId) {
+        bodyParams.qna_result_id = qnaResultId;
+      }
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       if (section) {
         queryParams.section = section;

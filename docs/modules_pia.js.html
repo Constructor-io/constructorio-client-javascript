@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>assistant - Documentation</title>
+    <title>modules/pia.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -37,368 +37,204 @@
 
 <div id="main">
     
-    <h1 class="page-title">assistant</h1>
+    <h1 class="page-title">modules/pia.js</h1>
     
 
     
 
 
 
-
-<section>
-
-<header>
     
-        
-    
-</header>
-
-<article>
-    
-        <div class="container-overview">
-        
-            
-
-            
-        
-        </div>
-    
-
-    
-
-    
-
-    
-    
-    
-
-     
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    <h4 class="name" id="~getAssistantResultsStream"><span class="type-signature type-signature-inner">(inner) </span>getAssistantResultsStream<span class="signature">(intent, parameters<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {ReadableStream}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>Retrieve a stream of assistant results from Constructor.io API</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_assistant.js.html">modules/assistant.js</a>, <a href="modules_assistant.js.html#line15">line 15</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <dt class="important tag-deprecated">Deprecated:</dt><dd><ul class="dummy"><li>Use getAssistantResultsStream from the Agent module instead.</li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-    <h5 class="h5-examples">Example</h5>
-    
-    <pre class="prettyprint"><code>const readableStream = constructorio.assistant.getAssistantResultsStream('I want to get shoes', {
-    domain: "nike_sportswear",
-});
-const reader = readableStream.getReader();
-const { value, done } = await reader.read();</code></pre>
-
-
-
-
-    <h5 class="h5-parameters">Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>intent</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Intent to use to perform an intent based recommendations</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>parameters</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Additional parameters to refine result set
-                <h6>Properties</h6>
-                
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>domain</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">domain name e.g. swimming sports gear, groceries</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>numResultsPerPage</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">The total number of results to return</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5 class="h5-returns">Returns:</h5>
-
-        
-<div class="param-desc">
-    Returns a ReadableStream.
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">ReadableStream</span>
-
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-    
-
-    
-
-    
-</article>
-
-</section>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* eslint-disable object-curly-newline, no-underscore-dangle */
+const EventDispatcher = require('../utils/event-dispatcher');
+const helpers = require('../utils/helpers');
+
+// Create URL from supplied itemId and parameters
+function createPiaUrl(itemId, parameters, options, questionPath) {
+  const {
+    apiKey,
+    clientId,
+    sessionId,
+    segments,
+    userId,
+    version,
+    agentServiceUrl,
+    assistantServiceUrl,
+  } = options;
+  const serviceUrl = agentServiceUrl || assistantServiceUrl;
+  let queryParams = { c: version };
+
+  queryParams.key = apiKey;
+  queryParams.i = clientId;
+  queryParams.s = sessionId;
+
+  // Validate item id is provided
+  if (!itemId || typeof itemId !== 'string') {
+    throw new Error('itemId is a required parameter of type string');
+  }
+
+  queryParams.item_id = itemId;
+
+  // Pull user segments from options
+  if (segments &amp;&amp; segments.length) {
+    queryParams.us = segments;
+  }
+
+  // Pull user id from options and ensure string
+  if (userId) {
+    queryParams.ui = String(userId);
+  }
+
+  if (parameters) {
+    const { threadId, variationId, numResults } = parameters;
+
+    if (threadId) {
+      queryParams.thread_id = threadId;
+    }
+
+    if (variationId) {
+      queryParams.variation_id = variationId;
+    }
+
+    if (!helpers.isNil(numResults)) {
+      queryParams.num_results = numResults;
+    }
+  }
+
+  queryParams._dt = Date.now();
+  queryParams = helpers.cleanParams(queryParams);
+
+  const queryString = helpers.stringify(queryParams);
+
+  return `${serviceUrl}/v1/item_questions${questionPath}?${queryString}`;
+}
+
+/**
+ * Interface to Product Insights Agent (PIA) related API calls
+ *
+ * @module pia
+ * @inner
+ * @returns {object}
+ */
+class Pia {
+  constructor(options) {
+    this.options = options || {};
+    this.eventDispatcher = new EventDispatcher(options.eventDispatcher);
+  }
+
+  /**
+   * Retrieve suggested questions for an item
+   *
+   * @function getSuggestedQuestions
+   * @description Retrieve suggested questions for a product from Constructor.io API
+   * @param {string} itemId - The identifier of the item
+   * @param {object} [parameters] - Additional parameters to refine result set
+   * @param {string} [parameters.threadId] - Thread ID for conversation context (UUID)
+   * @param {string} [parameters.variationId] - Variation ID of the item
+   * @param {number} [parameters.numResults] - Number of suggested questions to return
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {Promise}
+   * @example
+   * constructorio.agent.pia.getSuggestedQuestions('item-123', {
+   *    variationId: 'variation-456',
+   *    numResults: 3,
+   * });
+   */
+  getSuggestedQuestions(itemId, parameters, networkParameters = {}) {
+    let requestUrl;
+    const { fetch } = this.options;
+    let signal;
+
+    if (typeof AbortController === 'function') {
+      const controller = new AbortController();
+
+      signal = controller &amp;&amp; controller.signal;
+
+      helpers.applyNetworkTimeout(this.options, networkParameters, controller);
+    }
+
+    try {
+      requestUrl = createPiaUrl(itemId, parameters, this.options, '');
+    } catch (e) {
+      return Promise.reject(e);
+    }
+
+    return fetch(requestUrl, { signal })
+      .then(helpers.convertResponseToJson)
+      .then((json) => {
+        if (json.questions) {
+          this.eventDispatcher.queue('pia.getSuggestedQuestions.completed', json);
+
+          return json;
+        }
+
+        throw new Error('getSuggestedQuestions response data is malformed');
+      });
+  }
+
+  /**
+   * Retrieve an answer for a question about an item
+   *
+   * @function getAnswerResults
+   * @description Retrieve an answer to a product question from Constructor.io API
+   * @param {string} itemId - The identifier of the item
+   * @param {string} question - The question to ask about the item
+   * @param {object} [parameters] - Additional parameters to refine result set
+   * @param {string} [parameters.threadId] - Thread ID for conversation context (UUID)
+   * @param {string} [parameters.variationId] - Variation ID of the item
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {Promise}
+   * @example
+   * constructorio.agent.pia.getAnswerResults('item-123', 'What material is this made of?', {
+   *    threadId: '550e8400-e29b-41d4-a716-446655440000',
+   * });
+   */
+  getAnswerResults(itemId, question, parameters, networkParameters = {}) {
+    let requestUrl;
+    const { fetch } = this.options;
+    let signal;
+
+    if (!question || typeof question !== 'string') {
+      return Promise.reject(new Error('question is a required parameter of type string'));
+    }
+
+    if (typeof AbortController === 'function') {
+      const controller = new AbortController();
+
+      signal = controller &amp;&amp; controller.signal;
+
+      helpers.applyNetworkTimeout(this.options, networkParameters, controller);
+    }
+
+    try {
+      const encodedQuestion = helpers.encodeURIComponentRFC3986(helpers.trimNonBreakingSpaces(question));
+      requestUrl = createPiaUrl(itemId, parameters, this.options, `/${encodedQuestion}/answer`);
+    } catch (e) {
+      return Promise.reject(e);
+    }
+
+    return fetch(requestUrl, { signal })
+      .then(helpers.convertResponseToJson)
+      .then((json) => {
+        if (json.qna_result_id) {
+          this.eventDispatcher.queue('pia.getAnswerResults.completed', json);
+
+          return json;
+        }
+
+        throw new Error('getAnswerResults response data is malformed');
+      });
+  }
+}
+
+module.exports = Pia;
+</code></pre>
+        </article>
+    </section>
 
 
 

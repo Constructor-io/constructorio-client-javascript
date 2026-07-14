@@ -41,6 +41,10 @@ jobs:
           # Also create a latest version for easy access
           cp dist/constructorio-client-javascript-$VERSION.js s3_dist/latest.js
 
+          # Modern ESM bundle
+          cp dist/esm/constructorio-client-javascript-$VERSION.esm.js s3_dist/$VERSION.esm.js
+          cp dist/esm/constructorio-client-javascript-$VERSION.esm.js s3_dist/latest.esm.js
+
           # Sync to S3 with appropriate caching and permissions
           aws s3 sync s3_dist s3://constructor-frontend-prod/sdk/client-javascript --cache-control 'public, max-age=31536000, immutable' --acl 'public-read'
 

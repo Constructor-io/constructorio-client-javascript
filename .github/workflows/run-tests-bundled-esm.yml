@@ -1,10 +1,10 @@
-name: Run tests - Bundled
+name: Run tests - Bundled ESM
 on:
   pull_request:
     branches:
       - "**"
 concurrency:
-  group: run-tests-bundled-${{ github.head_ref }}
+  group: run-tests-bundled-esm-${{ github.head_ref }}
   cancel-in-progress: true
 jobs:
   build:
@@ -22,9 +22,9 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Run tests
-        run: npm run test:bundled:parallel
+        run: npm run test:bundled:esm:parallel
         env:
           TEST_REQUEST_API_KEY: ${{ secrets.TEST_REQUEST_API_KEY }}
-          TEST_MEDIA_REQUEST_API_KEY: ${{ secrets.TEST_MEDIA_REQUEST_API_KEY }}
           TEST_PIA_REQUEST_API_KEY: ${{ secrets.TEST_PIA_REQUEST_API_KEY }}
+          TEST_MEDIA_REQUEST_API_KEY: ${{ secrets.TEST_MEDIA_REQUEST_API_KEY }}
           SKIP_NETWORK_TIMEOUT_TESTS: true

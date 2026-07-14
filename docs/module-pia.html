@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>recommendations - Documentation</title>
+    <title>pia - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -37,7 +37,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">recommendations</h1>
+    <h1 class="page-title">pia</h1>
     
 
     
@@ -60,7 +60,7 @@
         <div class="container-overview">
         
             
-                <div class="description usertext">Interface to recommendations related API calls</div>
+                <div class="description usertext">Interface to Product Insights Agent (PIA) related API calls</div>
             
 
             
@@ -72,13 +72,13 @@
 <dl class="details">
     
     <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>Interface to recommendations related API calls</li></ul></dd>
+    <dd class="tag-description"><ul class="dummy"><li>Interface to Product Insights Agent (PIA) related API calls</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_recommendations.js.html">modules/recommendations.js</a>, <a href="modules_recommendations.js.html#line120">line 120</a>
+        <a href="modules_pia.js.html">modules/pia.js</a>, <a href="modules_pia.js.html#line65">line 65</a>
     </li></ul></dd>
     
 
@@ -188,7 +188,7 @@
 
     
 
-    <h4 class="name" id="~getRecommendations"><span class="type-signature type-signature-inner">(inner) </span>getRecommendations<span class="signature">(podId, parameters<span class="signature-attributes">opt</span>, networkParameters<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id="~getAnswerResults"><span class="type-signature type-signature-inner">(inner) </span>getAnswerResults<span class="signature">(itemId, question, parameters<span class="signature-attributes">opt</span>, networkParameters<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
 
     
 
@@ -198,13 +198,13 @@
 <dl class="details">
     
     <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>Retrieve recommendation results from Constructor.io API</li></ul></dd>
+    <dd class="tag-description"><ul class="dummy"><li>Retrieve an answer to a product question from Constructor.io API</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_recommendations.js.html">modules/recommendations.js</a>, <a href="modules_recommendations.js.html#line133">line 133</a>
+        <a href="modules_pia.js.html">modules/pia.js</a>, <a href="modules_pia.js.html#line129">line 129</a>
     </li></ul></dd>
     
 
@@ -235,13 +235,6 @@
     
 
     
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://docs.constructor.com/reference/recommendations-recommendation-results">https://docs.constructor.com/reference/recommendations-recommendation-results</a></li>
-        </ul>
-    </dd>
-    
 
     
 </dl>
@@ -258,11 +251,8 @@
 
     <h5 class="h5-examples">Example</h5>
     
-    <pre class="prettyprint"><code>constructorio.recommendations.getRecommendations('t-shirt-best-sellers', {
-    numResults: 5,
-    filters: {
-        size: 'medium'
-    },
+    <pre class="prettyprint"><code>constructorio.agent.pia.getAnswerResults('item-123', 'What material is this made of?', {
+   threadId: '550e8400-e29b-41d4-a716-446655440000',
 });</code></pre>
 
 
@@ -295,7 +285,7 @@
 
         <tr>
             
-                <td class="name"><code>podId</code></td>
+                <td class="name"><code>itemId</code></td>
             
 
             <td class="type">
@@ -320,7 +310,39 @@
 
             
 
-            <td class="description last">Pod identifier</td>
+            <td class="description last">The identifier of the item</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>question</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The question to ask about the item</td>
         </tr>
 
     
@@ -354,7 +376,7 @@
 
             
 
-            <td class="description last">Additional parameters to refine results
+            <td class="description last">Additional parameters to refine result set
                 <h6>Properties</h6>
                 
 
@@ -382,16 +404,13 @@
 
         <tr>
             
-                <td class="name"><code>itemIds</code></td>
+                <td class="name"><code>threadId</code></td>
             
 
             <td class="type">
             
                 
 <span class="param-type">string</span>
-|
-
-<span class="param-type">array</span>
 
 
 
@@ -412,8 +431,7 @@
 
             
 
-            <td class="description last">Item ID(s) to retrieve recommendations for (strategy specific).
-Required for variationId</td>
+            <td class="description last">Thread ID for conversation context (UUID)</td>
         </tr>
 
     
@@ -447,7 +465,405 @@ Required for variationId</td>
 
             
 
-            <td class="description last">Variation ID to retrieve recommendations for (strategy specific)</td>
+            <td class="description last">Variation ID of the item</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>networkParameters</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Parameters relevant to the network request
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>timeout</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Request timeout (in milliseconds)</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="~getSuggestedQuestions"><span class="type-signature type-signature-inner">(inner) </span>getSuggestedQuestions<span class="signature">(itemId, parameters<span class="signature-attributes">opt</span>, networkParameters<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li>Retrieve suggested questions for a product from Constructor.io API</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modules_pia.js.html">modules/pia.js</a>, <a href="modules_pia.js.html#line78">line 78</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-examples">Example</h5>
+    
+    <pre class="prettyprint"><code>constructorio.agent.pia.getSuggestedQuestions('item-123', {
+   variationId: 'variation-456',
+   numResults: 3,
+});</code></pre>
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>itemId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The identifier of the item</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>parameters</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Additional parameters to refine result set
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>threadId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Thread ID for conversation context (UUID)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>variationId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Variation ID of the item</td>
         </tr>
 
     
@@ -481,245 +897,7 @@ Required for variationId</td>
 
             
 
-            <td class="description last">The number of results to return</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>section</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">The section to return results from</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>term</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">The term to use to refine results (strategy specific)</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>filters</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Key / value mapping of filters used to refine results</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>variationsMap</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">The variations map object to aggregate variations. Please refer to https://docs.constructor.com/reference/shared-variations-mapping for details</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>preFilterExpression</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Faceting expression to scope search results. Please refer to https://docs.constructor.com/reference/configuration-collections</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>fmtOptions</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">An object containing options to format different aspects of the response. Please refer to https://docs.constructor.com/reference/v1-recommendations-get-pod-results for details</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>hiddenFields</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;string></span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Hidden metadata fields to return</td>
+            <td class="description last">Number of suggested questions to return</td>
         </tr>
 
     
