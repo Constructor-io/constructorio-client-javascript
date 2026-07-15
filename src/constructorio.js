@@ -185,7 +185,7 @@ class ConstructorIO {
    */
   setClientOptions(options) {
     if (Object.keys(options).length) {
-      const { apiKey, segments, testCells, sessionId, userId, sendTrackingEvents, serviceUrl } = options;
+      const { apiKey, segments, testCells, sessionId, userId, sendTrackingEvents, serviceUrl, additionalTrackingKeys } = options;
 
       if (apiKey) {
         this.options.apiKey = apiKey;
@@ -216,6 +216,10 @@ class ConstructorIO {
         const normalizedServiceUrl = serviceUrl.replace(/\/$/, '');
         const formattedServiceUrl = helpers.addHTTPSToString(normalizedServiceUrl, this.options.allowHttpServiceUrl);
         this.options.serviceUrl = formattedServiceUrl || this.options.serviceUrl;
+      }
+
+      if (Array.isArray(additionalTrackingKeys)) {
+        this.options.additionalTrackingKeys = additionalTrackingKeys;
       }
     }
   }
