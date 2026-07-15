@@ -431,6 +431,23 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         expect(queue[1].url).to.contain('key=valid-key');
         expect(queue[2].url).to.contain('key=another-valid-key');
       });
+
+      it('Should not duplicate events when additionalTrackingKeys contains the primary key or duplicates', () => {
+        store.session.set(humanityStorageKey, true);
+        const requests = new RequestQueue({
+          sendTrackingEvents: true,
+          trackingSendDelay: 1,
+          apiKey: 'primary-key',
+          additionalTrackingKeys: ['extra-key', 'primary-key', 'extra-key'],
+        });
+
+        requests.queue('https://ac.cnstrc.com/behavior?action=session_start&key=primary-key&_dt=123', 'POST', { action: 'session_start', key: 'primary-key' });
+
+        const queue = RequestQueue.get();
+        expect(queue).to.be.an('array').length(2);
+        expect(queue[0].url).to.contain('key=primary-key');
+        expect(queue[1].url).to.contain('key=extra-key');
+      });
     });
 
     describe('send', () => {
