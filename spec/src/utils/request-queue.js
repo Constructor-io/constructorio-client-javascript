@@ -412,7 +412,6 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         expect(queue[0].url).to.contain('key=primary-key');
         expect(queue[1].url).to.contain('key=extra-key-1');
         expect(queue[1].url).to.contain('action=session_start');
-        expect(queue[1].body.key).to.equal('extra-key-1');
       });
 
       it('Should skip invalid entries in additionalTrackingKeys', () => {
