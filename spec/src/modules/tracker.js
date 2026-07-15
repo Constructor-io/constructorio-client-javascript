@@ -17380,6 +17380,9 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           expect(firstBody.key).to.equal(testApiKey);
           expect(secondBody.key).to.equal(additionalKey);
 
+          const secondCallUrl = fetchSpy.getCall(1).args[0];
+          expect(secondCallUrl).to.not.contain(`key=${testApiKey}`);
+
           // Verify bodies are the same except for the key
           const firstBodyWithoutKey = { ...firstBody };
           const secondBodyWithoutKey = { ...secondBody };
