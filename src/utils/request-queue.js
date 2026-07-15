@@ -65,8 +65,8 @@ class RequestQueue {
         );
 
         uniqueKeys.forEach((additionalKey) => {
-          const encodedKey = helpers.encodeURIComponentRFC3986(additionalKey);
-          const swappedUrl = url.replace(`key=${encodedOriginalKey}`, `key=${encodedKey}`);
+          const encodedAdditionalKey = helpers.encodeURIComponentRFC3986(additionalKey);
+          const swappedUrl = url.replace(`key=${encodedOriginalKey}`, `key=${encodedAdditionalKey}`);
 
           queue.push({
             url: obfuscatePiiRequest(swappedUrl),
