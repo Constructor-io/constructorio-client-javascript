@@ -182,6 +182,7 @@ class ConstructorIO {
    * @param {string} [options.userId] - User ID
    * @param {boolean} [options.sendTrackingEvents] - Indicates if tracking events should be dispatched
    * @param {string} [options.serviceUrl] - API URL endpoint (normalized to include an HTTPS protocol and strip a trailing slash)
+   * @param {string[]} [options.additionalTrackingKeys] - Additional API keys that each receive a duplicate of every tracking event. Events are always sent to the primary `apiKey` and, in addition, to every key in this array.
    */
   setClientOptions(options) {
     if (Object.keys(options).length) {

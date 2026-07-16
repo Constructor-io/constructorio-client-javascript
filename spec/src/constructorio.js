@@ -918,6 +918,22 @@ if (!bundled) {
         expect(instance.options).to.have.property('sessionId').to.deep.equal(newSessionId);
       });
 
+      it('Should use additionalTrackingKeys updated via setClientOptions for subsequent events', () => {
+        const instance = new ConstructorIO({
+          apiKey: validApiKey,
+          clientId,
+          sessionId: 1,
+        });
+
+        expect(instance.options.additionalTrackingKeys).to.be.undefined;
+
+        instance.setClientOptions({
+          additionalTrackingKeys: ['extra-key-1', 'extra-key-2'],
+        });
+
+        expect(instance.options).to.have.property('additionalTrackingKeys').to.deep.equal(['extra-key-1', 'extra-key-2']);
+      });
+
       it('Should update the options for modules with new session id in a DOM-less context', () => {
         const oldSessionId = 1;
         const newSessionId = 2;
