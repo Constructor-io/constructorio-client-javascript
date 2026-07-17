@@ -918,7 +918,7 @@ if (!bundled) {
         expect(instance.options).to.have.property('sessionId').to.deep.equal(newSessionId);
       });
 
-      it('Should use additionalTrackingKeys updated via setClientOptions for subsequent events', () => {
+      it('Should use additionalTrackingKeys updated via setClientOptions in a DOM-less context', () => {
         const instance = new ConstructorIO({
           apiKey: validApiKey,
           clientId,
