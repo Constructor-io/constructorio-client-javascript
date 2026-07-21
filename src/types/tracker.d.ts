@@ -410,6 +410,7 @@ declare class Tracker {
       question: string;
       variationId?: string;
       threadId?: string;
+      questionTopic?: string;
       section?: string;
     },
     networkParameters?: NetworkParameters
@@ -422,6 +423,7 @@ declare class Tracker {
       question: string;
       variationId?: string;
       threadId?: string;
+      questionTopic?: string;
       section?: string;
     },
     networkParameters?: NetworkParameters

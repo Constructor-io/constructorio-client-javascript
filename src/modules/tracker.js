@@ -3592,6 +3592,7 @@ class Tracker {
    * @param {string} parameters.question - Question a user clicked on
    * @param {string} [parameters.variationId] - Variation id whose page we are on
    * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
+   * @param {string} [parameters.questionTopic] - Topic category of the question.
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3618,6 +3619,7 @@ class Tracker {
         variationId,
         question,
         threadId,
+        questionTopic,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3629,6 +3631,10 @@ class Tracker {
 
       if (threadId) {
         bodyParams.thread_id = threadId;
+      }
+
+      if (questionTopic) {
+        bodyParams.question_topic = questionTopic;
       }
 
       if (section) {
@@ -3666,6 +3672,7 @@ class Tracker {
    * @param {string} parameters.question - Question a user submitted
    * @param {string} [parameters.variationId] - Variation id whose page we are on
    * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
+   * @param {string} [parameters.questionTopic] - Topic category of the question
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3692,6 +3699,7 @@ class Tracker {
         variationId,
         question,
         threadId,
+        questionTopic,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3703,6 +3711,10 @@ class Tracker {
 
       if (threadId) {
         bodyParams.thread_id = threadId;
+      }
+
+      if (questionTopic) {
+        bodyParams.question_topic = questionTopic;
       }
 
       if (section) {
