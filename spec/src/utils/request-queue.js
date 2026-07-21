@@ -220,6 +220,21 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         helpers.triggerUnload();
       });
 
+      it('Should not add behavioral requests to the queue for the GoogleOther crawler even if the humanity flag is set', () => {
+        // Simulate the humanity flag being flipped by renderer-dispatched events
+        store.session.set(humanityStorageKey, true);
+        const requests = new RequestQueue(requestQueueOptions);
+
+        window.navigator.__defineGetter__('userAgent', () => 'Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.7871.124 Mobile Safari/537.36 (compatible; GoogleOther)');
+
+        requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
+        requests.queue('https://ac.cnstrc.com/behavior?action=focus');
+        requests.queue('https://ac.cnstrc.com/behavior?action=browse_result_load');
+
+        expect(RequestQueue.get()).to.be.an('array').length(0);
+        helpers.triggerUnload();
+      });
+
       it('Should obfuscate requests if PII is detected', () => {
         store.session.set(humanityStorageKey, true); // Enabled for the test to run
         const requests = new RequestQueue(requestQueueOptions);

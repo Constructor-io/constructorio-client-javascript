@@ -174,6 +174,15 @@ describe('ConstructorIO - Utils - Humanity Check', () => {
         expect(store.session.get(storageKey)).to.equal(true);
       });
 
+      it('Should return true for Google crawler user agents (GoogleOther, Storebot-Google, Google-InspectionTool, Google-CloudVertexBot)', () => {
+        ['GoogleOther', 'Storebot-Google', 'Google-InspectionTool', 'Google-CloudVertexBot'].forEach((token) => {
+          window.navigator.__defineGetter__('userAgent', () => `Mozilla/5.0 (compatible; ${token}/1.0; +http://www.google.com/bot.html)`);
+          const humanity = new HumanityCheck();
+
+          expect(humanity.isBot(), `${token} should be treated as a bot`).to.equal(true);
+        });
+      });
+
       it('Should return true if it does not detect the user is a bot user nor webdriver and the session variable has not been set yet', () => {
         const humanity = new HumanityCheck();
 
