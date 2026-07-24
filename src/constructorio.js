@@ -61,7 +61,7 @@ class ConstructorIO {
    * @param {number} [parameters.networkParameters.timeout] - Request timeout (in milliseconds) - may be overridden within individual method calls
    * @param {string} [parameters.humanityCheckLocation='session'] - Storage location for the humanity check flag ('session' for sessionStorage, 'local' for localStorage)
    * @param {boolean} [parameters.useWindowParameters=false] - Indicates if window globals (cnstrc/cnstrcUserId/cnstrcTestCells/cnstrcUserSegments) should be used as fallback for userId, testCells, and segments
-   * @param {string[]} [parameters.additionalTrackingKeys] - Additional API keys that each receive a duplicate of every tracking event. Events are always sent to the primary `apiKey` and, in addition, to every key in this array.
+   * @param {string[]|null} [parameters.additionalTrackingKeys] - Additional API keys that each receive a duplicate of every tracking event. Events are always sent to the primary `apiKey` and, in addition, to every key in this array. Pass an empty array or `null` to stop sending events to additional keys.
    * @property {object} search - Interface to {@link module:search}
    * @property {object} browse - Interface to {@link module:browse}
    * @property {object} autocomplete - Interface to {@link module:autocomplete}
@@ -149,7 +149,7 @@ class ConstructorIO {
       networkParameters: networkParameters || {},
       humanityCheckLocation: humanityCheckLocation || 'session',
       useWindowParameters: useWindowParameters === true,
-      additionalTrackingKeys,
+      additionalTrackingKeys: helpers.toValidAdditionalTrackingKeys(additionalTrackingKeys, apiKey),
     };
 
     if (useWindowParameters === true) {
@@ -182,7 +182,7 @@ class ConstructorIO {
    * @param {string} [options.userId] - User ID
    * @param {boolean} [options.sendTrackingEvents] - Indicates if tracking events should be dispatched
    * @param {string} [options.serviceUrl] - API URL endpoint (normalized to include an HTTPS protocol and strip a trailing slash)
-   * @param {string[]} [options.additionalTrackingKeys] - Additional API keys that each receive a duplicate of every tracking event. Events are always sent to the primary `apiKey` and, in addition, to every key in this array.
+   * @param {string[]|null} [options.additionalTrackingKeys] - Additional API keys that each receive a duplicate of every tracking event. Events are always sent to the primary `apiKey` and, in addition, to every key in this array. Pass an empty array or `null` to stop sending events to additional keys.
    */
   setClientOptions(options) {
     if (Object.keys(options).length) {
@@ -190,6 +190,12 @@ class ConstructorIO {
 
       if (apiKey) {
         this.options.apiKey = apiKey;
+
+        // If apiKey is updated, to re-validate the additionalTrackingKeys to ensure they are still valid
+        this.options.additionalTrackingKeys = helpers.toValidAdditionalTrackingKeys(
+          this.options.additionalTrackingKeys,
+          apiKey,
+        );
       }
 
       if (segments) {
@@ -219,8 +225,11 @@ class ConstructorIO {
         this.options.serviceUrl = formattedServiceUrl || this.options.serviceUrl;
       }
 
-      if (Array.isArray(additionalTrackingKeys)) {
-        this.options.additionalTrackingKeys = additionalTrackingKeys;
+      if (Array.isArray(additionalTrackingKeys) || additionalTrackingKeys === null) {
+        this.options.additionalTrackingKeys = helpers.toValidAdditionalTrackingKeys(
+          additionalTrackingKeys,
+          this.options.apiKey,
+        );
       }
     }
   }

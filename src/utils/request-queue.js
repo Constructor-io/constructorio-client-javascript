@@ -57,14 +57,10 @@ class RequestQueue {
       // Duplicate request for each additional tracking key
       const additionalKeys = this.options?.additionalTrackingKeys;
 
-      if (Array.isArray(additionalKeys) && additionalKeys.length) {
+      if (additionalKeys?.length) {
         const encodedOriginalKey = helpers.encodeURIComponentRFC3986(this.options.apiKey);
 
-        const uniqueKeys = new Set(
-          additionalKeys.filter((key) => key && typeof key === 'string' && key !== this.options.apiKey),
-        );
-
-        uniqueKeys.forEach((additionalKey) => {
+        additionalKeys.forEach((additionalKey) => {
           const encodedAdditionalKey = helpers.encodeURIComponentRFC3986(additionalKey);
           const swappedUrl = url.replace(`key=${encodedOriginalKey}`, `key=${encodedAdditionalKey}`);
 
