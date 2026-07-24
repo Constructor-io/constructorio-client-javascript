@@ -53,6 +53,26 @@ class RequestQueue {
         body,
         networkParameters,
       });
+
+      // Duplicate request for each additional tracking key
+      const additionalKeys = this.options?.additionalTrackingKeys;
+
+      if (additionalKeys?.length) {
+        const encodedOriginalKey = helpers.encodeURIComponentRFC3986(this.options.apiKey);
+
+        additionalKeys.forEach((additionalKey) => {
+          const encodedAdditionalKey = helpers.encodeURIComponentRFC3986(additionalKey);
+          const swappedUrl = url.replace(`key=${encodedOriginalKey}`, `key=${encodedAdditionalKey}`);
+
+          queue.push({
+            url: obfuscatePiiRequest(swappedUrl),
+            method,
+            body: { ...body, key: additionalKey },
+            networkParameters,
+          });
+        });
+      }
+
       RequestQueue.set(queue);
     }
   }

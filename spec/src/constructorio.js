@@ -19,6 +19,18 @@ const clientVersion = 'cio-mocha';
 const bundled = process.env.BUNDLED === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 
+// Assert an option on the client and every sub-module that shares its `options` reference.
+// Uses `deep.equal` to enforce strict structural equality for objects and arrays.
+const expectSharedOption = (instance, option, expected) => {
+  expect(instance.options).to.have.property(option).to.deep.equal(expected);
+  expect(instance.search.options).to.have.property(option).to.deep.equal(expected);
+  expect(instance.autocomplete.options).to.have.property(option).to.deep.equal(expected);
+  expect(instance.browse.options).to.have.property(option).to.deep.equal(expected);
+  expect(instance.recommendations.options).to.have.property(option).to.deep.equal(expected);
+  expect(instance.tracker.options).to.have.property(option).to.deep.equal(expected);
+  expect(instance.tracker.requests.options).to.have.property(option).to.deep.equal(expected);
+};
+
 describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
   const jsdomOptions = { url: 'http://localhost' };
   let cleanup;
@@ -173,6 +185,19 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
     expect(() => new ConstructorIO()).to.throw('API key is a required parameter of type string');
   });
 
+  // Tests for additionalTrackingKeys
+  [
+    { description: 'default to null when not provided', additionalTrackingKeys: undefined, expected: null },
+    { description: 'filter out invalid entries', additionalTrackingKeys: ['valid-key', '', null, 123, 'another-valid-key'], expected: ['valid-key', 'another-valid-key'] },
+    { description: 'deduplicate entries and remove the primary apiKey', additionalTrackingKeys: ['extra-key', validApiKey, 'extra-key'], expected: ['extra-key'] },
+  ].forEach(({ description, additionalTrackingKeys, expected }) => {
+    it(`Should sanitize additionalTrackingKeys: ${description}`, () => {
+      const instance = new ConstructorIO({ apiKey: validApiKey, additionalTrackingKeys });
+
+      expectSharedOption(instance, 'additionalTrackingKeys', expected);
+    });
+  });
+
   if (bundled) {
     it('Should have client version set appropriately without global set', () => {
       window.CLIENT_VERSION = null;
@@ -211,23 +236,13 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
       const newAPIKey = 'newAPIKey';
       const instance = new ConstructorIO({ apiKey: validApiKey });
 
-      expect(instance.options).to.have.property('apiKey').to.equal(validApiKey);
-      expect(instance.search.options).to.have.property('apiKey').to.equal(validApiKey);
-      expect(instance.autocomplete.options).to.have.property('apiKey').to.equal(validApiKey);
-      expect(instance.browse.options).to.have.property('apiKey').to.equal(validApiKey);
-      expect(instance.recommendations.options).to.have.property('apiKey').to.equal(validApiKey);
-      expect(instance.tracker.options).to.have.property('apiKey').to.equal(validApiKey);
+      expectSharedOption(instance, 'apiKey', validApiKey);
 
       instance.setClientOptions({
         apiKey: newAPIKey,
       });
 
-      expect(instance.options).to.have.property('apiKey').to.equal(newAPIKey);
-      expect(instance.search.options).to.have.property('apiKey').to.equal(newAPIKey);
-      expect(instance.autocomplete.options).to.have.property('apiKey').to.equal(newAPIKey);
-      expect(instance.browse.options).to.have.property('apiKey').to.equal(newAPIKey);
-      expect(instance.recommendations.options).to.have.property('apiKey').to.equal(newAPIKey);
-      expect(instance.tracker.options).to.have.property('apiKey').to.equal(newAPIKey);
+      expectSharedOption(instance, 'apiKey', newAPIKey);
     });
 
     it('Should update the client options with new segments', () => {
@@ -255,23 +270,13 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
         segments: oldSegments,
       });
 
-      expect(instance.options).to.have.property('segments').to.equal(oldSegments);
-      expect(instance.search.options).to.have.property('segments').to.equal(oldSegments);
-      expect(instance.autocomplete.options).to.have.property('segments').to.equal(oldSegments);
-      expect(instance.browse.options).to.have.property('segments').to.equal(oldSegments);
-      expect(instance.recommendations.options).to.have.property('segments').to.equal(oldSegments);
-      expect(instance.tracker.options).to.have.property('segments').to.equal(oldSegments);
+      expectSharedOption(instance, 'segments', oldSegments);
 
       instance.setClientOptions({
         segments: newSegments,
       });
 
-      expect(instance.options).to.have.property('segments').to.equal(newSegments);
-      expect(instance.search.options).to.have.property('segments').to.equal(newSegments);
-      expect(instance.autocomplete.options).to.have.property('segments').to.equal(newSegments);
-      expect(instance.browse.options).to.have.property('segments').to.equal(newSegments);
-      expect(instance.recommendations.options).to.have.property('segments').to.equal(newSegments);
-      expect(instance.tracker.options).to.have.property('segments').to.equal(newSegments);
+      expectSharedOption(instance, 'segments', newSegments);
     });
 
     it('Should update the client options with new test cells', () => {
@@ -565,23 +570,13 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
         testCells: oldTestCells,
       });
 
-      expect(instance.options).to.have.property('testCells').to.deep.equal(oldTestCells);
-      expect(instance.search.options).to.have.property('testCells').to.deep.equal(oldTestCells);
-      expect(instance.autocomplete.options).to.have.property('testCells').to.deep.equal(oldTestCells);
-      expect(instance.browse.options).to.have.property('testCells').to.deep.equal(oldTestCells);
-      expect(instance.recommendations.options).to.have.property('testCells').to.deep.equal(oldTestCells);
-      expect(instance.tracker.options).to.have.property('testCells').to.deep.equal(oldTestCells);
+      expectSharedOption(instance, 'testCells', oldTestCells);
 
       instance.setClientOptions({
         testCells: newTestCells,
       });
 
-      expect(instance.options).to.have.property('testCells').to.deep.equal(newTestCells);
-      expect(instance.search.options).to.have.property('testCells').to.deep.equal(newTestCells);
-      expect(instance.autocomplete.options).to.have.property('testCells').to.deep.equal(newTestCells);
-      expect(instance.browse.options).to.have.property('testCells').to.deep.equal(newTestCells);
-      expect(instance.recommendations.options).to.have.property('testCells').to.deep.equal(newTestCells);
-      expect(instance.tracker.options).to.have.property('testCells').to.deep.equal(newTestCells);
+      expectSharedOption(instance, 'testCells', newTestCells);
     });
 
     it('Should update the client options with a new user id', () => {
@@ -609,23 +604,13 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
         userId: oldUserId,
       });
 
-      expect(instance.options).to.have.property('userId').to.deep.equal(oldUserId);
-      expect(instance.search.options).to.have.property('userId').to.equal(oldUserId);
-      expect(instance.autocomplete.options).to.have.property('userId').to.equal(oldUserId);
-      expect(instance.browse.options).to.have.property('userId').to.equal(oldUserId);
-      expect(instance.recommendations.options).to.have.property('userId').to.equal(oldUserId);
-      expect(instance.tracker.options).to.have.property('userId').to.equal(oldUserId);
+      expectSharedOption(instance, 'userId', oldUserId);
 
       instance.setClientOptions({
         userId: newUserId,
       });
 
-      expect(instance.options).to.have.property('userId').to.deep.equal(newUserId);
-      expect(instance.search.options).to.have.property('userId').to.equal(newUserId);
-      expect(instance.autocomplete.options).to.have.property('userId').to.equal(newUserId);
-      expect(instance.browse.options).to.have.property('userId').to.equal(newUserId);
-      expect(instance.recommendations.options).to.have.property('userId').to.equal(newUserId);
-      expect(instance.tracker.options).to.have.property('userId').to.equal(newUserId);
+      expectSharedOption(instance, 'userId', newUserId);
     });
 
     it('Should clear the user id in client options', () => {
@@ -653,23 +638,13 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
         userId: oldUserId,
       });
 
-      expect(instance.options).to.have.property('userId').to.deep.equal(oldUserId);
-      expect(instance.search.options).to.have.property('userId').to.equal(oldUserId);
-      expect(instance.autocomplete.options).to.have.property('userId').to.equal(oldUserId);
-      expect(instance.browse.options).to.have.property('userId').to.equal(oldUserId);
-      expect(instance.recommendations.options).to.have.property('userId').to.equal(oldUserId);
-      expect(instance.tracker.options).to.have.property('userId').to.equal(oldUserId);
+      expectSharedOption(instance, 'userId', oldUserId);
 
       instance.setClientOptions({
         userId: newUserId,
       });
 
-      expect(instance.options).to.have.property('userId').to.deep.equal(newUserId);
-      expect(instance.search.options).to.have.property('userId').to.equal(newUserId);
-      expect(instance.autocomplete.options).to.have.property('userId').to.equal(newUserId);
-      expect(instance.browse.options).to.have.property('userId').to.equal(newUserId);
-      expect(instance.recommendations.options).to.have.property('userId').to.equal(newUserId);
-      expect(instance.tracker.options).to.have.property('userId').to.equal(newUserId);
+      expectSharedOption(instance, 'userId', newUserId);
     });
 
     it('Should not update the client options with new session id in a DOM context', () => {
@@ -697,23 +672,13 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
         sessionId: oldSessionId,
       });
 
-      expect(instance.options).to.have.property('sessionId').to.deep.equal(oldSessionId);
-      expect(instance.search.options).to.have.property('sessionId').to.equal(oldSessionId);
-      expect(instance.autocomplete.options).to.have.property('sessionId').to.equal(oldSessionId);
-      expect(instance.browse.options).to.have.property('sessionId').to.equal(oldSessionId);
-      expect(instance.recommendations.options).to.have.property('sessionId').to.equal(oldSessionId);
-      expect(instance.tracker.options).to.have.property('sessionId').to.equal(oldSessionId);
+      expectSharedOption(instance, 'sessionId', oldSessionId);
 
       instance.setClientOptions({
         sessionId: newSessionId,
       });
 
-      expect(instance.options).to.have.property('sessionId').to.deep.equal(oldSessionId);
-      expect(instance.search.options).to.have.property('sessionId').to.equal(oldSessionId);
-      expect(instance.autocomplete.options).to.have.property('sessionId').to.equal(oldSessionId);
-      expect(instance.browse.options).to.have.property('sessionId').to.equal(oldSessionId);
-      expect(instance.recommendations.options).to.have.property('sessionId').to.equal(oldSessionId);
-      expect(instance.tracker.options).to.have.property('sessionId').to.equal(oldSessionId);
+      expectSharedOption(instance, 'sessionId', oldSessionId);
     });
 
     it('Should update the client options with a new service url', () => {
@@ -733,21 +698,13 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
       const newServiceUrl = 'https://new-service-url.cnstrc.com';
       const instance = new ConstructorIO({ apiKey: validApiKey });
 
-      expect(instance.search.options).to.have.property('serviceUrl').to.equal('https://ac.cnstrc.com');
-      expect(instance.autocomplete.options).to.have.property('serviceUrl').to.equal('https://ac.cnstrc.com');
-      expect(instance.browse.options).to.have.property('serviceUrl').to.equal('https://ac.cnstrc.com');
-      expect(instance.recommendations.options).to.have.property('serviceUrl').to.equal('https://ac.cnstrc.com');
-      expect(instance.tracker.options).to.have.property('serviceUrl').to.equal('https://ac.cnstrc.com');
+      expectSharedOption(instance, 'serviceUrl', 'https://ac.cnstrc.com');
 
       instance.setClientOptions({
         serviceUrl: newServiceUrl,
       });
 
-      expect(instance.search.options).to.have.property('serviceUrl').to.equal(newServiceUrl);
-      expect(instance.autocomplete.options).to.have.property('serviceUrl').to.equal(newServiceUrl);
-      expect(instance.browse.options).to.have.property('serviceUrl').to.equal(newServiceUrl);
-      expect(instance.recommendations.options).to.have.property('serviceUrl').to.equal(newServiceUrl);
-      expect(instance.tracker.options).to.have.property('serviceUrl').to.equal(newServiceUrl);
+      expectSharedOption(instance, 'serviceUrl', newServiceUrl);
     });
 
     it('Should not update the client options service url with a falsy value', () => {
@@ -813,6 +770,60 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
       });
 
       expect(instance.options).to.have.property('serviceUrl').to.equal('http://new-service-url.cnstrc.com');
+    });
+
+    it('Should use additionalTrackingKeys updated via setClientOptions', () => {
+      const instance = new ConstructorIO({ apiKey: validApiKey });
+
+      expectSharedOption(instance, 'additionalTrackingKeys', null);
+
+      instance.setClientOptions({
+        additionalTrackingKeys: ['extra-key-1', 'extra-key-2'],
+      });
+
+      expectSharedOption(instance, 'additionalTrackingKeys', ['extra-key-1', 'extra-key-2']);
+    });
+
+    it('Should clear additionalTrackingKeys when passing an empty array', () => {
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        additionalTrackingKeys: ['extra-key-1', 'extra-key-2'],
+      });
+
+      expectSharedOption(instance, 'additionalTrackingKeys', ['extra-key-1', 'extra-key-2']);
+
+      instance.setClientOptions({ additionalTrackingKeys: [] });
+
+      expectSharedOption(instance, 'additionalTrackingKeys', null);
+    });
+
+    it('Should clear additionalTrackingKeys when passing null', () => {
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        additionalTrackingKeys: ['extra-key-1', 'extra-key-2'],
+      });
+
+      expectSharedOption(instance, 'additionalTrackingKeys', ['extra-key-1', 'extra-key-2']);
+
+      instance.setClientOptions({ additionalTrackingKeys: null });
+
+      expectSharedOption(instance, 'additionalTrackingKeys', null);
+    });
+
+    it('Should re-validate additionalTrackingKeys if new apiKey is set via setClientOptions', () => {
+      const instance = new ConstructorIO({
+        apiKey: validApiKey,
+        additionalTrackingKeys: ['new-primary-key', 'extra-key'],
+      });
+
+      expectSharedOption(instance, 'additionalTrackingKeys', ['new-primary-key', 'extra-key']);
+
+      instance.setClientOptions({
+        apiKey: 'new-primary-key',
+      });
+
+      expectSharedOption(instance, 'apiKey', 'new-primary-key');
+      expectSharedOption(instance, 'additionalTrackingKeys', ['extra-key']);
     });
   });
 
@@ -918,6 +929,70 @@ if (!bundled) {
         expect(instance.options).to.have.property('sessionId').to.deep.equal(newSessionId);
       });
 
+      it('Should use additionalTrackingKeys updated via setClientOptions in a DOM-less context', () => {
+        const instance = new ConstructorIO({
+          apiKey: validApiKey,
+          clientId,
+          sessionId: 1,
+        });
+
+        expectSharedOption(instance, 'additionalTrackingKeys', null);
+
+        instance.setClientOptions({
+          additionalTrackingKeys: ['extra-key-1', 'extra-key-2'],
+        });
+
+        expectSharedOption(instance, 'additionalTrackingKeys', ['extra-key-1', 'extra-key-2']);
+      });
+
+      it('Should clear additionalTrackingKeys when passing an empty array in a DOM-less context', () => {
+        const instance = new ConstructorIO({
+          apiKey: validApiKey,
+          clientId,
+          sessionId: 1,
+          additionalTrackingKeys: ['extra-key-1', 'extra-key-2'],
+        });
+
+        expectSharedOption(instance, 'additionalTrackingKeys', ['extra-key-1', 'extra-key-2']);
+
+        instance.setClientOptions({ additionalTrackingKeys: [] });
+
+        expectSharedOption(instance, 'additionalTrackingKeys', null);
+      });
+
+      it('Should clear additionalTrackingKeys when passing null in a DOM-less context', () => {
+        const instance = new ConstructorIO({
+          apiKey: validApiKey,
+          clientId,
+          sessionId: 1,
+          additionalTrackingKeys: ['extra-key-1', 'extra-key-2'],
+        });
+
+        expectSharedOption(instance, 'additionalTrackingKeys', ['extra-key-1', 'extra-key-2']);
+
+        instance.setClientOptions({ additionalTrackingKeys: null });
+
+        expectSharedOption(instance, 'additionalTrackingKeys', null);
+      });
+
+      it('Should re-validate additionalTrackingKeys if new apiKey is set via setClientOptions in a DOM-less context', () => {
+        const instance = new ConstructorIO({
+          apiKey: validApiKey,
+          clientId,
+          sessionId: 1,
+          additionalTrackingKeys: ['new-primary-key', 'extra-key'],
+        });
+
+        expectSharedOption(instance, 'additionalTrackingKeys', ['new-primary-key', 'extra-key']);
+
+        instance.setClientOptions({
+          apiKey: 'new-primary-key',
+        });
+
+        expectSharedOption(instance, 'apiKey', 'new-primary-key');
+        expectSharedOption(instance, 'additionalTrackingKeys', ['extra-key']);
+      });
+
       it('Should update the options for modules with new session id in a DOM-less context', () => {
         const oldSessionId = 1;
         const newSessionId = 2;
@@ -927,23 +1002,13 @@ if (!bundled) {
           sessionId: oldSessionId,
         });
 
-        expect(instance.options).to.have.property('sessionId').to.deep.equal(oldSessionId);
-        expect(instance.search.options).to.have.property('sessionId').to.equal(oldSessionId);
-        expect(instance.autocomplete.options).to.have.property('sessionId').to.equal(oldSessionId);
-        expect(instance.browse.options).to.have.property('sessionId').to.equal(oldSessionId);
-        expect(instance.recommendations.options).to.have.property('sessionId').to.equal(oldSessionId);
-        expect(instance.tracker.options).to.have.property('sessionId').to.equal(oldSessionId);
+        expectSharedOption(instance, 'sessionId', oldSessionId);
 
         instance.setClientOptions({
           sessionId: newSessionId,
         });
 
-        expect(instance.options).to.have.property('sessionId').to.deep.equal(newSessionId);
-        expect(instance.search.options).to.have.property('sessionId').to.equal(newSessionId);
-        expect(instance.autocomplete.options).to.have.property('sessionId').to.equal(newSessionId);
-        expect(instance.browse.options).to.have.property('sessionId').to.equal(newSessionId);
-        expect(instance.recommendations.options).to.have.property('sessionId').to.equal(newSessionId);
-        expect(instance.tracker.options).to.have.property('sessionId').to.equal(newSessionId);
+        expectSharedOption(instance, 'sessionId', newSessionId);
       });
     });
   });
