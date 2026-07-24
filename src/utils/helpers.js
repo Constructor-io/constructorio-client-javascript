@@ -377,13 +377,15 @@ const utils = {
   truncateString: (string, maxLength) => string.slice(0, maxLength),
 
   toValidAdditionalTrackingKeys: (additionalTrackingKeys, primaryKey) => {
-    if (!Array.isArray(additionalTrackingKeys) || !additionalTrackingKeys.length) {
+    if (!Array.isArray(additionalTrackingKeys)) {
       return null;
     }
 
-    return [...new Set(
+    const uniqueKeys = [...new Set(
       additionalTrackingKeys.filter((key) => key && typeof key === 'string' && key !== primaryKey),
     )];
+
+    return uniqueKeys.length ? uniqueKeys : null;
   },
 
   toValidTestCells: (testCells) => {
