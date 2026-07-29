@@ -3,8 +3,17 @@
   "version": "2.90.0",
   "description": "Constructor.io JavaScript client",
   "main": "lib/constructorio.js",
-  "module": "lib/esm/constructorio.js",
   "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "import": "./lib/esm/constructorio.mjs",
+      "require": "./lib/constructorio.js",
+      "default": "./lib/constructorio.js"
+    },
+    "./lib/*": "./lib/*",
+    "./package.json": "./package.json"
+  },
   "scripts": {
     "clean": "sudo rm -rf node_modules package-lock.json",
     "version": "node ./src/generateVersion.js && npm run docs && git add ./docs/* && npm run bundle && git add -A ./dist && git add ./src/version.js",
