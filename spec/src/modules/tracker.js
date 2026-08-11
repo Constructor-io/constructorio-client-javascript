@@ -9835,6 +9835,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const requiredParameters = { intent: 'Show me cookie recipes' };
     const optionalParameters = {
       section: 'Products',
+      threadId: 'thread-1234',
     };
 
     it('Should respond with a valid response when intent and required parameters are provided', (done) => {
@@ -9983,6 +9984,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         // Request
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('section').to.equal('Products');
+        expect(requestParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -10150,6 +10152,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const optionalParameters = {
       section: 'Products',
       intentResultId: '123451',
+      threadId: 'thread-123',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -10299,6 +10302,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(requestParams).to.have.property('intent_result_id').to.equal(optionalParameters.intentResultId);
+        expect(requestParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -10467,6 +10471,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const optionalParameters = {
       section: 'Products',
       intentResultId: '123451',
+      threadId: 'thread-123',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -10617,6 +10622,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(requestParams).to.have.property('intent_result_id').to.equal(optionalParameters.intentResultId);
+        expect(requestParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -10791,6 +10797,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       section: 'Products',
       intentResultId: '12312',
       variationId: '123123',
+      threadId: 'thread-123',
     };
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
@@ -10944,6 +10951,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('intent_result_id').to.equal(optionalParameters.intentResultId);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(requestParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
+        expect(requestParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -11116,6 +11124,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const optionalParameters = {
       intentResultId: 'result-id',
       section: 'Products',
+      threadId: 'thread-123',
       items: [
         {
           itemId: '123',
@@ -11288,6 +11297,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('intent_result_id').to.equal(optionalParameters.intentResultId);
         expect(requestParams).to.have.property('items').to.deep.equal(snakeCaseItems);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
+        expect(requestParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -11455,6 +11465,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const optionalParameters = {
       section: 'Products',
       intentResultId: '1234',
+      threadId: 'thread-123',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -11606,6 +11617,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(requestParams).to.have.property('intent_result_id').to.equal(optionalParameters.intentResultId);
+        expect(requestParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
