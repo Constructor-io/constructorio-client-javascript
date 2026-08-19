@@ -283,6 +283,7 @@ declare class Tracker {
     parameters: {
       intent: string;
       section?: string;
+      threadId?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -292,6 +293,7 @@ declare class Tracker {
       intent: string;
       section?: string;
       intentResultId?: string;
+      threadId?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -302,6 +304,7 @@ declare class Tracker {
       searchResultCount: number;
       section?: string;
       intentResultId?: string;
+      threadId?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -315,6 +318,7 @@ declare class Tracker {
       variationId?: string;
       section?: string;
       intentResultId?: string;
+      threadId?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -327,6 +331,7 @@ declare class Tracker {
       items?: ItemTracked[];
       intentResultId?: string;
       section?: string;
+      threadId?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -340,6 +345,7 @@ declare class Tracker {
       groupId?: string;
       section?: string;
       intentResultId?: string;
+      threadId?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -410,6 +416,7 @@ declare class Tracker {
       question: string;
       variationId?: string;
       threadId?: string;
+      questionTopic?: string;
       section?: string;
     },
     networkParameters?: NetworkParameters
@@ -422,6 +429,7 @@ declare class Tracker {
       question: string;
       variationId?: string;
       threadId?: string;
+      questionTopic?: string;
       section?: string;
     },
     networkParameters?: NetworkParameters

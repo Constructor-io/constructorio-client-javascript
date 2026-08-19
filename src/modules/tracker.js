@@ -2737,6 +2737,7 @@ class Tracker {
    * @param {object} parameters - Additional parameters to be sent with request
    * @param {string} parameters.intent - Intent of user request
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -2756,11 +2757,16 @@ class Tracker {
       const {
         section,
         intent,
+        threadId,
       } = parameters;
       const bodyParams = {
         intent,
         section,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
       const requestMethod = 'POST';
@@ -2791,6 +2797,7 @@ class Tracker {
    * @param {string} parameters.intent - Intent of user request
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {string} [parameters.intentResultId] - The intent result id from the ASA response
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -2811,12 +2818,17 @@ class Tracker {
         section,
         intentResultId,
         intent,
+        threadId,
       } = parameters;
       const bodyParams = {
         intent_result_id: intentResultId,
         intent,
         section,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
       const requestMethod = 'POST';
@@ -2848,6 +2860,7 @@ class Tracker {
    * @param {number} parameters.searchResultCount - Number of search results loaded
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {string} [parameters.intentResultId] - The intent result id from the ASA response
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -2870,6 +2883,7 @@ class Tracker {
         searchResultCount,
         intentResultId,
         intent,
+        threadId,
       } = parameters;
       const bodyParams = {
         intent_result_id: intentResultId,
@@ -2877,6 +2891,10 @@ class Tracker {
         intent,
         search_result_count: searchResultCount,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
       const requestMethod = 'POST';
@@ -2911,6 +2929,7 @@ class Tracker {
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {string} [parameters.variationId] - Product item variation unique identifier
    * @param {string} [parameters.intentResultId] - Browse result identifier (returned in response from Constructor)
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -2938,6 +2957,7 @@ class Tracker {
         itemId,
         itemName,
         intent,
+        threadId,
       } = parameters;
 
       const bodyParams = {
@@ -2949,6 +2969,10 @@ class Tracker {
         item_name: itemName,
         intent,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
       const requestMethod = 'POST';
@@ -2981,6 +3005,7 @@ class Tracker {
    * @param {object[]} [parameters.items] - List of product item objects viewed
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {string} [parameters.intentResultId] - Browse result identifier (returned in response from Constructor)
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -3007,6 +3032,7 @@ class Tracker {
         intentResultId,
         searchResultId,
         intent,
+        threadId,
       } = parameters;
 
       const bodyParams = {
@@ -3017,6 +3043,10 @@ class Tracker {
         items: items && Array.isArray(items) && items.slice(0, 100).map((item) => helpers.toSnakeCaseKeys(item, false)),
         intent,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
       const requestMethod = 'POST';
@@ -3048,6 +3078,7 @@ class Tracker {
    * @param {string} parameters.searchResultId - resultId of search result the clicked item belongs to
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {string} [parameters.intentResultId] - intentResultId from the ASA response
+   * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -3073,6 +3104,7 @@ class Tracker {
         searchTerm,
         searchResultId,
         intentResultId,
+        threadId,
       } = parameters;
 
       const bodyParams = {
@@ -3082,6 +3114,10 @@ class Tracker {
         search_result_id: searchResultId,
         intent_result_id: intentResultId,
       };
+
+      if (threadId) {
+        bodyParams.thread_id = threadId;
+      }
 
       const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
       const requestMethod = 'POST';
@@ -3592,6 +3628,7 @@ class Tracker {
    * @param {string} parameters.question - Question a user clicked on
    * @param {string} [parameters.variationId] - Variation id whose page we are on
    * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
+   * @param {string} [parameters.questionTopic] - Topic category of the question.
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3618,6 +3655,7 @@ class Tracker {
         variationId,
         question,
         threadId,
+        questionTopic,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3629,6 +3667,10 @@ class Tracker {
 
       if (threadId) {
         bodyParams.thread_id = threadId;
+      }
+
+      if (questionTopic) {
+        bodyParams.question_topic = questionTopic;
       }
 
       if (section) {
@@ -3666,6 +3708,7 @@ class Tracker {
    * @param {string} parameters.question - Question a user submitted
    * @param {string} [parameters.variationId] - Variation id whose page we are on
    * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
+   * @param {string} [parameters.questionTopic] - Topic category of the question
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -3692,6 +3735,7 @@ class Tracker {
         variationId,
         question,
         threadId,
+        questionTopic,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3703,6 +3747,10 @@ class Tracker {
 
       if (threadId) {
         bodyParams.thread_id = threadId;
+      }
+
+      if (questionTopic) {
+        bodyParams.question_topic = questionTopic;
       }
 
       if (section) {
