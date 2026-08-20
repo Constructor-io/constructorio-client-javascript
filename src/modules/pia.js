@@ -9,7 +9,6 @@ function createPiaUrl(itemId, parameters, options, questionPath) {
     clientId,
     sessionId,
     segments,
-    testCells,
     userId,
     version,
     agentServiceUrl,
@@ -34,13 +33,6 @@ function createPiaUrl(itemId, parameters, options, questionPath) {
     queryParams.us = segments;
   }
 
-  // Pull test cells from options
-  if (testCells) {
-    Object.keys(testCells).forEach((testCellKey) => {
-      queryParams[`ef-${testCellKey}`] = testCells[testCellKey];
-    });
-  }
-
   // Pull user id from options and ensure string
   if (userId) {
     queryParams.ui = String(userId);
@@ -54,6 +46,7 @@ function createPiaUrl(itemId, parameters, options, questionPath) {
       features,
       featureVariants,
       preFilterExpression,
+      qsParam,
       guard,
       fmtOptions,
     } = parameters;
@@ -80,6 +73,10 @@ function createPiaUrl(itemId, parameters, options, questionPath) {
 
     if (preFilterExpression) {
       queryParams.pre_filter_expression = JSON.stringify(preFilterExpression);
+    }
+
+    if (qsParam) {
+      queryParams.qs = JSON.stringify(qsParam);
     }
 
     if (!helpers.isNil(guard)) {

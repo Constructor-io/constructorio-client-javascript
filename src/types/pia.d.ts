@@ -18,6 +18,7 @@ export interface PiaBaseParameters {
   features?: Record<string, boolean>;
   featureVariants?: Record<string, string>;
   preFilterExpression?: FilterExpression;
+  qsParam?: Record<string, any>;
 }
 
 export interface PiaSuggestedQuestionsParameters extends PiaBaseParameters {
