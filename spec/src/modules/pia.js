@@ -155,7 +155,7 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
       return pia.getSuggestedQuestions(validItemId, { features }).then(() => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        expect(requestedUrlParams).to.have.property('features');
+        expect(requestedUrlParams).to.have.property('features').to.deep.equal({ pia_v2: 'true' });
       });
     });
 
@@ -169,7 +169,7 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
       return pia.getSuggestedQuestions(validItemId, { featureVariants }).then(() => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        expect(requestedUrlParams).to.have.property('feature_variants');
+        expect(requestedUrlParams).to.have.property('feature_variants').to.deep.equal({ pia_v2: 'control' });
       });
     });
 
@@ -183,7 +183,7 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
       return pia.getSuggestedQuestions(validItemId, { preFilterExpression }).then(() => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        expect(requestedUrlParams).to.have.property('pre_filter_expression');
+        expect(requestedUrlParams).to.have.property('pre_filter_expression').to.equal(JSON.stringify(preFilterExpression));
       });
     });
 
@@ -336,7 +336,7 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
       return pia.getAnswerResults(validItemId, validQuestion, { features }).then(() => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
-        expect(requestedUrlParams).to.have.property('features');
+        expect(requestedUrlParams).to.have.property('features').to.deep.equal({ pia_v2: 'true' });
       });
     });
 
