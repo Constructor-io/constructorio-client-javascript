@@ -17350,6 +17350,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       const checkComplete = () => {
         callCount += 1;
 
+        if (callCount > 2) {
+          done(new Error(`Expected exactly 2 calls but received ${callCount}`));
+          return;
+        }
+
         if (callCount === 2) {
           expect(fetchSpy).to.have.been.calledTwice;
 
@@ -17383,6 +17388,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
       const checkComplete = () => {
         callCount += 1;
+
+        if (callCount > 2) {
+          done(new Error(`Expected exactly 2 calls but received ${callCount}`));
+          return;
+        }
 
         if (callCount === 2) {
           expect(fetchSpy).to.have.been.calledTwice;

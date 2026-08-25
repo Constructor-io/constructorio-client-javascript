@@ -21,14 +21,14 @@ const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
 
 // Assert an option on the client and every sub-module that shares its `options` reference.
 // Uses `deep.equal` to enforce strict structural equality for objects and arrays.
-const expectSharedOption = (instance, option, expected) => {
-  expect(instance.options).to.have.property(option).to.deep.equal(expected);
-  expect(instance.search.options).to.have.property(option).to.deep.equal(expected);
-  expect(instance.autocomplete.options).to.have.property(option).to.deep.equal(expected);
-  expect(instance.browse.options).to.have.property(option).to.deep.equal(expected);
-  expect(instance.recommendations.options).to.have.property(option).to.deep.equal(expected);
-  expect(instance.tracker.options).to.have.property(option).to.deep.equal(expected);
-  expect(instance.tracker.requests.options).to.have.property(option).to.deep.equal(expected);
+const expectSharedOption = (instance, key, expectedValue) => {
+  expect(instance.options).to.have.property(key).to.deep.equal(expectedValue);
+  expect(instance.search.options).to.have.property(key).to.deep.equal(expectedValue);
+  expect(instance.autocomplete.options).to.have.property(key).to.deep.equal(expectedValue);
+  expect(instance.browse.options).to.have.property(key).to.deep.equal(expectedValue);
+  expect(instance.recommendations.options).to.have.property(key).to.deep.equal(expectedValue);
+  expect(instance.tracker.options).to.have.property(key).to.deep.equal(expectedValue);
+  expect(instance.tracker.requests.options).to.have.property(key).to.deep.equal(expectedValue);
 };
 
 describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
