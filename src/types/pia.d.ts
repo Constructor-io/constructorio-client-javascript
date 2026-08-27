@@ -1,5 +1,7 @@
 import {
   ConstructorClientOptions,
+  FilterExpression,
+  FmtOptions,
   NetworkParameters,
   Item,
 } from '.';
@@ -10,15 +12,19 @@ export interface PiaQuestion {
   value: string;
 }
 
-export interface PiaSuggestedQuestionsParameters {
+export interface PiaBaseParameters {
   threadId?: string;
   variationId?: string;
+  preFilterExpression?: FilterExpression;
+}
+
+export interface PiaSuggestedQuestionsParameters extends PiaBaseParameters {
   numResults?: number;
 }
 
-export interface PiaAnswerResultsParameters {
-  threadId?: string;
-  variationId?: string;
+export interface PiaAnswerResultsParameters extends PiaBaseParameters {
+  guard?: boolean;
+  fmtOptions?: FmtOptions;
 }
 
 export interface PiaSuggestedQuestionsResponse {

@@ -145,6 +145,20 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
       });
     });
 
+    it('Should pass pre_filter_expression as a query parameter when provided', () => {
+      const preFilterExpression = { brand: 'apple' };
+      const { agent: { pia } } = new ConstructorIO({
+        apiKey: piaApiKey,
+        fetch: fetchSpy,
+      });
+
+      return pia.getSuggestedQuestions(validItemId, { preFilterExpression }).then(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(requestedUrlParams).to.have.property('pre_filter_expression').to.equal(JSON.stringify(preFilterExpression));
+      });
+    });
+
     it('Should be rejected if response is malformed', () => {
       const malformedFetch = () => Promise.resolve({
         ok: true,
@@ -280,6 +294,50 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(requestedUrlParams).to.have.property('thread_id').to.equal(threadId);
+      });
+    });
+
+    it('Should pass pre_filter_expression as a query parameter when provided', function () {
+      this.timeout(10000);
+      const preFilterExpression = { brand: 'apple' };
+      const { agent: { pia } } = new ConstructorIO({
+        apiKey: piaApiKey,
+        fetch: fetchSpy,
+      });
+
+      return pia.getAnswerResults(validItemId, validQuestion, { preFilterExpression }).then(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(requestedUrlParams).to.have.property('pre_filter_expression').to.equal(JSON.stringify(preFilterExpression));
+      });
+    });
+
+    it('Should pass guard as a query parameter when provided', function () {
+      this.timeout(10000);
+      const { agent: { pia } } = new ConstructorIO({
+        apiKey: piaApiKey,
+        fetch: fetchSpy,
+      });
+
+      return pia.getAnswerResults(validItemId, validQuestion, { guard: true }).then(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(requestedUrlParams).to.have.property('guard').to.equal('true');
+      });
+    });
+
+    it('Should pass fmt_options as query parameters when provided', function () {
+      this.timeout(10000);
+      const fmtOptions = { groups_max_depth: 2 };
+      const { agent: { pia } } = new ConstructorIO({
+        apiKey: piaApiKey,
+        fetch: fetchSpy,
+      });
+
+      return pia.getAnswerResults(validItemId, validQuestion, { fmtOptions }).then(() => {
+        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(requestedUrlParams).to.have.property('fmt_options').to.deep.equal({ groups_max_depth: '2' });
       });
     });
 

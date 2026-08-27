@@ -39,7 +39,14 @@ function createPiaUrl(itemId, parameters, options, questionPath) {
   }
 
   if (parameters) {
-    const { threadId, variationId, numResults } = parameters;
+    const {
+      threadId,
+      variationId,
+      numResults,
+      preFilterExpression,
+      guard,
+      fmtOptions,
+    } = parameters;
 
     if (threadId) {
       queryParams.thread_id = threadId;
@@ -51,6 +58,18 @@ function createPiaUrl(itemId, parameters, options, questionPath) {
 
     if (!helpers.isNil(numResults)) {
       queryParams.num_results = numResults;
+    }
+
+    if (preFilterExpression) {
+      queryParams.pre_filter_expression = JSON.stringify(preFilterExpression);
+    }
+
+    if (!helpers.isNil(guard)) {
+      queryParams.guard = guard;
+    }
+
+    if (fmtOptions) {
+      queryParams.fmt_options = fmtOptions;
     }
   }
 
@@ -85,6 +104,7 @@ class Pia {
    * @param {string} [parameters.threadId] - Thread ID for conversation context (UUID)
    * @param {string} [parameters.variationId] - Variation ID of the item
    * @param {number} [parameters.numResults] - Number of suggested questions to return
+   * @param {object} [parameters.preFilterExpression] - Faceting expression to scope results
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
@@ -136,6 +156,9 @@ class Pia {
    * @param {object} [parameters] - Additional parameters to refine result set
    * @param {string} [parameters.threadId] - Thread ID for conversation context (UUID)
    * @param {string} [parameters.variationId] - Variation ID of the item
+   * @param {object} [parameters.preFilterExpression] - Faceting expression to scope results
+   * @param {boolean} [parameters.guard] - Enable or disable moderation check
+   * @param {object} [parameters.fmtOptions] - Response format options
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {Promise}
