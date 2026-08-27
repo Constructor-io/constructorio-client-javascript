@@ -58,7 +58,7 @@
     "chai-as-promised": "^7.1.1",
     "docdash": "^2.0.1",
     "dotenv": "^8.6.0",
-    "esbuild": "^0.25.0",
+    "esbuild": "^0.28.1",
     "eslint": "^8.17.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.2",
