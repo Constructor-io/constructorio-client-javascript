@@ -376,7 +376,18 @@ const utils = {
 
   truncateString: (string, maxLength) => string.slice(0, maxLength),
 
-  // Filter testCells to only include entries with non-empty string values
+  toValidAdditionalTrackingKeys: (additionalTrackingKeys, primaryKey) => {
+    if (!Array.isArray(additionalTrackingKeys)) {
+      return null;
+    }
+
+    const uniqueKeys = [...new Set(
+      additionalTrackingKeys.filter((key) => key && typeof key === 'string' && key !== primaryKey),
+    )];
+
+    return uniqueKeys.length ? uniqueKeys : null;
+  },
+
   toValidTestCells: (testCells) => {
     if (!testCells || typeof testCells !== 'object' || Array.isArray(testCells)) {
       return {};

@@ -73,6 +73,7 @@ export interface ConstructorClientOptions {
   networkParameters?: NetworkParameters;
   humanityCheckLocation?: 'session' | 'local';
   useWindowParameters?: boolean;
+  additionalTrackingKeys?: string[] | null;
 }
 
 export interface RequestFeature extends Record<string, any> {
