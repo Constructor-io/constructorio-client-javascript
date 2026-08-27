@@ -145,34 +145,6 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
       });
     });
 
-    it('Should pass features as query parameters when provided', () => {
-      const features = { pia_v2: true };
-      const { agent: { pia } } = new ConstructorIO({
-        apiKey: piaApiKey,
-        fetch: fetchSpy,
-      });
-
-      return pia.getSuggestedQuestions(validItemId, { features }).then(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-
-        expect(requestedUrlParams).to.have.property('features').to.deep.equal({ pia_v2: 'true' });
-      });
-    });
-
-    it('Should pass feature_variants as query parameters when provided', () => {
-      const featureVariants = { pia_v2: 'control' };
-      const { agent: { pia } } = new ConstructorIO({
-        apiKey: piaApiKey,
-        fetch: fetchSpy,
-      });
-
-      return pia.getSuggestedQuestions(validItemId, { featureVariants }).then(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-
-        expect(requestedUrlParams).to.have.property('feature_variants').to.deep.equal({ pia_v2: 'control' });
-      });
-    });
-
     it('Should pass pre_filter_expression as a query parameter when provided', () => {
       const preFilterExpression = { brand: 'apple' };
       const { agent: { pia } } = new ConstructorIO({
@@ -184,20 +156,6 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(requestedUrlParams).to.have.property('pre_filter_expression').to.equal(JSON.stringify(preFilterExpression));
-      });
-    });
-
-    it('Should pass qs as a query parameter when qsParam is provided', () => {
-      const qsParam = { new_qs_param: 'test_value' };
-      const { agent: { pia } } = new ConstructorIO({
-        apiKey: piaApiKey,
-        fetch: fetchSpy,
-      });
-
-      return pia.getSuggestedQuestions(validItemId, { qsParam }).then(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-
-        expect(requestedUrlParams).to.have.property('qs').to.equal(JSON.stringify(qsParam));
       });
     });
 
@@ -339,36 +297,6 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
       });
     });
 
-    it('Should pass features as query parameters when provided', function () {
-      this.timeout(10000);
-      const features = { pia_v2: true };
-      const { agent: { pia } } = new ConstructorIO({
-        apiKey: piaApiKey,
-        fetch: fetchSpy,
-      });
-
-      return pia.getAnswerResults(validItemId, validQuestion, { features }).then(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-
-        expect(requestedUrlParams).to.have.property('features').to.deep.equal({ pia_v2: 'true' });
-      });
-    });
-
-    it('Should pass feature_variants as query parameters when provided', function () {
-      this.timeout(10000);
-      const featureVariants = { pia_v2: 'control' };
-      const { agent: { pia } } = new ConstructorIO({
-        apiKey: piaApiKey,
-        fetch: fetchSpy,
-      });
-
-      return pia.getAnswerResults(validItemId, validQuestion, { featureVariants }).then(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-
-        expect(requestedUrlParams).to.have.property('feature_variants').to.deep.equal({ pia_v2: 'control' });
-      });
-    });
-
     it('Should pass pre_filter_expression as a query parameter when provided', function () {
       this.timeout(10000);
       const preFilterExpression = { brand: 'apple' };
@@ -410,21 +338,6 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
         const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
         expect(requestedUrlParams).to.have.property('fmt_options').to.deep.equal({ groups_max_depth: '2' });
-      });
-    });
-
-    it('Should pass qs as a query parameter when qsParam is provided', function () {
-      this.timeout(10000);
-      const qsParam = { new_qs_param: 'test_value' };
-      const { agent: { pia } } = new ConstructorIO({
-        apiKey: piaApiKey,
-        fetch: fetchSpy,
-      });
-
-      return pia.getAnswerResults(validItemId, validQuestion, { qsParam }).then(() => {
-        const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
-
-        expect(requestedUrlParams).to.have.property('qs').to.equal(JSON.stringify(qsParam));
       });
     });
 

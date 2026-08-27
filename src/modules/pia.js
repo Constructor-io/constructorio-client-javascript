@@ -43,10 +43,7 @@ function createPiaUrl(itemId, parameters, options, questionPath) {
       threadId,
       variationId,
       numResults,
-      features,
-      featureVariants,
       preFilterExpression,
-      qsParam,
       guard,
       fmtOptions,
     } = parameters;
@@ -63,20 +60,8 @@ function createPiaUrl(itemId, parameters, options, questionPath) {
       queryParams.num_results = numResults;
     }
 
-    if (features) {
-      queryParams.features = features;
-    }
-
-    if (featureVariants) {
-      queryParams.feature_variants = featureVariants;
-    }
-
     if (preFilterExpression) {
       queryParams.pre_filter_expression = JSON.stringify(preFilterExpression);
-    }
-
-    if (qsParam) {
-      queryParams.qs = JSON.stringify(qsParam);
     }
 
     if (!helpers.isNil(guard)) {
@@ -119,8 +104,6 @@ class Pia {
    * @param {string} [parameters.threadId] - Thread ID for conversation context (UUID)
    * @param {string} [parameters.variationId] - Variation ID of the item
    * @param {number} [parameters.numResults] - Number of suggested questions to return
-   * @param {object} [parameters.features] - Feature toggles for A/B testing
-   * @param {object} [parameters.featureVariants] - Feature variant overrides
    * @param {object} [parameters.preFilterExpression] - Faceting expression to scope results
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
@@ -129,7 +112,6 @@ class Pia {
    * constructorio.agent.pia.getSuggestedQuestions('item-123', {
    *    variationId: 'variation-456',
    *    numResults: 3,
-   *    features: { my_feature: true },
    * });
    */
   getSuggestedQuestions(itemId, parameters, networkParameters = {}) {
@@ -174,8 +156,6 @@ class Pia {
    * @param {object} [parameters] - Additional parameters to refine result set
    * @param {string} [parameters.threadId] - Thread ID for conversation context (UUID)
    * @param {string} [parameters.variationId] - Variation ID of the item
-   * @param {object} [parameters.features] - Feature toggles for A/B testing
-   * @param {object} [parameters.featureVariants] - Feature variant overrides
    * @param {object} [parameters.preFilterExpression] - Faceting expression to scope results
    * @param {boolean} [parameters.guard] - Enable or disable moderation check
    * @param {object} [parameters.fmtOptions] - Response format options
