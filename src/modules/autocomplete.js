@@ -94,7 +94,7 @@ function createAutocompleteUrl(query, parameters, options) {
 
     // Pull format options from parameters
     if (fmtOptions) {
-      queryParams.fmt_options = fmtOptions;
+      queryParams.fmt_options = { ...fmtOptions };
     }
 
     // Pull hidden fields from parameters

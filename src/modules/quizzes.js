@@ -79,7 +79,7 @@ function createQuizUrl(quizId, parameters, options, path) {
     }
 
     if (fmtOptions) {
-      queryParams.fmt_options = fmtOptions;
+      queryParams.fmt_options = { ...fmtOptions };
     }
 
     if (hiddenFields) {
