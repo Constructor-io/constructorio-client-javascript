@@ -284,6 +284,7 @@ declare class Tracker {
       intent: string;
       section?: string;
       threadId?: string;
+      source?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;

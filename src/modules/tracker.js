@@ -2738,15 +2738,18 @@ class Tracker {
    * @param {string} parameters.intent - Intent of user request
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
+   * @param {string} [parameters.source] - How the intent was submitted Ex. "suggestion"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
    * @description User submitted an agent search
-   *   (pressing enter within agent input element, or clicking agent submit element)
+   *   (pressing enter within agent input element, or clicking an agent submit or
+   *   suggested question element)
    * @example
    * constructorio.tracker.trackAgentSubmit(
    *     {
    *         intent: 'show me a recipe for a cookie',
+   *         source: 'suggestion',
    *     },
    * );
    */
@@ -2758,6 +2761,7 @@ class Tracker {
         section,
         intent,
         threadId,
+        source,
       } = parameters;
       const bodyParams = {
         intent,
@@ -2766,6 +2770,10 @@ class Tracker {
 
       if (threadId) {
         bodyParams.thread_id = threadId;
+      }
+
+      if (source) {
+        bodyParams.source = source;
       }
 
       const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
