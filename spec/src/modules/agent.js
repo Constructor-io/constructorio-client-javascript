@@ -366,6 +366,28 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
         done();
       });
     });
+    it('should enqueue FOLLOW_UP_REFINEMENT event data into the stream', (done) => {
+      const eventType = Agent.EventTypes.FOLLOW_UP_REFINEMENT;
+      const eventData = {
+        intent_result_id: '5ef345d6-3a36-4c4b-9de4-763d04e294f2',
+        thread_id: 'e421aec7-8b2a-4398-847e-08badd0225bc',
+        question: 'Who are you shopping for?',
+        options: ['Women\'s styles', 'Men\'s styles', 'Kids and baby'],
+      };
+
+      setupEventListeners(mockEventSource, mockStreamController, Agent.EventTypes);
+
+      const refinementCallback = mockEventSource.addEventListener
+        .getCalls()
+        .find((call) => call.args[0] === eventType).args[1];
+
+      refinementCallback({ data: JSON.stringify(eventData) });
+
+      setImmediate(() => {
+        expect(mockStreamController.enqueue.calledWith({ type: eventType, data: eventData })).to.be.true;
+        done();
+      });
+    });
   });
 
   describe('getAgentResultsStream', () => {

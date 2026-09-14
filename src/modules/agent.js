@@ -172,6 +172,7 @@ class Agent {
     IMAGE_META: 'image_meta', // This event type is used for enhancing recommendations with media content such as images
     MESSAGE: 'message', // Represents a textual message from the agent
     FOLLOW_UP_QUESTIONS: 'follow_up_questions', // Represents follow-up question suggestions
+    FOLLOW_UP_REFINEMENT: 'follow_up_refinement', // Represents a narrowing question with selectable options
     END: 'end', // Represents the end of data stream
   };
 
