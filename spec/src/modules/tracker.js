@@ -9836,6 +9836,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const optionalParameters = {
       section: 'Products',
       threadId: 'thread-1234',
+      source: 'suggestion',
     };
 
     it('Should respond with a valid response when intent and required parameters are provided', (done) => {
@@ -9985,6 +9986,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(fetchSpy).to.have.been.called;
         expect(requestParams).to.have.property('section').to.equal('Products');
         expect(requestParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
+        expect(requestParams).to.have.property('source').to.equal(optionalParameters.source);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
