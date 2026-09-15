@@ -3168,7 +3168,6 @@ class Tracker {
    */
   trackAgentButtonClick(parameters, networkParameters = {}) {
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/ai_agent_button_click?`;
       const {
         mode,
         domain,
@@ -3177,6 +3176,20 @@ class Tracker {
         instanceId,
         section,
       } = parameters;
+
+      if (!mode || typeof mode !== 'string') {
+        this.requests.send();
+
+        return new Error('mode is a required parameter of type string');
+      }
+
+      if (!domain || typeof domain !== 'string') {
+        this.requests.send();
+
+        return new Error('domain is a required parameter of type string');
+      }
+
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/ai_agent_button_click?`;
       const bodyParams = {
         mode,
         domain,
