@@ -3141,6 +3141,82 @@ class Tracker {
   }
 
   /**
+   * Send agent CTA button click event
+   *
+   * @function trackAgentButtonClick
+   * @param {object} parameters - Additional parameters to be sent with request
+   * @param {string} parameters.mode - Agent mode the CTA opens or starts Ex. "chat"
+   * @param {string} parameters.domain - Agent experience the CTA opens or starts Ex. "explorer"
+   * @param {string} [parameters.positionOnPage] - Stable label describing where the CTA is placed Ex. "search_bar"
+   * @param {string} [parameters.pageType] - Page surface where the CTA was clicked. One of "home", "plp", "pdp", "collection", "email_campaign", "cart"
+   * @param {number} [parameters.instanceId] - 1-based index distinguishing CTA instances with the same mode and position during one page view
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User clicked a CTA whose primary action is to open or start an agent experience
+   * @example
+   * constructorio.tracker.trackAgentButtonClick(
+   *     {
+   *         mode: 'chat',
+   *         domain: 'explorer',
+   *         positionOnPage: 'search_bar',
+   *         pageType: 'pdp',
+   *         instanceId: 1,
+   *     },
+   * );
+   */
+  trackAgentButtonClick(parameters, networkParameters = {}) {
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/ai_agent_button_click?`;
+      const {
+        mode,
+        domain,
+        positionOnPage,
+        pageType,
+        instanceId,
+        section,
+      } = parameters;
+      const bodyParams = {
+        mode,
+        domain,
+        section,
+      };
+
+      if (positionOnPage) {
+        bodyParams.position_on_page = positionOnPage;
+      }
+
+      if (pageType) {
+        bodyParams.page_type = pageType;
+      }
+
+      if (instanceId) {
+        bodyParams.instance_id = instanceId;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
    * Send ASA request submitted event
    *
    * @deprecated This method will be removed in a future version. Use trackAgentSubmit instead.

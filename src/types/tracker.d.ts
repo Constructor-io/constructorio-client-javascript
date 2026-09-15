@@ -350,6 +350,18 @@ declare class Tracker {
     networkParameters?: NetworkParameters
   ): true | Error;
 
+  trackAgentButtonClick(
+    parameters: {
+      mode: string;
+      domain: string;
+      positionOnPage?: string;
+      pageType?: 'home' | 'plp' | 'pdp' | 'collection' | 'email_campaign' | 'cart';
+      instanceId?: number;
+      section?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
   trackAssistantSubmit: typeof Tracker.prototype.trackAgentSubmit;
 
   trackAssistantResultLoadStarted: typeof Tracker.prototype.trackAgentResultLoadStarted;
