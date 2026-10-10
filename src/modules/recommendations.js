@@ -349,6 +349,9 @@ class Recommendations {
   /**
    * Get recommendations for every pod configured on a page
    *
+   * Beta: available to a small group of users and may change. Contact your Customer Success
+   * Manager to request access.
+   *
    * @function getRecommendationPage
    * @description Retrieve recommendation results for every pod on a page from Constructor.io API.
    * Each pod's `result_id` is appended to that pod's results, and a
