@@ -43,7 +43,6 @@ function createBaseQueryParams(options) {
 }
 
 // Create URL from supplied parameters
-// eslint-disable-next-line complexity
 function createRecommendationsUrl(podId, parameters, options) {
   const { serviceUrl } = options;
 
@@ -141,7 +140,6 @@ function createRecommendationsUrl(podId, parameters, options) {
 
 // Map parameters that can be set per pod on a page request to their query parameter form
 // - uses the same wire format as `createRecommendationsUrl`
-// eslint-disable-next-line complexity
 function createPageOverridableParams(parameters) {
   const {
     numResults,
@@ -186,7 +184,6 @@ function createPageOverridableParams(parameters) {
 }
 
 // Create page URL from supplied parameters
-// eslint-disable-next-line complexity
 function createRecommendationPageUrl(pageId, parameters, options) {
   const { serviceUrl } = options;
 
@@ -431,7 +428,6 @@ class Recommendations {
             // Append the pod's own `result_id` (not the page's) to each of its results
             if (pod.result_id) {
               pod.response.results.forEach((result) => {
-                // eslint-disable-next-line no-param-reassign
                 result.result_id = pod.result_id;
               });
             }
