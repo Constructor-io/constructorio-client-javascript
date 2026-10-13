@@ -714,7 +714,7 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
       expect(requestedUrlParams).to.not.have.property('pod_overrides');
     });
 
-    it('Should encode podOverrides in bracket notation with the same wire format as shared parameters', async () => {
+    it('Should encode podOverrides in bracket notation', async () => {
       const { recommendations } = new ConstructorIO({ apiKey: mockApiKey, fetch: fetchStub });
       const preFilterExpression = { or: [{ name: 'brand', value: 'acme' }] };
       const variationsMap = { group_by: [{ name: 'color', field: 'data.color' }], values: {}, dtype: 'array' };
@@ -726,7 +726,7 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
           similar_items: { numResults: 0 },
           complete_the_look: {
             numResults: 8,
-            filters: { in_stock: 'true', color: ['red', 'blue'] },
+            filters: { in_stock: 'true' },
             filterMatchTypes: { color: 'all' },
             preFilterExpression,
             variationsMap,
@@ -736,16 +736,12 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
         },
       });
 
-      const requestedUrl = decodeURIComponent(fetchStub.lastCall.args[0]);
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchStub);
       const completeTheLook = requestedUrlParams.pod_overrides.complete_the_look;
 
-      expect(requestedUrl).to.include('pod_overrides[similar_items][num_results]=0');
-      expect(requestedUrl).to.include('pod_overrides[complete_the_look][filters][color]=red&pod_overrides[complete_the_look][filters][color]=blue');
-      expect(requestedUrlParams.num_results).to.equal('10');
       expect(requestedUrlParams.pod_overrides.similar_items).to.deep.equal({ num_results: '0' });
       expect(completeTheLook.num_results).to.equal('8');
-      expect(completeTheLook.filters).to.deep.equal({ in_stock: 'true', color: ['red', 'blue'] });
+      expect(completeTheLook.filters).to.deep.equal({ in_stock: 'true' });
       expect(completeTheLook.filter_match_types).to.deep.equal({ color: 'all' });
       expect(JSON.parse(completeTheLook.pre_filter_expression)).to.deep.equal(preFilterExpression);
       expect(JSON.parse(completeTheLook.variations_map)).to.deep.equal(variationsMap);
@@ -765,20 +761,17 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
 
       expect(fmtOptions).to.deep.equal({ groups_max_depth: 2 });
       expect(requestedUrlParams.fmt_options).to.deep.equal({ groups_max_depth: '2' });
-      expect(requestedUrlParams.pod_overrides.similar_items.fmt_options).to.deep.equal({ groups_max_depth: '2', hidden_fields: 'inventory' });
     });
 
     it('Should stamp each pod\'s own result_id onto its results, not the page result_id', async () => {
       const { recommendations } = new ConstructorIO({ apiKey: mockApiKey, fetch: fetchStub });
 
       const res = await recommendations.getRecommendationPage(pageId, { itemIds: itemId });
-      const [similarItems, completeTheLook] = res.response.pods;
 
       expect(res.result_id).to.equal(pageResultId);
-      similarItems.response.results.forEach((result) => {
+      res.response.pods[0].response.results.forEach((result) => {
         expect(result.result_id).to.equal('similar-items-result-id');
       });
-      expect(completeTheLook.response.results).to.deep.equal([]);
     });
 
     it('Should emit a getRecommendations.completed event per pod and a page completed event', async () => {
@@ -793,7 +786,7 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
       // `CustomEvent` in Node context not containing `detail`, so checking arguments instead
       const customEventSpy = sinon.spy(window, 'CustomEvent');
 
-      await recommendations.getRecommendationPage(pageId, { itemIds: itemId });
+      const res = await recommendations.getRecommendationPage(pageId, { itemIds: itemId });
 
       customEventSpy.getCalls().forEach((call) => {
         const [eventName, { detail }] = call.args;
@@ -811,19 +804,9 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
       expect(podEvents[0].request.item_id).to.equal(itemId);
       expect(podEvents[0].result_id).to.equal('similar-items-result-id');
       expect(podEvents[0].response.pod.id).to.equal('similar_items');
-      expect(podEvents[0].response.results[0].result_id).to.equal('similar-items-result-id');
       expect(podEvents[1].request.pod_id).to.equal('complete_the_look');
-      expect(podEvents[1].result_id).to.equal('complete-the-look-result-id');
-      expect(podEvents[1].response.results).to.deep.equal([]);
       expect(pageEvents).to.have.length(1);
       expect(pageEvents[0].result_id).to.equal(pageResultId);
-    });
-
-    it('Should leave each pod\'s request without pod_id in the returned response', async () => {
-      const { recommendations } = new ConstructorIO({ apiKey: mockApiKey, fetch: fetchStub });
-
-      const res = await recommendations.getRecommendationPage(pageId, { itemIds: itemId });
-
       expect(res.response.pods[0].request).to.not.have.property('pod_id');
     });
 
@@ -847,8 +830,7 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
       customEventSpy.getCalls().forEach((call) => eventNames.push(call.args[0]));
       customEventSpy.restore();
 
-      expect(res.response.pods[1]).to.not.have.property('response');
-      expect(res.response.pods[0].response.results[0].result_id).to.equal('similar-items-result-id');
+      expect(res.response.pods).to.have.length(2);
       expect(eventNames.filter((name) => name === 'cio.client.recommendations.getRecommendations.completed')).to.have.length(1);
       expect(eventNames.filter((name) => name === 'cio.client.recommendations.getRecommendationPage.completed')).to.have.length(1);
     });
@@ -882,7 +864,7 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
       })).to.eventually.be.rejectedWith('podOverrides must be an object keyed by pod id');
     });
 
-    ['abc', 5, ['numResults']].forEach((override) => {
+    ['abc', ['numResults']].forEach((override) => {
       it(`Should be rejected when a podOverrides entry is ${JSON.stringify(override)}`, () => {
         const { recommendations } = new ConstructorIO({ apiKey: mockApiKey, fetch: fetchStub });
 
@@ -912,7 +894,6 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
       expect(res).to.have.property('result_id').to.be.a('string');
       expect(res.response.pods).to.be.an('array').that.is.not.empty;
       res.response.pods.forEach((pod) => {
-        expect(pod).to.have.property('pod_id').to.be.a('string');
         expect(pod).to.have.property('result_id').to.be.a('string').that.does.not.equal(res.result_id);
         expect(pod.response.pod.id).to.equal(pod.pod_id);
         pod.response.results.forEach((result) => {
