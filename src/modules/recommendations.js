@@ -238,7 +238,12 @@ function createRecommendationPageUrl(pageId, parameters, options) {
       const podOverrideParams = {};
 
       Object.keys(podOverrides).forEach((podId) => {
-        const override = podOverrides[podId] || {};
+        const override = podOverrides[podId];
+
+        if (!override || typeof override !== 'object' || Array.isArray(override)) {
+          throw new Error(`podOverrides.${podId} must be an object`);
+        }
+
         const unsupported = Object.keys(override)
           .filter((name) => !PAGE_OVERRIDABLE_PARAMETERS.includes(name));
 
