@@ -765,6 +765,7 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
 
       expect(fmtOptions).to.deep.equal({ groups_max_depth: 2 });
       expect(requestedUrlParams.fmt_options).to.deep.equal({ groups_max_depth: '2' });
+      expect(requestedUrlParams.pod_overrides.similar_items.fmt_options).to.deep.equal({ groups_max_depth: '2', hidden_fields: 'inventory' });
     });
 
     it('Should stamp each pod\'s own result_id onto its results, not the page result_id', async () => {
@@ -826,6 +827,32 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
       expect(res.response.pods[0].request).to.not.have.property('pod_id');
     });
 
+    it('Should skip pods without a results array and still emit the page completed event', async () => {
+      const response = pageResponse();
+      const [, failedPod] = response.response.pods;
+
+      delete failedPod.response;
+      fetchStub = sinon.stub().resolves({ ok: true, json: () => Promise.resolve(response) });
+
+      const { recommendations } = new ConstructorIO({
+        apiKey: mockApiKey,
+        fetch: fetchStub,
+        eventDispatcher: { waitForBeacon: false },
+      });
+      const eventNames = [];
+      const customEventSpy = sinon.spy(window, 'CustomEvent');
+
+      const res = await recommendations.getRecommendationPage(pageId, { itemIds: itemId });
+
+      customEventSpy.getCalls().forEach((call) => eventNames.push(call.args[0]));
+      customEventSpy.restore();
+
+      expect(res.response.pods[1]).to.not.have.property('response');
+      expect(res.response.pods[0].response.results[0].result_id).to.equal('similar-items-result-id');
+      expect(eventNames.filter((name) => name === 'cio.client.recommendations.getRecommendations.completed')).to.have.length(1);
+      expect(eventNames.filter((name) => name === 'cio.client.recommendations.getRecommendationPage.completed')).to.have.length(1);
+    });
+
     it('Should be rejected when the response has no pods', () => {
       fetchStub = sinon.stub().resolves({ ok: true, json: () => Promise.resolve({ response: {} }) });
       const { recommendations } = new ConstructorIO({ apiKey: mockApiKey, fetch: fetchStub });
@@ -847,6 +874,14 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
       })).to.eventually.be.rejectedWith('podOverrides.similar_items contains parameters that cannot be overridden per pod: itemIds');
     });
 
+    it('Should be rejected when podOverrides is not an object', () => {
+      const { recommendations } = new ConstructorIO({ apiKey: mockApiKey, fetch: fetchStub });
+
+      return expect(recommendations.getRecommendationPage(pageId, {
+        podOverrides: [{ numResults: 5 }],
+      })).to.eventually.be.rejectedWith('podOverrides must be an object keyed by pod id');
+    });
+
     it('Should be rejected when variationId is provided without itemIds', () => {
       const { recommendations } = new ConstructorIO({ apiKey: mockApiKey, fetch: fetchStub });
 
@@ -854,8 +889,7 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     });
   });
 
-  // The page endpoint is not yet enabled on the test index, and the test index has no
-  // page configured (`/recommendations/v1/pages/pdp_b2c` returns 404 there)
+  // Requires a page configured on the test index
   describe.skip('getRecommendationPage - live', () => {
     const pageId = 'pdp_b2c';
     const itemId = 'power_drill';
