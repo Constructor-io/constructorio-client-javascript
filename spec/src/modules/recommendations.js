@@ -864,7 +864,7 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
       })).to.eventually.be.rejectedWith('podOverrides must be an object keyed by pod id');
     });
 
-    ['abc', ['numResults']].forEach((override) => {
+    ['abc', false, ['numResults']].forEach((override) => {
       it(`Should be rejected when a podOverrides entry is ${JSON.stringify(override)}`, () => {
         const { recommendations } = new ConstructorIO({ apiKey: mockApiKey, fetch: fetchStub });
 
