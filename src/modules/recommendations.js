@@ -352,17 +352,17 @@ class Recommendations {
   }
 
   /**
-   * Get recommendations for every pod configured on a page
+   * Retrieve recommendation results for every pod on a page from Constructor.io API.
    *
    * Beta: available to a small group of users and may change. Contact your Customer Success
    * Manager to request access.
    *
-   * @function getRecommendationPage
-   * @description Retrieve recommendation results for every pod on a page from Constructor.io API.
    * Each pod's `result_id` is appended to that pod's results, and a
    * `recommendations.getRecommendations.completed` event is dispatched per pod so pod-level
    * tracking works as it does for `getRecommendations`. The top-level `result_id` identifies the
    * page request and must not be used for tracking.
+   *
+   * @function getRecommendationPage
    * @param {string} pageId - Page identifier
    * @param {object} [parameters] - Additional parameters to refine results, applied to every pod
    * @param {string|array} [parameters.itemIds] - Item ID(s) to retrieve recommendations for (strategy specific).
