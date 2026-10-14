@@ -748,6 +748,21 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
       expect(completeTheLook.fmt_options).to.deep.equal({ groups_max_depth: '2', hidden_fields: ['inventory', 'margin'] });
     });
 
+    it('Should omit empty podOverrides from the request', async () => {
+      const { recommendations } = new ConstructorIO({ apiKey: mockApiKey, fetch: fetchStub });
+
+      await recommendations.getRecommendationPage(pageId, {
+        itemIds: itemId,
+        podOverrides: { similar_items: {}, complete_the_look: null },
+      });
+
+      const requestedUrl = fetchStub.lastCall.args[0];
+      const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchStub);
+
+      expect(requestedUrl).to.not.include('&&');
+      expect(requestedUrlParams).to.not.have.property('pod_overrides');
+    });
+
     it('Should not mutate a fmtOptions object shared between page-wide parameters and an override', async () => {
       const { recommendations } = new ConstructorIO({ apiKey: mockApiKey, fetch: fetchStub });
       const fmtOptions = { groups_max_depth: 2 };

@@ -235,10 +235,17 @@ function createRecommendationPageUrl(pageId, parameters, options) {
           throw new Error(`podOverrides.${podId} contains parameters that cannot be overridden per pod: ${unsupported.join(', ')}. Supported: ${PAGE_OVERRIDABLE_PARAMETERS.join(', ')}`);
         }
 
-        podOverrideParams[podId] = createPageOverridableParams(override);
+        const overrideParams = createPageOverridableParams(override);
+
+        // Skip empty overrides, which would otherwise serialize to an empty query segment
+        if (Object.keys(overrideParams).length) {
+          podOverrideParams[podId] = overrideParams;
+        }
       });
 
-      queryParams.pod_overrides = podOverrideParams;
+      if (Object.keys(podOverrideParams).length) {
+        queryParams.pod_overrides = podOverrideParams;
+      }
     }
   }
 
