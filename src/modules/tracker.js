@@ -2739,6 +2739,7 @@ class Tracker {
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.source] - How the intent was submitted Ex. "suggestion"
+   * @param {string} [parameters.uiLibrary] - Name and version of the UI library sending the event, sent as `ui_library` Ex. "cio-ui-pia-1.4.0"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -2762,6 +2763,7 @@ class Tracker {
         intent,
         threadId,
         source,
+        uiLibrary,
       } = parameters;
       const bodyParams = {
         intent,
@@ -2776,7 +2778,13 @@ class Tracker {
         bodyParams.source = source;
       }
 
-      const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
+      const queryParams = {};
+
+      if (uiLibrary) {
+        queryParams.ui_library = uiLibrary;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
       const requestMethod = 'POST';
       const requestBody = applyParams(bodyParams, {
         ...this.options,
@@ -2806,6 +2814,7 @@ class Tracker {
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {string} [parameters.intentResultId] - The intent result id from the ASA response
    * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
+   * @param {string} [parameters.uiLibrary] - Name and version of the UI library sending the event, sent as `ui_library` Ex. "cio-ui-pia-1.4.0"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -2827,6 +2836,7 @@ class Tracker {
         intentResultId,
         intent,
         threadId,
+        uiLibrary,
       } = parameters;
       const bodyParams = {
         intent_result_id: intentResultId,
@@ -2838,7 +2848,13 @@ class Tracker {
         bodyParams.thread_id = threadId;
       }
 
-      const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
+      const queryParams = {};
+
+      if (uiLibrary) {
+        queryParams.ui_library = uiLibrary;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
       const requestMethod = 'POST';
       const requestBody = applyParams(bodyParams, {
         ...this.options,
@@ -2869,6 +2885,7 @@ class Tracker {
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {string} [parameters.intentResultId] - The intent result id from the ASA response
    * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
+   * @param {string} [parameters.uiLibrary] - Name and version of the UI library sending the event, sent as `ui_library` Ex. "cio-ui-pia-1.4.0"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -2892,6 +2909,7 @@ class Tracker {
         intentResultId,
         intent,
         threadId,
+        uiLibrary,
       } = parameters;
       const bodyParams = {
         intent_result_id: intentResultId,
@@ -2904,7 +2922,13 @@ class Tracker {
         bodyParams.thread_id = threadId;
       }
 
-      const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
+      const queryParams = {};
+
+      if (uiLibrary) {
+        queryParams.ui_library = uiLibrary;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
       const requestMethod = 'POST';
       const requestBody = applyParams(bodyParams, {
         ...this.options,
@@ -2938,6 +2962,7 @@ class Tracker {
    * @param {string} [parameters.variationId] - Product item variation unique identifier
    * @param {string} [parameters.intentResultId] - Browse result identifier (returned in response from Constructor)
    * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
+   * @param {string} [parameters.uiLibrary] - Name and version of the UI library sending the event, sent as `ui_library` Ex. "cio-ui-pia-1.4.0"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -2966,6 +2991,7 @@ class Tracker {
         itemName,
         intent,
         threadId,
+        uiLibrary,
       } = parameters;
 
       const bodyParams = {
@@ -2982,7 +3008,13 @@ class Tracker {
         bodyParams.thread_id = threadId;
       }
 
-      const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
+      const queryParams = {};
+
+      if (uiLibrary) {
+        queryParams.ui_library = uiLibrary;
+      }
+
+      const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
       const requestMethod = 'POST';
       const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
 
@@ -3014,6 +3046,7 @@ class Tracker {
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {string} [parameters.intentResultId] - Browse result identifier (returned in response from Constructor)
    * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
+   * @param {string} [parameters.uiLibrary] - Name and version of the UI library sending the event, sent as `ui_library` Ex. "cio-ui-pia-1.4.0"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -3041,6 +3074,7 @@ class Tracker {
         searchResultId,
         intent,
         threadId,
+        uiLibrary,
       } = parameters;
 
       const bodyParams = {
@@ -3056,7 +3090,13 @@ class Tracker {
         bodyParams.thread_id = threadId;
       }
 
-      const requestURL = `${requestPath}${applyParamsAsString({}, this.options)}`;
+      const queryParams = {};
+
+      if (uiLibrary) {
+        queryParams.ui_library = uiLibrary;
+      }
+
+      const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
       const requestMethod = 'POST';
       const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
 
@@ -3087,6 +3127,7 @@ class Tracker {
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
    * @param {string} [parameters.intentResultId] - intentResultId from the ASA response
    * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
+   * @param {string} [parameters.uiLibrary] - Name and version of the UI library sending the event, sent as `ui_library` Ex. "cio-ui-pia-1.4.0"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -3113,6 +3154,7 @@ class Tracker {
         searchResultId,
         intentResultId,
         threadId,
+        uiLibrary,
       } = parameters;
 
       const bodyParams = {
@@ -3127,7 +3169,13 @@ class Tracker {
         bodyParams.thread_id = threadId;
       }
 
-      const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
+      const queryParams = {};
+
+      if (uiLibrary) {
+        queryParams.ui_library = uiLibrary;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
       const requestMethod = 'POST';
       const requestBody = applyParams(bodyParams, {
         ...this.options,
@@ -3159,6 +3207,7 @@ class Tracker {
    * @param {string} [parameters.pageType] - Page surface where the CTA was clicked. One of "home", "plp", "pdp", "search", "collection", "email_campaign", "cart"
    * @param {number} [parameters.instanceId] - 1-based positive integer distinguishing CTA instances with the same mode and position during one page view
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.uiLibrary] - Name and version of the UI library sending the event, sent as `ui_library` Ex. "cio-ui-pia-1.4.0"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -3183,6 +3232,7 @@ class Tracker {
         pageType,
         instanceId,
         section,
+        uiLibrary,
       } = parameters;
 
       if (!mode || typeof mode !== 'string') {
@@ -3222,7 +3272,13 @@ class Tracker {
         bodyParams.instance_id = instanceId;
       }
 
-      const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
+      const queryParams = {};
+
+      if (uiLibrary) {
+        queryParams.ui_library = uiLibrary;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
       const requestMethod = 'POST';
       const requestBody = applyParams(bodyParams, {
         ...this.options,
@@ -3428,6 +3484,7 @@ class Tracker {
    * @param {string} [parameters.variationId] - Variation id whose page we are on
    * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.uiLibrary] - Name and version of the UI library sending the event, sent as `ui_library` Ex. "cio-ui-pia-1.4.0"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -3468,6 +3525,7 @@ class Tracker {
         variationId,
         viewTimespans,
         threadId,
+        uiLibrary,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3484,6 +3542,10 @@ class Tracker {
 
       if (section) {
         queryParams.section = section;
+      }
+
+      if (uiLibrary) {
+        queryParams.ui_library = uiLibrary;
       }
 
       const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
@@ -3518,6 +3580,7 @@ class Tracker {
    * @param {string} [parameters.variationId] - Variation id whose page we are on
    * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.uiLibrary] - Name and version of the UI library sending the event, sent as `ui_library` Ex. "cio-ui-pia-1.4.0"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -3547,6 +3610,7 @@ class Tracker {
         itemName,
         variationId,
         threadId,
+        uiLibrary,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3562,6 +3626,10 @@ class Tracker {
 
       if (section) {
         queryParams.section = section;
+      }
+
+      if (uiLibrary) {
+        queryParams.ui_library = uiLibrary;
       }
 
       const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
@@ -3595,6 +3663,7 @@ class Tracker {
    * @param {string} [parameters.variationId] - Variation id whose page we are on
    * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.uiLibrary] - Name and version of the UI library sending the event, sent as `ui_library` Ex. "cio-ui-pia-1.4.0"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -3618,6 +3687,7 @@ class Tracker {
         itemName,
         variationId,
         threadId,
+        uiLibrary,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3632,6 +3702,10 @@ class Tracker {
 
       if (section) {
         queryParams.section = section;
+      }
+
+      if (uiLibrary) {
+        queryParams.ui_library = uiLibrary;
       }
 
       const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
@@ -3665,6 +3739,7 @@ class Tracker {
    * @param {string} [parameters.variationId] - Variation id whose page we are on
    * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.uiLibrary] - Name and version of the UI library sending the event, sent as `ui_library` Ex. "cio-ui-pia-1.4.0"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -3688,6 +3763,7 @@ class Tracker {
         itemName,
         variationId,
         threadId,
+        uiLibrary,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3702,6 +3778,10 @@ class Tracker {
 
       if (section) {
         queryParams.section = section;
+      }
+
+      if (uiLibrary) {
+        queryParams.ui_library = uiLibrary;
       }
 
       const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
@@ -3737,6 +3817,7 @@ class Tracker {
    * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.questionTopic] - Topic category of the question.
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.uiLibrary] - Name and version of the UI library sending the event, sent as `ui_library` Ex. "cio-ui-pia-1.4.0"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -3763,6 +3844,7 @@ class Tracker {
         question,
         threadId,
         questionTopic,
+        uiLibrary,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3782,6 +3864,10 @@ class Tracker {
 
       if (section) {
         queryParams.section = section;
+      }
+
+      if (uiLibrary) {
+        queryParams.ui_library = uiLibrary;
       }
 
       const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
@@ -3817,6 +3903,7 @@ class Tracker {
    * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.questionTopic] - Topic category of the question
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.uiLibrary] - Name and version of the UI library sending the event, sent as `ui_library` Ex. "cio-ui-pia-1.4.0"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -3843,6 +3930,7 @@ class Tracker {
         question,
         threadId,
         questionTopic,
+        uiLibrary,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3862,6 +3950,10 @@ class Tracker {
 
       if (section) {
         queryParams.section = section;
+      }
+
+      if (uiLibrary) {
+        queryParams.ui_library = uiLibrary;
       }
 
       const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
@@ -3900,6 +3992,7 @@ class Tracker {
    * @param {string} [parameters.variationId] - Variation id whose page we are on
    * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.uiLibrary] - Name and version of the UI library sending the event, sent as `ui_library` Ex. "cio-ui-pia-1.4.0"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -3931,6 +4024,7 @@ class Tracker {
         items,
         followUpQuestions,
         threadId,
+        uiLibrary,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -3956,6 +4050,10 @@ class Tracker {
 
       if (section) {
         queryParams.section = section;
+      }
+
+      if (uiLibrary) {
+        queryParams.ui_library = uiLibrary;
       }
 
       const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
@@ -3991,6 +4089,7 @@ class Tracker {
    * @param {string} [parameters.variationId] - Variation id whose page we are on
    * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.uiLibrary] - Name and version of the UI library sending the event, sent as `ui_library` Ex. "cio-ui-pia-1.4.0"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -4018,6 +4117,7 @@ class Tracker {
         feedbackLabel,
         qnaResultId,
         threadId,
+        uiLibrary,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -4034,6 +4134,10 @@ class Tracker {
 
       if (section) {
         queryParams.section = section;
+      }
+
+      if (uiLibrary) {
+        queryParams.ui_library = uiLibrary;
       }
 
       const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
@@ -4073,6 +4177,7 @@ class Tracker {
    * @param {string} [parameters.variationId] - Variation id of the clicked recommendation
    * @param {string} [parameters.threadId] - Thread ID for grouping events within a conversation
    * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {string} [parameters.uiLibrary] - Name and version of the UI library sending the event, sent as `ui_library` Ex. "cio-ui-pia-1.4.0"
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -4104,6 +4209,7 @@ class Tracker {
         seedVariationId,
         qnaResultId,
         threadId,
+        uiLibrary,
       } = parameters;
       const queryParams = {};
       const bodyParams = {
@@ -4136,6 +4242,10 @@ class Tracker {
 
       if (section) {
         queryParams.section = section;
+      }
+
+      if (uiLibrary) {
+        queryParams.ui_library = uiLibrary;
       }
 
       const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;

@@ -9837,6 +9837,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       section: 'Products',
       threadId: 'thread-1234',
       source: 'suggestion',
+      uiLibrary: 'cio-ui-mocha-1.0.0',
     };
 
     it('Should respond with a valid response when intent and required parameters are provided', (done) => {
@@ -9984,6 +9985,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(helpers.extractUrlParamsFromFetch(fetchSpy)).to.have.property('ui_library').to.equal(optionalParameters.uiLibrary);
         expect(requestParams).to.have.property('section').to.equal('Products');
         expect(requestParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
         expect(requestParams).to.have.property('source').to.equal(optionalParameters.source);
@@ -10155,6 +10157,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       section: 'Products',
       intentResultId: '123451',
       threadId: 'thread-123',
+      uiLibrary: 'cio-ui-mocha-1.0.0',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -10302,6 +10305,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(helpers.extractUrlParamsFromFetch(fetchSpy)).to.have.property('ui_library').to.equal(optionalParameters.uiLibrary);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(requestParams).to.have.property('intent_result_id').to.equal(optionalParameters.intentResultId);
         expect(requestParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
@@ -10474,6 +10478,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       section: 'Products',
       intentResultId: '123451',
       threadId: 'thread-123',
+      uiLibrary: 'cio-ui-mocha-1.0.0',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -10622,6 +10627,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(helpers.extractUrlParamsFromFetch(fetchSpy)).to.have.property('ui_library').to.equal(optionalParameters.uiLibrary);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(requestParams).to.have.property('intent_result_id').to.equal(optionalParameters.intentResultId);
         expect(requestParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
@@ -10800,6 +10806,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       intentResultId: '12312',
       variationId: '123123',
       threadId: 'thread-123',
+      uiLibrary: 'cio-ui-mocha-1.0.0',
     };
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
@@ -10950,6 +10957,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(helpers.extractUrlParamsFromFetch(fetchSpy)).to.have.property('ui_library').to.equal(optionalParameters.uiLibrary);
         expect(requestParams).to.have.property('intent_result_id').to.equal(optionalParameters.intentResultId);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(requestParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
@@ -11137,6 +11145,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           itemId: '789',
         },
       ],
+      uiLibrary: 'cio-ui-mocha-1.0.0',
     };
     const snakeCaseItems = [
       {
@@ -11296,6 +11305,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(helpers.extractUrlParamsFromFetch(fetchSpy)).to.have.property('ui_library').to.equal(optionalParameters.uiLibrary);
         expect(requestParams).to.have.property('intent_result_id').to.equal(optionalParameters.intentResultId);
         expect(requestParams).to.have.property('items').to.deep.equal(snakeCaseItems);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
@@ -11468,6 +11478,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       section: 'Products',
       intentResultId: '1234',
       threadId: 'thread-123',
+      uiLibrary: 'cio-ui-mocha-1.0.0',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -11617,6 +11628,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(helpers.extractUrlParamsFromFetch(fetchSpy)).to.have.property('ui_library').to.equal(optionalParameters.uiLibrary);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(requestParams).to.have.property('intent_result_id').to.equal(optionalParameters.intentResultId);
         expect(requestParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
@@ -11789,6 +11801,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       positionOnPage: 'search_bar',
       pageType: 'search',
       instanceId: 1,
+      uiLibrary: 'cio-ui-mocha-1.0.0',
     };
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
@@ -11938,6 +11951,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(helpers.extractUrlParamsFromFetch(fetchSpy)).to.have.property('ui_library').to.equal(optionalParameters.uiLibrary);
         expect(requestParams).to.have.property('section').to.equal('Products');
         expect(requestParams).to.have.property('position_on_page').to.equal(optionalParameters.positionOnPage);
         expect(requestParams).to.have.property('page_type').to.equal(optionalParameters.pageType);
@@ -12146,6 +12160,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const requiredParameters = { intent: 'Show me cookie recipes' };
     const optionalParameters = {
       section: 'Products',
+      uiLibrary: 'cio-ui-mocha-1.0.0',
     };
 
     it('Should respond with a valid response when intent and required parameters are provided', (done) => {
@@ -12293,6 +12308,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(helpers.extractUrlParamsFromFetch(fetchSpy)).to.have.property('ui_library').to.equal(optionalParameters.uiLibrary);
         expect(requestParams).to.have.property('section').to.equal('Products');
 
         // Response
@@ -12461,6 +12477,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const optionalParameters = {
       section: 'Products',
       intentResultId: '123451',
+      uiLibrary: 'cio-ui-mocha-1.0.0',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -12608,6 +12625,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(helpers.extractUrlParamsFromFetch(fetchSpy)).to.have.property('ui_library').to.equal(optionalParameters.uiLibrary);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(requestParams).to.have.property('intent_result_id').to.equal(optionalParameters.intentResultId);
 
@@ -12778,6 +12796,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const optionalParameters = {
       section: 'Products',
       intentResultId: '123451',
+      uiLibrary: 'cio-ui-mocha-1.0.0',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -12926,6 +12945,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(helpers.extractUrlParamsFromFetch(fetchSpy)).to.have.property('ui_library').to.equal(optionalParameters.uiLibrary);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(requestParams).to.have.property('intent_result_id').to.equal(optionalParameters.intentResultId);
 
@@ -13102,6 +13122,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       section: 'Products',
       intentResultId: '12312',
       variationId: '123123',
+      uiLibrary: 'cio-ui-mocha-1.0.0',
     };
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
@@ -13252,6 +13273,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(helpers.extractUrlParamsFromFetch(fetchSpy)).to.have.property('ui_library').to.equal(optionalParameters.uiLibrary);
         expect(requestParams).to.have.property('intent_result_id').to.equal(optionalParameters.intentResultId);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(requestParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
@@ -13437,6 +13459,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
           itemId: '789',
         },
       ],
+      uiLibrary: 'cio-ui-mocha-1.0.0',
     };
     const snakeCaseItems = [
       {
@@ -13596,6 +13619,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(helpers.extractUrlParamsFromFetch(fetchSpy)).to.have.property('ui_library').to.equal(optionalParameters.uiLibrary);
         expect(requestParams).to.have.property('intent_result_id').to.equal(optionalParameters.intentResultId);
         expect(requestParams).to.have.property('items').to.deep.equal(snakeCaseItems);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
@@ -13766,6 +13790,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const optionalParameters = {
       section: 'Products',
       intentResultId: '1234',
+      uiLibrary: 'cio-ui-mocha-1.0.0',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -13915,6 +13940,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(helpers.extractUrlParamsFromFetch(fetchSpy)).to.have.property('ui_library').to.equal(optionalParameters.uiLibrary);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(requestParams).to.have.property('intent_result_id').to.equal(optionalParameters.intentResultId);
 
@@ -14103,6 +14129,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       section: 'Products',
       variationId: '2',
       threadId: 'thread-123',
+      uiLibrary: 'cio-ui-mocha-1.0.0',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -14254,6 +14281,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(helpers.extractUrlParamsFromFetch(fetchSpy)).to.have.property('ui_library').to.equal(optionalParameters.uiLibrary);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
         expect(bodyParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
@@ -14435,6 +14463,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       section: 'Products',
       variationId: '2',
       threadId: 'thread-123',
+      uiLibrary: 'cio-ui-mocha-1.0.0',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -14585,6 +14614,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(helpers.extractUrlParamsFromFetch(fetchSpy)).to.have.property('ui_library').to.equal(optionalParameters.uiLibrary);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
         expect(bodyParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
@@ -14758,6 +14788,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       section: 'Products',
       variationId: '2',
       threadId: 'thread-123',
+      uiLibrary: 'cio-ui-mocha-1.0.0',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -14909,6 +14940,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(helpers.extractUrlParamsFromFetch(fetchSpy)).to.have.property('ui_library').to.equal(optionalParameters.uiLibrary);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
         expect(bodyParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
@@ -15082,6 +15114,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       section: 'Products',
       variationId: '2',
       threadId: 'thread-123',
+      uiLibrary: 'cio-ui-mocha-1.0.0',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -15231,6 +15264,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(helpers.extractUrlParamsFromFetch(fetchSpy)).to.have.property('ui_library').to.equal(optionalParameters.uiLibrary);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
         expect(bodyParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
@@ -15405,6 +15439,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       variationId: '2',
       threadId: 'thread-123',
       questionTopic: 'pricing',
+      uiLibrary: 'cio-ui-mocha-1.0.0',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -15555,6 +15590,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(helpers.extractUrlParamsFromFetch(fetchSpy)).to.have.property('ui_library').to.equal(optionalParameters.uiLibrary);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
         expect(bodyParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
@@ -15730,6 +15766,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       variationId: '2',
       threadId: 'thread-123',
       questionTopic: 'pricing',
+      uiLibrary: 'cio-ui-mocha-1.0.0',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -15880,6 +15917,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(helpers.extractUrlParamsFromFetch(fetchSpy)).to.have.property('ui_library').to.equal(optionalParameters.uiLibrary);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
         expect(bodyParams).to.have.property('thread_id').to.equal(optionalParameters.threadId);
@@ -16057,6 +16095,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       threadId: 'thread-123',
       items: [{ itemId: 'rec1', itemName: 'Rec Product 1' }, { itemId: 'rec2', itemName: 'Rec Product 2' }],
       followUpQuestions: [{ value: 'What about size?' }, { value: 'Is it machine washable?' }],
+      uiLibrary: 'cio-ui-mocha-1.0.0',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -16208,6 +16247,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(helpers.extractUrlParamsFromFetch(fetchSpy)).to.have.property('ui_library').to.equal(optionalParameters.uiLibrary);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
         expect(bodyParams).to.have.property('qna_result_id').to.equal(optionalParameters.qnaResultId);
@@ -16388,6 +16428,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       variationId: '2',
       qnaResultId: '0daf0015-fc29-4727-9140-8d5313a1902c',
       threadId: 'thread-123',
+      uiLibrary: 'cio-ui-mocha-1.0.0',
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
@@ -16537,6 +16578,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(helpers.extractUrlParamsFromFetch(fetchSpy)).to.have.property('ui_library').to.equal(optionalParameters.uiLibrary);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('qna_result_id').to.equal(optionalParameters.qnaResultId);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
@@ -16715,6 +16757,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       seedVariationId: 'seed-var-1',
       threadId: 'thread-123',
       qnaResultId: '0daf0015-fc29-4727-9140-8d5313a1902c',
+      uiLibrary: 'cio-ui-mocha-1.0.0',
     };
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
@@ -16762,6 +16805,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
         // Request
         expect(fetchSpy).to.have.been.called;
+        expect(helpers.extractUrlParamsFromFetch(fetchSpy)).to.have.property('ui_library').to.equal(optionalParameters.uiLibrary);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
         expect(bodyParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
         expect(bodyParams).to.have.property('position').to.equal(optionalParameters.position);

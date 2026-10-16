@@ -285,6 +285,7 @@ declare class Tracker {
       section?: string;
       threadId?: string;
       source?: string;
+      uiLibrary?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -295,6 +296,7 @@ declare class Tracker {
       section?: string;
       intentResultId?: string;
       threadId?: string;
+      uiLibrary?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -306,6 +308,7 @@ declare class Tracker {
       section?: string;
       intentResultId?: string;
       threadId?: string;
+      uiLibrary?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -320,6 +323,7 @@ declare class Tracker {
       section?: string;
       intentResultId?: string;
       threadId?: string;
+      uiLibrary?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -333,6 +337,7 @@ declare class Tracker {
       intentResultId?: string;
       section?: string;
       threadId?: string;
+      uiLibrary?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -347,6 +352,7 @@ declare class Tracker {
       section?: string;
       intentResultId?: string;
       threadId?: string;
+      uiLibrary?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -359,6 +365,7 @@ declare class Tracker {
       pageType?: 'home' | 'plp' | 'pdp' | 'search' | 'collection' | 'email_campaign' | 'cart';
       instanceId?: number;
       section?: string;
+      uiLibrary?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -384,6 +391,7 @@ declare class Tracker {
       variationId?: string;
       threadId?: string;
       section?: string;
+      uiLibrary?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -396,6 +404,7 @@ declare class Tracker {
       variationId?: string;
       threadId?: string;
       section?: string;
+      uiLibrary?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -407,6 +416,7 @@ declare class Tracker {
       variationId?: string;
       threadId?: string;
       section?: string;
+      uiLibrary?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -418,6 +428,7 @@ declare class Tracker {
       variationId?: string;
       threadId?: string;
       section?: string;
+      uiLibrary?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -431,6 +442,7 @@ declare class Tracker {
       threadId?: string;
       questionTopic?: string;
       section?: string;
+      uiLibrary?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -444,6 +456,7 @@ declare class Tracker {
       threadId?: string;
       questionTopic?: string;
       section?: string;
+      uiLibrary?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -460,6 +473,7 @@ declare class Tracker {
       variationId?: string;
       threadId?: string;
       section?: string;
+      uiLibrary?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -473,6 +487,7 @@ declare class Tracker {
       variationId?: string;
       threadId?: string;
       section?: string;
+      uiLibrary?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -490,6 +505,7 @@ declare class Tracker {
       variationId?: string;
       threadId?: string;
       section?: string;
+      uiLibrary?: string;
     },
     networkParameters?: NetworkParameters
   ): true | Error;
