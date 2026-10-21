@@ -39,17 +39,18 @@ const constructorio = new ConstructorioClient({
 
 After instantiating an instance of the client, seven modules will be exposed as properties to help retrieve data or send behavioral events: `search`, `browse`, `autocomplete`, `recommendations`, `quizzes`, `agent`, and `tracker`.
 
-#### AI Shopping Agent and Product Insights Agent
+### AI Shopping Agent and Product Insights Agent
 
 - [`agent`](https://constructor-io.github.io/constructorio-client-javascript/module-agent.html) retrieves AI Shopping Agent (ASA) results as a stream.
 - [`agent.pia`](https://constructor-io.github.io/constructorio-client-javascript/module-pia.html) retrieves Product Insights Agent (PIA) questions and answers.
 - [`tracker`](https://constructor-io.github.io/constructorio-client-javascript/module-tracker.html) has the `trackAgent*` methods for ASA events and the `trackProductInsightsAgent*` methods for PIA events.
 
-The `assistant` property is deprecated. Use `agent` instead.
+#### Note:
+1. The `assistant` namespace is deprecated. Use `agent` instead.
 
-`agent` receives results through the browser `EventSource` interface. React Native does not include `EventSource`. If you use `agent` in React Native, add an `EventSource` polyfill.
+2. `agent` receives results through the browser `EventSource` interface. React Native does not include `EventSource`. If you use `agent` in React Native, add an `EventSource` polyfill.
 
-#### Dispatched events
+### Dispatched events
 
 Modules may dispatch custom events on the browser `window` with response data when a request has been completed. The event name follows the following structure: `cio.client.[moduleName].[methodName].completed`. Example consuming code can be found below:
 
