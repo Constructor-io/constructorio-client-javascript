@@ -7,11 +7,16 @@
   "exports": {
     ".": {
       "types": "./lib/types/index.d.ts",
+      "node": "./lib/constructorio.js",
       "import": "./lib/esm/constructorio.mjs",
       "require": "./lib/constructorio.js",
       "default": "./lib/constructorio.js"
     },
-    "./lib/*": "./lib/*",
+    "./lib/*": "./lib/*.js",
+    "./lib/*.js": "./lib/*.js",
+    "./lib/*.mjs": "./lib/*.mjs",
+    "./lib/*.d.ts": "./lib/*.d.ts",
+    "./lib/*.map": "./lib/*.map",
     "./package.json": "./package.json"
   },
   "scripts": {
