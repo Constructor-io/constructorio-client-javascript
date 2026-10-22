@@ -16,6 +16,25 @@ export interface RecommendationsParameters {
   fmtOptions?: FmtOptions;
 }
 
+/** Parameters that can be set per pod on a page request. Each replaces the page-wide value. */
+export interface RecommendationPagePodOverride {
+  numResults?: number;
+  filters?: Record<string, any>;
+  filterMatchTypes?: Record<string, 'all' | 'any' | 'none'>;
+  preFilterExpression?: FilterExpression;
+  fmtOptions?: FmtOptions;
+  hiddenFields?: string[];
+  variationsMap?: VariationsMap;
+}
+
+export interface RecommendationPageParameters extends RecommendationPagePodOverride {
+  itemIds?: string | string[];
+  variationId?: string;
+  section?: string;
+  term?: string;
+  podOverrides?: Record<string, RecommendationPagePodOverride>;
+}
+
 declare class Recommendations {
   constructor(options: ConstructorClientOptions);
 
@@ -28,6 +47,12 @@ declare class Recommendations {
     parameters?: RecommendationsParameters,
     networkParameters?: NetworkParameters
   ): Promise<RecommendationsResponse>;
+
+  getRecommendationPage(
+    pageId: string,
+    parameters?: RecommendationPageParameters,
+    networkParameters?: NetworkParameters
+  ): Promise<RecommendationPageResponse>;
 }
 
 /** *********
@@ -70,4 +95,30 @@ export interface RecommendationsResultType extends Record<string, any> {
     id: string;
     [key: string]: any;
   };
+}
+
+/** *********
+ * Recommendation page results returned from server
+ ********** */
+export interface RecommendationPageResponse extends Record<string, any> {
+  request: Record<string, any>;
+  response: RecommendationPageResponseType;
+  /** Identifies the page request. Not a tracking id: use each pod's `result_id`. */
+  result_id: string;
+}
+
+export interface RecommendationPageResponseType extends Record<string, any> {
+  page_id: string;
+  display_name: string;
+  page_type: string;
+  pods: RecommendationPagePod[];
+}
+
+export interface RecommendationPagePod extends Record<string, any> {
+  pod_id: string;
+  /** The pod's effective request: page-wide parameters with this pod's overrides applied */
+  request: Partial<RecommendationsRequestType>;
+  response: Partial<RecommendationsResponseType>;
+  /** Send this with the pod's recommendation view and click events */
+  result_id: string;
 }
