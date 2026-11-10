@@ -7,6 +7,8 @@ const helpers = require('../utils/helpers');
 const RequestQueue = require('../utils/request-queue');
 
 const MAX_URL_LENGTH = 2048;
+// Values the API accepts for `conversion_location`. Any other value makes it reject the whole conversion event
+const CONVERSION_LOCATIONS = ['plp', 'pdp'];
 
 function applyParams(parameters, options) {
   const {
@@ -1035,6 +1037,9 @@ class Tracker {
    * @param {string} [parameters.displayName] - Display name for the custom conversion type
    * @param {string} [parameters.section="Products"] - Index section
    * @param {object} [parameters.analyticsTags] - Pass additional analytics data
+   * @param {string} [parameters.conversionLocation] - Type of page the conversion happened on: `plp` for a product
+   *   listing page (search results, browse, category or recommendation listing) or `pdp` for a product detail page.
+   *   Sent only when the value is exactly `plp` or `pdp`; any other value is omitted from the request
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -1050,6 +1055,7 @@ class Tracker {
    *         variationId: 'KMH879-7632',
    *         type: 'like',
    *         section: 'Products',
+   *         conversionLocation: 'plp',
    *     },
    * );
    */
@@ -1078,6 +1084,8 @@ class Tracker {
         is_custom_type,
         isCustomType = is_custom_type,
         analyticsTags,
+        conversion_location,
+        conversionLocation = conversion_location,
       } = parameters;
 
       // Ensure support for both item_id and customer_id as parameters
@@ -1121,6 +1129,11 @@ class Tracker {
 
       if (analyticsTags) {
         bodyParams.analytics_tags = analyticsTags;
+      }
+
+      // Only send `plp` or `pdp`; anything else would make the API reject the whole conversion event
+      if (CONVERSION_LOCATIONS.includes(conversionLocation)) {
+        bodyParams.conversion_location = conversionLocation;
       }
 
       const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
@@ -2586,6 +2599,9 @@ class Tracker {
    * @param {string} [parameters.type='add_to_cart'] - Conversion type
    * @param {boolean} [parameters.isCustomType] - Specify if type is custom conversion type
    * @param {string} [parameters.displayName] - Display name for the custom conversion type
+   * @param {string} [parameters.conversionLocation] - Type of page the conversion happened on: `plp` for a product
+   *   listing page (search results, browse, category or recommendation listing) or `pdp` for a product detail page.
+   *   Sent only when the value is exactly `plp` or `pdp`; any other value is omitted from the request
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -2599,7 +2615,8 @@ class Tracker {
    *         itemName: 'espresso',
    *         variationId: '167',
    *         type: 'add_to_cart',
-   *         revenue: '1.0'
+   *         revenue: '1.0',
+   *         conversionLocation: 'pdp',
    *     },
    * );
    */
@@ -2628,6 +2645,8 @@ class Tracker {
         isCustomType = is_custom_type,
         display_name,
         displayName = display_name,
+        conversion_location,
+        conversionLocation = conversion_location,
       } = parameters;
 
       const queryParams = {};
@@ -2708,6 +2727,11 @@ class Tracker {
           return new Error('"displayName" must be a string');
         }
         bodyParams.display_name = displayName;
+      }
+
+      // Only send `plp` or `pdp`; anything else would make the API reject the whole conversion event
+      if (CONVERSION_LOCATIONS.includes(conversionLocation)) {
+        bodyParams.conversion_location = conversionLocation;
       }
 
       const requestURL = `${requestPath}${applyParamsAsString(queryParams, this.options)}`;
