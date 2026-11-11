@@ -1379,6 +1379,8 @@ class Tracker {
    * @param {string} [parameters.filterName] - Filter name from the relevant browse page
    * @param {string} [parameters.filterValue] - Filter value from the relevant browse page
    * @param {string} [parameters.searchTerm] - Search query of the relevant search page
+   * @param {string} [parameters.section] - The section name for the item Ex. "Products"
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
    * @param {object} [networkParameters] - Parameters relevant to the network request
    * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
    * @returns {(true|Error)}
@@ -1391,13 +1393,22 @@ class Tracker {
    *             { itemId: 'KMH140', itemName: 'Blue Jeans' },
    *         ],
    *         searchTerm: 'shirt',
+   *         section: 'Products',
+   *         analyticsTags: { placement: 'results-grid' },
    *     },
    * );
    */
   trackResultsImpressionView(parameters, networkParameters = {}) {
     // Ensure parameters are provided (required)
     if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
-      const { items, filterName, filterValue, searchTerm } = parameters;
+      const {
+        items,
+        filterName,
+        filterValue,
+        searchTerm,
+        section,
+        analyticsTags,
+      } = parameters;
 
       // Ensure items are provided (required)
       if (!items || !Array.isArray(items) || items.length === 0) {
@@ -1421,6 +1432,7 @@ class Tracker {
       const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/impression_view?`;
       const transformedItems = items.map((item) => helpers.toSnakeCaseKeys(item, false));
 
+      const queryParams = {};
       const bodyParams = {
         items: transformedItems,
       };
@@ -1437,7 +1449,15 @@ class Tracker {
         bodyParams.search_term = searchTerm;
       }
 
-      const requestURL = `${baseUrl}${applyParamsAsString({}, this.options)}`;
+      if (section) {
+        queryParams.section = section;
+      }
+
+      if (analyticsTags) {
+        bodyParams.analytics_tags = analyticsTags;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
       const requestMethod = 'POST';
       const requestBody = applyParams(bodyParams, { ...this.options, requestMethod });
 
