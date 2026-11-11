@@ -16,7 +16,7 @@ The contract is what the API accepts on the wire: path, parameter name, query or
 
 Read all of it: description, parent issue, every comment, attachments and linked pull requests. A scope change often exists only in a comment, and a parent issue often carries the parameter table.
 
-- **The input names an issue (an ID, a URL, or a pasted story that carries its ID) and an issue-tracker MCP server is connected:** fetch the issue, its parent and its comments now, before resolving anything. A pasted story is a snapshot, and its parent and comments are usually not in it.
+- **The input names an issue (an ID, a URL, or a pasted story that carries its ID) and an issue-tracker MCP server is connected:** fetch the issue with its relations, its parent and its comments now, before resolving anything. A pasted story is a snapshot, and its parent, comments and related issues are usually not in it.
 - **No such server:** work from the pasted text. With a person present, ask them to paste the parent or the comments when the text refers to them.
 - **The input is already a contract table:** take it as the starting contract. Still check the premise and still do every SDK-side step.
 
@@ -31,6 +31,8 @@ Before resolving anything, search the code on the base branch fetched at Preflig
 - **Everything the story asks for already exists:** stop. Report the file and function as evidence and change nothing. This ends `STATUS: done`.
 - **Part of it exists:** the contract covers only the missing part. Say so above the table.
 - **None of it exists:** continue.
+
+Then look for the same work in someone else's hands: an issue related to the story, or duplicating it, that another person has in progress; an open pull request; a pushed branch that touches the same endpoint or parameter. When you find one, say what it is, whose it is and since when. It is a stop condition (see When to stop).
 
 ## Find the contract for the API family
 
@@ -57,11 +59,13 @@ The document leaves three things out. Look them up in the same repository with t
 
 | Not in the document | Where it is |
 |---|---|
-| Rules across fields (one of two fields required; a field required when another is set) | `behavioral_action_service/src/behavioral_action_service/models/` |
+| Rules across fields (one of two fields required; a field required when another is set) | `behavioral_action_service/src/behavioral_action_service/models/routers/v2/behavioral_action/<event>.py`, and `models/common.py` for the fields every event shares |
 | What happens to bad input | `behavioral_action_service/tests/routers/v2/behavioral_action/test_<event>.py` |
 | Alias paths that still work but are hidden | `behavioral_action_service/src/behavioral_action_service/routers/v2/behavioral_action/<event>.py` |
 
-Known behaviour of this family: a field the endpoint does not declare, or a value outside an enum or limit, is rejected with HTTP 400 and **the whole event is lost**. The document says 422; the tests assert 400.
+Known behaviour of this family: a field the endpoint does not declare, or a value outside an enum or limit, is rejected with HTTP 400 and **the whole event is lost**. The document says 422; the tests assert 400. The request models are configured to allow extra fields, but the running API rejects them all the same, so do not conclude from a model that an undeclared field passes.
+
+A rule across fields may be in the document after all: the script prints it as `body rule` and `body is one of` when the document states one. The model is still where to check it.
 
 ### read
 
@@ -122,12 +126,15 @@ Stop before writing code when any of these holds. With a person present each is 
 - **The change would alter what an existing public method already sends, or where it sends it:** a different endpoint path, a renamed or removed parameter, a default that changes existing requests. That is a migration or a breaking change. It needs a compatibility decision that this skill does not make.
 - **A row is `story only`**, the run is unattended, and the repo guide does not let a live test prove acceptance for the module. A source that cannot be reached leaves its rows `story only`.
 - **The change fits no recipe** in the repo guide.
+- **Someone else already has the same change in progress:** a related or duplicate issue in development with another person, an open pull request, or a pushed branch for the same endpoint or parameter. A second implementation costs a review and a conversation at best.
 
 A false premise also stops the run, with `STATUS: done` (see Check the premise).
 
 ## The contract table
 
 One row per parameter. The same table is shown at the gate and placed in the pull request, so keep it readable: a cell holds a line or two. When a parameter is an object with a shape of its own, the cell names its keys, and the shape follows the table as a list with one line per key.
+
+When the rows share a repository and a commit, name them once in a line above the table, with the files, and let each Source cell say only which of those files establish the row. Repeating the repository and the commit in every cell makes a ten-row table unreadable.
 
 | Wire name | In | Type | Allowed values and limits | On a bad value the API | SDK name (aliases) | Methods | Source |
 |---|---|---|---|---|---|---|---|

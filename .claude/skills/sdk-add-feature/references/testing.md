@@ -24,7 +24,7 @@ When an existing test already sends every optional parameter, add the new one to
 Write the tests before the implementation and run them.
 
 - Where the tests run a built copy of the code, build it from the unchanged source first. A copy left over from another branch can already contain the field, and then nothing fails.
-- At least one Present case must fail, and for the right reason: the wire field is missing from the request.
+- At least one Present case must fail, and for the right reason: the wire field is missing from the request. For a new method the right reason is that the method does not exist yet, and every case that calls it fails that way.
 - Where the test runner retries, turn retries off for this run. A retry only repeats a failure you expect, and against a live API each one costs a full timeout.
 - Record the failing output. It goes into the pull request's Evidence.
 - An Omitted or Bad value case passes before the implementation exists. On its own it proves nothing.

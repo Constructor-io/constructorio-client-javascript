@@ -62,7 +62,7 @@ A reader with a fresh context finds what the author's context hides. Run this af
 
 **X. Pull request text**
 
-- **X1** The required headings are present and in order, the contract table matches the code, and each Source names a repository, file and commit, or a page URL. A `story only` row says what does confirm it: a person's yes at the gate, or the live API accepting the request.
+- **X1** The required headings are present and in order, the contract table matches the code, and each row's source can be opened: a repository, file and commit, or a page URL, given in its Source cell or once in a line above the table that the rows share. A `story only` row says what does confirm it: a person's yes at the gate, or the live API accepting the request.
 - **X2** Every claim under Evidence has a command and a result; failures are named; what was not run is stated.
 - **X3** Items the story lists but the change does not deliver (the release, other SDKs, flagged items) appear under Not in this PR.
 

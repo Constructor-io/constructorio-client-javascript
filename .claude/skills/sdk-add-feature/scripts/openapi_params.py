@@ -20,6 +20,9 @@ FILE is an OpenAPI JSON document, a markdown page that contains one in a fenced 
 A field inside an object, or inside the objects of an array, is printed under its parent with a
 dotted name: items[].item_id, shopper.membership. Nested fields are followed four levels down.
 
+A rule across body fields that the document states, a body that is one of several shapes each
+with its own required fields, is printed after the parameters as "body rule" and "body is one of".
+
 Exit status: 0 when something was found; 2 for a usage error, an unreadable spec, or a path
 or parameter that is not in the document.
 
@@ -266,8 +269,20 @@ def body_rows(body_schema, spec):
     return rows
 
 
+def body_rule(body_schema, spec):
+    """Return (rule, shapes) for what a body says about its fields taken together: a body that is
+    one of several shapes, each with its own required fields, and the description beside them."""
+    flat, _ = flatten(body_schema, spec)
+    shapes = [{'title': shape.get('title') or 'shape %d' % number, 'required': list(shape.get('required', []))}
+              for number, shape in enumerate(flat.get('x-alternatives', []), 1)]
+    if not any(shape['required'] for shape in shapes):
+        return '', []
+    return ' '.join(str(flat.get('description') or '').split()), shapes
+
+
 def operation_rows(path_item, operation, spec):
-    """Return (rows, body) where body is 'closed', 'open' or None when there is no request body."""
+    """Return (rows, body, rule) where body is 'closed', 'open' or None when there is no request
+    body, and rule is what body_rule() returns."""
     declared = {}
     # Parameters declared on the path apply to every method; the operation's own override them.
     for group in (path_item.get('parameters', []), operation.get('parameters', [])):
@@ -284,10 +299,11 @@ def operation_rows(path_item, operation, spec):
 
     content = resolve(operation.get('requestBody', {}), spec).get('content', {})
     if not content:
-        return rows, None
+        return rows, None, ('', [])
     media = content.get('application/json') or next(iter(content.values()))
     body_schema = media.get('schema', {}) if isinstance(media, dict) else {}
-    return rows + body_rows(body_schema, spec), 'closed' if is_closed(body_schema, spec) else 'open'
+    body = 'closed' if is_closed(body_schema, spec) else 'open'
+    return rows + body_rows(body_schema, spec), body, body_rule(body_schema, spec)
 
 
 def operations(spec, prefix=''):
@@ -350,10 +366,13 @@ def command_path(spec, args):
         raise UsageError('%s has no %s operation (available: %s)'
                          % (args.path, method.upper(), ', '.join(methods)))
 
-    rows, body = operation_rows(path_item, path_item[method], spec)
+    rows, body, (rule, shapes) = operation_rows(path_item, path_item[method], spec)
     operation = '%s %s' % (method.upper(), args.path)
     if args.json:
-        print(json.dumps({'operation': operation, 'body': body, 'parameters': rows}, indent=2))
+        data = {'operation': operation, 'body': body, 'parameters': rows}
+        if shapes:
+            data.update(body_rule=rule, body_shapes=shapes)
+        print(json.dumps(data, indent=2))
         return
     print(operation)
     print('%d parameters' % len(rows))
@@ -366,6 +385,13 @@ def command_path(spec, args):
         print('body: open (the document does not forbid unknown properties)')
     else:
         print('body: none')
+    # A rule across fields does not show in the rows above: each field looks optional on its own.
+    if rule:
+        print('body rule: %s' % rule)
+    if shapes:
+        print('body is one of:')
+        for shape in shapes:
+            print('  - %s: requires %s' % (shape['title'], ', '.join(shape['required']) or 'nothing'))
 
 
 def leaf(name):
@@ -377,7 +403,7 @@ def command_find(spec, args):
     hits = []
     names = set()
     for method, path, path_item, operation in operations(spec, args.prefix):
-        rows, _ = operation_rows(path_item, operation, spec)
+        rows, _, _ = operation_rows(path_item, operation, spec)
         names.update(leaf(row['name']) for row in rows)
         hits += [(method, path, row) for row in rows if args.find in (row['name'], leaf(row['name']))]
     if not hits:

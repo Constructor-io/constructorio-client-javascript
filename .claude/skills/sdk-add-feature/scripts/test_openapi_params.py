@@ -63,6 +63,22 @@ SPEC = {
                 ]}}}},
             },
         },
+        '/v2/thing/origin': {
+            'post': {
+                # A rule across fields, written as a description and as sets of required fields.
+                'requestBody': {'content': {'application/json': {'schema': {
+                    'type': 'object', 'additionalProperties': False,
+                    'description': 'Provide exactly one origin: either `term`, or `filter_name` with `filter_value`.',
+                    'required': ['related_term'],
+                    'properties': {
+                        'related_term': {'type': 'string'}, 'term': {'type': 'string'},
+                        'filter_name': {'type': 'string'}, 'filter_value': {'type': 'string'}},
+                    'oneOf': [
+                        {'title': 'Search origin', 'required': ['related_term', 'term']},
+                        {'title': 'Browse origin', 'required': ['related_term', 'filter_name', 'filter_value']},
+                    ]}}}},
+            },
+        },
         '/v2/thing/tree': {
             'post': {
                 'requestBody': {'content': {'application/json': {'schema': {
@@ -280,6 +296,27 @@ class OpenApiParamsTest(unittest.TestCase):
         self.assertFalse(rows['a']['required'])
         self.assertIn('1 of 2 body shapes', rows['b']['constraints'])
         self.assertNotIn('body shapes', rows['a']['constraints'])
+
+    def test_rule_across_body_fields_is_reported(self):
+        code, out, err = self.run_script('--path', '/v2/thing/origin')
+        self.assertEqual(code, 0, err)
+        self.assertIn('body rule: Provide exactly one origin', out)
+        self.assertIn('Search origin: requires related_term, term', out)
+        self.assertIn('Browse origin: requires related_term, filter_name, filter_value', out)
+        code, out, err = self.run_script('--path', '/v2/thing/origin', '--json')
+        self.assertEqual(code, 0, err)
+        data = json.loads(out)
+        self.assertTrue(data['body_rule'].startswith('Provide exactly one origin'))
+        self.assertEqual([shape['required'] for shape in data['body_shapes']],
+                         [['related_term', 'term'], ['related_term', 'filter_name', 'filter_value']])
+        # The four fields are still listed once each, and only the field every shape needs is required.
+        rows = self.rows('/v2/thing/origin')
+        self.assertEqual(sorted(rows), ['filter_name', 'filter_value', 'related_term', 'term'])
+        self.assertEqual([name for name in sorted(rows) if rows[name]['required']], ['related_term'])
+        # A body without such a rule prints nothing extra.
+        code, out, _ = self.run_script('--path', '/v2/thing/create')
+        self.assertNotIn('body rule', out)
+        self.assertNotIn('body is one of', out)
 
     def test_recursive_schemas_end(self):
         code, out, err = self.run_script('--path', '/v2/thing/tree', '--json')

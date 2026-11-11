@@ -11,7 +11,7 @@
 
 ## Branch and commit
 
-- **Branch:** the name the issue tracker suggests for the story, when it gives one; the pull request then links itself to the story. Otherwise `<ticket>-<short-summary>` in lower case. Create it from `origin/<base>` as fetched at Preflight, where `<base>` is the base branch the repo guide names.
+- **Branch:** the name the issue tracker suggests for the story, when it gives one; the pull request then links itself to the story. Otherwise `<ticket>-<short-summary>` in lower case. Create it from `origin/<base>` as fetched at Preflight, where `<base>` is the base branch the repo guide names, and without tracking it: `git switch -c <branch> --no-track origin/<base>`. A branch started from a remote branch otherwise takes that branch as its upstream, and a bare `git push` may then aim at the base branch.
 - **Commit:** one commit with the pull request's title, and a body of two or three lines on behaviour followed by the file list. Stage only the files you changed for this story, by name. Leave every other modified or untracked file exactly as it is.
 - **No ticket in the input:** with a person present, ask for it. Unattended, use the title prefix the repo guide gives for work without a ticket, and say so in the final report.
 
@@ -58,7 +58,7 @@ SDK repositories are public. This applies to code comments, the commit message a
 
 Open it as a draft unless the repo guide says otherwise, so the author reads it before reviewers are assigned.
 
-- **Person present:** show the title, the list of changed files and the whole body as it will be published, then ask once: "Push `<branch>` and open this as a draft pull request?" On yes, push the branch to the repository itself, not to a fork, and run `gh pr create --draft --base <base> --title "<title>" --body-file <file>`.
+- **Person present:** show the title, the list of changed files and the whole body as it will be published, then ask once: "Push `<branch>` and open this as a draft pull request?" On yes, push the branch by name to the repository itself, not to a fork (`git push -u origin <branch>`), and run `gh pr create --draft --base <base> --head <branch> --title "<title>" --body-file <file>`.
 - **`--pr`:** do the same without asking.
 - **`--no-pr`, or unattended without `--pr`:** stop after the commit. Put the title and the full body in the final report.
 

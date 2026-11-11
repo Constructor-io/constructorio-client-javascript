@@ -72,9 +72,9 @@ Read the whole story, check its premise against the code, resolve the contract f
 
 Read `references/testing.md`.
 
-Create the branch from the fetched base (naming is in `references/pull-request.md`). Write the cases the recipe and the case table call for, run them, and keep the output of the failing run.
+Create the branch from the fetched base without tracking it: `git switch -c <branch> --no-track origin/<base>` (naming is in `references/pull-request.md`). Write the cases the recipe and the case table call for, run them, and keep the output of the failing run.
 
-**Done when** at least one test that expects the new field has failed because the field is missing.
+**Done when** at least one test that expects the new field has failed because the field is missing, or, for a new method, because the method does not exist yet.
 
 ### 4. Implement
 

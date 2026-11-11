@@ -24,7 +24,7 @@ Decisions that hold across the SDKs, written down once so each repository does n
 
 ## Behaviour
 
-9. **`section` resolves to `Products` when the caller passes none.** Settled for methods that already send `section`. Open where adding the default would change what existing callers send: propose leaving the field absent unless the caller passes it, and list the point under Decisions to confirm.
+9. **`section` resolves to `Products` when the caller passes none.** Settled for methods that already send `section`. Open where adding the default would change what existing callers send: propose leaving the field absent unless the caller passes it, and list the point under Decisions to confirm. Open for a new method too: propose the default, and list it under Decisions to confirm with what the repository's newest methods do.
 
 10. **Dictionaries merge, scalars override.** Where an SDK has a client-level default for a dictionary parameter, the per-call value is merged over it, per-call keys winning. A scalar per-call value replaces the default. Settled.
 
