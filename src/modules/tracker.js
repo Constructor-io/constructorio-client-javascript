@@ -221,6 +221,66 @@ class Tracker {
   }
 
   /**
+   * Send input blur event to API
+   *
+   * @function trackInputBlur
+   * @param {object} [parameters] - Additional parameters to be sent with request
+   * @param {string} [parameters.userInput] - The text the user had typed when they moved away from the search input (maximum of 250 characters)
+   * @param {object} [parameters.analyticsTags] - Pass additional analytics data
+   * @param {string} [parameters.section="Products"] - Index section
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {(true|Error)}
+   * @description User moved away from (blurred) the search input element
+   * @example
+   * constructorio.tracker.trackInputBlur(
+   *     {
+   *         userInput: 'red shi',
+   *         section: 'Products',
+   *     },
+   * );
+   */
+  trackInputBlur(parameters = {}, networkParameters = {}) {
+    if (parameters && typeof parameters === 'object' && !Array.isArray(parameters)) {
+      const {
+        userInput,
+        analyticsTags,
+        section,
+      } = parameters;
+      const baseUrl = `${this.options.serviceUrl}/v2/behavioral_action/blur?`;
+      const queryParams = { section: section || 'Products' };
+      const bodyParams = {};
+
+      if (!helpers.isNil(userInput)) {
+        bodyParams.user_input = userInput;
+      }
+
+      if (analyticsTags) {
+        bodyParams.analytics_tags = analyticsTags;
+      }
+
+      const requestURL = `${baseUrl}${applyParamsAsString(queryParams, this.options)}`;
+      const requestMethod = 'POST';
+      const requestBody = applyParams(bodyParams, {
+        ...this.options,
+        requestMethod,
+      });
+      this.requests.queue(
+        requestURL,
+        requestMethod,
+        requestBody,
+        networkParameters,
+      );
+      this.requests.send();
+      return true;
+    }
+
+    this.requests.send();
+
+    return new Error('parameters are required of type object');
+  }
+
+  /**
    * Send item detail load event to API
    *
    * @function trackItemDetailLoad
