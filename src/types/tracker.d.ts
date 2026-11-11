@@ -25,6 +25,15 @@ declare class Tracker {
     networkParameters?: NetworkParameters
   ): true | Error;
 
+  trackInputBlur(
+    parameters?: {
+      userInput?: string;
+      analyticsTags?: Record<string, string>;
+      section?: string;
+    },
+    networkParameters?: NetworkParameters
+  ): true | Error;
+
   trackItemDetailLoad(
     parameters: {
       itemName: string;
