@@ -26,7 +26,7 @@ The specs are integration tests: almost every test sends a real request to the l
 
 - The client needs `...requestQueueOptions` (`sendTrackingEvents: true`), otherwise nothing is sent.
 - Subscribe with `tracker.on('success', ...)`, which fires only on a 2xx, and call `done()` inside it. `tracker.on('error', ...)` receives the API's message.
-- An assertion that fails inside a `success` handler shows up as `Timeout of 5000ms exceeded`. Read a timeout as "an assertion may have failed" before blaming the network.
+- An assertion that fails inside a `success` handler shows up as `Timeout of 5000ms exceeded`, or in some blocks as `done() invoked with non-Error` with the `AssertionError` inside it. Read either as "an assertion may have failed" before blaming the network.
 - Synchronous validation is tested without the spy: `expect(tracker.trackX()).to.be.an('error')`.
 
 ## When there is no fixture or no key

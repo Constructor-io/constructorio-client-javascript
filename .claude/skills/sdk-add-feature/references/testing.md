@@ -30,7 +30,7 @@ Write the tests before the implementation and run them.
 - An Omitted or Bad value case passes before the implementation exists. On its own it proves nothing.
 - A failure for any other reason is not evidence: a typo, a stale build, or a timeout, unless the repo guide says that a failed assertion shows up as one. The guide says how its tests load the code under test and what a real failure looks like there.
 
-After the implementation the same tests pass. Everything else runs once, at Verify.
+After the implementation the same tests pass. If a test you wrote first turns out to be wrong, fix it in place and say so under Decisions and assumptions; never loosen an assertion to get a pass. Everything else runs once, at Verify.
 
 ## Keep tests honest
 

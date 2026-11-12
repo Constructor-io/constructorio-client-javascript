@@ -32,7 +32,7 @@ Before resolving anything, search the code on the base branch fetched at Preflig
 - **Part of it exists:** the contract covers only the missing part. Say so above the table.
 - **None of it exists:** continue.
 
-Then look for the same work in someone else's hands: an issue related to the story, or duplicating it, that another person has in progress; an open pull request; a pushed branch that touches the same endpoint or parameter. When you find one, say what it is, whose it is and since when. It is a stop condition (see When to stop).
+Then look for the same work in someone else's hands: an issue related to the story, or duplicating it, that another person has in progress; an open pull request; a pushed branch that touches the same endpoint or parameter. Look for an earlier attempt too: a local branch already named for this story (`git branch --list <branch>`). When you find one, say what it is, whose it is and since when. It is a stop condition (see When to stop).
 
 ## Find the contract for the API family
 
@@ -127,6 +127,7 @@ Stop before writing code when any of these holds. With a person present each is 
 - **A row is `story only`**, the run is unattended, and the repo guide does not let a live test prove acceptance for the module. A source that cannot be reached leaves its rows `story only`.
 - **The change fits no recipe** in the repo guide.
 - **Someone else already has the same change in progress:** a related or duplicate issue in development with another person, an open pull request, or a pushed branch for the same endpoint or parameter. A second implementation costs a review and a conversation at best.
+- **An earlier attempt exists:** a local branch is already named for this story. Ask whether to continue it, replace it or leave it; never delete or reset it yourself.
 
 A false premise also stops the run, with `STATUS: done` (see Check the premise).
 

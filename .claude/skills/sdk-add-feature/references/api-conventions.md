@@ -6,7 +6,7 @@ Decisions that hold across the SDKs, written down once so each repository does n
 
 ## Parameters
 
-1. **Common parameters are added by shared plumbing, never per call.** `key`, `i`, `c`, `s`, `ui`, `us`, `_dt`, `origin_referrer`, `document_referrer`, `canonical_url`, test cells (`ef-*`) and `beacon` are attached to every request by each SDK's request builder. A spec lists them on every endpoint. They are never rows in a contract, and a method never sets them itself. Settled.
+1. **Common parameters are added by shared plumbing, never per call.** `key`, `i`, `c`, `s`, `ui`, `us`, `_dt`, `origin_referrer`, `document_referrer`, `canonical_url`, test cells (`ef-*`) and `beacon` are attached to every request by each SDK's request builder. A spec lists them on every endpoint. They are never rows in a contract, and a method never sets them itself. The SDKs send `_dt` in milliseconds although the tracking spec says seconds; that is a known open question for the API's owners, and no story changes the unit. Settled.
 
 2. **Placement follows the spec, endpoint by endpoint.** A parameter goes in the query string or the body according to that endpoint's document, even when a sibling endpoint or a neighbouring method does it differently. Settled.
 
@@ -24,7 +24,7 @@ Decisions that hold across the SDKs, written down once so each repository does n
 
 ## Behaviour
 
-9. **`section` resolves to `Products` when the caller passes none.** Settled for methods that already send `section`. Open where adding the default would change what existing callers send: propose leaving the field absent unless the caller passes it, and list the point under Decisions to confirm. Open for a new method too: propose the default, and list it under Decisions to confirm with what the repository's newest methods do.
+9. **`section` resolves to `Products` when the caller passes none.** Settled for methods that already send `section`. Open where adding the default would change what existing callers send: propose leaving the field absent unless the caller passes it, and list the point under Decisions to confirm. Open for a new method too: propose the default, and list it under Decisions to confirm with what the repository's newest methods do. The team's third-quarter decision for behavioural events points the other way for existing methods: default to `Products` everywhere, and treat a method without the fallback as a gap to close. Until the team settles which holds, show both options at the gate and say which one this rule proposes.
 
 10. **Dictionaries merge, scalars override.** Where an SDK has a client-level default for a dictionary parameter, the per-call value is merged over it, per-call keys winning. A scalar per-call value replaces the default. Settled.
 

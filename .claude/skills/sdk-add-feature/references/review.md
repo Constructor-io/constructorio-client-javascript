@@ -9,7 +9,7 @@ A reader with a fresh context finds what the author's context hides. Run this af
 
 ### Brief for the reviewer
 
-> You are reviewing one SDK change before it becomes a pull request. You read and report; the author makes the fixes.
+> You are reviewing one SDK change before it becomes a pull request. You read and report; the author makes the fixes. Change no file, run no tests and send no requests to the API: check every claim against the sources.
 >
 > Inputs:
 > - the change: `git diff <base>...HEAD` in `<repository path>`, where `<base>` is the ref the branch was created from, such as `origin/master`
