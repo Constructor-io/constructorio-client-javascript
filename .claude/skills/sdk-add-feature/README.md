@@ -41,7 +41,7 @@ It never bumps a version, edits generated files, writes to the issue tracker, me
 
 ## Prerequisites
 
-- `gh`, signed in. Tracking and agent stories need read access to the private backend repositories named in `references/contract.md`; without it the skill stops instead of guessing.
+- `gh`, signed in. A tracking story needs read access to the private repository `Constructor-io/autocomplete`, which holds that API's source. An agent story needs `Constructor-io/ai-shopping-assistant` as well, but only when the public API reference does not have the parameter. Without access the skill marks those facts as resting on the story alone and asks you at the contract table, instead of guessing.
 - The test keys the repository's guide names.
 - Python 3.8 or later, for `scripts/openapi_params.py`.
 - Optional: an issue-tracker MCP server, and the Constructor docs MCP server (`https://docs.constructor.com/mcp`, no credentials).
