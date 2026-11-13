@@ -26,7 +26,7 @@ A reader with a fresh context finds what the author's context hides. Run this af
 
 **C. Contract**
 
-- **C1** Each row of the contract table matches the source it cites. Open the source and compare: names, place, limits, rules across fields, and what the API does with a bad value. `contract.md`, next to this file, says how to fetch each kind of source. If you cannot reach a source, say so.
+- **C1** Each row of the contract table matches the source it cites. Open the source and compare: names, place, limits, rules across fields, and what the API does with a bad value. A `section` row that rule 9 of `api-conventions.md` adds to a method keeps that method's place, and Conflicts names the document's: that is not a mismatch. `contract.md`, next to this file, says how to fetch each kind of source. If you cannot reach a source, say so.
 - **C2** Every contract row is implemented on every method listed: wire name, place (query or body) and value as in the table.
 - **C3** Nothing outside the contract is sent or changed, and no common parameter is set by hand.
 - **C4** Every sibling endpoint and method is either covered or listed under Not in this PR.
@@ -34,8 +34,8 @@ A reader with a fresh context finds what the author's context hides. Run this af
 
 **B. Compatibility**
 
-- **B1** A call that does not use the new parameter produces the same request as before.
-- **B2** No public name, default or required flag changed.
+- **B1** A call that does not use the new parameter produces the same request as before. The one difference allowed is a `section` that now defaults to `Products` on a tracking method (`api-conventions.md`, next to this file, rule 9): it has a row in the contract table, and the title, the summary and the release note name it.
+- **B2** No public name, default or required flag changed, apart from that `section` default.
 
 **R. Recipe**
 
@@ -45,7 +45,7 @@ A reader with a fresh context finds what the author's context hides. Run this af
 
 **T. Tests**
 
-- **T1** Each new parameter has a Present and an Omitted case on every method that gained it, and the assertions check the value.
+- **T1** Each new parameter has a Present case and an Omitted case on every method that gained it, a Default case in place of Omitted where the SDK supplies a default, and the assertions check the value.
 - **T2** A failing run from before the implementation is recorded, and it failed because the wire field was missing.
 - **T3** The case list is lean, one case per kind of input, and no focus marker remains.
 - **T4** Shared fixtures are not mutated.

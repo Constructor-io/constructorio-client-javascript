@@ -74,7 +74,7 @@ Read `references/testing.md`.
 
 Create the branch from the fetched base without tracking it: `git switch -c <branch> --no-track origin/<base>` (naming is in `references/pull-request.md`). Write the cases the recipe and the case table call for, run them, and keep the output of the failing run.
 
-**Done when** at least one test that expects the new field has failed because the field is missing, or, for a new method, because the method does not exist yet.
+**Done when** at least one test that expects the new field, or the new default, has failed because it is missing from the request, or, for a new method, because the method does not exist yet.
 
 ### 4. Implement
 
@@ -110,8 +110,8 @@ Read `references/pull-request.md` and `references/review.md`. Commit, and write 
 
 1. **Wire facts come from the contract, never from the story's wording or a neighbouring method.** A fact no source confirms is marked `story only` and handled as `references/contract.md` says.
 2. **Build exactly the confirmed contract.** Whatever else the story mentions (a flagged idea, a release, stories for other SDKs) goes under Not in this PR, so nothing is silently done and nothing is silently dropped.
-3. **Existing callers keep sending the same requests.** A change that would alter them is a reason to stop, not a detail.
-4. **Every new field is tested present and absent, and a failing run comes first.** A test never seen failing proves nothing.
+3. **Existing callers keep sending the same requests.** A change that would alter them is a reason to stop, not a detail. The one change of that kind the team has decided is the `section` fallback on tracking methods (`references/api-conventions.md`, rule 9).
+4. **Every new field is tested present and absent, or at its default where the SDK supplies one, and a failing run comes first.** A test never seen failing proves nothing.
 5. **Generated files and version fields belong to the release.** Do not run commands that rewrite them in the working tree.
 6. **Public text is written for an outside reader.** Say "the API". Name no customer and no internal service or team, link no chat, quote no private source. A contract source is cited by repository, file and commit. The repository and its pull requests are public.
 7. **The only outward actions are pushing the branch and opening the draft pull request, and only as the mode allows.** Nothing is written to the issue tracker.

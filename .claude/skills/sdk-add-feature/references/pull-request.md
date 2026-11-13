@@ -38,7 +38,7 @@ Use these headings, in this order. Summary, Contract, Evidence, Release notes an
 | `## Evidence` | One line per command: the command and its result, the failing run first. Then one line naming the failures that predate the change, and one line for what was not run |
 | `## Decisions and assumptions` | One line per decision a reviewer could disagree with, with its reason |
 | `## Not in this PR` | One line each: the release, sibling endpoints, items the story flags, follow-up stories |
-| `## Release notes` | One customer-facing sentence, and the suggested version bump with its reason |
+| `## Release notes` | One customer-facing sentence, and the suggested version bump with its reason. When the change adds a `section` fallback to an existing method (`api-conventions.md`, rule 9), a second sentence says which indexes must now pass `section` |
 | `## Related` | `Resolves <TICKET>`, the story link, and a link to each file the contract table cites |
 
 A reviewer has five minutes, so the body is about 600 words. Lead with behaviour and do not walk through the code. Detail that does not fit goes in your final report, not in the pull request.

@@ -65,6 +65,8 @@ The document leaves three things out. Look them up in the same repository with t
 
 Known behaviour of this family: a field the endpoint does not declare, or a value outside an enum or limit, is rejected with HTTP 400 and **the whole event is lost**. The document says 422; the tests assert 400. The request models are configured to allow extra fields, but the running API rejects them all the same, so do not conclude from a model that an undeclared field passes.
 
+An event that names no `section` is filed under the index's default section, whatever that section is called. An event that names a section the index does not have is rejected like any other bad value. The lookup is in `behavioral_action_service/src/behavioral_action_service/processors/common.py`.
+
 A rule across fields may be in the document after all: the script prints it as `body rule` and `body is one of` when the document states one. The model is still where to check it.
 
 ### read
@@ -123,7 +125,7 @@ Also check the methods that share a request builder with the one being changed; 
 
 Stop before writing code when any of these holds. With a person present each is a question for them. Unattended, end with `STATUS: blocked: <the question>`.
 
-- **The change would alter what an existing public method already sends, or where it sends it:** a different endpoint path, a renamed or removed parameter, a default that changes existing requests. That is a migration or a breaking change. It needs a compatibility decision that this skill does not make.
+- **The change would alter what an existing public method already sends, or where it sends it:** a different endpoint path, a renamed or removed parameter, a default that changes existing requests. That is a migration or a breaking change. It needs a compatibility decision that this skill does not make. The one such decision the team has already made is the `section` fallback, rule 9 of `api-conventions.md`: adding it, to a `section` the story brings or to one the method already accepts, is a row of the contract, not a stop.
 - **A row is `story only`**, the run is unattended, and the repo guide does not let a live test prove acceptance for the module. A source that cannot be reached leaves its rows `story only`.
 - **The change fits no recipe** in the repo guide.
 - **Someone else already has the same change in progress:** a related or duplicate issue in development with another person, an open pull request, or a pushed branch for the same endpoint or parameter. A second implementation costs a review and a conversation at best.
@@ -133,7 +135,7 @@ A false premise also stops the run, with `STATUS: done` (see Check the premise).
 
 ## The contract table
 
-One row per parameter. The same table is shown at the gate and placed in the pull request, so keep it readable: a cell holds a line or two. When a parameter is an object with a shape of its own, the cell names its keys, and the shape follows the table as a list with one line per key.
+One row per parameter. Rule 9 of `api-conventions.md` can add a `section` row that the story did not ask for. The same table is shown at the gate and placed in the pull request, so keep it readable: a cell holds a line or two. When a parameter is an object with a shape of its own, the cell names its keys, and the shape follows the table as a list with one line per key.
 
 When the rows share a repository and a commit, name them once in a line above the table, with the files, and let each Source cell say only which of those files establish the row. Repeating the repository and the commit in every cell makes a ten-row table unreadable.
 
