@@ -500,6 +500,8 @@ declare class Tracker {
       filterName?: string;
       filterValue?: string;
       searchTerm?: string;
+      section?: string;
+      analyticsTags?: Record<string, string>;
     },
     networkParameters?: NetworkParameters
   ): true | Error;

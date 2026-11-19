@@ -16903,6 +16903,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       filterName: 'category',
       filterValue: 'shoes',
       searchTerm: 'red shoes',
+      section: 'Products',
+      analyticsTags: testAnalyticsTag,
     };
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
@@ -16923,9 +16925,12 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('s');
         expect(requestParams).to.have.property('c').to.equal(clientVersion);
         expect(requestParams).to.have.property('_dt');
+        expect(requestParams).to.not.have.property('section');
         validateOriginReferrer(requestParams);
 
         // Body
+        expect(bodyParams).to.not.have.property('section');
+        expect(bodyParams).to.not.have.property('analytics_tags');
         expect(bodyParams).to.have.property('items').to.deep.equal([
           {
             item_id: '1',
@@ -16965,14 +16970,20 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractUrlParamsFromFetch(fetchSpy);
         const bodyParams = helpers.extractBodyParamsFromFetch(fetchSpy);
 
-        // Body
+        // Request
         expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
+
+        // Body
         expect(bodyParams).to.have.property('items');
         expect(bodyParams).to.have.property('filter_name').to.equal(optionalParameters.filterName);
         expect(bodyParams).to.have.property('filter_value').to.equal(optionalParameters.filterValue);
         expect(bodyParams).to.have.property('search_term').to.equal(optionalParameters.searchTerm);
+        expect(bodyParams).to.have.property('analytics_tags').to.deep.equal(optionalParameters.analyticsTags);
+        expect(bodyParams).to.not.have.property('section');
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
