@@ -25,11 +25,16 @@ When an existing test already sends every optional parameter, add the new one to
 Write the tests before the implementation and run them.
 
 - Where the tests run a built copy of the code, build it from the unchanged source first. A copy left over from another branch can already contain the field, and then nothing fails.
-- At least one Present case must fail, and for the right reason: the wire field is missing from the request. When the only change to a field is its default, the Default case is the one that must fail, for the same reason. For a new method the right reason is that the method does not exist yet, and every case that calls it fails that way.
+- At least one new test must fail, and for the right reason. Which reason is right depends on what the story adds:
+  - **A request parameter:** a Present case fails because the wire field is missing from the request. When the only change to a field is its default, the Default case is the one that must fail, for the same reason.
+  - **A method or a module:** every case that calls it fails because it does not exist yet.
+  - **A client option, or anything else that no request shows:** a test of its default or of its effect fails because the option is not stored or not applied.
+  - **Types only:** a type test that uses the new type fails to compile or to match, while the request tests pass unchanged. This is also the case for a parameter the code already forwards without naming it, such as a new key inside an object it passes through whole: a Present case for it cannot fail. Write the type test even where the guide asks for type tests only now and then: it is the only failing run such a change can have, so pick an assertion that does fail before the change.
 - Where the test runner retries, turn retries off for this run. A retry only repeats a failure you expect, and against a live API each one costs a full timeout.
 - Record the failing output. It goes into the pull request's Evidence.
 - An Omitted or Bad value case passes before the implementation exists. On its own it proves nothing.
 - A failure for any other reason is not evidence: a typo, a stale build, or a timeout, unless the repo guide says that a failed assertion shows up as one. The guide says how its tests load the code under test and what a real failure looks like there.
+- On a branch continued from an earlier attempt (`contract.md`, under "When to stop"), a test for something the branch already implements passes at once, and its failing run cannot be had any more. Name those tests under Evidence as not seen failing in this run, and do not undo code to stage a failure. What the branch still lacks gets its failing run as above. When it lacks nothing, step 3 is done with that note.
 
 After the implementation the same tests pass. If a test you wrote first turns out to be wrong, fix it in place and say so under Decisions and assumptions; never loosen an assertion to get a pass. Everything else runs once, at Verify.
 

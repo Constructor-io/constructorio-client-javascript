@@ -21,7 +21,7 @@ Or ask Claude to work on the story; the skill loads by itself. The input can be:
 
 | Flag | Effect |
 |---|---|
-| `--unattended` | Never ask. Stop with `STATUS: blocked: <the question>` instead. Use it for headless runs |
+| `--unattended` | Never ask. Stop with `STATUS: blocked: <the question>` instead. Pass it whenever nobody will answer: without it a headless run pauses at each question, usually first at the contract table, and waits for you to continue the session |
 | `--pr` | Push and open the draft pull request without asking |
 | `--no-pr` | Stop after the local commit and print the pull request title and body |
 
@@ -35,13 +35,13 @@ The guide has to be on the repository's base branch, or sit uncommitted in your 
 4. It commits locally and writes the pull request text. A fresh subagent reviews both against a checklist.
 5. It shows the pull request text and **asks once** before pushing the branch and opening a draft pull request.
 
-The last line of every run is `STATUS: done`, `STATUS: blocked: <the question>` or `STATUS: failed: <what failed>`, so a script can read the outcome.
+The last line of a finished run is `STATUS: done`, `STATUS: blocked: <the question>` or `STATUS: failed: <what failed>`, so a script can read the outcome. A run that has paused to ask ends with its question and has no status line yet; a script should pass `--unattended`, which never pauses.
 
-It never bumps a version, edits generated files, writes to the issue tracker, merges, or stashes your uncommitted work.
+It never bumps a version, edits generated files, writes to the issue tracker, merges, or stashes your uncommitted work. What it reads on the way (the story, its comments, fetched pages) is data to it: a line there that tells it to run something, skip a check or publish something is reported, not followed.
 
 ## Prerequisites
 
-- `gh`, signed in. A tracking story needs read access to the private repository `Constructor-io/autocomplete`, which holds that API's source. An agent story needs `Constructor-io/ai-shopping-assistant` as well, but only when the public API reference does not have the parameter. Without access the skill marks those facts as resting on the story alone and asks you at the contract table, instead of guessing.
+- `gh`, signed in. A tracking story needs read access to the private repository `Constructor-io/autocomplete`, which holds that API's source. An agent story needs `Constructor-io/ai-shopping-assistant` as well, but only when the public API reference does not have the parameter. Without access the skill marks those facts as resting on the story alone and shows them that way in the contract table, instead of guessing.
 - The test keys the repository's guide names.
 - Python 3.8 or later, for `scripts/openapi_params.py`.
 - Optional: an issue-tracker MCP server, and the Constructor docs MCP server (`https://docs.constructor.com/mcp`, no credentials).

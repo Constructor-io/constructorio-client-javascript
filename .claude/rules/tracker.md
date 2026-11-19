@@ -35,7 +35,7 @@ Files, in order: `src/modules/tracker.js` (the JSDoc `@param`, the `@example`, t
 - **Legacy methods.** Do not add fields to the v1 GET methods: `trackSearchResultClick`, `trackAutocompleteSelect`, `trackSearchSubmit`, `trackInputFocus`, `trackSessionStart`. The change belongs on the V2 twin.
 - **JSDoc.** `* @param {string} [parameters.newParam] - Description`, placed before the `networkParameters` lines. Add the key to the `@example`.
 - **Deprecated wrappers.** The six `trackAssistant*` methods forward to their `trackAgent*` twins. When a `trackAgent*` method gains a parameter, add the same `@param` line to the wrapper's JSDoc. The wrapper's type follows by itself.
-- **URL values** go through `helpers.truncateString(url, MAX_URL_LENGTH)`, as in `trackItemDetailLoad`.
+- **URL values** go through `helpers.truncateString(url, MAX_URL_LENGTH)`, as in `trackItemDetailLoad`. The limit is the API's own, not the SDK's: the API document gives `url` at most 2,048 characters, and a longer one would lose the whole event. Every `url` this file sends is cut this way, so a new one with that limit in its contract is too, without the story having to ask. The shared conventions would pass the value through (rule 11); for URL values this repository's practice comes first.
 - **Types.** `newParam?: Type;` in the method's inline parameter object, with a literal union for an enum.
 
 Copy from `trackRecommendationClick` (aliases, `isNil`, array normalisation) or `trackAgentButtonClick` (camelCase only). Two details of them are not to be copied: the three `@param` lines that follow `networkParameters` in `trackRecommendationClick`, and the optional `section` inside the `bodyParams` literal of `trackAgentButtonClick`.

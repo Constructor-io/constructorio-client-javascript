@@ -29,6 +29,7 @@ The `.d.ts` files in `src/types/` are written by hand and are the types customer
 - `npm run lint` does not cover these files. Its `src/**/*.d.ts` pattern does not match `*.test-d.ts`, so keep to the style of the existing test files by hand.
 - Existing tests assert response shapes with `expectAssignable<...Response>`. Add a response assertion for a new read method.
 - A parameter assertion is expected only for a type that can be wrong in an interesting way, such as a literal union: assert that an allowed value compiles and that a disallowed one is an error.
+- The exception is a change that touches only types. It has no other failing run, so it always gets an assertion, and one that fails before the change. `expectAssignable` passes for any key on a type with an index signature, such as `FmtOptions`; `expectType` on the new field does not.
 - `lib/types/tests` is deleted during compilation, so the tests are not published.
 
 ## Known gaps, not patterns to copy
