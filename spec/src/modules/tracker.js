@@ -3629,6 +3629,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       itemName: 'item_name',
       variationId: 'variation-id',
       section: 'Products',
+      conversionLocation: 'plp',
     };
     const legacyParameters = {
       customerId: 'customer-id',
@@ -3694,6 +3695,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('_dt');
         expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.itemId);
         expect(requestParams).to.have.property('revenue').to.equal(requiredParameters.revenue.toString());
+        expect(requestParams).to.not.have.property('conversion_location');
         validateOriginReferrer(requestParams);
 
         // Response
@@ -3730,6 +3732,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('item_name').to.equal(optionalParameters.itemName);
         expect(requestParams).to.have.property('variation_id').to.equal(optionalParameters.variationId);
         expect(requestParams).to.have.property('section').to.equal(optionalParameters.section);
+        expect(requestParams).to.have.property('conversion_location').to.equal(optionalParameters.conversionLocation);
         validateOriginReferrer(requestParams);
 
         // Response
@@ -4285,6 +4288,89 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       expect(tracker.trackConversion(term, parametersWithAnalyticsTags)).to.equal(true);
+    });
+
+    it('Should respond with a valid response when term, required parameters and conversionLocation are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const parametersWithConversionLocation = {
+        ...requiredParameters,
+        conversionLocation: 'pdp',
+      };
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('conversion_location').to.equal('pdp');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackConversion(term, parametersWithConversionLocation)).to.equal(true);
+    });
+
+    it('Backwards Compatibility - Should respond with a valid response when snake cased conversion_location is provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const snakeCaseParameters = {
+        ...requiredParameters,
+        conversion_location: 'plp',
+      };
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('conversion_location').to.equal('plp');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackConversion(term, snakeCaseParameters)).to.equal(true);
+    });
+
+    ['PLP', '', ' plp', 'checkout', null, 1].forEach((conversionLocation) => {
+      it(`Should not send conversion_location when conversionLocation is ${JSON.stringify(conversionLocation)}`, (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          fetch: fetchSpy,
+          ...requestQueueOptions,
+        });
+
+        tracker.on('success', (responseParams) => {
+          const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+          // Request
+          expect(fetchSpy).to.have.been.called;
+          expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.itemId);
+          expect(requestParams).to.not.have.property('conversion_location');
+
+          // Response
+          expect(responseParams).to.have.property('method').to.equal('POST');
+          expect(responseParams).to.have.property('message').to.equal('ok');
+
+          done();
+        });
+
+        expect(tracker.trackConversion(term, { ...requiredParameters, conversionLocation })).to.equal(true);
+      });
     });
   });
 
@@ -9303,6 +9389,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       revenue: '1.0',
       isCustomType: false,
       displayName: 'name',
+      conversionLocation: 'pdp',
     };
 
     it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
@@ -9367,6 +9454,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('quiz_version_id').to.equal(requiredParameters.quizVersionId);
         expect(requestParams).to.have.property('item_name').to.equal(requiredParameters.itemName);
         expect(requestParams).to.have.property('item_id').to.equal(requiredParameters.itemId);
+        expect(requestParams).to.not.have.property('conversion_location');
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -9499,6 +9587,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
         expect(requestParams).to.have.property('revenue').to.equal(optionalParameters.revenue);
         expect(requestParams).to.have.property('is_custom_type').to.equal(optionalParameters.isCustomType);
         expect(requestParams).to.have.property('display_name').to.equal(optionalParameters.displayName);
+        expect(requestParams).to.have.property('conversion_location').to.equal(optionalParameters.conversionLocation);
 
         // Response
         expect(responseParams).to.have.property('method').to.equal('POST');
@@ -9509,6 +9598,89 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
       expect(tracker.trackQuizConversion({ ...requiredParameters, ...optionalParameters }))
         .to.equal(true);
+    });
+
+    it('Should respond with a valid response when required parameters and conversionLocation are provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const parametersWithConversionLocation = {
+        ...requiredParameters,
+        conversionLocation: 'plp',
+      };
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('conversion_location').to.equal('plp');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackQuizConversion(parametersWithConversionLocation)).to.equal(true);
+    });
+
+    it('Backwards Compatibility - Should respond with a valid response when snake cased conversion_location is provided', (done) => {
+      const { tracker } = new ConstructorIO({
+        apiKey: testApiKey,
+        fetch: fetchSpy,
+        ...requestQueueOptions,
+      });
+      const snakeCaseParameters = {
+        ...requiredParameters,
+        conversion_location: 'pdp',
+      };
+
+      tracker.on('success', (responseParams) => {
+        const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+        // Request
+        expect(fetchSpy).to.have.been.called;
+        expect(requestParams).to.have.property('conversion_location').to.equal('pdp');
+
+        // Response
+        expect(responseParams).to.have.property('method').to.equal('POST');
+        expect(responseParams).to.have.property('message').to.equal('ok');
+
+        done();
+      });
+
+      expect(tracker.trackQuizConversion(snakeCaseParameters)).to.equal(true);
+    });
+
+    ['PLP', '', ' plp', 'checkout', null, 1].forEach((conversionLocation) => {
+      it(`Should not send conversion_location when conversionLocation is ${JSON.stringify(conversionLocation)}`, (done) => {
+        const { tracker } = new ConstructorIO({
+          apiKey: testApiKey,
+          fetch: fetchSpy,
+          ...requestQueueOptions,
+        });
+
+        tracker.on('success', (responseParams) => {
+          const requestParams = helpers.extractBodyParamsFromFetch(fetchSpy);
+
+          // Request
+          expect(fetchSpy).to.have.been.called;
+          expect(requestParams).to.have.property('quiz_id').to.equal(requiredParameters.quizId);
+          expect(requestParams).to.not.have.property('conversion_location');
+
+          // Response
+          expect(responseParams).to.have.property('method').to.equal('POST');
+          expect(responseParams).to.have.property('message').to.equal('ok');
+
+          done();
+        });
+
+        expect(tracker.trackQuizConversion({ ...requiredParameters, conversionLocation })).to.equal(true);
+      });
     });
 
     it('Should throw an error when invalid quizId is provided', () => {

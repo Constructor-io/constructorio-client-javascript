@@ -121,6 +121,7 @@ declare class Tracker {
       resultId?: string;
       section?: string;
       analyticsTags?: Record<string, string>;
+      conversionLocation?: 'plp' | 'pdp';
     },
     networkParameters?: NetworkParameters
   ): true | Error;
@@ -275,6 +276,7 @@ declare class Tracker {
       type?: string;
       isCustomType?: boolean;
       displayName?: string;
+      conversionLocation?: 'plp' | 'pdp';
     },
     networkParameters?: NetworkParameters
   ): true | Error;
