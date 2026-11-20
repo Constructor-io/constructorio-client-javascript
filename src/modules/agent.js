@@ -238,6 +238,61 @@ class Agent {
 
     return readableStream;
   }
+
+  /**
+   * Retrieve conversational agent replies
+   *
+   * @function getChatInsights
+   * @description Hold one turn of a conversation with the shopping agent. Pass `threadId` from a previous turn to
+   *  continue that conversation
+   * @param {object} parameters
+   * @param {string} parameters.shopperInput - The shopper's message
+   * @param {string} parameters.domain - Domain name configured for the index key
+   * @param {object} parameters.pageContext - The shopper's current position in the catalog
+   * @param {string} parameters.pageContext.pageType - The type of page the shopper is currently viewing
+   *  Accepts 'home', 'plp', 'pdp', 'collection', 'email_campaign' or 'cart'
+   * @param {string} [parameters.pageContext.itemId] - The product identifier the shopper is looking at.
+   *  Required when pageType is 'pdp'
+   * @param {string} [parameters.pageContext.variationId] - The variation identifier of the product.
+   *  Only valid when itemId is set
+   * @param {string} [parameters.pageContext.searchTerm] - The search query that produced the current product listing
+   * @param {object} [parameters.pageContext.browseFilter] - The category or collection being viewed
+   * @param {object[]} [parameters.pageContext.filters] - Filter expressions currently applied on the page
+   * @param {object} [parameters.requestContext] - The shopper's price for the product on the page, for this
+   *  request only. Only accepted when enabled for the domain. Requires pageContext.itemId
+   * @param {object[]} parameters.requestContext.prices - Up to one item-level and one variation-level price
+   * @param {string} [parameters.threadId] - A unique identifier for the conversation thread.
+   *  When omitted, a new thread is created
+   * @param {boolean} [parameters.guard] - Turn the content moderation check on or off
+   * @param {number} [parameters.numResultEvents] - The maximum number of result events to return
+   * @param {number} [parameters.numResultsPerEvent] - The maximum number of results per `item_results` event
+   * @param {object} [parameters.fmtOptions] - Options to format different aspects of the response
+   * @param {object} [parameters.qsParam] - Extra parameters forwarded to the request.
+   *  Must not override keys managed by pageContext.filters
+   * @param {object} [parameters.features] - Feature toggles keyed by feature name
+   * @param {object} [parameters.featureVariants] - Feature variants keyed by feature name
+   * @param {object} [options] - Additional options for the response
+   * @param {boolean} [options.stream=true] - Stream the reply as events. Set to false for a single JSON response
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {Promise} Resolves to a ReadableStream of events when streaming, or the JSON response otherwise
+   * @example
+   * const readableStream = await constructorio.agent.getChatInsights({
+   *     shopperInput: 'I want a waterproof jacket',
+   *     domain: 'searchbar',
+   *     pageContext: { pageType: 'home' },
+   * });
+   * const reader = readableStream.getReader();
+   * const { value, done } = await reader.read();
+   */
+  // eslint-disable-next-line no-unused-vars, class-methods-use-this
+  getChatInsights(parameters, options = {}, networkParameters = {}) {
+    if (!parameters || !parameters.domain || typeof parameters.domain !== 'string') {
+      return Promise.reject(new Error('parameters.domain is a required parameter of type string'));
+    }
+
+    return Promise.reject(new Error('getChatInsights is not implemented'));
+  }
 }
 
 module.exports = Agent;
