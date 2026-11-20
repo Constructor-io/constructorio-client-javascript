@@ -23,8 +23,15 @@
       "response": {
         "facets": [],
         "groups": [],
-        "results": [],
-        "total_num_results": 0
+        "results": [
+          {
+            "value": "Item1",
+            "data": {
+              "id": "10001"
+            }
+          }
+        ],
+        "total_num_results": 1
       },
       "result_id": "5ab05bb8-034f-4339-b582-50301f03f9ff"
     }
