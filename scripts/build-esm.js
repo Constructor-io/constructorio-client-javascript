@@ -8,5 +8,7 @@ require('esbuild').build({
   define: {
     global: 'window',
   },
-  outfile: './lib/esm/constructorio.js',
+  // .mjs so Node classifies this as ESM without `"type": "module"`, which would
+  // reclassify every .js in the package and break CJS consumers.
+  outfile: './lib/esm/constructorio.mjs',
 }).catch(() => process.exit(1));
