@@ -3,8 +3,8 @@ const dotenv = require('dotenv');
 const chai = require('chai');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
-const EventSource = require('eventsource');
 const qs = require('qs');
+const helpers = require('../../mocha.helpers');
 const { createAssistantUrl, setupEventListeners } = require('../../../src/modules/assistant');
 const Assistant = require('../../../src/modules/assistant');
 let ConstructorIO = require('../../../test/constructorio'); // eslint-disable-line import/extensions
@@ -199,6 +199,8 @@ describe(`ConstructorIO - Assistant${bundledDescriptionSuffix}`, () => {
 
   describe('getAssistantResultsStream', () => {
     beforeEach(() => {
+      const EventSource = helpers.mockEventSource('assistant/results-stream');
+
       global.EventSource = EventSource;
       window.EventSource = EventSource;
     });

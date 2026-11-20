@@ -1,0 +1,2173 @@
+{
+  "results": {
+    "status": 200,
+    "body": {
+      "request": {
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "num_results_per_page": 20,
+        "term": "",
+        "page": 1,
+        "fmt_options": {
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "section": "Products",
+        "searchandized_items": {},
+        "browse_filter_name": "group_id",
+        "browse_filter_value": "drill_collection"
+      },
+      "response": {
+        "facets": [],
+        "groups": [],
+        "results": [],
+        "total_num_results": 0
+      },
+      "result_id": "5ab05bb8-034f-4339-b582-50301f03f9ff"
+    }
+  },
+  "with-test-cells": {
+    "status": 200,
+    "body": {
+      "request": {
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "num_results_per_page": 20,
+        "ef-foo": "bar",
+        "term": "",
+        "page": 1,
+        "fmt_options": {
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "section": "Products",
+        "searchandized_items": {},
+        "browse_filter_name": "group_id",
+        "browse_filter_value": "drill_collection"
+      },
+      "response": {
+        "facets": [],
+        "groups": [],
+        "results": [],
+        "total_num_results": 0
+      },
+      "result_id": "2ed3438b-0dc6-43dc-a23a-451579f1d823"
+    }
+  },
+  "two-results-per-page": {
+    "status": 200,
+    "body": {
+      "request": {
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "num_results_per_page": 2,
+        "term": "",
+        "page": 1,
+        "fmt_options": {
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "section": "Products",
+        "searchandized_items": {},
+        "browse_filter_name": "group_id",
+        "browse_filter_value": "drill_collection"
+      },
+      "response": {
+        "facets": [],
+        "groups": [],
+        "results": [],
+        "total_num_results": 0
+      },
+      "result_id": "dbd2e375-c796-42a5-8a50-5e4ca157ca0b"
+    }
+  },
+  "filtered-by-keywords": {
+    "status": 200,
+    "body": {
+      "request": {
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "num_results_per_page": 20,
+        "filters": {
+          "keywords": [
+            "battery-powered"
+          ]
+        },
+        "term": "",
+        "page": 1,
+        "fmt_options": {
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "section": "Products",
+        "filter_match_types": {
+          "keywords": "any"
+        },
+        "searchandized_items": {},
+        "browse_filter_name": "group_id",
+        "browse_filter_value": "drill_collection"
+      },
+      "response": {
+        "facets": [],
+        "groups": [],
+        "results": [],
+        "total_num_results": 0
+      },
+      "result_id": "865e2abb-0a99-4a73-8895-05a355fabad2"
+    }
+  },
+  "with-fmt-options": {
+    "status": 200,
+    "body": {
+      "request": {
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "num_results_per_page": 20,
+        "fmt_options": {
+          "show_hidden_fields": false,
+          "groups_max_depth": 2,
+          "groups_start": "current",
+          "show_hidden_facets": false,
+          "show_protected_facets": false
+        },
+        "term": "",
+        "page": 1,
+        "section": "Products",
+        "searchandized_items": {},
+        "browse_filter_name": "group_id",
+        "browse_filter_value": "drill_collection"
+      },
+      "response": {
+        "facets": [],
+        "groups": [],
+        "results": [],
+        "total_num_results": 0
+      },
+      "result_id": "97567a80-6e8f-429a-b3ce-cbdde51caf0a"
+    }
+  },
+  "sort-order-ascending": {
+    "status": 200,
+    "body": {
+      "request": {
+        "sort_by": "relevance",
+        "sort_order": "ascending",
+        "num_results_per_page": 20,
+        "term": "",
+        "page": 1,
+        "fmt_options": {
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "section": "Products",
+        "searchandized_items": {},
+        "browse_filter_name": "group_id",
+        "browse_filter_value": "drill_collection"
+      },
+      "response": {
+        "facets": [],
+        "groups": [],
+        "results": [],
+        "total_num_results": 0
+      },
+      "result_id": "8e55300a-6a9a-4afd-8b9c-fe266a323962"
+    }
+  },
+  "with-offset": {
+    "status": 200,
+    "body": {
+      "request": {
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "offset": 1,
+        "num_results_per_page": 20,
+        "term": "",
+        "fmt_options": {
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "section": "Products",
+        "searchandized_items": {},
+        "browse_filter_name": "group_id",
+        "browse_filter_value": "drill_collection"
+      },
+      "response": {
+        "facets": [],
+        "groups": [],
+        "results": [],
+        "total_num_results": 0
+      },
+      "result_id": "f7903d8c-9136-4a4f-a267-6c70922c4a24"
+    }
+  },
+  "with-pre-filter-expression": {
+    "status": 200,
+    "body": {
+      "request": {
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "num_results_per_page": 20,
+        "pre_filter_expression": {
+          "or": [
+            {
+              "and": [
+                {
+                  "name": "group_id",
+                  "value": "electronics-group-id"
+                },
+                {
+                  "name": "Price",
+                  "range": [
+                    "-inf",
+                    200
+                  ]
+                }
+              ]
+            },
+            {
+              "and": [
+                {
+                  "name": "Type",
+                  "value": "Laptop"
+                },
+                {
+                  "not": {
+                    "name": "Price",
+                    "range": [
+                      800,
+                      "inf"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "term": "",
+        "page": 1,
+        "fmt_options": {
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "section": "Products",
+        "searchandized_items": {},
+        "browse_filter_name": "group_id",
+        "browse_filter_value": "drill_collection"
+      },
+      "response": {
+        "facets": [],
+        "groups": [],
+        "results": [],
+        "total_num_results": 0
+      },
+      "result_id": "f6aa831f-731e-40cb-9f9e-76fb56742eaa"
+    }
+  },
+  "with-qs-param": {
+    "status": 200,
+    "body": {
+      "request": {
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "num_results_per_page": 10,
+        "filters": {
+          "keywords": [
+            "battery-powered"
+          ]
+        },
+        "term": "",
+        "page": 1,
+        "fmt_options": {
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "section": "Products",
+        "filter_match_types": {
+          "keywords": "any"
+        },
+        "searchandized_items": {},
+        "browse_filter_name": "group_id",
+        "browse_filter_value": "drill_collection"
+      },
+      "response": {
+        "facets": [],
+        "groups": [],
+        "results": [],
+        "total_num_results": 0
+      },
+      "result_id": "765e7f4b-202a-47dc-af23-e06c12ab6a48"
+    }
+  },
+  "with-hidden-fields": {
+    "status": 200,
+    "body": {
+      "request": {
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "num_results_per_page": 20,
+        "fmt_options": {
+          "show_hidden_fields": false,
+          "hidden_fields": [
+            "testField",
+            "testField2"
+          ],
+          "groups_max_depth": 1,
+          "groups_start": "current",
+          "show_hidden_facets": false,
+          "show_protected_facets": false
+        },
+        "term": "",
+        "page": 1,
+        "section": "Products",
+        "searchandized_items": {},
+        "browse_filter_name": "Color",
+        "browse_filter_value": "yellow"
+      },
+      "response": {
+        "facets": [],
+        "groups": [],
+        "results": [
+          {
+            "matched_terms": [],
+            "labels": {},
+            "data": {
+              "id": "10002",
+              "url": "https://test.com/p/10002",
+              "facets": [
+                {
+                  "name": "Color",
+                  "values": [
+                    "yellow"
+                  ]
+                }
+              ],
+              "deactivated": false,
+              "testField": "hiddenFieldValue",
+              "groups": [
+                {
+                  "group_id": "BrandXY",
+                  "display_name": "BrandXY",
+                  "path": "/All/Brands/BrandX",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Brands",
+                      "display_name": "Brands"
+                    },
+                    {
+                      "id": "BrandX",
+                      "display_name": "BrandX"
+                    }
+                  ]
+                }
+              ]
+            },
+            "value": "Item2",
+            "is_slotted": false
+          }
+        ],
+        "total_num_results": 2
+      },
+      "result_id": "77167177-b365-4876-b07a-52afa0ee65ed"
+    }
+  },
+  "with-hidden-facets": {
+    "status": 200,
+    "body": {
+      "request": {
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "num_results_per_page": 20,
+        "fmt_options": {
+          "show_hidden_fields": false,
+          "groups_max_depth": 1,
+          "groups_start": "current",
+          "show_hidden_facets": false,
+          "hidden_facets": [
+            "Brand",
+            "testFacet"
+          ],
+          "show_protected_facets": false
+        },
+        "term": "",
+        "page": 1,
+        "section": "Products",
+        "searchandized_items": {
+          "10001": [
+            1,
+            {
+              "is_sponsored": true
+            }
+          ]
+        },
+        "browse_filter_name": "Brand",
+        "browse_filter_value": "XYZ"
+      },
+      "response": {
+        "facets": [
+          {
+            "display_name": "Brand",
+            "name": "Brand",
+            "type": "multiple",
+            "options": [
+              {
+                "status": "",
+                "count": 4,
+                "display_name": "XYZ",
+                "value": "XYZ",
+                "data": {}
+              }
+            ],
+            "hidden": true,
+            "data": {}
+          }
+        ],
+        "groups": [],
+        "results": [
+          {
+            "matched_terms": [],
+            "labels": {
+              "is_sponsored": true
+            },
+            "data": {
+              "id": "10001",
+              "url": "https://test.com/p/20001",
+              "facets": [
+                {
+                  "name": "Brand",
+                  "values": [
+                    "XYZ"
+                  ]
+                },
+                {
+                  "name": "Color",
+                  "values": [
+                    "Blue",
+                    "red"
+                  ]
+                }
+              ],
+              "deactivated": false,
+              "groups": [
+                {
+                  "group_id": "StyleA",
+                  "display_name": "StyleA",
+                  "path": "/All/Styles",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Styles",
+                      "display_name": "Styles"
+                    }
+                  ]
+                }
+              ],
+              "variation_id": "20001"
+            },
+            "value": "item1 variation",
+            "is_slotted": true,
+            "variations": [
+              {
+                "data": {
+                  "url": "https://test.com/p/20001",
+                  "facets": [
+                    {
+                      "name": "Brand",
+                      "values": [
+                        "XYZ"
+                      ]
+                    },
+                    {
+                      "name": "Color",
+                      "values": [
+                        "Blue",
+                        "red"
+                      ]
+                    }
+                  ],
+                  "deactivated": false,
+                  "variation_id": "20001"
+                },
+                "value": "item1 variation"
+              }
+            ]
+          }
+        ],
+        "total_num_results": 4
+      },
+      "result_id": "7a312cef-9816-4243-8054-361bf17d205b"
+    }
+  },
+  "with-variations-map": {
+    "status": 200,
+    "body": {
+      "request": {
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "num_results_per_page": 20,
+        "variations_map": {
+          "group_by": [
+            {
+              "name": "variation",
+              "field": "data.variation_id"
+            }
+          ],
+          "values": {
+            "size": {
+              "aggregation": "all",
+              "field": "data.facets.size"
+            }
+          },
+          "dtype": "array"
+        },
+        "term": "",
+        "page": 1,
+        "fmt_options": {
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "section": "Products",
+        "searchandized_items": {
+          "10001": [
+            1,
+            {
+              "is_sponsored": true
+            }
+          ]
+        },
+        "browse_filter_name": "Brand",
+        "browse_filter_value": "XYZ"
+      },
+      "response": {
+        "facets": [],
+        "groups": [],
+        "results": [
+          {
+            "matched_terms": [],
+            "labels": {
+              "is_sponsored": true
+            },
+            "data": {
+              "id": "10001",
+              "url": "https://test.com/p/20001",
+              "facets": [
+                {
+                  "name": "Brand",
+                  "values": [
+                    "XYZ"
+                  ]
+                },
+                {
+                  "name": "Color",
+                  "values": [
+                    "Blue",
+                    "red"
+                  ]
+                }
+              ],
+              "deactivated": false,
+              "groups": [
+                {
+                  "group_id": "StyleA",
+                  "display_name": "StyleA",
+                  "path": "/All/Styles",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Styles",
+                      "display_name": "Styles"
+                    }
+                  ]
+                }
+              ],
+              "variation_id": "20001"
+            },
+            "value": "item1 variation",
+            "is_slotted": true,
+            "variations_map": [
+              {
+                "variation": "20001",
+                "size": [
+                  null
+                ]
+              }
+            ]
+          }
+        ],
+        "total_num_results": 4
+      },
+      "result_id": "67fa9817-2909-4590-aea6-4dfd8c770101"
+    }
+  },
+  "special-characters-in-path": {
+    "status": 200,
+    "body": {
+      "request": {
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "num_results_per_page": 20,
+        "term": "",
+        "page": 1,
+        "fmt_options": {
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "section": "Products",
+        "searchandized_items": {},
+        "browse_filter_name": "name +[]&",
+        "browse_filter_value": "value +[]&"
+      },
+      "response": {
+        "facets": [],
+        "groups": [],
+        "results": [],
+        "total_num_results": 0
+      },
+      "result_id": "2b7bdd8c-ab4c-43f9-83f7-d0a969d8f411"
+    }
+  },
+  "special-characters-in-sort-by": {
+    "status": 200,
+    "body": {
+      "request": {
+        "sort_by": "relevance +[]&",
+        "sort_order": "descending",
+        "num_results_per_page": 20,
+        "term": "",
+        "page": 1,
+        "fmt_options": {
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "section": "Products",
+        "searchandized_items": {},
+        "browse_filter_name": "Brand",
+        "browse_filter_value": "XYZ"
+      },
+      "response": {
+        "facets": [],
+        "groups": [],
+        "results": [
+          {
+            "matched_terms": [],
+            "labels": {},
+            "data": {
+              "id": "10001",
+              "url": "https://test.com/p/20001",
+              "facets": [
+                {
+                  "name": "Brand",
+                  "values": [
+                    "XYZ"
+                  ]
+                },
+                {
+                  "name": "Color",
+                  "values": [
+                    "Blue",
+                    "red"
+                  ]
+                }
+              ],
+              "deactivated": false,
+              "groups": [
+                {
+                  "group_id": "StyleA",
+                  "display_name": "StyleA",
+                  "path": "/All/Styles",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Styles",
+                      "display_name": "Styles"
+                    }
+                  ]
+                }
+              ],
+              "variation_id": "20001"
+            },
+            "value": "item1 variation",
+            "is_slotted": false,
+            "variations": [
+              {
+                "data": {
+                  "url": "https://test.com/p/20001",
+                  "facets": [
+                    {
+                      "name": "Brand",
+                      "values": [
+                        "XYZ"
+                      ]
+                    },
+                    {
+                      "name": "Color",
+                      "values": [
+                        "Blue",
+                        "red"
+                      ]
+                    }
+                  ],
+                  "deactivated": false,
+                  "variation_id": "20001"
+                },
+                "value": "item1 variation"
+              }
+            ]
+          }
+        ],
+        "total_num_results": 4
+      },
+      "result_id": "d575c6bf-6452-4940-8d3e-fdb60fe680bf"
+    }
+  },
+  "non-breaking-spaces-in-sort-by": {
+    "status": 200,
+    "body": {
+      "request": {
+        "sort_by": "relevance     relevance",
+        "sort_order": "descending",
+        "num_results_per_page": 20,
+        "term": "",
+        "page": 1,
+        "fmt_options": {
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "section": "Products",
+        "searchandized_items": {},
+        "browse_filter_name": "Brand",
+        "browse_filter_value": "XYZ"
+      },
+      "response": {
+        "facets": [],
+        "groups": [],
+        "results": [
+          {
+            "matched_terms": [],
+            "labels": {},
+            "data": {
+              "id": "10001",
+              "url": "https://test.com/p/20001",
+              "facets": [
+                {
+                  "name": "Brand",
+                  "values": [
+                    "XYZ"
+                  ]
+                },
+                {
+                  "name": "Color",
+                  "values": [
+                    "Blue",
+                    "red"
+                  ]
+                }
+              ],
+              "deactivated": false,
+              "groups": [
+                {
+                  "group_id": "StyleA",
+                  "display_name": "StyleA",
+                  "path": "/All/Styles",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Styles",
+                      "display_name": "Styles"
+                    }
+                  ]
+                }
+              ],
+              "variation_id": "20001"
+            },
+            "value": "item1 variation",
+            "is_slotted": false,
+            "variations": [
+              {
+                "data": {
+                  "url": "https://test.com/p/20001",
+                  "facets": [
+                    {
+                      "name": "Brand",
+                      "values": [
+                        "XYZ"
+                      ]
+                    },
+                    {
+                      "name": "Color",
+                      "values": [
+                        "Blue",
+                        "red"
+                      ]
+                    }
+                  ],
+                  "deactivated": false,
+                  "variation_id": "20001"
+                },
+                "value": "item1 variation"
+              }
+            ]
+          }
+        ],
+        "total_num_results": 4
+      },
+      "result_id": "158ce0f2-9238-482a-bdf6-ef4864705058"
+    }
+  },
+  "items-results": {
+    "status": 200,
+    "body": {
+      "request": {
+        "num_results_per_page": 20,
+        "ids": [
+          "10002",
+          "10001"
+        ],
+        "term": "",
+        "page": 1,
+        "fmt_options": {
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "section": "Products"
+      },
+      "response": {
+        "facets": [],
+        "groups": [],
+        "results": [
+          {
+            "value": "Item2",
+            "matched_terms": [],
+            "data": {
+              "id": "10002",
+              "url": "https://test.com/p/10002",
+              "facets": [
+                {
+                  "name": "Color",
+                  "values": [
+                    "yellow"
+                  ]
+                }
+              ],
+              "groups": [
+                {
+                  "group_id": "BrandXY",
+                  "display_name": "BrandXY",
+                  "path": "/All/Brands/BrandX",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Brands",
+                      "display_name": "Brands"
+                    },
+                    {
+                      "id": "BrandX",
+                      "display_name": "BrandX"
+                    }
+                  ]
+                }
+              ],
+              "deactivated": false
+            }
+          }
+        ],
+        "total_num_results": 2
+      },
+      "result_id": "f3ade9bd-23c4-440f-95c9-8b37ee22e2cf"
+    }
+  },
+  "items-with-test-cells": {
+    "status": 200,
+    "body": {
+      "request": {
+        "num_results_per_page": 20,
+        "ids": [
+          "10002",
+          "10001"
+        ],
+        "ef-foo": "bar",
+        "term": "",
+        "page": 1,
+        "fmt_options": {
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "section": "Products"
+      },
+      "response": {
+        "facets": [],
+        "groups": [],
+        "results": [
+          {
+            "value": "Item2",
+            "matched_terms": [],
+            "data": {
+              "id": "10002",
+              "url": "https://test.com/p/10002",
+              "facets": [
+                {
+                  "name": "Color",
+                  "values": [
+                    "yellow"
+                  ]
+                }
+              ],
+              "groups": [
+                {
+                  "group_id": "BrandXY",
+                  "display_name": "BrandXY",
+                  "path": "/All/Brands/BrandX",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Brands",
+                      "display_name": "Brands"
+                    },
+                    {
+                      "id": "BrandX",
+                      "display_name": "BrandX"
+                    }
+                  ]
+                }
+              ],
+              "deactivated": false
+            }
+          }
+        ],
+        "total_num_results": 2
+      },
+      "result_id": "30d0a4f9-aeee-4369-9b8d-32b0644010f4"
+    }
+  },
+  "items-two-results-per-page": {
+    "status": 200,
+    "body": {
+      "request": {
+        "num_results_per_page": 2,
+        "ids": [
+          "10002",
+          "10001"
+        ],
+        "term": "",
+        "page": 1,
+        "fmt_options": {
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "section": "Products"
+      },
+      "response": {
+        "facets": [],
+        "groups": [],
+        "results": [
+          {
+            "value": "Item2",
+            "matched_terms": [],
+            "data": {
+              "id": "10002",
+              "url": "https://test.com/p/10002",
+              "facets": [
+                {
+                  "name": "Color",
+                  "values": [
+                    "yellow"
+                  ]
+                }
+              ],
+              "groups": [
+                {
+                  "group_id": "BrandXY",
+                  "display_name": "BrandXY",
+                  "path": "/All/Brands/BrandX",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Brands",
+                      "display_name": "Brands"
+                    },
+                    {
+                      "id": "BrandX",
+                      "display_name": "BrandX"
+                    }
+                  ]
+                }
+              ],
+              "deactivated": false
+            }
+          },
+          {
+            "value": "item1 variation",
+            "matched_terms": [],
+            "data": {
+              "id": "10001",
+              "url": "https://test.com/p/20001",
+              "variation_id": "20001",
+              "facets": [
+                {
+                  "name": "Brand",
+                  "values": [
+                    "XYZ"
+                  ]
+                },
+                {
+                  "name": "Color",
+                  "values": [
+                    "Blue",
+                    "red"
+                  ]
+                }
+              ],
+              "groups": [
+                {
+                  "group_id": "StyleA",
+                  "display_name": "StyleA",
+                  "path": "/All/Styles",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Styles",
+                      "display_name": "Styles"
+                    }
+                  ]
+                }
+              ],
+              "deactivated": false
+            },
+            "variations": [
+              {
+                "data": {
+                  "url": "https://test.com/p/20001",
+                  "variation_id": "20001",
+                  "facets": [
+                    {
+                      "name": "Brand",
+                      "values": [
+                        "XYZ"
+                      ]
+                    },
+                    {
+                      "name": "Color",
+                      "values": [
+                        "Blue",
+                        "red"
+                      ]
+                    }
+                  ],
+                  "deactivated": false
+                },
+                "value": "item1 variation"
+              }
+            ]
+          }
+        ],
+        "total_num_results": 2
+      },
+      "result_id": "1af971e5-043c-4eda-9545-74ea8fe8703a"
+    }
+  },
+  "items-filtered-by-keywords": {
+    "status": 200,
+    "body": {
+      "request": {
+        "num_results_per_page": 20,
+        "filters": {
+          "keywords": [
+            "battery-powered"
+          ]
+        },
+        "ids": [
+          "10002",
+          "10001"
+        ],
+        "term": "",
+        "page": 1,
+        "fmt_options": {
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "section": "Products",
+        "filter_match_types": {
+          "keywords": "any"
+        }
+      },
+      "response": {
+        "facets": [],
+        "groups": [],
+        "results": [],
+        "total_num_results": 0
+      },
+      "result_id": "21e53a44-9658-4b81-aa28-7ed16061ca19"
+    }
+  },
+  "items-with-fmt-options": {
+    "status": 200,
+    "body": {
+      "request": {
+        "num_results_per_page": 20,
+        "fmt_options": {
+          "show_hidden_fields": false,
+          "groups_max_depth": 2,
+          "groups_start": "current",
+          "show_hidden_facets": false,
+          "show_protected_facets": false
+        },
+        "ids": [
+          "10002",
+          "10001"
+        ],
+        "term": "",
+        "page": 1,
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "section": "Products"
+      },
+      "response": {
+        "facets": [],
+        "groups": [],
+        "results": [
+          {
+            "value": "Item2",
+            "matched_terms": [],
+            "data": {
+              "id": "10002",
+              "url": "https://test.com/p/10002",
+              "facets": [
+                {
+                  "name": "Color",
+                  "values": [
+                    "yellow"
+                  ]
+                }
+              ],
+              "groups": [
+                {
+                  "group_id": "BrandXY",
+                  "display_name": "BrandXY",
+                  "path": "/All/Brands/BrandX",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Brands",
+                      "display_name": "Brands"
+                    },
+                    {
+                      "id": "BrandX",
+                      "display_name": "BrandX"
+                    }
+                  ]
+                }
+              ],
+              "deactivated": false
+            }
+          }
+        ],
+        "total_num_results": 2
+      },
+      "result_id": "393ec52e-2840-4922-9424-22d20c5fcf7f"
+    }
+  },
+  "items-with-offset": {
+    "status": 200,
+    "body": {
+      "request": {
+        "offset": 1,
+        "num_results_per_page": 20,
+        "ids": [
+          "10002",
+          "10001"
+        ],
+        "term": "",
+        "fmt_options": {
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "section": "Products"
+      },
+      "response": {
+        "facets": [],
+        "groups": [],
+        "results": [
+          {
+            "value": "item1 variation",
+            "matched_terms": [],
+            "data": {
+              "id": "10001",
+              "url": "https://test.com/p/20001",
+              "variation_id": "20001",
+              "facets": [
+                {
+                  "name": "Brand",
+                  "values": [
+                    "XYZ"
+                  ]
+                },
+                {
+                  "name": "Color",
+                  "values": [
+                    "Blue",
+                    "red"
+                  ]
+                }
+              ],
+              "groups": [
+                {
+                  "group_id": "StyleA",
+                  "display_name": "StyleA",
+                  "path": "/All/Styles",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Styles",
+                      "display_name": "Styles"
+                    }
+                  ]
+                }
+              ],
+              "deactivated": false
+            },
+            "variations": [
+              {
+                "data": {
+                  "url": "https://test.com/p/20001",
+                  "variation_id": "20001",
+                  "facets": [
+                    {
+                      "name": "Brand",
+                      "values": [
+                        "XYZ"
+                      ]
+                    },
+                    {
+                      "name": "Color",
+                      "values": [
+                        "Blue",
+                        "red"
+                      ]
+                    }
+                  ],
+                  "deactivated": false
+                },
+                "value": "item1 variation"
+              }
+            ]
+          }
+        ],
+        "total_num_results": 2
+      },
+      "result_id": "4a19971a-6638-4150-842b-4d798573f7c6"
+    }
+  },
+  "items-with-pre-filter-expression": {
+    "status": 200,
+    "body": {
+      "request": {
+        "num_results_per_page": 20,
+        "pre_filter_expression": {
+          "or": [
+            {
+              "and": [
+                {
+                  "name": "group_id",
+                  "value": "electronics-group-id"
+                },
+                {
+                  "name": "Price",
+                  "range": [
+                    "-inf",
+                    200
+                  ]
+                }
+              ]
+            },
+            {
+              "and": [
+                {
+                  "name": "Type",
+                  "value": "Laptop"
+                },
+                {
+                  "not": {
+                    "name": "Price",
+                    "range": [
+                      800,
+                      "inf"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "ids": [
+          "10002",
+          "10001"
+        ],
+        "term": "",
+        "page": 1,
+        "fmt_options": {
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "section": "Products"
+      },
+      "response": {
+        "facets": [],
+        "groups": [],
+        "results": [],
+        "total_num_results": 0
+      },
+      "result_id": "170eb705-1f45-40dc-9b7f-7ee9f53070e2"
+    }
+  },
+  "items-with-hidden-fields": {
+    "status": 200,
+    "body": {
+      "request": {
+        "num_results_per_page": 20,
+        "fmt_options": {
+          "show_hidden_fields": false,
+          "hidden_fields": [
+            "testField",
+            "testField2"
+          ],
+          "groups_max_depth": 1,
+          "groups_start": "current",
+          "show_hidden_facets": false,
+          "show_protected_facets": false
+        },
+        "ids": [
+          "10002",
+          "10001"
+        ],
+        "term": "",
+        "page": 1,
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "section": "Products"
+      },
+      "response": {
+        "facets": [],
+        "groups": [],
+        "results": [
+          {
+            "value": "Item2",
+            "matched_terms": [],
+            "data": {
+              "id": "10002",
+              "url": "https://test.com/p/10002",
+              "facets": [
+                {
+                  "name": "Color",
+                  "values": [
+                    "yellow"
+                  ]
+                }
+              ],
+              "groups": [
+                {
+                  "group_id": "BrandXY",
+                  "display_name": "BrandXY",
+                  "path": "/All/Brands/BrandX",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Brands",
+                      "display_name": "Brands"
+                    },
+                    {
+                      "id": "BrandX",
+                      "display_name": "BrandX"
+                    }
+                  ]
+                }
+              ],
+              "deactivated": false,
+              "testField": "hiddenFieldValue"
+            }
+          }
+        ],
+        "total_num_results": 2
+      },
+      "result_id": "76f66d6a-47a4-4ba5-9819-704eef2143c9"
+    }
+  },
+  "items-with-hidden-facets": {
+    "status": 200,
+    "body": {
+      "request": {
+        "num_results_per_page": 20,
+        "fmt_options": {
+          "show_hidden_fields": false,
+          "groups_max_depth": 1,
+          "groups_start": "current",
+          "show_hidden_facets": false,
+          "hidden_facets": [
+            "Brand",
+            "testFacet"
+          ],
+          "show_protected_facets": false
+        },
+        "ids": [
+          "10002",
+          "10001"
+        ],
+        "term": "",
+        "page": 1,
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "section": "Products"
+      },
+      "response": {
+        "facets": [
+          {
+            "type": "multiple",
+            "name": "Brand",
+            "display_name": "Brand",
+            "hidden": true,
+            "data": {},
+            "options": [
+              {
+                "display_name": "XYZ",
+                "status": "",
+                "value": "XYZ",
+                "count": 1,
+                "data": {}
+              }
+            ]
+          }
+        ],
+        "groups": [],
+        "results": [
+          {
+            "value": "Item2",
+            "matched_terms": [],
+            "data": {
+              "id": "10002",
+              "url": "https://test.com/p/10002",
+              "facets": [
+                {
+                  "name": "Color",
+                  "values": [
+                    "yellow"
+                  ]
+                }
+              ],
+              "groups": [
+                {
+                  "group_id": "BrandXY",
+                  "display_name": "BrandXY",
+                  "path": "/All/Brands/BrandX",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Brands",
+                      "display_name": "Brands"
+                    },
+                    {
+                      "id": "BrandX",
+                      "display_name": "BrandX"
+                    }
+                  ]
+                }
+              ],
+              "deactivated": false
+            }
+          }
+        ],
+        "total_num_results": 2
+      },
+      "result_id": "a0d3eeee-4019-4179-8f2e-87d3c657d186"
+    }
+  },
+  "items-with-variations-map": {
+    "status": 200,
+    "body": {
+      "request": {
+        "num_results_per_page": 20,
+        "variations_map": {
+          "group_by": [
+            {
+              "name": "variation",
+              "field": "data.variation_id"
+            }
+          ],
+          "values": {
+            "size": {
+              "aggregation": "all",
+              "field": "data.facets.size"
+            }
+          },
+          "dtype": "array"
+        },
+        "ids": [
+          "luistrenker-jacket-K245511299-cream"
+        ],
+        "term": "",
+        "page": 1,
+        "fmt_options": {
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "section": "Products"
+      },
+      "response": {
+        "facets": [],
+        "groups": [],
+        "results": [
+          {
+            "value": "Jacket “Rivka“ Luis Trenker cream",
+            "matched_terms": [],
+            "data": {
+              "id": "luistrenker-jacket-K245511299-cream",
+              "url": "https://demo.commercetools.com/en/luistrenker-jacket-K245511299-cream.html",
+              "variation_id": "M0E20000000E2ZJ",
+              "deactivated": false
+            },
+            "variations_map": [
+              {
+                "variation": "M0E20000000E2ZJ",
+                "size": [
+                  null
+                ]
+              }
+            ]
+          }
+        ],
+        "total_num_results": 1
+      },
+      "result_id": "dcdb2f6b-afee-4ff4-99c7-f6c448de1d48"
+    }
+  },
+  "groups": {
+    "status": 200,
+    "body": {
+      "request": {
+        "term": "",
+        "page": 1,
+        "num_results_per_page": 20,
+        "fmt_options": {
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "section": "Products"
+      },
+      "response": {
+        "groups": [
+          {
+            "group_id": "All",
+            "display_name": "All",
+            "count": 10,
+            "data": {},
+            "children": [
+              {
+                "group_id": "Brands",
+                "display_name": "Brands",
+                "count": 6,
+                "data": {},
+                "children": [],
+                "parents": [
+                  {
+                    "display_name": "All",
+                    "group_id": "All"
+                  }
+                ]
+              },
+              {
+                "group_id": "Styles",
+                "display_name": "Styles",
+                "count": 4,
+                "data": {},
+                "children": [],
+                "parents": [
+                  {
+                    "display_name": "All",
+                    "group_id": "All"
+                  }
+                ]
+              }
+            ],
+            "parents": []
+          }
+        ]
+      },
+      "result_id": "97e782e3-25ed-414b-94e5-f76419363ffe"
+    }
+  },
+  "groups-filtered-by-group-id": {
+    "status": 200,
+    "body": {
+      "request": {
+        "filters": {
+          "group_id": [
+            "drill_collection"
+          ]
+        },
+        "term": "",
+        "page": 1,
+        "num_results_per_page": 20,
+        "fmt_options": {
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "section": "Products",
+        "filter_match_types": {
+          "group_id": "any"
+        }
+      },
+      "response": {
+        "groups": []
+      },
+      "result_id": "a6494110-2479-43d0-91a0-913c61f07598"
+    }
+  },
+  "groups-with-fmt-options": {
+    "status": 200,
+    "body": {
+      "request": {
+        "fmt_options": {
+          "groups_max_depth": 2,
+          "groups_start": "current",
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "term": "",
+        "page": 1,
+        "num_results_per_page": 20,
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "section": "Products"
+      },
+      "response": {
+        "groups": [
+          {
+            "group_id": "All",
+            "display_name": "All",
+            "count": 10,
+            "data": {},
+            "children": [
+              {
+                "group_id": "Brands",
+                "display_name": "Brands",
+                "count": 6,
+                "data": {},
+                "children": [
+                  {
+                    "group_id": "BrandX",
+                    "display_name": "BrandX",
+                    "count": 3,
+                    "data": {},
+                    "children": [],
+                    "parents": [
+                      {
+                        "display_name": "All",
+                        "group_id": "All"
+                      },
+                      {
+                        "display_name": "Brands",
+                        "group_id": "Brands"
+                      }
+                    ]
+                  },
+                  {
+                    "group_id": "BrandA",
+                    "display_name": "BrandA",
+                    "count": 3,
+                    "data": {},
+                    "children": [],
+                    "parents": [
+                      {
+                        "display_name": "All",
+                        "group_id": "All"
+                      },
+                      {
+                        "display_name": "Brands",
+                        "group_id": "Brands"
+                      }
+                    ]
+                  }
+                ],
+                "parents": [
+                  {
+                    "display_name": "All",
+                    "group_id": "All"
+                  }
+                ]
+              },
+              {
+                "group_id": "Styles",
+                "display_name": "Styles",
+                "count": 4,
+                "data": {},
+                "children": [
+                  {
+                    "group_id": "StyleB",
+                    "display_name": "StyleB",
+                    "count": 2,
+                    "data": {},
+                    "children": [],
+                    "parents": [
+                      {
+                        "display_name": "All",
+                        "group_id": "All"
+                      },
+                      {
+                        "display_name": "Styles",
+                        "group_id": "Styles"
+                      }
+                    ]
+                  },
+                  {
+                    "group_id": "StyleA",
+                    "display_name": "StyleA",
+                    "count": 2,
+                    "data": {},
+                    "children": [],
+                    "parents": [
+                      {
+                        "display_name": "All",
+                        "group_id": "All"
+                      },
+                      {
+                        "display_name": "Styles",
+                        "group_id": "Styles"
+                      }
+                    ]
+                  }
+                ],
+                "parents": [
+                  {
+                    "display_name": "All",
+                    "group_id": "All"
+                  }
+                ]
+              }
+            ],
+            "parents": []
+          }
+        ]
+      },
+      "result_id": "a60147db-da4c-4ba1-b71c-fe6b4aa77c4d"
+    }
+  },
+  "facets": {
+    "status": 200,
+    "body": {
+      "request": {
+        "num_results_per_page": 20,
+        "term": "",
+        "page": 1,
+        "fmt_options": {
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "section": "Products"
+      },
+      "response": {
+        "facets": [
+          {
+            "display_name": "Color",
+            "name": "Color",
+            "type": "multiple",
+            "hidden": false,
+            "data": {
+              "cheese": "pizza"
+            }
+          }
+        ],
+        "total_num_results": 1
+      },
+      "result_id": "b6ce7cbc-7482-4e5f-b7ee-907cb27b61b1"
+    }
+  },
+  "facets-with-fmt-options": {
+    "status": 200,
+    "body": {
+      "request": {
+        "num_results_per_page": 20,
+        "fmt_options": {
+          "show_hidden_facets": true,
+          "show_protected_facets": false,
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_fields": false
+        },
+        "term": "",
+        "page": 1,
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "section": "Products"
+      },
+      "response": {
+        "facets": [
+          {
+            "display_name": "__cnstrc_age",
+            "name": "__cnstrc_age",
+            "data": {},
+            "type": "range",
+            "hidden": true,
+            "status": {}
+          },
+          {
+            "display_name": "Brand",
+            "name": "Brand",
+            "type": "multiple",
+            "hidden": true,
+            "data": {}
+          },
+          {
+            "display_name": "Color",
+            "name": "Color",
+            "type": "multiple",
+            "hidden": false,
+            "data": {
+              "cheese": "pizza"
+            }
+          }
+        ],
+        "total_num_results": 3
+      },
+      "result_id": "e5d4bef8-7797-43cf-bd0e-8af4f86a1e85"
+    }
+  },
+  "facets-with-offset": {
+    "status": 200,
+    "body": {
+      "request": {
+        "offset": 1,
+        "num_results_per_page": 20,
+        "term": "",
+        "fmt_options": {
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "section": "Products"
+      },
+      "response": {
+        "facets": [],
+        "total_num_results": 1
+      },
+      "result_id": "eca520e4-081e-4ee7-87d6-40315f3731dd"
+    }
+  },
+  "facet-options": {
+    "status": 200,
+    "body": {
+      "request": {
+        "num_results_per_page": 100000,
+        "facet_name": "Color",
+        "term": "",
+        "page": 1,
+        "fmt_options": {
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "section": "Products"
+      },
+      "response": {
+        "facets": [
+          {
+            "display_name": "Color",
+            "name": "Color",
+            "type": "multiple",
+            "options": [
+              {
+                "status": "",
+                "count": 2,
+                "display_name": "green",
+                "value": "green",
+                "data": {
+                  "milk": "shake"
+                }
+              },
+              {
+                "status": "",
+                "count": 2,
+                "display_name": "yellow",
+                "value": "yellow",
+                "data": {}
+              },
+              {
+                "status": "",
+                "count": 2,
+                "display_name": "red",
+                "value": "red",
+                "data": {}
+              },
+              {
+                "status": "",
+                "count": 1,
+                "display_name": "Silver",
+                "value": "silver",
+                "data": {}
+              },
+              {
+                "status": "",
+                "count": 1,
+                "display_name": "Pink",
+                "value": "pink",
+                "data": {}
+              },
+              {
+                "status": "",
+                "count": 1,
+                "display_name": "Blue",
+                "value": "Blue",
+                "data": {}
+              },
+              {
+                "status": "",
+                "count": 1,
+                "display_name": "blue",
+                "value": "blue",
+                "data": {}
+              }
+            ],
+            "hidden": false,
+            "data": {
+              "cheese": "pizza"
+            }
+          }
+        ],
+        "total_num_results": 7
+      },
+      "result_id": "e144a327-baa4-40b3-b7b3-af1ce6cbdbb6"
+    }
+  },
+  "facet-options-with-fmt-options": {
+    "status": 200,
+    "body": {
+      "request": {
+        "num_results_per_page": 100000,
+        "fmt_options": {
+          "show_hidden_facets": true,
+          "show_protected_facets": false,
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_fields": false
+        },
+        "facet_name": "Color",
+        "term": "",
+        "page": 1,
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "section": "Products"
+      },
+      "response": {
+        "facets": [
+          {
+            "display_name": "Color",
+            "name": "Color",
+            "type": "multiple",
+            "options": [
+              {
+                "status": "",
+                "count": 2,
+                "display_name": "green",
+                "value": "green",
+                "data": {
+                  "milk": "shake"
+                }
+              },
+              {
+                "status": "",
+                "count": 2,
+                "display_name": "yellow",
+                "value": "yellow",
+                "data": {}
+              },
+              {
+                "status": "",
+                "count": 2,
+                "display_name": "red",
+                "value": "red",
+                "data": {}
+              },
+              {
+                "status": "",
+                "count": 1,
+                "display_name": "Silver",
+                "value": "silver",
+                "data": {}
+              },
+              {
+                "status": "",
+                "count": 1,
+                "display_name": "Pink",
+                "value": "pink",
+                "data": {}
+              },
+              {
+                "status": "",
+                "count": 1,
+                "display_name": "Blue",
+                "value": "Blue",
+                "data": {}
+              },
+              {
+                "status": "",
+                "count": 1,
+                "display_name": "blue",
+                "value": "blue",
+                "data": {}
+              }
+            ],
+            "hidden": false,
+            "data": {
+              "cheese": "pizza"
+            }
+          }
+        ],
+        "total_num_results": 7
+      },
+      "result_id": "b7f298a3-62fe-4a87-980c-355a15ad1f07"
+    }
+  },
+  "invalid-parameters": {
+    "status": 400,
+    "body": {
+      "message": "page: Input should be a valid integer, unable to parse string as an integer"
+    }
+  },
+  "invalid-api-key": {
+    "status": 400,
+    "body": {
+      "message": "You have supplied an invalid `key` or `autocomplete_key`. You can find your key at app.constructor.io/dashboard/accounts/api_integration."
+    }
+  }
+}

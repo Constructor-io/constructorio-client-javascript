@@ -23,7 +23,6 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
   const validQuizId = 'test-quiz';
   const validAnswers = [[1], [1, 2], ['seen']];
   const jsdomOptions = { url: 'http://localhost' };
-  let fetchSpy;
   let cleanup;
 
   if (bundled) {
@@ -37,7 +36,6 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     cleanup = jsdom(jsdomOptions);
     global.CLIENT_VERSION = clientVersion;
     window.CLIENT_VERSION = clientVersion;
-    fetchSpy = sinon.spy(fetch);
 
     if (bundled) {
       ConstructorIO = window.ConstructorioClient;
@@ -48,12 +46,12 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     delete global.CLIENT_VERSION;
     delete window.CLIENT_VERSION;
     cleanup();
-
-    fetchSpy = null;
   });
 
   describe('getQuizAllQuestions', () => {
     it('Should return a result provided a valid apiKey and quizId', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/all-questions'));
+
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
@@ -76,6 +74,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result provided a valid apiKey, quizId and section', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/all-questions'));
+
       const section = 'Products';
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
@@ -93,6 +93,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result provided a valid apiKey, quizId and quizVersionId', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/all-questions'));
+
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
@@ -114,6 +116,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should error when fetching quiz questions with an invalid quizId', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/quiz-not-found'));
+
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
@@ -125,13 +129,14 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     it('Should error when fetching quiz questions with no quizId', () => {
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
-        fetch: fetchSpy,
       });
 
       return expect(quizzes.getQuizAllQuestions(null)).to.eventually.be.rejected;
     });
 
     it('Should error when fetching quiz questions with an invalid apiKey', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/invalid-api-key'));
+
       const { quizzes } = new ConstructorIO({
         apiKey: 'invalidKey',
         fetch: fetchSpy,
@@ -141,6 +146,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected if an invalid quizVersionId is provided', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/quiz-version-not-found'));
+
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
@@ -150,6 +157,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return 400 when quiz has jump logic', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/question-retrieval-not-supported'));
+
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
@@ -166,6 +175,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     const quizSessionId = 'test-session-id';
 
     it('Should return a result provided a valid apiKey and quizId', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/next-question'));
+
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
@@ -189,6 +200,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result provided a valid apiKey, quizId and section', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/next-question'));
+
       const section = 'Products';
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
@@ -208,6 +221,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result provided a valid apiKey, quizId and quizVersionId, quizSessionId', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/next-question'));
+
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
@@ -232,6 +247,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result provided a valid apiKey, quizId and user id', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/next-question'));
+
       const userId = 'user-id';
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
@@ -252,6 +269,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result provided a valid apiKey, quizId and segments', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/next-question'));
+
       const segments = ['foo', 'bar'];
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
@@ -272,6 +291,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return result given answers parameter', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/next-question-after-answers'));
+
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
@@ -286,6 +307,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should skip tracking', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/next-question-after-answers'));
+
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
@@ -301,6 +324,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected if an invalid quizVersionId is provided', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/quiz-version-not-found'));
+
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
@@ -310,6 +335,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected if an invalid quizId is provided', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/quiz-not-found'));
+
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
@@ -321,7 +348,6 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     it('Should be rejected if no quizId is provided', () => {
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
-        fetch: fetchSpy,
       });
 
       return expect(quizzes.getQuizNextQuestion(null, {})).to.eventually.be.rejected;
@@ -329,6 +355,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', () => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/next-question'));
+
         const { quizzes } = new ConstructorIO({
           apiKey: quizApiKey,
           fetch: fetchSpy,
@@ -338,6 +366,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', () => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/next-question'));
+
         const { quizzes } = new ConstructorIO({
           apiKey: quizApiKey,
           fetch: fetchSpy,
@@ -349,6 +379,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should be rejected if an invalid apiKey is provided', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/invalid-api-key'));
+
       const { quizzes } = new ConstructorIO({
         apiKey: 'invalidKey',
         fetch: fetchSpy,
@@ -362,6 +394,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     const quizSessionId = 'test-session-id';
 
     it('Should return result given valid API key and answers parameter', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/results'));
+
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
@@ -391,6 +425,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result given valid API key, answers and section parameters', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/results'));
+
       const section = 'Products';
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
@@ -414,6 +450,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result given fmtOptions parameters', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/results-with-hidden-fields'));
+
       const fmtOptions = { hidden_fields: ['testField', 'hiddenField2'] };
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
@@ -440,6 +478,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result given hiddenField parameters', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/results-with-hidden-fields'));
+
       const hiddenFields = ['testField', 'hiddenField2'];
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
@@ -466,6 +506,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result provided a valid apiKey, quizId, quizVersionId and quizSessionId', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch(['quizzes/next-question', 'quizzes/results']));
+
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
@@ -495,6 +537,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result provided a valid apiKey, quizId and user id', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/results'));
+
       const userId = 'user-id';
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
@@ -519,6 +563,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result provided a valid apiKey, quizId and segments', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/results'));
+
       const segments = ['foo', 'bar'];
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
@@ -542,6 +588,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result given valid API key, answers, and page parameters', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/results'));
+
       const page = 1;
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
@@ -565,6 +613,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result given valid API key, answers, and resultsPerPage parameters', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/results'));
+
       const resultsPerPage = 2;
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
@@ -588,6 +638,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result given valid API key, answers, and filters parameters', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/results'));
+
       const filters = { Color: ['Blue'] };
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
@@ -612,6 +664,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected if an invalid quizVersionId is provided', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/missing-quiz-session-id'));
+
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
@@ -623,13 +677,14 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     it('Should be rejected if no quizId is provided', () => {
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
-        fetch: fetchSpy,
       });
 
       return expect(quizzes.getQuizResults(null, { answers: validAnswers })).to.eventually.be.rejected;
     });
 
     it('Should be rejected if an invalid quizId is provided', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/missing-quiz-session-id'));
+
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
@@ -639,6 +694,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected if an invalid apiKey is provided', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/missing-quiz-session-id'));
+
       const { quizzes } = new ConstructorIO({
         apiKey: 'invalidKey',
         fetch: fetchSpy,
@@ -650,7 +707,6 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     it('Should be rejected if answers are not provided', () => {
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
-        fetch: fetchSpy,
       });
 
       return expect(quizzes.getQuizResults(validQuizId, { })).to.eventually.be.rejected;
@@ -659,7 +715,6 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     it('Should be rejected if empty answers are provided', () => {
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
-        fetch: fetchSpy,
       });
 
       return expect(quizzes.getQuizResults(validQuizId, { answers: [] })).to.eventually.be.rejected;
@@ -667,6 +722,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', () => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/results'));
+
         const { quizzes } = new ConstructorIO({
           apiKey: quizApiKey,
           fetch: fetchSpy,
@@ -676,6 +733,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', () => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/results'));
+
         const { quizzes } = new ConstructorIO({
           apiKey: quizApiKey,
           fetch: fetchSpy,
@@ -689,6 +748,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
 
   describe('getQuizResultsConfig', () => {
     it('Should return result given valid API key and quiz id', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/results-config'));
+
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
@@ -704,6 +765,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result provided a valid apiKey, quizId, quizVersionId', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/results-config'));
+
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
@@ -726,6 +789,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected if an invalid quizVersionId is provided', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/quiz-version-not-found'));
+
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
@@ -737,13 +802,14 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     it('Should be rejected if no quizId is provided', () => {
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
-        fetch: fetchSpy,
       });
 
       return expect(quizzes.getQuizResultsConfig(null)).to.eventually.be.rejected;
     });
 
     it('Should be rejected if an invalid quizId is provided', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/quiz-not-found'));
+
       const { quizzes } = new ConstructorIO({
         apiKey: quizApiKey,
         fetch: fetchSpy,
@@ -753,6 +819,8 @@ describe(`ConstructorIO - Quizzes${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected if an invalid apiKey is provided', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('quizzes/invalid-api-key'));
+
       const { quizzes } = new ConstructorIO({
         apiKey: 'invalidKey',
         fetch: fetchSpy,

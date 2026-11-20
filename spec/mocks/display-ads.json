@@ -1,0 +1,12 @@
+{
+  "home-banner-ad": {
+    "status": 200,
+    "body": {
+      "display_ads": {
+        "home": {
+          "banner_ad_id": "mock-banner-ad-id"
+        }
+      }
+    }
+  }
+}

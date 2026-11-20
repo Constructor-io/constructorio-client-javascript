@@ -410,15 +410,12 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
     });
 
     describe('send', () => {
-      let fetchSpy = null;
       let cleanup;
 
       beforeEach(() => {
         global.CLIENT_VERSION = 'cio-mocha';
-        fetchSpy = sinon.spy(fetch);
 
         requestQueueOptions = {
-          fetch: fetchSpy,
           sendTrackingEvents: true,
           trackingSendDelay: 1,
         };
@@ -430,14 +427,14 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         delete global.CLIENT_VERSION;
         cleanup();
 
-        fetchSpy = null;
-
         helpers.clearStorage();
       });
 
       describe('Single Instance', () => {
         it('Should send all url tracking requests if queue is populated and user is human', (done) => {
-          const requests = new RequestQueue(requestQueueOptions);
+          const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
+          const requests = new RequestQueue({ ...requestQueueOptions, fetch: fetchSpy });
 
           helpers.triggerResize(); // Human-like action
 
@@ -456,8 +453,10 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         });
 
         it('Should send all object tracking requests if queue is populated and user is human - POST with body', (done) => {
+          const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
           store.session.set(humanityStorageKey, true);
-          const requests = new RequestQueue(requestQueueOptions);
+          const requests = new RequestQueue({ ...requestQueueOptions, fetch: fetchSpy });
 
           requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'session_start' });
           requests.queue('https://ac.cnstrc.com/behavior', 'POST', { action: 'focus' });
@@ -475,7 +474,9 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         });
 
         it('Should not send tracking requests if queue was populated and user is not human', (done) => {
-          const requests = new RequestQueue(requestQueueOptions);
+          const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
+          const requests = new RequestQueue({ ...requestQueueOptions, fetch: fetchSpy });
 
           store.local.set(storageKey, [
             {
@@ -503,7 +504,9 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         });
 
         it('Should not send tracking requests if queue is populated and user is human and page is unloading', (done) => {
-          const requests = new RequestQueue(requestQueueOptions);
+          const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
+          const requests = new RequestQueue({ ...requestQueueOptions, fetch: fetchSpy });
 
           store.local.set(storageKey, [
             {
@@ -532,7 +535,9 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         });
 
         it('Should not send tracking requests if queue is populated and user is human and page is unloading and send was called before unload', (done) => {
-          const requests = new RequestQueue(requestQueueOptions);
+          const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
+          const requests = new RequestQueue({ ...requestQueueOptions, fetch: fetchSpy });
 
           store.local.set(storageKey, [
             {
@@ -561,13 +566,15 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         });
 
         it('Should send all tracking requests if requests exist in storage and user is human - backwards compatibility', (done) => {
+          const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
           store.local.set(storageKey, [
             'https://ac.cnstrc.com/behavior?action=session_start',
             'https://ac.cnstrc.com/behavior?action=focus',
             'https://ac.cnstrc.com/behavior?action=magic_number_three',
           ]);
 
-          const requests = new RequestQueue(requestQueueOptions);
+          const requests = new RequestQueue({ ...requestQueueOptions, fetch: fetchSpy });
 
           expect(RequestQueue.get()).to.be.an('array').length(3);
           helpers.triggerResize();
@@ -581,6 +588,8 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         });
 
         it('Should send all tracking requests if requests exist in storage and user is human', (done) => {
+          const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
           store.local.set(storageKey, [
             {
               url: 'https://ac.cnstrc.com/behavior?action=session_start',
@@ -596,7 +605,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
             },
           ]);
 
-          const requests = new RequestQueue(requestQueueOptions);
+          const requests = new RequestQueue({ ...requestQueueOptions, fetch: fetchSpy });
 
           expect(RequestQueue.get()).to.be.an('array').length(3);
           helpers.triggerResize();
@@ -610,6 +619,8 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         });
 
         it('Should send all tracking requests on initialization if requests exist in storage and user is human', (done) => {
+          const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
           store.local.set(storageKey, [
             {
               url: 'https://ac.cnstrc.com/behavior?action=session_start',
@@ -626,7 +637,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
           ]);
 
           // eslint-disable-next-line no-unused-vars
-          const requests = new RequestQueue(requestQueueOptions);
+          const requests = new RequestQueue({ ...requestQueueOptions, fetch: fetchSpy });
 
           expect(RequestQueue.get()).to.be.an('array').length(3);
           helpers.triggerResize();
@@ -639,6 +650,8 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         });
 
         it('Should not send tracking requests if requests exist in storage and user is not human', (done) => {
+          const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
           store.local.set(storageKey, [
             {
               url: 'https://ac.cnstrc.com/behavior?action=session_start',
@@ -654,7 +667,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
             },
           ]);
 
-          const requests = new RequestQueue(requestQueueOptions);
+          const requests = new RequestQueue({ ...requestQueueOptions, fetch: fetchSpy });
 
           expect(RequestQueue.get()).to.be.an('array').length(3);
           requests.send();
@@ -666,6 +679,8 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         });
 
         it('Should not send tracking requests if requests exist in storage and user is human and page is unloading', (done) => {
+          const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
           store.local.set(storageKey, [
             {
               url: 'https://ac.cnstrc.com/behavior?action=session_start',
@@ -681,7 +696,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
             },
           ]);
 
-          const requests = new RequestQueue(requestQueueOptions);
+          const requests = new RequestQueue({ ...requestQueueOptions, fetch: fetchSpy });
 
           expect(RequestQueue.get()).to.be.an('array').length(3);
           helpers.triggerResize();
@@ -695,6 +710,8 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         });
 
         it('Should clear all tracking requests if requests exist in storage and request is older than TTL value', (done) => {
+          const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
           const requestTTL = 180000; // 3 minutes in milliseconds
           const oneMinuteInMS = 3600;
 
@@ -713,7 +730,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
             },
           ]);
 
-          const requests = new RequestQueue(requestQueueOptions);
+          const requests = new RequestQueue({ ...requestQueueOptions, fetch: fetchSpy });
 
           expect(RequestQueue.get()).to.be.an('array').length(3);
           helpers.triggerResize();
@@ -729,6 +746,8 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         });
 
         it('Should not clear all tracking requests if request exists in storage and request _dt parameter is not an integer', (done) => {
+          const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
           store.local.set(storageKey, [
             {
               url: 'https://ac.cnstrc.com/behavior?action=session_start&_dt=abc',
@@ -744,7 +763,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
             },
           ]);
 
-          const requests = new RequestQueue(requestQueueOptions);
+          const requests = new RequestQueue({ ...requestQueueOptions, fetch: fetchSpy });
 
           expect(RequestQueue.get()).to.be.an('array').length(3);
           helpers.triggerResize();
@@ -760,6 +779,8 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         });
 
         it('Should not clear all tracking requests if requests exist in storage and request is younger than TTL value', (done) => {
+          const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
           const requestTTL = 180000; // 3 minutes in milliseconds
           const oneMinuteInMS = 3600;
 
@@ -770,7 +791,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
             },
           ]);
 
-          const requests = new RequestQueue(requestQueueOptions);
+          const requests = new RequestQueue({ ...requestQueueOptions, fetch: fetchSpy });
 
           expect(RequestQueue.get()).to.be.an('array').length(1);
           helpers.triggerResize();
@@ -786,6 +807,8 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         });
 
         it('Should not clear all tracking requests if requests exist in storage and no _dt parameter is set', (done) => {
+          const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
           store.local.set(storageKey, [
             {
               url: `https://ac.cnstrc.com/behavior?key=${testApiKey}&action=session_start`,
@@ -793,7 +816,7 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
             },
           ]);
 
-          const requests = new RequestQueue(requestQueueOptions);
+          const requests = new RequestQueue({ ...requestQueueOptions, fetch: fetchSpy });
 
           expect(RequestQueue.get()).to.be.an('array').length(1);
           helpers.triggerResize();
@@ -811,6 +834,8 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
 
       describe('Two Instances', () => {
         it('Should send tracking requests using multiple queues if requests exist in storage and user is human', (done) => {
+          const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
           store.local.set(storageKey, [
             {
               url: 'https://ac.cnstrc.com/behavior?action=session_start',
@@ -834,8 +859,8 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
             },
           ]);
 
-          const requests1 = new RequestQueue(requestQueueOptions);
-          const requests2 = new RequestQueue(requestQueueOptions);
+          const requests1 = new RequestQueue({ ...requestQueueOptions, fetch: fetchSpy });
+          const requests2 = new RequestQueue({ ...requestQueueOptions, fetch: fetchSpy });
           const sendSpy1 = sinon.spy(requests1, 'send');
           const sendSpy2 = sinon.spy(requests2, 'send');
 
@@ -855,8 +880,10 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         });
 
         it('Should send tracking requests using multiple queues when items are queued in one and user is human', (done) => {
-          const requests1 = new RequestQueue(requestQueueOptions);
-          const requests2 = new RequestQueue(requestQueueOptions);
+          const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
+          const requests1 = new RequestQueue({ ...requestQueueOptions, fetch: fetchSpy });
+          const requests2 = new RequestQueue({ ...requestQueueOptions, fetch: fetchSpy });
           const sendSpy1 = sinon.spy(requests1, 'send');
           const sendSpy2 = sinon.spy(requests2, 'send');
 
@@ -898,8 +925,10 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
         });
 
         it('Should send tracking requests using multiple queues when items are queued in both and user is human', (done) => {
-          const requests1 = new RequestQueue(requestQueueOptions);
-          const requests2 = new RequestQueue(requestQueueOptions);
+          const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
+          const requests1 = new RequestQueue({ ...requestQueueOptions, fetch: fetchSpy });
+          const requests2 = new RequestQueue({ ...requestQueueOptions, fetch: fetchSpy });
           const sendSpy1 = sinon.spy(requests1, 'send');
           const sendSpy2 = sinon.spy(requests2, 'send');
 
@@ -943,7 +972,6 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
     });
 
     describe('domless', () => {
-      let fetchSpy = null;
 
       before(() => {
         helpers.clearStorage();
@@ -951,10 +979,8 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
 
       beforeEach(() => {
         global.CLIENT_VERSION = 'cio-mocha';
-        fetchSpy = sinon.spy(fetch);
 
         requestQueueOptions = {
-          fetch: fetchSpy,
           sendTrackingEvents: true,
           trackingSendDelay: 1,
         };
@@ -966,7 +992,9 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
       });
 
       it('Should add url requests to the queue if the user is domless', async () => {
-        const requests = new RequestQueue(requestQueueOptions);
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
+        const requests = new RequestQueue({ ...requestQueueOptions, fetch: fetchSpy });
 
         requests.queue('https://ac.cnstrc.com/behavior?action=session_start');
         requests.queue('https://ac.cnstrc.com/behavior?action=focus');
@@ -976,8 +1004,10 @@ describe('ConstructorIO - Utils - Request Queue', function utilsRequestQueue() {
       });
 
       it('Should send  requests from the queue if the user is domless', (done) => {
-        const requests1 = new RequestQueue(requestQueueOptions);
-        const requests2 = new RequestQueue(requestQueueOptions);
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
+        const requests1 = new RequestQueue({ ...requestQueueOptions, fetch: fetchSpy });
+        const requests2 = new RequestQueue({ ...requestQueueOptions, fetch: fetchSpy });
         const sendSpy1 = sinon.spy(requests1, 'send');
         const sendSpy2 = sinon.spy(requests2, 'send');
 

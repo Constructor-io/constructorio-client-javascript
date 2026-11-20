@@ -1,0 +1,64 @@
+{
+  "success": {
+    "status": 204,
+    "body": null
+  },
+  "invalid-api-key": {
+    "status": 400,
+    "body": {
+      "message": "You have supplied an invalid `key` or `autocomplete_key`. You can find your key at app.constructor.io/dashboard/accounts/api_integration."
+    }
+  },
+  "missing-api-key": {
+    "status": 400,
+    "body": {
+      "message": "Invalid parameters",
+      "errors": [
+        {
+          "code": "missing",
+          "message": "Field required",
+          "source": "key"
+        }
+      ]
+    }
+  },
+  "result-page-and-offset": {
+    "status": 400,
+    "body": {
+      "message": "Invalid parameters",
+      "errors": [
+        {
+          "code": "value_error",
+          "message": "Value error, Provided both result_page and result_offset, accepted only one",
+          "source": ""
+        }
+      ]
+    }
+  },
+  "invalid-conversion-type": {
+    "status": 400,
+    "body": {
+      "message": "Invalid parameters",
+      "errors": [
+        {
+          "code": "value_error",
+          "message": "Value error, type must be one of add_to_cart,add_to_wishlist,like,message,make_offer,read. If you wish to use custom types, please set is_custom_type to true and specify a display_name.",
+          "source": ""
+        }
+      ]
+    }
+  },
+  "unknown-section": {
+    "status": 400,
+    "body": {
+      "message": "Unknown section: non-existent"
+    }
+  },
+  "not-json": {
+    "status": 404,
+    "text": "<!doctype html><html lang=\"en\"><head><title>Not Found</title></head></html>"
+  },
+  "invalid-host": {
+    "networkError": "fetch failed"
+  }
+}

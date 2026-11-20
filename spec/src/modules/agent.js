@@ -3,8 +3,8 @@ const dotenv = require('dotenv');
 const chai = require('chai');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
-const EventSource = require('eventsource');
 const qs = require('qs');
+const helpers = require('../../mocha.helpers');
 const { createAgentUrl, setupEventListeners } = require('../../../src/modules/agent');
 const Agent = require('../../../src/modules/agent');
 let ConstructorIO = require('../../../test/constructorio'); // eslint-disable-line import/extensions
@@ -392,6 +392,8 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
 
   describe('getAgentResultsStream', () => {
     beforeEach(() => {
+      const EventSource = helpers.mockEventSource('agent/results-stream');
+
       global.EventSource = EventSource;
       window.EventSource = EventSource;
     });

@@ -17,6 +17,7 @@ chai.use(sinonChai);
 dotenv.config();
 
 const testApiKey = process.env.TEST_REQUEST_API_KEY;
+// Unit tests don't need a real media key, the display ad comes from spec/mocks/display-ads.json
 const testApiKeyWithAdPlacements = process.env.TEST_MEDIA_REQUEST_API_KEY;
 const clientVersion = 'cio-mocha';
 const delayBetweenTests = 50;
@@ -44,7 +45,6 @@ function createLongUrl(length) {
 }
 
 describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
-  let fetchSpy = null;
   let cleanup;
   const jsdomOptions = { url, referrer };
   const requestQueueOptions = {
@@ -57,7 +57,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     helpers.clearStorage();
     store.session.set('_constructorio_is_human', true);
 
-    fetchSpy = sinon.spy(fetch);
     global.CLIENT_VERSION = clientVersion;
     window.CLIENT_VERSION = clientVersion;
 
@@ -71,8 +70,6 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
   });
 
   afterEach((done) => {
-    fetchSpy = null;
-
     delete window.CLIENT_VERSION;
     delete global.CLIENT_VERSION;
     delete window.cnstrc;
@@ -83,6 +80,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
   describe('trackSessionStart', () => {
     it('V2 Should respond with a valid response', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -112,6 +111,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -142,6 +143,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response with segments', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -168,6 +171,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response with userId', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -194,6 +199,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -219,6 +226,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is not defined', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -243,6 +252,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -268,6 +279,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -293,6 +306,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response with testCells', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -319,6 +334,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response with multiple testCells', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = {
         foo: 'bar',
         bar: 'foo',
@@ -351,6 +368,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should only include valid string testCells in request params', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { valid: 'bar', invalid: null, numVal: 123 };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -375,8 +394,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -389,8 +411,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -407,6 +432,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -434,6 +461,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const nonBreakingSpaces = '   ';
       const userId = `user-id ${nonBreakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -462,6 +491,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should include window globals in tracking requests when useWindowParameters is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       window.cnstrc = { userId: 'window-user-id', testCells: { exp: 'var' }, userSegments: ['seg1', 'seg2'] };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -486,6 +517,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should prefer options.userId over window global in tracking requests when useWindowParameters is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       window.cnstrc = { userId: 'window-user-id' };
       const instance = new ConstructorIO({
         apiKey: testApiKey,
@@ -508,6 +541,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
   describe('trackInputFocus', () => {
     it('V2 Should respond with a valid response', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -550,6 +585,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -575,6 +612,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -605,6 +644,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response with segments', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -631,6 +672,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response with userId', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -657,6 +700,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -682,6 +727,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -707,6 +754,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response with testCells', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -734,8 +783,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -748,8 +800,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -766,6 +821,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -793,6 +850,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -840,6 +899,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('V2 Should respond with a valid response when term and required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -887,6 +948,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Backwards Compatibility - V2 Should respond with a valid response when snake cased parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -941,6 +1004,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -985,6 +1050,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1016,6 +1083,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1042,6 +1111,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1068,6 +1139,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1094,6 +1167,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1126,6 +1201,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1176,6 +1253,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1201,6 +1280,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1227,8 +1308,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -1241,8 +1325,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -1259,6 +1346,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode path parameter', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const termSpecialCharacters = `apple ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -1285,6 +1374,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -1312,6 +1403,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -1352,6 +1445,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1390,6 +1485,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1421,6 +1518,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1447,6 +1546,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1473,6 +1574,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1499,6 +1602,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1525,6 +1630,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1563,6 +1670,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1588,6 +1697,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1614,8 +1725,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -1628,8 +1742,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -1646,6 +1763,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should truncate url param to 2048 characters max', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const longUrl = createLongUrl(3000);
       const truncatedUrl = longUrl.slice(0, 2048);
 
@@ -1684,6 +1803,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Backwards Compatibility - V2 Should respond with a valid response when term and snake cased parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1728,6 +1849,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('V2 Should respond with a valid response when term and required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1767,6 +1890,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Backwards Compatibility - Should respond with a valid response when term and snake cased parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1802,6 +1927,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1832,6 +1959,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1858,6 +1987,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1884,6 +2015,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1910,6 +2043,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1935,6 +2070,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1987,6 +2124,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -2012,6 +2151,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -2038,8 +2179,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -2052,8 +2196,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -2070,6 +2217,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode path parameter', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const termSpecialCharacters = `apple ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -2096,6 +2245,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -2123,6 +2274,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -2151,6 +2304,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly obfuscate PII in a path parameter', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const termWithPII = ' test-email@gmail.com';
       const replaceWith = '<email_omitted>';
       const { tracker } = new ConstructorIO({
@@ -2178,6 +2333,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly obfuscate PII in a query parameter', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const termWithPII = ' test-email@gmail.com';
       const replaceWith = '<email_omitted>';
       const { tracker } = new ConstructorIO({
@@ -2228,6 +2385,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     const transformedItems = [{ item_id: '1' }, { item_id: '2' }, { item_id: '3' }];
 
     it('Backwards Compatibility - Should respond with a valid response when term and snake cased parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -2285,6 +2444,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term and parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -2332,6 +2493,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -2374,6 +2537,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -2406,6 +2571,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -2436,6 +2603,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -2466,6 +2635,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -2496,6 +2667,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -2523,6 +2696,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term and legacy parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -2549,6 +2724,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, and zero value num_results parameter are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -2573,6 +2750,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should trim term parameter if extra spaces are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const spaceTerm = `   ${term}   `;
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -2618,6 +2797,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -2647,6 +2828,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -2677,8 +2860,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -2691,8 +2877,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -2709,6 +2898,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should send all items when more than 100 items are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -2740,6 +2931,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -2771,6 +2964,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -2803,6 +2998,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should truncate url param to 2048 characters max', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const longUrl = createLongUrl(3000);
       const truncatedUrl = longUrl.slice(0, 2048);
 
@@ -2831,6 +3028,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return valid response when resultOffset is passed as an integer', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -2858,6 +3057,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return valid response and omit result_offset when resultOffset is not provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -2884,6 +3085,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should receive error from backend when both resultPage and resultOffset are passed', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/result-page-and-offset'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -2942,6 +3145,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Backwards Compatibility - V2 Should respond with a valid response when term and snake cased parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -2999,6 +3204,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('V2 Should respond with a valid response when term and required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -3047,6 +3254,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('V2 Should return valid response when resultOffset is passed as an integer', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -3074,6 +3283,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('V2 Should return valid response and omit result_offset when resultOffset is not provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -3100,6 +3311,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('V2 Should receive error from backend when both resultPage and resultOffset are passed', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/result-page-and-offset'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -3128,6 +3341,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Backwards Compatibility - Should respond with a valid response when term and snake cased parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -3165,6 +3380,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -3196,6 +3413,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -3222,6 +3441,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -3247,6 +3468,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -3273,6 +3496,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -3299,6 +3524,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and variation id is provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -3326,6 +3553,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -3357,6 +3586,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term and legacy parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -3382,6 +3613,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term and item_is_convertible are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -3441,6 +3674,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -3466,6 +3701,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -3492,8 +3729,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -3506,8 +3746,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -3524,6 +3767,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode path parameter', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const termSpecialCharacters = `apple ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -3550,6 +3795,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -3577,6 +3824,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -3605,8 +3854,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when an invalid section is used', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/unknown-section'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
+        fetch: fetchSpy,
         ...requestQueueOptions,
       });
 
@@ -3637,6 +3889,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Backwards Compatibility - Should respond with a valid response when term and snake cased parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -3676,6 +3930,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -3707,6 +3963,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters, and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -3743,6 +4001,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response and section should be defaulted when term and required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const clonedParameters = cloneDeep(requiredParameters);
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -3770,6 +4030,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -3795,6 +4057,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -3821,6 +4085,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -3847,6 +4113,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should ensure userId is passed as a string', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 123;
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -3873,6 +4141,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -3899,6 +4169,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and conversion type are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -3924,6 +4196,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and custom conversion type are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -3956,6 +4230,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term and legacy parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -3987,6 +4263,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('should respond with a valid response if isCustomType is true, displayName is provided, and no type is specified', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -4018,6 +4296,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('should respond with an error if isCustomType is true, type is provided, and no displayName is specified', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/invalid-conversion-type'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -4049,6 +4329,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('should support v1 endpoint arguments', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -4091,6 +4373,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should trim term parameter if extra spaces are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const spaceTerm = `   ${term}   `;
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -4122,6 +4406,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -4147,6 +4433,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -4173,8 +4461,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -4187,8 +4478,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -4205,6 +4499,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should not encode body parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -4232,6 +4528,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -4260,6 +4558,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when analyticsTags are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -4319,6 +4619,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     ];
 
     it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -4355,6 +4657,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -4386,6 +4690,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -4416,6 +4722,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -4443,6 +4751,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -4469,6 +4779,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response and section should be defaulted when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -4493,6 +4805,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -4519,6 +4833,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -4545,6 +4861,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response and limit items to no more than 100', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -4584,6 +4902,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -4609,6 +4929,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -4636,6 +4958,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     // store2 doesn't seem to maintain the `window` context for bundled version
     if (!bundled) {
       it('Should not send a purchase event if the order has been tracked already', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
           fetch: fetchSpy,
@@ -4662,6 +4986,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should send a purchase event if the order has not been tracked yet', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -4708,8 +5034,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -4722,8 +5051,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -4740,6 +5072,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should not encode body parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -4767,6 +5101,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -4810,6 +5146,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -4851,6 +5189,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -4883,6 +5223,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const clonedParameters = cloneDeep(requiredParameters);
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -4911,6 +5253,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response and section should be defaulted when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const clonedParameters = cloneDeep(requiredParameters);
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -4938,6 +5282,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and items are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const items = [
         { itemId: '123', variationId: '234' },
         { itemId: 'abc' },
@@ -4969,6 +5315,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -4995,6 +5343,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -5021,6 +5371,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -5047,6 +5399,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -5087,6 +5441,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -5112,6 +5468,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -5138,8 +5496,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -5152,8 +5513,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -5170,6 +5534,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should not encode body parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -5197,6 +5563,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -5225,6 +5593,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when seedItemIds is an array', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const seedItemIds = ['123'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -5254,6 +5624,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response and convert seedItemIds to an array if it\'s is a number', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const seedItemIds = 123;
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -5283,6 +5655,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response and convert seedItemIds to an array if it\'s a string', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const seedItemIds = '123';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -5312,6 +5686,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response and omit seed_item_ids if seedItemIds is null', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const seedItemIds = null;
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -5341,6 +5717,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response and omit seed_item_ids if seedItemIds is an object', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const seedItemIds = { seedItemIds: '123' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -5370,6 +5748,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should truncate url param to 2048 characters max', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const longUrl = createLongUrl(3000);
       const truncatedUrl = longUrl.slice(0, 2048);
 
@@ -5398,6 +5778,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return valid response when resultOffset is passed as an integer', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -5425,6 +5807,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return valid response and omit result_offset when resultOffset is not provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -5451,6 +5835,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should receive error from backend when both resultPage and resultOffset are passed', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/result-page-and-offset'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -5499,6 +5885,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -5542,6 +5930,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -5574,6 +5964,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Backwards Compatibility - Should respond with a valid response when only item_name is provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -5611,6 +6003,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when only item_name is provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -5648,6 +6042,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response and section should be defaulted when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const clonedParameters = cloneDeep(requiredParameters);
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -5675,6 +6071,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -5700,6 +6098,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -5726,6 +6126,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -5752,6 +6154,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -5778,6 +6182,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -5822,6 +6228,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -5847,6 +6255,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -5873,8 +6283,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -5887,8 +6300,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -5905,6 +6321,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should not encode body parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -5932,6 +6350,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -5960,6 +6380,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when seedItemIds is provided as an array of strings', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -5983,6 +6405,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response and convert seedItemIds to array when provided as string', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -6006,6 +6430,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response and convert seedItemIds to array when provided as number', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -6029,6 +6455,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response and omit seed_item_ids when seedItemIds is empty string', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -6052,6 +6480,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response and omit seed_item_ids when seedItemIds is empty array', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -6075,6 +6505,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return valid response when resultOffset is passed as an integer', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -6102,6 +6534,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return valid response and omit result_offset when resultOffset is not provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -6128,6 +6562,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should receive error from backend when both resultPage and resultOffset are passed', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/result-page-and-offset'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -6196,6 +6632,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     ];
 
     it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -6242,6 +6680,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -6276,6 +6716,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response and section should be defaulted when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const clonedParameters = cloneDeep(requiredParameters);
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -6303,6 +6745,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -6328,6 +6772,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -6354,6 +6800,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -6380,6 +6828,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -6406,6 +6856,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -6436,6 +6888,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send all items when more than 100 items are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -6478,6 +6932,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -6503,6 +6959,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -6529,8 +6987,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -6543,8 +7004,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -6561,6 +7025,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should not encode body parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -6588,6 +7054,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -6616,6 +7084,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should truncate url param to 2048 characters max', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const longUrl = createLongUrl(3000);
       const truncatedUrl = longUrl.slice(0, 2048);
 
@@ -6644,6 +7114,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return valid response when resultOffset is passed as an integer', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -6671,6 +7143,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return valid response and omit result_offset when resultOffset is not provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -6697,6 +7171,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should receive error from backend when both resultPage and resultOffset are passed', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/result-page-and-offset'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -6741,6 +7217,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -6773,6 +7251,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response and section should be defaulted when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const clonedParameters = cloneDeep(requiredParameters);
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -6800,6 +7280,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -6825,6 +7307,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -6851,6 +7335,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -6877,6 +7363,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -6903,6 +7391,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -6943,6 +7433,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -6968,6 +7460,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -6994,8 +7488,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -7008,8 +7505,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -7026,6 +7526,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should not encode body parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -7053,6 +7555,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -7109,6 +7613,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -7155,6 +7661,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -7188,6 +7696,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response and section should be defaulted when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const clonedParameters = cloneDeep(requiredParameters);
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -7215,6 +7725,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -7240,6 +7752,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -7266,6 +7780,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -7292,6 +7808,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -7318,6 +7836,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -7351,6 +7871,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and non-existent item id are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -7398,6 +7920,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -7423,6 +7947,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -7449,8 +7975,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -7463,8 +7992,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -7481,6 +8013,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should not encode body parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -7508,6 +8042,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -7536,6 +8072,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when legacy parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -7561,6 +8099,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return valid response when resultOffset is passed as an integer', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -7588,6 +8128,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return valid response and omit result_offset when resultOffset is not provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -7614,6 +8156,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should receive error from backend when both resultPage and resultOffset are passed', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/result-page-and-offset'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -7654,6 +8198,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -7689,6 +8235,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -7719,6 +8267,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response and section should be defaulted when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const clonedParameters = cloneDeep(requiredParameters);
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -7746,6 +8296,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -7771,6 +8323,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -7797,6 +8351,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -7823,6 +8379,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -7851,6 +8409,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -7878,6 +8438,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and non-existent item id are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -7921,6 +8483,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -7946,6 +8510,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -7972,8 +8538,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -7986,8 +8555,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -8004,6 +8576,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should not encode body parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -8031,6 +8605,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -8059,6 +8635,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return valid response when resultOffset is passed as an integer', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -8086,6 +8664,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return valid response and omit result_offset when resultOffset is not provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -8148,6 +8728,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     ];
 
     it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -8187,6 +8769,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -8220,6 +8804,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when result_count is zero', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -8253,6 +8839,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -8278,6 +8866,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -8304,6 +8894,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -8330,6 +8922,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -8356,6 +8950,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -8469,6 +9065,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -8494,6 +9092,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -8520,8 +9120,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -8534,8 +9137,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -8552,6 +9158,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -8579,6 +9187,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -8607,6 +9217,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should truncate url param to 2048 characters max', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const longUrl = createLongUrl(3000);
       const truncatedUrl = longUrl.slice(0, 2048);
 
@@ -8635,6 +9247,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return valid response when resultOffset is passed as an integer', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -8662,6 +9276,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return valid response and omit result_offset when resultOffset is not provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -8688,6 +9304,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return an error when resultOffset is not a number', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -8701,6 +9319,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should receive error from backend when both resultPage and resultOffset are passed', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/result-page-and-offset'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -8748,6 +9368,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -8788,6 +9410,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -8821,6 +9445,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -8847,6 +9473,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -8872,6 +9500,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -8898,6 +9528,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -8924,6 +9556,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -9056,6 +9690,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -9081,6 +9717,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -9107,8 +9745,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -9121,8 +9762,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -9139,6 +9783,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -9166,6 +9812,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -9194,6 +9842,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return valid response when resultOffset is passed as an integer', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -9221,6 +9871,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return valid response and omit result_offset when resultOffset is not provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -9247,6 +9899,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return an error when resultOffset is not a number', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -9260,6 +9914,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should receive error from backend when both resultPage and resultOffset are passed', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/result-page-and-offset'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -9306,6 +9962,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Backwards Compatibility - Should respond with a valid response when snake cased parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -9346,6 +10004,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -9379,6 +10039,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -9404,6 +10066,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -9430,6 +10094,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -9456,6 +10122,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -9482,6 +10150,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -9614,6 +10284,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -9639,6 +10311,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -9665,8 +10339,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -9679,8 +10356,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -9697,6 +10377,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -9724,6 +10406,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -9778,6 +10462,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should receive a success message when making a request to a valid endpoint', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -9795,6 +10481,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should receive an error message when making a request to an endpoint that does not return valid JSON', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/not-json'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -9813,6 +10501,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should receive an error message when making a request to an invalid endpoint', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/invalid-host'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -9840,6 +10530,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Should respond with a valid response when intent and required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -9870,6 +10562,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -9895,6 +10589,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -9921,6 +10617,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -9947,6 +10645,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -9973,6 +10673,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -10011,6 +10713,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -10036,6 +10740,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -10062,8 +10768,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -10076,8 +10785,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -10094,6 +10806,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -10121,6 +10835,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -10158,6 +10874,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -10188,6 +10906,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -10213,6 +10933,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -10239,6 +10961,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -10265,6 +10989,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -10291,6 +11017,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -10330,6 +11058,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -10355,6 +11085,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -10381,8 +11113,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -10395,8 +11130,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -10413,6 +11151,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -10440,6 +11180,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -10477,6 +11219,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -10508,6 +11252,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -10533,6 +11279,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -10559,6 +11307,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -10585,6 +11335,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -10611,6 +11363,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -10650,6 +11404,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -10675,6 +11431,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -10701,8 +11459,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -10715,8 +11476,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -10733,6 +11497,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -10760,6 +11526,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -10803,6 +11571,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -10836,6 +11606,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -10861,6 +11633,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -10887,6 +11661,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -10913,6 +11689,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -10939,6 +11717,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -10979,6 +11759,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -11004,6 +11786,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -11030,8 +11814,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -11044,8 +11831,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -11062,6 +11852,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -11089,6 +11881,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -11150,6 +11944,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     ];
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -11182,6 +11978,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -11207,6 +12005,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -11233,6 +12033,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -11259,6 +12061,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -11285,6 +12089,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -11324,6 +12130,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -11349,6 +12157,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -11375,8 +12185,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -11389,8 +12202,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -11407,6 +12223,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should not encode body parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -11434,6 +12252,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -11471,6 +12291,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -11503,6 +12325,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -11528,6 +12352,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -11554,6 +12380,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -11580,6 +12408,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -11606,6 +12436,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -11644,6 +12476,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -11669,6 +12503,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -11695,8 +12531,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -11709,8 +12548,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -11727,6 +12569,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -11754,6 +12598,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -11792,6 +12638,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -11824,6 +12672,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -11849,6 +12699,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -11875,6 +12727,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -11901,6 +12755,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -11927,6 +12783,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -11985,6 +12843,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -12010,6 +12870,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -12036,8 +12898,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -12050,8 +12915,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -12068,6 +12936,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -12095,6 +12965,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -12149,6 +13021,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Should respond with a valid response when intent and required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -12179,6 +13053,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -12204,6 +13080,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -12230,6 +13108,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -12256,6 +13136,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -12282,6 +13164,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -12318,6 +13202,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -12343,6 +13229,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -12369,8 +13257,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -12383,8 +13274,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -12401,6 +13295,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -12428,6 +13324,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -12464,6 +13362,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -12494,6 +13394,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -12519,6 +13421,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -12545,6 +13449,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -12571,6 +13477,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -12597,6 +13505,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -12635,6 +13545,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -12660,6 +13572,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -12686,8 +13600,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -12700,8 +13617,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -12718,6 +13638,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -12745,6 +13667,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -12781,6 +13705,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -12812,6 +13738,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -12837,6 +13765,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -12863,6 +13793,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -12889,6 +13821,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -12915,6 +13849,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -12953,6 +13889,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -12978,6 +13916,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -13004,8 +13944,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -13018,8 +13961,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -13036,6 +13982,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -13063,6 +14011,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -13105,6 +14055,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -13138,6 +14090,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -13163,6 +14117,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -13189,6 +14145,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -13215,6 +14173,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -13241,6 +14201,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -13280,6 +14242,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -13305,6 +14269,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -13331,8 +14297,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -13345,8 +14314,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -13363,6 +14335,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -13390,6 +14364,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -13450,6 +14426,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     ];
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -13482,6 +14460,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -13507,6 +14487,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -13533,6 +14515,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -13559,6 +14543,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -13585,6 +14571,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -13623,6 +14611,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -13648,6 +14638,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -13674,8 +14666,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -13688,8 +14683,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -13706,6 +14704,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should not encode body parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -13733,6 +14733,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -13769,6 +14771,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -13801,6 +14805,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -13826,6 +14832,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -13852,6 +14860,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -13878,6 +14888,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -13904,6 +14916,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -13941,6 +14955,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -13966,6 +14982,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -13992,8 +15010,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -14006,8 +15027,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -14024,6 +15048,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -14051,6 +15077,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -14106,6 +15134,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -14139,6 +15169,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -14164,6 +15196,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -14190,6 +15224,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -14216,6 +15252,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -14242,6 +15280,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -14283,6 +15323,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -14308,6 +15350,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -14334,8 +15378,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -14348,8 +15395,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -14366,6 +15416,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -14393,6 +15445,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -14438,6 +15492,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -14470,6 +15526,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -14495,6 +15553,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -14521,6 +15581,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -14547,6 +15609,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -14573,6 +15637,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -14614,6 +15680,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -14639,6 +15707,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -14665,8 +15735,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -14679,8 +15752,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -14697,6 +15773,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -14724,6 +15802,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -14761,6 +15841,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -14792,6 +15874,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -14819,6 +15903,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -14845,6 +15931,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -14871,6 +15959,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -14897,6 +15987,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -14938,6 +16030,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -14963,6 +16057,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -14989,8 +16085,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -15003,8 +16102,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -15021,6 +16123,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -15048,6 +16152,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -15085,6 +16191,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -15116,6 +16224,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -15141,6 +16251,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -15167,6 +16279,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -15193,6 +16307,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -15219,6 +16335,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -15260,6 +16378,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -15285,6 +16405,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -15311,8 +16433,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -15325,8 +16450,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -15343,6 +16471,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -15370,6 +16500,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -15408,6 +16540,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -15440,6 +16574,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -15465,6 +16601,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -15491,6 +16629,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -15517,6 +16657,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -15543,6 +16685,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -15585,6 +16729,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -15610,6 +16756,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -15636,8 +16784,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -15650,8 +16801,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -15668,6 +16822,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -15695,6 +16851,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -15733,6 +16891,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -15765,6 +16925,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -15790,6 +16952,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -15816,6 +16980,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -15842,6 +17008,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -15868,6 +17036,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -15910,6 +17080,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -15935,6 +17107,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -15961,8 +17135,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -15975,8 +17152,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -15993,6 +17173,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -16020,6 +17202,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -16060,6 +17244,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -16093,6 +17279,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -16118,6 +17306,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -16144,6 +17334,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -16170,6 +17362,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -16196,6 +17390,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -16243,6 +17439,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -16268,6 +17466,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -16294,8 +17494,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -16308,8 +17511,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -16326,6 +17532,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -16353,6 +17561,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -16391,6 +17601,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Should respond with a valid response when term and required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -16423,6 +17635,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along document_referrer and canonical_url query param', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -16448,6 +17662,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when term, required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -16474,6 +17690,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -16500,6 +17718,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -16526,6 +17746,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -16567,6 +17789,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -16592,6 +17816,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -16618,8 +17844,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -16632,8 +17861,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -16650,6 +17882,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -16677,6 +17911,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -16718,6 +17954,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -16751,6 +17989,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -16795,6 +18035,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -16821,6 +18063,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -16848,8 +18092,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -16862,8 +18109,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -16906,6 +18156,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -16958,6 +18210,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -16989,6 +18243,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and segments are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const segments = ['foo', 'bar'];
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -17019,6 +18275,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and userId are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const userId = 'user-id';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -17049,6 +18307,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters and testCells are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const testCells = { foo: 'bar' };
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -17079,6 +18339,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -17108,6 +18370,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -17180,8 +18444,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           ...requestQueueOptions,
         });
 
@@ -17194,8 +18461,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: {
             timeout: 20,
           },
@@ -17220,7 +18490,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     before(async () => {
-      const response = await fetch(`https://display.media-cnstrc.com/display-ads?key=${testApiKeyWithAdPlacements}&placement_ids=${testPlacementId}`);
+      const response = await helpers.mockFetch('display-ads/home-banner-ad')(`https://display.media-cnstrc.com/display-ads?key=${testApiKeyWithAdPlacements}&placement_ids=${testPlacementId}`);
       const data = await response.json();
       const ad = data.display_ads[testPlacementId];
       requiredParameters = {
@@ -17230,6 +18500,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKeyWithAdPlacements,
         fetch: fetchSpy,
@@ -17269,6 +18541,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKeyWithAdPlacements,
         fetch: fetchSpy,
@@ -17312,6 +18586,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKeyWithAdPlacements,
         fetch: fetchSpy,
@@ -17340,6 +18616,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKeyWithAdPlacements,
         fetch: fetchSpy,
@@ -17368,6 +18646,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not encode body parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -17399,8 +18679,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKeyWithAdPlacements,
+          fetch: fetchSpy,
           mediaServiceUrl: 'https://media-cnstrc.com',
           ...requestQueueOptions,
         });
@@ -17416,8 +18699,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKeyWithAdPlacements,
+          fetch: fetchSpy,
           mediaServiceUrl: 'https://media-cnstrc.com',
           networkParameters: {
             timeout: 20,
@@ -17445,7 +18731,7 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     };
 
     before(async () => {
-      const response = await fetch(`https://display.media-cnstrc.com/display-ads?key=${testApiKeyWithAdPlacements}&placement_ids=${testPlacementId}`);
+      const response = await helpers.mockFetch('display-ads/home-banner-ad')(`https://display.media-cnstrc.com/display-ads?key=${testApiKeyWithAdPlacements}&placement_ids=${testPlacementId}`);
       const data = await response.json();
       const ad = data.display_ads[testPlacementId];
 
@@ -17456,6 +18742,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKeyWithAdPlacements,
         fetch: fetchSpy,
@@ -17495,6 +18783,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should respond with a valid response when required and optional parameters are provided', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKeyWithAdPlacements,
         fetch: fetchSpy,
@@ -17538,6 +18828,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send along origin_referrer query param if sendReferrerWithTrackingEvents is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKeyWithAdPlacements,
         fetch: fetchSpy,
@@ -17566,6 +18858,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not send along origin_referrer query param if sendReferrerWithTrackingEvents is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const { tracker } = new ConstructorIO({
         apiKey: testApiKeyWithAdPlacements,
         fetch: fetchSpy,
@@ -17594,6 +18888,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not encode body parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const specialCharacters = '+[]&';
       const userId = `user-id ${specialCharacters}`;
       const { tracker } = new ConstructorIO({
@@ -17625,8 +18921,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKeyWithAdPlacements,
+          fetch: fetchSpy,
           mediaServiceUrl: 'https://media-cnstrc.com',
           ...requestQueueOptions,
         });
@@ -17642,8 +18941,11 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', (done) => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
         const { tracker } = new ConstructorIO({
           apiKey: testApiKeyWithAdPlacements,
+          fetch: fetchSpy,
           mediaServiceUrl: 'https://media-cnstrc.com',
           networkParameters: {
             timeout: 20,
@@ -17663,6 +18965,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
+
       const breakingSpaces = '   ';
       const userId = `user-id ${breakingSpaces} user-id`;
       const userIdExpected = 'user-id     user-id';
@@ -17699,6 +19003,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
 
   describe('additionalTrackingKeys', () => {
     it('Should send tracking events to both primary and additional keys', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch(['tracking/success', 'tracking/invalid-api-key']));
+
       const additionalKey = 'extra-test-key';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,
@@ -17738,6 +19044,8 @@ describe(`ConstructorIO - Tracker${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should send identical request bodies for primary and additional keys', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch(['tracking/success', 'tracking/invalid-api-key']));
+
       const additionalKey = 'extra-test-key';
       const { tracker } = new ConstructorIO({
         apiKey: testApiKey,

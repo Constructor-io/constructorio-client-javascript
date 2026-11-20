@@ -21,14 +21,12 @@ const timeoutRejectionMessage = 'This operation was aborted';
 
 describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
   const jsdomOptions = { url: 'http://localhost' };
-  let fetchSpy;
   let cleanup;
 
   beforeEach(() => {
     cleanup = jsdom(jsdomOptions);
     global.CLIENT_VERSION = clientVersion;
     window.CLIENT_VERSION = clientVersion;
-    fetchSpy = sinon.spy(fetch);
 
     if (bundled) {
       ConstructorIO = window.ConstructorioClient;
@@ -40,8 +38,6 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     delete window.CLIENT_VERSION;
     delete window.cnstrc;
     cleanup();
-
-    fetchSpy = null;
   });
 
   describe('getSearchResults', () => {
@@ -49,6 +45,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     const section = 'Products';
 
     it('Should return a response with a valid query, and section', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/results'));
+
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -75,6 +73,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section and testCells', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/with-test-cells'));
+
       const testCells = { foo: 'bar' };
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -95,6 +95,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should only include valid string testCells in request params', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/results'));
+
       const testCells = { valid: 'bar', invalid: null, numVal: 123 };
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -113,6 +115,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section and segments', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/with-segments'));
+
       const segments = ['foo', 'bar'];
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -133,6 +137,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section and user id', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/results'));
+
       const userId = 'user-id';
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -152,6 +158,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should include window global userId when useWindowParameters is true and options.userId is absent', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/results'));
+
       window.cnstrc = { userId: 'window-user-id' };
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -167,6 +175,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should include window global testCells when useWindowParameters is true and options.testCells is absent', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/results'));
+
       window.cnstrc = { testCells: { experiment: 'variation_a' } };
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -182,6 +192,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should include window global userSegments when useWindowParameters is true and options.segments is absent', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/results'));
+
       window.cnstrc = { userSegments: ['vip', 'beta'] };
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -197,6 +209,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should prefer options.userId over window global when useWindowParameters is true', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/results'));
+
       window.cnstrc = { userId: 'window-user-id' };
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -213,6 +227,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not include window globals when useWindowParameters is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/results'));
+
       window.cnstrc = { userId: 'window-user-id', testCells: { exp: 'var' }, userSegments: ['seg'] };
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -229,6 +245,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section, and offset', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/with-offset'));
+
       const offset = 1;
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -252,6 +270,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section, and page', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/results'));
+
       const page = 1;
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -274,6 +294,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section, and resultsPerPage', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/two-results-per-page'));
+
       const resultsPerPage = 2;
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -298,6 +320,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section, and filters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/filtered-by-keywords'));
+
       const filters = { keywords: ['battery-powered'] };
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -321,6 +345,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section, and fmtOptions', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/with-fmt-options'));
+
       const fmtOptions = { groups_max_depth: 2, groups_start: 'current' };
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -346,6 +372,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section, and sortBy', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/results'));
+
       const sortBy = 'relevance';
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -368,6 +396,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section, and sortOrder', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/sort-order-ascending'));
+
       const sortOrder = 'ascending';
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -390,7 +420,9 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section with a result_id appended to each result', (done) => {
-      const { search } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/results'));
+
+      const { search } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       search.getSearchResults(query, { section }).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
@@ -405,6 +437,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a return a response with pre filter expression properly parsed', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/with-pre-filter-expression'));
+
       const preFilterExpression = {
         or: [
           {
@@ -450,6 +484,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section and hiddenFields', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/with-hidden-fields'));
+
       const hiddenFields = ['testField', 'hiddenField2'];
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -473,6 +509,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section and hiddenFacets', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/with-hidden-facets'));
+
       const hiddenFacets = ['Brand', 'testFacet'];
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -496,8 +534,10 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a redirect rule response with a valid query and section', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/redirect'));
+
       const redirectQuery = 'rolling';
-      const { search } = new ConstructorIO({ apiKey: testApiKey });
+      const { search } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       search.getSearchResults(redirectQuery, { section }).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
@@ -512,6 +552,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly encode path parameter', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/special-characters-in-query'));
+
       const specialCharacters = '+[]&';
       const querySpecialCharacters = `apple ${specialCharacters}`;
       const { search } = new ConstructorIO({
@@ -532,6 +574,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/special-characters-in-sort-by'));
+
       const specialCharacters = '+[]&';
       const sortBy = `relevance ${specialCharacters}`;
       const { search } = new ConstructorIO({
@@ -552,6 +596,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/non-breaking-spaces-in-sort-by'));
+
       const breakingSpaces = '   ';
       const sortBy = `relevance ${breakingSpaces} relevance`;
       const sortByExpected = 'relevance     relevance';
@@ -573,6 +619,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a return a response with qs param properly parsed', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/with-qs-param'));
+
       const qsParam = {
         num_results_per_page: '10',
         filters: {
@@ -595,6 +643,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a variations_map object in the response', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/with-variations-map'));
+
       const variationsMap = {
         group_by: [
           {
@@ -628,6 +678,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid filterName, filterValue and additional filters and filterMatchTypes', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/filtered-by-keywords'));
+
       const filters = { keywords: ['battery-powered'] };
       const filterMatchTypes = { keywords: 'any' };
       const { search } = new ConstructorIO({
@@ -650,8 +702,11 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should emit an event with response data', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/results'));
+
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
+        fetch: fetchSpy,
         eventDispatcher: {
           waitForBeacon: false,
         },
@@ -688,7 +743,9 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid page parameter is provided', () => {
-      const { search } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/invalid-parameters'));
+
+      const { search } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
       const searchParams = {
         section,
         page: 'abc',
@@ -698,7 +755,9 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid resultsPerPage parameter is provided', () => {
-      const { search } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/invalid-parameters'));
+
+      const { search } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
       const searchParams = {
         section,
         resultsPerPage: 'abc',
@@ -708,7 +767,9 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid filters parameter is provided', () => {
-      const { search } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/invalid-parameters'));
+
+      const { search } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
       const searchParams = {
         section,
         filters: 'abc',
@@ -718,7 +779,9 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid sortBy parameter is provided', () => {
-      const { search } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/invalid-parameters'));
+
+      const { search } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
       const searchParams = {
         section,
         sortBy: ['foo', 'bar'],
@@ -728,7 +791,9 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid sortOrder parameter is provided', () => {
-      const { search } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/invalid-parameters'));
+
+      const { search } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
       const searchParams = {
         section,
         sortOrder: 123,
@@ -738,20 +803,26 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid section parameter is provided', () => {
-      const { search } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/invalid-parameters'));
+
+      const { search } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       return expect(search.getSearchResults(query, { section: 123 })).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid apiKey is provided', () => {
-      const { search } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/invalid-api-key'));
+
+      const { search } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u', fetch: fetchSpy });
 
       return expect(search.getSearchResults(query, { section })).to.eventually.be.rejected;
     });
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', () => {
-        const { search } = new ConstructorIO({ apiKey: testApiKey });
+        const fetchSpy = sinon.spy(helpers.mockFetch('search/results'));
+
+        const { search } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
         return expect(search.getSearchResults(
           query,
@@ -761,8 +832,11 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', () => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('search/results'));
+
         const { search } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: { timeout: 20 },
         });
 
@@ -779,6 +853,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     const section = 'Products';
 
     it('Should return a response with a valid query, and section', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/voice-results'));
+
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -806,6 +882,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section and testCells', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/voice-with-test-cells'));
+
       const testCells = { foo: 'bar' };
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -826,6 +904,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section and segments', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/voice-with-segments'));
+
       const segments = ['foo', 'bar'];
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -846,6 +926,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section and user id', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/voice-results'));
+
       const userId = 'user-id';
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -865,6 +947,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section, and offset', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/voice-with-offset'));
+
       const offset = 1;
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -888,6 +972,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section, and page', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/voice-results'));
+
       const page = 1;
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -910,6 +996,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section, and resultsPerPage', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/voice-one-result-per-page'));
+
       const resultsPerPage = 1;
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -934,6 +1022,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section, and fmtOptions', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/voice-with-fmt-options'));
+
       const fmtOptions = { groups_max_depth: 2, groups_start: 'current' };
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -959,6 +1049,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section, and sortBy', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/voice-results'));
+
       const sortBy = 'relevance';
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -978,7 +1070,9 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section with a result_id appended to each result', (done) => {
-      const { search } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/voice-results'));
+
+      const { search } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       search.getVoiceSearchResults(voiceSearchQuery, { section }).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
@@ -993,6 +1087,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a return a response with pre filter expression properly parsed', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/voice-with-pre-filter-expression'));
+
       const preFilterExpression = {
         or: [
           {
@@ -1038,6 +1134,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section and hiddenFields', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/voice-with-hidden-fields'));
+
       const hiddenFields = ['testField', 'hiddenField2'];
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1061,6 +1159,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section and hiddenFacets', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/voice-with-hidden-facets'));
+
       const hiddenFacets = ['Brand', 'testFacet'];
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1084,6 +1184,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly encode path parameter', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/voice-special-characters-in-query'));
+
       const specialCharacters = '+[]&';
       const querySpecialCharacters = `${voiceSearchQuery} ${specialCharacters}`;
       const { search } = new ConstructorIO({
@@ -1104,6 +1206,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a return a response with qs param properly parsed', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/voice-with-qs-param'));
+
       const qsParam = {
         num_results_per_page: '10',
       };
@@ -1122,6 +1226,8 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a variations_map object in the response', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/voice-with-variations-map'));
+
       const variationsMap = {
         group_by: [
           {
@@ -1155,8 +1261,11 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should emit an event with response data', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/voice-results'));
+
       const { search } = new ConstructorIO({
         apiKey: testApiKey,
+        fetch: fetchSpy,
         eventDispatcher: {
           waitForBeacon: false,
         },
@@ -1193,7 +1302,9 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid page parameter is provided', () => {
-      const { search } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/invalid-parameters'));
+
+      const { search } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
       const searchParams = {
         section,
         page: 'abc',
@@ -1203,7 +1314,9 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid resultsPerPage parameter is provided', () => {
-      const { search } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/invalid-parameters'));
+
+      const { search } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
       const searchParams = {
         section,
         resultsPerPage: 'abc',
@@ -1213,20 +1326,26 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid section parameter is provided', () => {
-      const { search } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/invalid-parameters'));
+
+      const { search } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       return expect(search.getVoiceSearchResults(voiceSearchQuery, { section: 123 })).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid apiKey is provided', () => {
-      const { search } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
+      const fetchSpy = sinon.spy(helpers.mockFetch('search/invalid-api-key'));
+
+      const { search } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u', fetch: fetchSpy });
 
       return expect(search.getVoiceSearchResults(voiceSearchQuery, { section })).to.eventually.be.rejected;
     });
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', () => {
-        const { search } = new ConstructorIO({ apiKey: testApiKey });
+        const fetchSpy = sinon.spy(helpers.mockFetch('search/voice-results'));
+
+        const { search } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
         return expect(search.getVoiceSearchResults(
           voiceSearchQuery,
@@ -1236,8 +1355,11 @@ describe(`ConstructorIO - Search${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', () => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('search/voice-results'));
+
         const { search } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: { timeout: 20 },
         });
 

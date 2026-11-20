@@ -23,7 +23,6 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
   const validItemId = '149100215';
   const validQuestion = 'What material is this made of?';
   const jsdomOptions = { url: 'http://localhost' };
-  let fetchSpy;
   let cleanup;
 
   if (bundled) {
@@ -34,7 +33,6 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
     cleanup = jsdom(jsdomOptions);
     global.CLIENT_VERSION = clientVersion;
     window.CLIENT_VERSION = clientVersion;
-    fetchSpy = sinon.spy(fetch);
 
     if (bundled) {
       ConstructorIO = window.ConstructorioClient;
@@ -45,12 +43,12 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
     delete global.CLIENT_VERSION;
     delete window.CLIENT_VERSION;
     cleanup();
-
-    fetchSpy = null;
   });
 
   describe('getSuggestedQuestions', () => {
     it('Should return a result provided a valid apiKey and itemId', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('pia/suggested-questions'));
+
       const { agent: { pia } } = new ConstructorIO({
         apiKey: piaApiKey,
         fetch: fetchSpy,
@@ -73,6 +71,8 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result provided a valid apiKey, itemId and variationId', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('pia/suggested-questions'));
+
       const variationId = 'variation-123';
       const { agent: { pia } } = new ConstructorIO({
         apiKey: piaApiKey,
@@ -87,6 +87,8 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result provided a valid apiKey, itemId and numResults', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('pia/suggested-questions'));
+
       const numResults = 2;
       const { agent: { pia } } = new ConstructorIO({
         apiKey: piaApiKey,
@@ -102,6 +104,8 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result provided a valid apiKey, itemId and user id', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('pia/suggested-questions'));
+
       const userId = 'user-id';
       const { agent: { pia } } = new ConstructorIO({
         apiKey: piaApiKey,
@@ -117,6 +121,8 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result provided a valid apiKey, itemId and segments', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('pia/suggested-questions'));
+
       const segments = ['foo', 'bar'];
       const { agent: { pia } } = new ConstructorIO({
         apiKey: piaApiKey,
@@ -132,6 +138,8 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should pass threadId as a query parameter when provided', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('pia/suggested-questions'));
+
       const threadId = '550e8400-e29b-41d4-a716-446655440000';
       const { agent: { pia } } = new ConstructorIO({
         apiKey: piaApiKey,
@@ -146,6 +154,8 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should pass pre_filter_expression as a query parameter when provided', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('pia/suggested-questions'));
+
       const preFilterExpression = { brand: 'apple' };
       const { agent: { pia } } = new ConstructorIO({
         apiKey: piaApiKey,
@@ -175,13 +185,14 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
     it('Should be rejected if no itemId is provided', () => {
       const { agent: { pia } } = new ConstructorIO({
         apiKey: piaApiKey,
-        fetch: fetchSpy,
       });
 
       return expect(pia.getSuggestedQuestions(null)).to.eventually.be.rejected;
     });
 
     it('Should be rejected if an invalid apiKey is provided', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('pia/invalid-api-key'));
+
       const { agent: { pia } } = new ConstructorIO({
         apiKey: 'invalidKey',
         fetch: fetchSpy,
@@ -192,6 +203,8 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', () => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('pia/suggested-questions'));
+
         const { agent: { pia } } = new ConstructorIO({
           apiKey: piaApiKey,
           fetch: fetchSpy,
@@ -201,6 +214,8 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', () => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('pia/suggested-questions'));
+
         const { agent: { pia } } = new ConstructorIO({
           apiKey: piaApiKey,
           fetch: fetchSpy,
@@ -214,6 +229,8 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
 
   describe('getAnswerResults', () => {
     it('Should return a result provided a valid apiKey, itemId and question', function () {
+      const fetchSpy = sinon.spy(helpers.mockFetch('pia/answer'));
+
       this.timeout(10000);
       const { agent: { pia } } = new ConstructorIO({
         apiKey: piaApiKey,
@@ -236,6 +253,8 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result provided a valid apiKey, itemId, question and variationId', function () {
+      const fetchSpy = sinon.spy(helpers.mockFetch('pia/answer'));
+
       this.timeout(10000);
       const variationId = 'variation-123';
       const { agent: { pia } } = new ConstructorIO({
@@ -251,6 +270,8 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result provided a valid apiKey, itemId, question and user id', function () {
+      const fetchSpy = sinon.spy(helpers.mockFetch('pia/answer'));
+
       this.timeout(10000);
       const userId = 'user-id';
       const { agent: { pia } } = new ConstructorIO({
@@ -267,6 +288,8 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a result provided a valid apiKey, itemId, question and segments', function () {
+      const fetchSpy = sinon.spy(helpers.mockFetch('pia/answer'));
+
       this.timeout(10000);
       const segments = ['foo', 'bar'];
       const { agent: { pia } } = new ConstructorIO({
@@ -283,6 +306,8 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should pass threadId as a query parameter when provided', function () {
+      const fetchSpy = sinon.spy(helpers.mockFetch('pia/answer'));
+
       this.timeout(10000);
       const threadId = '550e8400-e29b-41d4-a716-446655440000';
       const { agent: { pia } } = new ConstructorIO({
@@ -298,6 +323,8 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should pass pre_filter_expression as a query parameter when provided', function () {
+      const fetchSpy = sinon.spy(helpers.mockFetch('pia/answer'));
+
       this.timeout(10000);
       const preFilterExpression = { brand: 'apple' };
       const { agent: { pia } } = new ConstructorIO({
@@ -313,6 +340,8 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should pass guard as a query parameter when provided', function () {
+      const fetchSpy = sinon.spy(helpers.mockFetch('pia/answer'));
+
       this.timeout(10000);
       const { agent: { pia } } = new ConstructorIO({
         apiKey: piaApiKey,
@@ -327,6 +356,8 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should pass fmt_options as query parameters when provided', function () {
+      const fetchSpy = sinon.spy(helpers.mockFetch('pia/answer'));
+
       this.timeout(10000);
       const fmtOptions = { groups_max_depth: 2 };
       const { agent: { pia } } = new ConstructorIO({
@@ -357,7 +388,6 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
     it('Should be rejected if no itemId is provided', () => {
       const { agent: { pia } } = new ConstructorIO({
         apiKey: piaApiKey,
-        fetch: fetchSpy,
       });
 
       return expect(pia.getAnswerResults(null, validQuestion)).to.eventually.be.rejected;
@@ -366,13 +396,14 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
     it('Should be rejected if no question is provided', () => {
       const { agent: { pia } } = new ConstructorIO({
         apiKey: piaApiKey,
-        fetch: fetchSpy,
       });
 
       return expect(pia.getAnswerResults(validItemId, null)).to.eventually.be.rejected;
     });
 
     it('Should be rejected if an invalid apiKey is provided', () => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('pia/invalid-api-key'));
+
       const { agent: { pia } } = new ConstructorIO({
         apiKey: 'invalidKey',
         fetch: fetchSpy,
@@ -383,6 +414,8 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', () => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('pia/answer'));
+
         const { agent: { pia } } = new ConstructorIO({
           apiKey: piaApiKey,
           fetch: fetchSpy,
@@ -392,6 +425,8 @@ describe(`ConstructorIO - Pia${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', () => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('pia/answer'));
+
         const { agent: { pia } } = new ConstructorIO({
           apiKey: piaApiKey,
           fetch: fetchSpy,
