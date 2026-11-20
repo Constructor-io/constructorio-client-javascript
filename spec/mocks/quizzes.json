@@ -1,0 +1,437 @@
+{
+  "all-questions": {
+    "status": 200,
+    "body": {
+      "questions": [
+        {
+          "options": [
+            {
+              "id": 1,
+              "value": "Yes",
+              "description": null,
+              "attribute": {
+                "name": "group_id",
+                "value": "BrandX"
+              },
+              "images": {
+                "primary_url": "/test-asset",
+                "primary_alt": "This is a test asset",
+                "secondary_url": "/secondary-test-asset",
+                "secondary_alt": "This is a test asset"
+              },
+              "key": "01a8333a-00a8-11ee-b02a-0a68312c1fd5"
+            },
+            {
+              "id": 2,
+              "value": "No",
+              "description": null,
+              "attribute": {
+                "name": "Brand",
+                "value": "XYZ"
+              },
+              "images": null,
+              "key": "01a8355b-00a8-11ee-b02a-0a68312c1fd5"
+            }
+          ],
+          "id": 1,
+          "title": "This is a test quiz.",
+          "description": "This is a test description",
+          "images": {
+            "primary_url": "/test-asset",
+            "primary_alt": "This is a test asset",
+            "secondary_url": "/secondary-test-asset",
+            "secondary_alt": "This is a test asset"
+          },
+          "cta_text": null,
+          "key": "0240b323-00a8-11ee-b02a-0a68312c1fd5",
+          "is_skippable": false,
+          "priority": 1,
+          "bucket_id": null,
+          "type": "single"
+        }
+      ],
+      "total_questions": 4,
+      "quiz_version_id": "cc8a9dac-d337-4dbc-bbf7-48469c0de7af",
+      "quiz_session_id": "7509f755-28ac-463e-b184-a8295070e971",
+      "quiz_id": "test-quiz"
+    }
+  },
+  "next-question": {
+    "status": 200,
+    "body": {
+      "next_question": {
+        "options": [
+          {
+            "id": 1,
+            "value": "Yes",
+            "description": null,
+            "attribute": {
+              "name": "group_id",
+              "value": "BrandX"
+            },
+            "images": {
+              "primary_url": "/test-asset",
+              "primary_alt": "This is a test asset",
+              "secondary_url": "/secondary-test-asset",
+              "secondary_alt": "This is a test asset"
+            },
+            "key": "01a8333a-00a8-11ee-b02a-0a68312c1fd5"
+          },
+          {
+            "id": 2,
+            "value": "No",
+            "description": null,
+            "attribute": {
+              "name": "Brand",
+              "value": "XYZ"
+            },
+            "images": null,
+            "key": "01a8355b-00a8-11ee-b02a-0a68312c1fd5"
+          }
+        ],
+        "id": 1,
+        "title": "This is a test quiz.",
+        "description": "This is a test description",
+        "images": {
+          "primary_url": "/test-asset",
+          "primary_alt": "This is a test asset",
+          "secondary_url": "/secondary-test-asset",
+          "secondary_alt": "This is a test asset"
+        },
+        "cta_text": null,
+        "key": "0240b323-00a8-11ee-b02a-0a68312c1fd5",
+        "is_skippable": false,
+        "priority": 1,
+        "bucket_id": null,
+        "type": "single"
+      },
+      "total_questions": 4,
+      "version_id": "cc8a9dac-d337-4dbc-bbf7-48469c0de7af",
+      "quiz_version_id": "cc8a9dac-d337-4dbc-bbf7-48469c0de7af",
+      "quiz_id": "test-quiz",
+      "quiz_session_id": "4c2e5917-4f3a-4933-bd5d-55d1c4878d73"
+    }
+  },
+  "next-question-after-answers": {
+    "status": 200,
+    "body": {
+      "next_question": {
+        "id": 4,
+        "title": "Test Open Text",
+        "description": "This is a open text test.",
+        "images": {
+          "primary_url": "/test-asset",
+          "primary_alt": "This is a test asset",
+          "secondary_url": "/secondary-test-asset",
+          "secondary_alt": "This is a test asset"
+        },
+        "cta_text": null,
+        "key": "0240b762-00a8-11ee-b02a-0a68312c1fd5",
+        "is_skippable": false,
+        "priority": null,
+        "bucket_id": null,
+        "type": "open",
+        "input_placeholder": "Input Placeholder test"
+      },
+      "total_questions": 4,
+      "version_id": "cc8a9dac-d337-4dbc-bbf7-48469c0de7af",
+      "quiz_version_id": "cc8a9dac-d337-4dbc-bbf7-48469c0de7af",
+      "quiz_id": "test-quiz",
+      "quiz_session_id": "test-session-id"
+    }
+  },
+  "results": {
+    "status": 200,
+    "body": {
+      "request": {
+        "page": 1,
+        "num_results_per_page": 20,
+        "collection_filter_expression": {
+          "and": [
+            {
+              "name": "group_id",
+              "value": "BrandX"
+            },
+            {
+              "or": [
+                {
+                  "name": "Color",
+                  "value": "Blue"
+                },
+                {
+                  "name": "Color",
+                  "value": "red"
+                }
+              ]
+            }
+          ]
+        },
+        "term": "",
+        "fmt_options": {
+          "groups_start": "current",
+          "groups_max_depth": 1,
+          "show_hidden_facets": false,
+          "show_hidden_fields": false,
+          "show_protected_facets": false
+        },
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "section": "Products"
+      },
+      "response": {
+        "facets": [],
+        "groups": [],
+        "results": [
+          {
+            "value": "Item5",
+            "matched_terms": [],
+            "data": {
+              "id": "10005",
+              "url": "https://test.com/p/10005",
+              "facets": [
+                {
+                  "name": "Brand",
+                  "values": [
+                    "XYZ"
+                  ]
+                },
+                {
+                  "name": "Color",
+                  "values": [
+                    "red"
+                  ]
+                }
+              ],
+              "groups": [
+                {
+                  "group_id": "BrandXY",
+                  "display_name": "BrandXY",
+                  "path": "/All/Brands/BrandX",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Brands",
+                      "display_name": "Brands"
+                    },
+                    {
+                      "id": "BrandX",
+                      "display_name": "BrandX"
+                    }
+                  ]
+                }
+              ],
+              "deactivated": false
+            }
+          }
+        ],
+        "total_num_results": 1
+      },
+      "result_id": "22175ee4-295c-426d-84bf-67e04a1f77eb",
+      "quiz_id": "test-quiz",
+      "version_id": "cc8a9dac-d337-4dbc-bbf7-48469c0de7af",
+      "quiz_version_id": "cc8a9dac-d337-4dbc-bbf7-48469c0de7af",
+      "quiz_session_id": "test-session-id",
+      "quiz_selected_options": [
+        {
+          "value": "Yes",
+          "has_attribute": true,
+          "is_matched": true
+        },
+        {
+          "value": "Yes",
+          "has_attribute": true,
+          "is_matched": true
+        },
+        {
+          "value": "No",
+          "has_attribute": true,
+          "is_matched": true
+        }
+      ]
+    }
+  },
+  "results-with-hidden-fields": {
+    "status": 200,
+    "body": {
+      "request": {
+        "page": 1,
+        "num_results_per_page": 20,
+        "fmt_options": {
+          "show_hidden_fields": false,
+          "hidden_fields": [
+            "testField",
+            "hiddenField2"
+          ],
+          "groups_max_depth": 1,
+          "groups_start": "current",
+          "show_hidden_facets": false,
+          "show_protected_facets": false
+        },
+        "collection_filter_expression": {
+          "and": [
+            {
+              "name": "group_id",
+              "value": "BrandX"
+            },
+            {
+              "or": [
+                {
+                  "name": "Color",
+                  "value": "Blue"
+                },
+                {
+                  "name": "Color",
+                  "value": "red"
+                }
+              ]
+            }
+          ]
+        },
+        "term": "",
+        "sort_by": "relevance",
+        "sort_order": "descending",
+        "section": "Products"
+      },
+      "response": {
+        "facets": [],
+        "groups": [],
+        "results": [
+          {
+            "value": "Item5",
+            "matched_terms": [],
+            "data": {
+              "id": "10005",
+              "url": "https://test.com/p/10005",
+              "facets": [
+                {
+                  "name": "Brand",
+                  "values": [
+                    "XYZ"
+                  ]
+                },
+                {
+                  "name": "Color",
+                  "values": [
+                    "red"
+                  ]
+                }
+              ],
+              "groups": [
+                {
+                  "group_id": "BrandXY",
+                  "display_name": "BrandXY",
+                  "path": "/All/Brands/BrandX",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Brands",
+                      "display_name": "Brands"
+                    },
+                    {
+                      "id": "BrandX",
+                      "display_name": "BrandX"
+                    }
+                  ]
+                }
+              ],
+              "deactivated": false,
+              "testField": "hiddenFieldValue"
+            }
+          }
+        ],
+        "total_num_results": 1
+      },
+      "result_id": "83b8ee34-0ab7-4ac5-aec9-bb5a2ab466ec",
+      "quiz_id": "test-quiz",
+      "version_id": "cc8a9dac-d337-4dbc-bbf7-48469c0de7af",
+      "quiz_version_id": "cc8a9dac-d337-4dbc-bbf7-48469c0de7af",
+      "quiz_session_id": "test-session-id",
+      "quiz_selected_options": [
+        {
+          "value": "Yes",
+          "has_attribute": true,
+          "is_matched": true
+        },
+        {
+          "value": "Yes",
+          "has_attribute": true,
+          "is_matched": true
+        },
+        {
+          "value": "No",
+          "has_attribute": true,
+          "is_matched": true
+        }
+      ]
+    }
+  },
+  "results-config": {
+    "status": 200,
+    "body": {
+      "results_config": {
+        "desktop": {
+          "title": {
+            "text": "Here are your results!!",
+            "is_active": true
+          },
+          "description": {
+            "text": "Based on your answers, these are our recommendations.",
+            "is_active": true
+          },
+          "response_summary": {
+            "text": "Based on your answers of @matched_options we recommend these items",
+            "is_active": true,
+            "items_separator": ", ",
+            "last_separator": ", and "
+          }
+        }
+      },
+      "quiz_version_id": "cc8a9dac-d337-4dbc-bbf7-48469c0de7af",
+      "quiz_id": "test-quiz",
+      "metadata": {
+        "key": "value"
+      }
+    }
+  },
+  "quiz-not-found": {
+    "status": 404,
+    "body": {
+      "message": "The quiz you requested, \"invalidQuizId\" was not found, please specify a valid quiz id before trying again.",
+      "error": "QUIZ_NOT_FOUND"
+    }
+  },
+  "quiz-version-not-found": {
+    "status": 404,
+    "body": {
+      "message": "The quiz you requested, \"test-quiz\" was not found with version \"foo\", please specify a valid quiz id and remove the quiz_version_id parameter before trying again.",
+      "error": "QUIZ_NOT_FOUND"
+    }
+  },
+  "invalid-api-key": {
+    "status": 404,
+    "body": {
+      "message": "The quiz you requested, \"test-quiz\" was not found, please specify a valid quiz id before trying again.",
+      "error": "QUIZ_NOT_FOUND"
+    }
+  },
+  "question-retrieval-not-supported": {
+    "status": 400,
+    "body": {
+      "message": "The requested quiz does not support question retrieval.",
+      "error": "INVALID_QUESTIONS_REQUEST"
+    }
+  },
+  "missing-quiz-session-id": {
+    "status": 400,
+    "body": {
+      "message": "quiz_session_id must be provided when answers are present",
+      "error": "MISSING_QUIZ_SESSION_ID"
+    }
+  }
+}

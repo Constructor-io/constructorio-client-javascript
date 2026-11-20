@@ -22,14 +22,12 @@ const timeoutRejectionMessage = 'This operation was aborted';
 
 describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
   const jsdomOptions = { url: 'http://localhost' };
-  let fetchSpy;
   let cleanup;
 
   beforeEach(() => {
     cleanup = jsdom(jsdomOptions);
     global.CLIENT_VERSION = clientVersion;
     window.CLIENT_VERSION = clientVersion;
-    fetchSpy = sinon.spy(fetch);
 
     if (bundled) {
       ConstructorIO = window.ConstructorioClient;
@@ -41,8 +39,6 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     delete window.CLIENT_VERSION;
     delete window.cnstrc;
     cleanup();
-
-    fetchSpy = null;
   });
 
   describe('getBrowseResults', () => {
@@ -52,6 +48,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     const filterValueCollection = 'test';
 
     it('Should return a response with a valid filterName and filterValue', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/results'));
+
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -79,6 +77,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid filterName, filterValue and testCells', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/with-test-cells'));
+
       const testCells = { foo: 'bar' };
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -99,6 +99,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should only include valid string testCells in request params', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/results'));
+
       const testCells = { valid: 'bar', invalid: null, numVal: 123 };
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -117,6 +119,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid filterName, filterValue and segments', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/results'));
+
       const segments = ['foo', 'bar'];
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -136,6 +140,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid filterName, filterValue and user id', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/results'));
+
       const userId = 'user-id';
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -155,6 +161,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should include window global userId when useWindowParameters is true and options.userId is absent', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/results'));
+
       window.cnstrc = { userId: 'window-user-id' };
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -170,6 +178,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should include window global testCells when useWindowParameters is true and options.testCells is absent', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/results'));
+
       window.cnstrc = { testCells: { experiment: 'variation_a' } };
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -185,6 +195,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should include window global userSegments when useWindowParameters is true and options.segments is absent', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/results'));
+
       window.cnstrc = { userSegments: ['vip', 'beta'] };
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -200,6 +212,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not include window globals when useWindowParameters is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/results'));
+
       window.cnstrc = { userId: 'window-user-id', testCells: { exp: 'var' }, userSegments: ['seg'] };
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -216,6 +230,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid filterName, filterValue and page', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/results'));
+
       const page = 1;
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -235,6 +251,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid filterName, filterValue and resultsPerPage', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/two-results-per-page'));
+
       const resultsPerPage = 2;
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -255,6 +273,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid filterName, filterValue and additional filters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/filtered-by-keywords'));
+
       const filters = { keywords: ['battery-powered'] };
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -275,6 +295,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid filterName, filterValue and additional filters and filterMatchTypes', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/filtered-by-keywords'));
+
       const filters = { keywords: ['battery-powered'] };
       const filterMatchTypes = { keywords: 'any' };
       const { browse } = new ConstructorIO({
@@ -297,6 +319,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid filterName, filterValue and additional fmtOptions', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/with-fmt-options'));
+
       const fmtOptions = { groups_max_depth: 2, groups_start: 'current' };
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -319,6 +343,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid filterName, filterValue and sortBy', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/results'));
+
       const sortBy = 'relevance';
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -338,6 +364,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid filterName, filterValue and sortOrder', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/sort-order-ascending'));
+
       const sortOrder = 'ascending';
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -357,6 +385,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid filterName, filterValue and section', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/results'));
+
       const section = 'Products';
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -376,6 +406,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid collection filterName and collection filterValue', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/results'));
+
       const section = 'Products';
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -395,7 +427,9 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid filterName and filterValue with a result_id appended to each result', (done) => {
-      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/results'));
+
+      const { browse } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       browse.getBrowseResults(filterName, filterValue).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
@@ -410,6 +444,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid filterName, filterValue and hiddenFields', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/with-hidden-fields'));
+
       const hiddenFields = ['testField', 'testField2'];
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -430,6 +466,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid filterName, filterValue and hiddenFacets', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/with-hidden-facets'));
+
       const hiddenFacets = ['Brand', 'testFacet'];
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -450,6 +488,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a return a response with pre filter expression properly parsed', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/with-pre-filter-expression'));
+
       const preFilterExpression = {
         or: [
           {
@@ -495,6 +535,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a return a response with qs param properly parsed', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/with-qs-param'));
+
       const qsParam = {
         num_results_per_page: '10',
         filters: {
@@ -517,6 +559,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly encode path parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/special-characters-in-path'));
+
       const specialCharacters = '+[]&';
       const filterNameSpecialCharacters = `name ${specialCharacters}`;
       const filterValueSpecialCharacters = `value ${specialCharacters}`;
@@ -543,6 +587,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/special-characters-in-sort-by'));
+
       const specialCharacters = '+[]&';
       const sortBy = `relevance ${specialCharacters}`;
       const { browse } = new ConstructorIO({
@@ -563,6 +609,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/non-breaking-spaces-in-sort-by'));
+
       const breakingSpaces = '   ';
       const sortBy = `relevance ${breakingSpaces} relevance`;
       const sortByExpected = 'relevance     relevance';
@@ -584,6 +632,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid filterName, filterValue, and section', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/results'));
+
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -612,6 +662,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a variations_map object in the response', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/with-variations-map'));
+
       const variationsMap = {
         group_by: [
           {
@@ -658,6 +710,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid filterName, filterValue, and offset', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/with-offset'));
+
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -687,8 +741,11 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should emit an event with response data', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/results'));
+
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
+        fetch: fetchSpy,
         eventDispatcher: {
           waitForBeacon: false,
         },
@@ -737,7 +794,9 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid page parameter is provided', () => {
-      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/invalid-parameters'));
+
+      const { browse } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       return expect(browse.getBrowseResults(filterName, filterValue, {
         page: 'abc',
@@ -745,7 +804,9 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid resultsPerPage parameter is provided', () => {
-      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/invalid-parameters'));
+
+      const { browse } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       return expect(browse.getBrowseResults(filterName, filterValue, {
         resultsPerPage: 'abc',
@@ -753,7 +814,9 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid filters parameter is provided', () => {
-      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/invalid-parameters'));
+
+      const { browse } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       return expect(browse.getBrowseResults(filterName, filterValue, {
         filters: 123,
@@ -761,7 +824,9 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid sortBy parameter is provided', () => {
-      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/invalid-parameters'));
+
+      const { browse } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       return expect(browse.getBrowseResults(filterName, filterValue, {
         sortBy: { foo: 'bar' },
@@ -769,7 +834,9 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid sortOrder parameter is provided', () => {
-      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/invalid-parameters'));
+
+      const { browse } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       return expect(browse.getBrowseResults(filterName, filterValue, {
         sortOrder: 'abc',
@@ -777,7 +844,9 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid section parameter is provided', () => {
-      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/invalid-parameters'));
+
+      const { browse } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       return expect(browse.getBrowseResults(filterName, filterValue, {
         section: 123,
@@ -791,14 +860,18 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid apiKey is provided', () => {
-      const { browse } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/invalid-api-key'));
+
+      const { browse } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u', fetch: fetchSpy });
 
       return expect(browse.getBrowseResults(filterName, filterValue)).to.eventually.be.rejected;
     });
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', () => {
-        const { browse } = new ConstructorIO({ apiKey: testApiKey });
+        const fetchSpy = sinon.spy(helpers.mockFetch('browse/results'));
+
+        const { browse } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
         return expect(browse.getBrowseResults(
           filterName,
@@ -809,8 +882,11 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', () => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('browse/results'));
+
         const { browse } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: { timeout: 20 },
         });
 
@@ -823,7 +899,9 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should be rejected when both page and offset are provided', () => {
-      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/invalid-parameters'));
+
+      const { browse } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       return expect(browse.getBrowseResults(filterName, filterValue, { page: 1, offset: 20 })).to.eventually.be.rejected;
     });
@@ -833,6 +911,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     const ids = ['10002', '10001'];
 
     it('Should return a response with valid ids', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/items-results'));
+
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -856,6 +936,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid ids and testCells', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/items-with-test-cells'));
+
       const testCells = { foo: 'bar' };
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -876,6 +958,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid ids and segments', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/items-results'));
+
       const segments = ['foo', 'bar'];
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -895,6 +979,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid ids and user id', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/items-results'));
+
       const userId = 'user-id';
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -914,6 +1000,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid ids and page', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/items-results'));
+
       const page = 1;
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -933,6 +1021,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid ids and resultsPerPage', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/items-two-results-per-page'));
+
       const resultsPerPage = 2;
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -953,6 +1043,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid ids and additional filters and filterMatchTypes', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/items-filtered-by-keywords'));
+
       const filters = { keywords: ['battery-powered'] };
       const filterMatchTypes = { keywords: 'any' };
 
@@ -977,6 +1069,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid ids and additional filters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/items-filtered-by-keywords'));
+
       const filters = { keywords: ['battery-powered'] };
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -997,6 +1091,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid ids and additional fmtOptions', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/items-with-fmt-options'));
+
       const fmtOptions = { groups_max_depth: 2, groups_start: 'current' };
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1019,6 +1115,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid ids and section', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/items-results'));
+
       const section = 'Products';
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1038,7 +1136,9 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid ids with a result_id appended to each result', (done) => {
-      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/items-results'));
+
+      const { browse } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       browse.getBrowseResultsForItemIds(ids).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
@@ -1053,6 +1153,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid ids and hiddenFields', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/items-with-hidden-fields'));
+
       const hiddenFields = ['testField', 'testField2'];
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1073,6 +1175,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid ids and hiddenFacets', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/items-with-hidden-facets'));
+
       const hiddenFacets = ['Brand', 'testFacet'];
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1093,6 +1197,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid ids and a section', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/items-results'));
+
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1117,6 +1223,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a variations_map object in the response', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/items-with-variations-map'));
+
       const variationsMap = {
         group_by: [
           {
@@ -1159,6 +1267,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid ids and offset parameter', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/items-with-offset'));
+
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1184,6 +1294,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a return a response with pre filter expression properly parsed', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/items-with-pre-filter-expression'));
+
       const preFilterExpression = {
         or: [
           {
@@ -1229,8 +1341,11 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should emit an event with response data', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/items-results'));
+
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
+        fetch: fetchSpy,
         eventDispatcher: {
           waitForBeacon: false,
         },
@@ -1255,7 +1370,9 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when both page and offset are provided', () => {
-      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/invalid-parameters'));
+
+      const { browse } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       return expect(browse.getBrowseResultsForItemIds(ids, { page: 1, offset: 1 })).to.eventually.be.rejected;
     });
@@ -1279,7 +1396,9 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid page parameter is provided', () => {
-      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/invalid-parameters'));
+
+      const { browse } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       return expect(browse.getBrowseResultsForItemIds(ids, {
         page: 'abc',
@@ -1287,7 +1406,9 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid resultsPerPage parameter is provided', () => {
-      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/invalid-parameters'));
+
+      const { browse } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       return expect(browse.getBrowseResultsForItemIds(ids, {
         resultsPerPage: 'abc',
@@ -1295,7 +1416,9 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid filters parameter is provided', () => {
-      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/invalid-parameters'));
+
+      const { browse } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       return expect(browse.getBrowseResultsForItemIds(ids, {
         filters: 123,
@@ -1303,7 +1426,9 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid sortBy parameter is provided', () => {
-      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/invalid-parameters'));
+
+      const { browse } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       return expect(browse.getBrowseResultsForItemIds(ids, {
         sortBy: { foo: 'bar' },
@@ -1311,7 +1436,9 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid sortOrder parameter is provided', () => {
-      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/invalid-parameters'));
+
+      const { browse } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       return expect(browse.getBrowseResultsForItemIds(ids, {
         sortOrder: 'abc',
@@ -1319,7 +1446,9 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid section parameter is provided', () => {
-      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/invalid-parameters'));
+
+      const { browse } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       return expect(browse.getBrowseResultsForItemIds(ids, {
         section: 123,
@@ -1327,14 +1456,18 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid apiKey is provided', () => {
-      const { browse } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/invalid-api-key'));
+
+      const { browse } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u', fetch: fetchSpy });
 
       return expect(browse.getBrowseResultsForItemIds(ids)).to.eventually.be.rejected;
     });
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', () => {
-        const { browse } = new ConstructorIO({ apiKey: testApiKey });
+        const fetchSpy = sinon.spy(helpers.mockFetch('browse/items-results'));
+
+        const { browse } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
         return expect(browse.getBrowseResultsForItemIds(
           ids,
@@ -1344,8 +1477,11 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', () => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('browse/items-results'));
+
         const { browse } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: { timeout: 20 },
         });
 
@@ -1360,6 +1496,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
 
   describe('getBrowseGroups', () => {
     it('Should return a response without any parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/groups'));
+
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1380,6 +1518,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid ids and additional filters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/groups-filtered-by-group-id'));
+
       const filters = { group_id: ['drill_collection'] };
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1400,6 +1540,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid ids and additional fmtOptions', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/groups-with-fmt-options'));
+
       const fmtOptions = { groups_max_depth: 2, groups_start: 'current' };
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1422,6 +1564,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a section', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/groups'));
+
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1443,7 +1587,9 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid filters parameter is provided', () => {
-      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/invalid-parameters'));
+
+      const { browse } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       return expect(browse.getBrowseGroups({
         filters: 123,
@@ -1451,21 +1597,28 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid apiKey is provided', () => {
-      const { browse } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/invalid-api-key'));
+
+      const { browse } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u', fetch: fetchSpy });
 
       return expect(browse.getBrowseGroups()).to.eventually.be.rejected;
     });
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', () => {
-        const { browse } = new ConstructorIO({ apiKey: testApiKey });
+        const fetchSpy = sinon.spy(helpers.mockFetch('browse/groups'));
+
+        const { browse } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
         return expect(browse.getBrowseGroups({}, { timeout: 10 })).to.eventually.be.rejectedWith(timeoutRejectionMessage);
       });
 
       it('Should be rejected when global network request timeout is provided and reached', () => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('browse/groups'));
+
         const { browse } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: { timeout: 20 },
         });
 
@@ -1476,6 +1629,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
 
   describe('getBrowseFacets', () => {
     it('Should return a response without parameters being passed', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/facets'));
+
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1498,6 +1653,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with optional parameters being passed', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/facets'));
+
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1523,6 +1680,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid fmtOptions', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/facets-with-fmt-options'));
+
       const fmtOptions = { show_hidden_facets: true };
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1542,6 +1701,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a section', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/facets'));
+
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1565,6 +1726,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response an offset', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/facets-with-offset'));
+
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1589,13 +1752,17 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when both page and offset are provided', () => {
-      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/invalid-parameters'));
+
+      const { browse } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       return expect(browse.getBrowseFacets({ page: 1, offset: 20 })).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid page parameter is provided', () => {
-      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/invalid-parameters'));
+
+      const { browse } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       return expect(browse.getBrowseFacets({
         page: 'abc',
@@ -1603,7 +1770,9 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid resultsPerPage parameter is provided', () => {
-      const { browse } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/invalid-parameters'));
+
+      const { browse } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       return expect(browse.getBrowseFacets({
         resultsPerPage: 'abc',
@@ -1611,21 +1780,28 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid apiKey is provided', () => {
-      const { browse } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/invalid-api-key'));
+
+      const { browse } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u', fetch: fetchSpy });
 
       return expect(browse.getBrowseFacets()).to.eventually.be.rejected;
     });
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', () => {
-        const { browse } = new ConstructorIO({ apiKey: testApiKey });
+        const fetchSpy = sinon.spy(helpers.mockFetch('browse/facets'));
+
+        const { browse } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
         return expect(browse.getBrowseFacets({}, { timeout: 10 })).to.eventually.be.rejectedWith(timeoutRejectionMessage);
       });
 
       it('Should be rejected when global network request timeout is provided and reached', () => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('browse/facets'));
+
         const { browse } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: { timeout: 20 },
         });
 
@@ -1638,6 +1814,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     const facetName = 'Color';
 
     it('Should return a response with a facet name without any parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/facet-options'));
+
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1660,6 +1838,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid fmtOptions', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/facet-options-with-fmt-options'));
+
       const fmtOptions = { show_hidden_facets: true };
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
@@ -1679,6 +1859,8 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a facet name with a section', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/facet-options'));
+
       const { browse } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -1718,23 +1900,31 @@ describe(`ConstructorIO - Browse${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid apiKey is provided', () => {
-      const { browse } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
+      const fetchSpy = sinon.spy(helpers.mockFetch('browse/invalid-api-key'));
+
+      const { browse } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u', fetch: fetchSpy });
 
       return expect(browse.getBrowseFacetOptions(facetName)).to.eventually.be.rejected;
     });
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', () => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('browse/facet-options'));
+
         const { browse } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
         });
 
         return expect(browse.getBrowseFacetOptions(facetName, {}, { timeout: 10 })).to.eventually.be.rejectedWith(timeoutRejectionMessage);
       });
 
       it('Should be rejected when global network request timeout is provided and reached', () => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('browse/facet-options'));
+
         const { browse } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: { timeout: 20 },
         });
 

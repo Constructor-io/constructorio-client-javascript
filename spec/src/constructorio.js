@@ -458,7 +458,7 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should actually suppress tracking events when sendTrackingEvents is set to false', (done) => {
-      const fetchSpy = sinon.spy(fetch);
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
       const instance = new ConstructorIO({
         apiKey: validApiKey,
         sendTrackingEvents: true,
@@ -519,7 +519,7 @@ describe(`ConstructorIO${bundledDescriptionSuffix}`, () => {
       helpers.clearStorage();
       store.session.set('_constructorio_is_human', true);
 
-      const fetchSpy = sinon.spy(fetch);
+      const fetchSpy = sinon.spy(helpers.mockFetch('tracking/success'));
       const instance = new ConstructorIO({
         apiKey: validApiKey,
         sendTrackingEvents: true,

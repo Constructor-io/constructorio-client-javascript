@@ -1,0 +1,37 @@
+{
+  "results-stream": {
+    "events": [
+      {
+        "type": "start",
+        "data": {
+          "intent_result_id": "895a5176-3909-4e10-95d6-269b554e3742",
+          "request": {
+            "intent": "query",
+            "query_params": {
+              "c": "cio-mocha",
+              "s": 123,
+              "i": "123",
+              "key": "<TEST_REQUEST_API_KEY>",
+              "domain": "assistant",
+              "guard": false
+            }
+          }
+        }
+      },
+      {
+        "type": "message",
+        "data": {
+          "intent_result_id": "895a5176-3909-4e10-95d6-269b554e3742",
+          "text": "I couldn't find any products for \"query\". Could you tell me what you're shopping for? For example, groceries, cleaning supplies, batteries, light bulbs, flowers or personal care items. Any dietary needs or a budget would help too."
+        }
+      },
+      {
+        "type": "end",
+        "data": {
+          "intent_result_id": "895a5176-3909-4e10-95d6-269b554e3742",
+          "search_result_count": 0
+        }
+      }
+    ]
+  }
+}

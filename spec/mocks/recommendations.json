@@ -1,0 +1,392 @@
+{
+  "item-recommendations": {
+    "status": 200,
+    "body": {
+      "request": {
+        "item_id": [
+          "power_drill",
+          "drill"
+        ],
+        "section": "Products",
+        "pod_id": "item_page_1"
+      },
+      "response": {
+        "results": [],
+        "total_num_results": 0,
+        "pod": {
+          "id": "item_page_1",
+          "display_name": "You may also like",
+          "channels": [
+            "site"
+          ]
+        }
+      },
+      "result_id": "bc43f9b6-dff9-4eba-9ae7-40867f1233c8"
+    }
+  },
+  "single-item-recommendations": {
+    "status": 200,
+    "body": {
+      "request": {
+        "item_id": "power_drill",
+        "section": "Products",
+        "pod_id": "item_page_1"
+      },
+      "response": {
+        "results": [],
+        "total_num_results": 0,
+        "pod": {
+          "id": "item_page_1",
+          "display_name": "You may also like",
+          "channels": [
+            "site"
+          ]
+        }
+      },
+      "result_id": "be460837-24ee-4458-9be3-786be9b9cb92"
+    }
+  },
+  "with-variation-id": {
+    "status": 200,
+    "body": {
+      "request": {
+        "item_id": "power_drill",
+        "variation_id": "power_drill_variation",
+        "section": "Products",
+        "pod_id": "item_page_1"
+      },
+      "response": {
+        "results": [],
+        "total_num_results": 0,
+        "pod": {
+          "id": "item_page_1",
+          "display_name": "You may also like",
+          "channels": [
+            "site"
+          ]
+        }
+      },
+      "result_id": "204e4c0b-4f1d-4edf-b705-fcbef7de1de1"
+    }
+  },
+  "with-num-results": {
+    "status": 200,
+    "body": {
+      "request": {
+        "item_id": [
+          "power_drill",
+          "drill"
+        ],
+        "num_results": 2,
+        "section": "Products",
+        "pod_id": "item_page_1"
+      },
+      "response": {
+        "results": [],
+        "total_num_results": 0,
+        "pod": {
+          "id": "item_page_1",
+          "display_name": "You may also like",
+          "channels": [
+            "site"
+          ]
+        }
+      },
+      "result_id": "5650e175-e3a4-4ebd-b69e-ffc5240f3aa7"
+    }
+  },
+  "with-hidden-fields": {
+    "status": 200,
+    "body": {
+      "request": {
+        "item_id": [
+          "power_drill",
+          "drill"
+        ],
+        "fmt_options": {
+          "hidden_fields": [
+            "hiddenField1",
+            "hiddenField2"
+          ]
+        },
+        "section": "Products",
+        "pod_id": "item_page_1"
+      },
+      "response": {
+        "results": [],
+        "total_num_results": 0,
+        "pod": {
+          "id": "item_page_1",
+          "display_name": "You may also like",
+          "channels": [
+            "site"
+          ]
+        }
+      },
+      "result_id": "184a6990-7052-47b6-8cfe-f5e39426a86b"
+    }
+  },
+  "with-fmt-options": {
+    "status": 200,
+    "body": {
+      "request": {
+        "item_id": [
+          "power_drill",
+          "drill"
+        ],
+        "fmt_options": {
+          "hidden_fields": [
+            "testField",
+            "hiddenField2"
+          ]
+        },
+        "section": "Products",
+        "pod_id": "item_page_1"
+      },
+      "response": {
+        "results": [],
+        "total_num_results": 0,
+        "pod": {
+          "id": "item_page_1",
+          "display_name": "You may also like",
+          "channels": [
+            "site"
+          ]
+        }
+      },
+      "result_id": "c8448ec0-b978-45e3-8bb6-a78f07757ac2"
+    }
+  },
+  "with-pre-filter-expression": {
+    "status": 200,
+    "body": {
+      "request": {
+        "item_id": [
+          "power_drill",
+          "drill"
+        ],
+        "pre_filter_expression": {
+          "or": [
+            {
+              "and": [
+                {
+                  "name": "group_id",
+                  "value": "electronics-group-id"
+                },
+                {
+                  "name": "Price",
+                  "range": [
+                    "-inf",
+                    200
+                  ]
+                }
+              ]
+            },
+            {
+              "and": [
+                {
+                  "name": "Type",
+                  "value": "Laptop"
+                },
+                {
+                  "not": {
+                    "name": "Price",
+                    "range": [
+                      800,
+                      "inf"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "section": "Products",
+        "pod_id": "item_page_1"
+      },
+      "response": {
+        "results": [],
+        "total_num_results": 0,
+        "pod": {
+          "id": "item_page_1",
+          "display_name": "You may also like",
+          "channels": [
+            "site"
+          ]
+        }
+      },
+      "result_id": "cae802fa-2e87-4812-870a-24127b6a652d"
+    }
+  },
+  "with-variations-map": {
+    "status": 200,
+    "body": {
+      "request": {
+        "item_id": [
+          "power_drill",
+          "drill"
+        ],
+        "variations_map": {
+          "group_by": [
+            {
+              "name": "variation",
+              "field": "data.variation_id"
+            }
+          ],
+          "values": {
+            "size": {
+              "aggregation": "all",
+              "field": "data.facets.size"
+            }
+          },
+          "dtype": "array"
+        },
+        "section": "Products",
+        "pod_id": "item_page_1"
+      },
+      "response": {
+        "results": [],
+        "total_num_results": 0,
+        "pod": {
+          "id": "item_page_1",
+          "display_name": "You may also like",
+          "channels": [
+            "site"
+          ]
+        }
+      },
+      "result_id": "b57205bd-34ff-4bd4-a75c-fe23e1608cdc"
+    }
+  },
+  "query-recommendations": {
+    "status": 200,
+    "body": {
+      "request": {
+        "term": "apple",
+        "section": "Products",
+        "pod_id": "query_recommendations"
+      },
+      "response": {
+        "results": [],
+        "total_num_results": 0,
+        "pod": {
+          "id": "query_recommendations",
+          "display_name": "Query Recommendations",
+          "channels": [
+            "site"
+          ]
+        }
+      },
+      "result_id": "a7af7219-924f-494c-9216-538fa55a0a7a"
+    }
+  },
+  "query-recommendations-special-characters": {
+    "status": 200,
+    "body": {
+      "request": {
+        "term": "apple +[]&",
+        "section": "Products",
+        "pod_id": "query_recommendations"
+      },
+      "response": {
+        "results": [],
+        "total_num_results": 0,
+        "pod": {
+          "id": "query_recommendations",
+          "display_name": "Query Recommendations",
+          "channels": [
+            "site"
+          ]
+        }
+      },
+      "result_id": "5d71b3f5-eae0-4ba9-b099-500a6dad3e5c"
+    }
+  },
+  "query-recommendations-non-breaking-spaces": {
+    "status": 200,
+    "body": {
+      "request": {
+        "term": "apple     apple",
+        "section": "Products",
+        "pod_id": "query_recommendations"
+      },
+      "response": {
+        "results": [],
+        "total_num_results": 0,
+        "pod": {
+          "id": "query_recommendations",
+          "display_name": "Query Recommendations",
+          "channels": [
+            "site"
+          ]
+        }
+      },
+      "result_id": "1ae4cae3-efa8-4210-8680-4130555602d2"
+    }
+  },
+  "filtered-items": {
+    "status": 200,
+    "body": {
+      "request": {
+        "filters": {
+          "keywords": [
+            "battery-powered"
+          ]
+        },
+        "section": "Products",
+        "pod_id": "filtered_items"
+      },
+      "response": {
+        "results": [],
+        "total_num_results": 0,
+        "pod": {
+          "id": "filtered_items",
+          "display_name": "Filtered Items",
+          "channels": [
+            "site"
+          ]
+        }
+      },
+      "result_id": "a456feb6-fa33-4d83-9d85-a55f746096f6"
+    }
+  },
+  "filtered-items-with-item-id": {
+    "status": 200,
+    "body": {
+      "request": {
+        "item_id": "power_drill",
+        "filters": {
+          "keywords": [
+            "battery-powered"
+          ]
+        },
+        "section": "Products",
+        "pod_id": "filtered_items"
+      },
+      "response": {
+        "results": [],
+        "total_num_results": 0,
+        "pod": {
+          "id": "filtered_items",
+          "display_name": "Filtered Items",
+          "channels": [
+            "site"
+          ]
+        }
+      },
+      "result_id": "d141a2ee-4b2f-4d06-a670-c28e25096e52"
+    }
+  },
+  "invalid-parameters": {
+    "status": 400,
+    "body": {
+      "message": "num_results: Input should be a valid integer, unable to parse string as an integer"
+    }
+  },
+  "invalid-api-key": {
+    "status": 400,
+    "body": {
+      "message": "You have supplied an invalid `key` or `autocomplete_key`. You can find your key at app.constructor.io/dashboard/accounts/api_integration."
+    }
+  }
+}

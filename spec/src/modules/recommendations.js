@@ -21,14 +21,12 @@ const timeoutRejectionMessage = 'This operation was aborted';
 
 describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
   const jsdomOptions = { url: 'http://localhost' };
-  let fetchSpy;
   let cleanup;
 
   beforeEach(() => {
     cleanup = jsdom(jsdomOptions);
     global.CLIENT_VERSION = clientVersion;
     window.CLIENT_VERSION = clientVersion;
-    fetchSpy = sinon.spy(fetch);
 
     if (bundled) {
       ConstructorIO = window.ConstructorioClient;
@@ -40,8 +38,6 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     delete window.CLIENT_VERSION;
     delete window.cnstrc;
     cleanup();
-
-    fetchSpy = null;
   });
 
   describe('getRecommendations', () => {
@@ -53,6 +49,8 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     const variationId = 'power_drill_variation';
 
     it('Should return a response with valid itemIds (singular)', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/single-item-recommendations'));
+
       const { recommendations } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -81,6 +79,8 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid itemIds (multiple)', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/item-recommendations'));
+
       const { recommendations } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -104,6 +104,8 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid variationId', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/with-variation-id'));
+
       const { recommendations } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -134,6 +136,8 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid term for query recommendations strategy pod', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/query-recommendations'));
+
       const term = 'apple';
       const { recommendations } = new ConstructorIO({
         apiKey: testApiKey,
@@ -157,6 +161,8 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid filters for filtered items strategy pod', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/filtered-items'));
+
       const filters = { keywords: ['battery-powered'] };
       const urlParamFilters = { keywords: 'battery-powered' };
       const { recommendations } = new ConstructorIO({
@@ -181,6 +187,8 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid filters and item id for filtered items strategy pod', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/filtered-items-with-item-id'));
+
       const filters = { keywords: ['battery-powered'] };
       const urlParamFilters = { keywords: 'battery-powered' };
       const { recommendations } = new ConstructorIO({
@@ -210,6 +218,8 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid itemIds, and segments', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/item-recommendations'));
+
       const segments = ['foo', 'bar'];
       const { recommendations } = new ConstructorIO({
         apiKey: testApiKey,
@@ -229,6 +239,8 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid itemIds, and user id', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/item-recommendations'));
+
       const userId = 'user-id';
       const { recommendations } = new ConstructorIO({
         apiKey: testApiKey,
@@ -248,6 +260,8 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid itemIds, and hiddenFields', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/with-hidden-fields'));
+
       const hiddenFields = ['hiddenField1', 'hiddenField2'];
       const { recommendations } = new ConstructorIO({
         apiKey: testApiKey,
@@ -267,6 +281,8 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid itemIds, and fmtOptions', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/with-fmt-options'));
+
       const hiddenFields = ['testField', 'hiddenField2'];
       const fmtOptions = { hidden_fields: hiddenFields };
       const { recommendations } = new ConstructorIO({
@@ -287,6 +303,8 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid itemIds, and numResults', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/with-num-results'));
+
       const numResults = 2;
       const { recommendations } = new ConstructorIO({
         apiKey: testApiKey,
@@ -309,6 +327,8 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid itemIds, and section', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/item-recommendations'));
+
       const section = 'Products';
       const { recommendations } = new ConstructorIO({
         apiKey: testApiKey,
@@ -331,7 +351,9 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with valid itemIds, with a result_id appended to each result', (done) => {
-      const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/item-recommendations'));
+
+      const { recommendations } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       recommendations.getRecommendations(podId, { itemIds }).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
@@ -346,6 +368,8 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a return a response with pre filter expression properly parsed', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/with-pre-filter-expression'));
+
       const preFilterExpression = {
         or: [
           {
@@ -391,6 +415,8 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/query-recommendations-special-characters'));
+
       const specialCharacters = '+[]&';
       const term = `apple ${specialCharacters}`;
       const { recommendations } = new ConstructorIO({
@@ -415,6 +441,8 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly transform non-breaking spaces in parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/query-recommendations-non-breaking-spaces'));
+
       const breakingSpaces = '   ';
       const term = `apple ${breakingSpaces} apple`;
       const termExpected = 'apple     apple';
@@ -440,6 +468,8 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a variations_map object in the response', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/with-variations-map'));
+
       const variationsMap = {
         group_by: [
           {
@@ -455,7 +485,7 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
         },
         dtype: 'array',
       };
-      const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
+      const { recommendations } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       recommendations.getRecommendations(podId, { itemIds, variationsMap }).then((res) => {
         expect(res).to.have.property('request').to.be.an('object');
@@ -471,8 +501,11 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should emit an event with response data', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/item-recommendations'));
+
       const { recommendations } = new ConstructorIO({
         apiKey: testApiKey,
+        fetch: fetchSpy,
         eventDispatcher: {
           waitForBeacon: false,
         },
@@ -530,7 +563,9 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid numResults parameter is provided', () => {
-      const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/invalid-parameters'));
+
+      const { recommendations } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       return expect(recommendations.getRecommendations(podId, {
         itemIds,
@@ -539,7 +574,9 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid section parameter is provided', () => {
-      const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/invalid-parameters'));
+
+      const { recommendations } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       return expect(recommendations.getRecommendations(podId, {
         itemIds,
@@ -548,7 +585,9 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid apiKey is provided', () => {
-      const { recommendations } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
+      const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/invalid-api-key'));
+
+      const { recommendations } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u', fetch: fetchSpy });
 
       return expect(recommendations.getRecommendations(podId, {
         itemIds,
@@ -557,7 +596,9 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', () => {
-        const { recommendations } = new ConstructorIO({ apiKey: testApiKey });
+        const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/item-recommendations'));
+
+        const { recommendations } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
         return expect(recommendations.getRecommendations(
           podId,
@@ -567,8 +608,11 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', () => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/item-recommendations'));
+
         const { recommendations } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: { timeout: 20 },
         });
 
@@ -580,6 +624,8 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     }
 
     it('Should include window global userId when useWindowParameters is true and options.userId is absent', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/single-item-recommendations'));
+
       window.cnstrc = { userId: 'window-user-id' };
       const { recommendations } = new ConstructorIO({
         apiKey: testApiKey,
@@ -595,6 +641,8 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should include window global testCells when useWindowParameters is true and options.testCells is absent', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/single-item-recommendations'));
+
       window.cnstrc = { testCells: { experiment: 'variation_a' } };
       const { recommendations } = new ConstructorIO({
         apiKey: testApiKey,
@@ -610,6 +658,8 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should include window global userSegments when useWindowParameters is true and options.segments is absent', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/single-item-recommendations'));
+
       window.cnstrc = { userSegments: ['vip', 'beta'] };
       const { recommendations } = new ConstructorIO({
         apiKey: testApiKey,
@@ -625,6 +675,8 @@ describe(`ConstructorIO - Recommendations${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not include window globals when useWindowParameters is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('recommendations/single-item-recommendations'));
+
       window.cnstrc = { userId: 'window-user-id', testCells: { exp: 'var' }, userSegments: ['seg'] };
       const { recommendations } = new ConstructorIO({
         apiKey: testApiKey,

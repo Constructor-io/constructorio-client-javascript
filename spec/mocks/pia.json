@@ -1,0 +1,49 @@
+{
+  "suggested-questions": {
+    "status": 200,
+    "body": {
+      "questions": [
+        {
+          "value": "What is the volume of each bottle?",
+          "question_topic": null
+        },
+        {
+          "value": "What flavor is the nutrition shake?",
+          "question_topic": null
+        },
+        {
+          "value": "What are the nutritional benefits of using a nutrition shake?",
+          "question_topic": null
+        }
+      ]
+    }
+  },
+  "answer": {
+    "status": 200,
+    "body": {
+      "qna_result_id": "9a59423f-8b85-454a-bcd8-f60c97b4db0b",
+      "value": "This is a liquid nutrition shake, so it isn't made of a material in the usual sense. It's generally sold in 8 fl. oz. plastic bottles, and the shake inside is a water-and-milk-protein-based formula with sugar, vegetable oil, vitamins, and minerals. Based on what's generally known about this product, please check the packaging for the exact packaging material and ingredients.",
+      "item_results": null,
+      "images": null,
+      "follow_up_questions": [
+        {
+          "value": "What are the main ingredients in this shake?"
+        },
+        {
+          "value": "How much protein is in each bottle?"
+        },
+        {
+          "value": "Does this shake contain any common allergens?"
+        }
+      ],
+      "thread_id": "018e2dfc-9c87-5913-ab63-833bb491a605",
+      "route": null
+    }
+  },
+  "invalid-api-key": {
+    "status": 400,
+    "body": {
+      "detail": "Invalid client key provided: 'invalidKey'."
+    }
+  }
+}

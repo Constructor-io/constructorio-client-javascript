@@ -21,14 +21,12 @@ const timeoutRejectionMessage = 'This operation was aborted';
 
 describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
   const jsdomOptions = { url: 'http://localhost' };
-  let fetchSpy;
   let cleanup;
 
   beforeEach(() => {
     cleanup = jsdom(jsdomOptions);
     global.CLIENT_VERSION = clientVersion;
     window.CLIENT_VERSION = clientVersion;
-    fetchSpy = sinon.spy(fetch);
 
     if (bundled) {
       ConstructorIO = window.ConstructorioClient;
@@ -40,14 +38,14 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     delete window.CLIENT_VERSION;
     delete window.cnstrc;
     cleanup();
-
-    fetchSpy = null;
   });
 
   describe('getAutocompleteResults', () => {
     const query = 'item';
 
     it('Should return a response with a valid query', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/results'));
+
       const { autocomplete } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -71,6 +69,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a / query', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/slash-query'));
+
       const { autocomplete } = new ConstructorIO({
         apiKey: testApiKey,
         fetch: fetchSpy,
@@ -94,6 +94,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, and testCells', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/with-test-cells'));
+
       const testCells = { foo: 'bar' };
       const { autocomplete } = new ConstructorIO({
         apiKey: testApiKey,
@@ -114,6 +116,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should only include valid string testCells in request params', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/results'));
+
       const testCells = { valid: 'bar', invalid: null, numVal: 123 };
       const { autocomplete } = new ConstructorIO({
         apiKey: testApiKey,
@@ -132,6 +136,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, and segments', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/with-segments'));
+
       const segments = ['foo', 'bar'];
       const { autocomplete } = new ConstructorIO({
         apiKey: testApiKey,
@@ -152,6 +158,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, and user id', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/results'));
+
       const userId = 'user-id';
       const { autocomplete } = new ConstructorIO({
         apiKey: testApiKey,
@@ -171,6 +179,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, and numResults', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/two-results'));
+
       const numResults = 2;
       const { autocomplete } = new ConstructorIO({
         apiKey: testApiKey,
@@ -199,6 +209,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, and resultsPerSection', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/results-per-section'));
+
       const resultsPerSection = {
         Products: 1,
         'Search Suggestions': 2,
@@ -223,6 +235,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, and filters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/filtered-by-keywords'));
+
       const filters = { keywords: ['battery-powered'] };
       const { autocomplete } = new ConstructorIO({
         apiKey: testApiKey,
@@ -243,6 +257,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, and multiple filters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/filtered-by-group-and-brand'));
+
       const filters = { group_id: ['All'], Brand: ['XYZ'] };
       const { autocomplete } = new ConstructorIO({
         apiKey: testApiKey,
@@ -266,6 +282,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query and filtersPerSection', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/filters-per-section'));
+
       const filtersPerSection = { 'Search Suggestions': { keywords: ['battery-powered'] } };
       const { autocomplete } = new ConstructorIO({
         apiKey: testApiKey,
@@ -285,6 +303,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, and multiple filtersPerSection', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/multiple-filters-per-section'));
+
       const filtersPerSection = {
         Products: { group_id: ['All', 'shop'] },
         'Search Suggestions': { keywords: ['battery-powered', 'solar'] },
@@ -309,7 +329,9 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, with a result_id appended to each result', (done) => {
-      const { autocomplete } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/results'));
+
+      const { autocomplete } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       autocomplete.getAutocompleteResults(query).then((res) => {
         const sectionKeys = Object.keys(res.sections);
@@ -330,6 +352,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query and hiddenFields', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/with-hidden-fields'));
+
       const hiddenFields = ['testField', 'hiddenField2'];
       const { autocomplete } = new ConstructorIO({
         apiKey: testApiKey,
@@ -352,6 +376,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly encode path parameter', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/special-characters-in-query'));
+
       const specialCharacters = '+[]&';
       const querySpecialCharacters = `apple ${specialCharacters}`;
       const { autocomplete } = new ConstructorIO({
@@ -372,6 +398,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should properly encode query parameters', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/special-characters-in-filters'));
+
       const specialCharacters = '+[]&';
       const filters = { keywords: [`battery-powered ${specialCharacters}`] };
       const { autocomplete } = new ConstructorIO({
@@ -393,6 +421,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section and preFilterExpression', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/with-pre-filter-expression'));
+
       const preFilterExpression = {
         or: [
           {
@@ -430,6 +460,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query and preFilterExpressionPerSection', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/results'));
+
       const preFilterExpressionPerSection = {
         Products: {
           or: [
@@ -467,6 +499,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, and multiple preFilterExpressionPerSection', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/results'));
+
       const preFilterExpressionPerSection = {
         Products: {
           and: [
@@ -501,6 +535,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a response with a valid query, section and fmtOptions', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/with-hidden-fields'));
+
       const hiddenFields = ['testField', 'hiddenField2'];
       const fmtOptions = { hidden_fields: hiddenFields };
       const { autocomplete } = new ConstructorIO({
@@ -524,6 +560,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a return a response with qs param properly parsed', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/with-qs-param'));
+
       const qsParam = {
         us: 'dogs',
       };
@@ -541,6 +579,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should return a variations_map object in the response', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/with-variations-map'));
+
       const variationsMap = {
         group_by: [
           {
@@ -574,8 +614,11 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should emit an event with response data', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/results'));
+
       const { autocomplete } = new ConstructorIO({
         apiKey: testApiKey,
+        fetch: fetchSpy,
         eventDispatcher: {
           waitForBeacon: false,
         },
@@ -600,6 +643,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should include window global userId when useWindowParameters is true and options.userId is absent', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/results'));
+
       window.cnstrc = { userId: 'window-user-id' };
       const { autocomplete } = new ConstructorIO({
         apiKey: testApiKey,
@@ -615,6 +660,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should include window global testCells when useWindowParameters is true and options.testCells is absent', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/results'));
+
       window.cnstrc = { testCells: { experiment: 'variation_a' } };
       const { autocomplete } = new ConstructorIO({
         apiKey: testApiKey,
@@ -630,6 +677,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should include window global userSegments when useWindowParameters is true and options.segments is absent', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/results'));
+
       window.cnstrc = { userSegments: ['vip', 'beta'] };
       const { autocomplete } = new ConstructorIO({
         apiKey: testApiKey,
@@ -645,6 +694,8 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should not include window globals when useWindowParameters is false', (done) => {
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/results'));
+
       window.cnstrc = { userId: 'window-user-id', testCells: { exp: 'var' }, userSegments: ['seg'] };
       const { autocomplete } = new ConstructorIO({
         apiKey: testApiKey,
@@ -675,26 +726,34 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
     });
 
     it('Should be rejected when invalid numResults parameter is provided', () => {
-      const { autocomplete } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/invalid-parameters'));
+
+      const { autocomplete } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       return expect(autocomplete.getAutocompleteResults(query, { numResults: 'abc' })).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid filters parameter is provided', () => {
-      const { autocomplete } = new ConstructorIO({ apiKey: testApiKey });
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/invalid-parameters'));
+
+      const { autocomplete } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
       return expect(autocomplete.getAutocompleteResults(query, { filters: 'abc' })).to.eventually.be.rejected;
     });
 
     it('Should be rejected when invalid apiKey is provided', () => {
-      const { autocomplete } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u' });
+      const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/invalid-api-key'));
+
+      const { autocomplete } = new ConstructorIO({ apiKey: 'fyzs7tfF8L161VoAXQ8u', fetch: fetchSpy });
 
       return expect(autocomplete.getAutocompleteResults(query)).to.eventually.be.rejected;
     });
 
     if (!skipNetworkTimeoutTests) {
       it('Should be rejected when network request timeout is provided and reached', () => {
-        const { autocomplete } = new ConstructorIO({ apiKey: testApiKey });
+        const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/results'));
+
+        const { autocomplete } = new ConstructorIO({ apiKey: testApiKey, fetch: fetchSpy });
 
         return expect(autocomplete.getAutocompleteResults(
           query,
@@ -704,8 +763,11 @@ describe(`ConstructorIO - Autocomplete${bundledDescriptionSuffix}`, () => {
       });
 
       it('Should be rejected when global network request timeout is provided and reached', () => {
+        const fetchSpy = sinon.spy(helpers.mockFetch('autocomplete/results'));
+
         const { autocomplete } = new ConstructorIO({
           apiKey: testApiKey,
+          fetch: fetchSpy,
           networkParameters: { timeout: 20 },
         });
 

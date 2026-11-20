@@ -1,0 +1,1427 @@
+{
+  "results": {
+    "status": 200,
+    "body": {
+      "request": {
+        "page_per_section": {},
+        "offset_per_section": {},
+        "num_section_results_per_page": {},
+        "term": "item",
+        "searchandized_items": {
+          "10005": [
+            1,
+            {
+              "is_sponsored": true
+            }
+          ]
+        }
+      },
+      "sections": {
+        "Search Suggestions": [],
+        "Content": [
+          {
+            "matched_terms": [
+              "item"
+            ],
+            "labels": {},
+            "data": {
+              "id": "10001"
+            },
+            "value": "Item1",
+            "is_slotted": false
+          }
+        ],
+        "Products": [
+          {
+            "matched_terms": [
+              "item"
+            ],
+            "labels": {
+              "is_sponsored": true
+            },
+            "data": {
+              "id": "10005",
+              "url": "https://test.com/p/10005",
+              "facets": [
+                {
+                  "name": "Brand",
+                  "values": [
+                    "XYZ"
+                  ]
+                },
+                {
+                  "name": "Color",
+                  "values": [
+                    "red"
+                  ]
+                }
+              ],
+              "deactivated": false,
+              "groups": [
+                {
+                  "group_id": "BrandXY",
+                  "display_name": "BrandXY",
+                  "path": "/All/Brands/BrandX",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Brands",
+                      "display_name": "Brands"
+                    },
+                    {
+                      "id": "BrandX",
+                      "display_name": "BrandX"
+                    }
+                  ]
+                }
+              ]
+            },
+            "value": "Item5",
+            "is_slotted": true
+          }
+        ]
+      },
+      "total_num_results_per_section": {
+        "Search Suggestions": 0,
+        "Content": 9,
+        "Products": 9
+      },
+      "result_id": "4fcc7211-c5cc-46ed-b8cc-e1915939d2a7"
+    }
+  },
+  "slash-query": {
+    "status": 200,
+    "body": {
+      "request": {
+        "page_per_section": {},
+        "offset_per_section": {},
+        "num_section_results_per_page": {},
+        "term": "/",
+        "searchandized_items": {}
+      },
+      "sections": {
+        "Products": [],
+        "Content": [],
+        "Search Suggestions": []
+      },
+      "total_num_results_per_section": {
+        "Products": 0,
+        "Content": 0,
+        "Search Suggestions": 0
+      },
+      "result_id": "f55adf01-21f8-4047-85c3-6b5c25448d47"
+    }
+  },
+  "with-test-cells": {
+    "status": 200,
+    "body": {
+      "request": {
+        "page_per_section": {},
+        "offset_per_section": {},
+        "num_section_results_per_page": {},
+        "ef-foo": "bar",
+        "term": "item",
+        "searchandized_items": {
+          "10005": [
+            1,
+            {
+              "is_sponsored": true
+            }
+          ]
+        }
+      },
+      "sections": {
+        "Content": [
+          {
+            "matched_terms": [
+              "item"
+            ],
+            "labels": {},
+            "data": {
+              "id": "10001"
+            },
+            "value": "Item1",
+            "is_slotted": false
+          }
+        ],
+        "Search Suggestions": [],
+        "Products": [
+          {
+            "matched_terms": [
+              "item"
+            ],
+            "labels": {
+              "is_sponsored": true
+            },
+            "data": {
+              "id": "10005",
+              "url": "https://test.com/p/10005",
+              "facets": [
+                {
+                  "name": "Brand",
+                  "values": [
+                    "XYZ"
+                  ]
+                },
+                {
+                  "name": "Color",
+                  "values": [
+                    "red"
+                  ]
+                }
+              ],
+              "deactivated": false,
+              "groups": [
+                {
+                  "group_id": "BrandXY",
+                  "display_name": "BrandXY",
+                  "path": "/All/Brands/BrandX",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Brands",
+                      "display_name": "Brands"
+                    },
+                    {
+                      "id": "BrandX",
+                      "display_name": "BrandX"
+                    }
+                  ]
+                }
+              ]
+            },
+            "value": "Item5",
+            "is_slotted": true
+          }
+        ]
+      },
+      "total_num_results_per_section": {
+        "Content": 9,
+        "Search Suggestions": 0,
+        "Products": 9
+      },
+      "result_id": "0d124725-c038-4dec-b0c7-4a0afc18323a"
+    }
+  },
+  "with-segments": {
+    "status": 200,
+    "body": {
+      "request": {
+        "us": [
+          "foo",
+          "bar"
+        ],
+        "page_per_section": {},
+        "offset_per_section": {},
+        "num_section_results_per_page": {},
+        "term": "item",
+        "searchandized_items": {
+          "10005": [
+            1,
+            {
+              "is_sponsored": true
+            }
+          ]
+        }
+      },
+      "sections": {
+        "Search Suggestions": [],
+        "Content": [
+          {
+            "matched_terms": [
+              "item"
+            ],
+            "labels": {},
+            "data": {
+              "id": "10001"
+            },
+            "value": "Item1",
+            "is_slotted": false
+          }
+        ],
+        "Products": [
+          {
+            "matched_terms": [
+              "item"
+            ],
+            "labels": {
+              "is_sponsored": true
+            },
+            "data": {
+              "id": "10005",
+              "url": "https://test.com/p/10005",
+              "facets": [
+                {
+                  "name": "Brand",
+                  "values": [
+                    "XYZ"
+                  ]
+                },
+                {
+                  "name": "Color",
+                  "values": [
+                    "red"
+                  ]
+                }
+              ],
+              "deactivated": false,
+              "groups": [
+                {
+                  "group_id": "BrandXY",
+                  "display_name": "BrandXY",
+                  "path": "/All/Brands/BrandX",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Brands",
+                      "display_name": "Brands"
+                    },
+                    {
+                      "id": "BrandX",
+                      "display_name": "BrandX"
+                    }
+                  ]
+                }
+              ]
+            },
+            "value": "Item5",
+            "is_slotted": true
+          }
+        ]
+      },
+      "total_num_results_per_section": {
+        "Search Suggestions": 0,
+        "Content": 9,
+        "Products": 9
+      },
+      "result_id": "2350bef3-32ce-43dd-ba90-99d1d50bb36c"
+    }
+  },
+  "two-results": {
+    "status": 200,
+    "body": {
+      "request": {
+        "page_per_section": {},
+        "offset_per_section": {},
+        "num_section_results_per_page": {},
+        "num_results": 2,
+        "term": "item",
+        "searchandized_items": {
+          "10005": [
+            1,
+            {
+              "is_sponsored": true
+            }
+          ]
+        }
+      },
+      "sections": {
+        "Search Suggestions": [],
+        "Content": [
+          {
+            "matched_terms": [
+              "item"
+            ],
+            "labels": {},
+            "data": {
+              "id": "10001"
+            },
+            "value": "Item1",
+            "is_slotted": false
+          }
+        ],
+        "Products": [
+          {
+            "matched_terms": [
+              "item"
+            ],
+            "labels": {
+              "is_sponsored": true
+            },
+            "data": {
+              "id": "10005",
+              "url": "https://test.com/p/10005",
+              "facets": [
+                {
+                  "name": "Brand",
+                  "values": [
+                    "XYZ"
+                  ]
+                },
+                {
+                  "name": "Color",
+                  "values": [
+                    "red"
+                  ]
+                }
+              ],
+              "deactivated": false,
+              "groups": [
+                {
+                  "group_id": "BrandXY",
+                  "display_name": "BrandXY",
+                  "path": "/All/Brands/BrandX",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Brands",
+                      "display_name": "Brands"
+                    },
+                    {
+                      "id": "BrandX",
+                      "display_name": "BrandX"
+                    }
+                  ]
+                }
+              ]
+            },
+            "value": "Item5",
+            "is_slotted": true
+          }
+        ]
+      },
+      "total_num_results_per_section": {
+        "Search Suggestions": 0,
+        "Content": 9,
+        "Products": 9
+      },
+      "result_id": "5efeef5c-9f66-4b66-ab7c-74cd516d1d34"
+    }
+  },
+  "results-per-section": {
+    "status": 200,
+    "body": {
+      "request": {
+        "page_per_section": {},
+        "offset_per_section": {},
+        "num_section_results_per_page": {},
+        "num_results_Products": 1,
+        "num_results_Search Suggestions": 2,
+        "term": "item",
+        "searchandized_items": {
+          "10005": [
+            1,
+            {
+              "is_sponsored": true
+            }
+          ]
+        }
+      },
+      "sections": {
+        "Content": [],
+        "Search Suggestions": [],
+        "Products": [
+          {
+            "matched_terms": [
+              "item"
+            ],
+            "labels": {
+              "is_sponsored": true
+            },
+            "data": {
+              "id": "10005",
+              "url": "https://test.com/p/10005",
+              "facets": [
+                {
+                  "name": "Brand",
+                  "values": [
+                    "XYZ"
+                  ]
+                },
+                {
+                  "name": "Color",
+                  "values": [
+                    "red"
+                  ]
+                }
+              ],
+              "deactivated": false,
+              "groups": [
+                {
+                  "group_id": "BrandXY",
+                  "display_name": "BrandXY",
+                  "path": "/All/Brands/BrandX",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Brands",
+                      "display_name": "Brands"
+                    },
+                    {
+                      "id": "BrandX",
+                      "display_name": "BrandX"
+                    }
+                  ]
+                }
+              ]
+            },
+            "value": "Item5",
+            "is_slotted": true
+          }
+        ]
+      },
+      "total_num_results_per_section": {
+        "Content": 0,
+        "Search Suggestions": 0,
+        "Products": 9
+      },
+      "result_id": "2b3ee054-c9d7-4e9b-9031-8c65be6756c4"
+    }
+  },
+  "filtered-by-keywords": {
+    "status": 200,
+    "body": {
+      "request": {
+        "page_per_section": {},
+        "offset_per_section": {},
+        "num_section_results_per_page": {},
+        "filters": {
+          "keywords": [
+            "battery-powered"
+          ],
+          "Content": {
+            "keywords": [
+              "battery-powered"
+            ]
+          },
+          "Products": {
+            "keywords": [
+              "battery-powered"
+            ]
+          },
+          "Search Suggestions": {
+            "keywords": [
+              "battery-powered"
+            ]
+          }
+        },
+        "term": "item",
+        "filter_match_types": {
+          "keywords": "any"
+        },
+        "searchandized_items": {
+          "10005": [
+            1,
+            {
+              "is_sponsored": true
+            }
+          ]
+        }
+      },
+      "sections": {
+        "Search Suggestions": [],
+        "Content": [],
+        "Products": []
+      },
+      "total_num_results_per_section": {
+        "Search Suggestions": 0,
+        "Content": 0,
+        "Products": 0
+      },
+      "result_id": "c65764f3-2c78-4eb5-92ba-753114c87e85"
+    }
+  },
+  "filtered-by-group-and-brand": {
+    "status": 200,
+    "body": {
+      "request": {
+        "page_per_section": {},
+        "offset_per_section": {},
+        "num_section_results_per_page": {},
+        "filters": {
+          "group_id": [
+            "All"
+          ],
+          "Brand": [
+            "XYZ"
+          ],
+          "Content": {
+            "group_id": [
+              "All"
+            ],
+            "Brand": [
+              "XYZ"
+            ]
+          },
+          "Products": {
+            "group_id": [
+              "All"
+            ],
+            "Brand": [
+              "XYZ"
+            ]
+          },
+          "Search Suggestions": {
+            "group_id": [
+              "All"
+            ],
+            "Brand": [
+              "XYZ"
+            ]
+          }
+        },
+        "term": "item",
+        "filter_match_types": {
+          "group_id": "any",
+          "Brand": "any"
+        },
+        "searchandized_items": {
+          "10005": [
+            1,
+            {
+              "is_sponsored": true
+            }
+          ]
+        }
+      },
+      "sections": {
+        "Content": [],
+        "Products": [
+          {
+            "matched_terms": [
+              "item"
+            ],
+            "labels": {
+              "is_sponsored": true
+            },
+            "data": {
+              "id": "10005",
+              "url": "https://test.com/p/10005",
+              "facets": [
+                {
+                  "name": "Brand",
+                  "values": [
+                    "XYZ"
+                  ]
+                },
+                {
+                  "name": "Color",
+                  "values": [
+                    "red"
+                  ]
+                }
+              ],
+              "deactivated": false,
+              "groups": [
+                {
+                  "group_id": "BrandXY",
+                  "display_name": "BrandXY",
+                  "path": "/All/Brands/BrandX",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Brands",
+                      "display_name": "Brands"
+                    },
+                    {
+                      "id": "BrandX",
+                      "display_name": "BrandX"
+                    }
+                  ]
+                }
+              ]
+            },
+            "value": "Item5",
+            "is_slotted": true
+          }
+        ],
+        "Search Suggestions": []
+      },
+      "total_num_results_per_section": {
+        "Content": 0,
+        "Products": 4,
+        "Search Suggestions": 0
+      },
+      "result_id": "69297299-4418-4ed7-8b20-ec60df5f4cbc"
+    }
+  },
+  "filters-per-section": {
+    "status": 200,
+    "body": {
+      "request": {
+        "page_per_section": {},
+        "offset_per_section": {},
+        "num_section_results_per_page": {},
+        "filters": {
+          "Search Suggestions": {
+            "keywords": [
+              "battery-powered"
+            ]
+          }
+        },
+        "term": "item",
+        "filter_match_types": {
+          "keywords": "any"
+        },
+        "searchandized_items": {
+          "10005": [
+            1,
+            {
+              "is_sponsored": true
+            }
+          ]
+        }
+      },
+      "sections": {
+        "Search Suggestions": [],
+        "Content": [
+          {
+            "matched_terms": [
+              "item"
+            ],
+            "labels": {},
+            "data": {
+              "id": "10001"
+            },
+            "value": "Item1",
+            "is_slotted": false
+          }
+        ],
+        "Products": [
+          {
+            "matched_terms": [
+              "item"
+            ],
+            "labels": {
+              "is_sponsored": true
+            },
+            "data": {
+              "id": "10005",
+              "url": "https://test.com/p/10005",
+              "facets": [
+                {
+                  "name": "Brand",
+                  "values": [
+                    "XYZ"
+                  ]
+                },
+                {
+                  "name": "Color",
+                  "values": [
+                    "red"
+                  ]
+                }
+              ],
+              "deactivated": false,
+              "groups": [
+                {
+                  "group_id": "BrandXY",
+                  "display_name": "BrandXY",
+                  "path": "/All/Brands/BrandX",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Brands",
+                      "display_name": "Brands"
+                    },
+                    {
+                      "id": "BrandX",
+                      "display_name": "BrandX"
+                    }
+                  ]
+                }
+              ]
+            },
+            "value": "Item5",
+            "is_slotted": true
+          }
+        ]
+      },
+      "total_num_results_per_section": {
+        "Search Suggestions": 0,
+        "Content": 9,
+        "Products": 9
+      },
+      "result_id": "a3ee9de6-9232-4ef3-950b-66a2b0643bf7"
+    }
+  },
+  "multiple-filters-per-section": {
+    "status": 200,
+    "body": {
+      "request": {
+        "page_per_section": {},
+        "offset_per_section": {},
+        "num_section_results_per_page": {},
+        "filters": {
+          "Products": {
+            "group_id": [
+              "All",
+              "shop"
+            ]
+          },
+          "Search Suggestions": {
+            "keywords": [
+              "battery-powered",
+              "solar"
+            ]
+          }
+        },
+        "term": "item",
+        "filter_match_types": {
+          "keywords": "any",
+          "group_id": "any"
+        },
+        "searchandized_items": {
+          "10005": [
+            1,
+            {
+              "is_sponsored": true
+            }
+          ]
+        }
+      },
+      "sections": {
+        "Search Suggestions": [],
+        "Content": [
+          {
+            "matched_terms": [
+              "item"
+            ],
+            "labels": {},
+            "data": {
+              "id": "10001"
+            },
+            "value": "Item1",
+            "is_slotted": false
+          }
+        ],
+        "Products": [
+          {
+            "matched_terms": [
+              "item"
+            ],
+            "labels": {
+              "is_sponsored": true
+            },
+            "data": {
+              "id": "10005",
+              "url": "https://test.com/p/10005",
+              "facets": [
+                {
+                  "name": "Brand",
+                  "values": [
+                    "XYZ"
+                  ]
+                },
+                {
+                  "name": "Color",
+                  "values": [
+                    "red"
+                  ]
+                }
+              ],
+              "deactivated": false,
+              "groups": [
+                {
+                  "group_id": "BrandXY",
+                  "display_name": "BrandXY",
+                  "path": "/All/Brands/BrandX",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Brands",
+                      "display_name": "Brands"
+                    },
+                    {
+                      "id": "BrandX",
+                      "display_name": "BrandX"
+                    }
+                  ]
+                }
+              ]
+            },
+            "value": "Item5",
+            "is_slotted": true
+          }
+        ]
+      },
+      "total_num_results_per_section": {
+        "Search Suggestions": 0,
+        "Content": 9,
+        "Products": 9
+      },
+      "result_id": "cddf42e6-6ef7-4714-a6e3-e596e0cc0a02"
+    }
+  },
+  "with-hidden-fields": {
+    "status": 200,
+    "body": {
+      "request": {
+        "fmt_options": {
+          "show_hidden_fields": false,
+          "hidden_fields": [
+            "testField",
+            "hiddenField2"
+          ],
+          "show_protected_facets": false
+        },
+        "page_per_section": {},
+        "offset_per_section": {},
+        "num_section_results_per_page": {},
+        "term": "item",
+        "searchandized_items": {
+          "10005": [
+            1,
+            {
+              "is_sponsored": true
+            }
+          ]
+        }
+      },
+      "sections": {
+        "Content": [
+          {
+            "matched_terms": [
+              "item"
+            ],
+            "labels": {},
+            "data": {
+              "id": "10001"
+            },
+            "value": "Item1",
+            "is_slotted": false
+          }
+        ],
+        "Search Suggestions": [],
+        "Products": [
+          {
+            "matched_terms": [
+              "item"
+            ],
+            "labels": {
+              "is_sponsored": true
+            },
+            "data": {
+              "id": "10005",
+              "url": "https://test.com/p/10005",
+              "facets": [
+                {
+                  "name": "Brand",
+                  "values": [
+                    "XYZ"
+                  ]
+                },
+                {
+                  "name": "Color",
+                  "values": [
+                    "red"
+                  ]
+                }
+              ],
+              "deactivated": false,
+              "testField": "hiddenFieldValue",
+              "groups": [
+                {
+                  "group_id": "BrandXY",
+                  "display_name": "BrandXY",
+                  "path": "/All/Brands/BrandX",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Brands",
+                      "display_name": "Brands"
+                    },
+                    {
+                      "id": "BrandX",
+                      "display_name": "BrandX"
+                    }
+                  ]
+                }
+              ]
+            },
+            "value": "Item5",
+            "is_slotted": true
+          }
+        ]
+      },
+      "total_num_results_per_section": {
+        "Content": 9,
+        "Search Suggestions": 0,
+        "Products": 9
+      },
+      "result_id": "7ccd925a-ee5f-4911-8782-f774327256a7"
+    }
+  },
+  "special-characters-in-query": {
+    "status": 200,
+    "body": {
+      "request": {
+        "page_per_section": {},
+        "offset_per_section": {},
+        "num_section_results_per_page": {},
+        "term": "apple +[]&",
+        "searchandized_items": {}
+      },
+      "sections": {
+        "Content": [],
+        "Products": [],
+        "Search Suggestions": []
+      },
+      "total_num_results_per_section": {
+        "Content": 0,
+        "Products": 0,
+        "Search Suggestions": 0
+      },
+      "result_id": "e8d6eada-04db-4bcb-ac4c-99152aad7d09"
+    }
+  },
+  "special-characters-in-filters": {
+    "status": 200,
+    "body": {
+      "request": {
+        "page_per_section": {},
+        "offset_per_section": {},
+        "num_section_results_per_page": {},
+        "filters": {
+          "keywords": [
+            "battery-powered +[]&"
+          ],
+          "Products": {
+            "keywords": [
+              "battery-powered +[]&"
+            ]
+          },
+          "Search Suggestions": {
+            "keywords": [
+              "battery-powered +[]&"
+            ]
+          },
+          "Content": {
+            "keywords": [
+              "battery-powered +[]&"
+            ]
+          }
+        },
+        "term": "item",
+        "filter_match_types": {
+          "keywords": "any"
+        },
+        "searchandized_items": {
+          "10005": [
+            1,
+            {
+              "is_sponsored": true
+            }
+          ]
+        }
+      },
+      "sections": {
+        "Search Suggestions": [],
+        "Content": [],
+        "Products": []
+      },
+      "total_num_results_per_section": {
+        "Search Suggestions": 0,
+        "Content": 0,
+        "Products": 0
+      },
+      "result_id": "67660c69-0b5b-4ec9-a58c-ca419c2da209"
+    }
+  },
+  "with-pre-filter-expression": {
+    "status": 200,
+    "body": {
+      "request": {
+        "page_per_section": {},
+        "offset_per_section": {},
+        "num_section_results_per_page": {},
+        "pre_filter_expression": {
+          "or": [
+            {
+              "and": [
+                {
+                  "name": "group_id",
+                  "value": "BrandXY"
+                },
+                {
+                  "name": "Color",
+                  "value": "red"
+                }
+              ]
+            },
+            {
+              "and": [
+                {
+                  "name": "Color",
+                  "value": "blue"
+                },
+                {
+                  "name": "Brand",
+                  "value": "XYZ"
+                }
+              ]
+            }
+          ]
+        },
+        "term": "item",
+        "searchandized_items": {
+          "10005": [
+            1,
+            {
+              "is_sponsored": true
+            }
+          ]
+        }
+      },
+      "sections": {
+        "Search Suggestions": [],
+        "Content": [],
+        "Products": [
+          {
+            "matched_terms": [
+              "item"
+            ],
+            "labels": {
+              "is_sponsored": true
+            },
+            "data": {
+              "id": "10005",
+              "url": "https://test.com/p/10005",
+              "facets": [
+                {
+                  "name": "Brand",
+                  "values": [
+                    "XYZ"
+                  ]
+                },
+                {
+                  "name": "Color",
+                  "values": [
+                    "red"
+                  ]
+                }
+              ],
+              "deactivated": false,
+              "groups": [
+                {
+                  "group_id": "BrandXY",
+                  "display_name": "BrandXY",
+                  "path": "/All/Brands/BrandX",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Brands",
+                      "display_name": "Brands"
+                    },
+                    {
+                      "id": "BrandX",
+                      "display_name": "BrandX"
+                    }
+                  ]
+                }
+              ]
+            },
+            "value": "Item5",
+            "is_slotted": true
+          },
+          {
+            "matched_terms": [
+              "item"
+            ],
+            "labels": {},
+            "data": {
+              "id": "10008",
+              "url": "https://test.com/p/10008",
+              "facets": [
+                {
+                  "name": "Brand",
+                  "values": [
+                    "XYZ"
+                  ]
+                },
+                {
+                  "name": "Color",
+                  "values": [
+                    "blue"
+                  ]
+                }
+              ],
+              "deactivated": false,
+              "groups": [
+                {
+                  "group_id": "BrandA",
+                  "display_name": "BrandA",
+                  "path": "/All/Brands",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Brands",
+                      "display_name": "Brands"
+                    }
+                  ]
+                },
+                {
+                  "group_id": "StyleA",
+                  "display_name": "StyleA",
+                  "path": "/All/Styles",
+                  "path_list": [
+                    {
+                      "id": "All",
+                      "display_name": "All"
+                    },
+                    {
+                      "id": "Styles",
+                      "display_name": "Styles"
+                    }
+                  ]
+                }
+              ]
+            },
+            "value": "Item8",
+            "is_slotted": false
+          }
+        ]
+      },
+      "total_num_results_per_section": {
+        "Search Suggestions": 0,
+        "Content": 0,
+        "Products": 2
+      },
+      "result_id": "2ce35ff8-9019-4aef-9802-ea8d9821d917"
+    }
+  },
+  "with-qs-param": {
+    "status": 200,
+    "body": {
+      "request": {
+        "us": [
+          "dogs"
+        ],
+        "page_per_section": {},
+        "offset_per_section": {},
+        "num_section_results_per_page": {},
+        "term": "jacket",
+        "searchandized_items": {}
+      },
+      "sections": {
+        "Products": [
+          {
+            "matched_terms": [
+              "jacket"
+            ],
+            "labels": {},
+            "data": {
+              "id": "luistrenker-jacket-K245511299-cream",
+              "url": "https://demo.commercetools.com/en/luistrenker-jacket-K245511299-cream.html",
+              "deactivated": false,
+              "variation_id": "M0E20000000E2ZJ"
+            },
+            "value": "Jacket “Rivka“ Luis Trenker cream",
+            "is_slotted": false,
+            "variations": [
+              {
+                "data": {
+                  "deactivated": false,
+                  "variation_id": "M0E20000000E2ZJ"
+                },
+                "value": "Jacket “Rivka“ Luis Trenker cream"
+              }
+            ]
+          }
+        ],
+        "Content": [
+          {
+            "matched_terms": [
+              "jacket"
+            ],
+            "labels": {},
+            "data": {
+              "id": "luistrenker-jacket-K245511299-cream"
+            },
+            "value": "Jacket “Rivka“ Luis Trenker cream",
+            "is_slotted": false
+          }
+        ],
+        "Search Suggestions": [
+          {
+            "matched_terms": [
+              "jacket"
+            ],
+            "labels": {},
+            "data": {
+              "id": "jacket",
+              "groups": [
+                {
+                  "group_id": "431",
+                  "display_name": null,
+                  "path": "/",
+                  "path_list": []
+                },
+                {
+                  "group_id": "487",
+                  "display_name": null,
+                  "path": "/",
+                  "path_list": []
+                },
+                {
+                  "group_id": "86",
+                  "display_name": null,
+                  "path": "/",
+                  "path_list": []
+                }
+              ]
+            },
+            "value": "jacket",
+            "is_slotted": false
+          }
+        ]
+      },
+      "total_num_results_per_section": {
+        "Products": 1,
+        "Content": 1,
+        "Search Suggestions": 9
+      },
+      "result_id": "dcb22a05-016b-4eb1-b17e-153169de916f"
+    }
+  },
+  "with-variations-map": {
+    "status": 200,
+    "body": {
+      "request": {
+        "variations_map": {
+          "group_by": [
+            {
+              "name": "variation",
+              "field": "data.variation_id"
+            }
+          ],
+          "values": {
+            "size": {
+              "aggregation": "all",
+              "field": "data.facets.size"
+            }
+          },
+          "dtype": "array"
+        },
+        "page_per_section": {},
+        "offset_per_section": {},
+        "num_section_results_per_page": {},
+        "term": "jacket",
+        "searchandized_items": {}
+      },
+      "sections": {
+        "Content": [
+          {
+            "matched_terms": [
+              "jacket"
+            ],
+            "labels": {},
+            "data": {
+              "id": "luistrenker-jacket-K245511299-cream"
+            },
+            "value": "Jacket “Rivka“ Luis Trenker cream",
+            "is_slotted": false
+          }
+        ],
+        "Products": [
+          {
+            "matched_terms": [
+              "jacket"
+            ],
+            "labels": {},
+            "data": {
+              "id": "luistrenker-jacket-K245511299-cream",
+              "url": "https://demo.commercetools.com/en/luistrenker-jacket-K245511299-cream.html",
+              "deactivated": false,
+              "variation_id": "M0E20000000E2ZJ"
+            },
+            "value": "Jacket “Rivka“ Luis Trenker cream",
+            "is_slotted": false,
+            "variations_map": [
+              {
+                "variation": "M0E20000000E2ZJ",
+                "size": [
+                  null
+                ]
+              }
+            ]
+          }
+        ],
+        "Search Suggestions": [
+          {
+            "matched_terms": [
+              "jacket"
+            ],
+            "labels": {},
+            "data": {
+              "id": "jacket",
+              "groups": [
+                {
+                  "group_id": "431",
+                  "display_name": null,
+                  "path": "/",
+                  "path_list": []
+                },
+                {
+                  "group_id": "487",
+                  "display_name": null,
+                  "path": "/",
+                  "path_list": []
+                },
+                {
+                  "group_id": "86",
+                  "display_name": null,
+                  "path": "/",
+                  "path_list": []
+                }
+              ]
+            },
+            "value": "jacket",
+            "is_slotted": false
+          }
+        ]
+      },
+      "total_num_results_per_section": {
+        "Content": 1,
+        "Products": 1,
+        "Search Suggestions": 9
+      },
+      "result_id": "1a7c912f-6cee-4a5c-b55c-6aff60d4a698"
+    }
+  },
+  "invalid-parameters": {
+    "status": 400,
+    "body": {
+      "message": "num_results: Input should be a valid integer, unable to parse string as an integer"
+    }
+  },
+  "invalid-api-key": {
+    "status": 400,
+    "body": {
+      "message": "You have supplied an invalid `key` or `autocomplete_key`. You can find your key at app.constructor.io/dashboard/accounts/api_integration."
+    }
+  }
+}
