@@ -43,7 +43,7 @@ class ConstructorIO {
    * @param {string} [parameters.quizzesServiceUrl='https://quizzes.cnstrc.com'] - Quizzes API URL endpoint
    * @param {string} [parameters.agentServiceUrl='https://agent.cnstrc.com'] - AI Shopping Agent API URL endpoint
    * @param {string} [parameters.mediaServiceUrl='https://media-cnstrc.com'] - Media API URL endpoint
-   * @param {string} [parameters.assistantServiceUrl='https://assistant.cnstrc.com'] - AI Shopping Assistant API URL endpoint @deprecated This parameter is deprecated and will be removed in a future version. Use parameters.agentServiceUrl instead.
+   * @param {string} [parameters.assistantServiceUrl='https://assistant.cnstrc.com'] - AI Shopping Assistant API URL endpoint. This parameter is deprecated and will be removed in a future version. Use parameters.agentServiceUrl instead.
    * @param {array} [parameters.segments] - User segments
    * @param {object} [parameters.testCells] - User test cells
    * @param {string} [parameters.clientId] - Client ID, defaults to value supplied by 'constructorio-id' module
@@ -70,7 +70,7 @@ class ConstructorIO {
    * @property {object} quizzes - Interface to {@link module:quizzes}
    * @property {object} agent - Interface to {@link module:agent}
    * @property {object} agent.pia - Interface to {@link module:pia}
-   * @property {object} assistant - Interface to {@link module:assistant} @deprecated This property is deprecated and will be removed in a future version. Use the agent property instead.
+   * @property {object} assistant - Interface to {@link module:assistant} This property is deprecated and will be removed in a future version. Use the agent module instead.
    * @returns {class}
    */
   constructor(options = {}) {

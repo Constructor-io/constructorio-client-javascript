@@ -56,8 +56,6 @@ export interface IAgentInsightsBaseParameters<TPageContext> {
   numResultsPerEvent?: number;
   qsParam?: Record<string, any>;
   fmtOptions?: FmtOptions;
-  features?: Record<string, boolean>;
-  featureVariants?: Record<string, string>;
 }
 
 /** Parameters for agent.getChatInsights */

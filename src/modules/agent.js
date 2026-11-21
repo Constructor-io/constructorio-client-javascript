@@ -239,6 +239,20 @@ class Agent {
     return readableStream;
   }
 
+  static InsightsEventTypes = {
+    START: 'start', // Event always emitted at the beginning of the server-sent event stream.
+    MESSAGE: 'message', // Event containing text produced by the agent: an answer, a pod title, or an explanation of the results.
+    ITEM_RESULTS: 'item_results', // Event containing a set of product results together with the Constructor request that produced them.
+    ARTICLE_REFERENCE: 'article_reference', // Event containing a relevant article from the agent's knowledge base. Emitted once per article.
+    FOLLOW_UP_REFINEMENT: 'follow_up_refinement', // Event containing a suggested refinement or follow-up action the shopper can take next.
+    IMAGE_META: 'image_meta', // Event containing an image the agent referenced while answering, such as a size chart or a dimensions diagram.
+    RECIPE_INFO: 'recipe_info', // Event containing a recipe the agent assembled, with its cooking times, serving size and ingredients. Emitted only by domains configured for recipes.
+    RECIPE_INSTRUCTIONS: 'recipe_instructions', // Event containing the preparation steps for the recipe described by the preceding `recipe_info`. Emitted only by domains configured for recipes.
+    PING: 'ping', // Event sent periodically to the caller to keep the connection alive and prevent timeouts.
+    SERVER_ERROR: 'server_error', // Event indicating that an internal server error occurred after the response headers were already sent.
+    END: 'end', // Event always closing the stream of server-sent events.
+  };
+
   /**
    * Retrieve conversational agent replies
    *
@@ -269,8 +283,6 @@ class Agent {
    * @param {object} [parameters.fmtOptions] - Options to format different aspects of the response
    * @param {object} [parameters.qsParam] - Extra parameters forwarded to the request.
    *  Must not override keys managed by pageContext.filters
-   * @param {object} [parameters.features] - Feature toggles keyed by feature name
-   * @param {object} [parameters.featureVariants] - Feature variants keyed by feature name
    * @param {object} [options] - Additional options for the response
    * @param {boolean} [options.stream=true] - Stream the reply as events. Set to false for a single JSON response
    * @param {object} [networkParameters] - Parameters relevant to the network request
