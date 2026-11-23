@@ -256,9 +256,12 @@ const utils = {
     const networkParametersTimeout = networkParameters && networkParameters.timeout;
     const timeout = networkParametersTimeout || optionsTimeout;
 
+    // Returns the timeout ID (or undefined when no timeout is set) so callers can clear it explicitly
     if (typeof timeout === 'number' && controller) {
-      setTimeout(() => controller.abort(), timeout);
+      return setTimeout(() => controller.abort(), timeout);
     }
+
+    return undefined;
   },
   stringify: (object, prefix, objectType) => {
     if (!object) {

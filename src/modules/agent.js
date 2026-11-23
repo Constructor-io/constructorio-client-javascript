@@ -1,4 +1,11 @@
-const { cleanParams, trimNonBreakingSpaces, encodeURIComponentRFC3986, stringify, isNil } = require('../utils/helpers');
+const {
+  cleanParams,
+  trimNonBreakingSpaces,
+  encodeURIComponentRFC3986,
+  stringify,
+  isNil,
+  applyNetworkTimeout,
+} = require('../utils/helpers');
 
 // Create URL from supplied intent (term) and parameters
 // eslint-disable-next-line complexity
@@ -443,6 +450,11 @@ class Agent {
     const { fetch } = this.options;
     const stream = !(options && options.stream === false);
     const requestUrl = createInsightsUrl('/v1/agent_insights/chat', parameters, this.options);
+    const controller = typeof AbortController === 'function' ? new AbortController() : null;
+
+    // JSON: limits the whole request.
+    // Stream: limits the time until the first event arrives
+    const timeoutId = applyNetworkTimeout(this.options, networkParameters, controller);
 
     return fetch(requestUrl, {
       method: 'POST',
@@ -451,14 +463,23 @@ class Agent {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(createInsightsBody(parameters)),
+      signal: controller && controller.signal,
     }).then((response) => {
       if (stream) {
-        // TODO (Step 6): return the event stream
+        // TODO (Step 6): return the event stream, which clears the timeout on the first event
         throw new Error('getChatInsights streaming is not implemented');
       }
 
       // TODO (Step 4): reject non-2xx responses with a mapped error
-      return response.json();
+      return response.json().then((json) => {
+        clearTimeout(timeoutId);
+
+        return json;
+      });
+    }).catch((error) => {
+      clearTimeout(timeoutId);
+
+      throw error;
     });
   }
 }
