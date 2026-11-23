@@ -5,13 +5,27 @@ const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 const EventSource = require('eventsource');
-const qs = require('qs');
 const { createAgentUrl, setupEventListeners } = require('../../../src/modules/agent');
 const Agent = require('../../../src/modules/agent');
 let ConstructorIO = require('../../../test/constructorio'); // eslint-disable-line import/extensions
 const { encodeURIComponentRFC3986 } = require('../../../src/utils/helpers');
 const jsdom = require('../utils/jsdom-global');
 const helpers = require('../../mocha.helpers');
+const insightsMocks = require('../../mocks/agent-insights.json');
+
+const {
+  stubSseFetch,
+  stubJsonFetch,
+  stubTextFetch,
+  stubHangingFetch,
+  getRequestInit,
+  getRequestUrl,
+  getRequestHeader,
+  captureRejection,
+  readAll,
+  readUntilError,
+  parseUrlParams,
+} = helpers;
 
 const bundled = process.env.BUNDLED === 'true';
 const bundledDescriptionSuffix = bundled ? ' - Bundled' : '';
@@ -35,219 +49,17 @@ const defaultParameters = {
   domain: 'agent',
 };
 
-/* ---------- Agent Insights - Constants & Helpers ---------- */
+/* ---------- Agent Insights - Common Constants & Helpers ---------- */
+const insightsExampleResponse = insightsMocks['json-response'].body;
+const allInsightsEvents = insightsMocks['all-stream-events'].events;
 
-const validChatParameters = {
-  shopperInput: 'I want a waterproof jacket',
-  domain: 'searchbar',
-  pageContext: { pageType: 'home' },
-};
-
-const insightsExampleResponse = {
-  result_id: 'r-1',
-  thread_id: '6f1c2e9a-1b7d-4c8e-9f3a-2d5e6b7c8a90',
-  status: 'complete',
-  message: 'Here are some waterproof jackets you might like.',
-  item_results: [
-    {
-      result_id: 'r-1',
-      title: 'Waterproof jackets',
-      request: { type: 'search', params: { query: 'waterproof jacket' } },
-      response: { results: [{ value: 'Rain Shell', data: { id: 'i1' } }] },
-    },
-  ],
-};
-
-// One event of every type in Agent.InsightsEventTypes, in a realistic order, ending with `end`
-const allInsightsEvents = [
-  { event: 'start', data: { event: 'start', result_id: 'r-1', request: { mode: 'chat', page_context: { page_type: 'home' } } } },
-  { event: 'message', data: { event: 'message', result_id: 'r-1', text: 'Here are some jackets' } },
-  { event: 'item_results', data: { event: 'item_results', result_id: 'r-1', response: { results: [{ value: 'Rain Shell', data: { id: 'i1' } }] } } },
-  { event: 'article_reference', data: { event: 'article_reference', result_id: 'r-1', source: 'https://example.com/a', title: 'Rain gear' } },
-  { event: 'follow_up_refinement', data: { event: 'follow_up_refinement', result_id: 'r-1', question: 'Which color?', options: ['White'] } },
-  { event: 'image_meta', data: { event: 'image_meta', result_id: 'r-1', item_id: 'i1', image_url: 'https://example.com/i1.jpg' } },
-  { event: 'recipe_info', data: { event: 'recipe_info', result_id: 'r-1', recipe_title: 'Pancakes', prep_time_minutes: 10, cook_time_minutes: 15, ingredients: ['flour'] } },
-  { event: 'recipe_instructions', data: { event: 'recipe_instructions', result_id: 'r-1', steps: ['Mix', 'Cook'] } },
-  { event: 'ping', data: { event: 'ping' } },
-  { event: 'server_error', data: { event: 'server_error', result_id: 'r-1', status_code: 500, message: 'Internal error' } },
-  { event: 'end', data: { event: 'end', result_id: 'r-1' } },
-];
+/* -- Mock SSE event helpers -- */
 
 const findEvent = (name) => allInsightsEvents.find((e) => e.event === name);
-
-const sseFrame = (event, data) => `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
-const frameOf = (name) => sseFrame(name, findEvent(name).data);
-
-const wait = (ms) => new Promise((resolve) => { setTimeout(resolve, ms); });
-
-/**
- * Builds an SSE response body. Each step is one of:
- *  - string: a chunk of SSE text to emit
- *  - { delay: ms }: pause before the next step
- *  - { error: Error }: error the body (simulates a dropped connection)
- * After the last step the body closes, or stays open when `hang` is true.
- * Like a real fetch body, it errors with `signal.reason` when the request is aborted.
- */
-function createSseBody(steps, { signal, hang = false } = {}) {
-  const encoder = new TextEncoder();
-  let index = 0;
-
-  return new ReadableStream({
-    start(controller) {
-      if (signal) {
-        const onAbort = () => {
-          try { controller.error(signal.reason); } catch (e) { /* already closed */ }
-        };
-
-        if (signal.aborted) {
-          onAbort();
-        } else {
-          signal.addEventListener('abort', onAbort, { once: true });
-        }
-      }
-    },
-    async pull(controller) {
-      if (index >= steps.length) {
-        if (hang) {
-          return new Promise(() => {});
-        }
-
-        controller.close();
-        return undefined;
-      }
-
-      const step = steps[index];
-      index += 1;
-
-      if (typeof step === 'string') {
-        controller.enqueue(encoder.encode(step));
-      } else if (step.delay) {
-        await wait(step.delay);
-      } else if (step.error) {
-        controller.error(step.error);
-      }
-
-      return undefined;
-    },
-  });
-}
-
-const sseFetch = (steps, { hang = false } = {}) => sinon.spy((url, init = {}) => Promise.resolve(
-  new Response(createSseBody(steps, { signal: init.signal, hang }), {
-    status: 200,
-    headers: { 'Content-Type': 'text/event-stream' },
-  }),
-));
-
-const jsonFetch = (body, { status = 200, statusText = 'OK' } = {}) => sinon.spy(() => Promise.resolve(
-  new Response(JSON.stringify(body), {
-    status,
-    statusText,
-    headers: { 'Content-Type': 'application/json' },
-  }),
-));
-
-const textFetch = (text, { status, statusText, contentType = 'text/html' }) => sinon.spy(() => Promise.resolve(
-  new Response(text, { status, statusText, headers: { 'Content-Type': contentType } }),
-));
-
-// Never resolves on its own; rejects with the abort reason when the request signal aborts, like a real fetch
-const hangingFetch = () => sinon.spy((url, init = {}) => new Promise((resolve, reject) => {
-  if (!init.signal) {
-    reject(new Error('fetch was called without an AbortSignal'));
-    return;
-  }
-
-  init.signal.addEventListener('abort', () => reject(init.signal.reason), { once: true });
-}));
-
-const getRequestInit = (fetchSpy) => fetchSpy.lastCall.args[1] || {};
-const getRequestUrl = (fetchSpy) => fetchSpy.lastCall.args[0];
-const getRequestHeader = (fetchSpy, name) => new Headers(getRequestInit(fetchSpy).headers).get(name);
-
-// Resolves with the rejection reason; fails the test if the promise resolves instead
-const captureRejection = (promise) => promise.then(
-  () => { throw new Error('Expected the promise to reject'); },
-  (error) => error,
-);
-
-async function readAll(stream) {
-  const reader = stream.getReader();
-  const events = [];
-
-  for (;;) {
-    // eslint-disable-next-line no-await-in-loop
-    const { value, done } = await reader.read();
-
-    if (done) {
-      return events;
-    }
-
-    events.push(value);
-  }
-}
-
-// Reads until the stream errors; fails the test if the stream closes cleanly instead
-async function readUntilError(stream) {
-  const reader = stream.getReader();
-  const events = [];
-
-  for (;;) {
-    let result;
-
-    try {
-      // eslint-disable-next-line no-await-in-loop
-      result = await reader.read();
-    } catch (error) {
-      return { events, error };
-    }
-
-    if (result.done) {
-      throw new Error('Expected the stream to error, but it closed cleanly');
-    }
-
-    events.push(result.value);
-  }
-}
+const encodeSseEvent = (event, data) => `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
+const frameOf = (name) => encodeSseEvent(name, findEvent(name).data);
 
 /* ---------- Agent Insights - Shared Test Suite ---------- */
-
-// Invalid values used to generate tests title
-const STRING_INVALIDS = [['missing', undefined], ['an empty string', ''], ['null', null], ['not a string', 123]];
-const OBJECT_INVALIDS = [['missing', undefined], ['null', null], ['a string', 'home'], ['an array', [{ pageType: 'home' }]]];
-const PAGE_TYPE_INVALIDS = [['missing', undefined], ['an empty string', ''], ['not a string', 1]];
-
-/**
- * One entry per Agent Insights method. Each entry runs the shared suites below.
- * Add an entry when a method is implemented, and put behavior unique to it in its own method-specific describe.
- *
- * - name: method on constructorio.agent
- * - path: endpoint path
- * - validParameters: smallest valid input
- * - expectedBody: request body expected for validParameters
- * - requiredFields: client-checked required fields; the first one is reported when parameters are not an object.
- *   The expected message is `parameters.<path> is a required parameter of type <type>`
- * - supportsRequestContext: whether the method accepts requestContext
- */
-const insightsMethods = [
-  {
-    name: 'getChatInsights',
-    path: '/v1/agent_insights/chat',
-    validParameters: validChatParameters,
-    expectedBody: {
-      shopper_input: validChatParameters.shopperInput,
-      page_context: { page_type: 'home' },
-      parameters: { domain: validChatParameters.domain },
-    },
-    requiredFields: [
-      { path: 'domain', type: 'string', invalidValues: STRING_INVALIDS },
-      { path: 'shopperInput', type: 'string', invalidValues: STRING_INVALIDS },
-      { path: 'pageContext', type: 'object', invalidValues: OBJECT_INVALIDS },
-      { path: 'pageContext.pageType', type: 'string', invalidValues: PAGE_TYPE_INVALIDS },
-    ],
-    supportsRequestContext: true,
-  },
-];
 
 const requiredFieldMessage = ({ path, type }) => `parameters.${path} is a required parameter of type ${type}`;
 
@@ -282,7 +94,7 @@ function describeRequiredFieldValidation(method) {
       ['undefined', undefined],
       ['null', null],
       ['a string', 'I want a jacket'],
-      ['an array', [method.validParameters]],
+      ['an array', [method.testParameters]],
     ].forEach(([label, value]) => {
       it(`should reject with the ${firstField.path} message when parameters are ${label}`, () => {
         const agent = createInsightsAgent(sinon.spy());
@@ -296,7 +108,7 @@ function describeRequiredFieldValidation(method) {
         it(`should reject when ${field.path} is ${label}`, () => {
           const agent = createInsightsAgent(sinon.spy());
 
-          return expect(call(agent, setAtPath(method.validParameters, field.path, value)))
+          return expect(call(agent, setAtPath(method.testParameters, field.path, value)))
             .to.eventually.be.rejectedWith(requiredFieldMessage(field));
         });
       });
@@ -307,7 +119,7 @@ function describeRequiredFieldValidation(method) {
       const agent = createInsightsAgent(fetchSpy);
 
       await Promise.all(method.requiredFields.map((field) => captureRejection(
-        call(agent, setAtPath(method.validParameters, field.path, field.invalidValues[0][1])),
+        call(agent, setAtPath(method.testParameters, field.path, field.invalidValues[0][1])),
       )));
 
       expect(fetchSpy).not.to.have.been.called;
@@ -324,30 +136,30 @@ function describeRequiredFieldValidation(method) {
     });
 
     it('should accept a whitespace-only shopperInput', async () => {
-      const fetchSpy = jsonFetch(insightsExampleResponse);
+      const fetchSpy = stubJsonFetch(insightsExampleResponse);
       const agent = createInsightsAgent(fetchSpy);
 
-      await call(agent, { ...method.validParameters, shopperInput: ' ' }, { stream: false });
+      await call(agent, { ...method.testParameters, shopperInput: ' ' }, { stream: false });
 
       expect(fetchSpy).to.have.been.calledOnce;
       expect(helpers.extractBodyParamsFromFetch(fetchSpy)).to.have.property('shopper_input', ' ');
     });
 
     it('should not check pageType against the enum', async () => {
-      const fetchSpy = jsonFetch(insightsExampleResponse);
+      const fetchSpy = stubJsonFetch(insightsExampleResponse);
       const agent = createInsightsAgent(fetchSpy);
 
-      await call(agent, setAtPath(method.validParameters, 'pageContext.pageType', 'search'), { stream: false });
+      await call(agent, setAtPath(method.testParameters, 'pageContext.pageType', 'search'), { stream: false });
 
       expect(fetchSpy).to.have.been.calledOnce;
       expect(helpers.extractBodyParamsFromFetch(fetchSpy).page_context).to.have.property('page_type', 'search');
     });
 
     it('should default to streaming when options are omitted', async () => {
-      const fetchSpy = sseFetch([frameOf('end')]);
+      const fetchSpy = stubSseFetch([frameOf('end')]);
       const agent = createInsightsAgent(fetchSpy);
 
-      const stream = await call(agent, method.validParameters);
+      const stream = await call(agent, method.testParameters);
 
       expect(stream).to.be.an.instanceOf(ReadableStream);
       expect(getRequestHeader(fetchSpy, 'Accept')).to.equal('text/event-stream');
@@ -357,8 +169,8 @@ function describeRequiredFieldValidation(method) {
 
 function describeRequest(method) {
   const call = (agent, ...args) => agent[method.name](...args);
-  const sendJsonRequest = async (parameters = method.validParameters, clientOptions = {}) => {
-    const fetchSpy = jsonFetch(insightsExampleResponse);
+  const sendJsonRequest = async (parameters = method.testParameters, clientOptions = {}) => {
+    const fetchSpy = stubJsonFetch(insightsExampleResponse);
     const agent = createInsightsAgent(fetchSpy, clientOptions);
 
     await call(agent, parameters, { stream: false });
@@ -368,10 +180,10 @@ function describeRequest(method) {
 
   describe('Request', () => {
     it('should send a POST with the client identity params and the minimal body', async () => {
-      const fetchSpy = jsonFetch(insightsExampleResponse);
+      const fetchSpy = stubJsonFetch(insightsExampleResponse);
       const agent = createInsightsAgent(fetchSpy, { agentServiceUrl: undefined }); // falls back to the default URL
 
-      await call(agent, method.validParameters, { stream: false });
+      await call(agent, method.testParameters, { stream: false });
 
       const requestedUrlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
 
@@ -398,16 +210,16 @@ function describeRequest(method) {
     });
 
     it('should send the request to a custom agentServiceUrl', async () => {
-      const fetchSpy = await sendJsonRequest(method.validParameters, { agentServiceUrl: 'https://agent.example.com' });
+      const fetchSpy = await sendJsonRequest(method.testParameters, { agentServiceUrl: 'https://agent.example.com' });
 
       expect(getRequestUrl(fetchSpy).split('?')[0]).to.equal(`https://agent.example.com${method.path}`);
     });
 
     it('should send Accept: text/event-stream by default', async () => {
-      const fetchSpy = sseFetch([frameOf('end')]);
+      const fetchSpy = stubSseFetch([frameOf('end')]);
       const agent = createInsightsAgent(fetchSpy);
 
-      await call(agent, method.validParameters, {});
+      await call(agent, method.testParameters, {});
 
       expect(getRequestHeader(fetchSpy, 'Accept')).to.equal('text/event-stream');
     });
@@ -415,7 +227,7 @@ function describeRequest(method) {
     it('should send optional parameters and client options as query params', async () => {
       const qsParam = { sort_by: 'price', sort_order: 'ascending' };
       const fetchSpy = await sendJsonRequest({
-        ...method.validParameters,
+        ...method.testParameters,
         threadId: insightsExampleResponse.thread_id,
         numResultEvents: 3,
         numResultsPerEvent: 5,
@@ -445,7 +257,7 @@ function describeRequest(method) {
         { name: 'price', range: [10, 50] },
       ];
       const parameters = {
-        ...method.validParameters,
+        ...method.testParameters,
         pageContext: { pageType: 'pdp', itemId: 'i1', variationId: 'v1', searchTerm: 'jacket', browseFilter, filters },
         ...(method.supportsRequestContext && { requestContext: { prices: examplePrices } }),
       };
@@ -482,17 +294,17 @@ function describeJsonResponse(method) {
 
   describe('Response (JSON)', () => {
     it('should resolve with the parsed JSON response', async () => {
-      const agent = createInsightsAgent(jsonFetch(insightsExampleResponse));
+      const agent = createInsightsAgent(stubJsonFetch(insightsExampleResponse));
 
-      const response = await call(agent, method.validParameters, { stream: false });
+      const response = await call(agent, method.testParameters, { stream: false });
 
       expect(response).to.deep.equal(insightsExampleResponse);
     });
 
     it('should resolve when status is partial', async () => {
-      const agent = createInsightsAgent(jsonFetch({ ...insightsExampleResponse, status: 'partial' }));
+      const agent = createInsightsAgent(stubJsonFetch({ ...insightsExampleResponse, status: 'partial' }));
 
-      const response = await call(agent, method.validParameters, { stream: false });
+      const response = await call(agent, method.testParameters, { stream: false });
 
       expect(response).to.have.property('status', 'partial');
     });
@@ -502,16 +314,16 @@ function describeJsonResponse(method) {
 function describeStreamResponse(method) {
   const call = (agent, ...args) => agent[method.name](...args);
   const readEvents = async (steps, options) => {
-    const agent = createInsightsAgent(sseFetch(steps, options));
+    const agent = createInsightsAgent(stubSseFetch(steps, options));
 
-    return readAll(await call(agent, method.validParameters));
+    return readAll(await call(agent, method.testParameters));
   };
 
   describe('Response (EventStream)', () => {
     it('should resolve to a ReadableStream', async () => {
-      const agent = createInsightsAgent(sseFetch([frameOf('start'), frameOf('end')]));
+      const agent = createInsightsAgent(stubSseFetch([frameOf('start'), frameOf('end')]));
 
-      const stream = await call(agent, method.validParameters);
+      const stream = await call(agent, method.testParameters);
 
       expect(stream).to.be.an.instanceOf(ReadableStream);
     });
@@ -523,7 +335,7 @@ function describeStreamResponse(method) {
     });
 
     it('should pass through every InsightsEventTypes event', async () => {
-      const events = await readEvents(allInsightsEvents.map(({ event, data }) => sseFrame(event, data)));
+      const events = await readEvents(allInsightsEvents.map(({ event, data }) => encodeSseEvent(event, data)));
 
       expect(events.map((e) => e.event)).to.deep.equal(Object.values(Agent.InsightsEventTypes));
       expect(events).to.deep.equal(allInsightsEvents);
@@ -562,16 +374,16 @@ function describeStreamResponse(method) {
 
     it('should pass through unknown event names', async () => {
       const unknownData = { event: 'brand_new_event', result_id: 'r-1', foo: 'bar' };
-      const events = await readEvents([frameOf('start'), sseFrame('brand_new_event', unknownData), frameOf('end')]);
+      const events = await readEvents([frameOf('start'), encodeSseEvent('brand_new_event', unknownData), frameOf('end')]);
 
       expect(events[1]).to.deep.equal({ event: 'brand_new_event', data: unknownData });
     });
 
     it('should abort the underlying request when the stream is cancelled', async () => {
-      const fetchSpy = sseFetch([frameOf('start')], { hang: true });
+      const fetchSpy = stubSseFetch([frameOf('start')], { hang: true });
       const agent = createInsightsAgent(fetchSpy);
 
-      const stream = await call(agent, method.validParameters);
+      const stream = await call(agent, method.testParameters);
       const reader = stream.getReader();
       await reader.read();
       await reader.cancel();
@@ -598,9 +410,9 @@ function describeErrors(method) {
       { label: 'stream: false', options: { stream: false } },
     ].forEach(({ label, options }) => {
       it(`should reject with the server message and status on 400 (${label})`, async () => {
-        const agent = createInsightsAgent(jsonFetch(errorBody, { status: 400, statusText: 'Bad Request' }));
+        const agent = createInsightsAgent(stubJsonFetch(errorBody, { status: 400, statusText: 'Bad Request' }));
 
-        const error = await captureRejection(call(agent, method.validParameters, options));
+        const error = await captureRejection(call(agent, method.testParameters, options));
 
         expect(error).to.be.an.instanceOf(Error);
         expect(error.message).to.equal(errorBody.message);
@@ -611,9 +423,9 @@ function describeErrors(method) {
       });
 
       it(`should keep errors[] and trace_id exactly as the server returned them (${label})`, async () => {
-        const agent = createInsightsAgent(jsonFetch(errorBody, { status: 400, statusText: 'Bad Request' }));
+        const agent = createInsightsAgent(stubJsonFetch(errorBody, { status: 400, statusText: 'Bad Request' }));
 
-        const error = await captureRejection(call(agent, method.validParameters, options));
+        const error = await captureRejection(call(agent, method.testParameters, options));
 
         expect(error.errors).to.deep.equal(errorBody.errors);
         expect(error.trace_id).to.equal(errorBody.trace_id);
@@ -627,9 +439,9 @@ function describeErrors(method) {
       ].forEach(([status, statusText, code]) => {
         it(`should reject on ${status} (${label})`, async () => {
           const body = { message: `${statusText} message`, errors: [{ code, message: statusText }] };
-          const agent = createInsightsAgent(jsonFetch(body, { status, statusText }));
+          const agent = createInsightsAgent(stubJsonFetch(body, { status, statusText }));
 
-          const error = await captureRejection(call(agent, method.validParameters, options));
+          const error = await captureRejection(call(agent, method.testParameters, options));
 
           expect(error.message).to.equal(body.message);
           expect(error.status).to.equal(status);
@@ -637,9 +449,9 @@ function describeErrors(method) {
       });
 
       it(`should reject with status when the error body is not JSON (${label})`, async () => {
-        const agent = createInsightsAgent(textFetch('<html><body>Bad Gateway</body></html>', { status: 502, statusText: 'Bad Gateway' }));
+        const agent = createInsightsAgent(stubTextFetch('<html><body>Bad Gateway</body></html>', { status: 502, statusText: 'Bad Gateway' }));
 
-        const error = await captureRejection(call(agent, method.validParameters, options));
+        const error = await captureRejection(call(agent, method.testParameters, options));
 
         expect(error).to.be.an.instanceOf(Error);
         expect(error).not.to.be.an.instanceOf(SyntaxError);
@@ -648,8 +460,8 @@ function describeErrors(method) {
     });
 
     it('should reject before returning a stream when streaming and status is non-2xx', async () => {
-      const agent = createInsightsAgent(jsonFetch(errorBody, { status: 400, statusText: 'Bad Request' }));
-      const result = await call(agent, method.validParameters).then(
+      const agent = createInsightsAgent(stubJsonFetch(errorBody, { status: 400, statusText: 'Bad Request' }));
+      const result = await call(agent, method.testParameters).then(
         (value) => ({ resolvedWith: value }),
         (error) => ({ rejectedWith: error }),
       );
@@ -661,26 +473,26 @@ function describeErrors(method) {
 
   describe('Errors: During the Stream', () => {
     it('should enqueue server_error and close normally when end follows', async () => {
-      const agent = createInsightsAgent(sseFetch([frameOf('start'), frameOf('server_error'), frameOf('end')]));
+      const agent = createInsightsAgent(stubSseFetch([frameOf('start'), frameOf('server_error'), frameOf('end')]));
 
-      const events = await readAll(await call(agent, method.validParameters));
+      const events = await readAll(await call(agent, method.testParameters));
 
       expect(events).to.deep.equal([findEvent('start'), findEvent('server_error'), findEvent('end')]);
     });
 
     it('should error the stream when server_error is followed by EOF without end', async () => {
-      const agent = createInsightsAgent(sseFetch([frameOf('start'), frameOf('server_error')]));
+      const agent = createInsightsAgent(stubSseFetch([frameOf('start'), frameOf('server_error')]));
 
-      const { events, error } = await readUntilError(await call(agent, method.validParameters));
+      const { events, error } = await readUntilError(await call(agent, method.testParameters));
 
       expect(events).to.deep.equal([findEvent('start'), findEvent('server_error')]);
       expect(error.message).to.equal(truncatedStreamMessage);
     });
 
     it('should error the stream when the body ends without an end event', async () => {
-      const agent = createInsightsAgent(sseFetch([frameOf('start'), frameOf('message')]));
+      const agent = createInsightsAgent(stubSseFetch([frameOf('start'), frameOf('message')]));
 
-      const { events, error } = await readUntilError(await call(agent, method.validParameters));
+      const { events, error } = await readUntilError(await call(agent, method.testParameters));
 
       expect(events).to.deep.equal([findEvent('start'), findEvent('message')]);
       expect(error.message).to.equal(truncatedStreamMessage);
@@ -691,22 +503,22 @@ function describeErrors(method) {
     it('should reject when fetch itself rejects', () => {
       const agent = createInsightsAgent(sinon.stub().rejects(new TypeError('Failed to fetch')));
 
-      return expect(call(agent, method.validParameters)).to.eventually.be.rejectedWith(TypeError, 'Failed to fetch');
+      return expect(call(agent, method.testParameters)).to.eventually.be.rejectedWith(TypeError, 'Failed to fetch');
     });
 
     it('should error the stream when the connection drops mid-stream', async () => {
-      const agent = createInsightsAgent(sseFetch([frameOf('start'), { error: new TypeError('terminated') }]));
+      const agent = createInsightsAgent(stubSseFetch([frameOf('start'), { error: new TypeError('terminated') }]));
 
-      const { events, error } = await readUntilError(await call(agent, method.validParameters));
+      const { events, error } = await readUntilError(await call(agent, method.testParameters));
 
       expect(events).to.deep.equal([findEvent('start')]);
       expect(error.message).to.equal('terminated');
     });
 
     it('should error the stream when an event data is not valid JSON', async () => {
-      const agent = createInsightsAgent(sseFetch([frameOf('start'), 'event: message\ndata: {not json\n\n', frameOf('end')]));
+      const agent = createInsightsAgent(stubSseFetch([frameOf('start'), 'event: message\ndata: {not json\n\n', frameOf('end')]));
 
-      const { events, error } = await readUntilError(await call(agent, method.validParameters));
+      const { events, error } = await readUntilError(await call(agent, method.testParameters));
 
       expect(events).to.deep.equal([findEvent('start')]);
       expect(error.message).to.equal(malformedEventMessage);
@@ -717,34 +529,34 @@ function describeErrors(method) {
 function describeNetworkTimeout(method) {
   const call = (agent, ...args) => agent[method.name](...args);
   const abortMessage = 'This operation was aborted';
-  const slowStream = () => sseFetch([frameOf('start'), { delay: 80 }, frameOf('message'), frameOf('end')]);
+  const slowStream = () => stubSseFetch([frameOf('start'), { delay: 80 }, frameOf('message'), frameOf('end')]);
 
   describe('Network Timeout', () => {
     it('JSON: should reject when the per-call timeout is reached', () => {
-      const agent = createInsightsAgent(hangingFetch());
+      const agent = createInsightsAgent(stubHangingFetch());
 
-      return expect(call(agent, method.validParameters, { stream: false }, { timeout: 20 }))
+      return expect(call(agent, method.testParameters, { stream: false }, { timeout: 20 }))
         .to.eventually.be.rejectedWith(abortMessage);
     });
 
     it('JSON: should reject when the client-level timeout is reached', () => {
-      const agent = createInsightsAgent(hangingFetch(), { networkParameters: { timeout: 20 } });
+      const agent = createInsightsAgent(stubHangingFetch(), { networkParameters: { timeout: 20 } });
 
-      return expect(call(agent, method.validParameters, { stream: false }))
+      return expect(call(agent, method.testParameters, { stream: false }))
         .to.eventually.be.rejectedWith(abortMessage);
     });
 
     it('Stream: should reject when the response does not arrive within the timeout', () => {
-      const agent = createInsightsAgent(hangingFetch());
+      const agent = createInsightsAgent(stubHangingFetch());
 
-      return expect(call(agent, method.validParameters, {}, { timeout: 20 }))
+      return expect(call(agent, method.testParameters, {}, { timeout: 20 }))
         .to.eventually.be.rejectedWith(abortMessage);
     });
 
     it('Stream: should error the stream when no event arrives within the timeout', async () => {
-      const agent = createInsightsAgent(sseFetch([], { hang: true }));
+      const agent = createInsightsAgent(stubSseFetch([], { hang: true }));
 
-      const stream = await call(agent, method.validParameters, {}, { timeout: 20 });
+      const stream = await call(agent, method.testParameters, {}, { timeout: 20 });
       const { events, error } = await readUntilError(stream);
 
       expect(events).to.deep.equal([]);
@@ -754,21 +566,21 @@ function describeNetworkTimeout(method) {
     it('Stream: should not abort after the first event even if the stream outlives the timeout', async () => {
       const agent = createInsightsAgent(slowStream());
 
-      const events = await readAll(await call(agent, method.validParameters, {}, { timeout: 30 }));
+      const events = await readAll(await call(agent, method.testParameters, {}, { timeout: 30 }));
 
       expect(events.map((e) => e.event)).to.deep.equal(['start', 'message', 'end']);
     });
 
     it('Stream: should reject when the response does not arrive within the client-level timeout', () => {
-      const agent = createInsightsAgent(hangingFetch(), { networkParameters: { timeout: 20 } });
+      const agent = createInsightsAgent(stubHangingFetch(), { networkParameters: { timeout: 20 } });
 
-      return expect(call(agent, method.validParameters)).to.eventually.be.rejectedWith(abortMessage);
+      return expect(call(agent, method.testParameters)).to.eventually.be.rejectedWith(abortMessage);
     });
 
     it('Stream: should treat the client-level timeout as time-to-first-event', async () => {
       const agent = createInsightsAgent(slowStream(), { networkParameters: { timeout: 30 } });
 
-      const events = await readAll(await call(agent, method.validParameters));
+      const events = await readAll(await call(agent, method.testParameters));
 
       expect(events.map((e) => e.event)).to.deep.equal(['start', 'message', 'end']);
     });
@@ -813,7 +625,7 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
       expect(url).contain('https://agent.cnstrc.com/v1/intent/');
       expect(url).contain(`intent/${encodeURIComponentRFC3986(intent)}`);
 
-      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+      const requestedUrlParams = parseUrlParams(url);
 
       expect(requestedUrlParams).to.have.property('key');
       expect(requestedUrlParams).to.have.property('i');
@@ -842,7 +654,7 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
         { ...defaultParameters, threadId: 'test-thread-id' },
         defaultOptions,
       );
-      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+      const requestedUrlParams = parseUrlParams(url);
 
       expect(requestedUrlParams).to.have.property('thread_id').to.equal('test-thread-id');
     });
@@ -853,7 +665,7 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
         { ...defaultParameters, guard: true },
         defaultOptions,
       );
-      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+      const requestedUrlParams = parseUrlParams(url);
 
       expect(requestedUrlParams).to.have.property('guard').to.equal('true');
     });
@@ -864,7 +676,7 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
         { ...defaultParameters, guard: false },
         defaultOptions,
       );
-      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+      const requestedUrlParams = parseUrlParams(url);
 
       expect(requestedUrlParams).to.have.property('guard').to.equal('false');
     });
@@ -875,7 +687,7 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
         { ...defaultParameters, numResultsPerEvent: 5 },
         defaultOptions,
       );
-      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+      const requestedUrlParams = parseUrlParams(url);
 
       expect(requestedUrlParams).to.have.property('num_results_per_event').to.equal('5');
     });
@@ -886,7 +698,7 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
         { ...defaultParameters, numResultEvents: 3 },
         defaultOptions,
       );
-      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+      const requestedUrlParams = parseUrlParams(url);
 
       expect(requestedUrlParams).to.have.property('num_result_events').to.equal('3');
     });
@@ -897,7 +709,7 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
         { ...defaultParameters, numResultsPerPage: 10 },
         defaultOptions,
       );
-      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+      const requestedUrlParams = parseUrlParams(url);
 
       expect(requestedUrlParams).to.have.property('num_results_per_page').to.equal('10');
     });
@@ -909,7 +721,7 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
         { ...defaultParameters, preFilterExpression },
         defaultOptions,
       );
-      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+      const requestedUrlParams = parseUrlParams(url);
 
       expect(requestedUrlParams).to.have.property('pre_filter_expression').to.equal(JSON.stringify(preFilterExpression));
     });
@@ -921,7 +733,7 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
         { ...defaultParameters, qsParam },
         defaultOptions,
       );
-      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+      const requestedUrlParams = parseUrlParams(url);
 
       expect(requestedUrlParams).to.have.property('qs').to.equal(JSON.stringify(qsParam));
     });
@@ -933,7 +745,7 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
         { ...defaultParameters, fmtOptions },
         defaultOptions,
       );
-      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+      const requestedUrlParams = parseUrlParams(url);
 
       expect(requestedUrlParams).to.have.property('fmt_options');
       expect(requestedUrlParams.fmt_options).to.have.property('fields');
@@ -945,7 +757,7 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
         ...defaultOptions,
         segments: ['segment1', 'segment2'],
       });
-      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+      const requestedUrlParams = parseUrlParams(url);
 
       expect(requestedUrlParams).to.have.property('us');
     });
@@ -955,7 +767,7 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
         ...defaultOptions,
         userId: 'user-123',
       });
-      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+      const requestedUrlParams = parseUrlParams(url);
 
       expect(requestedUrlParams).to.have.property('ui').to.equal('user-123');
     });
@@ -965,7 +777,7 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
         ...defaultOptions,
         testCells: { cellA: 'variant1', cellB: 'variant2' },
       });
-      const requestedUrlParams = qs.parse(url.split('?')?.[1]);
+      const requestedUrlParams = parseUrlParams(url);
 
       expect(requestedUrlParams).to.have.property('ef-cellA').to.equal('variant1');
       expect(requestedUrlParams).to.have.property('ef-cellB').to.equal('variant2');
@@ -1196,6 +1008,64 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
     });
   });
 
+  // Invalid values used to generate test titles
+  const STRING_INVALIDS = [
+    ['missing', undefined],
+    ['an empty string', ''],
+    ['null', null],
+    ['not a string', 123],
+  ];
+  const OBJECT_INVALIDS = [
+    ['missing', undefined],
+    ['null', null],
+    ['a string', 'home'],
+    ['an array', [{ pageType: 'home' }]],
+  ];
+  const PAGE_TYPE_INVALIDS = [
+    ['missing', undefined],
+    ['an empty string', ''],
+    ['not a string', 1],
+  ];
+
+  const insightsChatTestParams = {
+    shopperInput: 'I want a waterproof jacket',
+    domain: 'searchbar',
+    pageContext: { pageType: 'home' },
+  };
+
+  /**
+   * One entry per Agent Insights method. Each entry runs the shared suite below.
+   * Add an entry when a method is implemented for common behavior
+   * Put behavior unique to the method in its own method-specific describe.
+   *
+   * - name: method on constructorio.agent
+   * - path: endpoint path
+   * - testParameters: smallest valid input
+   * - expectedBody: request body expected for testParameters
+   * - requiredFields: client-checked required fields; the first one is reported when parameters are not an object.
+   *   The expected message is `parameters.<path> is a required parameter of type <type>`
+   * - supportsRequestContext: whether the method accepts requestContext
+   */
+  const insightsMethods = [
+    {
+      name: 'getChatInsights',
+      path: '/v1/agent_insights/chat',
+      testParameters: insightsChatTestParams,
+      expectedBody: {
+        shopper_input: insightsChatTestParams.shopperInput,
+        page_context: { page_type: 'home' },
+        parameters: { domain: insightsChatTestParams.domain },
+      },
+      requiredFields: [
+        { path: 'domain', type: 'string', invalidValues: STRING_INVALIDS },
+        { path: 'shopperInput', type: 'string', invalidValues: STRING_INVALIDS },
+        { path: 'pageContext', type: 'object', invalidValues: OBJECT_INVALIDS },
+        { path: 'pageContext.pageType', type: 'string', invalidValues: PAGE_TYPE_INVALIDS },
+      ],
+      supportsRequestContext: true,
+    },
+  ];
+
   describe('Agent Insights', () => {
     insightsMethods.forEach((method) => {
       describe(method.name, () => {
@@ -1210,13 +1080,13 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
 
     describe('getChatInsights: Method Specific', () => {
       it('should send domain in parameters.domain, not the query string', async () => {
-        const fetchSpy = jsonFetch(insightsExampleResponse);
+        const fetchSpy = stubJsonFetch(insightsExampleResponse);
         const agent = createInsightsAgent(fetchSpy);
 
-        await agent.getChatInsights(validChatParameters, { stream: false });
+        await agent.getChatInsights(insightsChatTestParams, { stream: false });
 
         expect(helpers.extractBodyParamsFromFetch(fetchSpy).parameters)
-          .to.deep.equal({ domain: validChatParameters.domain });
+          .to.deep.equal({ domain: insightsChatTestParams.domain });
         expect(helpers.extractUrlParamsFromFetch(fetchSpy)).not.to.have.property('domain');
       });
     });
