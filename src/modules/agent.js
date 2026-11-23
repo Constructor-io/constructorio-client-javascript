@@ -290,6 +290,46 @@ function createInsightsBody(parameters) {
   return body;
 }
 
+// Create an error carrying the response's status, statusText, url and headers
+function createResponseError(message, response) {
+  const error = new Error(message);
+
+  error.status = response.status;
+  error.statusText = response.statusText;
+  error.url = response.url;
+  error.headers = response.headers;
+
+  return error;
+}
+
+// Reject with an error built from a non-2xx response, keeping the server's message, errors[] and trace_id.
+// The body is read as text so that a non-JSON body (e.g. an HTML page from a proxy) does not
+// surface as a SyntaxError; the message then falls back to "<status> <statusText>"
+function throwInsightsHttpError(response) {
+  return response.text().then((text) => {
+    let body = {};
+
+    try {
+      body = JSON.parse(text);
+    } catch (e) {
+      // Not JSON: keep the empty body
+    }
+
+    const { message, errors, trace_id: traceId } = isPlainObject(body) ? body : {};
+    const error = createResponseError(message || `${response.status} ${response.statusText}`, response);
+
+    if (errors) {
+      error.errors = errors;
+    }
+
+    if (traceId) {
+      error.trace_id = traceId;
+    }
+
+    throw error;
+  });
+}
+
 /**
  * Interface to agent SSE.
  * Replaces the previous Assistant module.
@@ -465,12 +505,32 @@ class Agent {
       body: JSON.stringify(createInsightsBody(parameters)),
       signal: controller && controller.signal,
     }).then((response) => {
+      // Reject before any stream is returned, so callers handle request errors in one place
+      if (!response.ok) {
+        return throwInsightsHttpError(response);
+      }
+
+      // When unexpected response is received for a stream request
+      // Eg. 200 response with unexpected content type
       if (stream) {
+        const contentType = response.headers.get('Content-Type') || '';
+
+        if (!contentType.startsWith('text/event-stream')) {
+          // Stop downloading the body we are not going to read
+          if (controller) {
+            controller.abort();
+          }
+
+          throw createResponseError(
+            `getChatInsights expected text/event-stream but received ${contentType || 'no content type'}`,
+            response,
+          );
+        }
+
         // TODO (Step 6): return the event stream, which clears the timeout on the first event
         throw new Error('getChatInsights streaming is not implemented');
       }
 
-      // TODO (Step 4): reject non-2xx responses with a mapped error
       return response.json().then((json) => {
         clearTimeout(timeoutId);
 
