@@ -182,6 +182,107 @@ function validateInsightsParameters(parameters, requiredFields) {
   }
 }
 
+function createInsightsUrl(path, parameters, options) {
+  const {
+    apiKey,
+    version,
+    sessionId,
+    clientId,
+    userId,
+    segments,
+    testCells,
+    agentServiceUrl,
+    assistantServiceUrl,
+  } = options;
+  const {
+    threadId,
+    guard,
+    numResultEvents,
+    numResultsPerEvent,
+    fmtOptions,
+    qsParam,
+  } = parameters;
+  const queryParams = { c: version, key: apiKey, i: clientId, s: sessionId };
+
+  if (testCells) {
+    Object.keys(testCells).forEach((testCellKey) => {
+      queryParams[`ef-${testCellKey}`] = testCells[testCellKey];
+    });
+  }
+
+  if (segments && segments.length) {
+    queryParams.us = segments;
+  }
+
+  if (userId) {
+    queryParams.ui = String(userId);
+  }
+
+  if (threadId) {
+    queryParams.thread_id = threadId;
+  }
+
+  if (!isNil(guard)) {
+    queryParams.guard = guard;
+  }
+
+  if (numResultEvents) {
+    queryParams.num_result_events = numResultEvents;
+  }
+
+  if (numResultsPerEvent) {
+    queryParams.num_results_per_event = numResultsPerEvent;
+  }
+
+  if (fmtOptions) {
+    queryParams.fmt_options = fmtOptions;
+  }
+
+  if (qsParam) {
+    queryParams.qs = JSON.stringify(qsParam);
+  }
+
+  const serviceUrl = agentServiceUrl || assistantServiceUrl;
+
+  return `${serviceUrl}${path}?${stringify(cleanParams(queryParams))}`;
+}
+
+// Keys left undefined are dropped by JSON.stringify
+function createInsightsBody(parameters) {
+  const { shopperInput, domain, pageContext, requestContext } = parameters;
+  const { pageType, itemId, variationId, searchTerm, browseFilter, filters } = pageContext;
+  const body = {
+    shopper_input: shopperInput,
+    page_context: {
+      page_type: pageType,
+      item_id: itemId,
+      variation_id: variationId,
+      search_term: searchTerm,
+      // browseFilter and filters are already in the server's format, so they are sent as they are
+      browse_filter: browseFilter,
+      filters,
+    },
+    parameters: { domain },
+  };
+
+  if (requestContext) {
+    const { prices } = requestContext;
+
+    body.request_context = {
+      prices: Array.isArray(prices)
+        ? prices.map(({ itemId: priceItemId, variationId: priceVariationId, expiresAt, ...rest }) => ({
+          ...rest,
+          item_id: priceItemId,
+          variation_id: priceVariationId,
+          expires_at: expiresAt,
+        }))
+        : prices,
+    };
+  }
+
+  return body;
+}
+
 /**
  * Interface to agent SSE.
  * Replaces the previous Assistant module.
@@ -331,7 +432,7 @@ class Agent {
    * const reader = readableStream.getReader();
    * const { value, done } = await reader.read();
    */
-  // eslint-disable-next-line no-unused-vars, class-methods-use-this
+  // eslint-disable-next-line no-unused-vars
   getChatInsights(parameters, options = {}, networkParameters = {}) {
     try {
       validateInsightsParameters(parameters, CHAT_INSIGHTS_REQUIRED_FIELDS);
@@ -339,7 +440,26 @@ class Agent {
       return Promise.reject(error);
     }
 
-    return Promise.reject(new Error('getChatInsights is not implemented'));
+    const { fetch } = this.options;
+    const stream = !(options && options.stream === false);
+    const requestUrl = createInsightsUrl('/v1/agent_insights/chat', parameters, this.options);
+
+    return fetch(requestUrl, {
+      method: 'POST',
+      headers: {
+        Accept: stream ? 'text/event-stream' : 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(createInsightsBody(parameters)),
+    }).then((response) => {
+      if (stream) {
+        // TODO (Step 6): return the event stream
+        throw new Error('getChatInsights streaming is not implemented');
+      }
+
+      // TODO (Step 4): reject non-2xx responses with a mapped error
+      return response.json();
+    });
   }
 }
 
