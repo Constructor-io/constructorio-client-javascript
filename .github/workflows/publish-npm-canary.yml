@@ -1,0 +1,386 @@
+name: Publish canary to npm
+
+# pull_request_target runs this file from the base branch, so a pull request cannot change the publish rules.
+# The npm-canary environment must allow only master: that stops a copy of this file on any other branch.
+on:
+  pull_request_target:
+    types: [labeled, synchronize]
+    branches: [master]
+
+permissions: {}
+
+# Queue instead of cancel, so a publish in flight always finishes. A run that will publish nothing
+# (an unrelated label, a closed pull request, or an app as the actor) gets its own group: it would
+# otherwise replace the pending run for a newer commit. A canary label from someone without write
+# access cannot be told apart here, so that run does join the queue; it also removes the label, and
+# the label has to be added again before anything is published.
+concurrency:
+  group: npm-canary-${{ github.event.pull_request.number }}${{ ((github.event.action == 'labeled' && github.event.label.name != 'canary') || github.event.pull_request.state != 'open' || endsWith(github.triggering_actor, '[bot]')) && format('-skip-{0}', github.run_id) || '' }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  authorize:
+    name: Authorize
+    # With pull_request_target GitHub does not hold back runs from forks, so the fork check below is the barrier.
+    if: >-
+      github.event.pull_request.state == 'open' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      (
+        (github.event.action == 'labeled' && github.event.label.name == 'canary') ||
+        (github.event.action == 'synchronize' && contains(github.event.pull_request.labels.*.name, 'canary'))
+      )
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      allowed: ${{ steps.access.outputs.allowed }}
+      refused: ${{ steps.access.outputs.refused }}
+    steps:
+      - name: Check that the actor and the person who added the label have write access
+        id: access
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ACTOR: ${{ github.triggering_actor }}
+          ACTION: ${{ github.event.action }}
+          SENDER: ${{ github.event.sender.login }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          # An app has no access level to look up. Skip the run, so that its pushes do not show a failed check.
+          if [[ "$ACTOR" == *"[bot]" ]]; then
+            echo "::notice::${ACTOR} is an app, and apps do not publish canaries. To publish this commit, a person with write access can re-run this workflow."
+            exit 0
+          fi
+
+          # Prints the access level of a user. A lookup that fails for any reason other than an unknown
+          # user fails the step without a refusal, so an API error does not cost the label.
+          access_of() {
+            local level
+            if level=$(gh api "repos/${GITHUB_REPOSITORY}/collaborators/$1/permission" --jq '.permission' 2> "$RUNNER_TEMP/gh-error"); then
+              echo "$level"
+            elif grep -q 'HTTP 404' "$RUNNER_TEMP/gh-error"; then
+              echo none
+            else
+              cat "$RUNNER_TEMP/gh-error" >&2
+              echo "::error::Could not look up the access level of $1. Re-run this workflow." >&2
+              return 1
+            fi
+          }
+
+          # A refusal ends this job without an error; the remove-label job takes the label off and fails the run.
+          refuse() {
+            echo "::error::$1"
+            echo "refused=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          }
+
+          # The label may have been added while nothing checked it: on a closed pull request, by an app,
+          # or in a run that was replaced in the queue. So check who added it on every run, not only the actor.
+          if [[ "$ACTION" == "labeled" ]]; then
+            labeler=$SENDER
+          else
+            labeler=$(gh api --paginate "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/events?per_page=100" \
+              --jq '.[] | select(.event == "labeled" and .label.name == "canary") | .actor.login // ""' | tail -n 1)
+          fi
+          if [[ -z "$labeler" ]]; then
+            echo "::error::Could not find who added the canary label. Re-run this workflow, or remove the label and add it again."
+            exit 1
+          fi
+
+          for user in "$ACTOR" "$labeler"; do
+            if [[ "$user" == *"[bot]" ]]; then
+              refuse "The canary label was added by ${user}, an app. A person with write access must add it again."
+            fi
+            permission=$(access_of "$user")
+            if [[ "$permission" != "admin" && "$permission" != "write" ]]; then
+              refuse "${user} has '${permission}' access. Publishing a canary needs write access to ${GITHUB_REPOSITORY}, for the person who added the label and for the person who started this run."
+            fi
+            echo "${user} has ${permission} access."
+          done
+          echo "allowed=true" >> "$GITHUB_OUTPUT"
+
+  # A refused label would otherwise stay on the pull request. No checkout here either.
+  remove-label:
+    name: Remove refused label
+    needs: authorize
+    if: needs.authorize.outputs.refused == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Remove the canary label
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          gh api --method DELETE "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/labels/canary" > /dev/null
+          echo "::error::The canary label was refused and removed. See the Authorize job for the reason."
+          exit 1
+
+  # No checkout here: this job decides what may be published, so it runs none of the pull request's code.
+  version:
+    name: Compute version
+    needs: authorize
+    if: needs.authorize.outputs.allowed == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      name: ${{ steps.version.outputs.name }}
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Compute canary version
+        id: version
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_NUMBER: ${{ github.run_number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          package_json() {
+            gh api -H "Accept: application/vnd.github.raw+json" "repos/${GITHUB_REPOSITORY}/contents/package.json?ref=$1"
+          }
+
+          # Read the description now, not from the event: a re-run must see a corrected canary-name.
+          # The first match is taken with sed, not head: head stops reading after one line, and with
+          # pipefail that can fail the step on a long description.
+          pr_body=$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" --jq '.body // ""')
+
+          label=$(printf '%s\n' "$pr_body" | tr -d '\r`' \
+            | sed -nE 's/^[[:space:]]*canary-name:[[:space:]]*(.*[^[:space:]])[[:space:]]*$/\1/Ip' \
+            | sed -n '1p' | tr '[:upper:]' '[:lower:]')
+
+          # GITHUB_SHA is the base branch here. The name and the base version both come from it, so the
+          # pull request cannot choose either: a canary of 9999.0.0 would sort above every real release.
+          manifest=$(package_json "$GITHUB_SHA")
+          name=$(jq -r '.name' <<< "$manifest")
+          base=$(jq -r '.version' <<< "$manifest")
+          base=${base%%-*}
+
+          if [[ ! "$base" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+            echo "::error::The version in package.json on the base branch ('${base}') is not of the form 1.2.3."
+            exit 1
+          fi
+
+          if [[ -z "$label" ]]; then
+            # An all-digit hash is a number to semver and invalid with a leading zero, so extend it until it has a letter.
+            length=7
+            while [[ ! "${HEAD_SHA:0:length}" =~ [a-f] && length -lt ${#HEAD_SHA} ]]; do length=$((length + 1)); done
+            version="${base}-canary.${HEAD_SHA:0:length}.${RUN_NUMBER}"
+          elif [[ "$label" =~ ^[a-z]([a-z0-9-]{0,38}[a-z0-9])?$ ]]; then
+            version="${base}-${label}-pr${PR_NUMBER}.${RUN_NUMBER}"
+          else
+            echo "::error::Invalid canary-name '${label}'. Use 1-40 characters: lowercase letters, digits and hyphens, starting with a letter and not ending with a hyphen."
+            exit 1
+          fi
+
+          echo "name=${name}" >> "$GITHUB_OUTPUT"
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "Canary version: ${version}"
+
+  # This job runs the pull request's code. It must never get a secret, id-token or a write permission.
+  build:
+    name: Build package
+    needs: version
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+
+      # No cache: under pull_request_target a cache saved here lands in the base branch's scope,
+      # and this job's content is the pull request's.
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: package.json
+          package-manager-cache: false
+
+      - name: Install dependencies
+        run: npm ci
+
+      # src/version.js is compiled into the package and sent with every API request, so regenerate it first.
+      - name: Build
+        env:
+          VERSION: ${{ needs.version.outputs.version }}
+        run: |
+          npm version "$VERSION" --no-git-tag-version
+          node ./src/generateVersion.js
+          npm run compile
+
+      - name: Pack
+        run: |
+          mkdir -p "$RUNNER_TEMP/package"
+          npm pack --pack-destination "$RUNNER_TEMP/package"
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: npm-package
+          path: ${{ runner.temp }}/package/*.tgz
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    name: Publish to npm
+    needs: [version, build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: npm-canary
+      url: https://www.npmjs.com/package/${{ needs.version.outputs.name }}/v/${{ needs.version.outputs.version }}
+    permissions:
+      id-token: write
+      pull-requests: read
+    outputs:
+      published: ${{ steps.publish.outputs.published }}
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: npm-package
+          path: package
+
+      # The tarball was built by the pull request's code, so do not trust what it says about itself.
+      - name: Check the package
+        env:
+          NAME: ${{ needs.version.outputs.name }}
+          VERSION: ${{ needs.version.outputs.version }}
+        run: |
+          shopt -s nullglob
+          tarballs=(package/*.tgz)
+          if [[ ${#tarballs[@]} -ne 1 ]]; then
+            echo "::error::Expected one package tarball, found ${#tarballs[@]}."
+            exit 1
+          fi
+
+          # npm drops the first path component of every entry and the last package.json wins, so an
+          # entry such as x/package.json would replace the manifest that is checked below.
+          members=$(tar -tzf "${tarballs[0]}")
+          if grep -qvE '^package/' <<< "$members" || grep -qE '(^|/)\.\.?(/|$)|//' <<< "$members"; then
+            echo "::error::The tarball has entries outside package/ or with unusual paths."
+            exit 1
+          fi
+          if [[ $(grep -cx 'package/package.json' <<< "$members") -ne 1 ]]; then
+            echo "::error::The tarball must hold exactly one package/package.json."
+            exit 1
+          fi
+
+          manifest=$(tar -xOzf "${tarballs[0]}" package/package.json)
+          actual=$(jq -r '"\(.name)@\(.version)"' <<< "$manifest")
+          if [[ "$actual" != "${NAME}@${VERSION}" ]]; then
+            echo "::error::The tarball is '${actual}', expected '${NAME}@${VERSION}'."
+            exit 1
+          fi
+
+          # publishConfig can set the dist-tag and the registry.
+          if jq -e 'has("publishConfig")' <<< "$manifest" > /dev/null; then
+            echo "::error::The tarball's package.json has a publishConfig field. A canary must not have one."
+            exit 1
+          fi
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22.18.0
+
+      # Trusted publishing needs npm 11.5.1 or later; Node 22.18.0 ships npm 10.
+      - name: Install npm
+        run: npm install --global npm@11.21.2
+
+      # The label and state in the event are from when the run was created. The run may have waited
+      # in the queue since then, or be a re-run, so ask again just before publishing. A commit that
+      # is no longer the head is skipped too: publishing it would move the canary dist-tag and the
+      # pull request comment back to an old commit, and the newer commit has its own run.
+      - name: Check that the pull request is still open and labelled, and that this is its latest commit
+        id: live
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          live=$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" \
+            --jq '"\(.state == "open" and any(.labels[]; .name == "canary")) \(.head.sha)"')
+          read -r wanted head <<< "$live"
+          if [[ "$wanted" != "true" ]]; then
+            echo "::notice::The pull request is closed or no longer has the canary label. Nothing was published."
+          elif [[ "$head" != "$SHA" ]]; then
+            echo "::notice::${SHA} is no longer the latest commit of the pull request (${head} is). Nothing was published."
+          else
+            echo "wanted=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish
+        id: publish
+        if: steps.live.outputs.wanted == 'true'
+        env:
+          NAME: ${{ needs.version.outputs.name }}
+          VERSION: ${{ needs.version.outputs.version }}
+        run: |
+          if [[ -n "$(npm view "${NAME}@${VERSION}" version 2>/dev/null)" ]]; then
+            echo "${NAME}@${VERSION} is already published. Skipping."
+            heading="Canary already published by an earlier attempt of this run. Nothing was published now"
+          else
+            npm publish package/*.tgz --tag canary --access public --ignore-scripts
+            heading="Canary published"
+          fi
+
+          {
+            echo "### ${heading}"
+            echo '```sh'
+            echo "npm install ${NAME}@${VERSION} --save-exact"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          echo "published=true" >> "$GITHUB_OUTPUT"
+
+  comment:
+    name: Comment on pull request
+    needs: [version, publish]
+    if: needs.publish.outputs.published == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Create or update the canary comment
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NAME: ${{ needs.version.outputs.name }}
+          VERSION: ${{ needs.version.outputs.version }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          marker='<!-- npm-canary -->'
+          body=$(cat <<EOF
+          ${marker}
+          ### 📦 Canary published
+
+          \`${NAME}@${VERSION}\` was built from ${SHA}.
+
+          \`\`\`sh
+          npm install ${NAME}@${VERSION} --save-exact
+          \`\`\`
+
+          Each new commit to this pull request publishes a new canary while the \`canary\` label is on.
+          EOF
+          )
+
+          # sed, not head: head stops reading after one line, and with pipefail that can fail the step.
+          comment_id=$(gh api --paginate "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments" \
+            --jq ".[] | select(.user.login == \"github-actions[bot]\" and (.body | startswith(\"${marker}\"))) | .id" \
+            | sed -n '1p')
+
+          if [[ -n "$comment_id" ]]; then
+            gh api --method PATCH "repos/${GITHUB_REPOSITORY}/issues/comments/${comment_id}" -f body="$body" > /dev/null
+          else
+            gh api --method POST "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments" -f body="$body" > /dev/null
+          fi

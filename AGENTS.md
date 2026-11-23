@@ -64,7 +64,7 @@ Every change also touches types and specs: read `.claude/rules/types.md` and `.c
 - Specs are integration tests against the live API. The npm scripts run mocha with `--retries 3`.
 - Keys are read from `.env`: `TEST_REQUEST_API_KEY` (most specs, and every tracker block except media), `TEST_MEDIA_REQUEST_API_KEY` (two tracker media blocks), `TEST_PIA_REQUEST_API_KEY` (the PIA spec). `SKIP_NETWORK_TIMEOUT_TESTS=true` skips the timeout tests, as CI does.
 - Baseline as of 2026-11-10: the three test workflows fail on every pull request because of two tests, the "before all" hooks of `trackMediaImpressionView` and `trackMediaImpressionClick` (a `TypeError` reading `banner_ad_id`). Locally, with only `TEST_REQUEST_API_KEY`, those two fail and so does every test in `ConstructorIO - Pia` except the two that pass an invalid key: 22 failures in all with `SKIP_NETWORK_TIMEOUT_TESTS=true`, 26 without it. Judge a change by new failures, by test name.
-- On a pull request CI runs lint, the suite three ways (source, bundle, ESM bundle), a spell check over `**/*.js`, a licence check, a dependency check (Diffend), CodeQL and an automated review. It does not run the type tests. A pull request from a fork gets no keys.
+- On a pull request CI runs lint, the suite three ways (source, bundle, ESM bundle), a spell check over `**/*.js`, a licence check, a dependency check (Diffend), CodeQL and an automated review. It does not run the type tests. A pull request from a fork gets no keys. `Publish canary to npm` also starts on every push and label; its jobs are skipped unless the pull request has the `canary` label (see Releases).
 
 ## Generated and off-limits
 
@@ -91,6 +91,16 @@ Any file placed under `src/` is copied into the npm package, and anything under 
 Maintainers release after the merge, in a separate commit. `npm version <patch|minor|major> --ignore-scripts=false` regenerates `src/version.js`, `docs/` and `dist/`, and pushing the `v*` tag publishes. A feature pull request never changes the version or those folders.
 
 There is no changelog file. GitHub generates the release notes from pull request titles, so the title is the changelog line. Put a one-sentence release note and a suggested bump in the pull request body.
+
+### Canary releases
+
+`.github/workflows/publish-npm-canary.yml` publishes a throwaway npm version from a pull request, so a change can be tried in a real app before it is released.
+
+- **Start and stop.** A person with write access adds the `canary` label to an open pull request into `master` from a branch in this repository. Every later push publishes a new canary while the label is on. Removing the label stops it. Forks never publish. A push by an app does not publish; a person re-runs that run to publish the commit.
+- **Version.** `<version on master>-canary.<short hash>.<run number>`. With a line `canary-name: <name>` in the pull request description it is `<version on master>-<name>-pr<number>.<run number>`. The name is 1 to 40 lowercase letters, digits and hyphens, and starts with a letter.
+- **Install.** By the exact version in the bot comment on the pull request. All canaries share the `canary` dist-tag, and `latest` never moves.
+- **Changing the workflow.** It runs on `pull_request_target`, so the copy on `master` runs: an edit has no effect until it is merged and cannot be tried from its own pull request. Publishing also depends on two settings outside the repository. The `npm-canary` GitHub environment must allow only `master`. The trusted publisher on npm names this file and that environment, so renaming either breaks publishing.
+- **Agents.** A canary is a public npm version that stays on npm. Do not add the `canary` label or a `canary-name:` line unless asked.
 
 ## Area guides
 
