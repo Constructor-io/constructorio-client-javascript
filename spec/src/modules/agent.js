@@ -14,10 +14,10 @@ const helpers = require('../../mocha.helpers');
 const insightsMocks = require('../../mocks/agent-insights.json');
 
 const {
-  stubSseFetch,
-  stubJsonFetch,
-  stubTextFetch,
-  stubHangingFetch,
+  mockSseFetch,
+  mockJsonFetch,
+  mockTextFetch,
+  mockHangingFetch,
   getRequestInit,
   getRequestUrl,
   getRequestHeader,
@@ -136,7 +136,7 @@ function describeRequiredFieldValidation(method) {
     });
 
     it('should accept a whitespace-only shopperInput', async () => {
-      const fetchSpy = stubJsonFetch(insightsExampleResponse);
+      const fetchSpy = mockJsonFetch(insightsExampleResponse);
       const agent = createInsightsAgent(fetchSpy);
 
       await call(agent, { ...method.testParameters, shopperInput: ' ' }, { stream: false });
@@ -146,7 +146,7 @@ function describeRequiredFieldValidation(method) {
     });
 
     it('should not check pageType against the enum', async () => {
-      const fetchSpy = stubJsonFetch(insightsExampleResponse);
+      const fetchSpy = mockJsonFetch(insightsExampleResponse);
       const agent = createInsightsAgent(fetchSpy);
 
       await call(agent, setAtPath(method.testParameters, 'pageContext.pageType', 'search'), { stream: false });
@@ -156,7 +156,7 @@ function describeRequiredFieldValidation(method) {
     });
 
     it('should default to streaming when options are omitted', async () => {
-      const fetchSpy = stubSseFetch([frameOf('end')]);
+      const fetchSpy = mockSseFetch([frameOf('end')]);
       const agent = createInsightsAgent(fetchSpy);
 
       const stream = await call(agent, method.testParameters);
@@ -170,7 +170,7 @@ function describeRequiredFieldValidation(method) {
 function describeRequest(method) {
   const call = (agent, ...args) => agent[method.name](...args);
   const sendJsonRequest = async (parameters = method.testParameters, clientOptions = {}) => {
-    const fetchSpy = stubJsonFetch(insightsExampleResponse);
+    const fetchSpy = mockJsonFetch(insightsExampleResponse);
     const agent = createInsightsAgent(fetchSpy, clientOptions);
 
     await call(agent, parameters, { stream: false });
@@ -180,7 +180,7 @@ function describeRequest(method) {
 
   describe('Request', () => {
     it('should send a POST with the client identity params and the minimal body', async () => {
-      const fetchSpy = stubJsonFetch(insightsExampleResponse);
+      const fetchSpy = mockJsonFetch(insightsExampleResponse);
       const agent = createInsightsAgent(fetchSpy, { agentServiceUrl: undefined }); // falls back to the default URL
 
       await call(agent, method.testParameters, { stream: false });
@@ -216,7 +216,7 @@ function describeRequest(method) {
     });
 
     it('should send Accept: text/event-stream by default', async () => {
-      const fetchSpy = stubSseFetch([frameOf('end')]);
+      const fetchSpy = mockSseFetch([frameOf('end')]);
       const agent = createInsightsAgent(fetchSpy);
 
       await call(agent, method.testParameters, {});
@@ -294,7 +294,7 @@ function describeJsonResponse(method) {
 
   describe('Response (JSON)', () => {
     it('should resolve with the parsed JSON response', async () => {
-      const agent = createInsightsAgent(stubJsonFetch(insightsExampleResponse));
+      const agent = createInsightsAgent(mockJsonFetch(insightsExampleResponse));
 
       const response = await call(agent, method.testParameters, { stream: false });
 
@@ -302,7 +302,7 @@ function describeJsonResponse(method) {
     });
 
     it('should resolve when status is partial', async () => {
-      const agent = createInsightsAgent(stubJsonFetch({ ...insightsExampleResponse, status: 'partial' }));
+      const agent = createInsightsAgent(mockJsonFetch({ ...insightsExampleResponse, status: 'partial' }));
 
       const response = await call(agent, method.testParameters, { stream: false });
 
@@ -314,14 +314,14 @@ function describeJsonResponse(method) {
 function describeStreamResponse(method) {
   const call = (agent, ...args) => agent[method.name](...args);
   const readEvents = async (steps, options) => {
-    const agent = createInsightsAgent(stubSseFetch(steps, options));
+    const agent = createInsightsAgent(mockSseFetch(steps, options));
 
     return readAll(await call(agent, method.testParameters));
   };
 
   describe('Response (EventStream)', () => {
     it('should resolve to a ReadableStream', async () => {
-      const agent = createInsightsAgent(stubSseFetch([frameOf('start'), frameOf('end')]));
+      const agent = createInsightsAgent(mockSseFetch([frameOf('start'), frameOf('end')]));
 
       const stream = await call(agent, method.testParameters);
 
@@ -380,7 +380,7 @@ function describeStreamResponse(method) {
     });
 
     it('should abort the underlying request when the stream is cancelled', async () => {
-      const fetchSpy = stubSseFetch([frameOf('start')], { hang: true });
+      const fetchSpy = mockSseFetch([frameOf('start')], { hang: true });
       const agent = createInsightsAgent(fetchSpy);
 
       const stream = await call(agent, method.testParameters);
@@ -410,7 +410,7 @@ function describeErrors(method) {
       { label: 'stream: false', options: { stream: false } },
     ].forEach(({ label, options }) => {
       it(`should reject with the server message and status on 400 (${label})`, async () => {
-        const agent = createInsightsAgent(stubJsonFetch(errorBody, { status: 400, statusText: 'Bad Request' }));
+        const agent = createInsightsAgent(mockJsonFetch(errorBody, { status: 400, statusText: 'Bad Request' }));
 
         const error = await captureRejection(call(agent, method.testParameters, options));
 
@@ -423,7 +423,7 @@ function describeErrors(method) {
       });
 
       it(`should keep errors[] and trace_id exactly as the server returned them (${label})`, async () => {
-        const agent = createInsightsAgent(stubJsonFetch(errorBody, { status: 400, statusText: 'Bad Request' }));
+        const agent = createInsightsAgent(mockJsonFetch(errorBody, { status: 400, statusText: 'Bad Request' }));
 
         const error = await captureRejection(call(agent, method.testParameters, options));
 
@@ -439,7 +439,7 @@ function describeErrors(method) {
       ].forEach(([status, statusText, code]) => {
         it(`should reject on ${status} (${label})`, async () => {
           const body = { message: `${statusText} message`, errors: [{ code, message: statusText }] };
-          const agent = createInsightsAgent(stubJsonFetch(body, { status, statusText }));
+          const agent = createInsightsAgent(mockJsonFetch(body, { status, statusText }));
 
           const error = await captureRejection(call(agent, method.testParameters, options));
 
@@ -449,7 +449,7 @@ function describeErrors(method) {
       });
 
       it(`should reject with status when the error body is not JSON (${label})`, async () => {
-        const agent = createInsightsAgent(stubTextFetch('<html><body>Bad Gateway</body></html>', { status: 502, statusText: 'Bad Gateway' }));
+        const agent = createInsightsAgent(mockTextFetch('<html><body>Bad Gateway</body></html>', { status: 502, statusText: 'Bad Gateway' }));
 
         const error = await captureRejection(call(agent, method.testParameters, options));
 
@@ -460,7 +460,7 @@ function describeErrors(method) {
     });
 
     it('should reject before returning a stream when streaming and status is non-2xx', async () => {
-      const agent = createInsightsAgent(stubJsonFetch(errorBody, { status: 400, statusText: 'Bad Request' }));
+      const agent = createInsightsAgent(mockJsonFetch(errorBody, { status: 400, statusText: 'Bad Request' }));
       const result = await call(agent, method.testParameters).then(
         (value) => ({ resolvedWith: value }),
         (error) => ({ rejectedWith: error }),
@@ -473,7 +473,7 @@ function describeErrors(method) {
 
   describe('Errors: During the Stream', () => {
     it('should enqueue server_error and close normally when end follows', async () => {
-      const agent = createInsightsAgent(stubSseFetch([frameOf('start'), frameOf('server_error'), frameOf('end')]));
+      const agent = createInsightsAgent(mockSseFetch([frameOf('start'), frameOf('server_error'), frameOf('end')]));
 
       const events = await readAll(await call(agent, method.testParameters));
 
@@ -481,7 +481,7 @@ function describeErrors(method) {
     });
 
     it('should error the stream when server_error is followed by EOF without end', async () => {
-      const agent = createInsightsAgent(stubSseFetch([frameOf('start'), frameOf('server_error')]));
+      const agent = createInsightsAgent(mockSseFetch([frameOf('start'), frameOf('server_error')]));
 
       const { events, error } = await readUntilError(await call(agent, method.testParameters));
 
@@ -490,7 +490,7 @@ function describeErrors(method) {
     });
 
     it('should error the stream when the body ends without an end event', async () => {
-      const agent = createInsightsAgent(stubSseFetch([frameOf('start'), frameOf('message')]));
+      const agent = createInsightsAgent(mockSseFetch([frameOf('start'), frameOf('message')]));
 
       const { events, error } = await readUntilError(await call(agent, method.testParameters));
 
@@ -507,7 +507,7 @@ function describeErrors(method) {
     });
 
     it('should error the stream when the connection drops mid-stream', async () => {
-      const agent = createInsightsAgent(stubSseFetch([frameOf('start'), { error: new TypeError('terminated') }]));
+      const agent = createInsightsAgent(mockSseFetch([frameOf('start'), { error: new TypeError('terminated') }]));
 
       const { events, error } = await readUntilError(await call(agent, method.testParameters));
 
@@ -516,7 +516,7 @@ function describeErrors(method) {
     });
 
     it('should error the stream when an event data is not valid JSON', async () => {
-      const agent = createInsightsAgent(stubSseFetch([frameOf('start'), 'event: message\ndata: {not json\n\n', frameOf('end')]));
+      const agent = createInsightsAgent(mockSseFetch([frameOf('start'), 'event: message\ndata: {not json\n\n', frameOf('end')]));
 
       const { events, error } = await readUntilError(await call(agent, method.testParameters));
 
@@ -529,32 +529,32 @@ function describeErrors(method) {
 function describeNetworkTimeout(method) {
   const call = (agent, ...args) => agent[method.name](...args);
   const abortMessage = 'This operation was aborted';
-  const slowStream = () => stubSseFetch([frameOf('start'), { delay: 80 }, frameOf('message'), frameOf('end')]);
+  const slowStream = () => mockSseFetch([frameOf('start'), { delay: 80 }, frameOf('message'), frameOf('end')]);
 
   describe('Network Timeout', () => {
     it('JSON: should reject when the per-call timeout is reached', () => {
-      const agent = createInsightsAgent(stubHangingFetch());
+      const agent = createInsightsAgent(mockHangingFetch());
 
       return expect(call(agent, method.testParameters, { stream: false }, { timeout: 20 }))
         .to.eventually.be.rejectedWith(abortMessage);
     });
 
     it('JSON: should reject when the client-level timeout is reached', () => {
-      const agent = createInsightsAgent(stubHangingFetch(), { networkParameters: { timeout: 20 } });
+      const agent = createInsightsAgent(mockHangingFetch(), { networkParameters: { timeout: 20 } });
 
       return expect(call(agent, method.testParameters, { stream: false }))
         .to.eventually.be.rejectedWith(abortMessage);
     });
 
     it('Stream: should reject when the response does not arrive within the timeout', () => {
-      const agent = createInsightsAgent(stubHangingFetch());
+      const agent = createInsightsAgent(mockHangingFetch());
 
       return expect(call(agent, method.testParameters, {}, { timeout: 20 }))
         .to.eventually.be.rejectedWith(abortMessage);
     });
 
     it('Stream: should error the stream when no event arrives within the timeout', async () => {
-      const agent = createInsightsAgent(stubSseFetch([], { hang: true }));
+      const agent = createInsightsAgent(mockSseFetch([], { hang: true }));
 
       const stream = await call(agent, method.testParameters, {}, { timeout: 20 });
       const { events, error } = await readUntilError(stream);
@@ -572,7 +572,7 @@ function describeNetworkTimeout(method) {
     });
 
     it('Stream: should reject when the response does not arrive within the client-level timeout', () => {
-      const agent = createInsightsAgent(stubHangingFetch(), { networkParameters: { timeout: 20 } });
+      const agent = createInsightsAgent(mockHangingFetch(), { networkParameters: { timeout: 20 } });
 
       return expect(call(agent, method.testParameters)).to.eventually.be.rejectedWith(abortMessage);
     });
@@ -1080,7 +1080,7 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
 
     describe('getChatInsights: Method Specific', () => {
       it('should send domain in parameters.domain, not the query string', async () => {
-        const fetchSpy = stubJsonFetch(insightsExampleResponse);
+        const fetchSpy = mockJsonFetch(insightsExampleResponse);
         const agent = createInsightsAgent(fetchSpy);
 
         await agent.getChatInsights(insightsChatTestParams, { stream: false });

@@ -87,8 +87,8 @@ const getUserDefinedWindowProperties = () => {
   return properties;
 };
 
-/* ---------- Stub fetch ----------
- * Fetch stubs built inline in a test.
+/* ---------- Mock fetch ----------
+ * Fetch mocks built inline in a test.
  * Use them for error, timeout and negative test cases.
  * Each returns a sinon spy, so tests can also inspect the requests made.
  */
@@ -155,7 +155,7 @@ function createSseBody(steps, { signal, hang = false } = {}) {
 }
 
 // Responds with a `text/event-stream` body that plays back `steps` (see `createSseBody`)
-const stubSseFetch = (steps, { hang = false } = {}) => sinon.spy((url, init = {}) => Promise.resolve(
+const mockSseFetch = (steps, { hang = false } = {}) => sinon.spy((url, init = {}) => Promise.resolve(
   new Response(createSseBody(steps, { signal: init.signal, hang }), {
     status: 200,
     headers: { 'Content-Type': 'text/event-stream' },
@@ -163,7 +163,7 @@ const stubSseFetch = (steps, { hang = false } = {}) => sinon.spy((url, init = {}
 ));
 
 // Responds with `body` as JSON
-const stubJsonFetch = (body, { status = 200, statusText = 'OK' } = {}) => sinon.spy(() => Promise.resolve(
+const mockJsonFetch = (body, { status = 200, statusText = 'OK' } = {}) => sinon.spy(() => Promise.resolve(
   new Response(JSON.stringify(body), {
     status,
     statusText,
@@ -172,12 +172,12 @@ const stubJsonFetch = (body, { status = 200, statusText = 'OK' } = {}) => sinon.
 ));
 
 // Responds with a raw text body, e.g. an HTML error page from a proxy
-const stubTextFetch = (text, { status, statusText, contentType = 'text/html' }) => sinon.spy(() => Promise.resolve(
+const mockTextFetch = (text, { status, statusText, contentType = 'text/html' }) => sinon.spy(() => Promise.resolve(
   new Response(text, { status, statusText, headers: { 'Content-Type': contentType } }),
 ));
 
 // Never resolves on its own. Rejects with the abort reason when the request signal aborts
-const stubHangingFetch = () => sinon.spy((url, init = {}) => new Promise((resolve, reject) => {
+const mockHangingFetch = () => sinon.spy((url, init = {}) => new Promise((resolve, reject) => {
   if (!init.signal) {
     reject(new Error('fetch was called without an AbortSignal'));
     return;
@@ -235,10 +235,10 @@ async function readUntilError(stream) {
 }
 
 module.exports = {
-  stubSseFetch,
-  stubJsonFetch,
-  stubTextFetch,
-  stubHangingFetch,
+  mockSseFetch,
+  mockJsonFetch,
+  mockTextFetch,
+  mockHangingFetch,
   getRequestInit,
   getRequestUrl,
   getRequestHeader,

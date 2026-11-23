@@ -148,6 +148,40 @@ function setupEventListeners(eventSource, controller, eventTypes) {
   };
 }
 
+/* ---------- Agent Insights ---------- */
+
+// Required fields for getChatInsights
+const CHAT_INSIGHTS_REQUIRED_FIELDS = [
+  { path: 'domain', type: 'string' },
+  { path: 'shopperInput', type: 'string' },
+  { path: 'pageContext', type: 'object' },
+  { path: 'pageContext.pageType', type: 'string' },
+];
+
+const isPlainObject = (value) => value !== null && typeof value === 'object' && !Array.isArray(value);
+
+// Throw an error if any of the required fields is missing or of the wrong type
+// Throws the first encountered validation error
+function validateInsightsParameters(parameters, requiredFields) {
+  const invalidField = requiredFields.find(({ path, type }) => {
+    // Retrieve the value at the specified path within the parameters object
+    let value = parameters;
+
+    path.split('.').forEach((key) => {
+      value = isPlainObject(value) ? value[key] : undefined;
+    });
+
+    // TODO: Check if whitespace-only strings are allowed / meaningful to pass to server
+    return type === 'object'
+      ? !isPlainObject(value)
+      : typeof value !== 'string' || value === '';
+  });
+
+  if (invalidField) {
+    throw new Error(`parameters.${invalidField.path} is a required parameter of type ${invalidField.type}`);
+  }
+}
+
 /**
  * Interface to agent SSE.
  * Replaces the previous Assistant module.
@@ -299,8 +333,10 @@ class Agent {
    */
   // eslint-disable-next-line no-unused-vars, class-methods-use-this
   getChatInsights(parameters, options = {}, networkParameters = {}) {
-    if (!parameters || !parameters.domain || typeof parameters.domain !== 'string') {
-      return Promise.reject(new Error('parameters.domain is a required parameter of type string'));
+    try {
+      validateInsightsParameters(parameters, CHAT_INSIGHTS_REQUIRED_FIELDS);
+    } catch (error) {
+      return Promise.reject(error);
     }
 
     return Promise.reject(new Error('getChatInsights is not implemented'));
