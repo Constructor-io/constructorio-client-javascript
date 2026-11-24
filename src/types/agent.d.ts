@@ -370,14 +370,14 @@ export type AgentInsightsEvent =
   | { event: 'server_error'; data: AgentInsightsServerErrorData }
   | { event: 'end'; data: AgentInsightsEndData };
 
-export interface AgentInsightsEventBaseData<TEvent extends string = string> extends Record<string, any> {
-  event?: TEvent;
+/** Fields shared by every event's data. The event name is on the event itself, not inside data */
+export interface AgentInsightsEventBaseData extends Record<string, any> {
   result_id: string;
   /** Only for conversational modes */
   thread_id?: string;
 }
 
-export interface AgentInsightsStartData extends AgentInsightsEventBaseData<'start'> {
+export interface AgentInsightsStartData extends AgentInsightsEventBaseData {
   request: {
     mode: 'chat' | 'search' | 'qna' | 'recommendations' | 'query_refinement';
     page_context: Record<string, any>;
@@ -385,42 +385,41 @@ export interface AgentInsightsStartData extends AgentInsightsEventBaseData<'star
   };
 }
 
-export interface AgentInsightsMessageData extends AgentInsightsEventBaseData<'message'> {
+export interface AgentInsightsMessageData extends AgentInsightsEventBaseData {
   text: string;
   route?: string;
 }
 
 export interface AgentInsightsItemResultsData
-  extends AgentInsightsEventBaseData<'item_results'>,
+  extends AgentInsightsEventBaseData,
   AgentInsightsItemResultsContent {}
 
 export interface AgentInsightsArticleReferenceData
-  extends AgentInsightsEventBaseData<'article_reference'>,
+  extends AgentInsightsEventBaseData,
   AgentInsightsArticleReference {}
 
 export interface AgentInsightsFollowUpRefinementData
-  extends AgentInsightsEventBaseData<'follow_up_refinement'>,
+  extends AgentInsightsEventBaseData,
   AgentInsightsFollowUpRefinement {}
 
 export interface AgentInsightsImageMetaData
-  extends AgentInsightsEventBaseData<'image_meta'>,
+  extends AgentInsightsEventBaseData,
   AgentInsightsImageMeta {}
 
 export interface AgentInsightsRecipeInfoData
-  extends AgentInsightsEventBaseData<'recipe_info'>,
+  extends AgentInsightsEventBaseData,
   Omit<AgentInsightsRecipe, 'steps' | 'text'> {}
 
-export interface AgentInsightsRecipeInstructionsData extends AgentInsightsEventBaseData<'recipe_instructions'> {
+export interface AgentInsightsRecipeInstructionsData extends AgentInsightsEventBaseData {
   steps: string[];
   text?: string;
 }
 
-export interface AgentInsightsServerErrorData extends AgentInsightsEventBaseData<'server_error'> {
+export interface AgentInsightsServerErrorData extends AgentInsightsEventBaseData {
   status_code: number;
   message: string;
 }
-export interface AgentInsightsPingData {
-  event: 'ping';
-}
+/** Keep-alive event; its data carries no fields the caller needs */
+export type AgentInsightsPingData = Record<string, any>;
 
-export type AgentInsightsEndData = AgentInsightsEventBaseData<'end'>;
+export type AgentInsightsEndData = AgentInsightsEventBaseData;

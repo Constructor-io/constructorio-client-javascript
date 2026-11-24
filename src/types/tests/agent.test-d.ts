@@ -77,7 +77,6 @@ expectAssignable<AgentInsightsEvent[]>([
   {
     event: 'start',
     data: {
-      event: 'start',
       result_id: 'r-1',
       thread_id: 't-123',
       request: {
@@ -88,12 +87,11 @@ expectAssignable<AgentInsightsEvent[]>([
   },
   {
     event: 'message',
-    data: { event: 'message', result_id: 'r-1', text: 'Here are some jackets', route: 'product_search' },
+    data: { result_id: 'r-1', text: 'Here are some jackets', route: 'product_search' },
   },
   {
     event: 'item_results',
     data: {
-      event: 'item_results',
       result_id: 'r-1',
       title: 'Waterproof jackets',
       request: { type: 'search' },
@@ -103,7 +101,6 @@ expectAssignable<AgentInsightsEvent[]>([
   {
     event: 'article_reference',
     data: {
-      event: 'article_reference',
       result_id: 'r-1',
       source: 'https://example.com/blog/rain-gear',
       title: 'Choosing rain gear',
@@ -112,7 +109,6 @@ expectAssignable<AgentInsightsEvent[]>([
   {
     event: 'follow_up_refinement',
     data: {
-      event: 'follow_up_refinement',
       result_id: 'r-1',
       question: 'Which color?',
       choices: [{ label: 'White', filter: { name: 'color', value: ['white'] } }],
@@ -120,12 +116,11 @@ expectAssignable<AgentInsightsEvent[]>([
   },
   {
     event: 'image_meta',
-    data: { event: 'image_meta', result_id: 'r-1', item_id: 'i1', image_url: 'https://example.com/i1.jpg' },
+    data: { result_id: 'r-1', item_id: 'i1', image_url: 'https://example.com/i1.jpg' },
   },
   {
     event: 'recipe_info',
     data: {
-      event: 'recipe_info',
       result_id: 'r-1',
       recipe_title: 'Pancakes',
       prep_time_minutes: 10,
@@ -135,12 +130,12 @@ expectAssignable<AgentInsightsEvent[]>([
   },
   {
     event: 'recipe_instructions',
-    data: { event: 'recipe_instructions', result_id: 'r-1', steps: ['Mix', 'Cook'] },
+    data: { result_id: 'r-1', steps: ['Mix', 'Cook'] },
   },
-  { event: 'ping', data: { event: 'ping' } },
+  { event: 'ping', data: {} },
   {
     event: 'server_error',
-    data: { event: 'server_error', result_id: 'r-1', status_code: 500, message: 'Internal error' },
+    data: { result_id: 'r-1', status_code: 500, message: 'Internal error' },
   },
-  { event: 'end', data: { event: 'end', result_id: 'r-1' } },
+  { event: 'end', data: { result_id: 'r-1' } },
 ]);

@@ -331,6 +331,66 @@ function throwInsightsHttpError(response) {
 }
 
 /**
+ * Parser for the SSEs streamed by the Agent Insights endpoints.
+ *
+ * Response body returns as raw byte chunks, not events.
+ * The parser reconstructs events from byte chunks so that the caller receives proper SSE events.
+ */
+// TODO (Step 6): remove this eslint-disable once the stream engine uses the parser
+// eslint-disable-next-line no-unused-vars
+function createSseParser() {
+  let buffer = ''; // Text after the last line break, waiting for the rest of its line
+  let eventName = '';
+  let dataLines = [];
+
+  return {
+    push(text) {
+      const events = [];
+
+      buffer += text;
+
+      // Lines end with \r\n, \n or \r.
+      // A \r at the very end of the buffer is kept, as it may be the first half of a \r\n split across chunks.
+      // The last piece is an unfinished line
+      const lines = buffer.split(/\r\n|\r(?!$)|\n/);
+      buffer = lines.pop();
+
+      lines.forEach((line) => {
+        // A blank line ends the event
+        if (line === '') {
+          if (dataLines.length) {
+            events.push({ event: eventName || 'message', data: dataLines.join('\n') });
+          }
+
+          eventName = '';
+          dataLines = [];
+
+          return;
+        }
+
+        // Lines starting with ':' are comments
+        if (line.startsWith(':')) {
+          return;
+        }
+
+        // "field: value" (a single space after the colon is not part of the value)
+        const colonIndex = line.indexOf(':');
+        const field = colonIndex === -1 ? line : line.slice(0, colonIndex);
+        const value = colonIndex === -1 ? '' : line.slice(colonIndex + 1).replace(/^ /, '');
+
+        if (field === 'event') {
+          eventName = value;
+        } else if (field === 'data') {
+          dataLines.push(value);
+        }
+      });
+
+      return events;
+    },
+  };
+}
+
+/**
  * Interface to agent SSE.
  * Replaces the previous Assistant module.
  *

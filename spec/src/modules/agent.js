@@ -344,7 +344,7 @@ function describeStreamResponse(method) {
     it('should enqueue ping events', async () => {
       const events = await readEvents([frameOf('start'), frameOf('ping'), frameOf('end')]);
 
-      expect(events[1]).to.deep.equal({ event: 'ping', data: { event: 'ping' } });
+      expect(events[1]).to.deep.equal(findEvent('ping'));
     });
 
     it('should enqueue end and then close the stream, even if the connection stays open', async () => {
@@ -372,8 +372,23 @@ function describeStreamResponse(method) {
       expect(events).to.deep.equal([findEvent('start'), findEvent('message'), findEvent('end')]);
     });
 
+    it('should parse \\r\\n line endings, including a \\r\\n split across chunks', async () => {
+      // The live server ends lines with \r\n rather than \n
+      const toCrlf = (frame) => frame.replace(/\n/g, '\r\n');
+      const messageFrame = toCrlf(frameOf('message'));
+      const splitAt = messageFrame.indexOf('\r\n') + 1; // between the \r and the \n
+      const events = await readEvents([
+        toCrlf(frameOf('start')),
+        messageFrame.slice(0, splitAt),
+        messageFrame.slice(splitAt),
+        toCrlf(frameOf('end')),
+      ]);
+
+      expect(events).to.deep.equal([findEvent('start'), findEvent('message'), findEvent('end')]);
+    });
+
     it('should pass through unknown event names', async () => {
-      const unknownData = { event: 'brand_new_event', result_id: 'r-1', foo: 'bar' };
+      const unknownData = { result_id: 'r-1', foo: 'bar' };
       const events = await readEvents([frameOf('start'), encodeSseEvent('brand_new_event', unknownData), frameOf('end')]);
 
       expect(events[1]).to.deep.equal({ event: 'brand_new_event', data: unknownData });
