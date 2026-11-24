@@ -332,17 +332,30 @@ function createSseParser() {
   let buffer = ''; // Text after the last line break, waiting for the rest of its line
   let eventName = '';
   let dataLines = [];
+  let skipLeadingLF = false; // The previous chunk ended with \r, which may be the first half of a \r\n
 
   return {
     push(text) {
       const events = [];
+      let input = text;
 
-      buffer += text;
+      // Drop the \n of a \r\n split across chunks (its \r already ended the line)
+      if (skipLeadingLF && input) {
+        if (input[0] === '\n') {
+          input = input.slice(1);
+        }
 
-      // Lines end with \r\n, \n or \r.
-      // A \r at the very end of the buffer is kept, as it may be the first half of a \r\n split across chunks.
+        skipLeadingLF = false;
+      }
+
+      buffer += input;
+
+      // Lines end with \r\n, \n or \r. A trailing \r ends its line straight away,
+      // so events aren't held back waiting for the next chunk.
+      skipLeadingLF = buffer.endsWith('\r');
+
       // The last piece is an unfinished line
-      const lines = buffer.split(/\r\n|\r(?!$)|\n/);
+      const lines = buffer.split(/\r\n|\r|\n/);
       buffer = lines.pop();
 
       lines.forEach((line) => {

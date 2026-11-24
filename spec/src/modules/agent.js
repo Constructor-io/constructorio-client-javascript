@@ -387,6 +387,38 @@ function describeStreamResponse(method) {
       expect(events).to.deep.equal([findEvent('start'), findEvent('message'), findEvent('end')]);
     });
 
+    it('should parse \\r line endings, including the end event', async () => {
+      const toCr = (frame) => frame.replace(/\n/g, '\r');
+      const events = await readEvents([toCr(frameOf('start')), toCr(frameOf('message')), toCr(frameOf('end'))]);
+
+      expect(events).to.deep.equal([findEvent('start'), findEvent('message'), findEvent('end')]);
+    });
+
+    it('should deliver a \\r-terminated event without waiting for the next chunk', async () => {
+      const toCr = (frame) => frame.replace(/\n/g, '\r');
+      const agent = createInsightsAgent(mockSseFetch([toCr(frameOf('start'))], { hang: true }));
+
+      const reader = (await call(agent, method.testParameters)).getReader();
+      const { value } = await reader.read();
+      await reader.cancel();
+
+      expect(value).to.deep.equal(findEvent('start'));
+    });
+
+    it('should parse a \\r at a chunk boundary that is not followed by \\n', async () => {
+      const toCr = (frame) => frame.replace(/\n/g, '\r');
+      const messageFrame = toCr(frameOf('message'));
+      const splitAt = messageFrame.indexOf('\r') + 1; // right after the first \r
+      const events = await readEvents([
+        toCr(frameOf('start')),
+        messageFrame.slice(0, splitAt),
+        messageFrame.slice(splitAt),
+        toCr(frameOf('end')),
+      ]);
+
+      expect(events).to.deep.equal([findEvent('start'), findEvent('message'), findEvent('end')]);
+    });
+
     it('should pass through unknown event names', async () => {
       const unknownData = { result_id: 'r-1', foo: 'bar' };
       const events = await readEvents([frameOf('start'), encodeSseEvent('brand_new_event', unknownData), frameOf('end')]);
