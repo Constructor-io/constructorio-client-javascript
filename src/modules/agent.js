@@ -157,21 +157,6 @@ function setupEventListeners(eventSource, controller, eventTypes) {
 
 /* ---------- Agent Insights ---------- */
 
-// One entry per Agent Insights method, keyed by the public method name.
-// - path: endpoint path on the agent service
-// - requiredFields: checked in order by validateInsightsParameters; the first failing field is reported
-const INSIGHTS_METHODS = {
-  getChatInsights: {
-    path: '/v1/agent_insights/chat',
-    requiredFields: [
-      { path: 'domain', type: 'string' },
-      { path: 'shopperInput', type: 'string' },
-      { path: 'pageContext', type: 'object' },
-      { path: 'pageContext.pageType', type: 'string' },
-    ],
-  },
-};
-
 const isPlainObject = (value) => value !== null && typeof value === 'object' && !Array.isArray(value);
 
 // Throw an error if any of the required fields is missing or of the wrong type
@@ -492,12 +477,30 @@ function createInsightsEventStream(response, controller, timeoutId, methodName) 
 }
 
 /**
- * Shared request flow for every Agent Insights method
+ * Entry point for every Agent Insights method.
+ *
+ * Always returns a promise
+ *
+ * To support a new get*Insights method:
+ * 1. Add the public method to the Agent class, passing its own settings (see getChatInsights)
+ * 2. Add its types in src/types/agent.d.ts, and an entry to `insightsMethods` in spec/src/modules/agent.js
+ *    so the shared test suite runs against it
+ *
+ * @private
+ *
+ * @param {string} methodName - Public method name, used in error messages
+ * @param {object} request
+ * @param {string} request.path - Endpoint path on the Agent Insights service
+ * @param {object[]} request.requiredFields - { path, type } entries checked in order by validateInsightsParameters,
+ *   which reports the first failing field. `type` is 'string' (non-empty string) or 'object' (plain object)
+ * @param {object} request.parameters - The public method's `parameters` argument
+ * @param {object} [request.options] - The public method's `options` argument
+ * @param {object} [request.networkParameters] - The public method's `networkParameters` argument
+ * @param {object} request.clientOptions - The client options (the Agent instance's `this.options`)
+ * @returns {Promise<object|ReadableStream>} The JSON response, or a ReadableStream of events when streaming
  */
-// Kept off the class so it is not part of the public interface
 function getInsights(methodName, request) {
-  const { parameters, options, networkParameters, clientOptions } = request;
-  const { path, requiredFields } = INSIGHTS_METHODS[methodName];
+  const { path, requiredFields, parameters, options, networkParameters, clientOptions } = request;
 
   try {
     validateInsightsParameters(parameters, requiredFields);
@@ -523,7 +526,7 @@ function getInsights(methodName, request) {
     body: JSON.stringify(createInsightsBody(parameters)),
     signal: controller && controller.signal,
   }).then((response) => {
-    // Reject before any stream is returned, so callers handle request errors in one place
+    // Reject on a non-2xx response before streaming the body
     if (!response.ok) {
       return throwInsightsHttpError(response);
     }
@@ -534,7 +537,7 @@ function getInsights(methodName, request) {
       const contentType = response.headers.get('Content-Type') || '';
 
       if (!contentType.startsWith('text/event-stream')) {
-        // Stop downloading the body we are not going to read
+        // Stop downloading the body if the content type is not what we expect
         if (controller) {
           controller.abort();
         }
@@ -548,6 +551,7 @@ function getInsights(methodName, request) {
       return createInsightsEventStream(response, controller, timeoutId, methodName);
     }
 
+    // Handle JSON response for non-stream requests
     return response.json().then((json) => {
       clearTimeout(timeoutId);
 
@@ -710,7 +714,16 @@ class Agent {
    * const { value, done } = await reader.read();
    */
   getChatInsights(parameters, options = {}, networkParameters = {}) {
+    const chatInsightsRequiredFields = [
+      { path: 'domain', type: 'string' },
+      { path: 'shopperInput', type: 'string' },
+      { path: 'pageContext', type: 'object' },
+      { path: 'pageContext.pageType', type: 'string' },
+    ];
+
     return getInsights('getChatInsights', {
+      path: '/v1/agent_insights/chat',
+      requiredFields: chatInsightsRequiredFields,
       parameters,
       options,
       networkParameters,

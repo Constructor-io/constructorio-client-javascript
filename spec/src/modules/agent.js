@@ -484,6 +484,25 @@ function describeErrors(method) {
       expect(result).not.to.have.property('resolvedWith');
       expect(result.rejectedWith.status).to.equal(400);
     });
+
+    it('should reject and abort the request when streaming and a 2xx response is not text/event-stream', async () => {
+      // e.g. a captive portal or proxy answering 200 with its own HTML page
+      const fetchSpy = mockTextFetch('<html><body>Sign in to Wi-Fi</body></html>', {
+        status: 200,
+        statusText: 'OK',
+        contentType: 'text/html; charset=utf-8',
+      });
+      const agent = createInsightsAgent(fetchSpy);
+
+      const error = await captureRejection(call(agent, method.testParameters));
+
+      expect(error).to.be.an.instanceOf(Error);
+      expect(error.message).to.equal(`${method.name} expected text/event-stream but received text/html; charset=utf-8`);
+      expect(error.status).to.equal(200);
+      expect(error).to.have.property('headers');
+      expect(error).to.have.property('url');
+      expect(getRequestInit(fetchSpy).signal.aborted).to.be.true;
+    });
   });
 
   describe('Errors: During the Stream', () => {
