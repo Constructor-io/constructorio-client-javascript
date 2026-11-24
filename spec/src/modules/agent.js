@@ -1068,7 +1068,8 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
   };
 
   /**
-   * One entry per Agent Insights method. Each entry runs the shared suite below.
+   * Shared test registry for Agent Insights methods
+   *
    * Add an entry when a method is implemented for common behavior
    * Put behavior unique to the method in its own method-specific describe.
    *
@@ -1080,7 +1081,7 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
    *   The expected message is `parameters.<path> is a required parameter of type <type>`
    * - supportsRequestContext: whether the method accepts requestContext
    */
-  const insightsMethods = [
+  const INSIGHTS_METHODS = [
     {
       name: 'getChatInsights',
       path: '/v1/agent_insights/chat',
@@ -1101,7 +1102,7 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
   ];
 
   describe('Agent Insights', () => {
-    insightsMethods.forEach((method) => {
+    INSIGHTS_METHODS.forEach((method) => {
       describe(method.name, () => {
         describeRequiredFieldValidation(method);
         describeRequest(method);
