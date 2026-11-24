@@ -157,13 +157,20 @@ function setupEventListeners(eventSource, controller, eventTypes) {
 
 /* ---------- Agent Insights ---------- */
 
-// Required fields for getChatInsights
-const CHAT_INSIGHTS_REQUIRED_FIELDS = [
-  { path: 'domain', type: 'string' },
-  { path: 'shopperInput', type: 'string' },
-  { path: 'pageContext', type: 'object' },
-  { path: 'pageContext.pageType', type: 'string' },
-];
+// One entry per Agent Insights method, keyed by the public method name.
+// - path: endpoint path on the agent service
+// - requiredFields: checked in order by validateInsightsParameters; the first failing field is reported
+const INSIGHTS_METHODS = {
+  getChatInsights: {
+    path: '/v1/agent_insights/chat',
+    requiredFields: [
+      { path: 'domain', type: 'string' },
+      { path: 'shopperInput', type: 'string' },
+      { path: 'pageContext', type: 'object' },
+      { path: 'pageContext.pageType', type: 'string' },
+    ],
+  },
+};
 
 const isPlainObject = (value) => value !== null && typeof value === 'object' && !Array.isArray(value);
 
@@ -336,8 +343,6 @@ function throwInsightsHttpError(response) {
  * Response body returns as raw byte chunks, not events.
  * The parser reconstructs events from byte chunks so that the caller receives proper SSE events.
  */
-// TODO (Step 6): remove this eslint-disable once the stream engine uses the parser
-// eslint-disable-next-line no-unused-vars
 function createSseParser() {
   let buffer = ''; // Text after the last line break, waiting for the rest of its line
   let eventName = '';
@@ -388,6 +393,171 @@ function createSseParser() {
       return events;
     },
   };
+}
+
+/**
+ * Turn a successful event-stream response into a ReadableStream of { event, data } events.
+ *
+ * - Pull-based: the body is only read when the caller asks for the next event.
+ * - The network timeout is cleared on the first event.
+ * - The stream closes right after the end event, even if the server keeps the connection open.
+ * - The stream errors when
+ *    - Event data is not JSON
+ *    - The body ends without an end event
+ *    - The connection fails (including the timeout aborting the request).
+ */
+function createInsightsEventStream(response, controller, timeoutId, methodName) {
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  const parser = createSseParser();
+  let receivedFirstEvent = false;
+  let finished = false;
+
+  // Stop the timeout and the underlying request once the stream is done with them
+  const releaseConnection = () => {
+    finished = true;
+    clearTimeout(timeoutId);
+
+    if (controller) {
+      controller.abort();
+    } else {
+      reader.cancel().catch(() => {});
+    }
+  };
+
+  return new ReadableStream({
+    pull(streamController) {
+      const readChunk = () => reader.read().then(({ value, done }) => {
+        if (done) {
+          releaseConnection();
+          streamController.error(new Error(`${methodName} stream ended before the end event`));
+
+          return undefined;
+        }
+
+        const events = parser.push(decoder.decode(value, { stream: true }));
+
+        // Queue the events in order.
+        // `some` stops at an event that finishes the stream (end or malformed data)
+        events.some(({ event, data }) => {
+          if (!receivedFirstEvent) {
+            receivedFirstEvent = true;
+            clearTimeout(timeoutId);
+          }
+
+          let parsedData;
+
+          try {
+            parsedData = JSON.parse(data);
+          } catch (e) {
+            releaseConnection();
+            streamController.error(new Error(`${methodName} received malformed event data`));
+
+            return true;
+          }
+
+          streamController.enqueue({ event, data: parsedData });
+
+          if (event === 'end') {
+            streamController.close();
+            releaseConnection();
+
+            return true;
+          }
+
+          return false;
+        });
+
+        // The chunk held only part of an event: keep reading until there is something to give the caller
+        if (!finished && !events.length) {
+          return readChunk();
+        }
+
+        return undefined;
+      });
+
+      // The connection dropped, or the timeout aborted the request
+      return readChunk().catch((error) => {
+        if (!finished) {
+          releaseConnection();
+          streamController.error(error);
+        }
+      });
+    },
+    // The caller cancelled the stream
+    cancel() {
+      releaseConnection();
+    },
+  });
+}
+
+/**
+ * Shared request flow for every Agent Insights method
+ */
+// Kept off the class so it is not part of the public interface
+function getInsights(methodName, request) {
+  const { parameters, options, networkParameters, clientOptions } = request;
+  const { path, requiredFields } = INSIGHTS_METHODS[methodName];
+
+  try {
+    validateInsightsParameters(parameters, requiredFields);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+
+  const { fetch } = clientOptions;
+  const stream = !(options && options.stream === false);
+  const requestUrl = createInsightsUrl(path, parameters, clientOptions);
+  const controller = typeof AbortController === 'function' ? new AbortController() : null;
+
+  // JSON: limits the whole request.
+  // Stream: limits the time until the first event arrives
+  const timeoutId = applyNetworkTimeout(clientOptions, networkParameters, controller);
+
+  return fetch(requestUrl, {
+    method: 'POST',
+    headers: {
+      Accept: stream ? 'text/event-stream' : 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(createInsightsBody(parameters)),
+    signal: controller && controller.signal,
+  }).then((response) => {
+    // Reject before any stream is returned, so callers handle request errors in one place
+    if (!response.ok) {
+      return throwInsightsHttpError(response);
+    }
+
+    // Error handling for unexpected response during a stream request
+    // Eg. 200 response with unexpected content type
+    if (stream) {
+      const contentType = response.headers.get('Content-Type') || '';
+
+      if (!contentType.startsWith('text/event-stream')) {
+        // Stop downloading the body we are not going to read
+        if (controller) {
+          controller.abort();
+        }
+
+        throw createResponseError(
+          `${methodName} expected text/event-stream but received ${contentType || 'no content type'}`,
+          response,
+        );
+      }
+
+      return createInsightsEventStream(response, controller, timeoutId, methodName);
+    }
+
+    return response.json().then((json) => {
+      clearTimeout(timeoutId);
+
+      return json;
+    });
+  }).catch((error) => {
+    clearTimeout(timeoutId);
+
+    throw error;
+  });
 }
 
 /**
@@ -539,67 +709,12 @@ class Agent {
    * const reader = readableStream.getReader();
    * const { value, done } = await reader.read();
    */
-  // eslint-disable-next-line no-unused-vars
   getChatInsights(parameters, options = {}, networkParameters = {}) {
-    try {
-      validateInsightsParameters(parameters, CHAT_INSIGHTS_REQUIRED_FIELDS);
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    const { fetch } = this.options;
-    const stream = !(options && options.stream === false);
-    const requestUrl = createInsightsUrl('/v1/agent_insights/chat', parameters, this.options);
-    const controller = typeof AbortController === 'function' ? new AbortController() : null;
-
-    // JSON: limits the whole request.
-    // Stream: limits the time until the first event arrives
-    const timeoutId = applyNetworkTimeout(this.options, networkParameters, controller);
-
-    return fetch(requestUrl, {
-      method: 'POST',
-      headers: {
-        Accept: stream ? 'text/event-stream' : 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(createInsightsBody(parameters)),
-      signal: controller && controller.signal,
-    }).then((response) => {
-      // Reject before any stream is returned, so callers handle request errors in one place
-      if (!response.ok) {
-        return throwInsightsHttpError(response);
-      }
-
-      // When unexpected response is received for a stream request
-      // Eg. 200 response with unexpected content type
-      if (stream) {
-        const contentType = response.headers.get('Content-Type') || '';
-
-        if (!contentType.startsWith('text/event-stream')) {
-          // Stop downloading the body we are not going to read
-          if (controller) {
-            controller.abort();
-          }
-
-          throw createResponseError(
-            `getChatInsights expected text/event-stream but received ${contentType || 'no content type'}`,
-            response,
-          );
-        }
-
-        // TODO (Step 6): return the event stream, which clears the timeout on the first event
-        throw new Error('getChatInsights streaming is not implemented');
-      }
-
-      return response.json().then((json) => {
-        clearTimeout(timeoutId);
-
-        return json;
-      });
-    }).catch((error) => {
-      clearTimeout(timeoutId);
-
-      throw error;
+    return getInsights('getChatInsights', {
+      parameters,
+      options,
+      networkParameters,
+      clientOptions: this.options,
     });
   }
 }
