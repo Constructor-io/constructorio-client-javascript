@@ -130,7 +130,7 @@ function describeRequiredFieldValidation(method) {
       let result;
 
       expect(() => { result = call(agent, undefined); }).not.to.throw();
-      expect(result).to.be.an.instanceOf(Promise);
+      expect(result).to.be.a('promise');
 
       return expect(result).to.eventually.be.rejected;
     });
@@ -403,7 +403,6 @@ function describeStreamResponse(method) {
       await reader.read();
       await reader.cancel();
 
-      expect(getRequestInit(fetchSpy).signal).to.be.an.instanceOf(AbortSignal);
       expect(getRequestInit(fetchSpy).signal.aborted).to.be.true;
     });
   });
@@ -429,7 +428,7 @@ function describeErrors(method) {
 
         const error = await captureRejection(call(agent, method.testParameters, options));
 
-        expect(error).to.be.an.instanceOf(Error);
+        expect(error).to.be.an('error');
         expect(error.message).to.equal(errorBody.message);
         expect(error.status).to.equal(400);
         expect(error.statusText).to.equal('Bad Request');
@@ -468,8 +467,8 @@ function describeErrors(method) {
 
         const error = await captureRejection(call(agent, method.testParameters, options));
 
-        expect(error).to.be.an.instanceOf(Error);
-        expect(error).not.to.be.an.instanceOf(SyntaxError);
+        expect(error).to.be.an('error');
+        expect(error.name).to.equal('Error'); // not a SyntaxError from parsing the HTML body
         expect(error.status).to.equal(502);
       });
     });
@@ -496,7 +495,7 @@ function describeErrors(method) {
 
       const error = await captureRejection(call(agent, method.testParameters));
 
-      expect(error).to.be.an.instanceOf(Error);
+      expect(error).to.be.an('error');
       expect(error.message).to.equal(`${method.name} expected text/event-stream but received text/html; charset=utf-8`);
       expect(error.status).to.equal(200);
       expect(error).to.have.property('headers');
@@ -562,7 +561,8 @@ function describeErrors(method) {
 
 function describeNetworkTimeout(method) {
   const call = (agent, ...args) => agent[method.name](...args);
-  const abortMessage = 'This operation was aborted';
+  // Node says 'This operation was aborted'; the bundled build in jsdom says 'The operation was aborted.'
+  const abortMessage = /operation was aborted/;
   const slowStream = () => mockSseFetch([frameOf('start'), { delay: 80 }, frameOf('message'), frameOf('end')]);
 
   describe('Network Timeout', () => {
@@ -594,7 +594,7 @@ function describeNetworkTimeout(method) {
       const { events, error } = await readUntilError(stream);
 
       expect(events).to.deep.equal([]);
-      expect(error.message).to.equal(abortMessage);
+      expect(error.message).to.match(abortMessage);
     });
 
     it('Stream: should not abort after the first event even if the stream outlives the timeout', async () => {
