@@ -567,8 +567,12 @@ function getInsights(request) {
 }
 
 /**
- * Interface to agent SSE.
+ * Interface to the AI Shopping Agent.
  * Replaces the previous Assistant module.
+ *
+ * - getAgentResultsStream streams results from the legacy agent endpoint through EventSource
+ * - getChatInsights calls the Agent Insights API through fetch. It returns a stream of events by default,
+ *   or one JSON response when `stream` is false
  *
  * @module agent
  * @inner
@@ -693,6 +697,14 @@ class Agent {
    * @param {object} [parameters.requestContext] - The shopper's price for the product on the page, for this
    *  request only. Only accepted when enabled for the domain. Requires pageContext.itemId
    * @param {object[]} parameters.requestContext.prices - Up to one item-level and one variation-level price
+   * @param {string} parameters.requestContext.prices[].itemId - Must equal pageContext.itemId
+   * @param {string} [parameters.requestContext.prices[].variationId] - Must equal pageContext.variationId.
+   *  Omit for an item-level price
+   * @param {string} parameters.requestContext.prices[].amount - Decimal string greater than zero
+   * @param {string} parameters.requestContext.prices[].currency - 3-letter currency code
+   * @param {string} parameters.requestContext.prices[].expiresAt - ISO 8601 date-time
+   * @param {string} parameters.requestContext.prices[].source - Who resolved the price: 'integration' or 'browser'
+   * @param {string} [parameters.requestContext.prices[].reason] - Why the price applies
    * @param {string} [parameters.threadId] - A unique identifier for the conversation thread.
    *  When omitted, a new thread is created
    * @param {boolean} [parameters.guard] - Turn the content moderation check on or off
