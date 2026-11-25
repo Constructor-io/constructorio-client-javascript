@@ -229,6 +229,13 @@ declare class Agent {
     networkParameters?: NetworkParameters,
   ): Promise<AgentInsightsResponse>;
 
+  /** For user who wants to assign the value of `stream` at runtime */
+  getChatInsights(
+    parameters: IAgentInsightsChatParameters,
+    options?: { stream?: boolean },
+    networkParameters?: NetworkParameters,
+  ): Promise<ReadableStream<AgentInsightsEvent> | AgentInsightsResponse>;
+
   getSearchInsights(
     parameters: IAgentInsightsSearchParameters,
     options?: { stream?: true },
@@ -240,6 +247,13 @@ declare class Agent {
     options: { stream: false },
     networkParameters?: NetworkParameters,
   ): Promise<AgentInsightsResponse>;
+
+  /** For user who wants to assign the value of `stream` at runtime */
+  getSearchInsights(
+    parameters: IAgentInsightsSearchParameters,
+    options?: { stream?: boolean },
+    networkParameters?: NetworkParameters,
+  ): Promise<ReadableStream<AgentInsightsEvent> | AgentInsightsResponse>;
 
   getQnaInsights(
     parameters: IAgentInsightsQnaParameters,
@@ -253,6 +267,13 @@ declare class Agent {
     networkParameters?: NetworkParameters,
   ): Promise<AgentInsightsResponse>;
 
+  /** For user who wants to assign the value of `stream` at runtime */
+  getQnaInsights(
+    parameters: IAgentInsightsQnaParameters,
+    options?: { stream?: boolean },
+    networkParameters?: NetworkParameters,
+  ): Promise<ReadableStream<AgentInsightsEvent> | AgentInsightsResponse>;
+
   getRecommendationsInsights(
     parameters: IAgentInsightsRecommendationsParameters,
     options?: { stream?: true },
@@ -265,6 +286,13 @@ declare class Agent {
     networkParameters?: NetworkParameters,
   ): Promise<AgentInsightsResponse>;
 
+  /** For user who wants to assign the value of `stream` at runtime */
+  getRecommendationsInsights(
+    parameters: IAgentInsightsRecommendationsParameters,
+    options?: { stream?: boolean },
+    networkParameters?: NetworkParameters,
+  ): Promise<ReadableStream<AgentInsightsEvent> | AgentInsightsResponse>;
+
   getQueryRefinementInsights(
     parameters: IAgentInsightsQueryRefinementParameters,
     options?: { stream?: true },
@@ -276,6 +304,13 @@ declare class Agent {
     options: { stream: false },
     networkParameters?: NetworkParameters,
   ): Promise<AgentInsightsResponse>;
+
+  /** For user who wants to assign the value of `stream` at runtime  */
+  getQueryRefinementInsights(
+    parameters: IAgentInsightsQueryRefinementParameters,
+    options?: { stream?: boolean },
+    networkParameters?: NetworkParameters,
+  ): Promise<ReadableStream<AgentInsightsEvent> | AgentInsightsResponse>;
 }
 
 /* ---------- Agent Insights: JSON Response (stream: false) ---------- */
@@ -357,6 +392,12 @@ export interface AgentInsightsRecipe {
 
 /* ---------- Agent Insights: Stream Event ---------- */
 
+/**
+ * Known stream events.
+ *
+ * In a case where an unknown event type is received,
+ * it should be handled gracefully rather than assuming it will never occur.
+ */
 export type AgentInsightsEvent =
   | { event: 'start'; data: AgentInsightsStartData }
   | { event: 'message'; data: AgentInsightsMessageData }

@@ -5,6 +5,7 @@ const {
   stringify,
   isNil,
   applyNetworkTimeout,
+  throwHttpErrorFromResponse,
 } = require('../utils/helpers');
 
 // Create URL from supplied intent (term) and parameters
@@ -282,43 +283,20 @@ function createInsightsBody(parameters) {
   return body;
 }
 
-// Create an error carrying the response's status, statusText, url and headers
-function createResponseError(message, response) {
-  const error = new Error(message);
-
-  error.status = response.status;
-  error.statusText = response.statusText;
-  error.url = response.url;
-  error.headers = response.headers;
-
-  return error;
-}
-
-// Reject with an error built from a non-2xx response, keeping the server's message, errors[] and trace_id.
-// The body is read as text so that a non-JSON body (e.g. an HTML page from a proxy) does not
-// surface as a SyntaxError; the message then falls back to "<status> <statusText>"
+// Adding errors[] and trace_id returned by the Agent Insights API
 function throwInsightsHttpError(response) {
-  return response.text().then((text) => {
-    let body = {};
+  return response.clone().json().then((body) => {
+    const error = new Error();
 
-    try {
-      body = JSON.parse(text);
-    } catch (e) {
-      // Not JSON: keep the empty body
+    if (body.errors) {
+      error.errors = body.errors;
     }
 
-    const { message, errors, trace_id: traceId } = isPlainObject(body) ? body : {};
-    const error = createResponseError(message || `${response.status} ${response.statusText}`, response);
-
-    if (errors) {
-      error.errors = errors;
+    if (body.trace_id) {
+      error.trace_id = body.trace_id;
     }
 
-    if (traceId) {
-      error.trace_id = traceId;
-    }
-
-    throw error;
+    return throwHttpErrorFromResponse(error, response);
   });
 }
 
@@ -555,10 +533,7 @@ function getInsights(methodName, request) {
           controller.abort();
         }
 
-        throw createResponseError(
-          `${methodName} expected text/event-stream but received ${contentType || 'no content type'}`,
-          response,
-        );
+        throw new Error(`${methodName} expected text/event-stream but received ${contentType || 'no content type'}`);
       }
 
       return createInsightsEventStream(response, controller, timeoutId, methodName);
@@ -572,6 +547,10 @@ function getInsights(methodName, request) {
     });
   }).catch((error) => {
     clearTimeout(timeoutId);
+
+    if (controller) {
+      controller.abort();
+    }
 
     throw error;
   });

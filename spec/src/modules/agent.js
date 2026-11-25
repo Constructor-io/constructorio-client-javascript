@@ -477,6 +477,14 @@ function describeErrors(method) {
         expect(error.trace_id).to.equal(errorBody.trace_id);
       });
 
+      it(`should reject when the error body is not JSON (${label})`, async () => {
+        const agent = createInsightsAgent(mockTextFetch('<html><body>Bad Gateway</body></html>', { status: 502, statusText: 'Bad Gateway' }));
+
+        const error = await captureRejection(call(agent, method.testParameters, options));
+
+        expect(error).to.be.an.instanceOf(SyntaxError);
+      });
+
       [
         [422, 'Unprocessable Entity', 'client_error'],
         [429, 'Too Many Requests', 'rate_limit_exceeded'],
@@ -492,16 +500,6 @@ function describeErrors(method) {
           expect(error.message).to.equal(body.message);
           expect(error.status).to.equal(status);
         });
-      });
-
-      it(`should reject with status when the error body is not JSON (${label})`, async () => {
-        const agent = createInsightsAgent(mockTextFetch('<html><body>Bad Gateway</body></html>', { status: 502, statusText: 'Bad Gateway' }));
-
-        const error = await captureRejection(call(agent, method.testParameters, options));
-
-        expect(error).to.be.an('error');
-        expect(error.name).to.equal('Error'); // not a SyntaxError from parsing the HTML body
-        expect(error.status).to.equal(502);
       });
     });
 
@@ -529,9 +527,23 @@ function describeErrors(method) {
 
       expect(error).to.be.an('error');
       expect(error.message).to.equal(`${method.name} expected text/event-stream but received text/html; charset=utf-8`);
-      expect(error.status).to.equal(200);
-      expect(error).to.have.property('headers');
-      expect(error).to.have.property('url');
+      expect(getRequestInit(fetchSpy).signal.aborted).to.be.true;
+    });
+
+    it('should reject and abort the request when the stream cannot be set up', async () => {
+      // e.g. a custom fetch (like node-fetch v2) whose body is not a web ReadableStream
+      const fetchSpy = sinon.spy(() => Promise.resolve({
+        ok: true,
+        status: 200,
+        statusText: 'OK',
+        headers: new Headers({ 'Content-Type': 'text/event-stream' }),
+        body: {},
+      }));
+      const agent = createInsightsAgent(fetchSpy);
+
+      const error = await captureRejection(call(agent, method.testParameters));
+
+      expect(error).to.be.an.instanceOf(TypeError);
       expect(getRequestInit(fetchSpy).signal.aborted).to.be.true;
     });
   });
