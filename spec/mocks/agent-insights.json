@@ -1,0 +1,138 @@
+{
+  "json-response": {
+    "status": 200,
+    "body": {
+      "result_id": "r-1",
+      "thread_id": "6f1c2e9a-1b7d-4c8e-9f3a-2d5e6b7c8a90",
+      "status": "complete",
+      "message": "Here are some waterproof jackets you might like.",
+      "item_results": [
+        {
+          "result_id": "r-1",
+          "title": "Waterproof jackets",
+          "request": {
+            "type": "search",
+            "params": {
+              "query": "waterproof jacket"
+            }
+          },
+          "response": {
+            "results": [
+              {
+                "value": "Rain Shell",
+                "data": {
+                  "id": "i1"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "all-stream-events": {
+    "events": [
+      {
+        "event": "start",
+        "data": {
+          "result_id": "r-1",
+          "request": {
+            "mode": "chat",
+            "page_context": {
+              "page_type": "home"
+            }
+          }
+        }
+      },
+      {
+        "event": "message",
+        "data": {
+          "result_id": "r-1",
+          "text": "Here are some jackets"
+        }
+      },
+      {
+        "event": "item_results",
+        "data": {
+          "result_id": "r-1",
+          "response": {
+            "results": [
+              {
+                "value": "Rain Shell",
+                "data": {
+                  "id": "i1"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "event": "article_reference",
+        "data": {
+          "result_id": "r-1",
+          "source": "https://example.com/a",
+          "title": "Rain gear"
+        }
+      },
+      {
+        "event": "follow_up_refinement",
+        "data": {
+          "result_id": "r-1",
+          "question": "Which color?",
+          "options": [
+            "White"
+          ]
+        }
+      },
+      {
+        "event": "image_meta",
+        "data": {
+          "result_id": "r-1",
+          "item_id": "i1",
+          "image_url": "https://example.com/i1.jpg"
+        }
+      },
+      {
+        "event": "recipe_info",
+        "data": {
+          "result_id": "r-1",
+          "recipe_title": "Pancakes",
+          "prep_time_minutes": 10,
+          "cook_time_minutes": 15,
+          "ingredients": [
+            "flour"
+          ]
+        }
+      },
+      {
+        "event": "recipe_instructions",
+        "data": {
+          "result_id": "r-1",
+          "steps": [
+            "Mix",
+            "Cook"
+          ]
+        }
+      },
+      {
+        "event": "ping",
+        "data": {}
+      },
+      {
+        "event": "server_error",
+        "data": {
+          "result_id": "r-1",
+          "status_code": 500,
+          "message": "Internal error"
+        }
+      },
+      {
+        "event": "end",
+        "data": {
+          "result_id": "r-1"
+        }
+      }
+    ]
+  }
+}
