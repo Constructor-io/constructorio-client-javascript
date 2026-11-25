@@ -52,7 +52,7 @@ After instantiating an instance of the client, seven modules will be exposed as 
 
 2. The Agent Insights methods (`getChatInsights`) send requests with the client's `fetch`. Streaming also needs `ReadableStream`, `TextDecoder` and a response body that can be read as a stream (`response.body.getReader()`). If your environment's `fetch` can't stream response bodies (for example, React Native's default `fetch`), pass `{ stream: false }`, or supply a streaming-capable `fetch` in the client options.
 
-4. For Agent Insights, `networkParameters.timeout` limits the whole request when `stream: false`. When streaming, it limits only the time until the first event arrives.
+3. For Agent Insights, `networkParameters.timeout` limits the whole request when `stream: false`. When streaming, it limits only the time until the first event arrives.
 
 ### Dispatched events
 
