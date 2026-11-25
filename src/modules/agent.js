@@ -476,8 +476,8 @@ function createInsightsEventStream(response, controller, timeoutId, methodName) 
  *
  * To support a new get*Insights method:
  * 1. Add the public method to the Agent class, passing its own settings (see getChatInsights)
- * 2. Add its types in src/types/agent.d.ts, and an entry to `insightsMethods` in spec/src/modules/agent.js
- *    so the shared test suite runs against it
+ * 2. Add its types in src/types/agent.d.ts, and an entry to `INSIGHTS_METHODS` in spec/src/modules/agent.js
+ *    so the method contract suite runs against it
  *
  * @private
  *
@@ -738,3 +738,5 @@ class Agent {
 module.exports = Agent;
 module.exports.createAgentUrl = createAgentUrl;
 module.exports.setupEventListeners = setupEventListeners;
+module.exports.createSseParser = createSseParser;
+module.exports.getInsights = getInsights;
