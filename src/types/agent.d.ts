@@ -140,7 +140,7 @@ export interface AgentInsightsBasePageContext {
   browseFilter?: {
     /** Typically `group_id` for category pages or `collection_id` for collections */
     name: string;
-    value: string
+    value: string;
   };
   filters?: AgentInsightsFilterExpression[];
 }
@@ -162,7 +162,7 @@ export interface AgentInsightsListingPageContext extends AgentInsightsBasePageCo
   browseFilter?: {
     /** Always `group_id`, collection and facet browse pages cannot be refined */
     name: 'group_id';
-    value: string
+    value: string;
   };
 }
 
@@ -409,7 +409,8 @@ export type AgentInsightsEvent =
   | { event: 'recipe_instructions'; data: AgentInsightsRecipeInstructionsData }
   | { event: 'ping'; data: AgentInsightsPingData }
   | { event: 'server_error'; data: AgentInsightsServerErrorData }
-  | { event: 'end'; data: AgentInsightsEndData };
+  | { event: 'end'; data: AgentInsightsEndData }
+  | { event: string; data: Record<string, any> }; // future/unknown events
 
 /** Fields shared by every event's data. The event name is on the event itself, not inside data */
 export interface AgentInsightsEventBaseData extends Record<string, any> {
