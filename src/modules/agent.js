@@ -182,6 +182,8 @@ function validateInsightsParameters(parameters, requiredFields) {
   }
 }
 
+// Create the URL for the insights API request
+// Deduplicate from createAgentUrl method so that we can remove it completely once it's deprecated
 function createInsightsUrl(path, parameters, options) {
   const {
     apiKey,
