@@ -481,8 +481,8 @@ function createInsightsEventStream(response, controller, timeoutId, methodName) 
  *
  * @private
  *
- * @param {string} methodName - Public method name, used in error messages
  * @param {object} request
+ * @param {string} request.methodName - Public method name, used in error messages
  * @param {string} request.path - Endpoint path on the Agent Insights service
  * @param {object[]} request.requiredFields - { path, type } entries checked in order by validateInsightsParameters,
  *   which reports the first failing field. `type` is 'string' (non-empty string) or 'object' (plain object)
@@ -492,8 +492,16 @@ function createInsightsEventStream(response, controller, timeoutId, methodName) 
  * @param {object} request.clientOptions - The client options (the Agent instance's `this.options`)
  * @returns {Promise<object|ReadableStream>} The JSON response, or a ReadableStream of events when streaming
  */
-function getInsights(methodName, request) {
-  const { path, requiredFields, parameters, options, networkParameters, clientOptions } = request;
+function getInsights(request) {
+  const {
+    methodName,
+    path,
+    requiredFields,
+    parameters,
+    options,
+    networkParameters,
+    clientOptions,
+  } = request;
 
   try {
     validateInsightsParameters(parameters, requiredFields);
@@ -715,7 +723,8 @@ class Agent {
       { path: 'pageContext.pageType', type: 'string' },
     ];
 
-    return getInsights('getChatInsights', {
+    return getInsights({
+      methodName: 'getChatInsights',
       path: '/v1/agent_insights/chat',
       requiredFields: chatInsightsRequiredFields,
       parameters,
