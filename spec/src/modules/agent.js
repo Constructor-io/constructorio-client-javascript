@@ -1328,7 +1328,7 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
 
   const insightsChatTestParams = {
     shopperInput: 'I want a waterproof jacket',
-    domain: 'searchbar',
+    domain: 'explorer',
     pageContext: { pageType: 'home' },
   };
 

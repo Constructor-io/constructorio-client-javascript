@@ -496,7 +496,8 @@ function createInsightsEventStream(response, controller, timeoutId, methodName) 
  *
  * To support a new get*Insights method:
  * 1. Add the public method to the Agent class, passing its own settings (see getChatInsights)
- * 2. Add its types in src/types/agent.d.ts, and an entry to `INSIGHTS_METHODS` in spec/src/modules/agent.js
+ * 2. If the mode takes new `parameters` body fields, map them in createInsightsBody
+ * 3. Add its types in src/types/agent.d.ts, and an entry to `INSIGHTS_METHODS` in spec/src/modules/agent.js
  *    so the method contract suite runs against it
  *
  * @private
@@ -591,8 +592,14 @@ function getInsights(request) {
  * Replaces the previous Assistant module.
  *
  * - getAgentResultsStream streams results from the legacy agent endpoint through EventSource
- * - getChatInsights calls the Agent Insights API through fetch. It returns a stream of events by default,
- *   or one JSON response when `stream` is false
+ * - The get*Insights methods call the Agent Insights API through fetch, one method per mode. Each returns
+ *   a stream of events by default, or one JSON response when `stream` is false
+ *   - getChatInsights: conversational shopping agent
+ *   - getSearchInsights: search bar AI overview
+ *   - getQnaInsights: answers to a question about one product
+ *   - getQnaZeroStateInsights: suggested questions about one product
+ *   - getRecommendationsInsights: curated recommendations around one product
+ *   - getQueryRefinementInsights: refinements for a product listing page
  *
  * @module agent
  * @inner

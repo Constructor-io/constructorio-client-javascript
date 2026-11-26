@@ -43,14 +43,20 @@ After instantiating an instance of the client, seven modules will be exposed as 
 
 - [`agent`](https://constructor-io.github.io/constructorio-client-javascript/module-agent.html) retrieves AI Shopping Agent (ASA) results as a stream.
   - `getAgentResultsStream` streams results from the legacy ASA endpoint.
-  - `getChatInsights` holds one turn of a conversation with the shopping agent through the Agent Insights API. By default it resolves to a `ReadableStream` of `{ event, data }` objects. The event names are listed in `Agent.InsightsEventTypes`. Pass `{ stream: false }` as the second argument to get one JSON response instead.
+  - The Agent Insights methods call the Agent Insights API, one method per mode. By default each resolves to a `ReadableStream` of `{ event, data }` objects. The event names are listed in `Agent.InsightsEventTypes`. Pass `{ stream: false }` as the second argument to get one JSON response instead.
+    - `getChatInsights` holds one turn of a conversation with the shopping agent.
+    - `getSearchInsights` retrieves the AI overview shown above search results.
+    - `getQnaInsights` answers a shopper's question about one product.
+    - `getQnaZeroStateInsights` retrieves suggested questions about one product, before the shopper has asked anything.
+    - `getRecommendationsInsights` retrieves a curated set of recommendations built around one product.
+    - `getQueryRefinementInsights` refines a product listing page and suggests filters to narrow it.
 - [`agent.pia`](https://constructor-io.github.io/constructorio-client-javascript/module-pia.html) retrieves Product Insights Agent (PIA) questions and answers.
 - [`tracker`](https://constructor-io.github.io/constructorio-client-javascript/module-tracker.html) has the `trackAgent*` methods for ASA events and the `trackProductInsightsAgent*` methods for PIA events.
 
 #### Note:
 1. The `assistant` namespace is deprecated. Use `agent` instead.
 
-2. The Agent Insights methods (`getChatInsights`) send requests with the client's `fetch`. Streaming also needs `ReadableStream`, `TextDecoder` and a response body that can be read as a stream (`response.body.getReader()`). If your environment's `fetch` can't stream response bodies (for example, React Native's default `fetch`), pass `{ stream: false }`, or supply a streaming-capable `fetch` in the client options.
+2. The Agent Insights methods send requests with the client's `fetch`. Streaming also needs `ReadableStream`, `TextDecoder` and a response body that can be read as a stream (`response.body.getReader()`). If your environment's `fetch` can't stream response bodies (for example, React Native's default `fetch`), pass `{ stream: false }`, or supply a streaming-capable `fetch` in the client options.
 
 3. For Agent Insights, `networkParameters.timeout` limits the whole request when `stream: false`. When streaming, it limits only the time until the first event arrives.
 
