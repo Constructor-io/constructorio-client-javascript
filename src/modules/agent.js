@@ -936,6 +936,69 @@ class Agent {
       clientOptions: this.options,
     });
   }
+
+  /**
+   * Retrieve product recommendations
+   *
+   * @function getRecommendationsInsights
+   * @description Retrieve a curated set of recommendations built around an anchor product.
+   *  Nothing else is needed on the first render.
+   *  To narrow the set, pass a refinement option from the response back as `shopperInput` on the next request
+   * @param {object} parameters
+   * @param {string} parameters.strategy - The ID of a routing rule configured for the index key,
+   *  e.g. 'complementary_pod'. Not a Recommendations API pod ID
+   * @param {string} [parameters.defaultTitle] - Title shown when the set is the non-personalized default.
+   *  At most 100 characters
+   * @param {object} parameters.pageContext - The shopper's current position in the catalog
+   * @param {string} parameters.pageContext.pageType - The type of page the shopper is currently viewing
+   *  Accepts 'home', 'plp', 'pdp', 'collection', 'email_campaign' or 'cart'
+   * @param {string} parameters.pageContext.itemId - The product the recommendations are built around
+   * @param {string} [parameters.pageContext.variationId] - The variation identifier of the product
+   * @param {string} [parameters.pageContext.searchTerm] - The search query that produced the current product listing
+   * @param {object} [parameters.pageContext.browseFilter] - The category or collection being viewed
+   * @param {object[]} [parameters.pageContext.filters] - Filter expressions currently applied on the page.
+   *  Scopes the candidates to these facets
+   * @param {string} [parameters.shopperInput] - A shopper utterance to steer the recommendations
+   * @param {string} [parameters.threadId] - A unique identifier for the conversation thread.
+   *  When omitted, a new thread is created
+   * @param {boolean} [parameters.guard] - Turn the content moderation check on or off
+   * @param {number} [parameters.numResultEvents] - The maximum number of result events to return
+   * @param {number} [parameters.numResultsPerEvent] - The maximum number of results per `item_results` event
+   * @param {object} [parameters.fmtOptions] - Options to format different aspects of the response
+   * @param {object} [parameters.qsParam] - Extra parameters forwarded to the request.
+   *  Must not override keys managed by pageContext.filters
+   * @param {object} [options] - Additional options for the response
+   * @param {boolean} [options.stream=true] - Stream the recommendations as events. Set to false for a single
+   *  JSON response
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {Promise} Resolves to a ReadableStream of events when streaming, or the JSON response otherwise
+   * @example
+   * const readableStream = await constructorio.agent.getRecommendationsInsights({
+   *     strategy: 'complementary_pod',
+   *     pageContext: { pageType: 'pdp', itemId: 'jacket-123' },
+   * });
+   * const reader = readableStream.getReader();
+   * const { value, done } = await reader.read();
+   */
+  getRecommendationsInsights(parameters, options = {}, networkParameters = {}) {
+    const recommendationsInsightsRequiredFields = [
+      { path: 'strategy', type: 'string' },
+      { path: 'pageContext', type: 'object' },
+      { path: 'pageContext.pageType', type: 'string' },
+      { path: 'pageContext.itemId', type: 'string' },
+    ];
+
+    return getInsights({
+      methodName: 'getRecommendationsInsights',
+      path: '/v1/agent_insights/recommendations',
+      requiredFields: recommendationsInsightsRequiredFields,
+      parameters,
+      options,
+      networkParameters,
+      clientOptions: this.options,
+    });
+  }
 }
 
 module.exports = Agent;

@@ -1346,6 +1346,11 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
     pageContext: { pageType: 'pdp', itemId: 'jacket-123' },
   };
 
+  const insightsRecommendationsTestParams = {
+    strategy: 'complementary_pod',
+    pageContext: { pageType: 'pdp', itemId: 'jacket-123' },
+  };
+
   /**
    * Registry of public Agent Insights methods.
    *
@@ -1413,6 +1418,21 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
         page_context: { page_type: 'pdp', item_id: 'jacket-123' },
       },
       requiredFields: [
+        { path: 'pageContext', type: 'object' },
+        { path: 'pageContext.pageType', type: 'string' },
+        { path: 'pageContext.itemId', type: 'string' },
+      ],
+    },
+    {
+      name: 'getRecommendationsInsights',
+      path: '/v1/agent_insights/recommendations',
+      testParameters: insightsRecommendationsTestParams,
+      expectedBody: {
+        page_context: { page_type: 'pdp', item_id: 'jacket-123' },
+        parameters: { strategy: insightsRecommendationsTestParams.strategy },
+      },
+      requiredFields: [
+        { path: 'strategy', type: 'string' },
         { path: 'pageContext', type: 'object' },
         { path: 'pageContext.pageType', type: 'string' },
         { path: 'pageContext.itemId', type: 'string' },
@@ -1705,6 +1725,30 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
         expect(
           helpers.extractUrlParamsFromFetch(fetchSpy),
         ).not.to.have.property('num_questions');
+      });
+    });
+
+    describe('getRecommendationsInsights: Method Specific', () => {
+      it('should send strategy and defaultTitle in parameters, not the query string', async () => {
+        const fetchSpy = mockJsonFetch(insightsExampleResponse);
+        const agent = createInsightsAgent(fetchSpy);
+
+        await agent.getRecommendationsInsights(
+          { ...insightsRecommendationsTestParams, defaultTitle: 'Goes well with' },
+          { stream: false },
+        );
+
+        expect(
+          helpers.extractBodyParamsFromFetch(fetchSpy).parameters,
+        ).to.deep.equal({
+          strategy: insightsRecommendationsTestParams.strategy,
+          default_title: 'Goes well with',
+        });
+
+        const urlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(urlParams).not.to.have.property('strategy');
+        expect(urlParams).not.to.have.property('default_title');
       });
     });
   });
