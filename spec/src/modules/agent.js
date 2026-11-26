@@ -1342,6 +1342,10 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
     pageContext: { pageType: 'pdp', itemId: 'jacket-123' },
   };
 
+  const insightsQnaZeroStateTestParams = {
+    pageContext: { pageType: 'pdp', itemId: 'jacket-123' },
+  };
+
   /**
    * Registry of public Agent Insights methods.
    *
@@ -1396,6 +1400,19 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
       },
       requiredFields: [
         { path: 'shopperInput', type: 'string' },
+        { path: 'pageContext', type: 'object' },
+        { path: 'pageContext.pageType', type: 'string' },
+        { path: 'pageContext.itemId', type: 'string' },
+      ],
+    },
+    {
+      name: 'getQnaZeroStateInsights',
+      path: '/v1/agent_insights/qna/zero_state',
+      testParameters: insightsQnaZeroStateTestParams,
+      expectedBody: {
+        page_context: { page_type: 'pdp', item_id: 'jacket-123' },
+      },
+      requiredFields: [
         { path: 'pageContext', type: 'object' },
         { path: 'pageContext.pageType', type: 'string' },
         { path: 'pageContext.itemId', type: 'string' },
@@ -1669,6 +1686,25 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
         await agent.getSearchInsights(insightsSearchTestParams, { stream: false });
 
         expect(helpers.extractBodyParamsFromFetch(fetchSpy)).not.to.have.property('parameters');
+      });
+    });
+
+    describe('getQnaZeroStateInsights: Method Specific', () => {
+      it('should send numQuestions in parameters.num_questions, not the query string', async () => {
+        const fetchSpy = mockJsonFetch(insightsExampleResponse);
+        const agent = createInsightsAgent(fetchSpy);
+
+        await agent.getQnaZeroStateInsights(
+          { ...insightsQnaZeroStateTestParams, numQuestions: 4 },
+          { stream: false },
+        );
+
+        expect(
+          helpers.extractBodyParamsFromFetch(fetchSpy).parameters,
+        ).to.deep.equal({ num_questions: 4 });
+        expect(
+          helpers.extractUrlParamsFromFetch(fetchSpy),
+        ).not.to.have.property('num_questions');
       });
     });
   });

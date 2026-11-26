@@ -892,6 +892,50 @@ class Agent {
       clientOptions: this.options,
     });
   }
+
+  /**
+   * Retrieve suggested product questions
+   *
+   * @function getQnaZeroStateInsights
+   * @description Retrieve the questions to suggest about one product before the shopper has asked anything.
+   *  The questions arrive as the `options` of a `follow_up_refinement` event. Pass one unchanged as `shopperInput`
+   *  to getQnaInsights, with the same pageContext, to answer it
+   * @param {object} parameters
+   * @param {object} parameters.pageContext - The shopper's current position in the catalog
+   * @param {string} parameters.pageContext.pageType - The type of page the shopper is currently viewing
+   *  Accepts 'home', 'plp', 'pdp', 'collection', 'email_campaign' or 'cart'
+   * @param {string} parameters.pageContext.itemId - The product identifier to suggest questions for
+   * @param {number} [parameters.numQuestions] - The maximum number of questions to return.
+   *  Defaults to the number configured for the index key
+   * @param {object} [options] - Additional options for the response
+   * @param {boolean} [options.stream=true] - Stream the questions as events. Set to false for a single JSON response
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {Promise} Resolves to a ReadableStream of events when streaming, or the JSON response otherwise
+   * @example
+   * const response = await constructorio.agent.getQnaZeroStateInsights({
+   *     pageContext: { pageType: 'pdp', itemId: 'jacket-123' },
+   *     numQuestions: 4,
+   * }, { stream: false });
+   * const questions = response.follow_up_refinement?.options || [];
+   */
+  getQnaZeroStateInsights(parameters, options = {}, networkParameters = {}) {
+    const qnaZeroStateInsightsRequiredFields = [
+      { path: 'pageContext', type: 'object' },
+      { path: 'pageContext.pageType', type: 'string' },
+      { path: 'pageContext.itemId', type: 'string' },
+    ];
+
+    return getInsights({
+      methodName: 'getQnaZeroStateInsights',
+      path: '/v1/agent_insights/qna/zero_state',
+      requiredFields: qnaZeroStateInsightsRequiredFields,
+      parameters,
+      options,
+      networkParameters,
+      clientOptions: this.options,
+    });
+  }
 }
 
 module.exports = Agent;
