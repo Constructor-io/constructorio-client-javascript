@@ -1351,6 +1351,10 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
     pageContext: { pageType: 'pdp', itemId: 'jacket-123' },
   };
 
+  const insightsQueryRefinementTestParams = {
+    pageContext: { pageType: 'plp', searchTerm: 'sneakers' },
+  };
+
   /**
    * Registry of public Agent Insights methods.
    *
@@ -1436,6 +1440,18 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
         { path: 'pageContext', type: 'object' },
         { path: 'pageContext.pageType', type: 'string' },
         { path: 'pageContext.itemId', type: 'string' },
+      ],
+    },
+    {
+      name: 'getQueryRefinementInsights',
+      path: '/v1/agent_insights/query_refinement',
+      testParameters: insightsQueryRefinementTestParams,
+      expectedBody: {
+        page_context: { page_type: 'plp', search_term: 'sneakers' },
+      },
+      requiredFields: [
+        { path: 'pageContext', type: 'object' },
+        { path: 'pageContext.pageType', type: 'string' },
       ],
     },
   ];

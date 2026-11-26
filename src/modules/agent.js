@@ -999,6 +999,64 @@ class Agent {
       clientOptions: this.options,
     });
   }
+
+  /**
+   * Retrieve product listing refinements
+   *
+   * @function getQueryRefinementInsights
+   * @description Refine the product listing a shopper is on, and suggest filter choices to narrow it next.
+   * @param {object} parameters
+   * @param {object} parameters.pageContext - The product listing to refine. `searchTerm` or `browseFilter`
+   *  is required
+   * @param {string} parameters.pageContext.pageType - Always 'plp'
+   * @param {string} [parameters.pageContext.searchTerm] - The search query that produced the listing,
+   *  on a search results page
+   * @param {object} [parameters.pageContext.browseFilter] - The category the listing browses, on a category page
+   * @param {string} parameters.pageContext.browseFilter.name - Always 'group_id'
+   * @param {string} parameters.pageContext.browseFilter.value - The ID of the category
+   * @param {object[]} [parameters.pageContext.filters] - Filter expressions active on the listing
+   * @param {string} [parameters.pageContext.itemId] - A product identifier. Does not change the listing
+   * @param {string} [parameters.pageContext.variationId] - A variation identifier. Only valid when itemId is set
+   * @param {string} [parameters.shopperInput] - A refinement the shopper typed, e.g. 'under $200'.
+   *  Leave out on page load, after a choice or a filter has applied
+   * @param {string} [parameters.threadId] - A unique identifier for the conversation thread.
+   *  When omitted, a new thread is created
+   * @param {boolean} [parameters.guard] - Turn the content moderation check on or off
+   * @param {number} [parameters.numResultEvents] - The maximum number of result events to return
+   * @param {number} [parameters.numResultsPerEvent] - The maximum number of results per `item_results` event
+   * @param {object} [parameters.fmtOptions] - Options to format different aspects of the response
+   * @param {object} [parameters.qsParam] - Extra parameters forwarded to the request.
+   *  Must not override keys managed by pageContext.filters
+   * @param {object} [options] - Additional options for the response
+   * @param {boolean} [options.stream=true] - Stream the refinements as events. Set to false for a single
+   *  JSON response
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {Promise} Resolves to a ReadableStream of events when streaming, or the JSON response otherwise
+   * @example
+   * const readableStream = await constructorio.agent.getQueryRefinementInsights({
+   *     shopperInput: 'under $200',
+   *     pageContext: { pageType: 'plp', searchTerm: 'sneakers' },
+   * });
+   * const reader = readableStream.getReader();
+   * const { value, done } = await reader.read();
+   */
+  getQueryRefinementInsights(parameters, options = {}, networkParameters = {}) {
+    const queryRefinementInsightsRequiredFields = [
+      { path: 'pageContext', type: 'object' },
+      { path: 'pageContext.pageType', type: 'string' },
+    ];
+
+    return getInsights({
+      methodName: 'getQueryRefinementInsights',
+      path: '/v1/agent_insights/query_refinement',
+      requiredFields: queryRefinementInsightsRequiredFields,
+      parameters,
+      options,
+      networkParameters,
+      clientOptions: this.options,
+    });
+  }
 }
 
 module.exports = Agent;
