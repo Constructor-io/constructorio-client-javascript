@@ -1332,6 +1332,11 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
     pageContext: { pageType: 'home' },
   };
 
+  const insightsSearchTestParams = {
+    shopperInput: 'waterproof jacket',
+    pageContext: { pageType: 'home' },
+  };
+
   /**
    * Registry of public Agent Insights methods.
    *
@@ -1357,6 +1362,20 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
       },
       requiredFields: [
         { path: 'domain', type: 'string' },
+        { path: 'shopperInput', type: 'string' },
+        { path: 'pageContext', type: 'object' },
+        { path: 'pageContext.pageType', type: 'string' },
+      ],
+    },
+    {
+      name: 'getSearchInsights',
+      path: '/v1/agent_insights/search',
+      testParameters: insightsSearchTestParams,
+      expectedBody: {
+        shopper_input: insightsSearchTestParams.shopperInput,
+        page_context: { page_type: 'home' },
+      },
+      requiredFields: [
         { path: 'shopperInput', type: 'string' },
         { path: 'pageContext', type: 'object' },
         { path: 'pageContext.pageType', type: 'string' },
@@ -1619,6 +1638,17 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
         expect(
           helpers.extractUrlParamsFromFetch(fetchSpy),
         ).not.to.have.property('domain');
+      });
+    });
+
+    describe('getSearchInsights: Method Specific', () => {
+      it('should leave parameters out of the body', async () => {
+        const fetchSpy = mockJsonFetch(insightsExampleResponse);
+        const agent = createInsightsAgent(fetchSpy);
+
+        await agent.getSearchInsights(insightsSearchTestParams, { stream: false });
+
+        expect(helpers.extractBodyParamsFromFetch(fetchSpy)).not.to.have.property('parameters');
       });
     });
   });

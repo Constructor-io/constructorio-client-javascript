@@ -251,8 +251,17 @@ function createInsightsUrl(path, parameters, options) {
 
 // Keys left undefined are dropped by JSON.stringify
 function createInsightsBody(parameters) {
-  const { shopperInput, domain, pageContext, requestContext } = parameters;
+  const {
+    shopperInput,
+    domain,
+    strategy,
+    defaultTitle,
+    numQuestions,
+    pageContext,
+    requestContext,
+  } = parameters;
   const { pageType, itemId, variationId, searchTerm, browseFilter, filters } = pageContext;
+  // Common body parameters for all modes
   const body = {
     shopper_input: shopperInput,
     page_context: {
@@ -264,8 +273,19 @@ function createInsightsBody(parameters) {
       browse_filter: browseFilter,
       filters,
     },
-    parameters: { domain },
   };
+
+  // Each mode sends only the fields it accepts, so most leave this empty
+  const bodyParameters = {
+    domain,
+    strategy,
+    default_title: defaultTitle,
+    num_questions: numQuestions,
+  };
+  // Leave out `parameters` when the mode has none to send
+  if (Object.values(bodyParameters).some((value) => value !== undefined)) {
+    body.parameters = bodyParameters;
+  }
 
   if (requestContext) {
     const { prices } = requestContext;
@@ -721,7 +741,7 @@ class Agent {
    * @example
    * const readableStream = await constructorio.agent.getChatInsights({
    *     shopperInput: 'I want a waterproof jacket',
-   *     domain: 'searchbar',
+   *     domain: 'explorer',
    *     pageContext: { pageType: 'home' },
    * });
    * const reader = readableStream.getReader();
@@ -739,6 +759,66 @@ class Agent {
       methodName: 'getChatInsights',
       path: '/v1/agent_insights/chat',
       requiredFields: chatInsightsRequiredFields,
+      parameters,
+      options,
+      networkParameters,
+      clientOptions: this.options,
+    });
+  }
+
+  /**
+   * Retrieve search bar AI overviews
+   *
+   * @function getSearchInsights
+   * @description Produce the AI overview for a shopper's search query: a short summary of what the catalog offers
+   *  for it, and the few products that answer it best.
+   *  Rejects with status 422 when the key's search bar configuration judges the query better served by
+   *  traditional search, show your own search results in that case
+   * @param {object} parameters
+   * @param {string} parameters.shopperInput - The shopper's search query
+   * @param {object} parameters.pageContext - The shopper's current position in the catalog
+   * @param {string} parameters.pageContext.pageType - The type of page the shopper is currently viewing
+   *  Accepts 'home', 'plp', 'pdp', 'collection', 'email_campaign' or 'cart'
+   * @param {string} [parameters.pageContext.itemId] - The product identifier the shopper is looking at.
+   *  Required when pageType is 'pdp'
+   * @param {string} [parameters.pageContext.variationId] - The variation identifier of the product.
+   *  Only valid when itemId is set
+   * @param {string} [parameters.pageContext.searchTerm] - The search query that produced the current product listing
+   * @param {object} [parameters.pageContext.browseFilter] - The category or collection being viewed
+   * @param {object[]} [parameters.pageContext.filters] - Filter expressions currently applied on the page
+   * @param {string} [parameters.threadId] - A unique identifier for the conversation thread.
+   *  When omitted, a new thread is created
+   * @param {boolean} [parameters.guard] - Turn the content moderation check on or off
+   * @param {number} [parameters.numResultEvents] - The maximum number of result events to return.
+   *  Leave unset unless dropping product sets is intended
+   * @param {number} [parameters.numResultsPerEvent] - The maximum number of results per `item_results` event
+   * @param {object} [parameters.fmtOptions] - Options to format different aspects of the response
+   * @param {object} [parameters.qsParam] - Extra parameters forwarded to the request.
+   *  Must not override keys managed by pageContext.filters
+   * @param {object} [options] - Additional options for the response
+   * @param {boolean} [options.stream=true] - Stream the overview as events. Set to false for a single JSON response
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {Promise} Resolves to a ReadableStream of events when streaming, or the JSON response otherwise
+   * @example
+   * const readableStream = await constructorio.agent.getSearchInsights({
+   *     shopperInput: 'waterproof jacket',
+   *     pageContext: { pageType: 'home' },
+   * });
+   * const reader = readableStream.getReader();
+   * const { value, done } = await reader.read();
+   */
+  getSearchInsights(parameters, options = {}, networkParameters = {}) {
+    const searchInsightsRequiredFields = [
+      { path: 'shopperInput', type: 'string' },
+      { path: 'pageContext', type: 'object' },
+      { path: 'pageContext.pageType', type: 'string' },
+    ];
+
+    return getInsights({
+      methodName: 'getSearchInsights',
+      path: '/v1/agent_insights/search',
+      requiredFields: searchInsightsRequiredFields,
       parameters,
       options,
       networkParameters,
