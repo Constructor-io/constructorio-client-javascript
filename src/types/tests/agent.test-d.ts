@@ -1,5 +1,16 @@
-import { expectAssignable } from 'tsd';
-import { AgentInsightsResponse, AgentInsightsEvent } from '../agent';
+import { expectAssignable, expectNotAssignable, expectType } from 'tsd';
+import Agent, {
+  AgentInsightsResponse,
+  AgentInsightsEvent,
+  IAgentInsightsChatParameters,
+  IAgentInsightsSearchParameters,
+  IAgentInsightsQnaParameters,
+  IAgentInsightsQnaZeroStateParameters,
+  IAgentInsightsRecommendationsParameters,
+  IAgentInsightsQueryRefinementParameters,
+} from '../agent';
+
+declare const agent: Agent;
 
 expectAssignable<AgentInsightsResponse>({
   result_id: '9a4f1c2e-1b7d-4c8e-9f3a-2d5e6b7c8a90',
@@ -139,3 +150,163 @@ expectAssignable<AgentInsightsEvent[]>([
   },
   { event: 'end', data: { result_id: 'r-1' } },
 ]);
+
+/* ---------- getChatInsights ---------- */
+
+expectAssignable<IAgentInsightsChatParameters>({
+  shopperInput: 'waterproof jacket',
+  domain: 'shopping',
+  pageContext: { pageType: 'home' },
+});
+
+// domain is required
+expectNotAssignable<IAgentInsightsChatParameters>({
+  shopperInput: 'waterproof jacket',
+  pageContext: { pageType: 'home' },
+});
+
+expectType<Promise<ReadableStream<AgentInsightsEvent>>>(
+  agent.getChatInsights({ shopperInput: 'x', domain: 'shopping', pageContext: { pageType: 'home' } }),
+);
+
+expectType<Promise<AgentInsightsResponse>>(
+  agent.getChatInsights(
+    { shopperInput: 'x', domain: 'shopping', pageContext: { pageType: 'home' } },
+    { stream: false },
+  ),
+);
+
+/* ---------- getSearchInsights ---------- */
+
+expectAssignable<IAgentInsightsSearchParameters>({
+  shopperInput: 'waterproof jacket',
+  pageContext: { pageType: 'home' },
+});
+
+// shopperInput is required
+expectNotAssignable<IAgentInsightsSearchParameters>({
+  pageContext: { pageType: 'home' },
+});
+
+expectType<Promise<ReadableStream<AgentInsightsEvent>>>(
+  agent.getSearchInsights({ shopperInput: 'x', pageContext: { pageType: 'home' } }),
+);
+
+expectType<Promise<AgentInsightsResponse>>(
+  agent.getSearchInsights(
+    { shopperInput: 'x', pageContext: { pageType: 'home' } },
+    { stream: false },
+  ),
+);
+
+/* ---------- getQnaInsights ---------- */
+
+expectAssignable<IAgentInsightsQnaParameters>({
+  shopperInput: 'Is this waterproof?',
+  pageContext: { pageType: 'pdp', itemId: '12345' },
+});
+
+// itemId is required
+expectNotAssignable<IAgentInsightsQnaParameters>({
+  shopperInput: 'Is this waterproof?',
+  pageContext: { pageType: 'pdp' },
+});
+
+expectType<Promise<ReadableStream<AgentInsightsEvent>>>(
+  agent.getQnaInsights({ shopperInput: 'x', pageContext: { pageType: 'pdp', itemId: '12345' } }),
+);
+
+expectType<Promise<AgentInsightsResponse>>(
+  agent.getQnaInsights(
+    { shopperInput: 'x', pageContext: { pageType: 'pdp', itemId: '12345' } },
+    { stream: false },
+  ),
+);
+
+/* ---------- getQnaZeroStateInsights ---------- */
+
+expectAssignable<IAgentInsightsQnaZeroStateParameters>({
+  pageContext: { pageType: 'pdp', itemId: '12345' },
+  numQuestions: 4,
+});
+
+// itemId is required
+expectNotAssignable<IAgentInsightsQnaZeroStateParameters>({
+  pageContext: { pageType: 'pdp' },
+});
+
+expectType<Promise<ReadableStream<AgentInsightsEvent>>>(
+  agent.getQnaZeroStateInsights({ pageContext: { pageType: 'pdp', itemId: '12345' } }),
+);
+
+expectType<Promise<AgentInsightsResponse>>(
+  agent.getQnaZeroStateInsights(
+    { pageContext: { pageType: 'pdp', itemId: '12345' } },
+    { stream: false },
+  ),
+);
+
+/* ---------- getRecommendationsInsights ---------- */
+
+expectAssignable<IAgentInsightsRecommendationsParameters>({
+  strategy: 'similar-items',
+  pageContext: { pageType: 'pdp', itemId: '12345' },
+});
+
+// strategy is required
+expectNotAssignable<IAgentInsightsRecommendationsParameters>({
+  pageContext: { pageType: 'pdp', itemId: '12345' },
+});
+
+// itemId is required
+expectNotAssignable<IAgentInsightsRecommendationsParameters>({
+  strategy: 'similar-items',
+  pageContext: { pageType: 'pdp' },
+});
+
+expectType<Promise<ReadableStream<AgentInsightsEvent>>>(
+  agent.getRecommendationsInsights({
+    strategy: 'similar-items',
+    pageContext: { pageType: 'pdp', itemId: '12345' },
+  }),
+);
+
+expectType<Promise<AgentInsightsResponse>>(
+  agent.getRecommendationsInsights(
+    { strategy: 'similar-items', pageContext: { pageType: 'pdp', itemId: '12345' } },
+    { stream: false },
+  ),
+);
+
+/* ---------- getQueryRefinementInsights ---------- */
+
+expectAssignable<IAgentInsightsQueryRefinementParameters>({
+  pageContext: {
+    pageType: 'plp',
+    browseFilter: { name: 'group_id', value: 'jackets' },
+  },
+});
+
+// only listing pages are accepted
+expectNotAssignable<IAgentInsightsQueryRefinementParameters>({
+  pageContext: { pageType: 'home' },
+});
+
+// browseFilter name must be group_id
+expectNotAssignable<IAgentInsightsQueryRefinementParameters>({
+  pageContext: {
+    pageType: 'plp',
+    browseFilter: { name: 'collection_id', value: 'summer' },
+  },
+});
+
+expectType<Promise<ReadableStream<AgentInsightsEvent>>>(
+  agent.getQueryRefinementInsights({ pageContext: { pageType: 'plp', searchTerm: 'jackets' } }),
+);
+
+expectType<Promise<AgentInsightsResponse>>(
+  agent.getQueryRefinementInsights(
+    { pageContext: { pageType: 'plp', searchTerm: 'jackets' } },
+    { stream: false },
+  ),
+);

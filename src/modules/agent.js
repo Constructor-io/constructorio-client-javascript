@@ -251,8 +251,17 @@ function createInsightsUrl(path, parameters, options) {
 
 // Keys left undefined are dropped by JSON.stringify
 function createInsightsBody(parameters) {
-  const { shopperInput, domain, pageContext, requestContext } = parameters;
+  const {
+    shopperInput,
+    domain,
+    strategy,
+    defaultTitle,
+    numQuestions,
+    pageContext,
+    requestContext,
+  } = parameters;
   const { pageType, itemId, variationId, searchTerm, browseFilter, filters } = pageContext;
+  // Common body parameters for all modes
   const body = {
     shopper_input: shopperInput,
     page_context: {
@@ -264,8 +273,19 @@ function createInsightsBody(parameters) {
       browse_filter: browseFilter,
       filters,
     },
-    parameters: { domain },
   };
+
+  // Each mode sends only the fields it accepts, so most leave this empty
+  const bodyParameters = {
+    domain,
+    strategy,
+    default_title: defaultTitle,
+    num_questions: numQuestions,
+  };
+  // Leave out `parameters` when the mode has none to send
+  if (Object.values(bodyParameters).some((value) => value !== undefined)) {
+    body.parameters = bodyParameters;
+  }
 
   if (requestContext) {
     const { prices } = requestContext;
@@ -476,7 +496,8 @@ function createInsightsEventStream(response, controller, timeoutId, methodName) 
  *
  * To support a new get*Insights method:
  * 1. Add the public method to the Agent class, passing its own settings (see getChatInsights)
- * 2. Add its types in src/types/agent.d.ts, and an entry to `INSIGHTS_METHODS` in spec/src/modules/agent.js
+ * 2. If the mode takes new `parameters` body fields, map them in createInsightsBody
+ * 3. Add its types in src/types/agent.d.ts, and an entry to `INSIGHTS_METHODS` in spec/src/modules/agent.js
  *    so the method contract suite runs against it
  *
  * @private
@@ -571,8 +592,14 @@ function getInsights(request) {
  * Replaces the previous Assistant module.
  *
  * - getAgentResultsStream streams results from the legacy agent endpoint through EventSource
- * - getChatInsights calls the Agent Insights API through fetch. It returns a stream of events by default,
- *   or one JSON response when `stream` is false
+ * - The get*Insights methods call the Agent Insights API through fetch, one method per mode. Each returns
+ *   a stream of events by default, or one JSON response when `stream` is false
+ *   - getChatInsights: conversational shopping agent
+ *   - getSearchInsights: search bar AI overview
+ *   - getQnaInsights: answers to a question about one product
+ *   - getQnaZeroStateInsights: suggested questions about one product
+ *   - getRecommendationsInsights: curated recommendations around one product
+ *   - getQueryRefinementInsights: refinements for a product listing page
  *
  * @module agent
  * @inner
@@ -721,7 +748,7 @@ class Agent {
    * @example
    * const readableStream = await constructorio.agent.getChatInsights({
    *     shopperInput: 'I want a waterproof jacket',
-   *     domain: 'searchbar',
+   *     domain: 'explorer',
    *     pageContext: { pageType: 'home' },
    * });
    * const reader = readableStream.getReader();
@@ -739,6 +766,298 @@ class Agent {
       methodName: 'getChatInsights',
       path: '/v1/agent_insights/chat',
       requiredFields: chatInsightsRequiredFields,
+      parameters,
+      options,
+      networkParameters,
+      clientOptions: this.options,
+    });
+  }
+
+  /**
+   * Retrieve search bar AI overviews
+   *
+   * @function getSearchInsights
+   * @description Produce the AI overview for a shopper's search query: a short summary of what the catalog offers
+   *  for it, and the few products that answer it best.
+   *  Rejects with status 422 when the key's search bar configuration judges the query better served by
+   *  traditional search, show your own search results in that case
+   * @param {object} parameters
+   * @param {string} parameters.shopperInput - The shopper's search query
+   * @param {object} parameters.pageContext - The shopper's current position in the catalog
+   * @param {string} parameters.pageContext.pageType - The type of page the shopper is currently viewing
+   *  Accepts 'home', 'plp', 'pdp', 'collection', 'email_campaign' or 'cart'
+   * @param {string} [parameters.pageContext.itemId] - The product identifier the shopper is looking at.
+   *  Required when pageType is 'pdp'
+   * @param {string} [parameters.pageContext.variationId] - The variation identifier of the product.
+   *  Only valid when itemId is set
+   * @param {string} [parameters.pageContext.searchTerm] - The search query that produced the current product listing
+   * @param {object} [parameters.pageContext.browseFilter] - The category or collection being viewed
+   * @param {object[]} [parameters.pageContext.filters] - Filter expressions currently applied on the page
+   * @param {string} [parameters.threadId] - A unique identifier for the conversation thread.
+   *  When omitted, a new thread is created
+   * @param {boolean} [parameters.guard] - Turn the content moderation check on or off
+   * @param {number} [parameters.numResultEvents] - The maximum number of result events to return.
+   *  Leave unset unless dropping product sets is intended
+   * @param {number} [parameters.numResultsPerEvent] - The maximum number of results per `item_results` event
+   * @param {object} [parameters.fmtOptions] - Options to format different aspects of the response
+   * @param {object} [parameters.qsParam] - Extra parameters forwarded to the request.
+   *  Must not override keys managed by pageContext.filters
+   * @param {object} [options] - Additional options for the response
+   * @param {boolean} [options.stream=true] - Stream the overview as events. Set to false for a single JSON response
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {Promise} Resolves to a ReadableStream of events when streaming, or the JSON response otherwise
+   * @example
+   * const readableStream = await constructorio.agent.getSearchInsights({
+   *     shopperInput: 'waterproof jacket',
+   *     pageContext: { pageType: 'home' },
+   * });
+   * const reader = readableStream.getReader();
+   * const { value, done } = await reader.read();
+   */
+  getSearchInsights(parameters, options = {}, networkParameters = {}) {
+    const searchInsightsRequiredFields = [
+      { path: 'shopperInput', type: 'string' },
+      { path: 'pageContext', type: 'object' },
+      { path: 'pageContext.pageType', type: 'string' },
+    ];
+
+    return getInsights({
+      methodName: 'getSearchInsights',
+      path: '/v1/agent_insights/search',
+      requiredFields: searchInsightsRequiredFields,
+      parameters,
+      options,
+      networkParameters,
+      clientOptions: this.options,
+    });
+  }
+
+  /**
+   * Retrieve product question answers
+   *
+   * @function getQnaInsights
+   * @description Answer a shopper's question about one specific product. Pass `threadId` from a previous answer to
+   *  ask a follow-up in the same conversation
+   * @param {object} parameters
+   * @param {string} parameters.shopperInput - The question to answer about the product
+   * @param {object} parameters.pageContext - The shopper's current position in the catalog
+   * @param {string} parameters.pageContext.pageType - The type of page the shopper is currently viewing
+   *  Accepts 'home', 'plp', 'pdp', 'collection', 'email_campaign' or 'cart'
+   * @param {string} parameters.pageContext.itemId - The product identifier the question is about
+   * @param {string} [parameters.pageContext.variationId] - The variation identifier of the product
+   * @param {string} [parameters.pageContext.searchTerm] - The search query that produced the current product listing
+   * @param {object} [parameters.pageContext.browseFilter] - The category or collection being viewed
+   * @param {object[]} [parameters.pageContext.filters] - Filter expressions currently applied on the page
+   * @param {object} [parameters.requestContext] - The shopper's price for the product on the page, for this
+   *  request only. Only accepted when enabled for the domain
+   * @param {object[]} parameters.requestContext.prices - Up to one item-level and one variation-level price
+   * @param {string} parameters.requestContext.prices[].itemId - Must equal pageContext.itemId
+   * @param {string} [parameters.requestContext.prices[].variationId] - Must equal pageContext.variationId.
+   *  Omit for an item-level price
+   * @param {string} parameters.requestContext.prices[].amount - Decimal string greater than zero
+   * @param {string} parameters.requestContext.prices[].currency - 3-letter currency code
+   * @param {string} parameters.requestContext.prices[].expiresAt - ISO 8601 date-time
+   * @param {string} parameters.requestContext.prices[].source - Who resolved the price: 'integration' or 'browser'
+   * @param {string} [parameters.requestContext.prices[].reason] - Why the price applies
+   * @param {string} [parameters.threadId] - A unique identifier for the conversation thread.
+   *  When omitted, a new thread is created
+   * @param {boolean} [parameters.guard] - Turn the content moderation check on or off
+   * @param {number} [parameters.numResultEvents] - The maximum number of result events to return
+   * @param {number} [parameters.numResultsPerEvent] - The maximum number of results per `item_results` event
+   * @param {object} [parameters.fmtOptions] - Options to format different aspects of the response
+   * @param {object} [parameters.qsParam] - Extra parameters forwarded to the request.
+   *  Must not override keys managed by pageContext.filters
+   * @param {object} [options] - Additional options for the response
+   * @param {boolean} [options.stream=true] - Stream the answer as events. Set to false for a single JSON response
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {Promise} Resolves to a ReadableStream of events when streaming, or the JSON response otherwise
+   * @example
+   * const readableStream = await constructorio.agent.getQnaInsights({
+   *     shopperInput: 'Is this jacket machine washable?',
+   *     pageContext: { pageType: 'pdp', itemId: 'jacket-123' },
+   * });
+   * const reader = readableStream.getReader();
+   * const { value, done } = await reader.read();
+   */
+  getQnaInsights(parameters, options = {}, networkParameters = {}) {
+    const qnaInsightsRequiredFields = [
+      { path: 'shopperInput', type: 'string' },
+      { path: 'pageContext', type: 'object' },
+      { path: 'pageContext.pageType', type: 'string' },
+      { path: 'pageContext.itemId', type: 'string' },
+    ];
+
+    return getInsights({
+      methodName: 'getQnaInsights',
+      path: '/v1/agent_insights/qna',
+      requiredFields: qnaInsightsRequiredFields,
+      parameters,
+      options,
+      networkParameters,
+      clientOptions: this.options,
+    });
+  }
+
+  /**
+   * Retrieve suggested product questions
+   *
+   * @function getQnaZeroStateInsights
+   * @description Retrieve the questions to suggest about one product before the shopper has asked anything.
+   *  The questions arrive as the `options` of a `follow_up_refinement` event. Pass one unchanged as `shopperInput`
+   *  to getQnaInsights, with the same pageContext, to answer it
+   * @param {object} parameters
+   * @param {object} parameters.pageContext - The shopper's current position in the catalog
+   * @param {string} parameters.pageContext.pageType - The type of page the shopper is currently viewing
+   *  Accepts 'home', 'plp', 'pdp', 'collection', 'email_campaign' or 'cart'
+   * @param {string} parameters.pageContext.itemId - The product identifier to suggest questions for
+   * @param {number} [parameters.numQuestions] - The maximum number of questions to return.
+   *  Defaults to the number configured for the index key
+   * @param {object} [options] - Additional options for the response
+   * @param {boolean} [options.stream=true] - Stream the questions as events. Set to false for a single JSON response
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {Promise} Resolves to a ReadableStream of events when streaming, or the JSON response otherwise
+   * @example
+   * const response = await constructorio.agent.getQnaZeroStateInsights({
+   *     pageContext: { pageType: 'pdp', itemId: 'jacket-123' },
+   *     numQuestions: 4,
+   * }, { stream: false });
+   * const questions = response.follow_up_refinement?.options || [];
+   */
+  getQnaZeroStateInsights(parameters, options = {}, networkParameters = {}) {
+    const qnaZeroStateInsightsRequiredFields = [
+      { path: 'pageContext', type: 'object' },
+      { path: 'pageContext.pageType', type: 'string' },
+      { path: 'pageContext.itemId', type: 'string' },
+    ];
+
+    return getInsights({
+      methodName: 'getQnaZeroStateInsights',
+      path: '/v1/agent_insights/qna/zero_state',
+      requiredFields: qnaZeroStateInsightsRequiredFields,
+      parameters,
+      options,
+      networkParameters,
+      clientOptions: this.options,
+    });
+  }
+
+  /**
+   * Retrieve product recommendations
+   *
+   * @function getRecommendationsInsights
+   * @description Retrieve a curated set of recommendations built around an anchor product.
+   *  Nothing else is needed on the first render.
+   *  To narrow the set, pass a refinement option from the response back as `shopperInput` on the next request
+   * @param {object} parameters
+   * @param {string} parameters.strategy - The ID of a routing rule configured for the index key,
+   *  e.g. 'complementary_pod'. Not a Recommendations API pod ID
+   * @param {string} [parameters.defaultTitle] - Title shown when the set is the non-personalized default.
+   *  At most 100 characters
+   * @param {object} parameters.pageContext - The shopper's current position in the catalog
+   * @param {string} parameters.pageContext.pageType - The type of page the shopper is currently viewing
+   *  Accepts 'home', 'plp', 'pdp', 'collection', 'email_campaign' or 'cart'
+   * @param {string} parameters.pageContext.itemId - The product the recommendations are built around
+   * @param {string} [parameters.pageContext.variationId] - The variation identifier of the product
+   * @param {string} [parameters.pageContext.searchTerm] - The search query that produced the current product listing
+   * @param {object} [parameters.pageContext.browseFilter] - The category or collection being viewed
+   * @param {object[]} [parameters.pageContext.filters] - Filter expressions currently applied on the page.
+   *  Scopes the candidates to these facets
+   * @param {string} [parameters.shopperInput] - A shopper utterance to steer the recommendations
+   * @param {string} [parameters.threadId] - A unique identifier for the conversation thread.
+   *  When omitted, a new thread is created
+   * @param {boolean} [parameters.guard] - Turn the content moderation check on or off
+   * @param {number} [parameters.numResultEvents] - The maximum number of result events to return
+   * @param {number} [parameters.numResultsPerEvent] - The maximum number of results per `item_results` event
+   * @param {object} [parameters.fmtOptions] - Options to format different aspects of the response
+   * @param {object} [parameters.qsParam] - Extra parameters forwarded to the request.
+   *  Must not override keys managed by pageContext.filters
+   * @param {object} [options] - Additional options for the response
+   * @param {boolean} [options.stream=true] - Stream the recommendations as events. Set to false for a single
+   *  JSON response
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {Promise} Resolves to a ReadableStream of events when streaming, or the JSON response otherwise
+   * @example
+   * const readableStream = await constructorio.agent.getRecommendationsInsights({
+   *     strategy: 'complementary_pod',
+   *     pageContext: { pageType: 'pdp', itemId: 'jacket-123' },
+   * });
+   * const reader = readableStream.getReader();
+   * const { value, done } = await reader.read();
+   */
+  getRecommendationsInsights(parameters, options = {}, networkParameters = {}) {
+    const recommendationsInsightsRequiredFields = [
+      { path: 'strategy', type: 'string' },
+      { path: 'pageContext', type: 'object' },
+      { path: 'pageContext.pageType', type: 'string' },
+      { path: 'pageContext.itemId', type: 'string' },
+    ];
+
+    return getInsights({
+      methodName: 'getRecommendationsInsights',
+      path: '/v1/agent_insights/recommendations',
+      requiredFields: recommendationsInsightsRequiredFields,
+      parameters,
+      options,
+      networkParameters,
+      clientOptions: this.options,
+    });
+  }
+
+  /**
+   * Retrieve product listing refinements
+   *
+   * @function getQueryRefinementInsights
+   * @description Refine the product listing a shopper is on, and suggest filter choices to narrow it next.
+   * @param {object} parameters
+   * @param {object} parameters.pageContext - The product listing to refine. `searchTerm` or `browseFilter`
+   *  is required
+   * @param {string} parameters.pageContext.pageType - Always 'plp'
+   * @param {string} [parameters.pageContext.searchTerm] - The search query that produced the listing,
+   *  on a search results page
+   * @param {object} [parameters.pageContext.browseFilter] - The category the listing browses, on a category page
+   * @param {string} parameters.pageContext.browseFilter.name - Always 'group_id'
+   * @param {string} parameters.pageContext.browseFilter.value - The ID of the category
+   * @param {object[]} [parameters.pageContext.filters] - Filter expressions active on the listing
+   * @param {string} [parameters.pageContext.itemId] - A product identifier. Does not change the listing
+   * @param {string} [parameters.pageContext.variationId] - A variation identifier. Only valid when itemId is set
+   * @param {string} [parameters.shopperInput] - A refinement the shopper typed, e.g. 'under $200'.
+   *  Leave out on page load, after a choice or a filter has applied
+   * @param {string} [parameters.threadId] - A unique identifier for the conversation thread.
+   *  When omitted, a new thread is created
+   * @param {boolean} [parameters.guard] - Turn the content moderation check on or off
+   * @param {number} [parameters.numResultEvents] - The maximum number of result events to return
+   * @param {number} [parameters.numResultsPerEvent] - The maximum number of results per `item_results` event
+   * @param {object} [parameters.fmtOptions] - Options to format different aspects of the response
+   * @param {object} [parameters.qsParam] - Extra parameters forwarded to the request.
+   *  Must not override keys managed by pageContext.filters
+   * @param {object} [options] - Additional options for the response
+   * @param {boolean} [options.stream=true] - Stream the refinements as events. Set to false for a single
+   *  JSON response
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {Promise} Resolves to a ReadableStream of events when streaming, or the JSON response otherwise
+   * @example
+   * const readableStream = await constructorio.agent.getQueryRefinementInsights({
+   *     shopperInput: 'under $200',
+   *     pageContext: { pageType: 'plp', searchTerm: 'sneakers' },
+   * });
+   * const reader = readableStream.getReader();
+   * const { value, done } = await reader.read();
+   */
+  getQueryRefinementInsights(parameters, options = {}, networkParameters = {}) {
+    const queryRefinementInsightsRequiredFields = [
+      { path: 'pageContext', type: 'object' },
+      { path: 'pageContext.pageType', type: 'string' },
+    ];
+
+    return getInsights({
+      methodName: 'getQueryRefinementInsights',
+      path: '/v1/agent_insights/query_refinement',
+      requiredFields: queryRefinementInsightsRequiredFields,
       parameters,
       options,
       networkParameters,

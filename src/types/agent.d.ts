@@ -81,6 +81,16 @@ export interface IAgentInsightsQnaParameters
   requestContext?: AgentInsightsRequestContext;
 }
 
+/**
+ * Parameters for agent.getQnaZeroStateInsights.
+ */
+// Doesn't extend the base parameters and it takes no shopperInput or requestContext
+// They have no effect on zero state
+export interface IAgentInsightsQnaZeroStateParameters {
+  pageContext: AgentInsightsItemPageContext;
+  numQuestions?: number;
+}
+
 /** Parameters for agent.getRecommendationsInsights */
 export interface IAgentInsightsRecommendationsParameters
   extends IAgentInsightsBaseParameters<AgentInsightsItemPageContext> {
@@ -270,6 +280,25 @@ declare class Agent {
   /** For user who wants to assign the value of `stream` at runtime */
   getQnaInsights(
     parameters: IAgentInsightsQnaParameters,
+    options?: { stream?: boolean },
+    networkParameters?: NetworkParameters,
+  ): Promise<ReadableStream<AgentInsightsEvent> | AgentInsightsResponse>;
+
+  getQnaZeroStateInsights(
+    parameters: IAgentInsightsQnaZeroStateParameters,
+    options?: { stream?: true },
+    networkParameters?: NetworkParameters,
+  ): Promise<ReadableStream<AgentInsightsEvent>>;
+
+  getQnaZeroStateInsights(
+    parameters: IAgentInsightsQnaZeroStateParameters,
+    options: { stream: false },
+    networkParameters?: NetworkParameters,
+  ): Promise<AgentInsightsResponse>;
+
+  /** For user who wants to assign the value of `stream` at runtime */
+  getQnaZeroStateInsights(
+    parameters: IAgentInsightsQnaZeroStateParameters,
     options?: { stream?: boolean },
     networkParameters?: NetworkParameters,
   ): Promise<ReadableStream<AgentInsightsEvent> | AgentInsightsResponse>;

@@ -1328,8 +1328,31 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
 
   const insightsChatTestParams = {
     shopperInput: 'I want a waterproof jacket',
-    domain: 'searchbar',
+    domain: 'explorer',
     pageContext: { pageType: 'home' },
+  };
+
+  const insightsSearchTestParams = {
+    shopperInput: 'waterproof jacket',
+    pageContext: { pageType: 'home' },
+  };
+
+  const insightsQnaTestParams = {
+    shopperInput: 'Is this jacket machine washable?',
+    pageContext: { pageType: 'pdp', itemId: 'jacket-123' },
+  };
+
+  const insightsQnaZeroStateTestParams = {
+    pageContext: { pageType: 'pdp', itemId: 'jacket-123' },
+  };
+
+  const insightsRecommendationsTestParams = {
+    strategy: 'complementary_pod',
+    pageContext: { pageType: 'pdp', itemId: 'jacket-123' },
+  };
+
+  const insightsQueryRefinementTestParams = {
+    pageContext: { pageType: 'plp', searchTerm: 'sneakers' },
   };
 
   /**
@@ -1358,6 +1381,75 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
       requiredFields: [
         { path: 'domain', type: 'string' },
         { path: 'shopperInput', type: 'string' },
+        { path: 'pageContext', type: 'object' },
+        { path: 'pageContext.pageType', type: 'string' },
+      ],
+    },
+    {
+      name: 'getSearchInsights',
+      path: '/v1/agent_insights/search',
+      testParameters: insightsSearchTestParams,
+      expectedBody: {
+        shopper_input: insightsSearchTestParams.shopperInput,
+        page_context: { page_type: 'home' },
+      },
+      requiredFields: [
+        { path: 'shopperInput', type: 'string' },
+        { path: 'pageContext', type: 'object' },
+        { path: 'pageContext.pageType', type: 'string' },
+      ],
+    },
+    {
+      name: 'getQnaInsights',
+      path: '/v1/agent_insights/qna',
+      testParameters: insightsQnaTestParams,
+      expectedBody: {
+        shopper_input: insightsQnaTestParams.shopperInput,
+        page_context: { page_type: 'pdp', item_id: 'jacket-123' },
+      },
+      requiredFields: [
+        { path: 'shopperInput', type: 'string' },
+        { path: 'pageContext', type: 'object' },
+        { path: 'pageContext.pageType', type: 'string' },
+        { path: 'pageContext.itemId', type: 'string' },
+      ],
+    },
+    {
+      name: 'getQnaZeroStateInsights',
+      path: '/v1/agent_insights/qna/zero_state',
+      testParameters: insightsQnaZeroStateTestParams,
+      expectedBody: {
+        page_context: { page_type: 'pdp', item_id: 'jacket-123' },
+      },
+      requiredFields: [
+        { path: 'pageContext', type: 'object' },
+        { path: 'pageContext.pageType', type: 'string' },
+        { path: 'pageContext.itemId', type: 'string' },
+      ],
+    },
+    {
+      name: 'getRecommendationsInsights',
+      path: '/v1/agent_insights/recommendations',
+      testParameters: insightsRecommendationsTestParams,
+      expectedBody: {
+        page_context: { page_type: 'pdp', item_id: 'jacket-123' },
+        parameters: { strategy: insightsRecommendationsTestParams.strategy },
+      },
+      requiredFields: [
+        { path: 'strategy', type: 'string' },
+        { path: 'pageContext', type: 'object' },
+        { path: 'pageContext.pageType', type: 'string' },
+        { path: 'pageContext.itemId', type: 'string' },
+      ],
+    },
+    {
+      name: 'getQueryRefinementInsights',
+      path: '/v1/agent_insights/query_refinement',
+      testParameters: insightsQueryRefinementTestParams,
+      expectedBody: {
+        page_context: { page_type: 'plp', search_term: 'sneakers' },
+      },
+      requiredFields: [
         { path: 'pageContext', type: 'object' },
         { path: 'pageContext.pageType', type: 'string' },
       ],
@@ -1619,6 +1711,60 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
         expect(
           helpers.extractUrlParamsFromFetch(fetchSpy),
         ).not.to.have.property('domain');
+      });
+    });
+
+    describe('getSearchInsights: Method Specific', () => {
+      it('should leave parameters out of the body', async () => {
+        const fetchSpy = mockJsonFetch(insightsExampleResponse);
+        const agent = createInsightsAgent(fetchSpy);
+
+        await agent.getSearchInsights(insightsSearchTestParams, { stream: false });
+
+        expect(helpers.extractBodyParamsFromFetch(fetchSpy)).not.to.have.property('parameters');
+      });
+    });
+
+    describe('getQnaZeroStateInsights: Method Specific', () => {
+      it('should send numQuestions in parameters.num_questions, not the query string', async () => {
+        const fetchSpy = mockJsonFetch(insightsExampleResponse);
+        const agent = createInsightsAgent(fetchSpy);
+
+        await agent.getQnaZeroStateInsights(
+          { ...insightsQnaZeroStateTestParams, numQuestions: 4 },
+          { stream: false },
+        );
+
+        expect(
+          helpers.extractBodyParamsFromFetch(fetchSpy).parameters,
+        ).to.deep.equal({ num_questions: 4 });
+        expect(
+          helpers.extractUrlParamsFromFetch(fetchSpy),
+        ).not.to.have.property('num_questions');
+      });
+    });
+
+    describe('getRecommendationsInsights: Method Specific', () => {
+      it('should send strategy and defaultTitle in parameters, not the query string', async () => {
+        const fetchSpy = mockJsonFetch(insightsExampleResponse);
+        const agent = createInsightsAgent(fetchSpy);
+
+        await agent.getRecommendationsInsights(
+          { ...insightsRecommendationsTestParams, defaultTitle: 'Goes well with' },
+          { stream: false },
+        );
+
+        expect(
+          helpers.extractBodyParamsFromFetch(fetchSpy).parameters,
+        ).to.deep.equal({
+          strategy: insightsRecommendationsTestParams.strategy,
+          default_title: 'Goes well with',
+        });
+
+        const urlParams = helpers.extractUrlParamsFromFetch(fetchSpy);
+
+        expect(urlParams).not.to.have.property('strategy');
+        expect(urlParams).not.to.have.property('default_title');
       });
     });
   });
