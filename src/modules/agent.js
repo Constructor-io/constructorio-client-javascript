@@ -825,6 +825,73 @@ class Agent {
       clientOptions: this.options,
     });
   }
+
+  /**
+   * Retrieve product question answers
+   *
+   * @function getQnaInsights
+   * @description Answer a shopper's question about one specific product. Pass `threadId` from a previous answer to
+   *  ask a follow-up in the same conversation
+   * @param {object} parameters
+   * @param {string} parameters.shopperInput - The question to answer about the product
+   * @param {object} parameters.pageContext - The shopper's current position in the catalog
+   * @param {string} parameters.pageContext.pageType - The type of page the shopper is currently viewing
+   *  Accepts 'home', 'plp', 'pdp', 'collection', 'email_campaign' or 'cart'
+   * @param {string} parameters.pageContext.itemId - The product identifier the question is about
+   * @param {string} [parameters.pageContext.variationId] - The variation identifier of the product
+   * @param {string} [parameters.pageContext.searchTerm] - The search query that produced the current product listing
+   * @param {object} [parameters.pageContext.browseFilter] - The category or collection being viewed
+   * @param {object[]} [parameters.pageContext.filters] - Filter expressions currently applied on the page
+   * @param {object} [parameters.requestContext] - The shopper's price for the product on the page, for this
+   *  request only. Only accepted when enabled for the domain
+   * @param {object[]} parameters.requestContext.prices - Up to one item-level and one variation-level price
+   * @param {string} parameters.requestContext.prices[].itemId - Must equal pageContext.itemId
+   * @param {string} [parameters.requestContext.prices[].variationId] - Must equal pageContext.variationId.
+   *  Omit for an item-level price
+   * @param {string} parameters.requestContext.prices[].amount - Decimal string greater than zero
+   * @param {string} parameters.requestContext.prices[].currency - 3-letter currency code
+   * @param {string} parameters.requestContext.prices[].expiresAt - ISO 8601 date-time
+   * @param {string} parameters.requestContext.prices[].source - Who resolved the price: 'integration' or 'browser'
+   * @param {string} [parameters.requestContext.prices[].reason] - Why the price applies
+   * @param {string} [parameters.threadId] - A unique identifier for the conversation thread.
+   *  When omitted, a new thread is created
+   * @param {boolean} [parameters.guard] - Turn the content moderation check on or off
+   * @param {number} [parameters.numResultEvents] - The maximum number of result events to return
+   * @param {number} [parameters.numResultsPerEvent] - The maximum number of results per `item_results` event
+   * @param {object} [parameters.fmtOptions] - Options to format different aspects of the response
+   * @param {object} [parameters.qsParam] - Extra parameters forwarded to the request.
+   *  Must not override keys managed by pageContext.filters
+   * @param {object} [options] - Additional options for the response
+   * @param {boolean} [options.stream=true] - Stream the answer as events. Set to false for a single JSON response
+   * @param {object} [networkParameters] - Parameters relevant to the network request
+   * @param {number} [networkParameters.timeout] - Request timeout (in milliseconds)
+   * @returns {Promise} Resolves to a ReadableStream of events when streaming, or the JSON response otherwise
+   * @example
+   * const readableStream = await constructorio.agent.getQnaInsights({
+   *     shopperInput: 'Is this jacket machine washable?',
+   *     pageContext: { pageType: 'pdp', itemId: 'jacket-123' },
+   * });
+   * const reader = readableStream.getReader();
+   * const { value, done } = await reader.read();
+   */
+  getQnaInsights(parameters, options = {}, networkParameters = {}) {
+    const qnaInsightsRequiredFields = [
+      { path: 'shopperInput', type: 'string' },
+      { path: 'pageContext', type: 'object' },
+      { path: 'pageContext.pageType', type: 'string' },
+      { path: 'pageContext.itemId', type: 'string' },
+    ];
+
+    return getInsights({
+      methodName: 'getQnaInsights',
+      path: '/v1/agent_insights/qna',
+      requiredFields: qnaInsightsRequiredFields,
+      parameters,
+      options,
+      networkParameters,
+      clientOptions: this.options,
+    });
+  }
 }
 
 module.exports = Agent;

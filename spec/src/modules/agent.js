@@ -1337,6 +1337,11 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
     pageContext: { pageType: 'home' },
   };
 
+  const insightsQnaTestParams = {
+    shopperInput: 'Is this jacket machine washable?',
+    pageContext: { pageType: 'pdp', itemId: 'jacket-123' },
+  };
+
   /**
    * Registry of public Agent Insights methods.
    *
@@ -1379,6 +1384,21 @@ describe(`ConstructorIO - Agent${bundledDescriptionSuffix}`, () => {
         { path: 'shopperInput', type: 'string' },
         { path: 'pageContext', type: 'object' },
         { path: 'pageContext.pageType', type: 'string' },
+      ],
+    },
+    {
+      name: 'getQnaInsights',
+      path: '/v1/agent_insights/qna',
+      testParameters: insightsQnaTestParams,
+      expectedBody: {
+        shopper_input: insightsQnaTestParams.shopperInput,
+        page_context: { page_type: 'pdp', item_id: 'jacket-123' },
+      },
+      requiredFields: [
+        { path: 'shopperInput', type: 'string' },
+        { path: 'pageContext', type: 'object' },
+        { path: 'pageContext.pageType', type: 'string' },
+        { path: 'pageContext.itemId', type: 'string' },
       ],
     },
   ];
