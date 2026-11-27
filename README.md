@@ -42,13 +42,17 @@ After instantiating an instance of the client, seven modules will be exposed as 
 ### AI Shopping Agent and Product Insights Agent
 
 - [`agent`](https://constructor-io.github.io/constructorio-client-javascript/module-agent.html) retrieves AI Shopping Agent (ASA) results as a stream.
+  - `getChatInsights`, `getSearchInsights`, `getQnaInsights`, `getRecommendationsInsights` and `getQueryRefinementInsights` call the `/v1/agent_insights` endpoints, one method per mode. Each resolves to a `ReadableStream` of `{ type, data }` events, or to one JSON document when called with `{ stream: false }`.
+  - `getAgentResultsStream` streams results from the `/v1/intent` endpoint.
 - [`agent.pia`](https://constructor-io.github.io/constructorio-client-javascript/module-pia.html) retrieves Product Insights Agent (PIA) questions and answers.
 - [`tracker`](https://constructor-io.github.io/constructorio-client-javascript/module-tracker.html) has the `trackAgent*` methods for ASA events and the `trackProductInsightsAgent*` methods for PIA events.
 
 #### Note:
 1. The `assistant` namespace is deprecated. Use `agent` instead.
 
-2. `agent` receives results through the browser `EventSource` interface. React Native does not include `EventSource`. If you use `agent` in React Native, add an `EventSource` polyfill.
+2. `agent.getAgentResultsStream` receives results through the browser `EventSource` interface. React Native does not include `EventSource`. If you use `agent.getAgentResultsStream` in React Native, add an `EventSource` polyfill.
+
+3. The `agent.get*Insights` methods send their request with `fetch` and do not use `EventSource`. To deliver a stream they need `ReadableStream`, `TextDecoder` and a `fetch` whose response body can be read as a stream. In an environment without these, call them with `{ stream: false }` to receive one JSON document.
 
 ### Dispatched events
 
